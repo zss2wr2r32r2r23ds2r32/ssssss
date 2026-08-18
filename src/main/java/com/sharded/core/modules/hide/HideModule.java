@@ -18,12 +18,17 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
-/** /hide - scrambles your display name and swaps skin to Steve. */
+/**
+ * /hide — other players see Steve skin + scrambled nametag above head.
+ * Tab list name stays normal.
+ */
 public final class HideModule extends Module implements CommandExecutor {
 
     private record Original(PlayerProfile profile, net.kyori.adventure.text.Component displayName,
-                            net.kyori.adventure.text.Component listName) {
+                            net.kyori.adventure.text.Component listName, net.kyori.adventure.text.Component customName,
+                            boolean customNameVisible) {
     }
 
     private final Map<UUID, Original> hidden = new HashMap<>();
@@ -57,7 +62,7 @@ public final class HideModule extends Module implements CommandExecutor {
             return true;
         }
         if (!player.hasPermission("sharded.hide.use")) {
-            send(player, "no-permission");
+            send(sender, "no-permission");
             return true;
         }
         if (isHidden(player)) unhide(player, false);
@@ -66,14 +71,19 @@ public final class HideModule extends Module implements CommandExecutor {
     }
 
     private void hide(Player player) {
-        String scrambled = config.getString("scrambled-name", "&kaaaaaaaaaa");
-        hidden.put(player.getUniqueId(), new Original(player.getPlayerProfile(), player.displayName(), player.playerListName()));
+        String scrambled = scrambleName();
+        hidden.put(player.getUniqueId(), new Original(
+                player.getPlayerProfile(), player.displayName(), player.playerListName(),
+                player.customName(), player.isCustomNameVisible()));
 
-        PlayerProfile fake = Bukkit.createProfile(player.getUniqueId(), "??????");
-        fake.setProperty(new ProfileProperty("textures", steveTexture()));
-        player.setPlayerProfile(fake);
-        player.displayName(Text.c(scrambled));
-        player.playerListName(Text.c(scrambled));
+        PlayerProfile steve = Bukkit.createProfile(player.getUniqueId(), stripColors(scrambled));
+        steve.setProperty(new ProfileProperty("textures", steveTexture()));
+        player.setPlayerProfile(steve);
+
+        // Nametag above head (what others see floating)
+        player.customName(Text.c(scrambled));
+        player.setCustomNameVisible(true);
+        // Tab stays normal — do NOT change playerListName
         send(player, "hidden");
     }
 
@@ -83,7 +93,26 @@ public final class HideModule extends Module implements CommandExecutor {
         player.setPlayerProfile(original.profile());
         player.displayName(original.displayName());
         player.playerListName(original.listName());
+        player.customName(original.customName());
+        player.setCustomNameVisible(original.customNameVisible());
         if (!silent) send(player, "unhidden");
+    }
+
+    private String scrambleName() {
+        String template = config.getString("scrambled-name", "&kaaaaaaaaaa");
+        if (config.getBoolean("random-scramble", true)) {
+            int len = config.getInt("scramble-length", 12);
+            StringBuilder sb = new StringBuilder("&k");
+            for (int i = 0; i < len; i++) {
+                sb.append((char) ('a' + ThreadLocalRandom.current().nextInt(26)));
+            }
+            return sb.toString();
+        }
+        return template;
+    }
+
+    private String stripColors(String input) {
+        return input.replaceAll("&[0-9a-fk-orA-FK-OR]", "").replaceAll("(?i)&#[0-9a-fA-F]{6}", "");
     }
 
     private String steveTexture() {

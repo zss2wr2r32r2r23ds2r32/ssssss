@@ -3,15 +3,15 @@ package com.sharded.core.modules.tokens;
 import com.sharded.core.ShardedCore;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public final class TokenDatabase {
+
+    public record LeaderEntry(UUID uuid, long value) {
+    }
 
     private final ShardedCore plugin;
     private Connection connection;
@@ -38,7 +38,7 @@ public final class TokenDatabase {
                 return rs.next() ? rs.getLong("balance") : 0L;
             }
         } catch (SQLException e) {
-            plugin.getLogger().severe("Failed to read tokens for " + uuid + ": " + e.getMessage());
+            plugin.getLogger().severe("Failed to read tokens: " + e.getMessage());
             return 0L;
         }
     }
@@ -53,8 +53,24 @@ public final class TokenDatabase {
             ps.setLong(3, System.currentTimeMillis());
             ps.executeUpdate();
         } catch (SQLException e) {
-            plugin.getLogger().severe("Failed to save tokens for " + uuid + ": " + e.getMessage());
+            plugin.getLogger().severe("Failed to save tokens: " + e.getMessage());
         }
+    }
+
+    public synchronized List<LeaderEntry> top(int limit) {
+        List<LeaderEntry> list = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT uuid, balance FROM tokens ORDER BY balance DESC LIMIT ?")) {
+            ps.setInt(1, limit);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new LeaderEntry(UUID.fromString(rs.getString("uuid")), rs.getLong("balance")));
+                }
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Failed to read token leaderboard: " + e.getMessage());
+        }
+        return list;
     }
 
     public synchronized void close() {

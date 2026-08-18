@@ -1,23 +1,24 @@
 package com.sharded.core.gui;
 
+import com.sharded.core.util.ColorUtil;
 import com.sharded.core.util.ItemBuilder;
+import com.sharded.core.util.ItemsAdderHook;
 import com.sharded.core.util.Text;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/** A DeluxeMenus-style inventory menu loaded from YAML. */
+/** DeluxeMenus-style inventory menu loaded from YAML. */
 public final class GuiMenu {
 
     public static final class OpenGuiHolder implements InventoryHolder {
@@ -59,15 +60,19 @@ public final class GuiMenu {
             ConfigurationSection item = section.getConfigurationSection(key);
             if (item == null) continue;
 
-            Material material = parseMaterial(item.getString("material", "STONE"));
-            String name = item.getString("display_name", " ");
-            List<String> lore = item.getStringList("lore");
+            ItemStack stack = ItemsAdderHook.parseItem(item.getString("material", "STONE"));
+            if (stack == null) stack = new ItemStack(org.bukkit.Material.STONE);
+
+            String name = ColorUtil.normalize(item.getString("display_name", " "));
+            List<String> lore = new ArrayList<>();
+            for (String line : item.getStringList("lore")) lore.add(ColorUtil.normalize(line));
+
+            stack = new ItemBuilder(stack).name(name).lore(lore).hideAll().build();
+
             List<String> left = item.getStringList("left_click_commands");
             List<String> click = item.getStringList("click_commands");
             if (click.isEmpty()) click = left;
             if (click.isEmpty()) click = item.getStringList("right_click_commands");
-
-            ItemStack stack = new ItemBuilder(material).name(name).lore(lore).hideAll().build();
 
             List<Integer> slots = new ArrayList<>();
             if (item.contains("slot")) slots.add(item.getInt("slot"));
@@ -77,14 +82,6 @@ public final class GuiMenu {
                 itemsBySlot.put(slot, new GuiItem(slot, stack, left, click));
             }
         }
-    }
-
-    private static Material parseMaterial(String raw) {
-        if (raw == null || raw.isBlank()) return Material.STONE;
-        // ItemsAdder/custom ids fall back to paper.
-        if (raw.contains(":")) raw = raw.substring(raw.lastIndexOf(':') + 1).toUpperCase();
-        Material material = Material.matchMaterial(raw);
-        return material == null ? Material.STONE : material;
     }
 
     public String id() {
@@ -100,49 +97,53 @@ public final class GuiMenu {
     }
 
     public void open(Player player, GuiManager manager, Map<String, String> extraPlaceholders) {
-        if (!openPermission.isEmpty() && !player.hasPermission(openPermission)) {
-            manager.message(player, manager.noPermissionMessage());
+        if (!openPermission.isEmpty() && !player.hasPermission(resolvePermission(openPermission))) {
+            manager.message(player, manager.noPermissionMessage(), true);
             return;
         }
         OpenGuiHolder holder = new OpenGuiHolder(id);
-        Inventory inventory = Bukkit.createInventory(holder, size, apply(title, player, extraPlaceholders));
+        Inventory inventory = Bukkit.createInventory(holder, size, Text.c(apply(title, player, extraPlaceholders, manager)));
         holder.inventory = inventory;
 
         for (GuiItem guiItem : itemsBySlot.values()) {
-            inventory.setItem(guiItem.slot(), applyItem(guiItem.display(), player, extraPlaceholders));
+            inventory.setItem(guiItem.slot(), applyItem(guiItem.display(), player, extraPlaceholders, manager));
         }
         player.openInventory(inventory);
         manager.runCommands(player, openCommands, extraPlaceholders);
     }
 
-    private ItemStack applyItem(ItemStack template, Player player, Map<String, String> extra) {
+    private ItemStack applyItem(ItemStack template, Player player, Map<String, String> extra, GuiManager manager) {
         ItemStack copy = template.clone();
         var meta = copy.getItemMeta();
         if (meta == null) return copy;
-        if (meta.hasDisplayName()) meta.displayName(applyComponent(meta.displayName(), player, extra));
+        if (meta.hasDisplayName()) meta.displayName(applyComponent(meta.displayName(), player, extra, manager));
         if (meta.hasLore()) {
             List<Component> lore = new ArrayList<>();
-            for (Component line : meta.lore()) lore.add(applyComponent(line, player, extra));
+            for (Component line : meta.lore()) lore.add(applyComponent(line, player, extra, manager));
             meta.lore(lore);
         }
         copy.setItemMeta(meta);
         return copy;
     }
 
-    private Component applyComponent(Component component, Player player, Map<String, String> extra) {
+    private Component applyComponent(Component component, Player player, Map<String, String> extra, GuiManager manager) {
         String legacy = net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().serialize(component);
-        return Text.c(apply(legacy, player, extra));
+        return Text.c(apply(legacy, player, extra, manager));
     }
 
-    public static String apply(String input, Player player, Map<String, String> extra) {
+    private static String resolvePermission(String permission) {
+        if (permission.startsWith("sharded.")) return permission;
+        return "sharded." + permission;
+    }
+
+    public static String apply(String input, Player player, Map<String, String> extra, GuiManager manager) {
         if (input == null) return "";
-        String out = input.replace("%player_name%", player.getName())
-                .replace("%player%", player.getName());
+        String out = input.replace("%player_name%", player.getName()).replace("%player%", player.getName());
         if (extra != null) {
             for (Map.Entry<String, String> e : extra.entrySet()) {
                 out = out.replace("%" + e.getKey() + "%", e.getValue() == null ? "" : e.getValue());
             }
         }
-        return GuiManager.instance().applyPlaceholders(player, out);
+        return manager.applyPlaceholders(player, out);
     }
 }

@@ -2,7 +2,9 @@ package com.sharded.core.modules.joinmessages;
 
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
+import com.sharded.core.util.PlayerToggles;
 import com.sharded.core.util.Text;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -58,12 +60,24 @@ public final class JoinMessagesModule extends Module {
         String type = player.hasPlayedBefore() ? "join" : "first-join";
         String message = resolve(player, type);
         if (message == null && type.equals("first-join")) message = resolve(player, "join");
-        if (message != null) event.joinMessage(Text.c(message));
+        if (message != null) {
+            event.joinMessage(null);
+            var component = Text.c(message);
+            for (Player viewer : Bukkit.getOnlinePlayers()) {
+                if (PlayerToggles.joinMessages(viewer)) viewer.sendMessage(component);
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onQuit(PlayerQuitEvent event) {
         String message = resolve(event.getPlayer(), "quit");
-        if (message != null) event.quitMessage(Text.c(message));
+        if (message != null) {
+            event.quitMessage(null);
+            var component = Text.c(message);
+            for (Player viewer : Bukkit.getOnlinePlayers()) {
+                if (PlayerToggles.joinMessages(viewer)) viewer.sendMessage(component);
+            }
+        }
     }
 }

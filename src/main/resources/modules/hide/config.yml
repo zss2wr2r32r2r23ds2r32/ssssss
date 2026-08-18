@@ -1,3 +1,5 @@
-# Hide module - /hide scrambles your name and applies the Steve skin.
+# Hide — Steve skin + scrambled nametag above head for others. Tab name stays normal.
 scrambled-name: "&kaaaaaaaaaa"
+random-scramble: true
+scramble-length: 12
 skin-url: "http://textures.minecraft.net/texture/1a4af718455d4aab528e7a61f86fa25e6a369d1768dcb13f7df319a713eb810b"

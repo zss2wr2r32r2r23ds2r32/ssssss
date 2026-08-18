@@ -1,58 +1,100 @@
 menu_title: '&8SERVER SETTINGS'
-size: 27
+size: 54
 open_permission: sharded.settings.use
 
 items:
   filler:
     material: GRAY_STAINED_GLASS_PANE
-    slots: [0,1,2,3,4,5,6,7,8,9,17,18,19,20,21,23,24,25,26]
+    slots: [0,1,2,3,4,5,6,7,8,9,17,18,26,27,35,36,44,45,46,47,48,49,50,51,52,53]
     display_name: ' '
 
   chat:
     material: OAK_SIGN
-    slot: 11
+    slot: 10
     display_name: '&fPUBLIC CHAT &8(/chattoggle)'
     lore:
       - '&8[SETTINGS]'
-      - ''
       - '&bDESCRIPTION:'
-      - '&f| &7Click to toggle public chat visibility'
-      - ''
+      - '&f| &7Toggle public chat visibility'
       - '&e▷ CLICK TO TOGGLE'
     click_commands:
       - '[toggle_chat]'
 
   msg:
     material: WRITABLE_BOOK
-    slot: 13
+    slot: 12
     display_name: '&fPRIVATE MESSAGES &8(/msgtoggle)'
     lore:
       - '&8[SETTINGS]'
-      - ''
       - '&bDESCRIPTION:'
-      - '&f| &7Click to toggle private messages'
-      - ''
+      - '&f| &7Toggle receiving private messages'
       - '&e▷ CLICK TO TOGGLE'
     click_commands:
       - '[toggle_msg]'
 
   nightvision:
     material: ENDER_EYE
-    slot: 15
+    slot: 14
     display_name: '&fNIGHT VISION &8(/nv)'
     lore:
       - '&8[SETTINGS]'
-      - ''
       - '&bDESCRIPTION:'
-      - '&f| &7Click to toggle night vision'
-      - ''
+      - '&f| &7Toggle night vision'
       - '&e▷ CLICK TO TOGGLE'
     click_commands:
       - '[toggle_nightvision]'
 
+  scoreboard:
+    material: PAINTING
+    slot: 19
+    display_name: '&fSCOREBOARD &8(/sb)'
+    lore:
+      - '&8[SETTINGS]'
+      - '&bDESCRIPTION:'
+      - '&f| &7Toggle sidebar scoreboard'
+      - '&e▷ CLICK TO TOGGLE'
+    click_commands:
+      - '[toggle_scoreboard]'
+
+  deathmessages:
+    material: SKELETON_SKULL
+    slot: 21
+    display_name: '&fDEATH MESSAGES'
+    lore:
+      - '&8[SETTINGS]'
+      - '&bDESCRIPTION:'
+      - '&f| &7Toggle seeing death messages'
+      - '&e▷ CLICK TO TOGGLE'
+    click_commands:
+      - '[toggle_deathmessages]'
+
+  joinmessages:
+    material: OAK_DOOR
+    slot: 23
+    display_name: '&fJOIN/LEAVE MESSAGES'
+    lore:
+      - '&8[SETTINGS]'
+      - '&bDESCRIPTION:'
+      - '&f| &7Toggle join and leave messages'
+      - '&e▷ CLICK TO TOGGLE'
+    click_commands:
+      - '[toggle_joinmessages]'
+
+  mobspawn:
+    material: ZOMBIE_HEAD
+    slot: 25
+    display_name: '&fMOB SPAWNING'
+    lore:
+      - '&8[SETTINGS]'
+      - '&bDESCRIPTION:'
+      - '&f| &7Toggle natural mob spawns near you'
+      - '&e▷ CLICK TO TOGGLE'
+    click_commands:
+      - '[toggle_mobspawn]'
+
   close:
     material: BARRIER
-    slot: 22
+    slot: 40
     display_name: '&c&lCLOSE'
     click_commands:
       - '[close]'

@@ -1,0 +1,153 @@
+menu_title: 'Token Shop | Tags'
+open_command: tags
+size: 27
+open_permission: tokenshop.use
+
+items:
+
+  back_button:
+    material: BARRIER
+    slot: 26
+    display_name: '&x&F&F&0&0&0&0&lBACK'
+    left_click_commands:
+      - '[openguimenu] mainmenu'
+
+  summer_tag:
+    material: SUNFLOWER
+    slot: 10
+    display_name: '&x&F&F&E&3&0&0&l[&x&F&F&E&3&0&0☀ SUMMER&x&F&F&E&3&0&0&l]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&E&3&0&0Information:'
+      - '&x&F&F&E&3&0&0| &fPurchase the &x&F&F&E&3&0&0Summer Tag'
+      - '&x&F&F&E&3&0&0| &fShow off your seasonal style!'
+      - ''
+      - '&x&F&F&E&3&0&0⚓ &fCost: &x&F&F&E&3&0&0500 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[tokens_take] 500'
+      - '[console] lp user %player_name% permission set tag.summer true'
+      - '[message] %token_prefix%&aYou unlocked the Summer Tag!'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  vip_tag:
+    material: GOLD_INGOT
+    slot: 11
+    display_name: '&x&F&F&D&7&0&0&l[&x&F&F&D&7&0&0★ VIP&x&F&F&D&7&0&0&l]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&D&7&0&0Information:'
+      - '&x&F&F&D&7&0&0| &fPurchase the &x&F&F&D&7&0&0VIP Tag'
+      - '&x&F&F&D&7&0&0| &fStand out from the crowd!'
+      - ''
+      - '&x&F&F&D&7&0&0⚓ &fCost: &x&F&F&D&7&0&0750 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[tokens_take] 750'
+      - '[console] lp user %player_name% permission set tag.vip true'
+      - '[message] %token_prefix%&aYou unlocked the VIP Tag!'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  og_tag:
+    material: DIAMOND
+    slot: 12
+    display_name: '&x&0&0&F&F&F&F&l[&x&0&0&F&F&F&F⚡ OG&x&0&0&F&F&F&F&l]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&0&0&F&F&F&FInformation:'
+      - '&x&0&0&F&F&F&F| &fPurchase the &x&0&0&F&F&F&FOG Tag'
+      - '&x&0&0&F&F&F&F| &fFor the true veterans!'
+      - ''
+      - '&x&0&0&F&F&F&F⚓ &fCost: &x&0&0&F&F&F&F1000 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[tokens_take] 1000'
+      - '[console] lp user %player_name% permission set tag.og true'
+      - '[message] %token_prefix%&aYou unlocked the OG Tag!'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  heart_tag:
+    material: PINK_DYE
+    slot: 13
+    display_name: '&x&F&F&0&0&7&2&l[&x&F&F&0&0&7&2❤ HEART&x&F&F&0&0&7&2&l]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&0&7&2Information:'
+      - '&x&F&F&0&0&7&2| &fPurchase the &x&F&F&0&0&7&2Heart Tag'
+      - '&x&F&F&0&0&7&2| &fSpread the love!'
+      - ''
+      - '&x&F&F&0&0&7&2⚓ &fCost: &x&F&F&0&0&7&2500 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[tokens_take] 500'
+      - '[console] lp user %player_name% permission set tag.heart true'
+      - '[message] %token_prefix%&aYou unlocked the Heart Tag!'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  skull_tag:
+    material: WITHER_SKELETON_SKULL
+    slot: 14
+    display_name: '&x&8&8&8&8&8&8&l[&x&8&8&8&8&8&8💀 SKULL&x&8&8&8&8&8&8&l]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&8&8&8&8&8&8Information:'
+      - '&x&8&8&8&8&8&8| &fPurchase the &x&8&8&8&8&8&8Skull Tag'
+      - '&x&8&8&8&8&8&8| &fIntimidate your foes!'
+      - ''
+      - '&x&8&8&8&8&8&8⚓ &fCost: &x&8&8&8&8&8&8600 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[tokens_take] 600'
+      - '[console] lp user %player_name% permission set tag.skull true'
+      - '[message] %token_prefix%&aYou unlocked the Skull Tag!'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  star_tag:
+    material: NETHER_STAR
+    slot: 15
+    display_name: '&x&F&C&F&F&0&0&l[&x&F&C&F&F&0&0★ STAR&x&F&C&F&F&0&0&l]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&C&F&F&0&0Information:'
+      - '&x&F&C&F&F&0&0| &fPurchase the &x&F&C&F&F&0&0Star Tag'
+      - '&x&F&C&F&F&0&0| &fShine bright!'
+      - ''
+      - '&x&F&C&F&F&0&0⚓ &fCost: &x&F&C&F&F&0&0800 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[tokens_take] 800'
+      - '[console] lp user %player_name% permission set tag.star true'
+      - '[message] %token_prefix%&aYou unlocked the Star Tag!'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  custom_tag:
+    material: NAME_TAG
+    slot: 16
+    display_name: '&x&5&C&9&4&F&C&l[&x&5&C&9&4&F&C✦ CUSTOM&x&5&C&9&4&F&C&l]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&5&C&9&4&F&CInformation:'
+      - '&x&5&C&9&4&F&C| &fPurchase the &x&5&C&9&4&F&CCustom Tag'
+      - '&x&5&C&9&4&F&C| &fCreate your own style!'
+      - ''
+      - '&x&5&C&9&4&F&C⚓ &fCost: &x&5&C&9&4&F&C2000 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[tokens_take] 2000'
+      - '[console] lp user %player_name% permission set tag.custom true'
+      - '[message] %token_prefix%&aYou unlocked the Custom Tag!'
+      - '[sound] ENTITY_PLAYER_LEVELUP'

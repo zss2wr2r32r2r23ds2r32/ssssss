@@ -1,12 +1,11 @@
 package com.sharded.core.modules.tokens;
 
 import com.sharded.core.ShardedCore;
-import com.sharded.core.gui.GuiListener;
-import com.sharded.core.gui.GuiManager;
 import com.sharded.core.module.Module;
+import com.sharded.core.util.ColorUtil;
 import com.sharded.core.util.Numbers;
 import com.sharded.core.util.OfflinePlayers;
-import com.sharded.core.util.Text;
+import com.sharded.core.util.Prefix;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -28,7 +27,6 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
 
     private TokenDatabase database;
     private TokenService service;
-    private GuiManager guiManager;
 
     public TokensModule(ShardedCore plugin) {
         super(plugin, "tokens");
@@ -38,8 +36,12 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
         return service;
     }
 
-    public GuiManager guiManager() {
-        return guiManager;
+    public TokenDatabase database() {
+        return database;
+    }
+
+    public String tokenPrefix() {
+        return ColorUtil.normalize(config.getString("prefix", Prefix.get()));
     }
 
     @Override
@@ -51,12 +53,10 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
             throw new IllegalStateException("Could not open token database", e);
         }
 
-        guiManager = new GuiManager(plugin);
-        guiManager.setNoPermissionMessage(raw("no-permission"));
+        plugin.gui().setNoPermissionMessage(raw("no-permission"));
         File menusFolder = new File(moduleFolder(), "menus");
         copyDefaultMenus(menusFolder);
-        guiManager.loadFolder(menusFolder);
-        registerListener(new GuiListener(guiManager));
+        plugin.gui().loadFolder(menusFolder, "");
 
         registerCommand("bal", this);
         registerCommand("tokens", this);
@@ -64,7 +64,18 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             registerPlaceholders();
-            plugin.getLogger().info("Registered PlaceholderAPI placeholders (%shardedcore_tokens%).");
+            plugin.getLogger().info("Registered PlaceholderAPI placeholders.");
+        }
+    }
+
+    private void copyDefaultMenus(File folder) {
+        folder.mkdirs();
+        for (String menu : List.of("mainmenu", "glow", "keys", "cosmetics", "gradients", "chatcolors", "tags")) {
+            File out = new File(folder, menu + ".yml");
+            if (!out.exists()) {
+                String path = "modules/tokens/menus/" + menu + ".yml";
+                if (plugin.getResource(path) != null) plugin.saveResource(path, false);
+            }
         }
     }
 
@@ -92,27 +103,63 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
 
             @Override
             public @Nullable String onRequest(OfflinePlayer player, @NotNull String params) {
-                if (player == null || service == null) return "0";
-                long balance = service.getBalance(player.getUniqueId());
-                return switch (params.toLowerCase()) {
-                    case "tokens", "tokens_amount" -> String.valueOf(balance);
-                    case "tokens_formatted" -> Numbers.format(balance);
-                    default -> null;
+                String p = params.toLowerCase(Locale.ROOT);
+                if (player != null && service != null) {
+                    if (p.equals("tokens") || p.equals("tokens_amount")) {
+                        return String.valueOf(service.getBalance(player.getUniqueId()));
+                    }
+                    if (p.equals("tokens_formatted")) {
+                        return Numbers.format(service.getBalance(player.getUniqueId()));
+                    }
+                }
+                if (p.startsWith("tokens_top_")) {
+                    return leaderboardValue(p.substring("tokens_top_".length()), true);
+                }
+                if (p.startsWith("killstreak_top_")) {
+                    return leaderboardValue(p.substring("killstreak_top_".length()), false);
+                }
+                if (player != null) {
+                    var ks = plugin.modules().get(com.sharded.core.modules.killstreaks.KillstreaksModule.class);
+                    if (ks != null && ks.database() != null) {
+                        if (p.equals("killstreak")) return String.valueOf(ks.database().getCurrent(player.getUniqueId()));
+                        if (p.equals("killstreak_best")) return String.valueOf(ks.database().getBest(player.getUniqueId()));
+                    }
+                }
+                return null;
+            }
+
+            private String leaderboardValue(String spec, boolean tokens) {
+                String[] parts = spec.split("_", 2);
+                if (parts.length == 0) return "";
+                int rank;
+                try {
+                    rank = Integer.parseInt(parts[0]);
+                } catch (NumberFormatException e) {
+                    return "";
+                }
+                if (rank < 1 || rank > 10) return "";
+                String field = parts.length > 1 ? parts[1] : "name";
+                if (tokens) {
+                    List<TokenDatabase.LeaderEntry> top = database.top(10);
+                    if (rank > top.size()) return field.equals("amount") || field.equals("value") ? "0" : "---";
+                    TokenDatabase.LeaderEntry entry = top.get(rank - 1);
+                    return switch (field) {
+                        case "amount", "value" -> String.valueOf(entry.value());
+                        case "formatted" -> Numbers.format(entry.value());
+                        default -> OfflinePlayers.name(entry.uuid());
+                    };
+                }
+                var ks = plugin.modules().get(com.sharded.core.modules.killstreaks.KillstreaksModule.class);
+                if (ks == null || ks.database() == null) return "---";
+                List<com.sharded.core.modules.killstreaks.KillstreakDatabase.LeaderEntry> top = ks.database().topBest(10);
+                if (rank > top.size()) return field.equals("amount") || field.equals("value") ? "0" : "---";
+                var entry = top.get(rank - 1);
+                return switch (field) {
+                    case "amount", "value" -> String.valueOf(entry.value());
+                    default -> OfflinePlayers.name(entry.uuid());
                 };
             }
         }.register();
-    }
-
-    private void copyDefaultMenus(File folder) {
-        folder.mkdirs();
-        String[] menus = {"mainmenu", "glow", "keys", "cosmetics", "gradients"};
-        for (String menu : menus) {
-            File out = new File(folder, menu + ".yml");
-            if (!out.exists()) {
-                String path = "modules/tokens/menus/" + menu + ".yml";
-                if (plugin.getResource(path) != null) plugin.saveResource(path, false);
-            }
-        }
     }
 
     @Override
@@ -142,7 +189,7 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
                     send(player, "no-permission");
                     return true;
                 }
-                guiManager.open(player, config.getString("main-menu", "mainmenu"));
+                plugin.gui().open(player, config.getString("main-menu", "mainmenu"));
             }
             case "tokens" -> handleTokensAdmin(sender, args);
         }

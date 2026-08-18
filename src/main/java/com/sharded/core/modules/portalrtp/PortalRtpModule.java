@@ -1,13 +1,13 @@
 package com.sharded.core.modules.portalrtp;
 
 import com.sharded.core.ShardedCore;
-import com.sharded.core.gui.GuiListener;
-import com.sharded.core.gui.GuiManager;
 import com.sharded.core.module.Module;
+import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -17,10 +17,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityPortalEnterEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.util.HashMap;
@@ -28,12 +34,16 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-/** Portal RTP - nether portal in factions opens a configurable GUI, then RTP into world. */
 public final class PortalRtpModule extends Module implements CommandExecutor {
 
-    private GuiManager guiManager;
+    private NamespacedKey wandKey;
+    private PortalTriggerStore triggers;
     private final Map<UUID, Long> portalGuiCooldown = new HashMap<>();
     private final Map<UUID, Long> rtpCooldown = new HashMap<>();
+    private final Map<UUID, PendingTeleport> pending = new HashMap<>();
+
+    private record PendingTeleport(Location start, BukkitTask task) {
+    }
 
     public PortalRtpModule(ShardedCore plugin) {
         super(plugin, "portalrtp");
@@ -42,12 +52,21 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
     @Override
     protected void onEnable() {
         registerCommand("rtp", this);
-        guiManager = new GuiManager(plugin);
+        wandKey = new NamespacedKey(plugin, "portal_wand");
+        triggers = new PortalTriggerStore(plugin, moduleFolder());
+
         File guiFile = new File(moduleFolder(), "gui.yml");
         if (!guiFile.exists()) plugin.saveResource("modules/portalrtp/gui.yml", false);
-        guiManager.loadFolder(moduleFolder());
-        guiManager.registerAction("rtp_confirm", this::teleport);
-        registerListener(new GuiListener(guiManager));
+        plugin.gui().loadMenu(guiFile, "portalrtp");
+        plugin.gui().registerAction("rtp_confirm", this::startCountdown);
+    }
+
+    @Override
+    protected void onDisable() {
+        for (UUID uuid : pending.keySet()) {
+            cancelPending(uuid, false);
+        }
+        pending.clear();
     }
 
     private String portalWorld() {
@@ -60,24 +79,33 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
 
     @EventHandler
     public void onPortalEnter(EntityPortalEnterEvent event) {
-        if (!(event.getEntity() instanceof Player player)) return;
-        tryOpen(player);
+        if (event.getEntity() instanceof Player player) tryOpen(player, event.getLocation());
     }
 
-    /** Backup detection when standing inside portal blocks. */
     @EventHandler(ignoreCancelled = true)
     public void onMove(PlayerMoveEvent event) {
         if (!event.hasChangedBlock()) return;
         Location to = event.getTo();
         if (to == null) return;
-        if (to.getBlock().getType() != Material.NETHER_PORTAL
-                && to.clone().subtract(0, 1, 0).getBlock().getType() != Material.NETHER_PORTAL) return;
-        tryOpen(event.getPlayer());
+        PendingTeleport pt = pending.get(event.getPlayer().getUniqueId());
+        if (pt != null && moved(pt.start(), to)) {
+            cancelPending(event.getPlayer().getUniqueId(), true);
+            return;
+        }
+        if (to.getBlock().getType() == Material.NETHER_PORTAL
+                || to.clone().subtract(0, 1, 0).getBlock().getType() == Material.NETHER_PORTAL) {
+            tryOpen(event.getPlayer(), to);
+        }
     }
 
-    private void tryOpen(Player player) {
+    private boolean moved(Location from, Location to) {
+        return from.distanceSquared(to) > 0.01;
+    }
+
+    private void tryOpen(Player player, Location at) {
         if (!player.getWorld().getName().equalsIgnoreCase(portalWorld())) return;
         if (!player.hasPermission("sharded.rtp.use")) return;
+        if (!triggers.isTrigger(at)) return;
         long now = System.currentTimeMillis();
         Long last = portalGuiCooldown.get(player.getUniqueId());
         if (last != null && now - last < config.getLong("gui-cooldown-ms", 2000L)) return;
@@ -100,12 +128,26 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
             send(sender, "players-only");
             return true;
         }
+        if (args.length > 0 && args[0].equalsIgnoreCase("wand")) {
+            if (!player.hasPermission("sharded.rtp.admin")) {
+                send(player, "no-permission");
+                return true;
+            }
+            ItemStack wand = new ItemBuilder(Material.BLAZE_ROD)
+                    .name(raw("wand-name"))
+                    .lore(java.util.Arrays.asList(raw("wand-lore").split("\\|")))
+                    .glow(true)
+                    .edit(meta -> meta.getPersistentDataContainer().set(wandKey, PersistentDataType.BYTE, (byte) 1))
+                    .build();
+            player.getInventory().addItem(wand);
+            send(player, "wand-given");
+            return true;
+        }
         if (!player.hasPermission("sharded.rtp.use")) {
             send(player, "no-permission");
             return true;
         }
-        if (!player.getWorld().getName().equalsIgnoreCase(portalWorld())
-                && !player.hasPermission("sharded.rtp.bypass")) {
+        if (!player.getWorld().getName().equalsIgnoreCase(portalWorld())) {
             send(player, "wrong-world", "%world%", portalWorld());
             return true;
         }
@@ -113,14 +155,41 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
         return true;
     }
 
+    @EventHandler
+    public void onWandUse(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock() == null) return;
+        ItemStack item = event.getItem();
+        if (item == null || !item.getItemMeta().getPersistentDataContainer().has(wandKey, PersistentDataType.BYTE)) return;
+        if (!event.getPlayer().hasPermission("sharded.rtp.admin")) return;
+        event.setCancelled(true);
+        Block block = event.getClickedBlock();
+        if (block.getType() != Material.NETHER_PORTAL) {
+            send(event.getPlayer(), "wand-not-portal");
+            return;
+        }
+        triggers.add(block.getLocation());
+        send(event.getPlayer(), "wand-set", "%count%", String.valueOf(triggers.count()));
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        cancelPending(event.getPlayer().getUniqueId(), false);
+    }
+
     private void openGui(Player player) {
         Map<String, String> ph = Map.of(
                 "target_world", targetWorld(),
-                "border", config.getString("border-label", "5K x 5K"));
-        guiManager.open(player, "gui", ph);
+                "radius", config.getString("radius-label", "50K x 50K"),
+                "border", config.getString("border-label", "100K x 100K"),
+                "players_online", String.valueOf(Bukkit.getOnlinePlayers().size()));
+        plugin.gui().open(player, "portalrtp", ph);
     }
 
-    private void teleport(Player player) {
+    private void startCountdown(Player player) {
+        if (!player.getWorld().getName().equalsIgnoreCase(portalWorld())) {
+            send(player, "wrong-world", "%world%", portalWorld());
+            return;
+        }
         long cooldownSeconds = config.getLong("cooldown-seconds", 30L);
         if (!player.hasPermission("sharded.rtp.bypass")) {
             Long nextUse = rtpCooldown.get(player.getUniqueId());
@@ -129,9 +198,44 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
                 send(player, "on-cooldown", "%time%", Text.time((nextUse - now) / 1000L));
                 return;
             }
-            rtpCooldown.put(player.getUniqueId(), now + cooldownSeconds * 1000L);
         }
+        cancelPending(player.getUniqueId(), false);
+        int seconds = config.getInt("countdown-seconds", 5);
+        Location start = player.getLocation().clone();
+        player.closeInventory();
 
+        int[] remaining = {seconds};
+        BukkitTask task = plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
+            if (!player.isOnline()) {
+                cancelPending(player.getUniqueId(), false);
+                return;
+            }
+            if (remaining[0] <= 0) {
+                cancelPending(player.getUniqueId(), false);
+                finishTeleport(player, cooldownSeconds);
+                return;
+            }
+            String msg = raw("countdown", "%seconds%", String.valueOf(remaining[0]));
+            if (config.getBoolean("countdown-actionbar", true)) {
+                player.sendActionBar(Text.c(msg));
+            } else {
+                player.sendMessage(Text.c(msg));
+            }
+            remaining[0]--;
+        }, 0L, 20L);
+        pending.put(player.getUniqueId(), new PendingTeleport(start, task));
+    }
+
+    private void cancelPending(UUID uuid, boolean notify) {
+        PendingTeleport pt = pending.remove(uuid);
+        if (pt != null) pt.task().cancel();
+        if (notify) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null) send(player, "countdown-cancelled");
+        }
+    }
+
+    private void finishTeleport(Player player, long cooldownSeconds) {
         World world = Bukkit.getWorld(targetWorld());
         if (world == null) {
             send(player, "world-not-found", "%world%", targetWorld());
@@ -142,7 +246,9 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
             send(player, "no-safe-location");
             return;
         }
-        send(player, "teleporting");
+        if (!player.hasPermission("sharded.rtp.bypass")) {
+            rtpCooldown.put(player.getUniqueId(), System.currentTimeMillis() + cooldownSeconds * 1000L);
+        }
         player.teleportAsync(location, PlayerTeleportEvent.TeleportCause.PLUGIN).thenAccept(success -> {
             if (success) {
                 player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 0.8f, 1f);
@@ -157,7 +263,7 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
 
     private Location findSafeLocation(World world) {
         int minRadius = config.getInt("min-radius", 100);
-        int maxRadius = config.getInt("max-radius", 5000);
+        int maxRadius = config.getInt("max-radius", 50000);
         int centerX = config.getInt("center-x", 0);
         int centerZ = config.getInt("center-z", 0);
         int attempts = config.getInt("max-attempts", 25);

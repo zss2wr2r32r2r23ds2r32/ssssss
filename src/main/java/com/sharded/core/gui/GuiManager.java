@@ -2,6 +2,7 @@ package com.sharded.core.gui;
 
 import com.sharded.core.ShardedCore;
 import com.sharded.core.modules.tokens.TokenService;
+import com.sharded.core.util.ColorUtil;
 import com.sharded.core.util.Numbers;
 import com.sharded.core.util.Prefix;
 import com.sharded.core.util.Text;
@@ -12,17 +13,13 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-/** Loads and opens DeluxeMenus-style GUI configs. */
+/** Shared GUI engine for all modules (single listener, no cross-menu click bugs). */
 public final class GuiManager {
-
-    private static GuiManager instance;
 
     private final ShardedCore plugin;
     private final Map<String, GuiMenu> menus = new HashMap<>();
@@ -31,11 +28,6 @@ public final class GuiManager {
 
     public GuiManager(ShardedCore plugin) {
         this.plugin = plugin;
-        instance = this;
-    }
-
-    public static GuiManager instance() {
-        return instance;
     }
 
     public void setNoPermissionMessage(String message) {
@@ -50,39 +42,29 @@ public final class GuiManager {
         customActions.put(id.toLowerCase(), action);
     }
 
+    public void unregisterActions() {
+        customActions.clear();
+    }
+
     public void loadMenu(File file, String id) {
         if (!file.exists()) return;
         menus.put(id, new GuiMenu(id, YamlConfiguration.loadConfiguration(file)));
     }
 
-    public void loadFolder(File folder) {
-        menus.clear();
+    public void loadFolder(File folder, String prefix) {
         if (!folder.exists()) folder.mkdirs();
         File[] files = folder.listFiles((dir, name) -> name.endsWith(".yml"));
         if (files == null) return;
         for (File file : files) {
             YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
             if (!yaml.contains("menu_title")) continue;
-            String id = file.getName().replace(".yml", "");
+            String id = prefix.isEmpty() ? file.getName().replace(".yml", "") : prefix + file.getName().replace(".yml", "");
             menus.put(id, new GuiMenu(id, yaml));
         }
     }
 
-    public void loadResourceFolder(String resourcePath, File targetFolder) {
-        targetFolder.mkdirs();
-        String[] defaults = {"mainmenu", "glow", "keys", "cosmetics", "gradients", "rtp", "settings"};
-        for (String name : defaults) {
-            File out = new File(targetFolder, name + ".yml");
-            if (!out.exists()) {
-                String res = resourcePath + "/" + name + ".yml";
-                if (plugin.getResource(res) != null) plugin.saveResource(res, false);
-            }
-        }
-        loadFolder(targetFolder);
-    }
-
-    public GuiMenu menu(String id) {
-        return menus.get(id);
+    public void clearMenus() {
+        menus.clear();
     }
 
     public void open(Player player, String menuId) {
@@ -115,10 +97,9 @@ public final class GuiManager {
         }
     }
 
-    /** @return false to stop running further commands in the chain */
     private boolean runCommand(Player player, String line, Map<String, String> extra) {
         if (line == null || line.isBlank()) return true;
-        line = GuiMenu.apply(line, player, extra).trim();
+        line = ColorUtil.normalize(GuiMenu.apply(line, player, extra, this)).trim();
         if (!line.startsWith("[")) return true;
 
         int end = line.indexOf(']');
@@ -131,6 +112,10 @@ public final class GuiManager {
                 player.sendMessage(Text.c(payload));
                 yield true;
             }
+            case "actionbar" -> {
+                player.sendActionBar(Text.c(payload));
+                yield true;
+            }
             case "close" -> {
                 player.closeInventory();
                 yield true;
@@ -140,7 +125,7 @@ public final class GuiManager {
                 yield true;
             }
             case "console" -> {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), GuiMenu.apply(payload, player, extra));
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), GuiMenu.apply(payload, player, extra, this));
                 yield true;
             }
             case "sound" -> {
@@ -159,7 +144,7 @@ public final class GuiManager {
                 if (service == null) yield false;
                 long amount = parseLong(payload, 0);
                 if (amount > 0 && service.take(player.getUniqueId(), amount)) yield true;
-                message(player, "%prefix%&cYou don't have enough tokens!");
+                message(player, tokenPrefix() + "&cYou don't have enough tokens!", false);
                 yield false;
             }
             default -> {
@@ -170,13 +155,24 @@ public final class GuiManager {
         };
     }
 
-    public void message(CommandSender sender, String message) {
-        sender.sendMessage(Text.c(applyPlaceholders(sender instanceof Player p ? p : null, message)));
+    public void message(CommandSender sender, String message, boolean actionBar) {
+        String formatted = applyPlaceholders(sender instanceof Player p ? p : null, message);
+        if (actionBar && sender instanceof Player player) {
+            player.sendActionBar(Text.c(formatted));
+        } else {
+            sender.sendMessage(Text.c(formatted));
+        }
+    }
+
+    public String tokenPrefix() {
+        var tokens = plugin.modules().get(com.sharded.core.modules.tokens.TokensModule.class);
+        return tokens == null ? Prefix.get() : tokens.tokenPrefix();
     }
 
     public String applyPlaceholders(Player player, String input) {
         if (input == null) return "";
-        String out = input.replace("%prefix%", Prefix.get());
+        String out = input.replace("%prefix%", Prefix.get())
+                .replace("%token_prefix%", tokenPrefix());
         if (player != null) {
             TokenService tokens = plugin.modules().tokens();
             if (tokens != null) {
@@ -186,7 +182,63 @@ public final class GuiManager {
                         .replace("%playerpoints_points%", String.valueOf(bal));
             }
         }
+        return applyLeaderboardPlaceholders(player, out);
+    }
+
+    public String applyLeaderboardPlaceholders(Player player, String input) {
+        if (input == null) return "";
+        String out = input;
+        for (int i = 1; i <= 10; i++) {
+            out = out.replace("%tokens_top_" + i + "_name%", topTokenName(i))
+                    .replace("%tokens_top_" + i + "_amount%", topTokenAmount(i))
+                    .replace("%tokens_top_" + i + "_formatted%", topTokenFormatted(i))
+                    .replace("%killstreak_top_" + i + "_name%", topKillstreakName(i))
+                    .replace("%killstreak_top_" + i + "_amount%", topKillstreakAmount(i));
+        }
+        if (player != null) {
+            var ks = plugin.modules().get(com.sharded.core.modules.killstreaks.KillstreaksModule.class);
+            if (ks != null && ks.database() != null) {
+                out = out.replace("%killstreak%", String.valueOf(ks.database().getCurrent(player.getUniqueId())))
+                        .replace("%killstreak_best%", String.valueOf(ks.database().getBest(player.getUniqueId())));
+            }
+        }
         return out;
+    }
+
+    private String topTokenName(int rank) {
+        var tokens = plugin.modules().get(com.sharded.core.modules.tokens.TokensModule.class);
+        if (tokens == null || tokens.database() == null) return "---";
+        var top = tokens.database().top(10);
+        if (rank > top.size()) return "---";
+        return com.sharded.core.util.OfflinePlayers.name(top.get(rank - 1).uuid());
+    }
+
+    private String topTokenAmount(int rank) {
+        var tokens = plugin.modules().get(com.sharded.core.modules.tokens.TokensModule.class);
+        if (tokens == null || tokens.database() == null) return "0";
+        var top = tokens.database().top(10);
+        if (rank > top.size()) return "0";
+        return String.valueOf(top.get(rank - 1).value());
+    }
+
+    private String topTokenFormatted(int rank) {
+        return Numbers.format(Long.parseLong(topTokenAmount(rank)));
+    }
+
+    private String topKillstreakName(int rank) {
+        var ks = plugin.modules().get(com.sharded.core.modules.killstreaks.KillstreaksModule.class);
+        if (ks == null || ks.database() == null) return "---";
+        var top = ks.database().topBest(10);
+        if (rank > top.size()) return "---";
+        return com.sharded.core.util.OfflinePlayers.name(top.get(rank - 1).uuid());
+    }
+
+    private String topKillstreakAmount(int rank) {
+        var ks = plugin.modules().get(com.sharded.core.modules.killstreaks.KillstreaksModule.class);
+        if (ks == null || ks.database() == null) return "0";
+        var top = ks.database().topBest(10);
+        if (rank > top.size()) return "0";
+        return String.valueOf(top.get(rank - 1).value());
     }
 
     private long parseLong(String raw, long def) {

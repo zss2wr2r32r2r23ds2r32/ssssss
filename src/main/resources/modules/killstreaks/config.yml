@@ -1,5 +1,6 @@
-# Killstreaks module - rewards at configured streak counts.
-# Placeholders in commands/messages: %player%, %streak%, %uuid%
+# Killstreak rewards — add as many as you want (5, 10, 15, 20, 25, ...)
+announce-all-streaks: true
+announce-actionbar: false
 
 rewards:
   5:
@@ -14,3 +15,11 @@ rewards:
     broadcast: "&6%player% &eis on a &4&l15 &ekill streak!"
     commands:
       - "give %player% netherite_ingot 1"
+  20:
+    broadcast: "&6%player% &eis on a &4&l20 &ekill streak!"
+    commands:
+      - "give %player% emerald_block 1"
+  25:
+    broadcast: "&6%player% &eis on a &4&l25 &ekill streak!"
+    commands:
+      - "give %player% netherite_block 1"

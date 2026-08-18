@@ -1,5 +1,7 @@
 package com.sharded.core;
 
+import com.sharded.core.gui.GuiListener;
+import com.sharded.core.gui.GuiManager;
 import com.sharded.core.hook.LuckPermsHook;
 import com.sharded.core.module.ModuleManager;
 import com.sharded.core.util.PlayerStateStore;
@@ -14,6 +16,7 @@ public final class ShardedCore extends JavaPlugin {
 
     private LuckPermsHook luckPerms;
     private PlayerStateStore stateStore;
+    private GuiManager guiManager;
     private ModuleManager moduleManager;
 
     @Override
@@ -23,6 +26,9 @@ public final class ShardedCore extends JavaPlugin {
 
         this.luckPerms = new LuckPermsHook(this);
         this.stateStore = new PlayerStateStore(this);
+        this.guiManager = new GuiManager(this);
+        getServer().getPluginManager().registerEvents(new GuiListener(guiManager), this);
+
         this.moduleManager = new ModuleManager(this);
         this.moduleManager.enableModules();
 
@@ -43,10 +49,12 @@ public final class ShardedCore extends JavaPlugin {
             reloadConfig();
             moduleManager.reload();
             stateStore.saveNow();
-            sender.sendMessage(Text.c("&8[&bShardedCore&8] &aConfiguration reloaded. &7(" + moduleManager.enabledCount() + " modules enabled)"));
+            sender.sendMessage(Text.c(getConfig().getString("prefix", "&8[&bSharded&8] &r")
+                    + "&aConfiguration reloaded. &7(" + moduleManager.enabledCount() + " modules enabled)"));
             return true;
         }
-        sender.sendMessage(Text.c("&8[&bShardedCore&8] &7Running &bShardedCore v" + getDescription().getVersion() + "&7. Use &f/shardedcore reload&7."));
+        sender.sendMessage(Text.c(getConfig().getString("prefix", "&8[&bSharded&8] &r")
+                + "&7Running &bShardedCore v" + getDescription().getVersion() + "&7. Use &f/shardedcore reload&7."));
         return true;
     }
 
@@ -60,6 +68,10 @@ public final class ShardedCore extends JavaPlugin {
 
     public PlayerStateStore stateStore() {
         return stateStore;
+    }
+
+    public GuiManager gui() {
+        return guiManager;
     }
 
     public ModuleManager modules() {

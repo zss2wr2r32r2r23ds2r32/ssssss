@@ -13,10 +13,11 @@ public final class Text {
     private Text() {
     }
 
-    /** Deserializes a string with '&amp;' color codes (and &amp;#rrggbb hex) into a Component. */
+    /** Deserializes color codes including &amp;x&amp;R&amp;R&amp;G&amp;G&amp;B&amp;B and &amp;#rrggbb hex. */
     public static Component c(String input) {
         if (input == null || input.isEmpty()) return Component.empty();
-        return SERIALIZER.deserialize(input).decorationIfAbsent(net.kyori.adventure.text.format.TextDecoration.ITALIC,
+        return SERIALIZER.deserialize(ColorUtil.normalize(input)).decorationIfAbsent(
+                net.kyori.adventure.text.format.TextDecoration.ITALIC,
                 net.kyori.adventure.text.format.TextDecoration.State.FALSE);
     }
 

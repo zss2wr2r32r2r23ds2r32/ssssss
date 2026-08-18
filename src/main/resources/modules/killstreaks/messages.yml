@@ -1,2 +1,3 @@
 prefix: "&8[&bSharded&8] &r"
 milestone: "%prefix%&aKillstreak: &f%streak%&a!"
+streak-announce: "%prefix%&6%player% &eis on a &c&l%streak% &ekill streak!"

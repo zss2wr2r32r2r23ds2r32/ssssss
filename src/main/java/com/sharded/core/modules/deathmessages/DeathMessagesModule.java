@@ -62,6 +62,12 @@ public final class DeathMessagesModule extends Module {
                 "%group%", plugin.luckPerms().primaryGroup(player),
                 "%killer%", killer == null ? "" : killer.getName(),
                 "%killer_rank%", killer == null ? "" : plugin.luckPerms().prefix(killer));
-        event.deathMessage(Text.c(message));
+        event.deathMessage(null);
+        var component = Text.c(message);
+        for (Player viewer : plugin.getServer().getOnlinePlayers()) {
+            if (com.sharded.core.util.PlayerToggles.deathMessages(viewer)) {
+                viewer.sendMessage(component);
+            }
+        }
     }
 }
