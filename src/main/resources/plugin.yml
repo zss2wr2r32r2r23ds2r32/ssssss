@@ -1,0 +1,167 @@
+name: ShardedCore
+version: '${project.version}'
+main: com.sharded.core.ShardedCore
+api-version: '1.21'
+author: Sharded
+description: All-in-one core plugin (craft, fix, trash, graves, backpacks, armor trims, fly, autosmelt, portal rtp and more)
+softdepend: [LuckPerms]
+
+commands:
+  shardedcore:
+    description: ShardedCore admin command (reload)
+    usage: /shardedcore reload
+    aliases: [score, shardedc]
+    permission: sharded.admin
+  craft:
+    description: Open a portable crafting table
+    usage: /craft
+    aliases: [workbench, wb]
+  fix:
+    description: Repair the item you are holding (6h cooldown)
+    usage: /fix
+    aliases: [repair]
+  trash:
+    description: Open a trash bin
+    usage: /trash
+    aliases: [disposal, bin]
+  chattoggle:
+    description: Toggle seeing public chat
+    usage: /chattoggle
+    aliases: [togglechat, ct]
+  msg:
+    description: Send a private message
+    usage: /msg <player> <message>
+    aliases: [tell, whisper, w, pm]
+  reply:
+    description: Reply to the last private message
+    usage: /reply <message>
+    aliases: [r]
+  msgtoggle:
+    description: Toggle receiving private messages
+    usage: /msgtoggle
+    aliases: [togglemsg, pmtoggle]
+  nightvision:
+    description: Toggle night vision
+    usage: /nightvision
+    aliases: [nv]
+  hide:
+    description: Disguise yourself as Steve
+    usage: /hide
+    aliases: [unhide]
+  backpack:
+    description: Open your backpack
+    usage: /backpack
+    aliases: [bp]
+  armortrims:
+    description: Open the armor trim station
+    usage: /armortrims
+    aliases: [trims, trimstation]
+  fly:
+    description: Toggle flight (region restricted)
+    usage: /fly [player|speed <1-10>|pos1|pos2|setregion]
+  autosmelt:
+    description: Apply the Auto Smelt enchant to the pickaxe you are holding
+    usage: /autosmelt
+  rtp:
+    description: Open the random teleport menu
+    usage: /rtp
+    aliases: [randomtp, wild]
+  settings:
+    description: Open your personal settings
+    usage: /settings
+    aliases: [preferences, prefs]
+  graves:
+    description: Graves admin command
+    usage: /graves [list|purge]
+
+permissions:
+  sharded.admin:
+    description: Access to /shardedcore (reload)
+    default: op
+  sharded.craft.use:
+    description: Use /craft
+    default: true
+  sharded.fix.use:
+    description: Use /fix
+    default: true
+  sharded.fix.bypass:
+    description: Bypass the /fix cooldown
+    default: op
+  sharded.trash.use:
+    description: Use /trash
+    default: true
+  sharded.chat.toggle:
+    description: Use /chattoggle
+    default: true
+  sharded.msg.use:
+    description: Use /msg and /reply
+    default: true
+  sharded.msg.toggle:
+    description: Use /msgtoggle
+    default: true
+  sharded.msg.bypass:
+    description: Message players who have private messages disabled
+    default: op
+  sharded.nightvision.use:
+    description: Use /nightvision
+    default: true
+  sharded.hide.use:
+    description: Use /hide
+    default: op
+  sharded.backpack.use:
+    description: Use /backpack
+    default: true
+  sharded.backpack.level.1:
+    description: Backpack +1 row
+    default: false
+  sharded.backpack.level.2:
+    description: Backpack +2 rows
+    default: false
+  sharded.backpack.level.3:
+    description: Backpack +3 rows
+    default: false
+  sharded.backpack.level.4:
+    description: Backpack +4 rows
+    default: false
+  sharded.backpack.level.5:
+    description: Backpack +5 rows
+    default: false
+  sharded.graves.use:
+    description: Create a grave on death
+    default: true
+  sharded.graves.bypass:
+    description: Open anyone's grave
+    default: op
+  sharded.graves.admin:
+    description: Use /graves admin command
+    default: op
+  sharded.armortrims.use:
+    description: Use /armortrims
+    default: true
+  sharded.fly.use:
+    description: Use /fly inside the fly region
+    default: op
+  sharded.fly.speed:
+    description: Use /fly speed
+    default: op
+  sharded.fly.others:
+    description: Toggle flight for other players
+    default: op
+  sharded.fly.anywhere:
+    description: Bypass the fly region and world checks
+    default: op
+  sharded.fly.admin:
+    description: Set the fly region (pos1/pos2/setregion)
+    default: op
+  sharded.autosmelt.use:
+    description: Use /autosmelt
+    default: op
+  sharded.rtp.use:
+    description: Use the portal RTP
+    default: true
+  sharded.rtp.bypass:
+    description: Bypass RTP cooldown and world restriction
+    default: op
+  sharded.settings.use:
+    description: Use /settings
+    default: true

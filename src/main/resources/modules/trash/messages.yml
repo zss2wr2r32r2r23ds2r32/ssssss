@@ -1,0 +1,5 @@
+prefix: "&8[&bSharded&8] &r"
+players-only: "%prefix%&cOnly players can use this command."
+no-permission: "%prefix%&cYou don't have permission to use /trash."
+opened: "%prefix%&7Anything left inside will be &cdeleted &7when you close it."
+emptied: "%prefix%&7The trash has been &cemptied&7."

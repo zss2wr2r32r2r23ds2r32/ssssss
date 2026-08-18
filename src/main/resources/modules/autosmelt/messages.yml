@@ -1,0 +1,6 @@
+prefix: "&8[&bSharded&8] &r"
+players-only: "%prefix%&cOnly players can use this command."
+no-permission: "%prefix%&cYou don't have permission to use /autosmelt."
+not-a-pickaxe: "%prefix%&cAuto Smelt can only be applied to &fpickaxes&c."
+already-enchanted: "%prefix%&cThat pickaxe already has &7Auto Smelt&c."
+applied: "%prefix%&aYour pickaxe now has &7Auto Smelt I&a! Mined ores will smelt automatically."

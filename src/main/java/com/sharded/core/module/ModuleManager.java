@@ -1,0 +1,99 @@
+package com.sharded.core.module;
+
+import com.sharded.core.ShardedCore;
+import com.sharded.core.modules.armortrims.ArmorTrimsModule;
+import com.sharded.core.modules.autosmelt.AutoSmeltModule;
+import com.sharded.core.modules.backpack.BackpackModule;
+import com.sharded.core.modules.chat.ChatToggleModule;
+import com.sharded.core.modules.craft.CraftModule;
+import com.sharded.core.modules.deathmessages.DeathMessagesModule;
+import com.sharded.core.modules.fix.FixModule;
+import com.sharded.core.modules.fly.FlyModule;
+import com.sharded.core.modules.graves.GravesModule;
+import com.sharded.core.modules.hide.HideModule;
+import com.sharded.core.modules.joinmessages.JoinMessagesModule;
+import com.sharded.core.modules.nightvision.NightVisionModule;
+import com.sharded.core.modules.portalrtp.PortalRtpModule;
+import com.sharded.core.modules.privatemessages.PrivateMessagesModule;
+import com.sharded.core.modules.settings.SettingsModule;
+import com.sharded.core.modules.trash.TrashModule;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+public final class ModuleManager {
+
+    private final ShardedCore plugin;
+    private final Map<String, Module> modules = new LinkedHashMap<>();
+
+    public ModuleManager(ShardedCore plugin) {
+        this.plugin = plugin;
+        register(new CraftModule(plugin));
+        register(new FixModule(plugin));
+        register(new TrashModule(plugin));
+        register(new ChatToggleModule(plugin));
+        register(new PrivateMessagesModule(plugin));
+        register(new NightVisionModule(plugin));
+        register(new HideModule(plugin));
+        register(new DeathMessagesModule(plugin));
+        register(new JoinMessagesModule(plugin));
+        register(new BackpackModule(plugin));
+        register(new GravesModule(plugin));
+        register(new ArmorTrimsModule(plugin));
+        register(new FlyModule(plugin));
+        register(new AutoSmeltModule(plugin));
+        register(new PortalRtpModule(plugin));
+        register(new SettingsModule(plugin));
+    }
+
+    private void register(Module module) {
+        modules.put(module.id(), module);
+    }
+
+    public void enableModules() {
+        for (Module module : modules.values()) {
+            if (!plugin.getConfig().getBoolean("modules." + module.id(), true)) {
+                plugin.getLogger().info("Module '" + module.id() + "' is disabled in config.yml.");
+                continue;
+            }
+            try {
+                module.enable();
+                plugin.getLogger().info("Enabled module '" + module.id() + "'.");
+            } catch (Exception e) {
+                plugin.getLogger().severe("Failed to enable module '" + module.id() + "': " + e);
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void disableModules() {
+        List<Module> reversed = new ArrayList<>(modules.values());
+        java.util.Collections.reverse(reversed);
+        for (Module module : reversed) {
+            try {
+                module.disable();
+            } catch (Exception e) {
+                plugin.getLogger().severe("Failed to disable module '" + module.id() + "': " + e);
+            }
+        }
+    }
+
+    public void reload() {
+        disableModules();
+        enableModules();
+    }
+
+    public int enabledCount() {
+        return (int) modules.values().stream().filter(Module::isEnabled).count();
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends Module> T get(Class<T> type) {
+        for (Module module : modules.values()) {
+            if (type.isInstance(module)) return (T) module;
+        }
+        return null;
+    }
+}

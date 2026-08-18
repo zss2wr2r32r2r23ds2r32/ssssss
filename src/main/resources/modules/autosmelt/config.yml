@@ -1,0 +1,21 @@
+# Auto Smelt module - /autosmelt applies the Auto Smelt enchant to the pickaxe
+# you are holding (permission: sharded.autosmelt.use). Ores mined with an
+# Auto Smelt pickaxe drop their smelted form automatically.
+# Fortune still works because drop amounts are calculated before smelting.
+
+lore-line: "&7Auto Smelt I"
+play-sound: false
+
+# Drop -> smelted result (item that WOULD drop -> item that drops instead).
+smelt-map:
+  raw_iron: iron_ingot
+  raw_gold: gold_ingot
+  raw_copper: copper_ingot
+  gold_nugget: gold_ingot        # nether gold ore
+  ancient_debris: netherite_scrap
+  iron_ore: iron_ingot           # silk touch mined ores also smelt
+  deepslate_iron_ore: iron_ingot
+  gold_ore: gold_ingot
+  deepslate_gold_ore: gold_ingot
+  copper_ore: copper_ingot
+  deepslate_copper_ore: copper_ingot

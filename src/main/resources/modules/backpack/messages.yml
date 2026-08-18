@@ -1,0 +1,4 @@
+prefix: "&8[&bSharded&8] &r"
+players-only: "%prefix%&cOnly players can use this command."
+no-permission: "%prefix%&cYou don't have permission to use /backpack."
+opened: "%prefix%&7Backpack opened &8(&f%rows% rows&8)&7."

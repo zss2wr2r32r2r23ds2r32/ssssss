@@ -1,0 +1,5 @@
+prefix: "&8[&bSharded&8] &r"
+players-only: "%prefix%&cOnly players can use this command."
+no-permission: "%prefix%&cYou don't have permission to toggle chat."
+chat-enabled: "%prefix%&aPublic chat is now visible."
+chat-disabled: "%prefix%&cPublic chat is now hidden."

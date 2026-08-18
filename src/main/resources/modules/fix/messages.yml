@@ -1,0 +1,7 @@
+prefix: "&8[&bSharded&8] &r"
+players-only: "%prefix%&cOnly players can use this command."
+no-permission: "%prefix%&cYou don't have permission to use /fix."
+not-repairable: "%prefix%&cThe item in your hand cannot be repaired."
+already-repaired: "%prefix%&cThat item is already fully repaired."
+on-cooldown: "%prefix%&cYou can use /fix again in &f%time%&c."
+fixed: "%prefix%&aYour &f%item% &ahas been repaired!"

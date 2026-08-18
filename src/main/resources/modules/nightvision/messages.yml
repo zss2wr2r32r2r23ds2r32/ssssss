@@ -1,0 +1,5 @@
+prefix: "&8[&bSharded&8] &r"
+players-only: "%prefix%&cOnly players can use this command."
+no-permission: "%prefix%&cYou don't have permission to use /nightvision."
+nv-enabled: "%prefix%&aNight vision &aenabled&7."
+nv-disabled: "%prefix%&cNight vision &cdisabled&7."

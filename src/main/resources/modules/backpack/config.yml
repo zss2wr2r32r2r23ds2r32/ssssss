@@ -1,0 +1,11 @@
+# Backpack module - /backpack (alias /bp). Stored in a SQLite database
+# (plugins/ShardedCore/modules/backpack/backpacks.db).
+#
+# Size = base-rows + extra rows from permissions:
+#   sharded.backpack.level.1  ->  +1 row
+#   sharded.backpack.level.2  ->  +2 rows
+#   ... up to max-extra-rows. The highest level the player has wins.
+title: "&5Backpack &8- &7%player%"
+base-rows: 1
+max-extra-rows: 5
+play-sound: true

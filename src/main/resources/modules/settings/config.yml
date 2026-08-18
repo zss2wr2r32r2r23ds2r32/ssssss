@@ -1,0 +1,12 @@
+# Settings module - /settings opens a personal settings GUI.
+title: "&8Settings"
+
+slots:
+  chat: 11
+  msg: 13
+  nightvision: 15
+
+icons:
+  chat: OAK_SIGN
+  msg: WRITABLE_BOOK
+  nightvision: ENDER_EYE
