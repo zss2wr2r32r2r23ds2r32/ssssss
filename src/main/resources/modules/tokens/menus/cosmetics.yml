@@ -1,0 +1,98 @@
+menu_title: 'Token Shop | Cosmetics'
+open_command: cosmetics
+size: 27
+open_permission: tokenshop.use
+
+items:
+
+  back_button:
+    material: BARRIER
+    slot: 26
+    display_name: '&x&F&F&0&0&0&0&lBACK'
+    left_click_commands:
+      - '[openguimenu] mainmenu'
+
+  top_hat:
+    material: 'itemsadder-hats:tophat'
+    slot: 11
+    display_name: '&x&F&F&0&0&5&3&lTOP &x&F&F&0&0&5&3Hat &7(/wardrobe)'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&0&5&3Information:'
+      - '&x&F&F&0&0&5&3| &fPurchase the &x&F&F&0&0&5&3Top Hat'
+      - '&x&F&F&0&0&5&3| &fAnd Enhance Your character!'
+      - ''
+      - '&x&F&F&0&0&5&3⚓ &fCost: &x&F&F&0&0&5&3??? Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  crown:
+    material: 'itemsadder-hats:crown'
+    slot: 12
+    display_name: '&x&F&F&E&3&0&0&lCROWN &7(/wardrobe)'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&E&3&0&0Information:'
+      - '&x&F&F&E&3&0&0| &fPurchase the &x&F&F&E&3&0&0Crown'
+      - '&x&F&F&E&3&0&0| &fAnd Enhance Your character!'
+      - ''
+      - '&x&F&F&E&3&0&0⚓ &fCost: &x&F&F&E&3&0&0??? Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  propellerhat:
+    material: 'itemsadder-hats:propeller_hat'
+    slot: 13
+    display_name: '&x&0&0&8&D&F&F&lPROPELLER &x&0&0&8&D&F&FHat &7(/wardrobe)'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&0&0&8&D&F&FInformation:'
+      - '&x&0&0&8&D&F&F| &fPurchase the &x&0&0&8&D&F&FPropeller &x&0&0&8&D&F&FHat'
+      - '&x&0&0&8&D&F&F| &fAnd Enhance Your character!'
+      - ''
+      - '&x&0&0&8&D&F&F⚓ &fCost: &x&0&0&8&D&F&F??? Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  clowmask:
+    material: 'itemsadder-hats:clown_mask'
+    slot: 14
+    display_name: '&x&F&F&0&0&0&0&lCLOWN &x&F&F&0&0&0&0Mask &7(/wardrobe)'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&0&0&0Information:'
+      - '&x&F&F&0&0&0&0| &fPurchase the &x&F&F&0&0&0&0Clown &x&F&F&0&0&0&0Mask'
+      - '&x&F&F&0&0&0&0| &fAnd Enhance Your character!'
+      - ''
+      - '&x&F&F&0&0&0&0⚓ &fCost: &x&F&F&0&0&0&0??? Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  strawhat:
+    material: 'itemsadder-hats:sstraw_hat'
+    slot: 15
+    display_name: '&x&B&3&F&F&0&0&lSTRAW &x&B&3&F&F&0&0Hat &7(/wardrobe)'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&B&3&F&F&0&0Information:'
+      - '&x&B&3&F&F&0&0| &fPurchase the &x&B&3&F&F&0&0Straw &x&B&3&F&F&0&0Hat'
+      - '&x&B&3&F&F&0&0| &fAnd Enhance Your character!'
+      - ''
+      - '&x&B&3&F&F&0&0⚓ &fCost: &x&B&3&F&F&0&0??? Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[sound] ENTITY_PLAYER_LEVELUP'

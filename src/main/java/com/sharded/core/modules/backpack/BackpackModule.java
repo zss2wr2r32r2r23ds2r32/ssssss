@@ -2,35 +2,43 @@ package com.sharded.core.modules.backpack;
 
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
+import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.Text;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
- * /backpack (/bp) - per-player extra storage backed by a SQLite database.
- * Size is permission based:
- *   base rows (config) + N extra rows from sharded.backpack.level.N
- * e.g. sharded.backpack.level.2 = +2 rows. The highest level the player has wins.
+ * /backpack [player] - single-slot extra storage (SQLite).
+ * View/edit your own backpack, or view others (including offline) with permission.
  */
-public final class BackpackModule extends Module implements CommandExecutor {
+public final class BackpackModule extends Module implements CommandExecutor, TabCompleter {
+
+    private static final int SLOT = 13;
 
     private static final class BackpackHolder implements InventoryHolder {
         private final UUID owner;
+        private final boolean readOnly;
         private Inventory inventory;
 
-        private BackpackHolder(UUID owner) {
+        private BackpackHolder(UUID owner, boolean readOnly) {
             this.owner = owner;
+            this.readOnly = readOnly;
         }
 
         @Override
@@ -57,7 +65,6 @@ public final class BackpackModule extends Module implements CommandExecutor {
 
     @Override
     protected void onDisable() {
-        // Force-close any open backpacks so their contents get saved.
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             if (player.getOpenInventory().getTopInventory().getHolder() instanceof BackpackHolder) {
                 player.closeInventory();
@@ -67,68 +74,90 @@ public final class BackpackModule extends Module implements CommandExecutor {
         database = null;
     }
 
-    /** Backpack size in slots for the player's permissions. */
-    public int sizeFor(Player player) {
-        int baseRows = Math.max(1, Math.min(6, config.getInt("base-rows", 1)));
-        int maxExtra = Math.max(0, config.getInt("max-extra-rows", 5));
-        int extra = 0;
-        for (int level = maxExtra; level >= 1; level--) {
-            if (player.hasPermission("sharded.backpack.level." + level)) {
-                extra = level;
-                break;
-            }
-        }
-        return Math.min(6, baseRows + extra) * 9;
-    }
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player player)) {
+        if (!(sender instanceof Player viewer)) {
             send(sender, "players-only");
             return true;
         }
-        if (!player.hasPermission("sharded.backpack.use")) {
-            send(player, "no-permission");
+        if (!viewer.hasPermission("sharded.backpack.use")) {
+            send(viewer, "no-permission");
             return true;
         }
 
-        int size = sizeFor(player);
-        BackpackHolder holder = new BackpackHolder(player.getUniqueId());
-        Inventory inventory = Bukkit.createInventory(holder, size,
-                Text.c(Text.apply(config.getString("title", "&5Backpack &8- &7%player%"), "%player%", player.getName())));
+        UUID targetId = viewer.getUniqueId();
+        String targetName = viewer.getName();
+        boolean readOnly = false;
+
+        if (args.length >= 1) {
+            if (!viewer.hasPermission("sharded.backpack.view.others")) {
+                send(viewer, "no-permission-others");
+                return true;
+            }
+            OfflinePlayer target = OfflinePlayers.resolve(args[0]);
+            targetId = target.getUniqueId();
+            targetName = target.getName() == null ? args[0] : target.getName();
+            readOnly = !viewer.getUniqueId().equals(targetId);
+        }
+
+        open(viewer, targetId, targetName, readOnly);
+        return true;
+    }
+
+    private void open(Player viewer, UUID ownerId, String ownerName, boolean readOnly) {
+        BackpackHolder holder = new BackpackHolder(ownerId, readOnly);
+        String title = Text.apply(config.getString("title", "&5Backpack &8- &7%player%"),
+                "%player%", ownerName);
+        Inventory inventory = Bukkit.createInventory(holder, 27, Text.c(title));
         holder.inventory = inventory;
 
-        ItemStack[] stored = database.load(player.getUniqueId());
-        for (int i = 0; i < stored.length && i < size; i++) {
-            inventory.setItem(i, stored[i]);
-        }
-        // If the backpack shrank (lost permissions), give overflow back to the player.
-        for (int i = size; i < stored.length; i++) {
-            if (stored[i] != null) {
-                player.getInventory().addItem(stored[i]).values()
-                        .forEach(item -> player.getWorld().dropItemNaturally(player.getLocation(), item));
-            }
+        ItemStack[] stored = database.load(ownerId);
+        if (stored.length > 0 && stored[0] != null) {
+            inventory.setItem(SLOT, stored[0]);
         }
 
-        player.openInventory(inventory);
+        viewer.openInventory(inventory);
         if (config.getBoolean("play-sound", true)) {
-            player.playSound(player.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 0.6f, 1.3f);
+            viewer.playSound(viewer.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 0.6f, 1.3f);
         }
-        send(player, "opened", "%rows%", String.valueOf(size / 9));
-        return true;
+        if (readOnly) {
+            send(viewer, "viewing-other", "%player%", ownerName);
+        } else {
+            send(viewer, "opened");
+        }
+    }
+
+    @EventHandler
+    public void onClick(InventoryClickEvent event) {
+        if (!(event.getView().getTopInventory().getHolder() instanceof BackpackHolder holder)) return;
+        if (holder.readOnly) {
+            event.setCancelled(true);
+            if (event.getWhoClicked() instanceof Player player) send(player, "read-only");
+        } else if (event.getClickedInventory() == event.getView().getTopInventory() && event.getSlot() != SLOT) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
         if (!(event.getInventory().getHolder() instanceof BackpackHolder holder)) return;
-        ItemStack[] contents = event.getInventory().getContents();
-        ItemStack[] copy = new ItemStack[contents.length];
-        for (int i = 0; i < contents.length; i++) {
-            copy[i] = contents[i] == null ? null : contents[i].clone();
-        }
-        // Save off the main thread - SQLite writes shouldn't lag the server.
+        if (holder.readOnly) return;
+        ItemStack item = event.getInventory().getItem(SLOT);
+        ItemStack[] data = new ItemStack[]{item == null ? null : item.clone()};
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-            if (database != null) database.save(holder.owner, copy);
+            if (database != null) database.save(holder.owner, data);
         });
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (args.length == 1 && sender.hasPermission("sharded.backpack.view.others")) {
+            List<String> names = new ArrayList<>();
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                if (p.getName().toLowerCase().startsWith(args[0].toLowerCase())) names.add(p.getName());
+            }
+            return names;
+        }
+        return List.of();
     }
 }

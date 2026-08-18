@@ -1,0 +1,6 @@
+# Pickup spawners module
+# Permission: sharded.spawners.use (pay), sharded.spawners.pickup (mine spawners)
+# Pay with: /spawners pay [amount]
+price: 100
+use-tokens: true
+require-silk-touch: true

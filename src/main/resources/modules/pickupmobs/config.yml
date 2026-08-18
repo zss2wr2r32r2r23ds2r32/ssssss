@@ -1,0 +1,11 @@
+# Pickup mobs - sneak + right-click to pick up listed mobs.
+# Permission: sharded.pickupmobs.use
+allowed-mobs:
+  - ZOMBIE
+  - SKELETON
+  - CREEPER
+  - SPIDER
+  - COW
+  - PIG
+  - SHEEP
+  - CHICKEN

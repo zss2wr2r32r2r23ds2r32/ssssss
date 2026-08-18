@@ -1,0 +1,58 @@
+menu_title: '&8SERVER SETTINGS'
+size: 27
+open_permission: sharded.settings.use
+
+items:
+  filler:
+    material: GRAY_STAINED_GLASS_PANE
+    slots: [0,1,2,3,4,5,6,7,8,9,17,18,19,20,21,23,24,25,26]
+    display_name: ' '
+
+  chat:
+    material: OAK_SIGN
+    slot: 11
+    display_name: '&fPUBLIC CHAT &8(/chattoggle)'
+    lore:
+      - '&8[SETTINGS]'
+      - ''
+      - '&bDESCRIPTION:'
+      - '&f| &7Click to toggle public chat visibility'
+      - ''
+      - '&e▷ CLICK TO TOGGLE'
+    click_commands:
+      - '[toggle_chat]'
+
+  msg:
+    material: WRITABLE_BOOK
+    slot: 13
+    display_name: '&fPRIVATE MESSAGES &8(/msgtoggle)'
+    lore:
+      - '&8[SETTINGS]'
+      - ''
+      - '&bDESCRIPTION:'
+      - '&f| &7Click to toggle private messages'
+      - ''
+      - '&e▷ CLICK TO TOGGLE'
+    click_commands:
+      - '[toggle_msg]'
+
+  nightvision:
+    material: ENDER_EYE
+    slot: 15
+    display_name: '&fNIGHT VISION &8(/nv)'
+    lore:
+      - '&8[SETTINGS]'
+      - ''
+      - '&bDESCRIPTION:'
+      - '&f| &7Click to toggle night vision'
+      - ''
+      - '&e▷ CLICK TO TOGGLE'
+    click_commands:
+      - '[toggle_nightvision]'
+
+  close:
+    material: BARRIER
+    slot: 22
+    display_name: '&c&lCLOSE'
+    click_commands:
+      - '[close]'

@@ -1,4 +1,3 @@
-# Hide module - /hide swaps your nickname and skin for Steve.
-fake-name: "Steve"
-# Texture used for the disguise (default = the classic Steve skin).
+# Hide module - /hide scrambles your name and applies the Steve skin.
+scrambled-name: "&kaaaaaaaaaa"
 skin-url: "http://textures.minecraft.net/texture/1a4af718455d4aab528e7a61f86fa25e6a369d1768dcb13f7df319a713eb810b"

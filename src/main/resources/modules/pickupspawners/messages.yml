@@ -1,0 +1,8 @@
+prefix: "&8[&bSharded&8] &r"
+players-only: "%prefix%&cOnly players can use this command."
+no-permission: "%prefix%&cYou don't have permission."
+usage: "%prefix%&cUsage: /spawners pay [amount]"
+paid: "%prefix%&aYou paid &f%price% &atokens. Mine a spawner with silk touch to pick it up!"
+not-enough: "%prefix%&cYou need &f%price% &ctokens. Use &f/bal &cto check your balance."
+picked-up: "%prefix%&aSpawner picked up!"
+actionbar-hint: "%prefix%&aYou need to &f/spawners pay %price% &afirst!"

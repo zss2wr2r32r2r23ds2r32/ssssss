@@ -19,10 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-/**
- * /hide - disguises you as "Steve": your nickname (display name + tab name)
- * and skin are swapped for the classic Steve skin. Run /hide again to restore.
- */
+/** /hide - scrambles your display name and swaps skin to Steve. */
 public final class HideModule extends Module implements CommandExecutor {
 
     private record Original(PlayerProfile profile, net.kyori.adventure.text.Component displayName,
@@ -63,25 +60,21 @@ public final class HideModule extends Module implements CommandExecutor {
             send(player, "no-permission");
             return true;
         }
-        if (isHidden(player)) {
-            unhide(player, false);
-        } else {
-            hide(player);
-        }
+        if (isHidden(player)) unhide(player, false);
+        else hide(player);
         return true;
     }
 
     private void hide(Player player) {
-        String fakeName = config.getString("fake-name", "Steve");
+        String scrambled = config.getString("scrambled-name", "&kaaaaaaaaaa");
         hidden.put(player.getUniqueId(), new Original(player.getPlayerProfile(), player.displayName(), player.playerListName()));
 
-        PlayerProfile fakeProfile = Bukkit.createProfile(player.getUniqueId(), fakeName);
-        fakeProfile.setProperty(new ProfileProperty("textures", steveTexture()));
-        player.setPlayerProfile(fakeProfile);
-
-        player.displayName(Text.c(fakeName));
-        player.playerListName(Text.c(fakeName));
-        send(player, "hidden", "%name%", fakeName);
+        PlayerProfile fake = Bukkit.createProfile(player.getUniqueId(), "??????");
+        fake.setProperty(new ProfileProperty("textures", steveTexture()));
+        player.setPlayerProfile(fake);
+        player.displayName(Text.c(scrambled));
+        player.playerListName(Text.c(scrambled));
+        send(player, "hidden");
     }
 
     private void unhide(Player player, boolean silent) {
@@ -93,7 +86,6 @@ public final class HideModule extends Module implements CommandExecutor {
         if (!silent) send(player, "unhidden");
     }
 
-    /** Builds an (unsigned) textures property pointing at the configured skin url. */
     private String steveTexture() {
         String url = config.getString("skin-url",
                 "http://textures.minecraft.net/texture/1a4af718455d4aab528e7a61f86fa25e6a369d1768dcb13f7df319a713eb810b");
@@ -103,7 +95,6 @@ public final class HideModule extends Module implements CommandExecutor {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        // Profiles reset on relog anyway; just clean the map.
         hidden.remove(event.getPlayer().getUniqueId());
     }
 }

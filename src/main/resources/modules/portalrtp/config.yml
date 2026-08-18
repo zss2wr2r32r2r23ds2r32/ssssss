@@ -1,22 +1,12 @@
-# Portal RTP module.
-# Touching a nether portal in 'portal-world' opens the RTP GUI, which randomly
-# teleports the player into 'target-world'. Also available as /rtp.
-#
-# Permissions:
-#   sharded.rtp.use    - use the portal / /rtp (default: true)
-#   sharded.rtp.bypass - bypass the cooldown and world restriction
-
+# Portal RTP - touch nether portal in portal-world to open gui.yml
 portal-world: "factions"
 target-world: "world"
+border-label: "5K x 5K"
+gui-cooldown-ms: 2000
 
-gui-title: "&5Random Teleport"
-
-# Random teleport distance from the center point.
 center-x: 0
 center-z: 0
 min-radius: 100
 max-radius: 5000
 max-attempts: 25
-
-# Cooldown between teleports (seconds).
 cooldown-seconds: 30

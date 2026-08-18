@@ -1,0 +1,16 @@
+# Killstreaks module - rewards at configured streak counts.
+# Placeholders in commands/messages: %player%, %streak%, %uuid%
+
+rewards:
+  5:
+    broadcast: "&6%player% &eis on a &6&l5 &ekill streak!"
+    commands:
+      - "give %player% golden_apple 2"
+  10:
+    broadcast: "&6%player% &eis on a &c&l10 &ekill streak!"
+    commands:
+      - "give %player% diamond 1"
+  15:
+    broadcast: "&6%player% &eis on a &4&l15 &ekill streak!"
+    commands:
+      - "give %player% netherite_ingot 1"

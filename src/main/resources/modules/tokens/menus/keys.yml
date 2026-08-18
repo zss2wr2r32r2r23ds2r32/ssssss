@@ -1,0 +1,97 @@
+menu_title: 'Token Shop &8| Keys'
+open_command: keys
+size: 27
+open_permission: tokenshop.use
+
+items:
+
+  back_button:
+    material: BARRIER
+    slot: 26
+    display_name: '&x&F&F&0&0&0&0&lCLOSE'
+    left_click_commands:
+      - '[openguimenu] mainmenu'
+
+  common_key:
+    material: RED_CANDLE
+    slot: 13
+    display_name: '&x&F&F&0&0&0&0&lKILL &x&F&F&0&0&0&0Key'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&0&0&0Information:'
+      - '&x&F&F&0&0&0&0| &fPurchase the &x&F&F&0&0&0&0Kill Key'
+      - '&x&F&F&0&0&0&0| &fAnd Unlock Unique Rewards!'
+      - ''
+      - '&x&F&F&0&0&0&0⚓ &fCost: &x&F&F&0&0&0&01500 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[tokens_take] 250'
+      - '[console] crates give %player_name% CommonKey 1'
+      - '[message] &aYou purchased a Common Key!'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+    left_click_requirement:
+      requirements:
+        has_enough:
+          type: 'js constraint'
+          input: '%tokens_formatted%'
+          constraint: '>=250'
+          deny_commands:
+            - '[message] &cYou need 250 Tokens for this key!'
+
+  rare_key:
+    material: PURPLE_CANDLE
+    slot: 11
+    display_name: '&x&9&4&0&0&F&F&lCOSMETIC &x&9&4&0&0&F&FKey'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&9&4&0&0&F&FInformation:'
+      - '&x&9&4&0&0&F&F| &fPurchase the &x&9&4&0&0&F&FCosmetic Key'
+      - '&x&9&4&0&0&F&F| &fAnd Unlock Unique Rewards!'
+      - ''
+      - '&x&9&4&0&0&F&F⚓ &fCost: &x&9&4&0&0&F&F1000 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[tokens_take] 750'
+      - '[console] crates give %player_name% RareKey 1'
+      - '[message] &aYou purchased a Rare Key!'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+    left_click_requirement:
+      requirements:
+        has_enough:
+          type: 'js constraint'
+          input: '%tokens_formatted%'
+          constraint: '>=750'
+          deny_commands:
+            - '[message] &cYou need 750 Tokens for this key!'
+
+  legendary_key:
+    material: BLUE_CANDLE
+    slot: 15
+    display_name: '&#0045FF&lASTRAL &#0045FFKey'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#0045FFInformation:'
+      - '&#0045FF| &fPurchase the &#0045FFAstral Key'
+      - '&#0045FF| &fAnd Unlock Unique Rewards!'
+      - ''
+      - '&#0045FF⚓ &fCost: &#0045FF3000 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[tokens_take] 2000'
+      - '[console] crates give %player_name% LegendaryKey 1'
+      - '[message] &x&F&F&0&0&0&0COMING SOON!'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+    left_click_requirement:
+      requirements:
+        has_enough:
+          type: 'js constraint'
+          input: '%tokens_formatted%'
+          constraint: '>=2000'
+          deny_commands:
+            - '[message] &cYou need 2000 Tokens for this key!'

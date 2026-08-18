@@ -31,37 +31,18 @@ import org.bukkit.inventory.meta.trim.TrimPattern;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
-/**
- * /armortrims - a trim station GUI: put your armor piece in the middle,
- * pick a trim pattern on the left, a trim material on the right, then confirm.
- * Netherite (and the netherite upgrade template) are excluded.
- */
+/** /armortrims - 3-slot GUI: pattern (left), armor (center), material (right). Click sides to cycle. */
 public final class ArmorTrimsModule extends Module implements CommandExecutor {
 
-    private static final int ARMOR_SLOT = 22;
-    private static final int CONFIRM_SLOT = 49;
-    private static final int[] PATTERN_SLOTS = {
-            0, 1, 2, 9, 10, 11, 18, 19, 20, 27, 28, 29, 36, 37, 38, 45, 46, 47};
-    private static final int[] MATERIAL_SLOTS = {
-            6, 7, 8, 15, 16, 17, 24, 25, 26, 33, 34, 35};
-
-    private static final Map<String, Material> MATERIAL_ICONS = Map.ofEntries(
-            Map.entry("quartz", Material.QUARTZ),
-            Map.entry("iron", Material.IRON_INGOT),
-            Map.entry("gold", Material.GOLD_INGOT),
-            Map.entry("copper", Material.COPPER_INGOT),
-            Map.entry("emerald", Material.EMERALD),
-            Map.entry("diamond", Material.DIAMOND),
-            Map.entry("redstone", Material.REDSTONE),
-            Map.entry("lapis", Material.LAPIS_LAZULI),
-            Map.entry("amethyst", Material.AMETHYST_SHARD));
+    private static final int PATTERN_SLOT = 10;
+    private static final int ARMOR_SLOT = 13;
+    private static final int MATERIAL_SLOT = 16;
 
     private final class TrimHolder implements InventoryHolder {
         private Inventory inventory;
-        private TrimPattern selectedPattern;
-        private TrimMaterial selectedMaterial;
+        private int patternIndex;
+        private int materialIndex;
         private final List<TrimPattern> patterns = new ArrayList<>();
         private final List<TrimMaterial> materials = new ArrayList<>();
 
@@ -81,15 +62,6 @@ public final class ArmorTrimsModule extends Module implements CommandExecutor {
     }
 
     @Override
-    protected void onDisable() {
-        for (Player player : plugin.getServer().getOnlinePlayers()) {
-            if (player.getOpenInventory().getTopInventory().getHolder() instanceof TrimHolder) {
-                player.closeInventory();
-            }
-        }
-    }
-
-    @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) {
             send(sender, "players-only");
@@ -105,138 +77,73 @@ public final class ArmorTrimsModule extends Module implements CommandExecutor {
 
     private void open(Player player) {
         TrimHolder holder = new TrimHolder();
-        Inventory inventory = Bukkit.createInventory(holder, 54, Text.c(config.getString("title", "&8Armor Trim Station")));
-        holder.inventory = inventory;
-
-        List<String> excludedPatterns = lower(config.getStringList("excluded-patterns"));
-        List<String> excludedMaterials = lower(config.getStringList("excluded-materials"));
-
-        Registry<TrimPattern> patternRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.TRIM_PATTERN);
-        for (TrimPattern pattern : patternRegistry) {
-            NamespacedKey key = patternRegistry.getKey(pattern);
-            if (key == null) continue;
-            String name = key.getKey().toLowerCase(Locale.ROOT);
-            if (name.contains("netherite") || excludedPatterns.contains(name)) continue;
-            if (holder.patterns.size() >= PATTERN_SLOTS.length) break;
-            holder.patterns.add(pattern);
-        }
-
-        Registry<TrimMaterial> materialRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.TRIM_MATERIAL);
-        for (TrimMaterial material : materialRegistry) {
-            NamespacedKey key = materialRegistry.getKey(material);
-            if (key == null) continue;
-            String name = key.getKey().toLowerCase(Locale.ROOT);
-            if (name.contains("netherite") || excludedMaterials.contains(name)) continue;
-            if (holder.materials.size() >= MATERIAL_SLOTS.length) break;
-            holder.materials.add(material);
-        }
-
+        Inventory inv = Bukkit.createInventory(holder, 27, Text.c(config.getString("title", "&8Armor Trim Station")));
+        holder.inventory = inv;
+        loadOptions(holder);
         render(holder);
-        player.openInventory(inventory);
+        player.openInventory(inv);
         player.playSound(player.getLocation(), Sound.BLOCK_SMITHING_TABLE_USE, 0.6f, 1.2f);
         send(player, "opened");
     }
 
+    private void loadOptions(TrimHolder holder) {
+        List<String> excludedPatterns = config.getStringList("excluded-patterns");
+        List<String> excludedMaterials = config.getStringList("excluded-materials");
+
+        Registry<TrimPattern> pr = RegistryAccess.registryAccess().getRegistry(RegistryKey.TRIM_PATTERN);
+        for (TrimPattern p : pr) {
+            NamespacedKey key = pr.getKey(p);
+            if (key == null) continue;
+            String name = key.getKey().toLowerCase(Locale.ROOT);
+            if (name.contains("netherite") || excludedPatterns.contains(name)) continue;
+            holder.patterns.add(p);
+        }
+        Registry<TrimMaterial> mr = RegistryAccess.registryAccess().getRegistry(RegistryKey.TRIM_MATERIAL);
+        for (TrimMaterial m : mr) {
+            NamespacedKey key = mr.getKey(m);
+            if (key == null) continue;
+            String name = key.getKey().toLowerCase(Locale.ROOT);
+            if (name.contains("netherite") || excludedMaterials.contains(name)) continue;
+            holder.materials.add(m);
+        }
+    }
+
     private void render(TrimHolder holder) {
         Inventory inv = holder.inventory;
-        ItemStack armorItem = inv.getItem(ARMOR_SLOT);
         ItemStack filler = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).name("&r").build();
-        for (int slot = 0; slot < 54; slot++) {
-            if (slot == ARMOR_SLOT) continue;
-            inv.setItem(slot, filler);
+        for (int i = 0; i < 27; i++) inv.setItem(i, filler);
+
+        ItemStack armor = inv.getItem(ARMOR_SLOT);
+        inv.setItem(ARMOR_SLOT, armor);
+
+        if (!holder.patterns.isEmpty()) {
+            TrimPattern pattern = holder.patterns.get(holder.patternIndex);
+            inv.setItem(PATTERN_SLOT, new ItemBuilder(Material.PAPER)
+                    .edit(meta -> meta.displayName(Component.empty().append(Text.c("&e◀ ")).append(pattern.description())))
+                    .lore(raw("lore-cycle-pattern"))
+                    .glow(true).hideAll().build());
         }
-
-        Registry<TrimPattern> patternRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.TRIM_PATTERN);
-        for (int i = 0; i < holder.patterns.size(); i++) {
-            TrimPattern pattern = holder.patterns.get(i);
-            NamespacedKey key = patternRegistry.getKey(pattern);
-            boolean selected = pattern.equals(holder.selectedPattern);
-            inv.setItem(PATTERN_SLOTS[i], new ItemBuilder(patternIcon(key))
-                    .edit(meta -> meta.displayName(Component.empty()
-                            .append(Text.c(selected ? "&a✔ " : "&e"))
-                            .append(pattern.description())))
-                    .lore(selected ? raw("lore-selected") : raw("lore-click-pattern"))
-                    .glow(selected)
-                    .hideAll()
-                    .build());
+        if (!holder.materials.isEmpty()) {
+            TrimMaterial material = holder.materials.get(holder.materialIndex);
+            inv.setItem(MATERIAL_SLOT, new ItemBuilder(Material.EMERALD)
+                    .edit(meta -> meta.displayName(Component.empty().append(material.description()).append(Text.c(" &b▶"))))
+                    .lore(raw("lore-cycle-material"))
+                    .glow(true).hideAll().build());
         }
-
-        Registry<TrimMaterial> materialRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.TRIM_MATERIAL);
-        for (int i = 0; i < holder.materials.size(); i++) {
-            TrimMaterial material = holder.materials.get(i);
-            NamespacedKey key = materialRegistry.getKey(material);
-            boolean selected = material.equals(holder.selectedMaterial);
-            inv.setItem(MATERIAL_SLOTS[i], new ItemBuilder(materialIcon(key))
-                    .edit(meta -> meta.displayName(Component.empty()
-                            .append(Text.c(selected ? "&a✔ " : "&b"))
-                            .append(material.description())))
-                    .lore(selected ? raw("lore-selected") : raw("lore-click-material"))
-                    .glow(selected)
-                    .hideAll()
-                    .build());
-        }
-
-        // Armor slot hint + restore item
-        if (armorItem == null || armorItem.getType().isAir()) {
-            inv.setItem(ARMOR_SLOT, null);
-        } else {
-            inv.setItem(ARMOR_SLOT, armorItem);
-        }
-        int[] frame = {12, 13, 14, 21, 23, 30, 31, 32};
-        ItemStack frameItem = new ItemBuilder(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
-                .name(raw("armor-slot-hint")).build();
-        for (int slot : frame) inv.setItem(slot, frameItem);
-
-        boolean ready = holder.selectedPattern != null && holder.selectedMaterial != null
-                && armorItem != null && !armorItem.getType().isAir();
-        inv.setItem(CONFIRM_SLOT, new ItemBuilder(ready ? Material.LIME_CONCRETE : Material.RED_CONCRETE)
-                .name(ready ? raw("confirm-ready") : raw("confirm-not-ready"))
-                .lore(raw("confirm-lore"))
-                .build());
+        inv.setItem(22, new ItemBuilder(Material.LIME_CONCRETE).name(raw("confirm-name")).lore(raw("confirm-lore")).build());
     }
-
-    private Material patternIcon(NamespacedKey key) {
-        if (key != null) {
-            Material template = Material.getMaterial(key.getKey().toUpperCase(Locale.ROOT) + "_ARMOR_TRIM_SMITHING_TEMPLATE");
-            if (template != null) return template;
-        }
-        return Material.PAPER;
-    }
-
-    private Material materialIcon(NamespacedKey key) {
-        if (key == null) return Material.PAPER;
-        Material icon = MATERIAL_ICONS.get(key.getKey().toLowerCase(Locale.ROOT));
-        if (icon != null) return icon;
-        icon = Material.getMaterial(key.getKey().toUpperCase(Locale.ROOT));
-        if (icon != null) return icon;
-        icon = Material.getMaterial(key.getKey().toUpperCase(Locale.ROOT) + "_INGOT");
-        return icon != null ? icon : Material.PAPER;
-    }
-
-    private List<String> lower(List<String> input) {
-        List<String> out = new ArrayList<>();
-        for (String s : input) out.add(s.toLowerCase(Locale.ROOT));
-        return out;
-    }
-
-    private boolean isTrimmable(ItemStack item) {
-        return item != null && !item.getType().isAir() && item.getItemMeta() instanceof ArmorMeta;
-    }
-
-    /* ----------------------------- events ----------------------------- */
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         if (!(event.getView().getTopInventory().getHolder() instanceof TrimHolder holder)) return;
         if (!(event.getWhoClicked() instanceof Player player)) return;
 
-        // Clicks in the player's own inventory: allow, but handle shift-click into the GUI.
         if (event.getClickedInventory() != null && event.getClickedInventory() != holder.inventory) {
             if (event.isShiftClick()) {
                 event.setCancelled(true);
-                ItemStack current = event.getCurrentItem();
-                if (isTrimmable(current) && (holder.inventory.getItem(ARMOR_SLOT) == null)) {
-                    holder.inventory.setItem(ARMOR_SLOT, current.clone());
+                ItemStack cur = event.getCurrentItem();
+                if (isArmor(cur) && (holder.inventory.getItem(ARMOR_SLOT) == null || holder.inventory.getItem(ARMOR_SLOT).getType().isAir())) {
+                    holder.inventory.setItem(ARMOR_SLOT, cur.clone());
                     event.getClickedInventory().setItem(event.getSlot(), null);
                     render(holder);
                 }
@@ -246,67 +153,54 @@ public final class ArmorTrimsModule extends Module implements CommandExecutor {
 
         int slot = event.getSlot();
         if (slot == ARMOR_SLOT) {
-            // Allow placing/taking armor by hand, but only armor pieces.
             ItemStack cursor = event.getCursor();
-            if (cursor != null && !cursor.getType().isAir() && !isTrimmable(cursor)) {
+            if (cursor != null && !cursor.getType().isAir() && !isArmor(cursor)) {
                 event.setCancelled(true);
                 send(player, "not-armor");
-                return;
+            } else {
+                Bukkit.getScheduler().runTask(plugin, () -> applyTrim(holder));
             }
-            plugin.getServer().getScheduler().runTask(plugin, () -> render(holder));
             return;
         }
 
         event.setCancelled(true);
-
-        for (int i = 0; i < PATTERN_SLOTS.length; i++) {
-            if (PATTERN_SLOTS[i] == slot && i < holder.patterns.size()) {
-                holder.selectedPattern = holder.patterns.get(i);
-                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.4f);
-                render(holder);
-                return;
-            }
-        }
-        for (int i = 0; i < MATERIAL_SLOTS.length; i++) {
-            if (MATERIAL_SLOTS[i] == slot && i < holder.materials.size()) {
-                holder.selectedMaterial = holder.materials.get(i);
-                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.7f);
-                render(holder);
-                return;
-            }
-        }
-        if (slot == CONFIRM_SLOT) {
-            applyTrim(player, holder);
+        if (slot == PATTERN_SLOT && !holder.patterns.isEmpty()) {
+            holder.patternIndex = (holder.patternIndex + 1) % holder.patterns.size();
+            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.4f);
+            applyTrim(holder);
+        } else if (slot == MATERIAL_SLOT && !holder.materials.isEmpty()) {
+            holder.materialIndex = (holder.materialIndex + 1) % holder.materials.size();
+            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.7f);
+            applyTrim(holder);
+        } else if (slot == 22) {
+            applyTrim(holder);
+            send(player, "trim-applied");
+            player.playSound(player.getLocation(), Sound.BLOCK_SMITHING_TABLE_USE, 1f, 1f);
         }
     }
 
-    private void applyTrim(Player player, TrimHolder holder) {
+    private void applyTrim(TrimHolder holder) {
         ItemStack armor = holder.inventory.getItem(ARMOR_SLOT);
-        if (!isTrimmable(armor)) {
-            send(player, "no-armor");
-            return;
-        }
-        if (holder.selectedPattern == null || holder.selectedMaterial == null) {
-            send(player, "no-selection");
+        if (!isArmor(armor) || holder.patterns.isEmpty() || holder.materials.isEmpty()) {
+            render(holder);
             return;
         }
         ArmorMeta meta = (ArmorMeta) armor.getItemMeta();
-        meta.setTrim(new ArmorTrim(holder.selectedMaterial, holder.selectedPattern));
+        meta.setTrim(new ArmorTrim(holder.materials.get(holder.materialIndex), holder.patterns.get(holder.patternIndex)));
         armor.setItemMeta(meta);
         holder.inventory.setItem(ARMOR_SLOT, armor);
-        player.playSound(player.getLocation(), Sound.BLOCK_SMITHING_TABLE_USE, 1f, 1f);
-        send(player, "trim-applied");
         render(holder);
+    }
+
+    private boolean isArmor(ItemStack item) {
+        return item != null && !item.getType().isAir() && item.getItemMeta() instanceof ArmorMeta;
     }
 
     @EventHandler
     public void onDrag(InventoryDragEvent event) {
         if (!(event.getView().getTopInventory().getHolder() instanceof TrimHolder)) return;
-        for (int slot : event.getRawSlots()) {
-            if (slot < 54 && slot != ARMOR_SLOT) {
-                event.setCancelled(true);
-                return;
-            }
+        for (int raw : event.getRawSlots()) {
+            if (raw < 27 && raw != ARMOR_SLOT) event.setCancelled(true);
         }
     }
 
@@ -316,7 +210,7 @@ public final class ArmorTrimsModule extends Module implements CommandExecutor {
         ItemStack armor = event.getInventory().getItem(ARMOR_SLOT);
         if (armor != null && !armor.getType().isAir() && event.getPlayer() instanceof Player player) {
             player.getInventory().addItem(armor).values()
-                    .forEach(item -> player.getWorld().dropItemNaturally(player.getLocation(), item));
+                    .forEach(i -> player.getWorld().dropItemNaturally(player.getLocation(), i));
         }
     }
 }

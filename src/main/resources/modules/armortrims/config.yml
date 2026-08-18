@@ -1,8 +1,4 @@
-# Armor trims module - /armortrims opens a trim station.
-# Put an armor piece in the middle, pick a pattern (left) and a material
-# (right), then press confirm. Netherite is always excluded.
+# Armor trims - 3 slot GUI (pattern | armor | material). Click sides to cycle.
 title: "&8Armor Trim Station"
-
-# Extra patterns/materials to hide (lowercase registry keys, e.g. "silence").
 excluded-patterns: []
 excluded-materials: []

@@ -137,10 +137,14 @@ public abstract class Module implements Listener {
 
     /* ------------------------------------------------------------ */
 
-    /** Raw message from messages.yml with the module prefix and placeholders applied. */
+    /** Raw message from messages.yml with global + module prefix and placeholders applied. */
     public final String raw(String key, String... replacements) {
         String msg = messages.getString(key, "<missing message: " + id + "/" + key + ">");
-        msg = msg.replace("%prefix%", messages.getString("prefix", ""));
+        String modulePrefix = messages.getString("prefix", "%prefix%");
+        msg = msg.replace("%prefix%", com.sharded.core.util.Prefix.get());
+        if (!modulePrefix.isEmpty() && !modulePrefix.equals("%prefix%")) {
+            msg = msg.replace("%module_prefix%", modulePrefix);
+        }
         return Text.apply(msg, replacements);
     }
 

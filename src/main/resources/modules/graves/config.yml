@@ -1,28 +1,11 @@
-# Graves module - on death a player head spawns with a hologram showing the
-# player's name, a despawn timer and their stored XP. Right-click to open.
-#
-# Permissions:
-#   sharded.graves.use    - create a grave on death (default: true)
-#   sharded.graves.bypass - open anyone's grave (default: op)
-#   sharded.graves.admin  - /graves list & /graves purge
+# Graves module
+# Permission sharded.graves.use - give to ranks via LuckPerms to enable graves on death
+# Example: /lp group default permission set sharded.graves.use true
 
-# Empty list = all worlds.
 enabled-worlds: []
-
-# How long a grave stays before it expires (seconds). 300 = 5 minutes.
 expire-seconds: 300
-
-# What happens when a grave expires: true = items drop, false = items are deleted.
 drop-items-on-expire: true
-
-# How long only the owner (and bypass) can open the grave, in seconds.
-# -1 = protected until it expires. 0 = anyone can open immediately.
 protect-seconds: -1
-
-# Store the player's dropped XP in the grave (given to whoever opens it first).
 store-xp: true
-
-# Height of the first hologram line above the head block.
 hologram-height: 1.6
-
 gui-title: "&8Grave of &f%player%"

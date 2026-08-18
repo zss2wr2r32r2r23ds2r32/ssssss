@@ -87,8 +87,9 @@ public final class FlyModule extends Module implements CommandExecutor, TabCompl
     }
 
     private boolean canFlyHere(Player player) {
+        if (!regionSet()) return false;
         if (player.hasPermission("sharded.fly.anywhere")) return true;
-        return regionSet() && inRegion(player.getLocation());
+        return inRegion(player.getLocation());
     }
 
     private void saveRegion(Location a, Location b) {
@@ -204,6 +205,10 @@ public final class FlyModule extends Module implements CommandExecutor, TabCompl
                     disableFlight(target, false);
                     send(player, "disabled-other", "%player%", target.getName());
                 } else {
+                    if (!regionSet()) {
+                        send(player, "region-not-set");
+                        return true;
+                    }
                     enableFlight(target);
                     send(player, "enabled-other", "%player%", target.getName());
                 }
@@ -222,7 +227,7 @@ public final class FlyModule extends Module implements CommandExecutor, TabCompl
             send(player, "disabled");
             return;
         }
-        if (!regionSet() && !player.hasPermission("sharded.fly.anywhere")) {
+        if (!regionSet()) {
             send(player, "region-not-set");
             return;
         }

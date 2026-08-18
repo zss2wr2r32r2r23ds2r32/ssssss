@@ -1,0 +1,53 @@
+menu_title: '&5&lRTP ZONE'
+size: 27
+open_permission: sharded.rtp.use
+
+open_commands:
+  - '[sound] BLOCK_PORTAL_AMBIENT'
+
+items:
+  filler:
+    material: PURPLE_STAINED_GLASS_PANE
+    slots: [0,1,2,3,4,5,6,7,8,9,10,12,14,16,17,18,19,20,21,23,24,25,26]
+    display_name: ' '
+
+  info:
+    material: NETHER_STAR
+    slot: 4
+    display_name: '&a&l🌙 RTP ZONE 🌙'
+    lore:
+      - '&8Description'
+      - ''
+      - '&aInformation:'
+      - '&f| &7EXPLORE THE WILDERNESS, COLLECT MATERIALS AND BUILD BASES'
+      - '&f| &7BECOME THE STRONGEST PLAYER ON THE SERVER'
+      - ''
+      - '&c⚔ &fPVP: &aENABLED'
+      - '&c🛡 &fKEEP INVENTORY: &cDISABLED'
+      - '&e⚓ &fBUILDING/BREAKING: &aENABLED'
+      - '&b🌐 &fWORLD BORDER: &b%border%'
+
+  teleport:
+    material: ENDER_PEARL
+    slot: 13
+    display_name: '&5&lRANDOM TELEPORT'
+    lore:
+      - '&8Description'
+      - ''
+      - '&5Information:'
+      - '&5| &fTeleport to a random location'
+      - '&5| &fin world &f%target_world%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport'
+    click_commands:
+      - '[close]'
+      - '[rtp_confirm]'
+
+  cancel:
+    material: BARRIER
+    slot: 22
+    display_name: '&c&lCANCEL'
+    lore:
+      - '&7Click to close.'
+    click_commands:
+      - '[close]'

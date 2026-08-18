@@ -3,8 +3,9 @@ version: '${project.version}'
 main: com.sharded.core.ShardedCore
 api-version: '1.21'
 author: Sharded
-description: All-in-one core plugin (craft, fix, trash, graves, backpacks, armor trims, fly, autosmelt, portal rtp and more)
-softdepend: [LuckPerms]
+description: All-in-one core plugin for Paper 1.21.11
+softdepend: [LuckPerms, PlaceholderAPI]
+load: POSTWORLD
 
 commands:
   shardedcore:
@@ -45,12 +46,14 @@ commands:
     usage: /nightvision
     aliases: [nv]
   hide:
-    description: Disguise yourself as Steve
+    description: Hide your identity (scrambled name + Steve skin)
     usage: /hide
-    aliases: [unhide]
+  kill:
+    description: Kill yourself or another player
+    usage: /kill [player]
   backpack:
-    description: Open your backpack
-    usage: /backpack
+    description: Open a backpack (single slot)
+    usage: /backpack [player]
     aliases: [bp]
   armortrims:
     description: Open the armor trim station
@@ -60,7 +63,7 @@ commands:
     description: Toggle flight (region restricted)
     usage: /fly [player|speed <1-10>|pos1|pos2|setregion]
   autosmelt:
-    description: Apply the Auto Smelt enchant to the pickaxe you are holding
+    description: Apply Auto Smelt to your pickaxe
     usage: /autosmelt
   rtp:
     description: Open the random teleport menu
@@ -73,95 +76,87 @@ commands:
   graves:
     description: Graves admin command
     usage: /graves [list|purge]
+  spawners:
+    description: Pay to pick up spawners
+    usage: /spawners pay [amount]
+  bal:
+    description: Check your token balance
+    usage: /bal
+    aliases: [balance]
+  tokens:
+    description: Token admin commands
+    usage: /tokens <give|set|remove|reset|giveall>
+  tokenshop:
+    description: Open the token shop
+    usage: /tokenshop
 
 permissions:
   sharded.admin:
-    description: Access to /shardedcore (reload)
+    description: Access to /shardedcore reload
     default: op
   sharded.craft.use:
-    description: Use /craft
     default: true
   sharded.fix.use:
-    description: Use /fix
     default: true
   sharded.fix.bypass:
-    description: Bypass the /fix cooldown
     default: op
   sharded.trash.use:
-    description: Use /trash
     default: true
   sharded.chat.toggle:
-    description: Use /chattoggle
     default: true
   sharded.msg.use:
-    description: Use /msg and /reply
     default: true
   sharded.msg.toggle:
-    description: Use /msgtoggle
     default: true
   sharded.msg.bypass:
-    description: Message players who have private messages disabled
     default: op
   sharded.nightvision.use:
-    description: Use /nightvision
     default: true
   sharded.hide.use:
-    description: Use /hide
+    default: op
+  sharded.kill.use:
+    default: true
+  sharded.kill.others:
     default: op
   sharded.backpack.use:
-    description: Use /backpack
     default: true
-  sharded.backpack.level.1:
-    description: Backpack +1 row
-    default: false
-  sharded.backpack.level.2:
-    description: Backpack +2 rows
-    default: false
-  sharded.backpack.level.3:
-    description: Backpack +3 rows
-    default: false
-  sharded.backpack.level.4:
-    description: Backpack +4 rows
-    default: false
-  sharded.backpack.level.5:
-    description: Backpack +5 rows
-    default: false
+  sharded.backpack.view.others:
+    default: op
   sharded.graves.use:
-    description: Create a grave on death
+    description: Create a grave on death (give to ranks via LuckPerms)
     default: true
   sharded.graves.bypass:
-    description: Open anyone's grave
     default: op
   sharded.graves.admin:
-    description: Use /graves admin command
     default: op
   sharded.armortrims.use:
-    description: Use /armortrims
     default: true
   sharded.fly.use:
-    description: Use /fly inside the fly region
     default: op
   sharded.fly.speed:
-    description: Use /fly speed
     default: op
   sharded.fly.others:
-    description: Toggle flight for other players
     default: op
   sharded.fly.anywhere:
-    description: Bypass the fly region and world checks
+    description: Bypass fly region bounds (region must still be set)
     default: op
   sharded.fly.admin:
-    description: Set the fly region (pos1/pos2/setregion)
     default: op
   sharded.autosmelt.use:
-    description: Use /autosmelt
     default: op
   sharded.rtp.use:
-    description: Use the portal RTP
     default: true
   sharded.rtp.bypass:
-    description: Bypass RTP cooldown and world restriction
     default: op
   sharded.settings.use:
-    description: Use /settings
+    default: true
+  sharded.pickupmobs.use:
+    default: op
+  sharded.spawners.use:
+    default: true
+  sharded.spawners.pickup:
+    default: true
+  sharded.tokens.admin:
+    default: op
+  sharded.tokenshop.use:
     default: true

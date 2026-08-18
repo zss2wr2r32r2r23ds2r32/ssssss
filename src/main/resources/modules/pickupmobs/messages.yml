@@ -1,0 +1,2 @@
+prefix: "&8[&bSharded&8] &r"
+picked-up: "%prefix%&aYou picked up a &f%mob%&a."

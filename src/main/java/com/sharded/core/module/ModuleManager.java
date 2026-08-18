@@ -12,10 +12,16 @@ import com.sharded.core.modules.fly.FlyModule;
 import com.sharded.core.modules.graves.GravesModule;
 import com.sharded.core.modules.hide.HideModule;
 import com.sharded.core.modules.joinmessages.JoinMessagesModule;
+import com.sharded.core.modules.kill.KillModule;
+import com.sharded.core.modules.killstreaks.KillstreaksModule;
 import com.sharded.core.modules.nightvision.NightVisionModule;
+import com.sharded.core.modules.pickupmobs.PickupMobsModule;
+import com.sharded.core.modules.pickupspawners.PickupSpawnersModule;
 import com.sharded.core.modules.portalrtp.PortalRtpModule;
 import com.sharded.core.modules.privatemessages.PrivateMessagesModule;
 import com.sharded.core.modules.settings.SettingsModule;
+import com.sharded.core.modules.tokens.TokenService;
+import com.sharded.core.modules.tokens.TokensModule;
 import com.sharded.core.modules.trash.TrashModule;
 
 import java.util.ArrayList;
@@ -46,6 +52,11 @@ public final class ModuleManager {
         register(new AutoSmeltModule(plugin));
         register(new PortalRtpModule(plugin));
         register(new SettingsModule(plugin));
+        register(new KillModule(plugin));
+        register(new KillstreaksModule(plugin));
+        register(new PickupMobsModule(plugin));
+        register(new PickupSpawnersModule(plugin));
+        register(new TokensModule(plugin));
     }
 
     private void register(Module module) {
@@ -95,5 +106,10 @@ public final class ModuleManager {
             if (type.isInstance(module)) return (T) module;
         }
         return null;
+    }
+
+    public TokenService tokens() {
+        TokensModule module = get(TokensModule.class);
+        return module == null ? null : module.service();
     }
 }

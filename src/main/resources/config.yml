@@ -1,18 +1,17 @@
 # ---------------------------------------------------------
 #  ShardedCore - main configuration
-#  Enable or disable every module here.
-#  Each module has its own config.yml and messages.yml in
-#  plugins/ShardedCore/modules/<module>/
 # ---------------------------------------------------------
+
+prefix: "&8[&bSharded&8] &r"
 
 modules:
   craft: true
   fix: true
   trash: true
-  chat: true            # public chat toggle
-  privatemessages: true # /msg, /reply, /msgtoggle
+  chat: true
+  privatemessages: true
   nightvision: true
-  hide: true            # /hide -> Steve disguise
+  hide: true
   deathmessages: true
   joinmessages: true
   backpack: true
@@ -22,3 +21,8 @@ modules:
   autosmelt: true
   portalrtp: true
   settings: true
+  kill: true
+  killstreaks: true
+  pickupmobs: true
+  pickupspawners: true
+  tokens: true
