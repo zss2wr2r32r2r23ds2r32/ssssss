@@ -77,6 +77,13 @@ commands:
     description: Toggle join and leave messages
     usage: /jointoggle
     aliases: [joinleave, jtoggle]
+  mobtoggle:
+    description: Toggle natural mob spawning near you
+    usage: /mobtoggle
+    aliases: [mobspawn, mtoggle]
+  killstreak:
+    description: View killstreak stats
+    usage: /killstreak [best|player] [best]
   toolname:
     description: Rename the item you are holding
     usage: /toolname [name]
@@ -187,6 +194,12 @@ permissions:
     default: true
   sharded.settings.mobspawn:
     default: true
+  sharded.killstreak.use:
+    description: View your own killstreak
+    default: true
+  sharded.killstreak.others:
+    description: View other players' killstreaks
+    default: op
   sharded.toolname.use:
     default: true
   sharded.pickupmobs.use:

@@ -19,24 +19,21 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TextDisplay;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockExplodeEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -48,9 +45,9 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Graves: when a player dies, their items are stored in a grave shown as the
- * player's head, with a floating hologram showing their name, a despawn timer
- * and the stored XP. Right-click the head to open the grave and take the loot.
+ * Graves: when a player dies, their items are stored in a grave shown as a
+ * floating player head marker (no world blocks are replaced), with holograms
+ * showing their name, despawn timer and stored XP.
  */
 public final class GravesModule extends Module implements CommandExecutor, TabCompleter {
 
@@ -68,8 +65,10 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
         }
     }
 
-    private final Map<String, Grave> gravesByBlock = new LinkedHashMap<>();
+    private final Map<String, Grave> gravesByLocation = new LinkedHashMap<>();
     private NamespacedKey hologramKey;
+    private NamespacedKey graveMarkerKey;
+    /** Legacy key for cleaning up old player-head blocks. */
     private NamespacedKey graveBlockKey;
     private BukkitTask tickTask;
 
@@ -80,10 +79,11 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
     @Override
     protected void onEnable() {
         hologramKey = new NamespacedKey(plugin, "grave_hologram");
+        graveMarkerKey = new NamespacedKey(plugin, "grave_marker");
         graveBlockKey = new NamespacedKey(plugin, "grave_block");
         registerCommand("graves", this);
         loadGraves();
-        for (Grave grave : List.copyOf(gravesByBlock.values())) {
+        for (Grave grave : List.copyOf(gravesByLocation.values())) {
             if (grave.location.getWorld() != null && grave.location.isChunkLoaded()) {
                 restoreGraveInWorld(grave);
             }
@@ -99,11 +99,12 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
                 player.closeInventory();
             }
         }
-        for (Grave grave : gravesByBlock.values()) {
+        for (Grave grave : gravesByLocation.values()) {
             despawnHolograms(grave);
+            despawnMarker(grave);
         }
         saveGraves();
-        gravesByBlock.clear();
+        gravesByLocation.clear();
     }
 
     /* ----------------------------- creation ----------------------------- */
@@ -140,8 +141,8 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
         long lifetime = config.getLong("expire-seconds", 300L);
         Grave grave = new Grave(UUID.randomUUID(), player.getUniqueId(), player.getName(), location,
                 items, xp, xp <= 0, System.currentTimeMillis(), System.currentTimeMillis() + lifetime * 1000L);
-        gravesByBlock.put(blockKey(location), grave);
-        placeGraveBlock(grave);
+        gravesByLocation.put(locationKey(location), grave);
+        spawnMarker(grave);
         spawnHolograms(grave);
         saveGraves();
 
@@ -157,45 +158,74 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
         if (world == null) return null;
         int x = deathLocation.getBlockX();
         int z = deathLocation.getBlockZ();
-        int y = world.getHighestBlockYAt(x, z);
-        Location grave = new Location(world, x, y, z);
+        int y = Math.max(deathLocation.getBlockY(), world.getHighestBlockYAt(x, z));
+        Location grave = new Location(world, x + 0.5, y + 0.15, z + 0.5);
         for (int attempt = 0; attempt < 5; attempt++) {
-            if (!gravesByBlock.containsKey(blockKey(grave))) return grave;
-            grave = grave.clone().add(0, 1, 0);
+            if (!gravesByLocation.containsKey(locationKey(grave))) return grave;
+            grave = grave.clone().add(0, 0.5, 0);
         }
         return grave;
     }
 
-    private void placeGraveBlock(Grave grave) {
-        Block block = grave.location.getBlock();
-        block.setType(Material.PLAYER_HEAD, false);
-        if (block.getState() instanceof Skull skull) {
-            skull.setOwningPlayer(Bukkit.getOfflinePlayer(grave.owner));
-            skull.getPersistentDataContainer().set(graveBlockKey, PersistentDataType.STRING, grave.id.toString());
-            skull.update(true, false);
-        }
+    private ItemStack playerHead(UUID owner) {
+        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta meta = (SkullMeta) head.getItemMeta();
+        meta.setOwningPlayer(Bukkit.getOfflinePlayer(owner));
+        head.setItemMeta(meta);
+        return head;
     }
 
-    private Grave graveAt(Location location) {
-        if (location == null || location.getWorld() == null) return null;
-        Grave mapped = gravesByBlock.get(blockKey(location));
-        if (mapped != null) return mapped;
-        Block block = location.getBlock();
-        if (block.getType() != Material.PLAYER_HEAD) return null;
-        if (!(block.getState() instanceof Skull skull)) return null;
-        String id = skull.getPersistentDataContainer().get(graveBlockKey, PersistentDataType.STRING);
+    private void spawnMarker(Grave grave) {
+        if (grave.markerEntityId != null) {
+            Entity existing = Bukkit.getEntity(grave.markerEntityId);
+            if (existing != null && !existing.isDead()) return;
+        }
+        World world = grave.location.getWorld();
+        if (world == null || !grave.location.isChunkLoaded()) return;
+
+        ArmorStand stand = world.spawn(grave.location, ArmorStand.class, entity -> {
+            entity.setInvisible(true);
+            entity.setMarker(true);
+            entity.setSmall(true);
+            entity.setGravity(false);
+            entity.setBasePlate(false);
+            entity.setArms(false);
+            entity.setPersistent(false);
+            entity.getEquipment().setHelmet(playerHead(grave.owner));
+            entity.getPersistentDataContainer().set(graveMarkerKey, PersistentDataType.STRING, grave.id.toString());
+        });
+        grave.markerEntityId = stand.getUniqueId();
+    }
+
+    private void despawnMarker(Grave grave) {
+        if (grave.markerEntityId == null) return;
+        Entity entity = Bukkit.getEntity(grave.markerEntityId);
+        if (entity != null) entity.remove();
+        grave.markerEntityId = null;
+    }
+
+    private Grave graveFromEntity(Entity entity) {
+        if (!(entity instanceof ArmorStand stand)) return null;
+        String id = stand.getPersistentDataContainer().get(graveMarkerKey, PersistentDataType.STRING);
         if (id == null) return null;
-        for (Grave grave : gravesByBlock.values()) {
+        for (Grave grave : gravesByLocation.values()) {
             if (grave.id.toString().equals(id)) return grave;
         }
         return null;
     }
 
-    /** Re-applies block + holograms for a grave loaded from disk. */
+    /** Removes legacy player-head blocks from older versions. */
+    private void cleanupLegacyBlock(Location location) {
+        Block block = location.getBlock();
+        if (block.getType() != Material.PLAYER_HEAD) return;
+        if (!(block.getState() instanceof Skull skull)) return;
+        String id = skull.getPersistentDataContainer().get(graveBlockKey, PersistentDataType.STRING);
+        if (id != null) block.setType(Material.AIR, false);
+    }
+
     private void restoreGraveInWorld(Grave grave) {
-        if (grave.location.getBlock().getType() != Material.PLAYER_HEAD) {
-            placeGraveBlock(grave);
-        }
+        cleanupLegacyBlock(grave.location);
+        spawnMarker(grave);
         cleanupStrayHolograms(grave.location);
         spawnHolograms(grave);
     }
@@ -214,7 +244,7 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
         };
         double baseHeight = config.getDouble("hologram-height", 1.6);
         for (int i = 0; i < lines.length; i++) {
-            Location lineLocation = grave.location.clone().add(0.5, baseHeight - i * 0.28, 0.5);
+            Location lineLocation = grave.location.clone().add(0, baseHeight - i * 0.28, 0);
             TextDisplay display = world.spawn(lineLocation, TextDisplay.class, entity -> {
                 entity.setBillboard(Display.Billboard.CENTER);
                 entity.setPersistent(false);
@@ -240,7 +270,7 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
     private void cleanupStrayHolograms(Location location) {
         World world = location.getWorld();
         if (world == null) return;
-        for (Entity entity : world.getNearbyEntities(location.clone().add(0.5, 1, 0.5), 2, 3, 2)) {
+        for (Entity entity : world.getNearbyEntities(location, 2, 3, 2)) {
             if (entity instanceof TextDisplay
                     && entity.getPersistentDataContainer().has(hologramKey, PersistentDataType.STRING)) {
                 entity.remove();
@@ -253,8 +283,8 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
     }
 
     private void tick() {
-        if (gravesByBlock.isEmpty()) return;
-        for (Grave grave : List.copyOf(gravesByBlock.values())) {
+        if (gravesByLocation.isEmpty()) return;
+        for (Grave grave : List.copyOf(gravesByLocation.values())) {
             if (grave.isExpired()) {
                 expireGrave(grave);
                 continue;
@@ -271,12 +301,12 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
 
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
-        for (Grave grave : gravesByBlock.values()) {
-            if (!grave.hologramsSpawned
-                    && grave.location.getWorld() != null
-                    && grave.location.getWorld().equals(event.getWorld())
-                    && grave.location.getBlockX() >> 4 == event.getChunk().getX()
-                    && grave.location.getBlockZ() >> 4 == event.getChunk().getZ()) {
+        for (Grave grave : gravesByLocation.values()) {
+            if (grave.location.getWorld() == null || !grave.location.getWorld().equals(event.getWorld())) continue;
+            if (grave.location.getBlockX() >> 4 != event.getChunk().getX()
+                    || grave.location.getBlockZ() >> 4 != event.getChunk().getZ()) continue;
+            if (!grave.hologramsSpawned || grave.markerEntityId == null
+                    || Bukkit.getEntity(grave.markerEntityId) == null) {
                 restoreGraveInWorld(grave);
             }
         }
@@ -285,51 +315,14 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
     /* ----------------------------- opening ----------------------------- */
 
     @EventHandler
-    public void onInteract(PlayerInteractEvent event) {
-        if (event.getClickedBlock() == null) return;
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK) return;
-        Grave grave = graveAt(event.getClickedBlock().getLocation());
+    public void onInteractEntity(PlayerInteractEntityEvent event) {
+        Grave grave = graveFromEntity(event.getRightClicked());
         if (grave == null) return;
         event.setCancelled(true);
         openGrave(event.getPlayer(), grave);
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void onBreak(BlockBreakEvent event) {
-        Grave grave = graveAt(event.getBlock().getLocation());
-        if (grave == null) return;
-        event.setCancelled(true);
-        openGrave(event.getPlayer(), grave);
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-    public void onTeleport(PlayerTeleportEvent event) {
-        Location to = event.getTo();
-        if (to == null) return;
-        if (graveAt(to.getBlock().getLocation()) != null) {
-            event.setTo(to.clone().add(0, 1, 0));
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void onEntityExplode(EntityExplodeEvent event) {
-        event.blockList().removeIf(block -> gravesByBlock.containsKey(blockKey(block.getLocation())));
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void onBlockExplode(BlockExplodeEvent event) {
-        event.blockList().removeIf(block -> gravesByBlock.containsKey(blockKey(block.getLocation())));
-    }
-
-    private boolean canOpen(Player player, Grave grave) {
-        return true;
     }
 
     private void openGrave(Player player, Grave grave) {
-        if (!canOpen(player, grave)) {
-            send(player, "not-your-grave", "%player%", grave.ownerName);
-            return;
-        }
         int size = Math.min(54, Math.max(9, ((Math.max(grave.items.size(), 1) + 8) / 9) * 9));
         GraveHolder holder = new GraveHolder(grave);
         Inventory inventory = Bukkit.createInventory(holder, size,
@@ -387,7 +380,7 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
         boolean dropItems = config.getBoolean("drop-items-on-expire", true);
         if (dropItems && grave.location.getWorld() != null && grave.location.isChunkLoaded()) {
             for (ItemStack item : grave.items) {
-                grave.location.getWorld().dropItemNaturally(grave.location.clone().add(0.5, 0.5, 0.5), item);
+                grave.location.getWorld().dropItemNaturally(grave.location, item);
             }
         }
         removeGrave(grave, false);
@@ -398,16 +391,14 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
 
     private void removeGrave(Grave grave, boolean dropContents) {
         despawnHolograms(grave);
-        if (grave.location.getWorld() != null && grave.location.isChunkLoaded()
-                && grave.location.getBlock().getType() == Material.PLAYER_HEAD) {
-            grave.location.getBlock().setType(Material.AIR, false);
-        }
+        despawnMarker(grave);
+        cleanupLegacyBlock(grave.location);
         if (dropContents && grave.location.getWorld() != null && grave.location.isChunkLoaded()) {
             for (ItemStack item : grave.items) {
-                grave.location.getWorld().dropItemNaturally(grave.location.clone().add(0.5, 0.5, 0.5), item);
+                grave.location.getWorld().dropItemNaturally(grave.location, item);
             }
         }
-        gravesByBlock.remove(blockKey(grave.location));
+        gravesByLocation.remove(locationKey(grave.location));
     }
 
     /* ----------------------------- admin cmd ----------------------------- */
@@ -419,16 +410,16 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
             return true;
         }
         if (args.length > 0 && args[0].equalsIgnoreCase("purge")) {
-            int count = gravesByBlock.size();
-            for (Grave grave : List.copyOf(gravesByBlock.values())) {
+            int count = gravesByLocation.size();
+            for (Grave grave : List.copyOf(gravesByLocation.values())) {
                 removeGrave(grave, true);
             }
             saveGraves();
             send(sender, "purged", "%count%", String.valueOf(count));
             return true;
         }
-        send(sender, "list-header", "%count%", String.valueOf(gravesByBlock.size()));
-        for (Grave grave : gravesByBlock.values()) {
+        send(sender, "list-header", "%count%", String.valueOf(gravesByLocation.size()));
+        for (Grave grave : gravesByLocation.values()) {
             send(sender, "list-entry",
                     "%player%", grave.ownerName,
                     "%x%", String.valueOf(grave.location.getBlockX()),
@@ -450,7 +441,7 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
 
     /* ----------------------------- persistence ----------------------------- */
 
-    private String blockKey(Location location) {
+    private String locationKey(Location location) {
         return (location.getWorld() == null ? "?" : location.getWorld().getName())
                 + ":" + location.getBlockX() + ":" + location.getBlockY() + ":" + location.getBlockZ();
     }
@@ -467,8 +458,10 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
                 if (graveSection == null) continue;
                 World world = Bukkit.getWorld(graveSection.getString("world", ""));
                 if (world == null) continue;
-                Location location = new Location(world,
-                        graveSection.getInt("x"), graveSection.getInt("y"), graveSection.getInt("z"));
+                double x = graveSection.getDouble("x", graveSection.getInt("x"));
+                double y = graveSection.getDouble("y", graveSection.getInt("y"));
+                double z = graveSection.getDouble("z", graveSection.getInt("z"));
+                Location location = new Location(world, x, y, z);
                 List<ItemStack> items = new ArrayList<>();
                 for (ItemStack item : ItemSerializer.fromBase64(graveSection.getString("items", ""))) {
                     if (item != null) items.add(item);
@@ -481,7 +474,14 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
                         graveSection.getBoolean("xp-claimed", false),
                         graveSection.getLong("created-at", System.currentTimeMillis()),
                         graveSection.getLong("expires-at", System.currentTimeMillis()));
-                gravesByBlock.put(blockKey(location), grave);
+                String markerId = graveSection.getString("marker-entity-id");
+                if (markerId != null) {
+                    try {
+                        grave.markerEntityId = UUID.fromString(markerId);
+                    } catch (IllegalArgumentException ignored) {
+                    }
+                }
+                gravesByLocation.put(locationKey(location), grave);
             } catch (Exception e) {
                 plugin.getLogger().warning("Skipping corrupt grave entry '" + key + "': " + e.getMessage());
             }
@@ -490,19 +490,22 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
 
     private void saveGraves() {
         YamlConfiguration yaml = new YamlConfiguration();
-        for (Grave grave : gravesByBlock.values()) {
+        for (Grave grave : gravesByLocation.values()) {
             String path = "graves." + grave.id;
             yaml.set(path + ".owner", grave.owner.toString());
             yaml.set(path + ".owner-name", grave.ownerName);
             yaml.set(path + ".world", grave.location.getWorld() == null ? "" : grave.location.getWorld().getName());
-            yaml.set(path + ".x", grave.location.getBlockX());
-            yaml.set(path + ".y", grave.location.getBlockY());
-            yaml.set(path + ".z", grave.location.getBlockZ());
+            yaml.set(path + ".x", grave.location.getX());
+            yaml.set(path + ".y", grave.location.getY());
+            yaml.set(path + ".z", grave.location.getZ());
             yaml.set(path + ".xp", grave.xp);
             yaml.set(path + ".xp-claimed", grave.xpClaimed);
             yaml.set(path + ".created-at", grave.createdAt);
             yaml.set(path + ".expires-at", grave.expiresAt);
             yaml.set(path + ".items", ItemSerializer.toBase64(grave.items.toArray(new ItemStack[0])));
+            if (grave.markerEntityId != null) {
+                yaml.set(path + ".marker-entity-id", grave.markerEntityId.toString());
+            }
         }
         try {
             yaml.save(new File(moduleFolder(), "graves-data.yml"));

@@ -46,7 +46,10 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
     @Override
     public void onDisable() {
         if (moduleManager != null) moduleManager.disableModules();
-        if (stateStore != null) stateStore.saveNow();
+        if (stateStore != null) {
+            stateStore.saveNow();
+            stateStore.close();
+        }
         instance = null;
     }
 

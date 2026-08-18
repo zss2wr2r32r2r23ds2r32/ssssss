@@ -40,6 +40,7 @@ public final class SettingsModule extends Module implements CommandExecutor {
         registerCommand("sb", this);
         registerCommand("deathtoggle", this);
         registerCommand("jointoggle", this);
+        registerCommand("mobtoggle", this);
     }
 
     private void toggleChat(Player player) {
@@ -107,6 +108,7 @@ public final class SettingsModule extends Module implements CommandExecutor {
             }
             case "deathtoggle" -> toggleDeath(player);
             case "jointoggle" -> toggleJoin(player);
+            case "mobtoggle" -> toggleMobSpawn(player);
         }
         return true;
     }

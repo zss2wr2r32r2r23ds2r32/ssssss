@@ -33,6 +33,8 @@ public final class CommandHelp {
         list.add(new CommandInfo("/sb", "Toggle scoreboard", "sharded.settings.scoreboard"));
         list.add(new CommandInfo("/deathtoggle", "Toggle death messages", "sharded.settings.deathmessages"));
         list.add(new CommandInfo("/jointoggle", "Toggle join/leave messages", "sharded.settings.joinmessages"));
+        list.add(new CommandInfo("/mobtoggle", "Toggle mob spawning near you", "sharded.settings.mobspawn"));
+        list.add(new CommandInfo("/killstreak [best|player]", "View killstreak stats", "sharded.killstreak.use"));
         list.add(new CommandInfo("/bal", "Check token balance", null));
         list.add(new CommandInfo("/tokenshop", "Open token shop", "sharded.tokenshop.use"));
         list.add(new CommandInfo("/toolname [name]", "Rename held item", "sharded.toolname.use"));

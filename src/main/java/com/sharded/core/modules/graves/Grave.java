@@ -20,6 +20,9 @@ public final class Grave {
     public final long createdAt;
     public final long expiresAt;
 
+    /** Spawned marker entity (player head armor stand). */
+    public UUID markerEntityId;
+
     /** Spawned TextDisplay hologram entity ids (name, timer, xp). */
     public final List<UUID> hologramIds = new ArrayList<>();
     public boolean hologramsSpawned;
