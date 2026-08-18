@@ -1,0 +1,197 @@
+package com.sharded.core.hook;
+
+import com.sharded.core.ShardedCore;
+import com.sharded.core.modules.killstreaks.KillstreakDatabase;
+import com.sharded.core.modules.killstreaks.KillstreaksModule;
+import com.sharded.core.modules.tokens.TokenDatabase;
+import com.sharded.core.modules.tokens.TokensModule;
+import com.sharded.core.util.Numbers;
+import com.sharded.core.util.OfflinePlayers;
+import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginEnableEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Locale;
+
+/**
+ * PlaceholderAPI expansions for tokens and killstreaks (used by Topper and holograms).
+ *
+ * <p>Topper example ({@code plugins/Topper/config.yml}):
+ * <pre>
+ * holders:
+ *   killstreaks:
+ *     type: placeholder
+ *     placeholder: '%xkillstreak_best%'
+ *     online: true
+ *   tokens:
+ *     type: placeholder
+ *     placeholder: '%shardedcore_tokens%'
+ *     online: true
+ * </pre>
+ */
+public final class PlaceholderHook implements Listener {
+
+    private final ShardedCore plugin;
+    private boolean registered;
+
+    public PlaceholderHook(ShardedCore plugin) {
+        this.plugin = plugin;
+    }
+
+    public void tryRegister() {
+        if (registered) return;
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") == null) return;
+
+        new ShardedCoreExpansion().register();
+        new XKillstreakExpansion().register();
+        registered = true;
+        plugin.getLogger().info("Registered PlaceholderAPI expansions (shardedcore, xkillstreak).");
+    }
+
+    @EventHandler
+    public void onPluginEnable(PluginEnableEvent event) {
+        if ("PlaceholderAPI".equals(event.getPlugin().getName())) {
+            tryRegister();
+        }
+    }
+
+    private final class ShardedCoreExpansion extends PlaceholderExpansion {
+        @Override
+        public @NotNull String getIdentifier() {
+            return "shardedcore";
+        }
+
+        @Override
+        public @NotNull String getAuthor() {
+            return "Sharded";
+        }
+
+        @Override
+        public @NotNull String getVersion() {
+            return plugin.getDescription().getVersion();
+        }
+
+        @Override
+        public boolean persist() {
+            return true;
+        }
+
+        @Override
+        public @Nullable String onRequest(OfflinePlayer player, @NotNull String params) {
+            String p = params.toLowerCase(Locale.ROOT);
+
+            if (player != null) {
+                TokensModule tokens = plugin.modules().get(TokensModule.class);
+                if (tokens != null && tokens.service() != null) {
+                    if (p.equals("tokens") || p.equals("tokens_amount")) {
+                        return String.valueOf(tokens.service().getBalance(player.getUniqueId()));
+                    }
+                    if (p.equals("tokens_formatted")) {
+                        return Numbers.format(tokens.service().getBalance(player.getUniqueId()));
+                    }
+                }
+
+                KillstreakDatabase ks = killstreakDb();
+                if (ks != null) {
+                    if (p.equals("killstreak") || p.equals("killstreak_current")) {
+                        return String.valueOf(ks.getCurrent(player.getUniqueId()));
+                    }
+                    if (p.equals("killstreak_best")) {
+                        return String.valueOf(ks.getBest(player.getUniqueId()));
+                    }
+                }
+            }
+
+            if (p.startsWith("tokens_top_")) {
+                return leaderboardValue(p.substring("tokens_top_".length()), true);
+            }
+            if (p.startsWith("killstreak_top_")) {
+                return leaderboardValue(p.substring("killstreak_top_".length()), false);
+            }
+            return null;
+        }
+    }
+
+    /** Legacy-style placeholders: {@code %xkillstreak_current%}, {@code %xkillstreak_best%}. */
+    private final class XKillstreakExpansion extends PlaceholderExpansion {
+        @Override
+        public @NotNull String getIdentifier() {
+            return "xkillstreak";
+        }
+
+        @Override
+        public @NotNull String getAuthor() {
+            return "Sharded";
+        }
+
+        @Override
+        public @NotNull String getVersion() {
+            return plugin.getDescription().getVersion();
+        }
+
+        @Override
+        public boolean persist() {
+            return true;
+        }
+
+        @Override
+        public @Nullable String onRequest(OfflinePlayer player, @NotNull String params) {
+            if (player == null) return "0";
+            KillstreakDatabase ks = killstreakDb();
+            if (ks == null) return "0";
+
+            return switch (params.toLowerCase(Locale.ROOT)) {
+                case "current", "streak" -> String.valueOf(ks.getCurrent(player.getUniqueId()));
+                case "best", "max" -> String.valueOf(ks.getBest(player.getUniqueId()));
+                default -> null;
+            };
+        }
+    }
+
+    private KillstreakDatabase killstreakDb() {
+        KillstreaksModule module = plugin.modules().get(KillstreaksModule.class);
+        return module == null ? null : module.database();
+    }
+
+    private String leaderboardValue(String spec, boolean tokens) {
+        String[] parts = spec.split("_", 2);
+        if (parts.length == 0) return "";
+        int rank;
+        try {
+            rank = Integer.parseInt(parts[0]);
+        } catch (NumberFormatException e) {
+            return "";
+        }
+        if (rank < 1 || rank > 10) return "";
+        String field = parts.length > 1 ? parts[1] : "name";
+
+        if (tokens) {
+            TokensModule module = plugin.modules().get(TokensModule.class);
+            if (module == null || module.database() == null) return "---";
+            List<TokenDatabase.LeaderEntry> top = module.database().top(10);
+            if (rank > top.size()) return field.equals("amount") || field.equals("value") ? "0" : "---";
+            TokenDatabase.LeaderEntry entry = top.get(rank - 1);
+            return switch (field) {
+                case "amount", "value" -> String.valueOf(entry.value());
+                case "formatted" -> Numbers.format(entry.value());
+                default -> OfflinePlayers.name(entry.uuid());
+            };
+        }
+
+        KillstreakDatabase ks = killstreakDb();
+        if (ks == null) return "---";
+        List<KillstreakDatabase.LeaderEntry> top = ks.topBest(10);
+        if (rank > top.size()) return field.equals("amount") || field.equals("value") ? "0" : "---";
+        KillstreakDatabase.LeaderEntry entry = top.get(rank - 1);
+        return switch (field) {
+            case "amount", "value" -> String.valueOf(entry.value());
+            default -> OfflinePlayers.name(entry.uuid());
+        };
+    }
+}

@@ -7,7 +7,6 @@ import com.sharded.core.util.Numbers;
 import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.Prefix;
 import com.sharded.core.util.TabCompleteHelper;
-import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -15,9 +14,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.io.File;
 import java.util.List;
 import java.util.Locale;
@@ -61,11 +57,6 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
         registerCommand("bal", this);
         registerCommand("tokens", this);
         registerCommand("tokenshop", this);
-
-        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            registerPlaceholders();
-            plugin.getLogger().info("Registered PlaceholderAPI placeholders.");
-        }
     }
 
     private void copyDefaultMenus(File folder) {
@@ -77,89 +68,6 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
                 if (plugin.getResource(path) != null) plugin.saveResource(path, false);
             }
         }
-    }
-
-    private void registerPlaceholders() {
-        new PlaceholderExpansion() {
-            @Override
-            public @NotNull String getIdentifier() {
-                return "shardedcore";
-            }
-
-            @Override
-            public @NotNull String getAuthor() {
-                return "Sharded";
-            }
-
-            @Override
-            public @NotNull String getVersion() {
-                return plugin.getDescription().getVersion();
-            }
-
-            @Override
-            public boolean persist() {
-                return true;
-            }
-
-            @Override
-            public @Nullable String onRequest(OfflinePlayer player, @NotNull String params) {
-                String p = params.toLowerCase(Locale.ROOT);
-                if (player != null && service != null) {
-                    if (p.equals("tokens") || p.equals("tokens_amount")) {
-                        return String.valueOf(service.getBalance(player.getUniqueId()));
-                    }
-                    if (p.equals("tokens_formatted")) {
-                        return Numbers.format(service.getBalance(player.getUniqueId()));
-                    }
-                }
-                if (p.startsWith("tokens_top_")) {
-                    return leaderboardValue(p.substring("tokens_top_".length()), true);
-                }
-                if (p.startsWith("killstreak_top_")) {
-                    return leaderboardValue(p.substring("killstreak_top_".length()), false);
-                }
-                if (player != null) {
-                    var ks = plugin.modules().get(com.sharded.core.modules.killstreaks.KillstreaksModule.class);
-                    if (ks != null && ks.database() != null) {
-                        if (p.equals("killstreak")) return String.valueOf(ks.database().getCurrent(player.getUniqueId()));
-                        if (p.equals("killstreak_best")) return String.valueOf(ks.database().getBest(player.getUniqueId()));
-                    }
-                }
-                return null;
-            }
-
-            private String leaderboardValue(String spec, boolean tokens) {
-                String[] parts = spec.split("_", 2);
-                if (parts.length == 0) return "";
-                int rank;
-                try {
-                    rank = Integer.parseInt(parts[0]);
-                } catch (NumberFormatException e) {
-                    return "";
-                }
-                if (rank < 1 || rank > 10) return "";
-                String field = parts.length > 1 ? parts[1] : "name";
-                if (tokens) {
-                    List<TokenDatabase.LeaderEntry> top = database.top(10);
-                    if (rank > top.size()) return field.equals("amount") || field.equals("value") ? "0" : "---";
-                    TokenDatabase.LeaderEntry entry = top.get(rank - 1);
-                    return switch (field) {
-                        case "amount", "value" -> String.valueOf(entry.value());
-                        case "formatted" -> Numbers.format(entry.value());
-                        default -> OfflinePlayers.name(entry.uuid());
-                    };
-                }
-                var ks = plugin.modules().get(com.sharded.core.modules.killstreaks.KillstreaksModule.class);
-                if (ks == null || ks.database() == null) return "---";
-                List<com.sharded.core.modules.killstreaks.KillstreakDatabase.LeaderEntry> top = ks.database().topBest(10);
-                if (rank > top.size()) return field.equals("amount") || field.equals("value") ? "0" : "---";
-                var entry = top.get(rank - 1);
-                return switch (field) {
-                    case "amount", "value" -> String.valueOf(entry.value());
-                    default -> OfflinePlayers.name(entry.uuid());
-                };
-            }
-        }.register();
     }
 
     @Override

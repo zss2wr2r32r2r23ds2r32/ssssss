@@ -3,6 +3,7 @@ package com.sharded.core;
 import com.sharded.core.gui.GuiListener;
 import com.sharded.core.gui.GuiManager;
 import com.sharded.core.hook.LuckPermsHook;
+import com.sharded.core.hook.PlaceholderHook;
 import com.sharded.core.module.ModuleManager;
 import com.sharded.core.util.PlayerStateStore;
 import com.sharded.core.util.CommandHelp;
@@ -20,6 +21,7 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
     private static ShardedCore instance;
 
     private LuckPermsHook luckPerms;
+    private PlaceholderHook placeholderHook;
     private PlayerStateStore stateStore;
     private GuiManager guiManager;
     private ModuleManager moduleManager;
@@ -30,12 +32,15 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
         saveDefaultConfig();
 
         this.luckPerms = new LuckPermsHook(this);
+        this.placeholderHook = new PlaceholderHook(this);
+        getServer().getPluginManager().registerEvents(placeholderHook, this);
         this.stateStore = new PlayerStateStore(this);
         this.guiManager = new GuiManager(this);
         getServer().getPluginManager().registerEvents(new GuiListener(guiManager), this);
 
         this.moduleManager = new ModuleManager(this);
         this.moduleManager.enableModules();
+        placeholderHook.tryRegister();
 
         var admin = getCommand("shardedcore");
         if (admin != null) admin.setTabCompleter(this);
