@@ -3,4 +3,5 @@
 default-slots: 1
 max-slots: 9
 title: "&5Backpack &8- &7%player%"
+title-admin: "&cAdmin Backpack &8- &7%player%"
 play-sound: true

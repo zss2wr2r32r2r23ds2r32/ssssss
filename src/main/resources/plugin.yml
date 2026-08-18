@@ -10,7 +10,7 @@ load: POSTWORLD
 commands:
   shardedcore:
     description: ShardedCore admin command (reload)
-    usage: /shardedcore reload
+    usage: /shardedcore [reload|help]
     aliases: [score, shardedc]
     permission: sharded.admin
   craft:
@@ -45,9 +45,6 @@ commands:
     description: Toggle night vision
     usage: /nightvision
     aliases: [nv]
-  hide:
-    description: Hide your identity (scrambled name + Steve skin)
-    usage: /hide
   kill:
     description: Kill yourself or another player
     usage: /kill [player]
@@ -72,6 +69,17 @@ commands:
   sb:
     description: Toggle the sidebar scoreboard
     usage: /sb
+  deathtoggle:
+    description: Toggle seeing death messages
+    usage: /deathtoggle
+    aliases: [deathmessages, dtoggle]
+  jointoggle:
+    description: Toggle join and leave messages
+    usage: /jointoggle
+    aliases: [joinleave, jtoggle]
+  toolname:
+    description: Rename the item you are holding
+    usage: /toolname [name]
   graves:
     description: Graves admin command
     usage: /graves [list|purge]
@@ -111,8 +119,6 @@ permissions:
     default: op
   sharded.nightvision.use:
     default: true
-  sharded.hide.use:
-    default: op
   sharded.kill.use:
     default: true
   sharded.kill.others:
@@ -120,6 +126,9 @@ permissions:
   sharded.backpack.use:
     default: true
   sharded.backpack.view.others:
+    default: op
+  sharded.backpack.admin:
+    description: View and take items from any player's backpack
     default: op
   sharded.backpack.slots.1:
     default: true
@@ -177,6 +186,8 @@ permissions:
   sharded.settings.joinmessages:
     default: true
   sharded.settings.mobspawn:
+    default: true
+  sharded.toolname.use:
     default: true
   sharded.pickupmobs.use:
     default: op

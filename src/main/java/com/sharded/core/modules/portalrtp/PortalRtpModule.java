@@ -81,7 +81,10 @@ public final class PortalRtpModule extends Module implements CommandExecutor, Ta
 
     @EventHandler
     public void onPortalEnter(EntityPortalEnterEvent event) {
-        if (event.getEntity() instanceof Player player) tryOpen(player, event.getLocation());
+        if (event.getEntity() instanceof Player player) {
+            Location loc = event.getLocation().getBlock().getLocation();
+            if (onTriggerBlock(loc)) tryOpen(player, loc);
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -94,8 +97,8 @@ public final class PortalRtpModule extends Module implements CommandExecutor, Ta
             cancelPending(event.getPlayer().getUniqueId(), true);
             return;
         }
-        if (triggers.isTrigger(to) || triggers.isTrigger(to.clone().subtract(0, 1, 0))) {
-            tryOpen(event.getPlayer(), to);
+        if (onTriggerBlock(to)) {
+            tryOpen(event.getPlayer(), to.getBlock().getLocation());
         }
     }
 
@@ -112,6 +115,13 @@ public final class PortalRtpModule extends Module implements CommandExecutor, Ta
         if (last != null && now - last < config.getLong("gui-cooldown-ms", 2000L)) return;
         portalGuiCooldown.put(player.getUniqueId(), now);
         openGui(player);
+    }
+
+    private boolean onTriggerBlock(Location location) {
+        if (location == null || location.getWorld() == null) return false;
+        Location block = location.getBlock().getLocation();
+        if (triggers.isTrigger(block)) return true;
+        return triggers.isTrigger(block.clone().subtract(0, 1, 0));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -156,16 +166,27 @@ public final class PortalRtpModule extends Module implements CommandExecutor, Ta
         return true;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onWandUse(PlayerInteractEvent event) {
+        if (event.getHand() != org.bukkit.inventory.EquipmentSlot.HAND) return;
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock() == null) return;
         ItemStack item = event.getItem();
-        if (item == null || item.getItemMeta() == null
+        if (item == null || item.getType().isAir() || item.getItemMeta() == null
                 || !item.getItemMeta().getPersistentDataContainer().has(wandKey, PersistentDataType.BYTE)) return;
-        if (!event.getPlayer().hasPermission("sharded.rtp.admin")) return;
+        Player player = event.getPlayer();
+        if (!player.hasPermission("sharded.rtp.admin")) return;
         event.setCancelled(true);
-        triggers.add(event.getClickedBlock().getLocation());
-        send(event.getPlayer(), "wand-set", "%count%", String.valueOf(triggers.count()),
+        event.setUseInteractedBlock(org.bukkit.event.Event.Result.DENY);
+        event.setUseItemInHand(org.bukkit.event.Event.Result.DENY);
+        Location loc = event.getClickedBlock().getLocation();
+        if (player.isSneaking()) {
+            triggers.remove(loc);
+            send(player, "wand-removed", "%count%", String.valueOf(triggers.count()),
+                    "%block%", event.getClickedBlock().getType().name());
+            return;
+        }
+        triggers.add(loc);
+        send(player, "wand-set", "%count%", String.valueOf(triggers.count()),
                 "%block%", event.getClickedBlock().getType().name());
     }
 

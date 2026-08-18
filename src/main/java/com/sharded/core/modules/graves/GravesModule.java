@@ -32,6 +32,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -69,6 +70,7 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
 
     private final Map<String, Grave> gravesByBlock = new LinkedHashMap<>();
     private NamespacedKey hologramKey;
+    private NamespacedKey graveBlockKey;
     private BukkitTask tickTask;
 
     public GravesModule(ShardedCore plugin) {
@@ -78,6 +80,7 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
     @Override
     protected void onEnable() {
         hologramKey = new NamespacedKey(plugin, "grave_hologram");
+        graveBlockKey = new NamespacedKey(plugin, "grave_block");
         registerCommand("graves", this);
         loadGraves();
         for (Grave grave : List.copyOf(gravesByBlock.values())) {
@@ -105,18 +108,24 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
 
     /* ----------------------------- creation ----------------------------- */
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getPlayer();
         if (event.getKeepInventory()) return;
         if (!player.hasPermission("sharded.graves.use")) return;
         List<String> worlds = config.getStringList("enabled-worlds");
         if (!worlds.isEmpty() && !worlds.contains(player.getWorld().getName())) return;
-        if (event.getDrops().isEmpty() && event.getDroppedExp() <= 0) return;
 
         List<ItemStack> items = new ArrayList<>();
         for (ItemStack drop : event.getDrops()) {
             if (drop != null && !drop.getType().isAir()) items.add(drop.clone());
+        }
+        if (items.isEmpty()) {
+            for (ItemStack stack : player.getInventory().getContents()) {
+                if (stack != null && !stack.getType().isAir()) items.add(stack.clone());
+            }
+            ItemStack off = player.getInventory().getItemInOffHand();
+            if (off != null && !off.getType().isAir()) items.add(off.clone());
         }
         int xp = config.getBoolean("store-xp", true) ? event.getDroppedExp() : 0;
         if (items.isEmpty() && xp <= 0) return;
@@ -125,6 +134,7 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
         if (location == null) return;
 
         event.getDrops().clear();
+        player.getInventory().clear();
         if (config.getBoolean("store-xp", true)) event.setDroppedExp(0);
 
         long lifetime = config.getLong("expire-seconds", 300L);
@@ -145,17 +155,15 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
     private Location findGraveLocation(Location deathLocation) {
         World world = deathLocation.getWorld();
         if (world == null) return null;
-        int y = Math.max(world.getMinHeight() + 1, Math.min(world.getMaxHeight() - 2, deathLocation.getBlockY()));
-        Location base = new Location(world, deathLocation.getBlockX(), y, deathLocation.getBlockZ());
-        // Find the first air-ish block at or above the death point.
-        for (int offset = 0; offset < 10 && base.getBlockY() + offset < world.getMaxHeight() - 1; offset++) {
-            Location candidate = base.clone().add(0, offset, 0);
-            Material type = candidate.getBlock().getType();
-            if ((type.isAir() || !type.isSolid()) && !gravesByBlock.containsKey(blockKey(candidate))) {
-                return candidate;
-            }
+        int x = deathLocation.getBlockX();
+        int z = deathLocation.getBlockZ();
+        int y = world.getHighestBlockYAt(x, z);
+        Location grave = new Location(world, x, y, z);
+        for (int attempt = 0; attempt < 5; attempt++) {
+            if (!gravesByBlock.containsKey(blockKey(grave))) return grave;
+            grave = grave.clone().add(0, 1, 0);
         }
-        return base;
+        return grave;
     }
 
     private void placeGraveBlock(Grave grave) {
@@ -163,8 +171,24 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
         block.setType(Material.PLAYER_HEAD, false);
         if (block.getState() instanceof Skull skull) {
             skull.setOwningPlayer(Bukkit.getOfflinePlayer(grave.owner));
+            skull.getPersistentDataContainer().set(graveBlockKey, PersistentDataType.STRING, grave.id.toString());
             skull.update(true, false);
         }
+    }
+
+    private Grave graveAt(Location location) {
+        if (location == null || location.getWorld() == null) return null;
+        Grave mapped = gravesByBlock.get(blockKey(location));
+        if (mapped != null) return mapped;
+        Block block = location.getBlock();
+        if (block.getType() != Material.PLAYER_HEAD) return null;
+        if (!(block.getState() instanceof Skull skull)) return null;
+        String id = skull.getPersistentDataContainer().get(graveBlockKey, PersistentDataType.STRING);
+        if (id == null) return null;
+        for (Grave grave : gravesByBlock.values()) {
+            if (grave.id.toString().equals(id)) return grave;
+        }
+        return null;
     }
 
     /** Re-applies block + holograms for a grave loaded from disk. */
@@ -262,8 +286,9 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock() == null) return;
-        Grave grave = gravesByBlock.get(blockKey(event.getClickedBlock().getLocation()));
+        if (event.getClickedBlock() == null) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK) return;
+        Grave grave = graveAt(event.getClickedBlock().getLocation());
         if (grave == null) return;
         event.setCancelled(true);
         openGrave(event.getPlayer(), grave);
@@ -271,10 +296,19 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
 
     @EventHandler(ignoreCancelled = true)
     public void onBreak(BlockBreakEvent event) {
-        Grave grave = gravesByBlock.get(blockKey(event.getBlock().getLocation()));
+        Grave grave = graveAt(event.getBlock().getLocation());
         if (grave == null) return;
         event.setCancelled(true);
         openGrave(event.getPlayer(), grave);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onTeleport(PlayerTeleportEvent event) {
+        Location to = event.getTo();
+        if (to == null) return;
+        if (graveAt(to.getBlock().getLocation()) != null) {
+            event.setTo(to.clone().add(0, 1, 0));
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -296,7 +330,7 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
             send(player, "not-your-grave", "%player%", grave.ownerName);
             return;
         }
-        int size = Math.min(54, Math.max(9, ((grave.items.size() + 8) / 9) * 9));
+        int size = Math.min(54, Math.max(9, ((Math.max(grave.items.size(), 1) + 8) / 9) * 9));
         GraveHolder holder = new GraveHolder(grave);
         Inventory inventory = Bukkit.createInventory(holder, size,
                 Text.c(Text.apply(config.getString("gui-title", "&8Grave of &f%player%"), "%player%", grave.ownerName)));

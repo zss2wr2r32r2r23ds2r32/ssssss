@@ -37,6 +37,9 @@ public final class PrivateMessagesModule extends Module implements CommandExecut
         registerCommand("msg", this);
         registerCommand("reply", this);
         registerCommand("msgtoggle", this);
+        com.sharded.core.util.CommandOverride.takeOver(plugin, "msgtoggle", this, this);
+        com.sharded.core.util.CommandOverride.takeOver(plugin, "togglemsg", this, this);
+        com.sharded.core.util.CommandOverride.takeOver(plugin, "pmtoggle", this, this);
     }
 
     @Override
@@ -60,7 +63,7 @@ public final class PrivateMessagesModule extends Module implements CommandExecut
             return true;
         }
         switch (command.getName().toLowerCase()) {
-            case "msgtoggle" -> {
+            case "msgtoggle", "togglemsg", "pmtoggle" -> {
                 if (!player.hasPermission("sharded.msg.toggle")) {
                     send(player, "no-permission");
                     return true;

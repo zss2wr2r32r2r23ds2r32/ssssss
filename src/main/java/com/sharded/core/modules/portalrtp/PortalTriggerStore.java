@@ -55,6 +55,8 @@ public final class PortalTriggerStore {
     }
 
     private String key(Location loc) {
+        if (loc.getWorld() == null) return "?";
+        loc = loc.getBlock().getLocation();
         return loc.getWorld().getName() + ":" + loc.getBlockX() + ":" + loc.getBlockY() + ":" + loc.getBlockZ();
     }
 

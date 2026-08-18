@@ -1,0 +1,8 @@
+prefix: "%prefix%"
+players-only: "%prefix%&cOnly players can use this command."
+no-permission: "%prefix%&cYou don't have permission."
+no-item: "%prefix%&cHold an item to rename it."
+blacklisted: "%prefix%&cThat name contains a blocked word."
+cleared: "%prefix%&aItem name cleared."
+renamed: "%prefix%&aRenamed item to &f%name%&a."
+failed: "%prefix%&cCould not rename that item."

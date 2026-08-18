@@ -10,8 +10,10 @@ import com.sharded.core.modules.deathmessages.DeathMessagesModule;
 import com.sharded.core.modules.fix.FixModule;
 import com.sharded.core.modules.fly.FlyModule;
 import com.sharded.core.modules.graves.GravesModule;
-import com.sharded.core.modules.hide.HideModule;
-import com.sharded.core.modules.joinmessages.JoinMessagesModule;
+import com.sharded.core.modules.tokens.TokenService;
+import com.sharded.core.modules.tokens.TokensModule;
+import com.sharded.core.modules.toolname.ToolNameModule;
+import com.sharded.core.modules.trash.TrashModule;
 import com.sharded.core.modules.kill.KillModule;
 import com.sharded.core.modules.killstreaks.KillstreaksModule;
 import com.sharded.core.modules.nightvision.NightVisionModule;
@@ -20,9 +22,7 @@ import com.sharded.core.modules.pickupspawners.PickupSpawnersModule;
 import com.sharded.core.modules.portalrtp.PortalRtpModule;
 import com.sharded.core.modules.privatemessages.PrivateMessagesModule;
 import com.sharded.core.modules.settings.SettingsModule;
-import com.sharded.core.modules.tokens.TokenService;
-import com.sharded.core.modules.tokens.TokensModule;
-import com.sharded.core.modules.trash.TrashModule;
+import com.sharded.core.modules.joinmessages.JoinMessagesModule;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -42,7 +42,6 @@ public final class ModuleManager {
         register(new ChatToggleModule(plugin));
         register(new PrivateMessagesModule(plugin));
         register(new NightVisionModule(plugin));
-        register(new HideModule(plugin));
         register(new DeathMessagesModule(plugin));
         register(new JoinMessagesModule(plugin));
         register(new BackpackModule(plugin));
@@ -57,6 +56,7 @@ public final class ModuleManager {
         register(new PickupMobsModule(plugin));
         register(new PickupSpawnersModule(plugin));
         register(new TokensModule(plugin));
+        register(new ToolNameModule(plugin));
     }
 
     private void register(Module module) {

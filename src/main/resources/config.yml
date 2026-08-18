@@ -11,7 +11,6 @@ modules:
   chat: true
   privatemessages: true
   nightvision: true
-  hide: true
   deathmessages: true
   joinmessages: true
   backpack: true
@@ -26,3 +25,4 @@ modules:
   pickupmobs: true
   pickupspawners: true
   tokens: true
+  toolname: true

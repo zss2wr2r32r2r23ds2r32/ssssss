@@ -16,7 +16,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.io.File;
 
-/** Settings toggles (/sb + GUI actions). /settings command removed. */
+/** Player toggles: /sb, /deathtoggle, /jointoggle (+ GUI actions if opened elsewhere). */
 public final class SettingsModule extends Module implements CommandExecutor {
 
     public SettingsModule(ShardedCore plugin) {
@@ -38,6 +38,8 @@ public final class SettingsModule extends Module implements CommandExecutor {
         plugin.gui().registerAction("toggle_mobspawn", this::toggleMobSpawn);
 
         registerCommand("sb", this);
+        registerCommand("deathtoggle", this);
+        registerCommand("jointoggle", this);
     }
 
     private void toggleChat(Player player) {
@@ -94,12 +96,18 @@ public final class SettingsModule extends Module implements CommandExecutor {
             send(sender, "players-only");
             return true;
         }
-        if (!player.hasPermission("sharded.settings.scoreboard")) {
-            PlayerToggles.noPermissionActionBar(player, raw("no-permission-actionbar"));
-            return true;
+        switch (command.getName().toLowerCase()) {
+            case "sb" -> {
+                if (!player.hasPermission("sharded.settings.scoreboard")) {
+                    PlayerToggles.noPermissionActionBar(player, raw("no-permission-actionbar"));
+                    return true;
+                }
+                PlayerToggles.setScoreboard(player, !PlayerToggles.scoreboard(player));
+                send(player, PlayerToggles.scoreboard(player) ? "scoreboard-on" : "scoreboard-off");
+            }
+            case "deathtoggle" -> toggleDeath(player);
+            case "jointoggle" -> toggleJoin(player);
         }
-        PlayerToggles.setScoreboard(player, !PlayerToggles.scoreboard(player));
-        send(player, PlayerToggles.scoreboard(player) ? "scoreboard-on" : "scoreboard-off");
         return true;
     }
 

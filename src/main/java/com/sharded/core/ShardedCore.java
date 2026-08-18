@@ -5,6 +5,7 @@ import com.sharded.core.gui.GuiManager;
 import com.sharded.core.hook.LuckPermsHook;
 import com.sharded.core.module.ModuleManager;
 import com.sharded.core.util.PlayerStateStore;
+import com.sharded.core.util.CommandHelp;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
 import org.bukkit.command.Command;
@@ -53,6 +54,10 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!command.getName().equalsIgnoreCase("shardedcore")) return false;
         if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
+            if (!sender.hasPermission("sharded.admin")) {
+                sender.sendMessage(Text.c(getConfig().getString("prefix", "&8[&bSharded&8] &r") + "&cYou don't have permission."));
+                return true;
+            }
             reloadConfig();
             moduleManager.reload();
             stateStore.saveNow();
@@ -60,8 +65,7 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
                     + "&aConfiguration reloaded. &7(" + moduleManager.enabledCount() + " modules enabled)"));
             return true;
         }
-        sender.sendMessage(Text.c(getConfig().getString("prefix", "&8[&bSharded&8] &r")
-                + "&7Running &bShardedCore v" + getDescription().getVersion() + "&7. Use &f/shardedcore reload&7."));
+        CommandHelp.send(sender, getConfig().getString("prefix", "&8[&bSharded&8] &r"));
         return true;
     }
 
@@ -69,7 +73,7 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (!command.getName().equalsIgnoreCase("shardedcore")) return List.of();
         if (args.length == 1) {
-            return TabCompleteHelper.filter(args[0], "reload");
+            return TabCompleteHelper.filter(args[0], "reload", "help");
         }
         return List.of();
     }
