@@ -34,7 +34,7 @@ public final class PortalTriggerStore {
 
     public boolean isTrigger(Location location) {
         if (location.getWorld() == null) return false;
-        if (triggers.isEmpty()) return true; // no wand points = any portal in world
+        if (triggers.isEmpty()) return false;
         return triggers.contains(key(location));
     }
 

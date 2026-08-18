@@ -17,6 +17,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -122,11 +123,11 @@ public final class ArmorTrimsModule extends Module implements CommandExecutor {
     private void render(TrimHolder holder) {
         Inventory inv = holder.inventory;
         ItemStack filler = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).name("&r").build();
+        ItemStack armor = inv.getItem(ARMOR_SLOT);
         for (int i = 0; i < 27; i++) {
             if (i == ARMOR_SLOT) continue;
             inv.setItem(i, filler);
         }
-        ItemStack armor = inv.getItem(ARMOR_SLOT);
         inv.setItem(ARMOR_SLOT, armor);
 
         Registry<TrimPattern> pr = RegistryAccess.registryAccess().getRegistry(RegistryKey.TRIM_PATTERN);
@@ -171,48 +172,44 @@ public final class ArmorTrimsModule extends Module implements CommandExecutor {
         if (!(event.getView().getTopInventory().getHolder() instanceof TrimHolder holder)) return;
         if (!(event.getWhoClicked() instanceof Player player)) return;
 
-        event.setCancelled(true);
+        int rawSlot = event.getRawSlot();
+        int topSize = event.getView().getTopInventory().getSize();
 
-        if (event.getClickedInventory() == holder.inventory) {
-            int slot = event.getSlot();
-            if (slot == PATTERN_SLOT && !holder.patterns.isEmpty()) {
+        if (rawSlot < topSize) {
+            if (rawSlot == ARMOR_SLOT) {
+                ItemStack cursor = event.getCursor();
+                if (cursor != null && !cursor.getType().isAir() && !isArmor(cursor)) {
+                    event.setCancelled(true);
+                    send(player, "not-armor");
+                    return;
+                }
+                Bukkit.getScheduler().runTask(plugin, () -> applyTrim(holder));
+                return;
+            }
+            event.setCancelled(true);
+            if (rawSlot == PATTERN_SLOT && !holder.patterns.isEmpty()) {
                 holder.patternIndex = (holder.patternIndex + 1) % holder.patterns.size();
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.4f);
                 applyTrim(holder);
-            } else if (slot == MATERIAL_SLOT && !holder.materials.isEmpty()) {
+            } else if (rawSlot == MATERIAL_SLOT && !holder.materials.isEmpty()) {
                 holder.materialIndex = (holder.materialIndex + 1) % holder.materials.size();
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.7f);
                 applyTrim(holder);
-            } else if (slot == CONFIRM_SLOT) {
+            } else if (rawSlot == CONFIRM_SLOT) {
                 applyTrim(holder);
                 send(player, "trim-applied");
                 player.playSound(player.getLocation(), Sound.BLOCK_SMITHING_TABLE_USE, 1f, 1f);
-            } else if (slot == ARMOR_SLOT) {
-                ItemStack cursor = event.getCursor();
-                ItemStack current = event.getCurrentItem();
-                if (cursor != null && !cursor.getType().isAir()) {
-                    if (!isArmor(cursor)) {
-                        send(player, "not-armor");
-                        return;
-                    }
-                    holder.inventory.setItem(ARMOR_SLOT, cursor.clone());
-                    player.setItemOnCursor(current != null && !current.getType().isAir() ? current.clone() : null);
-                    applyTrim(holder);
-                } else if (current != null && !current.getType().isAir()) {
-                    player.setItemOnCursor(current.clone());
-                    holder.inventory.setItem(ARMOR_SLOT, null);
-                    render(holder);
-                }
             }
             return;
         }
 
-        if (event.isShiftClick()) {
-            ItemStack cur = event.getCurrentItem();
-            ItemStack armor = holder.inventory.getItem(ARMOR_SLOT);
-            if (isArmor(cur) && (armor == null || armor.getType().isAir())) {
-                holder.inventory.setItem(ARMOR_SLOT, cur.clone());
-                event.getClickedInventory().setItem(event.getSlot(), null);
+        if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
+            event.setCancelled(true);
+            ItemStack current = event.getCurrentItem();
+            ItemStack existing = holder.inventory.getItem(ARMOR_SLOT);
+            if (isArmor(current) && (existing == null || existing.getType().isAir())) {
+                holder.inventory.setItem(ARMOR_SLOT, current.clone());
+                event.setCurrentItem(null);
                 applyTrim(holder);
             }
         }
@@ -238,7 +235,12 @@ public final class ArmorTrimsModule extends Module implements CommandExecutor {
     @EventHandler
     public void onDrag(InventoryDragEvent event) {
         if (!(event.getView().getTopInventory().getHolder() instanceof TrimHolder)) return;
-        event.setCancelled(true);
+        for (int slot : event.getRawSlots()) {
+            if (slot < event.getView().getTopInventory().getSize() && slot != ARMOR_SLOT) {
+                event.setCancelled(true);
+                return;
+            }
+        }
     }
 
     @EventHandler

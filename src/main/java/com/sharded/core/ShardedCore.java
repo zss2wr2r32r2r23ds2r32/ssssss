@@ -5,12 +5,16 @@ import com.sharded.core.gui.GuiManager;
 import com.sharded.core.hook.LuckPermsHook;
 import com.sharded.core.module.ModuleManager;
 import com.sharded.core.util.PlayerStateStore;
+import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class ShardedCore extends JavaPlugin {
+import java.util.List;
+
+public final class ShardedCore extends JavaPlugin implements TabCompleter {
 
     private static ShardedCore instance;
 
@@ -31,6 +35,9 @@ public final class ShardedCore extends JavaPlugin {
 
         this.moduleManager = new ModuleManager(this);
         this.moduleManager.enableModules();
+
+        var admin = getCommand("shardedcore");
+        if (admin != null) admin.setTabCompleter(this);
 
         getLogger().info("ShardedCore enabled with " + moduleManager.enabledCount() + " modules.");
     }
@@ -56,6 +63,15 @@ public final class ShardedCore extends JavaPlugin {
         sender.sendMessage(Text.c(getConfig().getString("prefix", "&8[&bSharded&8] &r")
                 + "&7Running &bShardedCore v" + getDescription().getVersion() + "&7. Use &f/shardedcore reload&7."));
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (!command.getName().equalsIgnoreCase("shardedcore")) return List.of();
+        if (args.length == 1) {
+            return TabCompleteHelper.filter(args[0], "reload");
+        }
+        return List.of();
     }
 
     public static ShardedCore get() {

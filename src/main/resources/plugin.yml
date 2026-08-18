@@ -72,10 +72,6 @@ commands:
   sb:
     description: Toggle the sidebar scoreboard
     usage: /sb
-  settings:
-    description: Open your personal settings
-    usage: /settings
-    aliases: [preferences, prefs]
   graves:
     description: Graves admin command
     usage: /graves [list|purge]
@@ -124,6 +120,24 @@ permissions:
   sharded.backpack.use:
     default: true
   sharded.backpack.view.others:
+    default: op
+  sharded.backpack.slots.1:
+    default: true
+  sharded.backpack.slots.2:
+    default: op
+  sharded.backpack.slots.3:
+    default: op
+  sharded.backpack.slots.4:
+    default: op
+  sharded.backpack.slots.5:
+    default: op
+  sharded.backpack.slots.6:
+    default: op
+  sharded.backpack.slots.7:
+    default: op
+  sharded.backpack.slots.8:
+    default: op
+  sharded.backpack.slots.9:
     default: op
   sharded.graves.use:
     description: Create a grave on death (give to ranks via LuckPerms)

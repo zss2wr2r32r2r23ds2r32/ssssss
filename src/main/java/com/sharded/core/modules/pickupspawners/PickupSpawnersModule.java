@@ -3,6 +3,7 @@ package com.sharded.core.modules.pickupspawners;
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.modules.tokens.TokenService;
+import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -11,6 +12,7 @@ import org.bukkit.block.CreatureSpawner;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -26,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public final class PickupSpawnersModule extends Module implements CommandExecutor {
+public final class PickupSpawnersModule extends Module implements CommandExecutor, TabCompleter {
 
     private NamespacedKey mobKey;
     private final Map<UUID, Integer> paidPickups = new HashMap<>();
@@ -81,6 +83,14 @@ public final class PickupSpawnersModule extends Module implements CommandExecuto
         paidPickups.merge(player.getUniqueId(), 1, Integer::sum);
         send(player, "paid", "%price%", String.valueOf(cost));
         return true;
+    }
+
+    @Override
+    public java.util.List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (args.length == 1) {
+            return TabCompleteHelper.filter(args[0], "pay");
+        }
+        return java.util.List.of();
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)

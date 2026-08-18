@@ -6,6 +6,7 @@ import com.sharded.core.util.ColorUtil;
 import com.sharded.core.util.Numbers;
 import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.Prefix;
+import com.sharded.core.util.TabCompleteHelper;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -18,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -297,21 +297,11 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
             return List.of();
         }
         if (args.length == 1) {
-            return filter(List.of("give", "set", "remove", "reset", "giveall"), args[0]);
+            return TabCompleteHelper.filter(args[0], "give", "set", "remove", "take", "reset", "giveall");
         }
         if (args.length == 2 && !args[0].equalsIgnoreCase("giveall")) {
-            List<String> names = new ArrayList<>();
-            for (Player p : Bukkit.getOnlinePlayers()) names.add(p.getName());
-            return filter(names, args[1]);
+            return TabCompleteHelper.onlinePlayers(args[1]);
         }
         return List.of();
-    }
-
-    private List<String> filter(List<String> options, String input) {
-        List<String> out = new ArrayList<>();
-        for (String o : options) {
-            if (o.toLowerCase(Locale.ROOT).startsWith(input.toLowerCase(Locale.ROOT))) out.add(o);
-        }
-        return out;
     }
 }

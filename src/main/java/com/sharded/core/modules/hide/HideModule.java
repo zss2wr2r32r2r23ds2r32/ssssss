@@ -6,12 +6,24 @@ import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.util.Text;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Display;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.TextDisplay;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -21,17 +33,20 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * /hide — other players see Steve skin + scrambled nametag above head.
- * Tab list name stays normal.
+ * /hide — other players see a Steve disguise + scrambled nametag.
+ * Tab list name and skin stay normal (profile is never changed).
  */
 public final class HideModule extends Module implements CommandExecutor {
 
-    private record Original(PlayerProfile profile, net.kyori.adventure.text.Component displayName,
-                            net.kyori.adventure.text.Component listName, net.kyori.adventure.text.Component customName,
-                            boolean customNameVisible) {
+    private record HideState(
+            UUID armorStandId,
+            UUID nameTagId,
+            BukkitTask followTask,
+            Team team,
+            String scrambled) {
     }
 
-    private final Map<UUID, Original> hidden = new HashMap<>();
+    private final Map<UUID, HideState> hidden = new HashMap<>();
 
     public HideModule(ShardedCore plugin) {
         super(plugin, "hide");
@@ -44,7 +59,7 @@ public final class HideModule extends Module implements CommandExecutor {
 
     @Override
     protected void onDisable() {
-        for (UUID uuid : Map.copyOf(hidden).keySet()) {
+        for (UUID uuid : new HashMap<>(hidden).keySet()) {
             Player player = Bukkit.getPlayer(uuid);
             if (player != null) unhide(player, true);
         }
@@ -72,34 +87,131 @@ public final class HideModule extends Module implements CommandExecutor {
 
     private void hide(Player player) {
         String scrambled = scrambleName();
-        hidden.put(player.getUniqueId(), new Original(
-                player.getPlayerProfile(), player.displayName(), player.playerListName(),
-                player.customName(), player.isCustomNameVisible()));
+        Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
+        String teamName = teamId(player.getUniqueId());
+        Team team = board.getTeam(teamName);
+        if (team == null) team = board.registerNewTeam(teamName);
+        team.addEntry(player.getName());
+        team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
 
-        PlayerProfile steve = Bukkit.createProfile(player.getUniqueId(), stripColors(scrambled));
-        steve.setProperty(new ProfileProperty("textures", steveTexture()));
-        player.setPlayerProfile(steve);
+        Location loc = player.getLocation();
+        ArmorStand stand = loc.getWorld().spawn(loc, ArmorStand.class, as -> {
+            as.setGravity(false);
+            as.setBasePlate(false);
+            as.setVisible(true);
+            as.setSmall(false);
+            as.setMarker(false);
+            as.setInvulnerable(true);
+            as.setCollidable(false);
+            as.setCanPickupItems(false);
+            as.setCustomNameVisible(false);
+            as.setPersistent(false);
+            as.getEquipment().setHelmet(steveHead());
+            as.getEquipment().setChestplate(new ItemStack(Material.LIGHT_BLUE_STAINED_GLASS));
+            as.getEquipment().setLeggings(new ItemStack(Material.PURPLE_STAINED_GLASS));
+        });
 
-        // Nametag above head (what others see floating)
-        player.customName(Text.c(scrambled));
-        player.setCustomNameVisible(true);
-        // Tab stays normal — do NOT change playerListName
+        TextDisplay tag = loc.getWorld().spawn(loc.clone().add(0, 2.0, 0), TextDisplay.class, td -> {
+            td.text(Text.c(scrambled));
+            td.setBillboard(Display.Billboard.CENTER);
+            td.setSeeThrough(true);
+            td.setShadowed(true);
+            td.setPersistent(false);
+        });
+
+        HideState state = new HideState(stand.getUniqueId(), tag.getUniqueId(), null, team, scrambled);
+        hidden.put(player.getUniqueId(), state);
+
+        applyVisibility(player, stand, tag);
+        BukkitTask task = plugin.getServer().getScheduler().runTaskTimer(plugin, () -> follow(player, stand, tag), 1L, 1L);
+        hidden.put(player.getUniqueId(), new HideState(state.armorStandId(), state.nameTagId(), task, team, scrambled));
+
         send(player, "hidden");
     }
 
+    private void follow(Player player, ArmorStand stand, TextDisplay tag) {
+        if (!player.isOnline() || !stand.isValid()) return;
+        Location loc = player.getLocation();
+        stand.teleport(loc);
+        tag.teleport(loc.clone().add(0, 2.0, 0));
+    }
+
+    private void applyVisibility(Player hiddenPlayer, ArmorStand stand, TextDisplay tag) {
+        for (Player viewer : Bukkit.getOnlinePlayers()) {
+            if (viewer.equals(hiddenPlayer)) {
+                viewer.hideEntity(plugin, stand);
+                viewer.hideEntity(plugin, tag);
+            } else {
+                viewer.hideEntity(plugin, hiddenPlayer);
+                viewer.showEntity(plugin, stand);
+                viewer.showEntity(plugin, tag);
+            }
+        }
+    }
+
     private void unhide(Player player, boolean silent) {
-        Original original = hidden.remove(player.getUniqueId());
-        if (original == null) return;
-        player.setPlayerProfile(original.profile());
-        player.displayName(original.displayName());
-        player.playerListName(original.listName());
-        player.customName(original.customName());
-        player.setCustomNameVisible(original.customNameVisible());
+        HideState state = hidden.remove(player.getUniqueId());
+        if (state == null) return;
+        if (state.followTask() != null) state.followTask().cancel();
+        if (state.team() != null) {
+            state.team().removeEntry(player.getName());
+            if (state.team().getEntries().isEmpty()) state.team().unregister();
+        }
+        Entity stand = Bukkit.getEntity(state.armorStandId());
+        if (stand != null) stand.remove();
+        Entity tag = Bukkit.getEntity(state.nameTagId());
+        if (tag != null) tag.remove();
+        for (Player viewer : Bukkit.getOnlinePlayers()) {
+            viewer.showEntity(plugin, player);
+        }
         if (!silent) send(player, "unhidden");
     }
 
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        Player joiner = event.getPlayer();
+        for (Map.Entry<UUID, HideState> entry : hidden.entrySet()) {
+            Player hiddenPlayer = Bukkit.getPlayer(entry.getKey());
+            if (hiddenPlayer == null || !hiddenPlayer.isOnline()) continue;
+            Entity stand = Bukkit.getEntity(entry.getValue().armorStandId());
+            Entity tag = Bukkit.getEntity(entry.getValue().nameTagId());
+            if (joiner.equals(hiddenPlayer)) {
+                if (stand != null) joiner.hideEntity(plugin, stand);
+                if (tag != null) joiner.hideEntity(plugin, tag);
+            } else {
+                joiner.hideEntity(plugin, hiddenPlayer);
+                if (stand != null) joiner.showEntity(plugin, stand);
+                if (tag != null) joiner.showEntity(plugin, tag);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        HideState state = hidden.remove(event.getPlayer().getUniqueId());
+        if (state == null) return;
+        if (state.followTask() != null) state.followTask().cancel();
+        if (state.team() != null) {
+            state.team().removeEntry(event.getPlayer().getName());
+            if (state.team().getEntries().isEmpty()) state.team().unregister();
+        }
+        Entity stand = Bukkit.getEntity(state.armorStandId());
+        if (stand != null) stand.remove();
+        Entity tag = Bukkit.getEntity(state.nameTagId());
+        if (tag != null) tag.remove();
+    }
+
+    private ItemStack steveHead() {
+        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta meta = (SkullMeta) head.getItemMeta();
+        PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID(), "Steve");
+        profile.setProperty(new ProfileProperty("textures", steveTexture()));
+        meta.setPlayerProfile(profile);
+        head.setItemMeta(meta);
+        return head;
+    }
+
     private String scrambleName() {
-        String template = config.getString("scrambled-name", "&kaaaaaaaaaa");
         if (config.getBoolean("random-scramble", true)) {
             int len = config.getInt("scramble-length", 12);
             StringBuilder sb = new StringBuilder("&k");
@@ -108,11 +220,7 @@ public final class HideModule extends Module implements CommandExecutor {
             }
             return sb.toString();
         }
-        return template;
-    }
-
-    private String stripColors(String input) {
-        return input.replaceAll("&[0-9a-fk-orA-FK-OR]", "").replaceAll("(?i)&#[0-9a-fA-F]{6}", "");
+        return config.getString("scrambled-name", "&kaaaaaaaaaa");
     }
 
     private String steveTexture() {
@@ -122,8 +230,7 @@ public final class HideModule extends Module implements CommandExecutor {
         return Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
     }
 
-    @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
-        hidden.remove(event.getPlayer().getUniqueId());
+    private String teamId(UUID uuid) {
+        return "sh_hide_" + uuid.toString().replace("-", "").substring(0, 12);
     }
 }

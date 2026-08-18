@@ -5,9 +5,7 @@ import com.sharded.core.module.Module;
 import com.sharded.core.modules.chat.ChatToggleModule;
 import com.sharded.core.modules.nightvision.NightVisionModule;
 import com.sharded.core.modules.privatemessages.PrivateMessagesModule;
-import com.sharded.core.util.CommandOverride;
 import com.sharded.core.util.PlayerToggles;
-import com.sharded.core.util.Text;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,6 +16,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.io.File;
 
+/** Settings toggles (/sb + GUI actions). /settings command removed. */
 public final class SettingsModule extends Module implements CommandExecutor {
 
     public SettingsModule(ShardedCore plugin) {
@@ -38,9 +37,7 @@ public final class SettingsModule extends Module implements CommandExecutor {
         plugin.gui().registerAction("toggle_joinmessages", this::toggleJoin);
         plugin.gui().registerAction("toggle_mobspawn", this::toggleMobSpawn);
 
-        registerCommand("settings", this);
         registerCommand("sb", this);
-        CommandOverride.takeOver(plugin, "settings", this, null);
     }
 
     private void toggleChat(Player player) {
@@ -97,20 +94,12 @@ public final class SettingsModule extends Module implements CommandExecutor {
             send(sender, "players-only");
             return true;
         }
-        if (command.getName().equalsIgnoreCase("sb")) {
-            if (!player.hasPermission("sharded.settings.scoreboard")) {
-                PlayerToggles.noPermissionActionBar(player, raw("no-permission-actionbar"));
-                return true;
-            }
-            PlayerToggles.setScoreboard(player, !PlayerToggles.scoreboard(player));
-            send(player, PlayerToggles.scoreboard(player) ? "scoreboard-on" : "scoreboard-off");
-            return true;
-        }
-        if (!player.hasPermission("sharded.settings.use")) {
+        if (!player.hasPermission("sharded.settings.scoreboard")) {
             PlayerToggles.noPermissionActionBar(player, raw("no-permission-actionbar"));
             return true;
         }
-        plugin.gui().open(player, "settings");
+        PlayerToggles.setScoreboard(player, !PlayerToggles.scoreboard(player));
+        send(player, PlayerToggles.scoreboard(player) ? "scoreboard-on" : "scoreboard-off");
         return true;
     }
 

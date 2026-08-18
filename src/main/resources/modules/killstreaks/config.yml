@@ -1,5 +1,5 @@
 # Killstreak rewards — add as many as you want (5, 10, 15, 20, 25, ...)
-announce-all-streaks: true
+announce-all-streaks: false
 announce-actionbar: false
 
 rewards:

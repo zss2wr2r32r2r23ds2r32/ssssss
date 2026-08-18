@@ -3,6 +3,7 @@ package com.sharded.core.modules.graves;
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.util.ItemSerializer;
+import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -15,6 +16,7 @@ import org.bukkit.block.Skull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Display;
@@ -49,7 +51,7 @@ import java.util.UUID;
  * player's head, with a floating hologram showing their name, a despawn timer
  * and the stored XP. Right-click the head to open the grave and take the loot.
  */
-public final class GravesModule extends Module implements CommandExecutor {
+public final class GravesModule extends Module implements CommandExecutor, TabCompleter {
 
     private static final class GraveHolder implements InventoryHolder {
         private final Grave grave;
@@ -286,11 +288,7 @@ public final class GravesModule extends Module implements CommandExecutor {
     }
 
     private boolean canOpen(Player player, Grave grave) {
-        if (player.getUniqueId().equals(grave.owner)) return true;
-        if (player.hasPermission("sharded.graves.bypass")) return true;
-        long protectSeconds = config.getLong("protect-seconds", -1L);
-        if (protectSeconds < 0) return false; // protected forever
-        return System.currentTimeMillis() >= grave.createdAt + protectSeconds * 1000L;
+        return true;
     }
 
     private void openGrave(Player player, Grave grave) {
@@ -405,6 +403,15 @@ public final class GravesModule extends Module implements CommandExecutor {
                     "%time%", Text.time(grave.secondsLeft()));
         }
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (!sender.hasPermission("sharded.graves.admin")) return List.of();
+        if (args.length == 1) {
+            return TabCompleteHelper.filter(args[0], "list", "purge");
+        }
+        return List.of();
     }
 
     /* ----------------------------- persistence ----------------------------- */

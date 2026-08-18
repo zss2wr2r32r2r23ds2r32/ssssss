@@ -3,6 +3,7 @@ package com.sharded.core.modules.portalrtp;
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.util.ItemBuilder;
+import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -14,6 +15,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -34,7 +36,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-public final class PortalRtpModule extends Module implements CommandExecutor {
+public final class PortalRtpModule extends Module implements CommandExecutor, TabCompleter {
 
     private NamespacedKey wandKey;
     private PortalTriggerStore triggers;
@@ -92,8 +94,7 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
             cancelPending(event.getPlayer().getUniqueId(), true);
             return;
         }
-        if (to.getBlock().getType() == Material.NETHER_PORTAL
-                || to.clone().subtract(0, 1, 0).getBlock().getType() == Material.NETHER_PORTAL) {
+        if (triggers.isTrigger(to) || triggers.isTrigger(to.clone().subtract(0, 1, 0))) {
             tryOpen(event.getPlayer(), to);
         }
     }
@@ -159,16 +160,13 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
     public void onWandUse(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock() == null) return;
         ItemStack item = event.getItem();
-        if (item == null || !item.getItemMeta().getPersistentDataContainer().has(wandKey, PersistentDataType.BYTE)) return;
+        if (item == null || item.getItemMeta() == null
+                || !item.getItemMeta().getPersistentDataContainer().has(wandKey, PersistentDataType.BYTE)) return;
         if (!event.getPlayer().hasPermission("sharded.rtp.admin")) return;
         event.setCancelled(true);
-        Block block = event.getClickedBlock();
-        if (block.getType() != Material.NETHER_PORTAL) {
-            send(event.getPlayer(), "wand-not-portal");
-            return;
-        }
-        triggers.add(block.getLocation());
-        send(event.getPlayer(), "wand-set", "%count%", String.valueOf(triggers.count()));
+        triggers.add(event.getClickedBlock().getLocation());
+        send(event.getPlayer(), "wand-set", "%count%", String.valueOf(triggers.count()),
+                "%block%", event.getClickedBlock().getType().name());
     }
 
     @EventHandler
@@ -282,5 +280,13 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
             return new Location(world, x + 0.5, y + 1.0, z + 0.5);
         }
         return null;
+    }
+
+    @Override
+    public java.util.List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (args.length == 1) {
+            return TabCompleteHelper.ifPermission(sender, "sharded.rtp.admin", args[0], "wand");
+        }
+        return java.util.List.of();
     }
 }

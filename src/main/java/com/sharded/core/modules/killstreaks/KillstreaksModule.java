@@ -54,18 +54,11 @@ public final class KillstreaksModule extends Module {
         database.setStreak(killer.getUniqueId(), streak);
 
         ConfigurationSection rewards = config.getConfigurationSection("rewards." + streak);
-        if (rewards == null) {
-            if (config.getBoolean("announce-all-streaks", true)) {
-                announce(raw("streak-announce", "%player%", killer.getName(), "%streak%", String.valueOf(streak)), killer);
-            }
-            return;
-        }
+        if (rewards == null) return;
 
         String broadcast = rewards.getString("broadcast", "");
         if (!broadcast.isEmpty()) {
             announce(Text.apply(broadcast, "%player%", killer.getName(), "%streak%", String.valueOf(streak)), killer);
-        } else if (config.getBoolean("announce-all-streaks", true)) {
-            announce(raw("streak-announce", "%player%", killer.getName(), "%streak%", String.valueOf(streak)), killer);
         }
 
         send(killer, "milestone", "%streak%", String.valueOf(streak));

@@ -35,7 +35,8 @@ public final class GuiMenu {
         }
     }
 
-    public record GuiItem(int slot, ItemStack display, List<String> leftClickCommands, List<String> clickCommands) {
+    public record GuiItem(int slot, ItemStack display, String rawName, List<String> rawLore,
+                          List<String> leftClickCommands, List<String> clickCommands) {
     }
 
     private final String id;
@@ -79,7 +80,7 @@ public final class GuiMenu {
             if (item.contains("slots")) slots.addAll(item.getIntegerList("slots"));
 
             for (int slot : slots) {
-                itemsBySlot.put(slot, new GuiItem(slot, stack, left, click));
+                itemsBySlot.put(slot, new GuiItem(slot, stack, name, lore, left, click));
             }
         }
     }
@@ -106,20 +107,24 @@ public final class GuiMenu {
         holder.inventory = inventory;
 
         for (GuiItem guiItem : itemsBySlot.values()) {
-            inventory.setItem(guiItem.slot(), applyItem(guiItem.display(), player, extraPlaceholders, manager));
+            inventory.setItem(guiItem.slot(), applyItem(guiItem, player, extraPlaceholders, manager));
         }
         player.openInventory(inventory);
         manager.runCommands(player, openCommands, extraPlaceholders);
     }
 
-    private ItemStack applyItem(ItemStack template, Player player, Map<String, String> extra, GuiManager manager) {
-        ItemStack copy = template.clone();
+    private ItemStack applyItem(GuiItem item, Player player, Map<String, String> extra, GuiManager manager) {
+        ItemStack copy = item.display().clone();
         var meta = copy.getItemMeta();
         if (meta == null) return copy;
-        if (meta.hasDisplayName()) meta.displayName(applyComponent(meta.displayName(), player, extra, manager));
-        if (meta.hasLore()) {
+        if (item.rawName() != null && !item.rawName().isBlank()) {
+            meta.displayName(Text.c(apply(item.rawName(), player, extra, manager)));
+        }
+        if (item.rawLore() != null && !item.rawLore().isEmpty()) {
             List<Component> lore = new ArrayList<>();
-            for (Component line : meta.lore()) lore.add(applyComponent(line, player, extra, manager));
+            for (String line : item.rawLore()) {
+                lore.add(Text.c(apply(line, player, extra, manager)));
+            }
             meta.lore(lore);
         }
         copy.setItemMeta(meta);
