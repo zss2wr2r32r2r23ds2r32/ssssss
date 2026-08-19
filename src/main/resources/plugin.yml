@@ -144,6 +144,15 @@ commands:
     description: Open the temporary rank shop
     usage: /temprank shop
     aliases: [rankshop, temprankshop]
+  gmc:
+    description: Set creative mode
+    usage: /gmc
+  gms:
+    description: Set survival mode
+    usage: /gms
+  gmsp:
+    description: Set spectator mode
+    usage: /gmsp
 
 permissions:
   sharded.admin:
@@ -315,3 +324,12 @@ permissions:
   sharded.tempranks.use:
     description: Open and purchase from the temp rank shop
     default: true
+  sharded.staff:
+    description: Marks a player as staff for command auditing
+    default: op
+  sharded.staff.notify:
+    description: Receive in-game staff audit alerts
+    default: op
+  sharded.staff.gamemode:
+    description: Use /gmc /gms /gmsp
+    default: op

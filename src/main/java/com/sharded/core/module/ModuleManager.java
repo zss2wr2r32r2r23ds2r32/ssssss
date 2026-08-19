@@ -33,6 +33,8 @@ import com.sharded.core.modules.chatcolor.ChatColorModule;
 import com.sharded.core.modules.namecolor.NameColorModule;
 import com.sharded.core.modules.abilities.AbilitiesShopModule;
 import com.sharded.core.modules.tempranks.TempranksModule;
+import com.sharded.core.modules.staff.StaffModule;
+import com.sharded.core.modules.client.ClientModule;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -77,6 +79,8 @@ public final class ModuleManager {
         register(new WardrobeModule(plugin));
         register(new ToolNameModule(plugin));
         register(new BundlesModule(plugin));
+        register(new StaffModule(plugin));
+        register(new ClientModule(plugin));
     }
 
     private void register(Module module) {

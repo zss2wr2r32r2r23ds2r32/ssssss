@@ -82,6 +82,10 @@ public final class ConfigSync {
         count += resetIfExists(plugin, "modules/backpack/config.yml");
         count += resetIfExists(plugin, "modules/backpack/messages.yml");
         count += resetIfExists(plugin, "modules/bundles/config.yml");
+        count += resetIfExists(plugin, "modules/staff/config.yml");
+        count += resetIfExists(plugin, "modules/staff/messages.yml");
+        count += resetIfExists(plugin, "modules/client/config.yml");
+        count += resetIfExists(plugin, "modules/client/messages.yml");
         count += resetIfExists(plugin, "modules/chat/config.yml");
         count += resetIfExists(plugin, "modules/chat/messages.yml");
         count += resetIfExists(plugin, "modules/craft/config.yml");
@@ -145,6 +149,10 @@ public final class ConfigSync {
         count += resetIfExists(plugin, "modules/toolname/messages.yml");
         count += resetIfExists(plugin, "modules/trash/config.yml");
         count += resetIfExists(plugin, "modules/trash/messages.yml");
+        count += resetIfExists(plugin, "modules/staff/config.yml");
+        count += resetIfExists(plugin, "modules/staff/messages.yml");
+        count += resetIfExists(plugin, "modules/client/config.yml");
+        count += resetIfExists(plugin, "modules/client/messages.yml");
         return count;
     }
 

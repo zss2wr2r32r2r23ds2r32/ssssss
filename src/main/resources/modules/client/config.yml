@@ -1,0 +1,21 @@
+config-version: 1
+
+apply-delay-ticks: 40
+
+resource-pack:
+  enabled: true
+  # Host ShardedCore-ui.zip and paste the direct URL here (also in release/ folder)
+  url: 'https://github.com/zss2wr2r32r2r23ds2r32/ssssss/raw/cursor/sharded-core-plugin-e2e9/release/ShardedCore-ui.zip'
+  required: false
+  prompt: '&#AD4EFFLoading ShardedMC UI...'
+
+discord-rpc:
+  enabled: true
+  # Sends to Lunar via apollo:json; uses Feather/Apollo API if those plugins are installed
+  send-without-detection: true
+  game-name: 'Sharded MC'
+  details: 'Playing Sharded MC'
+  state: 'Online on ShardedMC'
+  image-url: ''
+  image-text: 'Sharded MC'
+  show-player-count: true

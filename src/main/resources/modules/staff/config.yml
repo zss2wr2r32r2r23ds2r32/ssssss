@@ -1,0 +1,45 @@
+config-version: 1
+
+audit-enabled: true
+audit-log-to-file: true
+audit-log-file: audit.log
+audit-notify-staff: true
+audit-notify-permission: sharded.staff.notify
+audit-null-permission-commands: false
+
+# Commands always audited when run by staff (sharded.staff)
+audit-commands:
+  - gamemode
+  - gm
+  - gmc
+  - gms
+  - gmsp
+  - give
+  - tp
+  - teleport
+  - ban
+  - kick
+  - op
+  - deop
+  - stop
+  - reload
+  - whitelist
+  - pardon
+  - kill
+  - clear
+  - enchant
+  - effect
+  - weather
+  - time
+  - difficulty
+  - setblock
+  - fill
+  - summon
+  - shardedcore
+
+discord-webhook:
+  enabled: false
+  url: ''
+  title: 'Staff Command Audit'
+  description: '**%player%** ran `%command%` in `%world%`'
+  color: 11328511

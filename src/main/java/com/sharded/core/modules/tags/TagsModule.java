@@ -285,6 +285,7 @@ public final class TagsModule extends Module implements CommandExecutor {
             send(player, "custom-prompt");
             return;
         }
+        clearEquippedTag(player);
         runApplyCommand(player, tag, null);
         send(player, "equipped", "%tag%", tag.displayName());
     }
