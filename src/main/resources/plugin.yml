@@ -173,8 +173,8 @@ commands:
     description: IP ban a player
     usage: /banip <player> [reason] [duration]
   offend:
-    description: View a player's offense history
-    usage: /offend <player>
+    description: Ban a player (offender ban)
+    usage: /offend <player> [reason] [duration]
   unban:
     description: Unban a player
     usage: /unban <player>
@@ -190,6 +190,10 @@ commands:
   alts:
     description: Show linked alt accounts
     usage: /alts [player]
+  revokepunishment:
+    description: Revoke all punishments except doxxing bans
+    usage: /revokepunishment
+    permission: sharded.punishments.revokepunishment
   stafflist:
     description: List online staff
     usage: /stafflist
@@ -208,6 +212,7 @@ commands:
   screenshare:
     description: Start or stop a screenshare
     usage: /screenshare <player>
+    aliases: [ss]
   staffchat:
     description: Send a message to staff chat
     usage: /staffchat <message>
@@ -427,6 +432,32 @@ permissions:
     default: op
   sharded.staff.offend:
     description: Use /offend
+    default: op
+  sharded.staff.kick:
+    description: Use /kick
+    default: op
+  sharded.staff.mute:
+    description: Use /mute (via punish GUI)
+    default: op
+  sharded.staff.revokepunishment:
+    description: Use /revokepunishment
+    default: op
+  sharded.staff.screenshare:
+    description: Use /screenshare and /ss
+    default: op
+  sharded.staff.invrollback:
+    description: Use /invrollback
+    default: op
+  sharded.staff.announce:
+    description: Use /announce
+    default: op
+  sharded.staff.requeststaff:
+    description: Respond to /requeststaff alerts
+    default: op
+  sharded.staff.staffchat:
+    description: Use /staffchat
+    default: op
+  sharded.punishments.revokepunishment:
     default: op
   sharded.staff.wipe:
     description: Use /wipe

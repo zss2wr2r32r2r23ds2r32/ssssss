@@ -1,4 +1,4 @@
 # Private messages module - /msg, /reply, /msgtoggle
 config-version: 3
-# message-mode: inherit  # chat | actionbar | both — overrides global message-mode
+message-mode: inherit
 play-sound: true

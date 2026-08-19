@@ -383,4 +383,64 @@ public final class PunishmentDatabase {
         }
         connection = null;
     }
+
+    public synchronized int revokeActiveBansExceptDoxxing() {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "UPDATE punishments SET active = 0 WHERE type = 'BAN' AND active = 1 AND doxxed = 0")) {
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getLogger().warning("[punishments] Failed to revoke bans: " + e.getMessage());
+            return 0;
+        }
+    }
+
+    public synchronized int revokeActiveMutes() {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "UPDATE punishments SET active = 0 WHERE type = 'MUTE' AND active = 1")) {
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getLogger().warning("[punishments] Failed to revoke mutes: " + e.getMessage());
+            return 0;
+        }
+    }
+
+    public synchronized int revokeActiveWarnings() {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "UPDATE punishments SET active = 0 WHERE type = 'WARN' AND active = 1")) {
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getLogger().warning("[punishments] Failed to revoke warnings: " + e.getMessage());
+            return 0;
+        }
+    }
+
+    public synchronized int deleteKicks() {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "DELETE FROM punishments WHERE type = 'KICK'")) {
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getLogger().warning("[punishments] Failed to delete kicks: " + e.getMessage());
+            return 0;
+        }
+    }
+
+    public synchronized int deleteHistory() {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "DELETE FROM punishments WHERE active = 0")) {
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getLogger().warning("[punishments] Failed to delete history: " + e.getMessage());
+            return 0;
+        }
+    }
+
+    public synchronized int revokeAllIpBans() {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "UPDATE ip_bans SET active = 0 WHERE active = 1")) {
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getLogger().warning("[punishments] Failed to revoke IP bans: " + e.getMessage());
+            return 0;
+        }
+    }
 }

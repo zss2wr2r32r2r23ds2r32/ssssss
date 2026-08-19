@@ -1,4 +1,5 @@
 config-version: 1
+message-mode: inherit
 
 countdown-seconds: 120
 chat-warning-interval-seconds: 5

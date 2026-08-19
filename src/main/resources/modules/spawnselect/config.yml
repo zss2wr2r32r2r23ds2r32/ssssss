@@ -1,4 +1,5 @@
 config-version: 2
+message-mode: inherit
 
 # World used when portal RTP module is disabled
 fallback-world: world

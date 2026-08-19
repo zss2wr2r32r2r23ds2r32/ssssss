@@ -1,4 +1,5 @@
 config-version: 1
+message-mode: inherit
 
 title: "&8🔥 Inventory Rollback &8| %player%"
 

@@ -1,4 +1,5 @@
 config-version: 2
+message-mode: inherit
 
 apply-delay-ticks: 40
 

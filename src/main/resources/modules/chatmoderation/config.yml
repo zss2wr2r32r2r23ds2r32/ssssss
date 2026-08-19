@@ -1,4 +1,5 @@
 config-version: 1
+message-mode: inherit
 
 anti-swear:
   enabled: true

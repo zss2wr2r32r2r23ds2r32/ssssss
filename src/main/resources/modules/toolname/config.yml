@@ -1,6 +1,6 @@
 # Words blocked from /toolname (case-insensitive, partial match)
 config-version: 3
-# message-mode: inherit  # chat | actionbar | both — overrides global message-mode
+message-mode: inherit
 blacklist:
 - fuck
 - shit

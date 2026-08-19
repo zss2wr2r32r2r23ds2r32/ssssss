@@ -1,2 +1,3 @@
 config-version: 1
+message-mode: inherit
 # Temporary ability purchases from the token shop (7-day LuckPerms grants).

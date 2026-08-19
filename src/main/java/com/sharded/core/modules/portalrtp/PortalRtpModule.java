@@ -133,7 +133,8 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
             send(player, "no-permission");
             return true;
         }
-        if (!player.getWorld().getName().equalsIgnoreCase(portalWorld())) {
+        if (config.getBoolean("command-require-portal-world", false)
+                && !player.getWorld().getName().equalsIgnoreCase(portalWorld())) {
             send(player, "wrong-world", "%world%", portalWorld());
             return true;
         }
@@ -157,7 +158,8 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
     }
 
     private void startCountdown(Player player) {
-        if (!player.getWorld().getName().equalsIgnoreCase(portalWorld())) {
+        if (config.getBoolean("command-require-portal-world", false)
+                && !player.getWorld().getName().equalsIgnoreCase(portalWorld())) {
             send(player, "wrong-world", "%world%", portalWorld());
             return;
         }

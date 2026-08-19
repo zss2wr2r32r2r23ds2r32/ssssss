@@ -57,7 +57,8 @@ public final class ScreenshareModule extends Module implements CommandExecutor, 
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!sender.hasPermission("sharded.screenshare.use")) {
+        if (!sender.hasPermission("sharded.screenshare.use")
+                && !sender.hasPermission("sharded.staff.screenshare")) {
             send(sender, "no-permission");
             return true;
         }

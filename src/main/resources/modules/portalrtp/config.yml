@@ -1,6 +1,8 @@
 # Portal RTP
-config-version: 4
-# message-mode: inherit  # chat | actionbar | both — overrides global message-mode
+config-version: 5
+message-mode: inherit
+# When false, /rtp works from any world (portal triggers still require portal-world)
+command-require-portal-world: false
 portal-world: spawn
 target-world: world
 radius-label: 1K x 1K

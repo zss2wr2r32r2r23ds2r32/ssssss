@@ -2,6 +2,6 @@
 # Does not affect items players craft or hold normally.
 
 config-version: 3
-# message-mode: inherit  # chat | actionbar | both — overrides global message-mode
+message-mode: inherit
 strip-bundles: true
 strip-trim-templates: true

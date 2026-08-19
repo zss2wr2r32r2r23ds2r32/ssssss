@@ -1,5 +1,5 @@
 config-version: 4
-# message-mode: inherit  # chat | actionbar | both — overrides global message-mode
+message-mode: inherit
 prefix: '&x&5&C&9&4&F&C&lTOKENS &8▷ &r'
 main-menu: mainmenu
 

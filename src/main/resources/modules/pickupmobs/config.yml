@@ -1,7 +1,7 @@
 # Pickup mobs - sneak + right-click to pick up listed mobs.
 # Permission: sharded.pickupmobs.use
 config-version: 3
-# message-mode: inherit  # chat | actionbar | both — overrides global message-mode
+message-mode: inherit
 allowed-mobs:
 - ZOMBIE
 - SKELETON

@@ -1,6 +1,6 @@
 # Backpack - single row inventory. Default 1 slot, permissions unlock more.
 config-version: 3
-# message-mode: inherit  # chat | actionbar | both
+message-mode: inherit
 # Permissions: sharded.backpack.slots.N (N = 1-9)
 default-slots: 1
 max-slots: 9

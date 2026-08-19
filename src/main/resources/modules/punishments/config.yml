@@ -1,8 +1,15 @@
-config-version: 1
+config-version: 2
+
+message-mode: inherit
 
 default-reason: 'Unfair Modifications'
 discord: '.gg/shardedmc'
 repeat-offender-threshold: 3
+revoke-console-scope: 'server:global'
+
+offend:
+  reason: Ban-Evasion
+  duration: permanent
 
 doxxing-reasons:
   - Doxxing
@@ -195,3 +202,9 @@ wipe:
 
 alts:
   max-display: 50
+  chat:
+    header: '%prefix%&#FF8300Alts for &f%player%&7:'
+    entry: '%prefix% &7- &f%name% &8(%status%)'
+    none: '%prefix%&#FF2727No alts found.'
+    online: '&#9FFF00online'
+    offline: '&#FF2727offline'

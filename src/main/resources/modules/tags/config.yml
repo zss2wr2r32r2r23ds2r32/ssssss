@@ -1,4 +1,5 @@
 config-version: 8
+message-mode: inherit
 
 menu-title: 'Tags'
 menu-size: 27

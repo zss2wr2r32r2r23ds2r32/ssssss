@@ -3,6 +3,7 @@ package com.sharded.core.modules.requeststaff;
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.util.Text;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
@@ -59,20 +60,33 @@ public final class RequestStaffModule extends Module implements CommandExecutor 
         claimedBy.remove(player.getUniqueId());
 
         String staffPerm = config.getString("staff-permission", "sharded.staff");
-        String alert = raw("staff-alert", "%player%", player.getName());
-        var base = Text.c(alert);
-        var clickable = base.append(Text.c(raw("click-here")).clickEvent(ClickEvent.runCommand("/requeststaff tp " + player.getName()))
-                .hoverEvent(HoverEvent.showText(Text.c(raw("click-hover")))));
+        Component alert = buildStaffAlert(player.getName(), staffPerm);
 
         for (Player staff : Bukkit.getOnlinePlayers()) {
-            if (staff.hasPermission(staffPerm)) staff.sendMessage(clickable);
+            if (staff.hasPermission(staffPerm)) staff.sendMessage(alert);
         }
         send(player, "sent");
         return true;
     }
 
+    private Component buildStaffAlert(String playerName, String staffPerm) {
+        String line1 = raw("staff-alert", "%player%", playerName);
+        String line2 = raw("staff-alert-spacer");
+        String clickLine = raw("click-here");
+        var clickable = Text.c(clickLine)
+                .clickEvent(ClickEvent.runCommand("/requeststaff tp " + playerName))
+                .hoverEvent(HoverEvent.showText(Text.c(raw("click-hover"))));
+        return Component.join(
+                net.kyori.adventure.text.JoinConfiguration.newlines(),
+                Text.c(line1),
+                Text.c(line2.isEmpty() ? " " : line2),
+                clickable);
+    }
+
     public boolean handleStaffTeleport(Player staff, String targetName) {
-        if (!staff.hasPermission(config.getString("staff-permission", "sharded.staff"))) return false;
+        String staffPerm = config.getString("staff-permission", "sharded.staff");
+        String respondPerm = config.getString("respond-permission", "sharded.staff.requeststaff");
+        if (!staff.hasPermission(staffPerm) && !staff.hasPermission(respondPerm)) return false;
         Player target = Bukkit.getPlayerExact(targetName);
         if (target == null) {
             send(staff, "target-offline");

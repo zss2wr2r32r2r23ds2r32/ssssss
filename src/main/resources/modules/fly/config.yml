@@ -14,7 +14,7 @@
 # Players in creative or spectator are never force-cancelled.
 
 config-version: 4
-# message-mode: inherit  # chat | actionbar | both — overrides global message-mode
+message-mode: inherit
 world: spawn
 
 region:

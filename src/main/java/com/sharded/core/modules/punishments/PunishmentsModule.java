@@ -7,6 +7,7 @@ import com.sharded.core.util.ColorUtil;
 import com.sharded.core.util.DiscordWebhook;
 import com.sharded.core.util.DurationUtil;
 import com.sharded.core.util.ItemBuilder;
+import com.sharded.core.util.MessageUtil;
 import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
@@ -57,6 +58,15 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         return database;
     }
 
+    /** Accepts sharded.punishments.* or matching sharded.staff.* permission. */
+    private boolean can(CommandSender sender, String punishNode) {
+        if (sender.hasPermission(punishNode)) return true;
+        if (punishNode.startsWith("sharded.punishments.")) {
+            return sender.hasPermission("sharded.staff." + punishNode.substring("sharded.punishments.".length()));
+        }
+        return false;
+    }
+
     @Override
     protected void onEnable() {
         try {
@@ -75,6 +85,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         registerCommand("pardon", this);
         registerCommand("wipe", this);
         registerCommand("alts", this);
+        registerCommand("revokepunishment", this);
     }
 
     @Override
@@ -97,6 +108,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
             case "pardon" -> handlePardonCmd(sender, args);
             case "wipe" -> handleWipeCmd(sender, args);
             case "alts" -> handleAltsCmd(sender, args);
+            case "revokepunishment" -> handleRevokePunishmentCmd(sender);
             default -> false;
         };
     }
@@ -182,7 +194,43 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
             send(sender, "player-not-found");
             return true;
         }
-        showOffenses(sender, target);
+        String reason = args.length >= 2 ? joinArgs(args, 1, args.length - (args.length >= 3 ? 1 : 0))
+                : config.getString("offend.reason", "Ban-Evasion");
+        String duration = args.length >= 3 ? args[args.length - 1]
+                : config.getString("offend.duration", "permanent");
+        if (args.length == 2 && config.getConfigurationSection("reasons") != null
+                && config.getConfigurationSection("reasons").contains(reason)) {
+            duration = defaultDuration("reasons", reason);
+        }
+        ban(sender, target, reason, duration);
+        return true;
+    }
+
+    private boolean handleRevokePunishmentCmd(CommandSender sender) {
+        if (!can(sender, "sharded.punishments.revokepunishment")) {
+            send(sender, "no-permission");
+            return true;
+        }
+        int bans = database.revokeActiveBansExceptDoxxing();
+        int mutes = database.revokeActiveMutes();
+        int warnings = database.revokeActiveWarnings();
+        int kicks = database.deleteKicks();
+        int history = database.deleteHistory();
+        database.revokeAllIpBans();
+
+        String scope = config.getString("revoke-console-scope", "server:global");
+        plugin.getLogger().info("Removed " + bans + " bans from " + scope + ".");
+        plugin.getLogger().info("Removed " + mutes + " mutes from " + scope + ".");
+        plugin.getLogger().info("Removed " + warnings + " warnings from " + scope + ".");
+        plugin.getLogger().info("Removed " + kicks + " kicks from " + scope + ".");
+        plugin.getLogger().info("Removed " + history + " history from " + scope + ".");
+
+        send(sender, "revoke-done",
+                "%bans%", String.valueOf(bans),
+                "%mutes%", String.valueOf(mutes),
+                "%warnings%", String.valueOf(warnings),
+                "%kicks%", String.valueOf(kicks),
+                "%history%", String.valueOf(history));
         return true;
     }
 
@@ -286,7 +334,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
     }
 
     public void openPunishMenu(Player staff, Player target) {
-        if (!staff.hasPermission("sharded.punishments.punish")) {
+        if (!can(staff, "sharded.punishments.punish")) {
             send(staff, "no-permission");
             return;
         }
@@ -294,7 +342,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
     }
 
     public void openPunishMenu(Player staff, OfflinePlayer target) {
-        if (!staff.hasPermission("sharded.punishments.punish")) {
+        if (!can(staff, "sharded.punishments.punish")) {
             send(staff, "no-permission");
             return;
         }
@@ -442,7 +490,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
     }
 
     public void kick(CommandSender staff, Player target, String reason) {
-        if (!staff.hasPermission("sharded.punishments.kick")) {
+        if (!can(staff, "sharded.punishments.kick")) {
             send(staff, "no-permission");
             return;
         }
@@ -455,7 +503,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
     }
 
     public void ban(CommandSender staff, OfflinePlayer target, String reason, String durationRaw) {
-        if (!staff.hasPermission("sharded.punishments.ban")) {
+        if (!can(staff, "sharded.punishments.ban")) {
             send(staff, "no-permission");
             return;
         }
@@ -475,7 +523,11 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         if (doxxed) database.markDoxxed(target.getUniqueId());
         Player online = target.getPlayer();
         if (online != null) {
-            online.kick(buildKickComponent("ban-screen", staffName, reason, expiresAt));
+            if (doxxed) {
+                online.kick(buildBanEvasionScreen("doxxing-deny-screen"));
+            } else {
+                online.kick(buildKickComponent("ban-screen", staffName, reason, expiresAt));
+            }
         }
         send(staff, "banned", "%player%", OfflinePlayers.name(target.getUniqueId()),
                 "%reason%", reason, "%duration%", formatDurationLabel(durationRaw, expiresAt));
@@ -519,7 +571,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
     }
 
     public void mute(CommandSender staff, OfflinePlayer target, String reason, String durationRaw) {
-        if (!staff.hasPermission("sharded.punishments.mute")) {
+        if (!can(staff, "sharded.punishments.mute")) {
             send(staff, "no-permission");
             return;
         }
@@ -541,7 +593,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
     }
 
     public void banIp(CommandSender staff, OfflinePlayer target, String reason, String durationRaw) {
-        if (!staff.hasPermission("sharded.punishments.banip")) {
+        if (!can(staff, "sharded.punishments.banip")) {
             send(staff, "no-permission");
             return;
         }
@@ -572,7 +624,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
     }
 
     public void unban(CommandSender staff, OfflinePlayer target) {
-        if (!staff.hasPermission("sharded.punishments.unban")) {
+        if (!can(staff, "sharded.punishments.unban")) {
             send(staff, "no-permission");
             return;
         }
@@ -583,7 +635,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
     }
 
     public void unmute(CommandSender staff, OfflinePlayer target) {
-        if (!staff.hasPermission("sharded.punishments.unmute")) {
+        if (!can(staff, "sharded.punishments.unmute")) {
             send(staff, "no-permission");
             return;
         }
@@ -592,7 +644,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
     }
 
     public void pardon(CommandSender staff, OfflinePlayer target) {
-        if (!staff.hasPermission("sharded.punishments.pardon")) {
+        if (!can(staff, "sharded.punishments.pardon")) {
             send(staff, "no-permission");
             return;
         }
@@ -616,7 +668,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
     }
 
     public void showAlts(CommandSender sender, OfflinePlayer target) {
-        if (!sender.hasPermission("sharded.punishments.alts")) {
+        if (!can(sender, "sharded.punishments.alts")) {
             send(sender, "no-permission");
             return;
         }
@@ -628,21 +680,44 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
             return;
         }
         List<PunishmentDatabase.AltAccount> alts = database.findAlts(ip, target.getUniqueId());
-        send(sender, "alts-header", "%player%", OfflinePlayers.name(target.getUniqueId()));
-        if (alts.isEmpty()) send(sender, "alts-none");
-        else {
+        String playerName = OfflinePlayers.name(target.getUniqueId());
+        sendRaw(sender, altMessage("header", "%player%", playerName));
+        if (alts.isEmpty()) {
+            sendRaw(sender, altMessage("none"));
+        } else {
             int max = config.getInt("alts.max-display", 50);
             for (int i = 0; i < Math.min(max, alts.size()); i++) {
                 PunishmentDatabase.AltAccount alt = alts.get(i);
                 boolean online = Bukkit.getPlayer(alt.uuid()) != null;
-                send(sender, "alts-entry", "%name%", alt.name(),
-                        "%status%", online ? raw("alts-online") : raw("alts-offline"));
+                sendRaw(sender, altMessage("entry",
+                        "%name%", alt.name(),
+                        "%status%", online ? altMessage("online") : altMessage("offline")));
             }
         }
     }
 
+    private String altMessage(String key, String... replacements) {
+        String path = "alts.chat." + key;
+        String msg = config.getString(path);
+        if (msg == null || msg.isBlank()) {
+            if ("header".equals(key)) msg = messages.getString("alts-header");
+            else if ("none".equals(key)) msg = messages.getString("alts-none");
+            else if ("entry".equals(key)) msg = messages.getString("alts-entry");
+            else if ("online".equals(key)) msg = messages.getString("alts-online");
+            else if ("offline".equals(key)) msg = messages.getString("alts-offline");
+        }
+        if (msg == null) msg = "";
+        msg = msg.replace("%prefix%", messagePrefix());
+        return Text.apply(msg, replacements);
+    }
+
+    private void sendRaw(CommandSender to, String msg) {
+        if (msg == null || msg.isEmpty()) return;
+        MessageUtil.deliver(to, Text.c(msg), resolveDelivery("alts"));
+    }
+
     public void openWipeConfirm(Player staff, OfflinePlayer target, String reasonKey) {
-        if (!staff.hasPermission("sharded.punishments.wipe")) {
+        if (!can(staff, "sharded.punishments.wipe")) {
             send(staff, "no-permission");
             return;
         }
@@ -657,7 +732,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
     }
 
     public void wipePlayer(CommandSender staff, UUID targetId, String targetName, String reasonKey) {
-        if (!staff.hasPermission("sharded.punishments.wipe")) {
+        if (!can(staff, "sharded.punishments.wipe")) {
             send(staff, "no-permission");
             return;
         }
