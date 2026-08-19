@@ -1,4 +1,4 @@
-config-version: 5
+config-version: 6
 menu_title: 'Settings'
 size: 36
 open_permission: sharded.settings.use
@@ -60,7 +60,7 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
     left_click_commands:
-      - '[player] sb'
+      - '[scoreboard_toggle]'
       - '[refresh] settings'
 
   death_messages:

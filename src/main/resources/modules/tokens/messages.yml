@@ -1,4 +1,4 @@
-config-version: 3
+config-version: 4
 prefix: '%prefix%'
 players-only: '%prefix%&#FF2727Only players can use this command.'
 no-permission: '%prefix%&#FF2727You don''t have permission.'
@@ -14,3 +14,4 @@ set: '%prefix%&#7Set &#9FFF00%player%''s &7balance to &#9FFF00%amount%.'
 removed: '%prefix%&#7Removed &#9FFF00%amount% &7from &#9FFF00%player%.'
 reset: '%prefix%&#7Reset &#9FFF00%player%''s &7token balance.'
 giveall: '%prefix%&#7Gave &#9FFF00%amount% &7tokens to &#9FFF00%count% &7online players.'
+playtime-reward: '%prefix%&#9FFF00You earned &#9FFF00%amount% tokens &#9FFF00for playing an hour!'

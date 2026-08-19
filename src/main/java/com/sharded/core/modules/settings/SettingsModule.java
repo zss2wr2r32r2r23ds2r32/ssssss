@@ -32,6 +32,7 @@ public final class SettingsModule extends Module implements CommandExecutor {
         ConfigSync.sync(plugin, guiFile, "modules/settings/gui.yml");
         plugin.gui().loadMenu(guiFile, "settings");
         plugin.gui().registerMenuExtras("settings", this::placeholders);
+        plugin.gui().registerAction("scoreboard_toggle", this::toggleScoreboardExternal);
 
         registerCommand("settings", this);
         registerCommand("deathtoggle", this);
@@ -50,7 +51,7 @@ public final class SettingsModule extends Module implements CommandExecutor {
 
     public Map<String, String> placeholders(Player player) {
         Map<String, String> map = new HashMap<>();
-        map.put("status_scoreboard", formatStatus(PlayerToggles.scoreboard(player)));
+        map.put("status_scoreboard", formatStatus(PlayerToggles.scoreboardDisplay(player)));
         map.put("status_death_messages", formatStatus(PlayerToggles.deathMessages(player)));
         map.put("status_join_messages", formatStatus(PlayerToggles.joinMessages(player)));
         map.put("status_mob_toggle", formatStatus(PlayerToggles.mobSpawn(player)));
@@ -96,6 +97,13 @@ public final class SettingsModule extends Module implements CommandExecutor {
         return true;
     }
 
+    public void toggleScoreboardExternal(Player player) {
+        if (!check(player, "sharded.settings.scoreboard")) return;
+        player.performCommand("sb");
+        PlayerToggles.flipScoreboardDisplay(player);
+        send(player, PlayerToggles.scoreboardDisplay(player) ? "scoreboard-on" : "scoreboard-off");
+    }
+
     private void toggleScoreboard(Player player) {
         if (!check(player, "sharded.settings.scoreboard")) return;
         PlayerToggles.setScoreboard(player, !PlayerToggles.scoreboard(player));
@@ -128,8 +136,7 @@ public final class SettingsModule extends Module implements CommandExecutor {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        PlayerToggles.setScoreboard(player, PlayerToggles.scoreboard(player));
+        // TAB / external plugins handle the live scoreboard via /sb.
     }
 
     @EventHandler

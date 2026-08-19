@@ -62,7 +62,7 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
     }
 
     private String portalWorld() {
-        return config.getString("portal-world", "factions");
+        return config.getString("portal-world", "spawn");
     }
 
     private String targetWorld() {

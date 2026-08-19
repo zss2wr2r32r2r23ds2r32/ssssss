@@ -1,4 +1,4 @@
-config-version: 4
+config-version: 5
 menu_title: '⛃ Token Shop'
 open_command:
   - tokenshop
@@ -288,7 +288,7 @@ items:
       - '[sound] UI_BUTTON_CLICK'
 
   your_balance:
-    material: PLAYER_HEAD
+    material: '%player_head%'
     slot: 22
     display_name: '&x&5&C&9&4&F&C&lYOUR TOKENS'
     lore:

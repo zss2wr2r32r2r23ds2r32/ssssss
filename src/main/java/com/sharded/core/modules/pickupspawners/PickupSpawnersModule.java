@@ -97,7 +97,11 @@ public final class PickupSpawnersModule extends Module implements CommandExecuto
     public void onBreak(BlockBreakEvent event) {
         if (event.getBlock().getType() != Material.SPAWNER) return;
         Player player = event.getPlayer();
-        if (!player.hasPermission("sharded.spawners.pickup")) return;
+        if (!player.hasPermission("sharded.spawners.pickup")) {
+            event.setCancelled(true);
+            MessageUtil.deliver(player, raw("no-permission"), resolveDelivery("no-permission"));
+            return;
+        }
 
         ItemStack tool = player.getInventory().getItemInMainHand();
         if (config.getBoolean("require-silk-touch", true) && !tool.containsEnchantment(Enchantment.SILK_TOUCH)) return;

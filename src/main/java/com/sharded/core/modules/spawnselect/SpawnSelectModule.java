@@ -18,6 +18,8 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
@@ -44,6 +46,7 @@ public final class SpawnSelectModule extends Module implements CommandExecutor, 
 
         registerCommand("spawn", this);
         registerCommand("spawnselect", this);
+        registerCommand("spawnselector", this);
         registerCommand("setspawn", this);
     }
 
@@ -55,7 +58,7 @@ public final class SpawnSelectModule extends Module implements CommandExecutor, 
             send(sender, "players-only");
             return true;
         }
-        if (cmd.equals("spawn") || cmd.equals("spawnselect")) {
+        if (cmd.equals("spawn") || cmd.equals("spawnselect") || cmd.equals("spawnselector")) {
             return handleSpawn(player, args);
         }
         return true;
@@ -157,6 +160,23 @@ public final class SpawnSelectModule extends Module implements CommandExecutor, 
         } catch (Exception e) {
             plugin.getLogger().warning("[spawnselect] Could not save config: " + e.getMessage());
         }
+    }
+
+    private boolean hasSelection(Player player) {
+        String selection = getSelection(player);
+        return selection != null && !selection.isBlank();
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        if (!config.getBoolean("prompt-on-join", true)) return;
+        Player player = event.getPlayer();
+        if (hasSelection(player)) return;
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (!player.isOnline() || hasSelection(player)) return;
+            openSelector(player);
+            send(player, "prompt-select");
+        }, config.getLong("prompt-delay-ticks", 40L));
     }
 
     @EventHandler

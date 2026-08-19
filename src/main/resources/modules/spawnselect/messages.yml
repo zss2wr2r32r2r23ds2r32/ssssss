@@ -1,4 +1,4 @@
-config-version: 1
+config-version: 2
 prefix: '%prefix%'
 
 players-only: '%prefix%&#FF2727Only players can use this command.'
@@ -20,3 +20,4 @@ message-modes:
 
 selected-main: '&#9FFF00You selected &#FF0053Main Spawn&#9FFF00.'
 selected-vanilla: '&#9FFF00You selected &#9FFF00Vanilla Spawn&#9FFF00.'
+prompt-select: '%prefix%&#9FFF00Choose your spawn type — this is saved permanently.'

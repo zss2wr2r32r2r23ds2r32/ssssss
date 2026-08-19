@@ -24,6 +24,15 @@ public final class PlayerToggles {
         return plugin().stateStore().getBool(player.getUniqueId(), SCOREBOARD, true);
     }
 
+    /** Display state for settings GUI when using an external /sb command (e.g. TAB). */
+    public static boolean scoreboardDisplay(Player player) {
+        return plugin().stateStore().getBool(player.getUniqueId(), SCOREBOARD, true);
+    }
+
+    public static void flipScoreboardDisplay(Player player) {
+        plugin().stateStore().setBool(player.getUniqueId(), SCOREBOARD, !scoreboardDisplay(player));
+    }
+
     public static void setScoreboard(Player player, boolean enabled) {
         plugin().stateStore().setBool(player.getUniqueId(), SCOREBOARD, enabled);
         if (enabled) {

@@ -1,7 +1,7 @@
 # Portal RTP
 config-version: 3
 # message-mode: inherit  # chat | actionbar | both — overrides global message-mode
-portal-world: factions
+portal-world: spawn
 target-world: world
 radius-label: 1K x 1K
 border-label: 5k x 5k

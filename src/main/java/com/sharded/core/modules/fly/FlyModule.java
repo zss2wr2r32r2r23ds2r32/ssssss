@@ -69,7 +69,7 @@ public final class FlyModule extends Module implements CommandExecutor, TabCompl
     }
 
     private String flyWorld() {
-        return config.getString("world", "factions");
+        return config.getString("world", "spawn");
     }
 
     private boolean inRegion(Location location) {

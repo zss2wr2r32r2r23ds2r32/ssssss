@@ -63,7 +63,7 @@ commands:
     description: Apply Auto Smelt to your pickaxe
     usage: /autosmelt
   rtp:
-    description: Open the random teleport menu (factions world only)
+    description: Open the random teleport menu (spawn world only)
     usage: /rtp
     aliases: [randomtp, wild]
   spawn:
@@ -72,6 +72,7 @@ commands:
   spawnselect:
     description: Open the spawn selector menu
     usage: /spawnselect
+    aliases: [spawnselector]
   setspawn:
     description: Set main or vanilla spawn locations
     usage: /setspawn <main/vanilla> [world]

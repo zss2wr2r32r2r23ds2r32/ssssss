@@ -39,7 +39,8 @@ public final class GuiMenu {
     }
 
     public record GuiItem(int slot, ItemStack display, String rawName, List<String> rawLore,
-                          List<String> leftClickCommands, List<String> clickCommands, String permission) {
+                          List<String> leftClickCommands, List<String> clickCommands, String permission,
+                          boolean viewerHead) {
     }
 
     private final String id;
@@ -76,18 +77,25 @@ public final class GuiMenu {
             ConfigurationSection item = section.getConfigurationSection(key);
             if (item == null) continue;
 
-            ItemStack stack = HeadUtil.parse(item.getString("material", "STONE"));
-            if (stack == null) stack = ItemsAdderHook.parseItem(item.getString("material", "STONE"));
+            String materialRaw = item.getString("material", "STONE");
+            ItemStack stack = HeadUtil.parse(materialRaw);
+            if (stack == null) stack = ItemsAdderHook.parseItem(materialRaw);
             if (stack == null) {
-                Material mat = Material.matchMaterial(item.getString("material", "STONE").toUpperCase(java.util.Locale.ROOT));
+                Material mat = Material.matchMaterial(materialRaw.toUpperCase(java.util.Locale.ROOT));
                 stack = new ItemStack(mat == null ? Material.STONE : mat);
             }
+
+            boolean viewerHead = HeadUtil.isViewerHeadMaterial(materialRaw);
 
             String name = item.getString("display_name", " ");
             List<String> lore = new ArrayList<>();
             for (String line : item.getStringList("lore")) lore.add(line);
 
-            stack = new ItemBuilder(stack).name(name).lore(lore).hideAll().build();
+            if (!viewerHead) {
+                stack = new ItemBuilder(stack).name(name).lore(lore).hideAll().build();
+            } else {
+                stack = new ItemBuilder(stack).hideAll().build();
+            }
 
             List<String> left = item.getStringList("left_click_commands");
             List<String> click = item.getStringList("click_commands");
@@ -100,7 +108,7 @@ public final class GuiMenu {
             if (item.contains("slots")) slots.addAll(item.getIntegerList("slots"));
 
             for (int slot : slots) {
-                itemsBySlot.put(slot, new GuiItem(slot, stack, name, lore, left, click, permission));
+                itemsBySlot.put(slot, new GuiItem(slot, stack, name, lore, left, click, permission, viewerHead));
             }
         }
     }
@@ -146,12 +154,8 @@ public final class GuiMenu {
 
     private ItemStack applyItem(GuiItem item, Player player, Map<String, String> extra, GuiManager manager) {
         ItemStack copy = item.display().clone();
-        if (copy.getType() == Material.PLAYER_HEAD) {
-            var meta = copy.getItemMeta();
-            if (meta instanceof org.bukkit.inventory.meta.SkullMeta skull
-                    && skull.getPlayerProfile().getProperties().isEmpty()) {
-                copy = HeadUtil.applyViewer(copy, player);
-            }
+        if (item.viewerHead()) {
+            copy = HeadUtil.applyViewer(copy, player);
         }
         var meta = copy.getItemMeta();
         if (meta == null) return copy;

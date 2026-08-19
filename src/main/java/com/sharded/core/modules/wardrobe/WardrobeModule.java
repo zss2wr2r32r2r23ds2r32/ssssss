@@ -15,11 +15,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
@@ -181,63 +178,25 @@ public final class WardrobeModule extends Module implements CommandExecutor {
 
         for (HatOption hat : hats.values()) {
             if (hat.slot() != event.getSlot()) continue;
-            player.closeInventory();
+            event.setCancelled(true);
             if (!owns(player, hat)) {
+                player.closeInventory();
                 send(player, "not-owned", "%hat%", hat.displayName());
                 return;
             }
-            equip(player, hat);
-            send(player, "equipped", "%hat%", hat.displayName());
+            HatOption chosen = hat;
+            player.closeInventory();
+            plugin.getServer().getScheduler().runTask(plugin, () -> {
+                equip(player, chosen);
+                send(player, "equipped", "%hat%", chosen.displayName());
+            });
             return;
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onInventoryClick(InventoryClickEvent event) {
-        if (event.getView().getTopInventory().getHolder() instanceof MenuHolder) return;
-        if (!(event.getWhoClicked() instanceof Player)) return;
-
-        ItemStack current = event.getCurrentItem();
-        ItemStack cursor = event.getCursor();
-
-        if (isWardrobeHat(current) || isWardrobeHat(cursor)) {
-            event.setCancelled(true);
-            return;
-        }
-
-        if (event.getClick() == ClickType.NUMBER_KEY) {
-            ItemStack hotbar = event.getWhoClicked().getInventory().getItem(event.getHotbarButton());
-            if (isWardrobeHat(hotbar)) {
-                event.setCancelled(true);
-            }
-        }
-
-        if (event.getSlotType() == org.bukkit.event.inventory.InventoryType.SlotType.ARMOR
-                && event.getSlot() == 39) {
-            ItemStack helmet = event.getWhoClicked().getInventory().getHelmet();
-            if (isWardrobeHat(helmet)) {
-                event.setCancelled(true);
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onDrag(InventoryDragEvent event) {
+    @EventHandler
+    public void onMenuDrag(InventoryDragEvent event) {
         if (event.getView().getTopInventory().getHolder() instanceof MenuHolder) {
-            event.setCancelled(true);
-            return;
-        }
-        for (ItemStack stack : event.getNewItems().values()) {
-            if (isWardrobeHat(stack)) {
-                event.setCancelled(true);
-                return;
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onDrop(PlayerDropItemEvent event) {
-        if (isWardrobeHat(event.getItemDrop().getItemStack())) {
             event.setCancelled(true);
         }
     }
@@ -296,7 +255,6 @@ public final class WardrobeModule extends Module implements CommandExecutor {
             leftover.values().forEach(item -> player.getWorld().dropItemNaturally(player.getLocation(), item));
         }
         inv.setHelmet(hatItem);
-        purgeWardrobeHatsFromInventory(player);
     }
 
     private void unequip(Player player) {
@@ -304,11 +262,11 @@ public final class WardrobeModule extends Module implements CommandExecutor {
         if (isWardrobeHat(inv.getHelmet())) {
             inv.setHelmet(null);
         }
-        purgeWardrobeHatsFromInventory(player);
+        removeWardrobeHatsFromInventory(player);
         if (database != null) database.setEquipped(player.getUniqueId(), "");
     }
 
-    private void purgeWardrobeHatsFromInventory(Player player) {
+    private void removeWardrobeHatsFromInventory(Player player) {
         PlayerInventory inv = player.getInventory();
         for (int i = 0; i < inv.getSize(); i++) {
             if (isWardrobeHat(inv.getItem(i))) inv.setItem(i, null);
@@ -329,10 +287,8 @@ public final class WardrobeModule extends Module implements CommandExecutor {
     }
 
     private ItemStack buildHatItem(HatOption hat) {
-        ItemStack stack = ItemsAdderHook.getItem(hat.itemsadderId());
-        if (stack == null) stack = ItemsAdderHook.parseItem(hat.itemsadderId());
-        if (stack == null) stack = ItemsAdderHook.parseItem("itemsadder-" + hat.itemsadderId());
-        if (stack == null) return null;
+        ItemStack stack = resolveDisplayItem(hat);
+        if (stack == null || stack.getType().isAir()) return null;
         stack = stack.clone();
         int prot = config.getInt("enchantments.protection", 4);
         int unb = config.getInt("enchantments.unbreaking", 3);

@@ -1,7 +1,13 @@
-config-version: 3
+config-version: 4
 # message-mode: inherit  # chat | actionbar | both — overrides global message-mode
 prefix: '&x&5&C&9&4&F&C&lTOKENS &8▷ &r'
 main-menu: mainmenu
+
+playtime-reward:
+  enabled: true
+  amount: 50
+  interval-minutes: 60
+  check-interval-seconds: 60
 
 # Topper holder name must be "token":
 #   holders:

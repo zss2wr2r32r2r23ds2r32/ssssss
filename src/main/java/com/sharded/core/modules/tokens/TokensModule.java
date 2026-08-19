@@ -2,6 +2,7 @@ package com.sharded.core.modules.tokens;
 
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
+import com.sharded.core.util.ConfigSync;
 import com.sharded.core.util.Numbers;
 import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.TabCompleteHelper;
@@ -11,17 +12,26 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.entity.Player;
-import com.sharded.core.util.ConfigSync;
+import org.bukkit.scheduler.BukkitTask;
 import java.io.File;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class TokensModule extends Module implements CommandExecutor, TabCompleter {
 
     private TokenDatabase database;
     private TokenService service;
+    private BukkitTask playtimeTask;
+    private final Map<UUID, Long> onlineSince = new ConcurrentHashMap<>();
+
+    private static final String PLAYTIME_LAST_GRANT = "tokens-hourly-last-grant";
 
     public TokensModule(ShardedCore plugin) {
         super(plugin, "tokens");
@@ -56,6 +66,46 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
         registerCommand("bal", this);
         registerCommand("tokens", this);
         registerCommand("tokenshop", this);
+
+        startPlaytimeRewards();
+    }
+
+    private void startPlaytimeRewards() {
+        if (!config.getBoolean("playtime-reward.enabled", true)) return;
+        long intervalTicks = Math.max(20L, config.getLong("playtime-reward.check-interval-seconds", 60L) * 20L);
+        playtimeTask = plugin.getServer().getScheduler().runTaskTimer(plugin, this::tickPlaytimeRewards, intervalTicks, intervalTicks);
+    }
+
+    private void tickPlaytimeRewards() {
+        if (service == null) return;
+        long amount = config.getLong("playtime-reward.amount", 50L);
+        long intervalMs = config.getLong("playtime-reward.interval-minutes", 60L) * 60_000L;
+        if (amount <= 0 || intervalMs <= 0) return;
+        long now = System.currentTimeMillis();
+        for (Player player : plugin.getServer().getOnlinePlayers()) {
+            UUID uuid = player.getUniqueId();
+            long last = plugin.stateStore().getLong(uuid, PLAYTIME_LAST_GRANT, onlineSince.getOrDefault(uuid, now));
+            if (now - last < intervalMs) continue;
+            service.give(uuid, amount);
+            plugin.stateStore().setLong(uuid, PLAYTIME_LAST_GRANT, now);
+            send(player, "playtime-reward", "%amount%", String.valueOf(amount));
+        }
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        if (!config.getBoolean("playtime-reward.enabled", true)) return;
+        UUID uuid = event.getPlayer().getUniqueId();
+        long now = System.currentTimeMillis();
+        onlineSince.put(uuid, now);
+        if (plugin.stateStore().getLong(uuid, PLAYTIME_LAST_GRANT, 0L) == 0L) {
+            plugin.stateStore().setLong(uuid, PLAYTIME_LAST_GRANT, now);
+        }
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        onlineSince.remove(event.getPlayer().getUniqueId());
     }
 
     private void copyDefaultMenus(File folder) {
@@ -68,6 +118,9 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
 
     @Override
     protected void onDisable() {
+        if (playtimeTask != null) playtimeTask.cancel();
+        playtimeTask = null;
+        onlineSince.clear();
         if (database != null) database.close();
         database = null;
         service = null;
