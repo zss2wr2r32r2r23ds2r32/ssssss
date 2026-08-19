@@ -98,7 +98,7 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         registerCommand("pets", this);
         registerCommand("pet", this);
 
-        followTask = plugin.getServer().getScheduler().runTaskTimer(plugin, (Runnable) this::tickFollow, 1L, 1L);
+        followTask = plugin.getServer().getScheduler().runTaskTimer(plugin, (Runnable) this::tickFollow, 2L, 2L);
         respawnOnlinePlayers();
     }
 
@@ -179,6 +179,11 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
                 event.setCancelled(true);
             }
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPetSpawn(CreatureSpawnEvent event) {
+        if (isPet(event.getEntity())) zeroVelocity(event.getEntity());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -389,7 +394,18 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
 
         active.put(owner.getUniqueId(), new ActivePet(type, entity.getUniqueId(), displayName, axolotlVariant));
         applyName(owner.getUniqueId(), active.get(owner.getUniqueId()));
+        zeroVelocity(entity);
+        UUID entityId = entity.getUniqueId();
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+            Entity spawned = Bukkit.getEntity(entityId);
+            if (spawned != null) zeroVelocity(spawned);
+        }, 1L);
         tickFollow(owner.getUniqueId());
+    }
+
+    private void zeroVelocity(Entity entity) {
+        if (entity == null) return;
+        entity.setVelocity(new Vector(0, 0, 0));
     }
 
     private void configurePet(Entity entity, UUID ownerId, PetType type, String axolotlVariant) {
@@ -399,7 +415,7 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         entity.getPersistentDataContainer().set(petOwnerKey, PersistentDataType.STRING, ownerId.toString());
 
         // Paper 1.21+ requires a non-null velocity in the add_entity packet.
-        entity.setVelocity(new Vector(0, 0, 0));
+        zeroVelocity(entity);
 
         // Pets are cosmetic — never use gravity (warden was sinking underground).
         entity.setGravity(false);
@@ -472,7 +488,7 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         }
         if (!entity.getWorld().equals(owner.getWorld())) {
             entity.teleport(owner.getLocation());
-            entity.setVelocity(new Vector(0, 0, 0));
+            zeroVelocity(entity);
             return;
         }
 
@@ -485,8 +501,11 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         } else {
             target = followLocation(owner);
         }
-        entity.teleport(target);
-        entity.setVelocity(new Vector(0, 0, 0));
+        // Avoid teleport every tick when already close enough.
+        if (entity.getLocation().distanceSquared(target) > 0.04) {
+            entity.teleport(target);
+            zeroVelocity(entity);
+        }
     }
 
     private void clearParrotFromShoulder(Player owner, Entity petEntity) {

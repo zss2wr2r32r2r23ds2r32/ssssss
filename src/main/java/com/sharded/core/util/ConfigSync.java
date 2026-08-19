@@ -28,7 +28,17 @@ public final class ConfigSync {
 
     public static YamlConfiguration load(ShardedCore plugin, File file, String resourcePath) {
         sync(plugin, file, resourcePath);
-        return file.exists() ? YamlConfiguration.loadConfiguration(file) : new YamlConfiguration();
+        if (!file.exists()) return new YamlConfiguration();
+        try {
+            return YamlConfiguration.loadConfiguration(file);
+        } catch (Exception e) {
+            plugin.getLogger().warning("Corrupt config at " + file.getPath() + ", replacing from jar: " + e.getMessage());
+            backup(file);
+            if (plugin.getResource(resourcePath) != null) {
+                plugin.saveResource(resourcePath, true);
+            }
+            return file.exists() ? YamlConfiguration.loadConfiguration(file) : new YamlConfiguration();
+        }
     }
 
     public static void sync(ShardedCore plugin, File file, String resourcePath) {
@@ -38,8 +48,14 @@ public final class ConfigSync {
         File parent = file.getParentFile();
         if (parent != null && !parent.exists()) parent.mkdirs();
 
-        YamlConfiguration defaults = YamlConfiguration.loadConfiguration(
-                new InputStreamReader(resource, StandardCharsets.UTF_8));
+        YamlConfiguration defaults;
+        try {
+            defaults = YamlConfiguration.loadConfiguration(
+                    new InputStreamReader(resource, StandardCharsets.UTF_8));
+        } catch (Exception e) {
+            plugin.getLogger().severe("Invalid default config in jar: " + resourcePath + " — " + e.getMessage());
+            return;
+        }
         int jarVersion = defaults.getInt("config-version", VERSION);
 
         if (!file.exists()) {
@@ -48,7 +64,15 @@ public final class ConfigSync {
             return;
         }
 
-        YamlConfiguration disk = YamlConfiguration.loadConfiguration(file);
+        YamlConfiguration disk;
+        try {
+            disk = YamlConfiguration.loadConfiguration(file);
+        } catch (Exception e) {
+            plugin.getLogger().warning("Corrupt config " + file.getPath() + ", replacing from jar: " + e.getMessage());
+            backup(file);
+            plugin.saveResource(resourcePath, true);
+            return;
+        }
         int diskVersion = disk.getInt("config-version", 0);
         if (diskVersion < jarVersion) {
             backup(file);
