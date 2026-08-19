@@ -1,0 +1,89 @@
+config-version: 1
+menu-rows: 4
+filler-material: BLACK_STAINED_GLASS_PANE
+custom-apply-command: 'namecolor:gradient %gradient%'
+
+placeholders:
+  owned-yes: '&#9FFF00&nYes'
+  owned-no: '&#FF2727&nNo'
+  none: '&7None'
+
+colors:
+  red:
+    slot: 10
+    permission: namecolor.set.color.red
+    command: 'namecolor:color #FF0000'
+    material: RED_DYE
+    display-name: '&x&F&F&0&0&0&0&lRED &x&F&F&0&0&0&0Name Colour'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&0&0&0| ⚓ &fOwned: %namecolor_owned_red%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  orange:
+    slot: 11
+    permission: namecolor.set.color.orange
+    command: 'namecolor:color #FF6700'
+    material: ORANGE_DYE
+    display-name: '&x&F&F&6&7&0&0&lORANGE &x&F&F&6&7&0&0Name Colour'
+    lore:
+      - '&x&F&F&6&7&0&0| ⚓ &fOwned: %namecolor_owned_orange%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  yellow:
+    slot: 12
+    permission: namecolor.set.color.yellow
+    command: 'namecolor:color #FCFF00'
+    material: YELLOW_DYE
+    display-name: '&x&F&C&F&F&0&0&lYELLOW &x&F&C&F&F&0&0Name Colour'
+    lore:
+      - '&x&F&C&F&F&0&0| ⚓ &fOwned: %namecolor_owned_yellow%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  lime:
+    slot: 13
+    permission: namecolor.set.color.lime
+    command: 'namecolor:color #9FFF00'
+    material: LIME_DYE
+    display-name: '&x&9&F&F&F&0&0&lLIME &x&9&F&F&F&0&0Name Colour'
+    lore:
+      - '&x&9&F&F&F&0&0| ⚓ &fOwned: %namecolor_owned_lime%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  aqua:
+    slot: 14
+    permission: namecolor.set.color.aqua
+    command: 'namecolor:color #00B7FF'
+    material: LIGHT_BLUE_DYE
+    display-name: '&x&0&0&B&7&F&F&lAQUA &x&0&0&B&7&F&FName Colour'
+    lore:
+      - '&x&0&0&B&7&F&F| ⚓ &fOwned: %namecolor_owned_aqua%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  purple:
+    slot: 15
+    permission: namecolor.set.color.purple
+    command: 'namecolor:color #AD4EFF'
+    material: PURPLE_DYE
+    display-name: '&x&A&D&4&E&F&F&lPURPLE &x&A&D&4&E&F&FName Colour'
+    lore:
+      - '&x&A&D&4&E&F&F| ⚓ &fOwned: %namecolor_owned_purple%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  custom:
+    slot: 16
+    permission: namecolor.set.color.custom
+    custom-input: true
+    material: NAME_TAG
+    display-name: '&x&0&0&5&A&F&F&lCUSTOM &x&0&0&5&A&F&FGradient'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&0&0&5&A&F&F| &fClick to apply saved gradient'
+      - '&x&0&0&5&A&F&F| &fUse &f/namecolor custom &7to set new'
+      - ''
+      - '&x&0&0&5&A&F&F| ⚓ &fOwned: %namecolor_owned_custom%'
+      - '&x&0&0&5&A&F&F| ⚓ &fSaved: %last_gradient%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'

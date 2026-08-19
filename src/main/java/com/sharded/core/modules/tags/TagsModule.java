@@ -215,6 +215,14 @@ public final class TagsModule extends Module implements CommandExecutor {
         String none = config.getString("placeholders.none", "&7None");
         String lastCustom = database == null ? null : database.getLastCustomTag(player.getUniqueId());
         map.put("last_custom_tag", lastCustom == null || lastCustom.isBlank() ? none : lastCustom);
+        long created = database == null ? 0L : database.getLastCustomCreatedAt(player.getUniqueId());
+        long cooldownMs = config.getLong("custom-cooldown-hours", 24L) * 3_600_000L;
+        if (created <= 0 || System.currentTimeMillis() - created >= cooldownMs) {
+            map.put("custom_cooldown", config.getString("placeholders.cooldown-ready", "&#9FFF00Ready"));
+        } else {
+            long remaining = (cooldownMs - (System.currentTimeMillis() - created)) / 1000L;
+            map.put("custom_cooldown", com.sharded.core.util.Text.time(remaining));
+        }
 
         for (TagOption tag : tags.values()) {
             map.put("tag_owned_" + tag.id(), player.hasPermission(tag.permission()) ? ownedYes : ownedNo);
@@ -336,6 +344,18 @@ public final class TagsModule extends Module implements CommandExecutor {
             return;
         }
 
+        if (fromChat) {
+            long cooldownMs = config.getLong("custom-cooldown-hours", 24L) * 3_600_000L;
+            long lastCreated = database == null ? 0L : database.getLastCustomCreatedAt(player.getUniqueId());
+            if (lastCreated > 0 && System.currentTimeMillis() - lastCreated < cooldownMs) {
+                long remaining = (cooldownMs - (System.currentTimeMillis() - lastCreated)) / 1000L;
+                send(player, "custom-cooldown", "%time%", com.sharded.core.util.Text.time(remaining));
+                return;
+            }
+        }
+
+        clearEquippedTag(player);
+
         String cmd = config.getString("custom-apply-command",
                         "[console] lp user %player_name% meta setsuffix \" %custom%\"")
                 .replace("%player%", player.getName())
@@ -343,8 +363,16 @@ public final class TagsModule extends Module implements CommandExecutor {
                 .replace("%custom%", input);
         dispatchCommand(player, cmd);
 
-        if (database != null) database.saveLastCustomTag(player.getUniqueId(), input);
+        if (database != null) database.saveLastCustomTag(player.getUniqueId(), input, fromChat);
         send(player, fromChat ? "custom-set" : "custom-reapplied", "%tag%", input);
+    }
+
+    private void clearEquippedTag(Player player) {
+        for (String line : config.getStringList("clear-equipped-commands")) {
+            if (line == null || line.isBlank()) continue;
+            String cmd = line.replace("%player%", player.getName()).replace("%player_name%", player.getName());
+            dispatchCommand(player, cmd);
+        }
     }
 
     private boolean matchesLimitedTag(String input) {

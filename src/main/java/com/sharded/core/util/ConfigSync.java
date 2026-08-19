@@ -117,6 +117,12 @@ public final class ConfigSync {
         count += resetIfExists(plugin, "modules/spawnselect/gui.yml");
         count += resetIfExists(plugin, "modules/eglow/config.yml");
         count += resetIfExists(plugin, "modules/eglow/messages.yml");
+        count += resetIfExists(plugin, "modules/chatcolor/config.yml");
+        count += resetIfExists(plugin, "modules/chatcolor/messages.yml");
+        count += resetIfExists(plugin, "modules/namecolor/config.yml");
+        count += resetIfExists(plugin, "modules/namecolor/messages.yml");
+        count += resetIfExists(plugin, "modules/wardrobe/config.yml");
+        count += resetIfExists(plugin, "modules/wardrobe/messages.yml");
         count += resetIfExists(plugin, "modules/tags/config.yml");
         count += resetIfExists(plugin, "modules/tags/messages.yml");
         count += resetIfExists(plugin, "modules/privatemessages/config.yml");

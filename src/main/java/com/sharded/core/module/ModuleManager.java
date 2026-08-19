@@ -28,6 +28,9 @@ import com.sharded.core.modules.pets.PetsModule;
 import com.sharded.core.modules.spawnselect.SpawnSelectModule;
 import com.sharded.core.modules.eglow.EGlowModule;
 import com.sharded.core.modules.tags.TagsModule;
+import com.sharded.core.modules.wardrobe.WardrobeModule;
+import com.sharded.core.modules.chatcolor.ChatColorModule;
+import com.sharded.core.modules.namecolor.NameColorModule;
 import com.sharded.core.modules.tempranks.TempranksModule;
 
 import java.util.ArrayList;
@@ -67,6 +70,9 @@ public final class ModuleManager {
         register(new TokensModule(plugin));
         register(new EGlowModule(plugin));
         register(new TagsModule(plugin));
+        register(new ChatColorModule(plugin));
+        register(new NameColorModule(plugin));
+        register(new WardrobeModule(plugin));
         register(new ToolNameModule(plugin));
         register(new BundlesModule(plugin));
     }

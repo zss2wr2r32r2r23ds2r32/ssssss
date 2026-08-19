@@ -8,12 +8,18 @@ limited-close-slot: 26
 
 apply-command: 'eternaltags:tags set %tag_id% %player_name%'
 custom-apply-command: '[console] lp user %player_name% meta setsuffix " %custom%"'
+custom-cooldown-hours: 24
 block-limited-tag-copy: true
 
+clear-equipped-commands:
+  - '[console] eternaltags:tags clear %player_name%'
+  - '[console] lp user %player_name% meta clearsuffix'
+
 placeholders:
-  owned-yes: '&#9FFF00Yes'
-  owned-no: '&#FF2727No'
+  owned-yes: '&#9FFF00&nYes'
+  owned-no: '&#FF2727&nNo'
   none: '&7None'
+  cooldown-ready: '&#9FFF00Ready'
 
 close-button:
   enabled: true

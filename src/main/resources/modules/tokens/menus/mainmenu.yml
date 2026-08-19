@@ -242,7 +242,7 @@ items:
   namecolors_category:
     material: NAME_TAG
     slot: 15
-    display_name: '&x&0&0&E&0&F&F&lNAME GRADIENTS'
+    display_name: '&x&0&0&E&0&F&F&lNAME COLOURS'
     lore:
       - '&8Description'
       - ''

@@ -1,14 +1,14 @@
-config-version: 5
+config-version: 6
 menu_title: 'Token Shop | Glows'
 open_command: glowshop
-size: 54
+size: 45
 open_permission: tokenshop.use
 
 items:
 
   back_button:
     material: BARRIER
-    slot: 53
+    slot: 44
     display_name: '&x&F&F&0&0&0&0&lBACK'
     left_click_commands:
       - '[openguimenu] mainmenu'

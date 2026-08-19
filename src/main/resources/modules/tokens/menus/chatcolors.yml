@@ -1,4 +1,4 @@
-config-version: 3
+config-version: 6
 menu_title: 'Token Shop | Chat Colours'
 open_command: chatcolors
 size: 27
@@ -20,135 +20,86 @@ items:
     lore:
       - '&8Description'
       - ''
-      - '&x&F&F&0&0&0&0Information:'
-      - '&x&F&F&0&0&0&0| &fPurchase the &x&F&F&0&0&0&0Red Chat Colour'
-      - '&x&F&F&0&0&0&0| &fAnd customize your chat!'
-      - ''
       - '&x&F&F&0&0&0&0⚓ &fCost: &x&F&F&0&0&0&0300 Tokens'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
+      - '[deny_if_permission] ezcolor.color.red'
       - '[tokens_take] 300'
-      - '[console] lp user %player_name% permission set chatcolor.red true'
-      - '[message] %token_prefix%&aYou unlocked Red Chat Colour!'
+      - '[console] lp user %player_name% permission set ezcolor.color.red true'
+      - '[message] %token_prefix%&#9FFF00Unlocked Red Chat! Use &f/chatcolor&#9FFF00.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   orange_chat:
     material: ORANGE_DYE
     slot: 11
-    display_name: '&x&F&F&9&1&0&0&lORANGE &x&F&F&9&1&0&0Chat Colour'
+    display_name: '&x&F&F&6&7&0&0&lORANGE &x&F&F&6&7&0&0Chat Colour'
     lore:
-      - '&8Description'
-      - ''
-      - '&x&F&F&9&1&0&0Information:'
-      - '&x&F&F&9&1&0&0| &fPurchase the &x&F&F&9&1&0&0Orange Chat Colour'
-      - '&x&F&F&9&1&0&0| &fAnd customize your chat!'
-      - ''
-      - '&x&F&F&9&1&0&0⚓ &fCost: &x&F&F&9&1&0&0300 Tokens'
+      - '&x&F&F&6&7&0&0⚓ &fCost: &x&F&F&6&7&0&0300 Tokens'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
+      - '[deny_if_permission] ezcolor.color.orange'
       - '[tokens_take] 300'
-      - '[console] lp user %player_name% permission set chatcolor.orange true'
-      - '[message] %token_prefix%&aYou unlocked Orange Chat Colour!'
+      - '[console] lp user %player_name% permission set ezcolor.color.orange true'
+      - '[message] %token_prefix%&#9FFF00Unlocked Orange Chat! Use &f/chatcolor&#9FFF00.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   yellow_chat:
     material: YELLOW_DYE
     slot: 12
     display_name: '&x&F&C&F&F&0&0&lYELLOW &x&F&C&F&F&0&0Chat Colour'
-    lore:
-      - '&8Description'
-      - ''
-      - '&x&F&C&F&F&0&0Information:'
-      - '&x&F&C&F&F&0&0| &fPurchase the &x&F&C&F&F&0&0Yellow Chat Colour'
-      - '&x&F&C&F&F&0&0| &fAnd customize your chat!'
-      - ''
-      - '&x&F&C&F&F&0&0⚓ &fCost: &x&F&C&F&F&0&0300 Tokens'
-      - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
+      - '[deny_if_permission] ezcolor.color.yellow'
       - '[tokens_take] 300'
-      - '[console] lp user %player_name% permission set chatcolor.yellow true'
-      - '[message] %token_prefix%&aYou unlocked Yellow Chat Colour!'
+      - '[console] lp user %player_name% permission set ezcolor.color.yellow true'
+      - '[message] %token_prefix%&#9FFF00Unlocked Yellow Chat! Use &f/chatcolor&#9FFF00.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   lime_chat:
     material: LIME_DYE
     slot: 13
-    display_name: '&x&9&4&F&F&0&0&lLIME &x&9&4&F&F&0&0Chat Colour'
-    lore:
-      - '&8Description'
-      - ''
-      - '&x&9&4&F&F&0&0Information:'
-      - '&x&9&4&F&F&0&0| &fPurchase the &x&9&4&F&F&0&0Lime Chat Colour'
-      - '&x&9&4&F&F&0&0| &fAnd customize your chat!'
-      - ''
-      - '&x&9&4&F&F&0&0⚓ &fCost: &x&9&4&F&F&0&0300 Tokens'
-      - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    display_name: '&x&9&F&F&F&0&0&lLIME &x&9&F&F&F&0&0Chat Colour'
     left_click_commands:
+      - '[deny_if_permission] ezcolor.color.lime'
       - '[tokens_take] 300'
-      - '[console] lp user %player_name% permission set chatcolor.lime true'
-      - '[message] %token_prefix%&aYou unlocked Lime Chat Colour!'
+      - '[console] lp user %player_name% permission set ezcolor.color.lime true'
+      - '[message] %token_prefix%&#9FFF00Unlocked Lime Chat! Use &f/chatcolor&#9FFF00.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   aqua_chat:
     material: LIGHT_BLUE_DYE
     slot: 14
-    display_name: '&x&0&0&B&7&F&F&lAQUA &x&0&0&B&7&F&FAqua Colour'
-    lore:
-      - '&8Description'
-      - ''
-      - '&x&0&0&B&7&F&FInformation:'
-      - '&x&0&0&B&7&F&F| &fPurchase the &x&0&0&B&7&F&FAqua Chat Colour'
-      - '&x&0&0&B&7&F&F| &fAnd customize your chat!'
-      - ''
-      - '&x&0&0&B&7&F&F⚓ &fCost: &x&0&0&B&7&F&F300 Tokens'
-      - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    display_name: '&x&0&0&B&7&F&F&lAQUA &x&0&0&B&7&F&FChat Colour'
     left_click_commands:
+      - '[deny_if_permission] ezcolor.color.aqua'
       - '[tokens_take] 300'
-      - '[console] lp user %player_name% permission set chatcolor.aqua true'
-      - '[message] %token_prefix%&aYou unlocked Aqua Chat Colour!'
+      - '[console] lp user %player_name% permission set ezcolor.color.aqua true'
+      - '[message] %token_prefix%&#9FFF00Unlocked Aqua Chat! Use &f/chatcolor&#9FFF00.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   purple_chat:
     material: PURPLE_DYE
     slot: 15
-    display_name: '&x&8&A&0&0&F&F&lPURPLE &x&8&A&0&0&F&FChat Colour'
-    lore:
-      - '&8Description'
-      - ''
-      - '&x&8&A&0&0&F&FInformation:'
-      - '&x&8&A&0&0&F&F| &fPurchase the &x&8&A&0&0&F&FPurple Chat Colour'
-      - '&x&8&A&0&0&F&F| &fAnd customize your chat!'
-      - ''
-      - '&x&8&A&0&0&F&F⚓ &fCost: &x&8&A&0&0&F&F300 Tokens'
-      - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    display_name: '&x&A&D&4&E&F&F&lPURPLE &x&A&D&4&E&F&FChat Colour'
     left_click_commands:
+      - '[deny_if_permission] ezcolor.color.purple'
       - '[tokens_take] 300'
-      - '[console] lp user %player_name% permission set chatcolor.purple true'
-      - '[message] %token_prefix%&aYou unlocked Purple Chat Colour!'
+      - '[console] lp user %player_name% permission set ezcolor.color.purple true'
+      - '[message] %token_prefix%&#9FFF00Unlocked Purple Chat! Use &f/chatcolor&#9FFF00.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   rainbow_chat:
     material: NETHER_STAR
     slot: 16
-    display_name: '&x&F&F&0&0&0&0&lR&x&F&F&4&8&0&0&lA&x&F&F&F&8&0&0&lI&x&8&0&F&C&3&7&lN&x&0&0&F&F&6&E&lB&x&0&0&C&1&F&F&lO&x&3&3&6&4&E&9&lW &x&3&3&6&4&E&9Chat'
+    display_name: '&x&3&3&6&4&E&9&lRAINBOW &x&3&3&6&4&E&9Chat'
     lore:
-      - '&8Description'
-      - ''
-      - '&x&3&3&6&4&E&9Information:'
-      - '&x&3&3&6&4&E&9| &fPurchase the &x&3&3&6&4&E&9Rainbow Chat Colour'
-      - '&x&3&3&6&4&E&9| &fAnd customize your chat!'
-      - ''
       - '&x&3&3&6&4&E&9⚓ &fCost: &x&3&3&6&4&E&91500 Tokens'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
+      - '[deny_if_permission] ezcolor.color.rainbow'
       - '[tokens_take] 1500'
-      - '[console] lp user %player_name% permission set chatcolor.rainbow true'
-      - '[message] %token_prefix%&aYou unlocked Rainbow Chat Colour!'
+      - '[console] lp user %player_name% permission set ezcolor.color.rainbow true'
+      - '[message] %token_prefix%&#9FFF00Unlocked Rainbow Chat! Use &f/chatcolor&#9FFF00.'
       - '[sound] ENTITY_PLAYER_LEVELUP'

@@ -194,6 +194,11 @@ public final class GuiManager {
                 if (module == null) yield false;
                 yield module.tryPurchase(player, parts[0], (int) parseLong(parts[1], 0), parseLong(parts[2], 0));
             }
+            case "wardrobe_unlock" -> {
+                var module = plugin.modules().get(com.sharded.core.modules.wardrobe.WardrobeModule.class);
+                if (module == null) yield false;
+                yield module.unlock(player, payload.trim());
+            }
             default -> {
                 Consumer<Player> action = customActions.get(tag);
                 if (action != null) action.accept(player);

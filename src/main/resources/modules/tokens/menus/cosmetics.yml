@@ -1,4 +1,4 @@
-config-version: 3
+config-version: 6
 menu_title: 'Token Shop | Cosmetics'
 open_command: cosmetics
 size: 27
@@ -20,80 +20,61 @@ items:
     lore:
       - '&8Description'
       - ''
-      - '&x&F&F&0&0&5&3Information:'
-      - '&x&F&F&0&0&5&3| &fPurchase the &x&F&F&0&0&5&3Top Hat'
-      - '&x&F&F&0&0&5&3| &fAnd Enhance Your character!'
-      - ''
-      - '&x&F&F&0&0&5&3⚓ &fCost: &x&F&F&0&0&5&3??? Tokens'
+      - '&x&F&F&0&0&5&3⚓ &fCost: &x&F&F&0&0&5&3800 Tokens'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
+      - '[deny_if_permission] sharded.wardrobe.tophat'
+      - '[tokens_take] 800'
+      - '[console] lp user %player_name% permission set sharded.wardrobe.tophat true'
+      - '[wardrobe_unlock] tophat'
+      - '[message] %token_prefix%&#9FFF00Top Hat added to wardrobe! Use &f/wardrobe&#9FFF00.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   crown:
     material: 'itemsadder-hats:crown'
     slot: 12
     display_name: '&x&F&F&E&3&0&0&lCROWN &7(/wardrobe)'
-    lore:
-      - '&8Description'
-      - ''
-      - '&x&F&F&E&3&0&0Information:'
-      - '&x&F&F&E&3&0&0| &fPurchase the &x&F&F&E&3&0&0Crown'
-      - '&x&F&F&E&3&0&0| &fAnd Enhance Your character!'
-      - ''
-      - '&x&F&F&E&3&0&0⚓ &fCost: &x&F&F&E&3&0&0??? Tokens'
-      - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
+      - '[deny_if_permission] sharded.wardrobe.crown'
+      - '[tokens_take] 1200'
+      - '[console] lp user %player_name% permission set sharded.wardrobe.crown true'
+      - '[wardrobe_unlock] crown'
+      - '[message] %token_prefix%&#9FFF00Crown added to wardrobe!'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   propellerhat:
     material: 'itemsadder-hats:propeller_hat'
     slot: 13
     display_name: '&x&0&0&8&D&F&F&lPROPELLER &x&0&0&8&D&F&FHat &7(/wardrobe)'
-    lore:
-      - '&8Description'
-      - ''
-      - '&x&0&0&8&D&F&FInformation:'
-      - '&x&0&0&8&D&F&F| &fPurchase the &x&0&0&8&D&F&FPropeller &x&0&0&8&D&F&FHat'
-      - '&x&0&0&8&D&F&F| &fAnd Enhance Your character!'
-      - ''
-      - '&x&0&0&8&D&F&F⚓ &fCost: &x&0&0&8&D&F&F??? Tokens'
-      - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
+      - '[deny_if_permission] sharded.wardrobe.propeller_hat'
+      - '[tokens_take] 900'
+      - '[console] lp user %player_name% permission set sharded.wardrobe.propeller_hat true'
+      - '[wardrobe_unlock] propeller_hat'
+      - '[message] %token_prefix%&#9FFF00Propeller Hat added to wardrobe!'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
-  clowmask:
+  clownmask:
     material: 'itemsadder-hats:clown_mask'
     slot: 14
     display_name: '&x&F&F&0&0&0&0&lCLOWN &x&F&F&0&0&0&0Mask &7(/wardrobe)'
-    lore:
-      - '&8Description'
-      - ''
-      - '&x&F&F&0&0&0&0Information:'
-      - '&x&F&F&0&0&0&0| &fPurchase the &x&F&F&0&0&0&0Clown &x&F&F&0&0&0&0Mask'
-      - '&x&F&F&0&0&0&0| &fAnd Enhance Your character!'
-      - ''
-      - '&x&F&F&0&0&0&0⚓ &fCost: &x&F&F&0&0&0&0??? Tokens'
-      - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
+      - '[deny_if_permission] sharded.wardrobe.clown_mask'
+      - '[tokens_take] 700'
+      - '[console] lp user %player_name% permission set sharded.wardrobe.clown_mask true'
+      - '[wardrobe_unlock] clown_mask'
+      - '[message] %token_prefix%&#9FFF00Clown Mask added to wardrobe!'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   strawhat:
     material: 'itemsadder-hats:sstraw_hat'
     slot: 15
     display_name: '&x&B&3&F&F&0&0&lSTRAW &x&B&3&F&F&0&0Hat &7(/wardrobe)'
-    lore:
-      - '&8Description'
-      - ''
-      - '&x&B&3&F&F&0&0Information:'
-      - '&x&B&3&F&F&0&0| &fPurchase the &x&B&3&F&F&0&0Straw &x&B&3&F&F&0&0Hat'
-      - '&x&B&3&F&F&0&0| &fAnd Enhance Your character!'
-      - ''
-      - '&x&B&3&F&F&0&0⚓ &fCost: &x&B&3&F&F&0&0??? Tokens'
-      - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
+      - '[deny_if_permission] sharded.wardrobe.sstraw_hat'
+      - '[tokens_take] 600'
+      - '[console] lp user %player_name% permission set sharded.wardrobe.sstraw_hat true'
+      - '[wardrobe_unlock] sstraw_hat'
+      - '[message] %token_prefix%&#9FFF00Straw Hat added to wardrobe!'
       - '[sound] ENTITY_PLAYER_LEVELUP'

@@ -37,5 +37,8 @@ modules:
   tokens: true
   eglow: true
   tags: true
+  chatcolor: true
+  namecolor: true
+  wardrobe: true
   toolname: true
   bundles: true

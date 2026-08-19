@@ -11,6 +11,7 @@ custom-invalid-format: '%prefix%&#FF2727Invalid tag format. Use &8[&x&F&F&0&0&7&
 custom-set: '%prefix%&#9FFF00Custom tag set to %tag%&#9FFF00!'
 custom-reapplied: '%prefix%&#9FFF00Re-applied your saved custom tag!'
 custom-limited-blocked: '%prefix%&#FF2727That tag matches a limited-time tag and is not allowed.'
+custom-cooldown: '%prefix%&#FF2727You can create a new custom tag in &f%time%&#FF2727.'
 
 message-modes:
   equipped: actionbar

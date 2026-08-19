@@ -1,0 +1,9 @@
+config-version: 1
+prefix: '%prefix%'
+players-only: '%prefix%&#FF2727Only players can use this command.'
+no-permission: '%prefix%&#FF2727You don''t have permission.'
+not-owned: '%prefix%&#FF2727You don''t own %color%&#FF2727!'
+applied: '%prefix%&#9FFF00Chat colour applied!'
+
+message-modes:
+  applied: actionbar

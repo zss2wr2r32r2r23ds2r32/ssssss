@@ -79,6 +79,17 @@ commands:
     description: Open the glow equip menu
     usage: /eglow [color/off]
     aliases: [glows, glowing]
+  chatcolor:
+    description: Open the chat colour equip menu
+    usage: /chatcolor
+    aliases: [chatcolors]
+  namecolor:
+    description: Open the name colour equip menu
+    usage: /namecolor [custom]
+    aliases: [namecolors]
+  wardrobe:
+    description: Open your cosmetic hat wardrobe
+    usage: /wardrobe
   tags:
     description: Open the tag equip menu
     usage: /tags
@@ -240,6 +251,25 @@ permissions:
   sharded.tags.use:
     description: Open the tag equip menu
     default: true
+  sharded.chatcolor.use:
+    description: Open the chat colour equip menu
+    default: true
+  sharded.namecolor.use:
+    description: Open the name colour equip menu
+    default: true
+  sharded.wardrobe.use:
+    description: Open the wardrobe menu
+    default: true
+  sharded.wardrobe.tophat:
+    default: false
+  sharded.wardrobe.crown:
+    default: false
+  sharded.wardrobe.propeller_hat:
+    default: false
+  sharded.wardrobe.clown_mask:
+    default: false
+  sharded.wardrobe.sstraw_hat:
+    default: false
   sharded.settings.use:
     default: true
   sharded.settings.scoreboard:
