@@ -1,6 +1,7 @@
-config-version: 1
+config-version: 2
 menu-rows: 4
 filler-material: BLACK_STAINED_GLASS_PANE
+show-all-hats: true
 
 enchantments:
   protection: 4
@@ -21,8 +22,8 @@ hats:
   tophat:
     slot: 11
     permission: sharded.wardrobe.tophat
-    itemsadder-id: hats:tophat
-    material: PAPER
+    itemsadder-id: 'hats:tophat'
+    material: 'itemsadder-hats:tophat'
     display-name: '&x&F&F&0&0&5&3&lTOP &x&F&F&0&0&5&3Hat'
     lore:
       - '&7Equip as your helmet'
@@ -34,40 +35,52 @@ hats:
   crown:
     slot: 12
     permission: sharded.wardrobe.crown
-    itemsadder-id: hats:crown
-    material: PAPER
+    itemsadder-id: 'hats:crown'
+    material: 'itemsadder-hats:crown'
     display-name: '&x&F&F&E&3&0&0&lCROWN'
     lore:
+      - '&7Equip as your helmet'
+      - '&7Prot IV · Unb III · Mending'
+      - ''
       - '&x&F&F&E&3&0&0| ⚓ &fOwned: %wardrobe_owned_crown%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip'
   propeller_hat:
     slot: 13
     permission: sharded.wardrobe.propeller_hat
-    itemsadder-id: hats:propeller_hat
-    material: PAPER
+    itemsadder-id: 'hats:propeller_hat'
+    material: 'itemsadder-hats:propeller_hat'
     display-name: '&x&0&0&8&D&F&F&lPROPELLER &x&0&0&8&D&F&FHat'
     lore:
+      - '&7Equip as your helmet'
+      - '&7Prot IV · Unb III · Mending'
+      - ''
       - '&x&0&0&8&D&F&F| ⚓ &fOwned: %wardrobe_owned_propeller_hat%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip'
   clown_mask:
     slot: 14
     permission: sharded.wardrobe.clown_mask
-    itemsadder-id: hats:clown_mask
-    material: PAPER
+    itemsadder-id: 'hats:clown_mask'
+    material: 'itemsadder-hats:clown_mask'
     display-name: '&x&F&F&0&0&0&0&lCLOWN &x&F&F&0&0&0&0Mask'
     lore:
+      - '&7Equip as your helmet'
+      - '&7Prot IV · Unb III · Mending'
+      - ''
       - '&x&F&F&0&0&0&0| ⚓ &fOwned: %wardrobe_owned_clown_mask%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip'
   sstraw_hat:
     slot: 15
     permission: sharded.wardrobe.sstraw_hat
-    itemsadder-id: hats:sstraw_hat
-    material: PAPER
+    itemsadder-id: 'hats:sstraw_hat'
+    material: 'itemsadder-hats:sstraw_hat'
     display-name: '&x&B&3&F&F&0&0&lSTRAW &x&B&3&F&F&0&0Hat'
     lore:
+      - '&7Equip as your helmet'
+      - '&7Prot IV · Unb III · Mending'
+      - ''
       - '&x&B&3&F&F&0&0| ⚓ &fOwned: %wardrobe_owned_sstraw_hat%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip'

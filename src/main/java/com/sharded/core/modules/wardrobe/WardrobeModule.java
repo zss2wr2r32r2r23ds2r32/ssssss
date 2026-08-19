@@ -120,13 +120,7 @@ public final class WardrobeModule extends Module implements CommandExecutor {
 
         Map<String, String> ph = equipPlaceholders(player);
         for (HatOption hat : hats.values()) {
-            if (!owns(player, hat)) continue;
-            ItemStack stack = ItemsAdderHook.parseItem(hat.itemsadderId());
-            if (stack == null) {
-                Material mat = Material.matchMaterial(hat.material());
-                if (mat == null) mat = Material.PAPER;
-                stack = new ItemStack(mat);
-            }
+            ItemStack stack = resolveDisplayItem(hat);
             inventory.setItem(hat.slot(), new ItemBuilder(stack)
                     .name(apply(hat.displayName(), ph))
                     .lore(apply(hat.lore(), ph))
@@ -228,6 +222,17 @@ public final class WardrobeModule extends Module implements CommandExecutor {
         }
         player.getInventory().setHelmet(null);
         if (database != null) database.setEquipped(player.getUniqueId(), "");
+    }
+
+    private ItemStack resolveDisplayItem(HatOption hat) {
+        ItemStack stack = ItemsAdderHook.getItem(hat.itemsadderId());
+        if (stack == null) stack = ItemsAdderHook.parseItem(hat.itemsadderId());
+        if (stack == null) stack = ItemsAdderHook.parseItem("itemsadder-" + hat.itemsadderId());
+        if (stack == null) stack = ItemsAdderHook.parseItem(hat.material());
+        if (stack != null) return stack.clone();
+        Material mat = Material.matchMaterial(hat.material());
+        if (mat == null) mat = Material.PAPER;
+        return new ItemStack(mat);
     }
 
     private ItemStack buildHatItem(HatOption hat) {
