@@ -39,12 +39,12 @@ import java.util.regex.Pattern;
 /** Tag equip menu — requires eternaltags.tag.* permissions from token shop. */
 public final class TagsModule extends Module implements CommandExecutor {
 
-    private static final Pattern EXTENDED_HEX_TAG = Pattern.compile(
-            "^&8\\[&x(?:&[0-9A-Fa-f]){6}&l(.+?)&8\\]$", Pattern.CASE_INSENSITIVE);
-    private static final Pattern HASH_HEX_TAG = Pattern.compile(
-            "^&8\\[(&#[0-9A-Fa-f]{3,8})&l(.+?)&8\\]$", Pattern.CASE_INSENSITIVE);
-    private static final Pattern NORMALIZED_HEX_TAG = Pattern.compile(
-            "^&8\\[(&#[0-9A-Fa-f]{6})&l(.+?)&8\\]$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern FULL_TAG = Pattern.compile(
+            "^&8\\[((?:&x(?:&[0-9A-Fa-f]){6})|(?:&#[0-9A-Fa-f]{3,8})|(?:&[0-9a-fk-or]))(.+?)&8\\]$",
+            Pattern.CASE_INSENSITIVE);
+    private static final Pattern SHORT_COLOR_TAG = Pattern.compile(
+            "^((?:&x(?:&[0-9A-Fa-f]){6})|(?:&#[0-9A-Fa-f]{3,8})|(?:&[0-9a-fk-or]))(.+)$",
+            Pattern.CASE_INSENSITIVE);
 
     private final Map<String, TagOption> tags = new LinkedHashMap<>();
     private final Map<String, TagOption> limitedTags = new LinkedHashMap<>();
@@ -326,17 +326,23 @@ public final class TagsModule extends Module implements CommandExecutor {
             send(player, "not-owned", "%tag%", "Custom Tag");
             return;
         }
-        String input = ColorUtil.normalize(rawInput.trim());
-        applyCustomTag(player, input, true);
+        applyCustomTag(player, rawInput.trim(), true);
     }
 
     private void applyCustomTag(Player player, String input, boolean fromChat) {
-        if (WordBlacklist.contains(config, "custom-tag-blacklist", input)) {
-            send(player, "custom-blacklisted");
+        String formatted = formatCustomTag(ColorUtil.normalize(input == null ? "" : input.trim()));
+        if (formatted == null) {
+            send(player, "custom-invalid-format");
             return;
         }
-        if (!isValidCustomTag(input)) {
-            send(player, "custom-invalid-format");
+        input = formatted;
+
+        if (containsBlockedEmoji(input)) {
+            send(player, "custom-emoji-blocked");
+            return;
+        }
+        if (WordBlacklist.contains(config, "custom-tag-blacklist", input)) {
+            send(player, "custom-blacklisted");
             return;
         }
         if (matchesLimitedTag(input)) {
@@ -357,7 +363,7 @@ public final class TagsModule extends Module implements CommandExecutor {
         clearEquippedTag(player);
 
         String cmd = config.getString("custom-apply-command",
-                        "[console] lp user %player_name% meta setsuffix \" %custom%\"")
+                        "[console] lp user %player_name% meta setsuffix \"%custom%\"")
                 .replace("%player%", player.getName())
                 .replace("%player_name%", player.getName())
                 .replace("%custom%", input);
@@ -391,18 +397,41 @@ public final class TagsModule extends Module implements CommandExecutor {
         return false;
     }
 
-    private boolean isValidCustomTag(String input) {
-        if (input == null || input.isBlank()) return false;
-        String raw = input.trim();
-        if (EXTENDED_HEX_TAG.matcher(raw).matches() || HASH_HEX_TAG.matcher(raw).matches()) return true;
+    /** Accepts full &8[colorTEXT&8] or short color+text; returns normalized bracket form without spaces. */
+    private String formatCustomTag(String input) {
+        if (input == null || input.isBlank()) return null;
+        String raw = input.trim().replace(" ", "");
         String normalized = ColorUtil.normalize(raw);
-        return NORMALIZED_HEX_TAG.matcher(normalized).matches() || HASH_HEX_TAG.matcher(normalized).matches();
+
+        Matcher full = FULL_TAG.matcher(normalized);
+        if (full.matches()) {
+            return "&8[" + full.group(1) + full.group(2) + "&8]";
+        }
+
+        Matcher shortTag = SHORT_COLOR_TAG.matcher(normalized);
+        if (shortTag.matches()) {
+            String color = shortTag.group(1);
+            String text = shortTag.group(2);
+            if (text.isBlank()) return null;
+            return "&8[" + color + text + "&8]";
+        }
+        return null;
+    }
+
+    private boolean containsBlockedEmoji(String input) {
+        if (input == null || input.isBlank()) return false;
+        for (String blocked : config.getStringList("custom-emoji-blacklist")) {
+            if (blocked != null && !blocked.isBlank() && input.contains(blocked)) return true;
+        }
+        return false;
     }
 
     private String extractInnerTagText(String input) {
         if (input == null) return null;
-        Matcher m = Pattern.compile("&l(.+?)&8\\]", Pattern.CASE_INSENSITIVE).matcher(input);
-        if (m.find()) return m.group(1).trim();
+        Matcher m = Pattern.compile(
+                "&8\\[((?:&x(?:&[0-9A-Fa-f]){6})|(?:&#[0-9A-Fa-f]{3,8})|(?:&[0-9a-fk-or]))(.+?)&8\\]",
+                Pattern.CASE_INSENSITIVE).matcher(input);
+        if (m.find()) return m.group(2).trim();
         return null;
     }
 

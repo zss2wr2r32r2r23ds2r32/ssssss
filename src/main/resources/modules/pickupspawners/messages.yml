@@ -6,7 +6,8 @@ message-modes:
 
 players-only: '%prefix%&#FF2727Only players can use this command.'
 no-permission: '%prefix%&#FF2727You don''t have permission.'
-usage: '%prefix%&#FF2727Usage: /spawners pay [amount]'
+usage: '%prefix%&#FF2727Usage: /spawners pay'
+wrong-amount: '%prefix%&#FF2727You must pay exactly &f%price% &#FF2727tokens. Use &f/spawners pay'
 paid: '%prefix%&#9FFF00You paid &f%price% &#9FFF00tokens. Mine a spawner with silk
   touch to pick it up!'
 not-enough: '%prefix%&#FF2727You need &f%price% &#FF2727tokens. Use &f/bal &#FF2727to

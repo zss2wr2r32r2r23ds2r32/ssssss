@@ -1,4 +1,4 @@
-config-version: 3
+config-version: 4
 menu-rows: 4
 filler-material: BLACK_STAINED_GLASS_PANE
 show-all-hats: true
@@ -6,6 +6,11 @@ show-all-hats: true
 enchantments:
   protection: 4
   unbreaking: 3
+
+# Armor bar on HUD (3.0 = diamond helmet, 3.0 toughness = netherite)
+attributes:
+  armor: 3.0
+  armor-toughness: 0.0
 
 placeholders:
   owned-yes: '&#9FFF00&nYes'

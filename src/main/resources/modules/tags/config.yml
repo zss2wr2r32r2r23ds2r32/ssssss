@@ -1,4 +1,4 @@
-config-version: 3
+config-version: 4
 
 menu-title: 'Tags'
 menu-size: 27
@@ -7,13 +7,23 @@ limited-menu-size: 27
 limited-close-slot: 26
 
 apply-command: 'eternaltags:tags set %tag_id% %player_name%'
-custom-apply-command: '[console] lp user %player_name% meta setsuffix " %custom%"'
+custom-apply-command: '[console] lp user %player_name% meta setsuffix "%custom%"'
 custom-cooldown-hours: 24
 block-limited-tag-copy: true
 
 clear-equipped-commands:
   - '[console] eternaltags:tags clear %player_name%'
   - '[console] lp user %player_name% meta clearsuffix'
+
+custom-tag-blacklist:
+  - badword
+  - admin
+  - owner
+
+# Emoji characters blocked from custom tags (emojis are otherwise allowed)
+custom-emoji-blacklist:
+  - '🖕'
+  - '💩'
 
 placeholders:
   owned-yes: '&#9FFF00&nYes'
@@ -37,11 +47,6 @@ limited-button:
     - '&x&F&F&0&0&0&0| &fView limited-time tags'
     - ''
     - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open'
-
-custom-tag-blacklist:
-  - badword
-  - admin
-  - owner
 
 tags:
   mvp:

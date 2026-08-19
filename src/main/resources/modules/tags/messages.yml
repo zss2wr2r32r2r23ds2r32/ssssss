@@ -1,13 +1,14 @@
-config-version: 1
+config-version: 2
 prefix: '%prefix%'
 
 players-only: '%prefix%&#FF2727Only players can use this command.'
 no-permission: '%prefix%&#FF2727You don''t have permission to open tags.'
 not-owned: '%prefix%&#FF2727You don''t own %tag%&#FF2727!'
 equipped: '%prefix%&#9FFF00Tag equipped!'
-custom-prompt: '%prefix%&#9FFF00Type your custom tag in chat. Format: &8[&x&F&F&0&0&7&C&lTAG&8] &7or &8[&#2edaw&lTAG&8]'
+custom-prompt: '%prefix%&#9FFF00Type your custom tag in chat. Example: &#FF0000COOL or &8[&#FF0000COOL&8]'
 custom-blacklisted: '%prefix%&#FF2727That tag contains a blocked word.'
-custom-invalid-format: '%prefix%&#FF2727Invalid tag format. Use &8[&x&F&F&0&0&7&C&lTAG&8] &7or &8[&#hex&lTAG&8]'
+custom-emoji-blocked: '%prefix%&#FF2727That tag contains a blocked emoji.'
+custom-invalid-format: '%prefix%&#FF2727Invalid tag. Use a color + tag text (e.g. &#FF0000COOL) or &8[&#FF0000COOL&8]'
 custom-set: '%prefix%&#9FFF00Custom tag set to %tag%&#9FFF00!'
 custom-reapplied: '%prefix%&#9FFF00Re-applied your saved custom tag!'
 custom-limited-blocked: '%prefix%&#FF2727That tag matches a limited-time tag and is not allowed.'

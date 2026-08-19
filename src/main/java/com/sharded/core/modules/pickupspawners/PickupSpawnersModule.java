@@ -68,9 +68,16 @@ public final class PickupSpawnersModule extends Module implements CommandExecuto
         }
         long cost = price();
         if (args.length >= 2) {
+            long attempted;
             try {
-                cost = Long.parseLong(args[1]);
-            } catch (NumberFormatException ignored) {
+                attempted = Long.parseLong(args[1]);
+            } catch (NumberFormatException e) {
+                send(player, "usage");
+                return true;
+            }
+            if (attempted != cost) {
+                send(player, "wrong-amount", "%price%", String.valueOf(cost));
+                return true;
             }
         }
         TokenService tokens = plugin.modules().tokens();

@@ -12,6 +12,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -25,7 +27,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -267,23 +271,27 @@ public final class WardrobeModule extends Module implements CommandExecutor {
         scheduleReequip(event.getPlayer());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onRespawn(PlayerRespawnEvent event) {
         scheduleReequip(event.getPlayer());
     }
 
     private void scheduleReequip(Player player) {
         if (database == null) return;
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            if (!player.isOnline()) return;
-            String equipped = database.getEquipped(player.getUniqueId());
-            if (equipped == null || equipped.isBlank()) return;
-            HatOption hat = hats.get(equipped);
-            if (hat == null || !owns(player, hat)) return;
-            ItemStack current = player.getInventory().getHelmet();
-            if (isWardrobeHat(current)) return;
-            equipSilent(player, hat);
-        }, 5L);
+        for (long delay : new long[] {1L, 10L, 40L}) {
+            plugin.getServer().getScheduler().runTaskLater(plugin, () -> reequipIfNeeded(player), delay);
+        }
+    }
+
+    private void reequipIfNeeded(Player player) {
+        if (!player.isOnline()) return;
+        String equipped = database.getEquipped(player.getUniqueId());
+        if (equipped == null || equipped.isBlank()) return;
+        HatOption hat = hats.get(equipped);
+        if (hat == null || !owns(player, hat)) return;
+        ItemStack current = player.getInventory().getHelmet();
+        if (isWardrobeHat(current)) return;
+        equipSilent(player, hat);
     }
 
     public void equip(Player player, HatOption hat) {
@@ -343,12 +351,23 @@ public final class WardrobeModule extends Module implements CommandExecutor {
         stack = stack.clone();
         int prot = config.getInt("enchantments.protection", 4);
         int unb = config.getInt("enchantments.unbreaking", 3);
+        double armor = config.getDouble("attributes.armor", 3.0);
+        double toughness = config.getDouble("attributes.armor-toughness", 0.0);
         ItemMeta meta = stack.getItemMeta();
         if (meta != null) {
             meta.addEnchant(Enchantment.PROTECTION, prot, true);
             meta.addEnchant(Enchantment.UNBREAKING, unb, true);
             meta.addEnchant(Enchantment.MENDING, 1, true);
             meta.setUnbreakable(false);
+            NamespacedKey armorKey = new NamespacedKey(plugin, "wardrobe_armor_" + hat.id());
+            meta.addAttributeModifier(Attribute.ARMOR, new AttributeModifier(
+                    armorKey, armor, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.HEAD));
+            if (toughness > 0) {
+                NamespacedKey toughKey = new NamespacedKey(plugin, "wardrobe_toughness_" + hat.id());
+                meta.addAttributeModifier(Attribute.ARMOR_TOUGHNESS, new AttributeModifier(
+                        toughKey, toughness, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.HEAD));
+            }
+            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
             meta.getPersistentDataContainer().set(hatKey, PersistentDataType.STRING, hat.id());
             stack.setItemMeta(meta);
         }
