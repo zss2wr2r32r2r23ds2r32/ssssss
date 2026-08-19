@@ -1,12 +1,35 @@
-config-version: 3
-prefix: '%prefix%'
+config-version: 4
+prefix: '&#00A2FF&lCORE &8▷ &r'
 players-only: '%prefix%&#FF2727Only players can use this command.'
 no-permission: '%prefix%&#FF2727You don''t have permission.'
-opened: '%prefix%&7Place armor in the &fmiddle&7. Click &eleft&7/&bright &7to cycle
-  trims.'
+opened: '%prefix%&7Place armor in the &fmiddle&7. Use the buttons to cycle trims.'
 not-armor: '%prefix%&#FF2727Only armor goes in the middle slot.'
 trim-applied: '%prefix%&#9FFF00Trim applied!'
-lore-cycle-pattern: '&7Click to cycle &etrim pattern'
-lore-cycle-material: '&7Click to cycle &bmaterial'
-confirm-name: '&#9FFF00&lAPPLY TRIM'
-confirm-lore: '&7Applies the selected trim to your armor'
+
+pattern-name: '&#0083FF&l%pattern%'
+material-name: '&#0083FF&l%material%'
+
+pattern-lore:
+  - '&8Description'
+  - ''
+  - '&#0083FFInformation:'
+  - '&#0083FF| &fSelect The Pattern You Want'
+  - ''
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Cycle'
+
+material-lore:
+  - '&8Description'
+  - ''
+  - '&#0083FFInformation:'
+  - '&#0083FF| &fSelect The Material You Want'
+  - ''
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Cycle'
+
+confirm-name: '&#94FF00&lAPPLY'
+confirm-lore:
+  - '&8Description'
+  - ''
+  - '&#94FF00Information:'
+  - '&#94FF00| &fClick To Apply'
+  - ''
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'

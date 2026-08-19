@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /** Shared GUI engine for all modules (single listener, no cross-menu click bugs). */
 public final class GuiManager {
@@ -25,6 +26,7 @@ public final class GuiManager {
     private final ShardedCore plugin;
     private final Map<String, GuiMenu> menus = new HashMap<>();
     private final Map<String, Consumer<Player>> customActions = new HashMap<>();
+    private final Map<String, Function<Player, Map<String, String>>> menuExtras = new HashMap<>();
     private String noPermissionMessage = "%prefix%&cYou don't have permission.";
 
     public GuiManager(ShardedCore plugin) {
@@ -43,8 +45,13 @@ public final class GuiManager {
         customActions.put(id.toLowerCase(), action);
     }
 
+    public void registerMenuExtras(String menuId, Function<Player, Map<String, String>> provider) {
+        menuExtras.put(menuId.toLowerCase(), provider);
+    }
+
     public void unregisterActions() {
         customActions.clear();
+        menuExtras.clear();
     }
 
     public void loadMenu(File file, String id) {
@@ -78,7 +85,14 @@ public final class GuiManager {
             player.sendMessage(Text.c(Prefix.get() + "&cUnknown menu: &f" + menuId));
             return;
         }
-        menu.open(player, this, extra);
+        Map<String, String> merged = new HashMap<>();
+        Function<Player, Map<String, String>> provider = menuExtras.get(menuId.toLowerCase());
+        if (provider != null) {
+            Map<String, String> provided = provider.apply(player);
+            if (provided != null) merged.putAll(provided);
+        }
+        if (extra != null) merged.putAll(extra);
+        menu.open(player, this, merged);
     }
 
     public void handleClick(Player player, String menuId, int slot) {
@@ -88,17 +102,21 @@ public final class GuiManager {
         if (item == null) return;
         List<String> commands = item.clickCommands();
         if (commands.isEmpty()) commands = item.leftClickCommands();
-        runCommands(player, commands, Map.of());
+        runCommands(player, menuId, commands, Map.of());
     }
 
-    public void runCommands(Player player, List<String> commands, Map<String, String> extra) {
+    public void runCommands(Player player, String menuId, List<String> commands, Map<String, String> extra) {
         if (commands == null) return;
         for (String line : commands) {
-            if (!runCommand(player, line, extra)) break;
+            if (!runCommand(player, menuId, line, extra)) break;
         }
     }
 
-    private boolean runCommand(Player player, String line, Map<String, String> extra) {
+    public void runCommands(Player player, List<String> commands, Map<String, String> extra) {
+        runCommands(player, "", commands, extra);
+    }
+
+    private boolean runCommand(Player player, String menuId, String line, Map<String, String> extra) {
         if (line == null || line.isBlank()) return true;
         line = GuiMenu.apply(line, player, extra, this).trim();
         if (!line.startsWith("[")) return true;
@@ -138,6 +156,11 @@ public final class GuiManager {
             }
             case "openguimenu", "opendeluxemenu" -> {
                 open(player, payload);
+                yield true;
+            }
+            case "refresh" -> {
+                String target = payload.isBlank() ? menuId : payload;
+                open(player, target);
                 yield true;
             }
             case "tokens_take" -> {

@@ -3,10 +3,9 @@ package com.sharded.core.modules.settings;
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.modules.chat.ChatToggleModule;
-import com.sharded.core.modules.nightvision.NightVisionModule;
 import com.sharded.core.modules.privatemessages.PrivateMessagesModule;
-import com.sharded.core.util.PlayerToggles;
 import com.sharded.core.util.ConfigSync;
+import com.sharded.core.util.PlayerToggles;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -17,8 +16,10 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
-/** Player toggles: /sb, /deathtoggle, /jointoggle (+ GUI actions if opened elsewhere). */
+/** Personal settings GUI (/settings) — toggles persist in SQLite across sessions. */
 public final class SettingsModule extends Module implements CommandExecutor {
 
     public SettingsModule(ShardedCore plugin) {
@@ -30,37 +31,71 @@ public final class SettingsModule extends Module implements CommandExecutor {
         File guiFile = new File(moduleFolder(), "gui.yml");
         ConfigSync.sync(plugin, guiFile, "modules/settings/gui.yml");
         plugin.gui().loadMenu(guiFile, "settings");
+        plugin.gui().registerMenuExtras("settings", this::placeholders);
 
-        plugin.gui().registerAction("toggle_chat", this::toggleChat);
-        plugin.gui().registerAction("toggle_msg", this::toggleMsg);
-        plugin.gui().registerAction("toggle_nightvision", this::toggleNv);
-        plugin.gui().registerAction("toggle_scoreboard", this::toggleScoreboard);
-        plugin.gui().registerAction("toggle_deathmessages", this::toggleDeath);
-        plugin.gui().registerAction("toggle_joinmessages", this::toggleJoin);
-        plugin.gui().registerAction("toggle_mobspawn", this::toggleMobSpawn);
-
+        registerCommand("settings", this);
         registerCommand("sb", this);
         registerCommand("deathtoggle", this);
         registerCommand("jointoggle", this);
         registerCommand("mobtoggle", this);
     }
 
-    private void toggleChat(Player player) {
-        if (!check(player, "sharded.chat.toggle")) return;
+    public void openSettings(Player player) {
+        if (!player.hasPermission("sharded.settings.use")) {
+            send(player, "no-permission");
+            return;
+        }
+        plugin.gui().open(player, "settings", placeholders(player));
+        send(player, "opened");
+    }
+
+    public Map<String, String> placeholders(Player player) {
+        Map<String, String> map = new HashMap<>();
+        map.put("status_scoreboard", formatStatus(PlayerToggles.scoreboard(player)));
+        map.put("status_death_messages", formatStatus(PlayerToggles.deathMessages(player)));
+        map.put("status_join_messages", formatStatus(PlayerToggles.joinMessages(player)));
+        map.put("status_mob_toggle", formatStatus(PlayerToggles.mobSpawn(player)));
+        map.put("status_public_chat", formatStatus(isChatEnabled(player)));
+        map.put("status_private_messages", formatStatus(isMsgEnabled(player)));
+        return map;
+    }
+
+    public String formatStatus(boolean enabled) {
+        String key = enabled ? "status.enabled" : "status.disabled";
+        return config.getString(key, enabled ? "&#9FFF00&lENABLED" : "&#FF2727&lDISABLED");
+    }
+
+    private boolean isChatEnabled(Player player) {
         ChatToggleModule chat = plugin.modules().get(ChatToggleModule.class);
-        if (chat != null && chat.isEnabled()) chat.setChatEnabled(player, !chat.isChatEnabled(player));
+        return chat == null || !chat.isEnabled() || chat.isChatEnabled(player);
     }
 
-    private void toggleMsg(Player player) {
-        if (!check(player, "sharded.msg.toggle")) return;
+    private boolean isMsgEnabled(Player player) {
         PrivateMessagesModule pms = plugin.modules().get(PrivateMessagesModule.class);
-        if (pms != null && pms.isEnabled()) pms.setMsgEnabled(player, !pms.isMsgEnabled(player));
+        return pms == null || !pms.isEnabled() || pms.isMsgEnabled(player);
     }
 
-    private void toggleNv(Player player) {
-        if (!check(player, "sharded.nightvision.use")) return;
-        NightVisionModule nv = plugin.modules().get(NightVisionModule.class);
-        if (nv != null && nv.isEnabled()) nv.setNightVision(player, !nv.isNightVisionEnabled(player));
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player player)) {
+            send(sender, "players-only");
+            return true;
+        }
+        String cmd = command.getName().toLowerCase();
+        if (cmd.equals("settings") || cmd.equals("setting")) {
+            openSettings(player);
+            return true;
+        }
+        if (args.length > 0 && !args[0].equalsIgnoreCase("toggle")) {
+            return true;
+        }
+        switch (cmd) {
+            case "sb" -> toggleScoreboard(player);
+            case "deathtoggle", "deathmessages", "dtoggle" -> toggleDeath(player);
+            case "jointoggle", "joinmessages", "joinleave", "jtoggle" -> toggleJoin(player);
+            case "mobtoggle", "mobspawn", "mtoggle" -> toggleMobSpawn(player);
+        }
+        return true;
     }
 
     private void toggleScoreboard(Player player) {
@@ -93,33 +128,10 @@ public final class SettingsModule extends Module implements CommandExecutor {
         return false;
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player player)) {
-            send(sender, "players-only");
-            return true;
-        }
-        switch (command.getName().toLowerCase()) {
-            case "sb" -> {
-                if (!player.hasPermission("sharded.settings.scoreboard")) {
-                    PlayerToggles.noPermissionActionBar(player, raw("no-permission-actionbar"));
-                    return true;
-                }
-                PlayerToggles.setScoreboard(player, !PlayerToggles.scoreboard(player));
-                send(player, PlayerToggles.scoreboard(player) ? "scoreboard-on" : "scoreboard-off");
-            }
-            case "deathtoggle" -> toggleDeath(player);
-            case "jointoggle" -> toggleJoin(player);
-            case "mobtoggle" -> toggleMobSpawn(player);
-        }
-        return true;
-    }
-
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        if (!PlayerToggles.scoreboard(event.getPlayer())) {
-            PlayerToggles.setScoreboard(event.getPlayer(), false);
-        }
+        Player player = event.getPlayer();
+        PlayerToggles.setScoreboard(player, PlayerToggles.scoreboard(player));
     }
 
     @EventHandler

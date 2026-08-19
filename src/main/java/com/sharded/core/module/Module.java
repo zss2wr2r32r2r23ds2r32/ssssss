@@ -133,6 +133,20 @@ public abstract class Module implements Listener {
         return Text.apply(msg, replacements);
     }
 
+    /** Lore/message lines from messages.yml (string list or single string). */
+    public final List<String> rawList(String key, String... replacements) {
+        List<String> lines = new ArrayList<>(messages.getStringList(key));
+        if (lines.isEmpty()) {
+            String single = messages.getString(key);
+            if (single != null && !single.isEmpty()) lines.add(single);
+        }
+        List<String> out = new ArrayList<>(lines.size());
+        for (String line : lines) {
+            out.add(Text.apply(line.replace("%prefix%", messagePrefix()), replacements));
+        }
+        return out;
+    }
+
     /** Sends a message from messages.yml. Empty messages are skipped. */
     public final void send(CommandSender to, String key, String... replacements) {
         String msg = raw(key, replacements);

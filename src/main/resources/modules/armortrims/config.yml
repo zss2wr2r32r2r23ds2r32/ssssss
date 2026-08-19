@@ -1,5 +1,5 @@
 # Armor Trims — /trims, /armortrims, /trimstation
-config-version: 3
+config-version: 4
 # message-mode: inherit  # chat | actionbar | both
 
 title: '&8Armor Trim Station'
@@ -16,13 +16,15 @@ gui:
     material: 16
     confirm: 22
   pattern-item:
-    prefix: '&e◀ '
+    material: PAPER
+    use-template-icon: false
+    display-name: '&#0083FF&l%pattern%'
     glow: true
   material-item:
-    suffix: ' &b▶'
+    display-name: '&#0083FF&l%material%'
     glow: true
   confirm:
-    material: LIME_CONCRETE
+    material: LIME_DYE
 
 sounds:
   open: BLOCK_SMITHING_TABLE_USE
@@ -54,4 +56,4 @@ material-icons:
 
 pattern-icons: {}
 pattern-icon-fallback: PAPER
-material-icon-fallback: EMERALD
+material-icon-fallback: GOLD_INGOT

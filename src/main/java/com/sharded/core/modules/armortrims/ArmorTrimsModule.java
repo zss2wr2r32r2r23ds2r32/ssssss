@@ -7,7 +7,6 @@ import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.Text;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -59,9 +58,11 @@ public final class ArmorTrimsModule extends Module implements CommandExecutor {
     private int guiSize = 27;
     private Material fillerMaterial = Material.BLACK_STAINED_GLASS_PANE;
     private String fillerName = "&r";
-    private Material confirmMaterial = Material.LIME_CONCRETE;
-    private String patternPrefix = "&e◀ ";
-    private String materialSuffix = " &b▶";
+    private Material confirmMaterial = Material.LIME_DYE;
+    private Material patternDisplayMaterial = Material.PAPER;
+    private boolean useTemplateIcon = false;
+    private String patternDisplayName = "&#0083FF&l%pattern%";
+    private String materialDisplayName = "&#0083FF&l%material%";
     private boolean patternGlow = true;
     private boolean materialGlow = true;
     private Material patternFallback = Material.PAPER;
@@ -97,12 +98,14 @@ public final class ArmorTrimsModule extends Module implements CommandExecutor {
             }
             ConfigurationSection patternItem = gui.getConfigurationSection("pattern-item");
             if (patternItem != null) {
-                patternPrefix = patternItem.getString("prefix", "&e◀ ");
+                patternDisplayMaterial = parseMaterial(patternItem.getString("material"), Material.PAPER);
+                useTemplateIcon = patternItem.getBoolean("use-template-icon", false);
+                patternDisplayName = patternItem.getString("display-name", patternDisplayName);
                 patternGlow = patternItem.getBoolean("glow", true);
             }
             ConfigurationSection materialItem = gui.getConfigurationSection("material-item");
             if (materialItem != null) {
-                materialSuffix = materialItem.getString("suffix", " &b▶");
+                materialDisplayName = materialItem.getString("display-name", materialDisplayName);
                 materialGlow = materialItem.getBoolean("glow", true);
             }
             ConfigurationSection confirm = gui.getConfigurationSection("confirm");
@@ -223,37 +226,51 @@ public final class ArmorTrimsModule extends Module implements CommandExecutor {
         if (!holder.patterns.isEmpty()) {
             TrimPattern pattern = holder.patterns.get(holder.patternIndex);
             NamespacedKey key = pr.getKey(pattern);
-            ItemStack patternItem = new ItemBuilder(patternIcon(key))
-                    .edit(meta -> meta.displayName(Component.empty()
-                            .append(Text.c(patternPrefix))
-                            .append(pattern.description())))
-                    .lore(raw("lore-cycle-pattern"))
+            String label = registryLabel(key);
+            String name = Text.apply(messages.getString("pattern-name", patternDisplayName), "%pattern%", label);
+            ItemStack patternItem = new ItemBuilder(patternDisplayMaterial(key))
+                    .name(name)
+                    .lore(rawList("pattern-lore"))
                     .glow(patternGlow)
                     .hideAll()
                     .build();
-            BundleUtil.stripTrimTemplate(patternItem);
+            BundleUtil.forceCustomTooltip(patternItem);
             inv.setItem(patternSlot, patternItem);
         }
         Registry<TrimMaterial> mr = RegistryAccess.registryAccess().getRegistry(RegistryKey.TRIM_MATERIAL);
         if (!holder.materials.isEmpty()) {
             TrimMaterial material = holder.materials.get(holder.materialIndex);
             NamespacedKey key = mr.getKey(material);
+            String label = registryLabel(key);
+            String name = Text.apply(messages.getString("material-name", materialDisplayName), "%material%", label);
             ItemStack materialItem = new ItemBuilder(materialIcon(key))
-                    .edit(meta -> meta.displayName(Component.empty()
-                            .append(material.description())
-                            .append(Text.c(materialSuffix))))
-                    .lore(raw("lore-cycle-material"))
+                    .name(name)
+                    .lore(rawList("material-lore"))
                     .glow(materialGlow)
                     .hideAll()
                     .build();
-            BundleUtil.stripTrimTemplate(materialItem);
+            BundleUtil.forceCustomTooltip(materialItem);
             inv.setItem(materialSlot, materialItem);
         }
         ItemStack confirm = new ItemBuilder(confirmMaterial)
                 .name(raw("confirm-name"))
-                .lore(raw("confirm-lore"))
+                .lore(rawList("confirm-lore"))
+                .hideAll()
                 .build();
         inv.setItem(confirmSlot, confirm);
+    }
+
+    private Material patternDisplayMaterial(NamespacedKey key) {
+        if (useTemplateIcon) {
+            Material template = patternIcon(key);
+            if (template != patternFallback || key != null) return template;
+        }
+        return patternDisplayMaterial;
+    }
+
+    private String registryLabel(NamespacedKey key) {
+        if (key == null) return "Unknown";
+        return key.getKey().replace('_', ' ').toUpperCase(Locale.ROOT);
     }
 
     private Material patternIcon(NamespacedKey key) {

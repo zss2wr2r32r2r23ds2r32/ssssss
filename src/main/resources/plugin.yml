@@ -27,8 +27,8 @@ commands:
     aliases: [disposal, bin]
   chattoggle:
     description: Toggle seeing public chat
-    usage: /chattoggle
-    aliases: [togglechat, ct]
+    usage: /chattoggle [toggle]
+    aliases: [togglechat, ct, publicchat]
   msg:
     description: Send a private message
     usage: /msg <player> <message>
@@ -71,16 +71,21 @@ commands:
     usage: /sb
   deathtoggle:
     description: Toggle seeing death messages
-    usage: /deathtoggle
+    usage: /deathtoggle [toggle]
     aliases: [deathmessages, dtoggle]
   jointoggle:
     description: Toggle join and leave messages
-    usage: /jointoggle
-    aliases: [joinleave, jtoggle]
+    usage: /jointoggle [toggle]
+    aliases: [joinleave, jtoggle, joinmessages]
   mobtoggle:
     description: Toggle natural mob spawning near you
     usage: /mobtoggle
     aliases: [mobspawn, mtoggle]
+  settings:
+    description: Open your personal settings menu
+    usage: /settings
+    aliases: [setting]
+    permission: sharded.settings.use
   killstreak:
     description: View killstreak stats
     usage: /killstreak [best|player] [best]

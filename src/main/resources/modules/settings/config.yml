@@ -1,14 +1,9 @@
-# Settings module - /settings opens a personal settings GUI.
-config-version: 3
-# message-mode: inherit  # chat | actionbar | both — overrides global message-mode
-title: '&8Settings'
+config-version: 4
+# message-mode: inherit  # chat | actionbar | both
 
-slots:
-  chat: 11
-  msg: 13
-  nightvision: 15
+prefix: '&#00A2FF&lCORE &8▷ &r'
 
-icons:
-  chat: OAK_SIGN
-  msg: WRITABLE_BOOK
-  nightvision: ENDER_EYE
+# Shown in GUI lore as %status_<name>% — edit text/colors here (ENABLED/DISABLED or ON/OFF)
+status:
+  enabled: '&#9FFF00&lENABLED'
+  disabled: '&#FF2727&lDISABLED'

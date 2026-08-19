@@ -18,6 +18,17 @@ public final class BundleUtil {
         return changed;
     }
 
+    /** Hides vanilla item name / smithing lines so only custom menu meta shows. */
+    public static void forceCustomTooltip(ItemStack item) {
+        if (item == null) return;
+        var builder = TooltipDisplay.tooltipDisplay().addHiddenComponents(DataComponentTypes.ITEM_NAME);
+        Material type = item.getType();
+        if (type.name().endsWith("_SMITHING_TEMPLATE") || item.hasData(DataComponentTypes.PROVIDES_TRIM_MATERIAL)) {
+            builder.addHiddenComponents(DataComponentTypes.PROVIDES_TRIM_MATERIAL);
+        }
+        item.setData(DataComponentTypes.TOOLTIP_DISPLAY, builder.build());
+    }
+
     public static boolean stripBundle(ItemStack item) {
         if (item == null || item.getType() != Material.BUNDLE) return false;
         if (item.hasData(DataComponentTypes.TOOLTIP_DISPLAY)) return false;
@@ -33,13 +44,7 @@ public final class BundleUtil {
         boolean template = type.name().endsWith("_SMITHING_TEMPLATE");
         boolean trimMaterial = item.hasData(DataComponentTypes.PROVIDES_TRIM_MATERIAL);
         if (!template && !trimMaterial) return false;
-        if (item.hasData(DataComponentTypes.TOOLTIP_DISPLAY)) return false;
-        var builder = TooltipDisplay.tooltipDisplay()
-                .addHiddenComponents(DataComponentTypes.PROVIDES_TRIM_MATERIAL);
-        if (template) {
-            builder.addHiddenComponents(DataComponentTypes.ITEM_NAME);
-        }
-        item.setData(DataComponentTypes.TOOLTIP_DISPLAY, builder.build());
+        forceCustomTooltip(item);
         return true;
     }
 }

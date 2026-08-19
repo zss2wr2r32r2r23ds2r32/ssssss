@@ -42,6 +42,9 @@ public final class ChatToggleModule extends Module implements CommandExecutor {
             send(sender, "players-only");
             return true;
         }
+        if (args.length > 0 && !args[0].equalsIgnoreCase("toggle")) {
+            return true;
+        }
         if (!player.hasPermission("sharded.chat.toggle")) {
             send(player, "no-permission");
             return true;
