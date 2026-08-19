@@ -2,7 +2,7 @@ package com.sharded.core.modules.client;
 
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
-import com.sharded.core.util.Text;
+import com.sharded.core.util.ItemsAdderEscMenuSync;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,21 +11,15 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** Escape menu resource pack + Discord rich presence for Lunar / Feather / Dawn clients. */
+/** Discord rich presence for Lunar / Feather / Dawn; escape menu via ItemsAdder lang overwrite. */
 public final class ClientModule extends Module implements PluginMessageListener {
 
-    private static final UUID PACK_ID = UUID.nameUUIDFromBytes("shardedcore-ui-pack".getBytes(StandardCharsets.UTF_8));
-
     private final Set<UUID> lunarPlayers = ConcurrentHashMap.newKeySet();
-    private byte[] resourcePackBytes;
-    private byte[] resourcePackHash;
     private boolean featherApiAvailable;
 
     public ClientModule(ShardedCore plugin) {
@@ -34,9 +28,8 @@ public final class ClientModule extends Module implements PluginMessageListener 
 
     @Override
     protected void onEnable() {
-        loadResourcePack();
+        ItemsAdderEscMenuSync.install(plugin, config);
         featherApiAvailable = Bukkit.getPluginManager().getPlugin("feather-server-api") != null;
-
         registerPluginChannels();
     }
 
@@ -58,27 +51,11 @@ public final class ClientModule extends Module implements PluginMessageListener 
         lunarPlayers.clear();
     }
 
-    private void loadResourcePack() {
-        if (!config.getBoolean("resource-pack.enabled", true)) return;
-        try (InputStream in = plugin.getResource("resourcepack/ShardedCore-ui.zip")) {
-            if (in == null) {
-                plugin.getLogger().warning("[client] resourcepack/ShardedCore-ui.zip missing from jar");
-                return;
-            }
-            resourcePackBytes = in.readAllBytes();
-            MessageDigest digest = MessageDigest.getInstance("SHA-1");
-            resourcePackHash = digest.digest(resourcePackBytes);
-        } catch (Exception e) {
-            plugin.getLogger().warning("[client] Could not load resource pack: " + e.getMessage());
-        }
-    }
-
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (!player.isOnline()) return;
-            applyResourcePack(player);
             applyDiscordPresence(player);
         }, config.getLong("apply-delay-ticks", 40L));
     }
@@ -93,26 +70,6 @@ public final class ClientModule extends Module implements PluginMessageListener 
         if (!"lunar:apollo".equals(channel)) return;
         lunarPlayers.add(player.getUniqueId());
         Bukkit.getScheduler().runTask(plugin, () -> applyDiscordPresence(player));
-    }
-
-    private void applyResourcePack(Player player) {
-        if (!config.getBoolean("resource-pack.enabled", true)) return;
-        String url = config.getString("resource-pack.url", "");
-        if (url == null || url.isBlank()) {
-            plugin.getLogger().warning("[client] resource-pack.url is not set — escape menu text will not apply");
-            return;
-        }
-        boolean required = config.getBoolean("resource-pack.required", false);
-        String prompt = config.getString("resource-pack.prompt", "Loading ShardedMC UI...");
-        try {
-            if (resourcePackHash != null) {
-                player.setResourcePack(PACK_ID, url, resourcePackHash, Text.c(prompt), required);
-            } else {
-                player.setResourcePack(PACK_ID, url, new byte[0], Text.c(prompt), required);
-            }
-        } catch (Exception e) {
-            plugin.getLogger().warning("[client] Could not send resource pack to " + player.getName() + ": " + e.getMessage());
-        }
     }
 
     private void applyDiscordPresence(Player player) {
@@ -149,7 +106,7 @@ public final class ClientModule extends Module implements PluginMessageListener 
 
             Object activity = builder.getClass().getMethod("build").invoke(builder);
             Class<?> featherPlayerClass = Class.forName("net.digitalingot.feather.serverapi.api.player.FeatherPlayer");
-            Object featherPlayer = featherApi.getMethod("getPlayer", java.util.UUID.class).invoke(null, player.getUniqueId());
+            Object featherPlayer = featherApi.getMethod("getPlayer", UUID.class).invoke(null, player.getUniqueId());
             if (featherPlayer == null) return false;
             metaService.getClass().getMethod("updateDiscordActivity", featherPlayerClass, activityClass)
                     .invoke(metaService, featherPlayer, activity);

@@ -1,17 +1,20 @@
-config-version: 1
+config-version: 2
 
 apply-delay-ticks: 40
 
-resource-pack:
+# Escape menu disconnect text — installed into ItemsAdder (uses IA resource pack, no second prompt)
+itemsadder-escape-menu:
   enabled: true
-  # Host ShardedCore-ui.zip and paste the direct URL here (also in release/ folder)
-  url: 'https://github.com/zss2wr2r32r2r23ds2r32/ssssss/raw/cursor/sharded-core-plugin-e2e9/release/ShardedCore-ui.zip'
-  required: false
-  prompt: '&#AD4EFFLoading ShardedMC UI...'
+  auto-install: true
+  namespace: shardedcore
+  block-id: shardedcore_esc_menu
+  disconnect-text: '&x&A&D&4&E&F&FDisconnect from ShardedMC'
+  install-path: 'plugins/ItemsAdder/contents/shardedcore/configs/esc_menu.yml'
+  reload-on-install: false
+  reload-command: iareload
 
 discord-rpc:
   enabled: true
-  # Sends to Lunar via apollo:json; uses Feather/Apollo API if those plugins are installed
   send-without-detection: true
   game-name: 'Sharded MC'
   details: 'Playing Sharded MC'
