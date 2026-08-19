@@ -1,5 +1,5 @@
 # Portal RTP
-config-version: 3
+config-version: 4
 # message-mode: inherit  # chat | actionbar | both — overrides global message-mode
 portal-world: spawn
 target-world: world
