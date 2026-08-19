@@ -8,24 +8,24 @@ items:
   back_button:
     material: BARRIER
     slot: 26
-    display_name: '&x&F&F&0&0&0&0&lBACK'
+    display_name: '&#FF0000&lBACK'
     left_click_commands:
       - '[openguimenu] mainmenu'
 
   red_glow:
     material: RED_HARNESS
     slot: 10
-    display_name: '&x&F&F&0&0&0&0&lRED &x&F&F&0&0&0&0Glow'
+    display_name: '&#FF0000&lRED &#FF0000Glow'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&F&0&0&0&0Information:'
-      - '&x&F&F&0&0&0&0| &fPurchase the &x&F&F&0&0&0&0Red Glow'
-      - '&x&F&F&0&0&0&0| &fAnd Enhance your looks!'
+      - '&#FF0000Information:'
+      - '&#FF0000| &fPurchase the &#FF0000Red Glow'
+      - '&#FF0000| &fAnd Enhance your looks!'
       - ''
-      - '&x&F&F&0&0&0&0⚓ &fCost: &x&F&F&0&0&0&0500 Tokens'
+      - '&#FF0000⚓ &fCost: &#FF0000500 Tokens'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
     left_click_commands:
       - '[tokens_take] 500'
       - '[console] lp user %player_name% permission set glow.red true'
@@ -35,17 +35,17 @@ items:
   orange_glow:
     material: ORANGE_HARNESS
     slot: 11
-    display_name: '&x&F&F&9&1&0&0&lORANGE &x&F&F&9&1&0&0Glow'
+    display_name: '&#FF9100&lORANGE &#FF9100Glow'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&F&9&1&0&0Information:'
-      - '&x&F&F&9&1&0&0| &fPurchase the &x&F&F&9&1&0&0Orange Glow'
-      - '&x&F&F&9&1&0&0| &fAnd Enhance your looks!'
+      - '&#FF9100Information:'
+      - '&#FF9100| &fPurchase the &#FF9100Orange Glow'
+      - '&#FF9100| &fAnd Enhance your looks!'
       - ''
-      - '&x&F&F&9&1&0&0⚓ &fCost: &x&F&F&9&1&0&0500 Tokens'
+      - '&#FF9100⚓ &fCost: &#FF9100500 Tokens'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
     left_click_commands:
       - '[tokens_take] 500'
       - '[console] lp user %player_name% permission set glow.orange true'
@@ -55,17 +55,17 @@ items:
   yellow_glow:
     material: YELLOW_HARNESS
     slot: 12
-    display_name: '&x&F&C&F&F&0&0&lYELLOW &x&F&C&F&F&0&0Glow'
+    display_name: '&#FCFF00&lYELLOW &#FCFF00Glow'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&C&F&F&0&0Information:'
-      - '&x&F&C&F&F&0&0| &fPurchase the &x&F&C&F&F&0&0Yellow Glow'
-      - '&x&F&C&F&F&0&0| &fAnd Enhance your looks!'
+      - '&#FCFF00Information:'
+      - '&#FCFF00| &fPurchase the &#FCFF00Yellow Glow'
+      - '&#FCFF00| &fAnd Enhance your looks!'
       - ''
-      - '&x&F&C&F&F&0&0⚓ &fCost: &x&F&C&F&F&0&0500 Tokens'
+      - '&#FCFF00⚓ &fCost: &#FCFF00500 Tokens'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
     left_click_commands:
       - '[tokens_take] 500'
       - '[console] lp user %player_name% permission set glow.yellow true'
@@ -75,17 +75,17 @@ items:
   lime_glow:
     material: LIME_HARNESS
     slot: 13
-    display_name: '&x&9&4&F&F&0&0&lLIME &x&9&4&F&F&0&0Glow'
+    display_name: '&#94FF00&lLIME &#94FF00Glow'
     lore:
       - '&8Description'
       - ''
-      - '&x&9&4&F&F&0&0Information:'
-      - '&x&9&4&F&F&0&0| &fPurchase the &x&9&4&F&F&0&0Lime Glow'
-      - '&x&9&4&F&F&0&0| &fAnd Enhance your looks!'
+      - '&#94FF00Information:'
+      - '&#94FF00| &fPurchase the &#94FF00Lime Glow'
+      - '&#94FF00| &fAnd Enhance your looks!'
       - ''
-      - '&x&9&4&F&F&0&0⚓ &fCost: &x&9&4&F&F&0&0500 Tokens'
+      - '&#94FF00⚓ &fCost: &#94FF00500 Tokens'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
     left_click_commands:
       - '[tokens_take] 500'
       - '[console] lp user %player_name% permission set glow.lime true'
@@ -95,17 +95,17 @@ items:
   cyan_glow:
     material: CYAN_HARNESS
     slot: 14
-    display_name: '&x&0&0&E&0&F&F&lCYAN &x&0&0&E&0&F&FGlow'
+    display_name: '&#00E0FF&lCYAN &#00E0FFGlow'
     lore:
       - '&8Description'
       - ''
-      - '&x&0&0&E&0&F&FInformation:'
-      - '&x&0&0&E&0&F&F| &fPurchase the &x&0&0&E&0&F&FCyan Glow'
-      - '&x&0&0&E&0&F&F| &fAnd Enhance your looks!'
+      - '&#00E0FFInformation:'
+      - '&#00E0FF| &fPurchase the &#00E0FFCyan Glow'
+      - '&#00E0FF| &fAnd Enhance your looks!'
       - ''
-      - '&x&0&0&E&0&F&F⚓ &fCost: &x&0&0&E&0&F&F500 Tokens'
+      - '&#00E0FF⚓ &fCost: &#00E0FF500 Tokens'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
     left_click_commands:
       - '[tokens_take] 500'
       - '[console] lp user %player_name% permission set glow.cyan true'
@@ -115,17 +115,17 @@ items:
   purple_glow:
     material: PURPLE_HARNESS
     slot: 15
-    display_name: '&x&9&4&0&0&F&F&lPURPLE &x&9&4&0&0&F&FGlow'
+    display_name: '&#9400FF&lPURPLE &#9400FFGlow'
     lore:
       - '&8Description'
       - ''
-      - '&x&9&4&0&0&F&FInformation:'
-      - '&x&9&4&0&0&F&F| &fPurchase the &x&9&4&0&0&F&FPurple Glow'
-      - '&x&9&4&0&0&F&F| &fAnd Enhance your looks!'
+      - '&#9400FFInformation:'
+      - '&#9400FF| &fPurchase the &#9400FFPurple Glow'
+      - '&#9400FF| &fAnd Enhance your looks!'
       - ''
-      - '&x&9&4&0&0&F&F⚓ &fCost: &x&9&4&0&0&F&F500 Tokens'
+      - '&#9400FF⚓ &fCost: &#9400FF500 Tokens'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
     left_click_commands:
       - '[tokens_take] 500'
       - '[console] lp user %player_name% permission set glow.purple true'
@@ -135,17 +135,17 @@ items:
   rainbow_glow:
     material: NETHER_STAR
     slot: 16
-    display_name: '&x&F&F&0&0&0&0&lR&x&F&F&4&8&0&0&lA&x&F&F&F&8&0&0&lI&x&8&0&F&C&3&7&lN&x&0&0&F&F&6&E&lB&x&0&0&C&1&F&F&lO&x&3&3&6&4&E&9&lW &x&3&3&6&4&E&9Glow'
+    display_name: '&#FF0000&lR&#FF4800&lA&#FFF800&lI&#80FC37&lN&#00FF6E&lB&#00C1FF&lO&#3364E9&lW &#3364E9Glow'
     lore:
       - '&8Description'
       - ''
-      - '&x&3&3&6&4&E&9Information:'
-      - '&x&3&3&6&4&E&9| &fPurchase the &x&3&3&6&4&E&9Rainbow Glow'
-      - '&x&3&3&6&4&E&9| &fAnd Enhance your looks!'
+      - '&#3364E9Information:'
+      - '&#3364E9| &fPurchase the &#3364E9Rainbow Glow'
+      - '&#3364E9| &fAnd Enhance your looks!'
       - ''
-      - '&x&3&3&6&4&E&9⚓ &fCost: &x&3&3&6&4&E&91500 Tokens'
+      - '&#3364E9⚓ &fCost: &#3364E91500 Tokens'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
     left_click_commands:
       - '[tokens_take] 2500'
       - '[console] lp user %player_name% permission set glow.rainbow true'

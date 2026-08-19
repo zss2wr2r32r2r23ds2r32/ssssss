@@ -13,17 +13,17 @@ items:
   ruby_7d:
     material: RED_HARNESS
     slot: 11
-    display_name: '&x&F&F&2&B&2&B&lRUBY &x&F&F&2&B&2&BRank &7[7D]'
+    display_name: '&#FF2B2B&lRUBY &#FF2B2BRank &7[7D]'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&F&2&B&2&BInformation:'
-      - '&x&F&F&2&B&2&B| &fPurchase Ranks using tokens'
-      - '&x&F&F&2&B&2&B| &ftokens can be obtained by &x&F&F&2&B&2&BKill Streaks'
+      - '&#FF2B2BInformation:'
+      - '&#FF2B2B| &fPurchase Ranks using tokens'
+      - '&#FF2B2B| &ftokens can be obtained by &#FF2B2BKill Streaks'
       - ''
-      - '&x&F&F&2&B&2&B| &fTokens: &x&F&F&2&B&2&B500'
+      - '&#FF2B2B| &fTokens: &#FF2B2B500'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
     click_commands:
       - '[temprank_buy] ruby 7 500'
       - '[sound] ENTITY_PLAYER_LEVELUP'
@@ -31,13 +31,13 @@ items:
   ruby_14d:
     material: RED_HARNESS
     slot: 20
-    display_name: '&x&F&F&2&B&2&B&lRUBY &x&F&F&2&B&2&BRank &7[14D]'
+    display_name: '&#FF2B2B&lRUBY &#FF2B2BRank &7[14D]'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&F&2&B&2&B| &fTokens: &x&F&F&2&B&2&B900'
+      - '&#FF2B2B| &fTokens: &#FF2B2B900'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
     click_commands:
       - '[temprank_buy] ruby 14 900'
       - '[sound] ENTITY_PLAYER_LEVELUP'
@@ -45,13 +45,13 @@ items:
   sapphire_7d:
     material: BLUE_HARNESS
     slot: 12
-    display_name: '&x&0&0&6&E&F&F&lSAPPHIRE &x&0&0&6&E&F&FRank &7[7D]'
+    display_name: '&#006EFF&lSAPPHIRE &#006EFFRank &7[7D]'
     lore:
       - '&8Description'
       - ''
-      - '&x&0&0&6&E&F&F| &fTokens: &x&0&0&6&E&F&F750'
+      - '&#006EFF| &fTokens: &#006EFF750'
       - ''
-      - '&x&F&F&C&F&0&0▷ &x&F&F&C&F&0&0&l&nCLICK&r &x&F&F&C&F&0&0To Purchase'
+      - '&#FFCF00▷ &#FFCF00&l&nCLICK&r &#FFCF00To Purchase'
     click_commands:
       - '[temprank_buy] sapphire 7 750'
       - '[sound] ENTITY_PLAYER_LEVELUP'
@@ -59,13 +59,13 @@ items:
   sapphire_14d:
     material: BLUE_HARNESS
     slot: 21
-    display_name: '&x&0&0&6&E&F&F&lSAPPHIRE &x&0&0&6&E&F&FRank &7[14D]'
+    display_name: '&#006EFF&lSAPPHIRE &#006EFFRank &7[14D]'
     lore:
       - '&8Description'
       - ''
-      - '&x&0&0&6&E&F&F| &fTokens: &x&0&0&6&E&F&F1350'
+      - '&#006EFF| &fTokens: &#006EFF1350'
       - ''
-      - '&x&F&F&C&F&0&0▷ &x&F&F&C&F&0&0&l&nCLICK&r &x&F&F&C&F&0&0To Purchase'
+      - '&#FFCF00▷ &#FFCF00&l&nCLICK&r &#FFCF00To Purchase'
     click_commands:
       - '[temprank_buy] sapphire 14 1350'
       - '[sound] ENTITY_PLAYER_LEVELUP'
@@ -73,13 +73,13 @@ items:
   onyx_7d:
     material: YELLOW_HARNESS
     slot: 13
-    display_name: '&x&F&F&C&F&0&0&lONYX &x&F&F&C&F&0&0Rank &7[7D]'
+    display_name: '&#FFCF00&lONYX &#FFCF00Rank &7[7D]'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&F&C&F&0&0| &fTokens: &x&F&F&C&F&0&01000'
+      - '&#FFCF00| &fTokens: &#FFCF001000'
       - ''
-      - '&x&F&F&C&F&0&0▷ &x&F&F&C&F&0&0&l&nCLICK&r &x&F&F&C&F&0&0To Purchase'
+      - '&#FFCF00▷ &#FFCF00&l&nCLICK&r &#FFCF00To Purchase'
     click_commands:
       - '[temprank_buy] onyx 7 1000'
       - '[sound] ENTITY_PLAYER_LEVELUP'
@@ -87,13 +87,13 @@ items:
   onyx_14d:
     material: YELLOW_HARNESS
     slot: 22
-    display_name: '&x&F&F&C&F&0&0&lONYX &x&F&F&C&F&0&0Rank &7[14D]'
+    display_name: '&#FFCF00&lONYX &#FFCF00Rank &7[14D]'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&F&C&F&0&0| &fTokens: &x&F&F&C&F&0&01800'
+      - '&#FFCF00| &fTokens: &#FFCF001800'
       - ''
-      - '&x&F&F&C&F&0&0▷ &x&F&F&C&F&0&0&l&nCLICK&r &x&F&F&C&F&0&0To Purchase'
+      - '&#FFCF00▷ &#FFCF00&l&nCLICK&r &#FFCF00To Purchase'
     click_commands:
       - '[temprank_buy] onyx 14 1800'
       - '[sound] ENTITY_PLAYER_LEVELUP'
@@ -101,13 +101,13 @@ items:
   aether_7d:
     material: LIGHT_BLUE_HARNESS
     slot: 14
-    display_name: '&x&7&D&E&B&F&F&lAETHER &x&7&D&E&B&F&FRank &7[7D]'
+    display_name: '&#7DEBFF&lAETHER &#7DEBFFRank &7[7D]'
     lore:
       - '&8Description'
       - ''
-      - '&x&7&D&E&B&F&F| &fTokens: &x&7&D&E&B&F&F1500'
+      - '&#7DEBFF| &fTokens: &#7DEBFF1500'
       - ''
-      - '&x&F&F&C&F&0&0▷ &x&F&F&C&F&0&0&l&nCLICK&r &x&F&F&C&F&0&0To Purchase'
+      - '&#FFCF00▷ &#FFCF00&l&nCLICK&r &#FFCF00To Purchase'
     click_commands:
       - '[temprank_buy] aether 7 1500'
       - '[sound] ENTITY_PLAYER_LEVELUP'
@@ -115,13 +115,13 @@ items:
   aether_14d:
     material: LIGHT_BLUE_HARNESS
     slot: 23
-    display_name: '&x&7&D&E&B&F&F&lAETHER &x&7&D&E&B&F&FRank &7[14D]'
+    display_name: '&#7DEBFF&lAETHER &#7DEBFFRank &7[14D]'
     lore:
       - '&8Description'
       - ''
-      - '&x&7&D&E&B&F&F| &fTokens: &x&7&D&E&B&F&F2700'
+      - '&#7DEBFF| &fTokens: &#7DEBFF2700'
       - ''
-      - '&x&F&F&C&F&0&0▷ &x&F&F&C&F&0&0&l&nCLICK&r &x&F&F&C&F&0&0To Purchase'
+      - '&#FFCF00▷ &#FFCF00&l&nCLICK&r &#FFCF00To Purchase'
     click_commands:
       - '[temprank_buy] aether 14 2700'
       - '[sound] ENTITY_PLAYER_LEVELUP'
@@ -129,13 +129,13 @@ items:
   flawless_7d:
     material: PURPLE_HARNESS
     slot: 15
-    display_name: '&x&8&B&5&C&F&6&lFLAWLESS &x&8&B&5&C&F&6Rank &7[7D]'
+    display_name: '&#8B5CF6&lFLAWLESS &#8B5CF6Rank &7[7D]'
     lore:
       - '&8Description'
       - ''
-      - '&x&8&B&5&C&F&6| &fTokens: &x&8&B&5&C&F&62000'
+      - '&#8B5CF6| &fTokens: &#8B5CF62000'
       - ''
-      - '&x&F&F&C&F&0&0▷ &x&F&F&C&F&0&0&l&nCLICK&r &x&F&F&C&F&0&0To Purchase'
+      - '&#FFCF00▷ &#FFCF00&l&nCLICK&r &#FFCF00To Purchase'
     click_commands:
       - '[temprank_buy] flawless 7 2000'
       - '[sound] ENTITY_PLAYER_LEVELUP'
@@ -143,13 +143,13 @@ items:
   flawless_14d:
     material: PURPLE_HARNESS
     slot: 24
-    display_name: '&x&8&B&5&C&F&6&lFLAWLESS &x&8&B&5&C&F&6Rank &7[14D]'
+    display_name: '&#8B5CF6&lFLAWLESS &#8B5CF6Rank &7[14D]'
     lore:
       - '&8Description'
       - ''
-      - '&x&8&B&5&C&F&6| &fTokens: &x&8&B&5&C&F&63600'
+      - '&#8B5CF6| &fTokens: &#8B5CF63600'
       - ''
-      - '&x&F&F&C&F&0&0▷ &x&F&F&C&F&0&0&l&nCLICK&r &x&F&F&C&F&0&0To Purchase'
+      - '&#FFCF00▷ &#FFCF00&l&nCLICK&r &#FFCF00To Purchase'
     click_commands:
       - '[temprank_buy] flawless 14 3600'
       - '[sound] ENTITY_PLAYER_LEVELUP'

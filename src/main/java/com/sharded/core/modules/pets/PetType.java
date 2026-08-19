@@ -11,7 +11,7 @@ public enum PetType {
     AXOLOTL("axolotl", EntityType.AXOLOTL, 0.45, false, false, false, false, null),
     BEE("bee", EntityType.BEE, 0.45, false, false, false, false, null),
     WARDEN("warden", EntityType.WARDEN, 0.22, false, true, false, false, null),
-    ENDER_DRAGON("enderdragon", EntityType.ENDER_DRAGON, 0.18, false, false, false, false, null);
+    ALLAY("allay", EntityType.ALLAY, 0.65, false, false, false, true, null);
 
     private final String id;
     private final EntityType entityType;
@@ -74,7 +74,7 @@ public enum PetType {
         for (PetType type : values()) {
             if (type.id.equals(id) || type.name().equalsIgnoreCase(id)) return type;
         }
-        if (id.equals("dragon")) return ENDER_DRAGON;
+        if (id.equals("dragon") || id.equals("enderdragon")) return ALLAY;
         return null;
     }
 

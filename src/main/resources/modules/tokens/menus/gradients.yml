@@ -8,24 +8,24 @@ items:
   back_button:
     material: BARRIER
     slot: 26
-    display_name: '&x&F&F&0&0&0&0&lBACK'
+    display_name: '&#FF0000&lBACK'
     left_click_commands:
       - '[openguimenu] mainmenu'
 
   red_name:
     material: RED_DYE
     slot: 10
-    display_name: '&x&F&F&0&0&0&0&lRED &x&F&F&0&0&0&0Color'
+    display_name: '&#FF0000&lRED &#FF0000Color'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&F&0&0&0&0Information:'
-      - '&x&F&F&0&0&0&0| &fPurchase the &x&F&F&0&0&0&0Red Color'
-      - '&x&F&F&0&0&0&0| &fAnd Unlock The Unique Colour!'
+      - '&#FF0000Information:'
+      - '&#FF0000| &fPurchase the &#FF0000Red Color'
+      - '&#FF0000| &fAnd Unlock The Unique Colour!'
       - ''
-      - '&x&F&F&0&0&0&0⚓ &fCost: &x&F&F&0&0&0&0250 Tokens'
+      - '&#FF0000⚓ &fCost: &#FF0000250 Tokens'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
     left_click_commands:
       - '[tokens_take] 400'
       - '[console] lp user %player_name% permission set namecolor.red true'
@@ -35,17 +35,17 @@ items:
   gold_name:
     material: ORANGE_DYE
     slot: 11
-    display_name: '&x&F&F&9&1&0&0&lORANGE &x&F&F&9&1&0&0Color'
+    display_name: '&#FF9100&lORANGE &#FF9100Color'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&F&9&1&0&0Information:'
-      - '&x&F&F&9&1&0&0| &fPurchase the &x&F&F&9&1&0&0Orange Color'
-      - '&x&F&F&9&1&0&0| &fAnd Unlock The Unique Colour!'
+      - '&#FF9100Information:'
+      - '&#FF9100| &fPurchase the &#FF9100Orange Color'
+      - '&#FF9100| &fAnd Unlock The Unique Colour!'
       - ''
-      - '&x&F&F&9&1&0&0⚓ &fCost: &x&F&F&9&1&0&0250 Tokens'
+      - '&#FF9100⚓ &fCost: &#FF9100250 Tokens'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
     left_click_commands:
       - '[tokens_take] 400'
       - '[console] lp user %player_name% permission set namecolor.gold true'
@@ -55,17 +55,17 @@ items:
   lime_name:
     material: LIME_DYE
     slot: 12
-    display_name: '&x&8&0&F&F&0&0&lLIME &x&8&0&F&F&0&0Color'
+    display_name: '&#80FF00&lLIME &#80FF00Color'
     lore:
       - '&8Description'
       - ''
-      - '&x&8&0&F&F&0&0Information:'
-      - '&x&8&0&F&F&0&0| &fPurchase the &x&8&0&F&F&0&0Lime Color'
-      - '&x&8&0&F&F&0&0| &fAnd Unlock The Unique Colour!'
+      - '&#80FF00Information:'
+      - '&#80FF00| &fPurchase the &#80FF00Lime Color'
+      - '&#80FF00| &fAnd Unlock The Unique Colour!'
       - ''
-      - '&x&8&0&F&F&0&0⚓ &fCost: &x&8&0&F&F&0&0250 Tokens'
+      - '&#80FF00⚓ &fCost: &#80FF00250 Tokens'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
     left_click_commands:
       - '[tokens_take] 400'
       - '[console] lp user %player_name% permission set namecolor.lime true'
@@ -75,17 +75,17 @@ items:
   aqua_name:
     material: LIGHT_BLUE_DYE
     slot: 13
-    display_name: '&x&0&0&B&7&F&F&lLIGHT BLUE &x&0&0&B&7&F&FColor'
+    display_name: '&#00B7FF&lLIGHT BLUE &#00B7FFColor'
     lore:
       - '&8Description'
       - ''
-      - '&x&0&0&B&7&F&FInformation:'
-      - '&x&0&0&B&7&F&F| &fPurchase the &x&0&0&B&7&F&FLight Blue Color'
-      - '&x&0&0&B&7&F&F| &fAnd Unlock The Unique Colour!'
+      - '&#00B7FFInformation:'
+      - '&#00B7FF| &fPurchase the &#00B7FFLight Blue Color'
+      - '&#00B7FF| &fAnd Unlock The Unique Colour!'
       - ''
-      - '&x&0&0&B&7&F&F⚓ &fCost: &x&0&0&B&7&F&F250 Tokens'
+      - '&#00B7FF⚓ &fCost: &#00B7FF250 Tokens'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
     left_click_commands:
       - '[tokens_take] 400'
       - '[console] lp user %player_name% permission set namecolor.aqua true'
@@ -95,17 +95,17 @@ items:
   purple_name:
     material: PURPLE_DYE
     slot: 14
-    display_name: '&x&8&A&0&0&F&F&lPURPLE &x&8&A&0&0&F&FColor'
+    display_name: '&#8A00FF&lPURPLE &#8A00FFColor'
     lore:
       - '&8Description'
       - ''
-      - '&x&8&A&0&0&F&FInformation:'
-      - '&x&8&A&0&0&F&F| &fPurchase the &x&8&A&0&0&FPurple Color'
-      - '&x&8&A&0&0&F&F| &fAnd Unlock The Unique Colour!'
+      - '&#8A00FFInformation:'
+      - '&#8A00FF| &fPurchase the &x&8&A&0&0&FPurple Color'
+      - '&#8A00FF| &fAnd Unlock The Unique Colour!'
       - ''
-      - '&x&8&A&0&0&F&F⚓ &fCost: &x&8&A&0&0&F&F250 Tokens'
+      - '&#8A00FF⚓ &fCost: &#8A00FF250 Tokens'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
     left_click_commands:
       - '[tokens_take] 400'
       - '[console] lp user %player_name% permission set namecolor.purple true'
@@ -115,17 +115,17 @@ items:
   pink_name:
     material: PINK_DYE
     slot: 15
-    display_name: '&x&F&F&0&0&5&D&lPINK &x&F&F&0&0&5&DColor'
+    display_name: '&#FF005D&lPINK &#FF005DColor'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&F&0&0&5&DInformation:'
-      - '&x&F&F&0&0&5&D| &fPurchase the &x&F&F&0&0&5&DPink Color'
-      - '&x&F&F&0&0&5&D| &fAnd Unlock The Unique Colour!'
+      - '&#FF005DInformation:'
+      - '&#FF005D| &fPurchase the &#FF005DPink Color'
+      - '&#FF005D| &fAnd Unlock The Unique Colour!'
       - ''
-      - '&x&F&F&0&0&5&D⚓ &fCost: &x&F&F&0&0&5&D250 Tokens'
+      - '&#FF005D⚓ &fCost: &#FF005D250 Tokens'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
     left_click_commands:
       - '[tokens_take] 400'
       - '[console] lp user %player_name% permission set namecolor.white true'
@@ -135,17 +135,17 @@ items:
   rainbow_name:
     material: BLUE_BUNDLE
     slot: 16
-    display_name: '&x&0&0&5&A&F&F&lCUSTOM &x&0&0&5&A&F&FColor'
+    display_name: '&#005AFF&lCUSTOM &#005AFFColor'
     lore:
       - '&8Description'
       - ''
-      - '&x&0&0&5&A&F&FInformation:'
-      - '&x&0&0&5&A&F&F| &fPurchase the &x&0&0&5&A&F&FCustom Color'
-      - '&x&0&0&5&A&F&F| &fAnd Unlock The Unique Colour!'
+      - '&#005AFFInformation:'
+      - '&#005AFF| &fPurchase the &#005AFFCustom Color'
+      - '&#005AFF| &fAnd Unlock The Unique Colour!'
       - ''
-      - '&x&0&0&5&A&F&F⚓ &fCost: &x&0&0&5&A&F&F1200 Tokens'
+      - '&#005AFF⚓ &fCost: &#005AFF1200 Tokens'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
     left_click_commands:
       - '[tokens_take] 2000'
       - '[console] lp user %player_name% permission set namecolor.rainbow true'

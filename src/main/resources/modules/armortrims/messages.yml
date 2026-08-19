@@ -1,9 +1,9 @@
 prefix: '%prefix%'
-players-only: '%prefix%&x&F&F&2&7&2&7Only players can use this command.'
-no-permission: '%prefix%&x&F&F&2&7&2&7You don''t have permission.'
+players-only: '%prefix%&#FF2727Only players can use this command.'
+no-permission: '%prefix%&#FF2727You don''t have permission.'
 opened: '%prefix%&7Place armor in the &fmiddle&7. Click &eleft&7/&bright &7to cycle
   trims.'
-not-armor: '%prefix%&x&F&F&2&7&2&7Only armor goes in the middle slot.'
+not-armor: '%prefix%&#FF2727Only armor goes in the middle slot.'
 trim-applied: '%prefix%&x&9&S&F&F&0&0Trim applied!'
 lore-cycle-pattern: '&7Click to cycle &etrim pattern'
 lore-cycle-material: '&7Click to cycle &bmaterial'

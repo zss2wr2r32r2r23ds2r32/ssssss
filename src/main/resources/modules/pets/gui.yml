@@ -1,4 +1,4 @@
-menu_title: '&8PETS'
+menu_title: '&#8PETS'
 size: 45
 open_permission: sharded.pets.use
 
@@ -11,57 +11,58 @@ items:
   parrot:
     material: FEATHER
     slot: 10
-    display_name: '&bParrot &7(shoulder)'
+    display_name: '&#bParrot'
     lore:
-      - '&7Sits on your shoulder'
-      - '&e▷ CLICK TO EQUIP'
+      - '&#7Flies in orbit around you'
+      - '&#e▷ CLICK TO EQUIP'
     click_commands:
       - '[pet_equip_parrot]'
 
   axolotl:
     material: AXOLOTL_BUCKET
     slot: 12
-    display_name: '&dTiny Axolotl'
+    display_name: '&#dTiny Axolotl'
     lore:
-      - '&7Follows you around'
-      - '&e▷ CLICK TO EQUIP'
+      - '&#7Follows you around'
+      - '&#7Use /pet equip axolotl <color>'
+      - '&#e▷ CLICK TO EQUIP'
     click_commands:
       - '[pet_equip_axolotl]'
 
   bee:
     material: HONEYCOMB
     slot: 14
-    display_name: '&eTiny Bee'
+    display_name: '&#eTiny Bee'
     lore:
-      - '&7Follows you around'
-      - '&e▷ CLICK TO EQUIP'
+      - '&#7Follows you around'
+      - '&#e▷ CLICK TO EQUIP'
     click_commands:
       - '[pet_equip_bee]'
 
   warden:
     material: SCULK_CATALYST
     slot: 16
-    display_name: '&3Tiny Warden'
+    display_name: '&#3Tiny Warden'
     lore:
-      - '&7Walks on the ground near you'
-      - '&e▷ CLICK TO EQUIP'
+      - '&#7Follows you on the ground'
+      - '&#e▷ CLICK TO EQUIP'
     click_commands:
       - '[pet_equip_warden]'
 
-  enderdragon:
-    material: DRAGON_HEAD
+  allay:
+    material: AMETHYST_SHARD
     slot: 22
-    display_name: '&5Tiny Dragon'
+    display_name: '&#bTiny Allay'
     lore:
-      - '&7Mini dragon head follower'
-      - '&e▷ CLICK TO EQUIP'
+      - '&#7Flies around you'
+      - '&#e▷ CLICK TO EQUIP'
     click_commands:
-      - '[pet_equip_enderdragon]'
+      - '[pet_equip_allay]'
 
   remove:
     material: BARRIER
     slot: 40
-    display_name: '&cRemove Pet'
+    display_name: '&#cRemove Pet'
     click_commands:
       - '[player] pet remove'
       - '[close]'

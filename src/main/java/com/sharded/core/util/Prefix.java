@@ -10,7 +10,7 @@ public final class Prefix {
 
     public static String get() {
         ShardedCore plugin = ShardedCore.get();
-        if (plugin == null) return "&8[&bSharded&8] &r";
-        return plugin.getConfig().getString("prefix", "&8[&bSharded&8] &r");
+        if (plugin == null) return ColorUtil.normalize("&8[&bSharded&8] &r");
+        return ColorUtil.normalize(plugin.getConfig().getString("prefix", "&8[&bSharded&8] &r"));
     }
 }

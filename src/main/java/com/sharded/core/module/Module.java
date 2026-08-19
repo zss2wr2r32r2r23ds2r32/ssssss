@@ -145,7 +145,7 @@ public abstract class Module implements Listener {
             return ColorUtil.normalize(config.getString("prefix"));
         }
         String modulePrefix = messages.getString("prefix", "%prefix%");
-        return modulePrefix.replace("%prefix%", Prefix.get());
+        return ColorUtil.normalize(modulePrefix.replace("%prefix%", Prefix.get()));
     }
 
     /** Raw message from messages.yml with module prefix and placeholders applied. */

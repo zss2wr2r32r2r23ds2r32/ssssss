@@ -1,5 +1,5 @@
 prefix: '&8[&bSharded&8] &r'
-players-only: '%prefix%&x&F&F&2&7&2&7Only players can use this command.'
-no-permission: '%prefix%&x&F&F&2&7&2&7You don''t have permission to use /nightvision.'
+players-only: '%prefix%&#FF2727Only players can use this command.'
+no-permission: '%prefix%&#FF2727You don''t have permission to use /nightvision.'
 nv-enabled: '%prefix%&x&9&S&F&F&0&0Night vision &x&9&S&F&F&0&0enabled&7.'
-nv-disabled: '%prefix%&x&F&F&2&7&2&7Night vision &x&F&F&2&7&2&7disabled&7.'
+nv-disabled: '%prefix%&#FF2727Night vision &#FF2727disabled&7.'

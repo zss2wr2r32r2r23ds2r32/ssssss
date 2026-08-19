@@ -166,7 +166,28 @@ permissions:
   sharded.backpack.slots.9:
     default: op
   sharded.graves.use:
-    description: Store items in a grave on death — grant to ranks via LuckPerms (default off)
+    description: Skip graves on death (normal item drops) — grant to paid ranks
+    default: false
+  sharded.graves.duration.vip:
+    description: Graves last 10 minutes
+    default: false
+  sharded.graves.duration.mvp:
+    description: Graves last 15 minutes
+    default: false
+  sharded.graves.duration.ruby:
+    description: Graves last 20 minutes
+    default: false
+  sharded.graves.duration.sapphire:
+    description: Graves last 25 minutes
+    default: false
+  sharded.graves.duration.onyx:
+    description: Graves last 30 minutes
+    default: false
+  sharded.graves.duration.aether:
+    description: Graves last 40 minutes
+    default: false
+  sharded.graves.duration.flawless:
+    description: Graves last 60 minutes
     default: false
   sharded.graves.bypass:
     default: op
@@ -230,7 +251,7 @@ permissions:
     default: true
   sharded.pets.warden:
     default: op
-  sharded.pets.enderdragon:
+  sharded.pets.allay:
     default: op
   sharded.tempranks.use:
     description: Open and purchase from the temp rank shop

@@ -99,7 +99,7 @@ public final class GuiManager {
 
     private boolean runCommand(Player player, String line, Map<String, String> extra) {
         if (line == null || line.isBlank()) return true;
-        line = ColorUtil.normalize(GuiMenu.apply(line, player, extra, this)).trim();
+        line = GuiMenu.apply(line, player, extra, this).trim();
         if (!line.startsWith("[")) return true;
 
         int end = line.indexOf(']');

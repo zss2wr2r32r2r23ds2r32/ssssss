@@ -65,9 +65,9 @@ public final class GuiMenu {
             ItemStack stack = ItemsAdderHook.parseItem(item.getString("material", "STONE"));
             if (stack == null) stack = new ItemStack(org.bukkit.Material.STONE);
 
-            String name = ColorUtil.normalize(item.getString("display_name", " "));
+            String name = item.getString("display_name", " ");
             List<String> lore = new ArrayList<>();
-            for (String line : item.getStringList("lore")) lore.add(ColorUtil.normalize(line));
+            for (String line : item.getStringList("lore")) lore.add(line);
 
             stack = new ItemBuilder(stack).name(name).lore(lore).hideAll().build();
 

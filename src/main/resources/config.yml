@@ -2,7 +2,7 @@
 #  ShardedCore - main configuration
 # ---------------------------------------------------------
 
-prefix: "&x&0&0&A&2&F&F&lCORE &8▷ &r"
+prefix: '&#00A2FF&lCORE &8▷ &r'
 
 modules:
   craft: true

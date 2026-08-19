@@ -1,11 +1,20 @@
-# Grant sharded.graves.use to ranks via LuckPerms — victim must have this permission.
-# When they die, items go into a player-head grave for 5 minutes instead of dropping.
+# sharded.graves.use = skip graves (normal item drops). Grant to ranks that should NOT get graves.
+# Everyone else gets a grave on death. Anyone can open any grave.
 # /lp group vip permission set sharded.graves.use true
 
 enabled-worlds: []
 expire-seconds: 300
 drop-items-on-expire: true
-protect-seconds: -1
 store-xp: true
 hologram-height: 1.6
-gui-title: '&8Grave of &f%player%'
+gui-title: '&#8Grave of &#f%player%'
+
+# Longer grave time for ranks (permission -> seconds). Highest matching value wins.
+duration-permissions:
+  sharded.graves.duration.vip: 600
+  sharded.graves.duration.mvp: 900
+  sharded.graves.duration.ruby: 1200
+  sharded.graves.duration.sapphire: 1500
+  sharded.graves.duration.onyx: 1800
+  sharded.graves.duration.aether: 2400
+  sharded.graves.duration.flawless: 3600

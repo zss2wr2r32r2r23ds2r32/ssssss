@@ -16,7 +16,6 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Axolotl;
 import org.bukkit.entity.Bee;
-import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
@@ -367,10 +366,6 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         if (entity instanceof Axolotl axolotl) {
             axolotl.setPlayingDead(false);
             axolotl.setVariant(PetType.parseAxolotlVariant(axolotlVariant));
-        }
-        if (entity instanceof EnderDragon dragon) {
-            dragon.setAI(false);
-            dragon.setAware(false);
         }
     }
 

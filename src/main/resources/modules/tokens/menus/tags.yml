@@ -8,24 +8,24 @@ items:
   back_button:
     material: BARRIER
     slot: 26
-    display_name: '&x&F&F&0&0&0&0&lBACK'
+    display_name: '&#FF0000&lBACK'
     click_commands:
       - '[openguimenu] mainmenu'
 
   vip_tag:
     material: PAPER
     slot: 10
-    display_name: '&8[&x&F&F&C&F&0&0&lMVP&8] &x&F&F&C&F&0&0Tag'
+    display_name: '&8[&#FFCF00&lMVP&8] &#FFCF00Tag'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&F&C&F&0&0Information:'
-      - '&x&F&F&C&F&0&0| &fUnlock the &x&F&F&C&F&0&0MVP Tag'
-      - '&x&F&F&C&F&0&0| &fAnd Stand out on TAB!'
+      - '&#FFCF00Information:'
+      - '&#FFCF00| &fUnlock the &#FFCF00MVP Tag'
+      - '&#FFCF00| &fAnd Stand out on TAB!'
       - ''
-      - '&x&F&F&C&F&0&0⚓ &fCost: &x&F&F&C&F&0&0100 Tokens'
+      - '&#FFCF00⚓ &fCost: &#FFCF00100 Tokens'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
     click_commands:
       - '[deny_if_permission] tag.mvp'
       - '[tokens_take] 100'
@@ -36,17 +36,17 @@ items:
   pro_tag:
     material: PAPER
     slot: 11
-    display_name: '&8[&x&0&0&8&3&F&F&lDIAMOND&8] &x&0&0&8&3&F&FTag'
+    display_name: '&8[&#0083FF&lDIAMOND&8] &#0083FFTag'
     lore:
       - '&8Description'
       - ''
-      - '&x&0&0&8&3&F&FInformation:'
-      - '&x&0&0&8&3&F&F| &fUnlock the &x&0&0&8&3&F&FDiamond Tag'
-      - '&x&0&0&8&3&F&F| &fAnd Stand out on TAB!'
+      - '&#0083FFInformation:'
+      - '&#0083FF| &fUnlock the &#0083FFDiamond Tag'
+      - '&#0083FF| &fAnd Stand out on TAB!'
       - ''
-      - '&x&0&0&8&3&F&F⚓ &fCost: &x&0&0&8&3&F&F600 Tokens'
+      - '&#0083FF⚓ &fCost: &#0083FF600 Tokens'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
     click_commands:
       - '[deny_if_permission] tag.pro'
       - '[tokens_take] 600'
@@ -57,17 +57,17 @@ items:
   elite_tag:
     material: PAPER
     slot: 12
-    display_name: '&8[&x&F&F&0&0&0&0&lELITE&8] &x&F&F&0&0&0&0Tag'
+    display_name: '&8[&#FF0000&lELITE&8] &#FF0000Tag'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&F&0&0&0&0Information:'
-      - '&x&F&F&0&0&0&0| &fUnlock the &x&F&F&0&0&0&0Elite Tag'
-      - '&x&F&F&0&0&0&0| &fAnd Stand out on TAB!'
+      - '&#FF0000Information:'
+      - '&#FF0000| &fUnlock the &#FF0000Elite Tag'
+      - '&#FF0000| &fAnd Stand out on TAB!'
       - ''
-      - '&x&F&F&0&0&0&0⚓ &fCost: &x&F&F&0&0&0&0800 Tokens'
+      - '&#FF0000⚓ &fCost: &#FF0000800 Tokens'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
     click_commands:
       - '[deny_if_permission] tag.elite'
       - '[tokens_take] 800'
@@ -78,13 +78,13 @@ items:
   legend_tag:
     material: PAPER
     slot: 13
-    display_name: '&8[&x&B&3&F&F&0&0&lSWEAT&8] &x&B&3&F&F&0&0Tag'
+    display_name: '&8[&#B3FF00&lSWEAT&8] &#B3FF00Tag'
     lore:
       - '&8Description'
       - ''
-      - '&x&B&3&F&F&0&0| &fCost: &x&B&3&F&F&0&01000 Tokens'
+      - '&#B3FF00| &fCost: &#B3FF001000 Tokens'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
     click_commands:
       - '[deny_if_permission] tag.legend'
       - '[tokens_take] 1000'
@@ -95,13 +95,13 @@ items:
   mythic_tag:
     material: PAPER
     slot: 14
-    display_name: '&8[&x&F&F&0&0&7&C&lGOAT&8] &x&F&F&0&0&7&CTag'
+    display_name: '&8[&#FF007C&lGOAT&8] &#FF007CTag'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&F&0&0&7&C| &fCost: &x&F&F&0&0&7&C1500 Tokens'
+      - '&#FF007C| &fCost: &#FF007C1500 Tokens'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
     click_commands:
       - '[deny_if_permission] tag.mythic'
       - '[tokens_take] 1500'
@@ -112,13 +112,13 @@ items:
   custom_tag:
     material: WRITABLE_BOOK
     slot: 16
-    display_name: '&x&F&F&0&A&0&0&lCUSTOM &x&F&F&0&A&0&0Tag'
+    display_name: '&#FF0A00&lCUSTOM &#FF0A00Tag'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&F&0&A&0&0| &fCost: &x&F&F&0&A&0&03000 Tokens'
+      - '&#FF0A00| &fCost: &#FF0A003000 Tokens'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
     click_commands:
       - '[deny_if_permission] tag.custom'
       - '[tokens_take] 3000'

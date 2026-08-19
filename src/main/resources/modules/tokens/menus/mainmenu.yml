@@ -161,15 +161,15 @@ items:
   emotes_category:
     material: MUSIC_DISC_PIGSTEP
     slot: 10
-    display_name: '&x&F&C&F&F&0&0&lEMOTES &8[&x&F&F&0&0&0&0SOON&8]'
+    display_name: '&#FCFF00&lEMOTES &8[&#FF0000SOON&8]'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&C&F&F&0&0Information:'
-      - '&x&F&C&F&F&0&0| &fBuy Emotes'
-      - '&x&F&C&F&F&0&0| &fShow off your amazing moves!'
+      - '&#FCFF00Information:'
+      - '&#FCFF00| &fBuy Emotes'
+      - '&#FCFF00| &fShow off your amazing moves!'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Navigate'
     click_commands:
       - '[message] &cEmotes are coming soon!'
       - '[sound] ENTITY_VILLAGER_NO'
@@ -177,15 +177,15 @@ items:
   glows_category:
     material: NETHERITE_CHESTPLATE
     slot: 11
-    display_name: '&x&0&0&6&E&F&F&lGLOWS'
+    display_name: '&#006EFF&lGLOWS'
     lore:
       - '&8Description'
       - ''
-      - '&x&0&0&6&E&F&FInformation:'
-      - '&x&0&0&6&E&F&F| &fBuy Glows'
-      - '&x&0&0&6&E&F&F| &fStand out from everyone else!'
+      - '&#006EFFInformation:'
+      - '&#006EFF| &fBuy Glows'
+      - '&#006EFF| &fStand out from everyone else!'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Navigate'
     click_commands:
       - '[openguimenu] glow'
       - '[sound] UI_BUTTON_CLICK'
@@ -193,15 +193,15 @@ items:
   keys_category:
     material: TRIPWIRE_HOOK
     slot: 12
-    display_name: '&x&A&9&F&F&0&0&lKEYS'
+    display_name: '&#A9FF00&lKEYS'
     lore:
       - '&8Description'
       - ''
-      - '&x&A&9&F&F&0&0Information:'
-      - '&x&A&9&F&F&0&0| &fBuy crate keys'
-      - '&x&A&9&F&F&0&0| &fUnlock unique rewards!'
+      - '&#A9FF00Information:'
+      - '&#A9FF00| &fBuy crate keys'
+      - '&#A9FF00| &fUnlock unique rewards!'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Navigate'
     click_commands:
       - '[openguimenu] keys'
       - '[sound] UI_BUTTON_CLICK'
@@ -209,15 +209,15 @@ items:
   cosmetics_category:
     material: PINK_HARNESS
     slot: 13
-    display_name: '&x&F&F&0&0&7&2&lCOSMETICS'
+    display_name: '&#FF0072&lCOSMETICS'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&F&0&0&7&2Information:'
-      - '&x&F&F&0&0&7&2| &fBuy Cosmetics'
-      - '&x&F&F&0&0&7&2| &fEnhance your appearance!'
+      - '&#FF0072Information:'
+      - '&#FF0072| &fBuy Cosmetics'
+      - '&#FF0072| &fEnhance your appearance!'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Navigate'
     click_commands:
       - '[openguimenu] cosmetics'
       - '[sound] UI_BUTTON_CLICK'
@@ -225,15 +225,15 @@ items:
   chatcolors_category:
     material: RED_DYE
     slot: 14
-    display_name: '&x&F&F&0&0&0&0&lCHAT COLOURS'
+    display_name: '&#FF0000&lCHAT COLOURS'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&F&0&0&0&0Information:'
-      - '&x&F&F&0&0&0&0| &fBuy Chat Colours'
-      - '&x&F&F&0&0&0&0| &fCustomize your chat!'
+      - '&#FF0000Information:'
+      - '&#FF0000| &fBuy Chat Colours'
+      - '&#FF0000| &fCustomize your chat!'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Navigate'
     click_commands:
       - '[openguimenu] chatcolors'
       - '[sound] UI_BUTTON_CLICK'
@@ -241,15 +241,15 @@ items:
   namecolors_category:
     material: NAME_TAG
     slot: 15
-    display_name: '&x&0&0&E&0&F&F&lNAME GRADIENTS'
+    display_name: '&#00E0FF&lNAME GRADIENTS'
     lore:
       - '&8Description'
       - ''
-      - '&x&0&0&E&0&F&FInformation:'
-      - '&x&0&0&E&0&E&F&F| &fBuy Name Gradients'
-      - '&x&0&0&E&0&F&F| &fCustomize your TAB name!'
+      - '&#00E0FFInformation:'
+      - '&#00E0EF&F| &fBuy Name Gradients'
+      - '&#00E0FF| &fCustomize your TAB name!'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Navigate'
     click_commands:
       - '[openguimenu] gradients'
       - '[sound] UI_BUTTON_CLICK'
@@ -257,15 +257,15 @@ items:
   tags_category:
     material: PAPER
     slot: 16
-    display_name: '&x&F&C&F&F&0&0&lTAGS'
+    display_name: '&#FCFF00&lTAGS'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&C&F&F&0&0Information:'
-      - '&x&F&C&F&F&0&0| &fBuy Player Tags'
-      - '&x&F&C&F&F&0&0| &fCustomize your appearance!'
+      - '&#FCFF00Information:'
+      - '&#FCFF00| &fBuy Player Tags'
+      - '&#FCFF00| &fCustomize your appearance!'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Navigate'
     click_commands:
       - '[openguimenu] tags'
       - '[sound] UI_BUTTON_CLICK'
@@ -273,24 +273,24 @@ items:
   your_balance:
     material: SUNFLOWER
     slot: 22
-    display_name: '&x&5&C&9&4&F&C&lYOUR TOKENS'
+    display_name: '&#5C94FC&lYOUR TOKENS'
     lore:
       - '&8Description'
       - ''
-      - '&x&5&C&9&4&F&CInformation:'
-      - '&x&5&C&9&4&F&C| &fYour current token balance'
-      - '&x&5&C&9&4&F&C| &fcan be spent in this shop!'
+      - '&#5C94FCInformation:'
+      - '&#5C94FC| &fYour current token balance'
+      - '&#5C94FC| &fcan be spent in this shop!'
       - ''
-      - '&x&5&C&9&4&F&C● &fTokens: &x&5&C&9&4&F&C%tokens_formatted%'
+      - '&#5C94FC● &fTokens: &#5C94FC%tokens_formatted%'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&lSTORE'
+      - '&#FFBA00▷ &#FFBA00&lSTORE'
     click_commands:
       - '[sound] UI_BUTTON_CLICK'
 
   close_menu:
     material: BARRIER
     slot: 31
-    display_name: '&x&F&F&0&0&0&0&lCLOSE'
+    display_name: '&#FF0000&lCLOSE'
     lore:
       - ''
       - '&7Click to close the Token Shop.'

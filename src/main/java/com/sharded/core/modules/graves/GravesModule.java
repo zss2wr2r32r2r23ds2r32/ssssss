@@ -109,7 +109,8 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getPlayer();
         if (event.getKeepInventory()) return;
-        if (!player.hasPermission("sharded.graves.use")) return;
+        // Players WITH sharded.graves.use keep normal drops (no grave). Everyone else gets a grave.
+        if (player.hasPermission("sharded.graves.use")) return;
         List<String> worlds = config.getStringList("enabled-worlds");
         if (!worlds.isEmpty() && !worlds.contains(player.getWorld().getName())) return;
         if (event.getDrops().isEmpty() && event.getDroppedExp() <= 0) return;
@@ -127,7 +128,7 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
         event.getDrops().clear();
         if (config.getBoolean("store-xp", true)) event.setDroppedExp(0);
 
-        long lifetime = config.getLong("expire-seconds", 300L);
+        long lifetime = graveLifetime(player);
         Grave grave = new Grave(UUID.randomUUID(), player.getUniqueId(), player.getName(), location,
                 items, xp, xp <= 0, System.currentTimeMillis(), System.currentTimeMillis() + lifetime * 1000L);
         gravesByBlock.put(blockKey(location), grave);
@@ -140,6 +141,19 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
                 "%y%", String.valueOf(location.getBlockY()),
                 "%z%", String.valueOf(location.getBlockZ()),
                 "%time%", Text.time(lifetime));
+    }
+
+    /** Default expire-seconds, extended by duration-permissions (highest wins). */
+    private long graveLifetime(Player player) {
+        long seconds = config.getLong("expire-seconds", 300L);
+        if (config.isConfigurationSection("duration-permissions")) {
+            for (String permission : config.getConfigurationSection("duration-permissions").getKeys(false)) {
+                if (player.hasPermission(permission)) {
+                    seconds = Math.max(seconds, config.getLong("duration-permissions." + permission, seconds));
+                }
+            }
+        }
+        return seconds;
     }
 
     private Location findGraveLocation(Location deathLocation) {
@@ -288,18 +302,10 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
     }
 
     private boolean canOpen(Player player, Grave grave) {
-        if (player.getUniqueId().equals(grave.owner)) return true;
-        if (player.hasPermission("sharded.graves.bypass")) return true;
-        long protectSeconds = config.getLong("protect-seconds", -1L);
-        if (protectSeconds < 0) return false; // protected forever
-        return System.currentTimeMillis() >= grave.createdAt + protectSeconds * 1000L;
+        return true;
     }
 
     private void openGrave(Player player, Grave grave) {
-        if (!canOpen(player, grave)) {
-            send(player, "not-your-grave", "%player%", grave.ownerName);
-            return;
-        }
         int size = Math.min(54, Math.max(9, ((grave.items.size() + 8) / 9) * 9));
         GraveHolder holder = new GraveHolder(grave);
         Inventory inventory = Bukkit.createInventory(holder, size,
