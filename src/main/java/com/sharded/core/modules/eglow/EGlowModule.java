@@ -15,14 +15,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
-import org.bukkit.inventory.InventoryHolder;
-
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +28,7 @@ import java.util.Map;
 public final class EGlowModule extends Module implements CommandExecutor {
 
     private static final String MENU_TITLE = "🔥 Glows";
+
     private static final class GlowMenuHolder implements InventoryHolder {
         @Override
         public Inventory getInventory() {
@@ -47,10 +45,14 @@ public final class EGlowModule extends Module implements CommandExecutor {
     @Override
     protected void onEnable() {
         loadGlowOptions();
-        plugin.gui().registerMenuExtras("glow", this::shopPlaceholders);
         registerCommand("eglow", this);
         registerCommand("glows", this);
         registerCommand("glowing", this);
+    }
+
+    @Override
+    protected void onDisable() {
+        // Do not run disable commands on reload — EGlow keeps the player's active glow.
     }
 
     private void loadGlowOptions() {
@@ -64,7 +66,7 @@ public final class EGlowModule extends Module implements CommandExecutor {
                     id,
                     glow.getInt("slot", 0),
                     glow.getString("permission", "eglow.color." + id),
-                    glow.getString("command", "eglow " + id),
+                    glow.getString("command", "eglow:eglow " + id),
                     glow.getString("display-name", "&f" + id),
                     glow.getStringList("lore"),
                     parseColor(glow.getString("color", "#FFFFFF"))
@@ -103,8 +105,8 @@ public final class EGlowModule extends Module implements CommandExecutor {
             return true;
         }
         String sub = args[0].toLowerCase();
-        if (sub.equals("off")) {
-            runGlowCommand(player, config.getString("disable-command", "eglow off"));
+        if (sub.equals("off") || sub.equals("disabled") || sub.equals("disable")) {
+            runGlowCommand(player, config.getString("disable-command", "eglow:eglow disabled"));
             send(player, "disabled");
             return true;
         }
@@ -121,33 +123,21 @@ public final class EGlowModule extends Module implements CommandExecutor {
         int rows = config.getInt("menu-rows", 4);
         Inventory inventory = plugin.getServer().createInventory(new GlowMenuHolder(), rows * 9, Text.c(MENU_TITLE));
 
-        ItemStack filler = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).name(" ").hideAll().build();
+        Material fillerMat = Material.matchMaterial(config.getString("filler-material", "BLACK_STAINED_GLASS_PANE"));
+        if (fillerMat == null) fillerMat = Material.BLACK_STAINED_GLASS_PANE;
+        ItemStack filler = new ItemBuilder(fillerMat).name(" ").hideAll().build();
         for (int slot = 0; slot < inventory.getSize(); slot++) {
             inventory.setItem(slot, filler.clone());
         }
 
-        String ownedYes = config.getString("owned.yes", "&#9FFF00Yes");
-        String ownedNo = config.getString("owned.no", "&#FF2727No");
-        String ownedLine = config.getString("owned.lore-line", "%color%⚓ &fOwned: %owned%");
-
+        Map<String, String> placeholders = equipPlaceholders(player);
         for (GlowOption glow : glows.values()) {
-            boolean owned = player.hasPermission(glow.permission());
-            List<String> lore = new ArrayList<>();
-            for (String line : glow.lore()) {
-                lore.add(line.replace("%owned%", owned ? ownedYes : ownedNo));
-            }
-            String ownedFormatted = ownedLine
-                    .replace("%owned%", owned ? ownedYes : ownedNo)
-                    .replace("%color%", glow.displayName().substring(0, Math.min(20, glow.displayName().length())));
-            if (config.getBoolean("owned.show-in-lore", true)) {
-                lore.add("");
-                lore.add(ownedFormatted);
-            }
+            List<String> lore = applyPlaceholders(glow.lore(), placeholders);
             ItemStack item = leatherChestplate(glow.color(), glow.displayName(), lore);
             inventory.setItem(glow.slot(), item);
         }
 
-        List<String> disableLore = config.getStringList("disable.lore");
+        List<String> disableLore = applyPlaceholders(config.getStringList("disable.lore"), placeholders);
         inventory.setItem(config.getInt("disable.slot", 4),
                 new ItemBuilder(Material.BARRIER)
                         .name(config.getString("disable.display-name", "&x&F&F&0&0&0&0&lDISABLE GLOW"))
@@ -156,6 +146,30 @@ public final class EGlowModule extends Module implements CommandExecutor {
                         .build());
 
         player.openInventory(inventory);
+    }
+
+    private List<String> applyPlaceholders(List<String> lines, Map<String, String> placeholders) {
+        List<String> out = new ArrayList<>(lines.size());
+        for (String line : lines) {
+            String replaced = line;
+            for (Map.Entry<String, String> entry : placeholders.entrySet()) {
+                replaced = replaced.replace("%" + entry.getKey() + "%", entry.getValue());
+            }
+            out.add(replaced);
+        }
+        return out;
+    }
+
+    /** Placeholders for equip GUI lore in modules/eglow/config.yml — not used in token shop. */
+    public Map<String, String> equipPlaceholders(Player player) {
+        Map<String, String> map = new LinkedHashMap<>();
+        String ownedYes = config.getString("placeholders.owned-yes", "&#9FFF00Yes");
+        String ownedNo = config.getString("placeholders.owned-no", "&#FF2727No");
+        for (GlowOption glow : glows.values()) {
+            String key = "glow_owned_" + glow.id();
+            map.put(key, player.hasPermission(glow.permission()) ? ownedYes : ownedNo);
+        }
+        return map;
     }
 
     private ItemStack leatherChestplate(Color color, String name, List<String> lore) {
@@ -178,7 +192,7 @@ public final class EGlowModule extends Module implements CommandExecutor {
         int slot = event.getSlot();
         if (slot == config.getInt("disable.slot", 4)) {
             player.closeInventory();
-            runGlowCommand(player, config.getString("disable-command", "eglow off"));
+            runGlowCommand(player, config.getString("disable-command", "eglow:eglow disabled"));
             send(player, "disabled");
             return;
         }
@@ -210,16 +224,6 @@ public final class EGlowModule extends Module implements CommandExecutor {
     private void runGlowCommand(Player player, String command) {
         if (command.startsWith("/")) command = command.substring(1);
         player.performCommand(command);
-    }
-
-    public Map<String, String> shopPlaceholders(Player player) {
-        Map<String, String> map = new HashMap<>();
-        String ownedYes = config.getString("owned.yes", "&#9FFF00Yes");
-        String ownedNo = config.getString("owned.no", "&#FF2727No");
-        for (GlowOption glow : glows.values()) {
-            map.put("glow_owned_" + glow.id(), player.hasPermission(glow.permission()) ? ownedYes : ownedNo);
-        }
-        return map;
     }
 
     private record GlowOption(String id, int slot, String permission, String command,

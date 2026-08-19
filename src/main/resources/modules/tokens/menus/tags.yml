@@ -1,4 +1,4 @@
-config-version: 4
+config-version: 5
 menu_title: 'Token Shop | Tags'
 open_command: tagshop
 size: 27
@@ -25,7 +25,6 @@ items:
       - '&x&F&F&C&F&0&0| &fAnd Stand out on TAB!'
       - ''
       - '&x&F&F&C&F&0&0⚓ &fCost: &x&F&F&C&F&0&0100 Tokens'
-      - '&x&F&F&C&F&0&0⚓ &fOwned: %tag_owned_mvp%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
@@ -47,7 +46,6 @@ items:
       - '&x&0&0&8&3&F&F| &fAnd Stand out on TAB!'
       - ''
       - '&x&0&0&8&3&F&F⚓ &fCost: &x&0&0&8&3&F&F600 Tokens'
-      - '&x&0&0&8&3&F&F⚓ &fOwned: %tag_owned_diamond%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
@@ -69,7 +67,6 @@ items:
       - '&x&F&F&0&0&0&0| &fAnd Stand out on TAB!'
       - ''
       - '&x&F&F&0&0&0&0⚓ &fCost: &x&F&F&0&0&0&0800 Tokens'
-      - '&x&F&F&0&0&0&0⚓ &fOwned: %tag_owned_elite%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
@@ -91,7 +88,6 @@ items:
       - '&x&B&3&F&F&0&0| &fAnd Stand out on TAB!'
       - ''
       - '&x&B&3&F&F&0&0⚓ &fCost: &x&B&3&F&F&0&01000 Tokens'
-      - '&x&B&3&F&F&0&0⚓ &fOwned: %tag_owned_sweat%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
@@ -113,7 +109,6 @@ items:
       - '&x&F&F&0&0&7&C| &fAnd Stand out on TAB!'
       - ''
       - '&x&F&F&0&0&7&C⚓ &fCost: &x&F&F&0&0&7&C1500 Tokens'
-      - '&x&F&F&0&0&7&C⚓ &fOwned: %tag_owned_goat%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
@@ -135,7 +130,6 @@ items:
       - '&x&F&F&0&A&0&0| &fAnd Stand out on TAB!'
       - ''
       - '&x&F&F&0&A&0&0⚓ &fCost: &x&F&F&0&A&0&03000 Tokens'
-      - '&x&F&F&0&A&0&0⚓ &fOwned: %tag_owned_custom%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:

@@ -25,27 +25,33 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /** Tag equip menu — requires eternaltags.tag.* permissions from token shop. */
 public final class TagsModule extends Module implements CommandExecutor {
 
     private static final Pattern EXTENDED_HEX_TAG = Pattern.compile(
-            "^&8\\[&x(?:&[0-9A-Fa-f]){6}&l[A-Za-z0-9 ]+&8\\]$", Pattern.CASE_INSENSITIVE);
+            "^&8\\[&x(?:&[0-9A-Fa-f]){6}&l(.+?)&8\\]$", Pattern.CASE_INSENSITIVE);
     private static final Pattern HASH_HEX_TAG = Pattern.compile(
-            "^&8\\[(&#[0-9A-Fa-f]{3,8})&l[A-Za-z0-9 ]+&8\\]$", Pattern.CASE_INSENSITIVE);
+            "^&8\\[(&#[0-9A-Fa-f]{3,8})&l(.+?)&8\\]$", Pattern.CASE_INSENSITIVE);
     private static final Pattern NORMALIZED_HEX_TAG = Pattern.compile(
-            "^&8\\[(&#[0-9A-Fa-f]{6})&l[A-Za-z0-9 ]+&8\\]$", Pattern.CASE_INSENSITIVE);
+            "^&8\\[(&#[0-9A-Fa-f]{6})&l(.+?)&8\\]$", Pattern.CASE_INSENSITIVE);
 
     private final Map<String, TagOption> tags = new LinkedHashMap<>();
     private final Map<String, TagOption> limitedTags = new LinkedHashMap<>();
     private final Map<UUID, Boolean> awaitingCustomTag = new ConcurrentHashMap<>();
+    private final Set<String> limitedBlockedText = new HashSet<>();
+
+    private TagDatabase database;
 
     public TagsModule(ShardedCore plugin) {
         super(plugin, "tags");
@@ -53,22 +59,42 @@ public final class TagsModule extends Module implements CommandExecutor {
 
     @Override
     protected void onEnable() {
+        try {
+            database = new TagDatabase(plugin, moduleFolder());
+        } catch (Exception e) {
+            throw new IllegalStateException("Could not open tags database", e);
+        }
         reloadTags();
         registerCommand("tags", this);
         registerCommand("tag", this);
-        plugin.gui().registerMenuExtras("tags", this::shopPlaceholders);
     }
 
     @Override
     protected void onDisable() {
         awaitingCustomTag.clear();
+        if (database != null) database.close();
+        database = null;
     }
 
     private void reloadTags() {
         tags.clear();
         limitedTags.clear();
+        limitedBlockedText.clear();
         loadTagSection(config.getConfigurationSection("tags"), tags);
         loadTagSection(config.getConfigurationSection("limited-tags"), limitedTags);
+        buildLimitedBlocklist();
+    }
+
+    private void buildLimitedBlocklist() {
+        for (TagOption tag : limitedTags.values()) {
+            limitedBlockedText.add(normalizeCompare(tag.id()));
+            limitedBlockedText.add(normalizeCompare(stripColors(tag.displayName())));
+            for (String blocked : tag.blockedText()) {
+                if (!blocked.isBlank()) limitedBlockedText.add(normalizeCompare(blocked));
+            }
+            String inner = extractInnerTagText(stripColors(tag.displayName()));
+            if (inner != null && !inner.isBlank()) limitedBlockedText.add(normalizeCompare(inner));
+        }
     }
 
     private void loadTagSection(ConfigurationSection section, Map<String, TagOption> target) {
@@ -83,8 +109,9 @@ public final class TagsModule extends Module implements CommandExecutor {
                     tag.getString("material", "PAPER"),
                     tag.getString("display-name", id),
                     tag.getStringList("lore"),
-                    tag.getString("apply-command", "eternaltags set %tag_id%"),
-                    tag.getBoolean("custom-input", false)
+                    tag.getString("apply-command", config.getString("apply-command", "eternaltags:tags set %tag_id% %player_name%")),
+                    tag.getBoolean("custom-input", false),
+                    tag.getStringList("blocked-text")
             ));
         }
     }
@@ -97,6 +124,15 @@ public final class TagsModule extends Module implements CommandExecutor {
         }
         if (!player.hasPermission("sharded.tags.use")) {
             send(player, "no-permission");
+            return true;
+        }
+        if (args.length >= 1 && args[0].equalsIgnoreCase("custom")) {
+            if (!player.hasPermission("eternaltags.tag.custom")) {
+                send(player, "not-owned", "%tag%", "Custom Tag");
+                return true;
+            }
+            awaitingCustomTag.put(player.getUniqueId(), true);
+            send(player, "custom-prompt");
             return true;
         }
         openMainMenu(player);
@@ -121,20 +157,17 @@ public final class TagsModule extends Module implements CommandExecutor {
             inventory.setItem(slot, filler.clone());
         }
 
-        String ownedYes = config.getString("owned.yes", "&#9FFF00Yes");
-        String ownedNo = config.getString("owned.no", "&#FF2727No");
-        String ownedLineTemplate = config.getString("owned.lore-line", "%color%⚓ &fOwned: %owned%");
-
+        Map<String, String> placeholders = equipPlaceholders(player);
         for (TagOption tag : options.values()) {
-            boolean owned = player.hasPermission(tag.permission());
-            List<String> lore = buildLore(tag, owned, ownedYes, ownedNo, ownedLineTemplate);
+            List<String> lore = applyPlaceholders(buildLore(tag, placeholders), placeholders);
             Material material = Material.matchMaterial(tag.material());
             if (material == null) material = Material.PAPER;
-            inventory.setItem(tag.slot(), new ItemBuilder(material).name(tag.displayName()).lore(lore).hideAll().build());
+            String name = applyPlaceholders(tag.displayName(), placeholders);
+            inventory.setItem(tag.slot(), new ItemBuilder(material).name(name).lore(lore).hideAll().build());
         }
 
         if (!limited && config.getBoolean("limited-button.enabled", true)) {
-            List<String> limitedLore = config.getStringList("limited-button.lore");
+            List<String> limitedLore = applyPlaceholders(config.getStringList("limited-button.lore"), placeholders);
             Material mat = Material.matchMaterial(config.getString("limited-button.material", "CLOCK"));
             if (mat == null) mat = Material.CLOCK;
             inventory.setItem(config.getInt("limited-button.slot", 22),
@@ -156,19 +189,40 @@ public final class TagsModule extends Module implements CommandExecutor {
         player.openInventory(inventory);
     }
 
-    private List<String> buildLore(TagOption tag, boolean owned, String ownedYes, String ownedNo, String ownedLineTemplate) {
-        List<String> lore = new ArrayList<>();
-        for (String line : tag.lore()) {
-            lore.add(line.replace("%owned%", owned ? ownedYes : ownedNo));
+    private List<String> buildLore(TagOption tag, Map<String, String> placeholders) {
+        return new ArrayList<>(tag.lore());
+    }
+
+    private String applyPlaceholders(String line, Map<String, String> placeholders) {
+        String out = line;
+        for (Map.Entry<String, String> entry : placeholders.entrySet()) {
+            out = out.replace("%" + entry.getKey() + "%", entry.getValue());
         }
-        if (config.getBoolean("owned.show-in-lore", true)) {
-            String ownedLine = ownedLineTemplate.replace("%owned%", owned ? ownedYes : ownedNo);
-            if (!lore.contains(ownedLine) && !lore.contains(ownedLine.replace("%color%", ""))) {
-                lore.add("");
-                lore.add(ownedLine);
-            }
+        return out;
+    }
+
+    private List<String> applyPlaceholders(List<String> lines, Map<String, String> placeholders) {
+        List<String> out = new ArrayList<>(lines.size());
+        for (String line : lines) out.add(applyPlaceholders(line, placeholders));
+        return out;
+    }
+
+    /** Placeholders for equip GUI lore in modules/tags/config.yml — not used in token shop. */
+    public Map<String, String> equipPlaceholders(Player player) {
+        Map<String, String> map = new LinkedHashMap<>();
+        String ownedYes = config.getString("placeholders.owned-yes", "&#9FFF00Yes");
+        String ownedNo = config.getString("placeholders.owned-no", "&#FF2727No");
+        String none = config.getString("placeholders.none", "&7None");
+        String lastCustom = database == null ? null : database.getLastCustomTag(player.getUniqueId());
+        map.put("last_custom_tag", lastCustom == null || lastCustom.isBlank() ? none : lastCustom);
+
+        for (TagOption tag : tags.values()) {
+            map.put("tag_owned_" + tag.id(), player.hasPermission(tag.permission()) ? ownedYes : ownedNo);
         }
-        return lore;
+        for (TagOption tag : limitedTags.values()) {
+            map.put("tag_owned_" + tag.id(), player.hasPermission(tag.permission()) ? ownedYes : ownedNo);
+        }
+        return map;
     }
 
     @EventHandler
@@ -214,6 +268,11 @@ public final class TagsModule extends Module implements CommandExecutor {
             return;
         }
         if (tag.customInput()) {
+            String last = database == null ? null : database.getLastCustomTag(player.getUniqueId());
+            if (last != null && !last.isBlank()) {
+                applyCustomTag(player, last, false);
+                return;
+            }
             awaitingCustomTag.put(player.getUniqueId(), true);
             send(player, "custom-prompt");
             return;
@@ -229,6 +288,10 @@ public final class TagsModule extends Module implements CommandExecutor {
                 .replace("%tag_id%", tag.id())
                 .replace("%tag%", tag.id())
                 .replace("%custom%", customValue == null ? "" : customValue);
+        dispatchCommand(player, cmd);
+    }
+
+    private void dispatchCommand(Player player, String cmd) {
         if (cmd.startsWith("[console]")) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.substring("[console]".length()).trim());
         } else if (cmd.startsWith("[player]")) {
@@ -247,16 +310,19 @@ public final class TagsModule extends Module implements CommandExecutor {
         event.setCancelled(true);
 
         String input = PlainTextComponentSerializer.plainText().serialize(event.message()).trim();
-        String normalized = ColorUtil.normalize(input);
-
-        Bukkit.getScheduler().runTask(plugin, () -> handleCustomInput(player, normalized));
+        Bukkit.getScheduler().runTask(plugin, () -> handleCustomInput(player, input));
     }
 
-    private void handleCustomInput(Player player, String input) {
+    private void handleCustomInput(Player player, String rawInput) {
         if (!player.hasPermission("eternaltags.tag.custom")) {
             send(player, "not-owned", "%tag%", "Custom Tag");
             return;
         }
+        String input = ColorUtil.normalize(rawInput.trim());
+        applyCustomTag(player, input, true);
+    }
+
+    private void applyCustomTag(Player player, String input, boolean fromChat) {
         if (WordBlacklist.contains(config, "custom-tag-blacklist", input)) {
             send(player, "custom-blacklisted");
             return;
@@ -265,21 +331,36 @@ public final class TagsModule extends Module implements CommandExecutor {
             send(player, "custom-invalid-format");
             return;
         }
-        TagOption custom = tags.values().stream().filter(TagOption::customInput).findFirst().orElse(null);
-        if (custom == null) {
-            String cmd = config.getString("custom-apply-command", "eternaltags set %custom%")
-                    .replace("%player%", player.getName())
-                    .replace("%player_name%", player.getName())
-                    .replace("%custom%", input);
-            if (cmd.startsWith("[console]")) {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.substring("[console]".length()).trim());
-            } else {
-                player.performCommand(cmd.startsWith("/") ? cmd.substring(1) : cmd);
-            }
-        } else {
-            runApplyCommand(player, custom, input);
+        if (matchesLimitedTag(input)) {
+            send(player, "custom-limited-blocked");
+            return;
         }
-        send(player, "custom-set", "%tag%", input);
+
+        String cmd = config.getString("custom-apply-command",
+                        "[console] lp user %player_name% meta setsuffix \" %custom%\"")
+                .replace("%player%", player.getName())
+                .replace("%player_name%", player.getName())
+                .replace("%custom%", input);
+        dispatchCommand(player, cmd);
+
+        if (database != null) database.saveLastCustomTag(player.getUniqueId(), input);
+        send(player, fromChat ? "custom-set" : "custom-reapplied", "%tag%", input);
+    }
+
+    private boolean matchesLimitedTag(String input) {
+        if (!config.getBoolean("block-limited-tag-copy", true)) return false;
+        String normalizedInput = normalizeCompare(stripColors(input));
+        if (limitedBlockedText.contains(normalizedInput)) return true;
+
+        String inner = extractInnerTagText(stripColors(input));
+        if (inner != null && limitedBlockedText.contains(normalizeCompare(inner))) return true;
+
+        for (String blocked : limitedBlockedText) {
+            if (!blocked.isBlank() && (normalizedInput.contains(blocked) || blocked.contains(normalizedInput))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean isValidCustomTag(String input) {
@@ -290,20 +371,29 @@ public final class TagsModule extends Module implements CommandExecutor {
         return NORMALIZED_HEX_TAG.matcher(normalized).matches() || HASH_HEX_TAG.matcher(normalized).matches();
     }
 
+    private String extractInnerTagText(String input) {
+        if (input == null) return null;
+        Matcher m = Pattern.compile("&l(.+?)&8\\]", Pattern.CASE_INSENSITIVE).matcher(input);
+        if (m.find()) return m.group(1).trim();
+        return null;
+    }
+
+    private String stripColors(String input) {
+        if (input == null) return "";
+        return ColorUtil.normalize(input)
+                .replaceAll("(?i)&#[0-9a-f]{6}", "")
+                .replaceAll("(?i)&[0-9a-fk-or]", "")
+                .replace("§", "");
+    }
+
+    private String normalizeCompare(String input) {
+        if (input == null) return "";
+        return input.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]", "");
+    }
+
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         awaitingCustomTag.remove(event.getPlayer().getUniqueId());
-    }
-
-    public Map<String, String> shopPlaceholders(Player player) {
-        Map<String, String> map = new HashMap<>();
-        String ownedYes = config.getString("owned.yes", "&#9FFF00Yes");
-        String ownedNo = config.getString("owned.no", "&#FF2727No");
-        for (TagOption tag : tags.values()) {
-            map.put("tag_owned_" + tag.id(), player.hasPermission(tag.permission()) ? ownedYes : ownedNo);
-            map.put("owned_" + tag.id(), player.hasPermission(tag.permission()) ? ownedYes : ownedNo);
-        }
-        return map;
     }
 
     private static final class TagMenuHolder implements InventoryHolder {
@@ -325,6 +415,6 @@ public final class TagsModule extends Module implements CommandExecutor {
 
     private record TagOption(String id, int slot, String permission, String material,
                              String displayName, List<String> lore, String applyCommand,
-                             boolean customInput) {
+                             boolean customInput, List<String> blockedText) {
     }
 }

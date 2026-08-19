@@ -1,7 +1,12 @@
-config-version: 1
+config-version: 2
 
 menu-rows: 4
-disable-command: eglow off
+filler-material: BLACK_STAINED_GLASS_PANE
+disable-command: 'eglow:eglow disabled'
+
+placeholders:
+  owned-yes: '&#9FFF00Yes'
+  owned-no: '&#FF2727No'
 
 disable:
   slot: 4
@@ -14,17 +19,11 @@ disable:
     - ''
     - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Remove'
 
-owned:
-  show-in-lore: true
-  yes: '&#9FFF00Yes'
-  no: '&#FF2727No'
-  lore-line: '%color%⚓ &fOwned: %owned%'
-
 glows:
   red:
     slot: 10
     permission: eglow.color.red
-    command: eglow red
+    command: 'eglow:eglow red'
     color: '#FF0000'
     display-name: '&x&F&F&0&0&0&0&lRED GLOW'
     lore:
@@ -38,7 +37,7 @@ glows:
   darkred:
     slot: 11
     permission: eglow.color.darkred
-    command: eglow darkred
+    command: 'eglow:eglow darkred'
     color: '#A70000'
     display-name: '&x&A&7&0&0&0&0&lDARK RED GLOW'
     lore:
@@ -52,7 +51,7 @@ glows:
   yellow:
     slot: 12
     permission: eglow.color.yellow
-    command: eglow yellow
+    command: 'eglow:eglow yellow'
     color: '#FFF800'
     display-name: '&x&F&F&F&8&0&0&lYELLOW GLOW'
     lore:
@@ -66,7 +65,7 @@ glows:
   gold:
     slot: 13
     permission: eglow.color.gold
-    command: eglow gold
+    command: 'eglow:eglow gold'
     color: '#FFC400'
     display-name: '&x&F&F&C&4&0&0&lGOLD GLOW'
     lore:
@@ -80,7 +79,7 @@ glows:
   green:
     slot: 14
     permission: eglow.color.green
-    command: eglow green
+    command: 'eglow:eglow green'
     color: '#8AFF00'
     display-name: '&x&8&A&F&F&0&0&lGREEN GLOW'
     lore:
@@ -94,7 +93,7 @@ glows:
   darkgreen:
     slot: 15
     permission: eglow.color.darkgreen
-    command: eglow darkgreen
+    command: 'eglow:eglow darkgreen'
     color: '#5AA500'
     display-name: '&x&5&A&A&5&0&0&lDARK GREEN GLOW'
     lore:
@@ -108,7 +107,7 @@ glows:
   cyan:
     slot: 16
     permission: eglow.color.cyan
-    command: eglow cyan
+    command: 'eglow:eglow cyan'
     color: '#00FFE0'
     display-name: '&x&0&0&F&F&E&0&lCYAN GLOW'
     lore:
@@ -122,7 +121,7 @@ glows:
   blue:
     slot: 19
     permission: eglow.color.blue
-    command: eglow blue
+    command: 'eglow:eglow blue'
     color: '#00C1FF'
     display-name: '&x&0&0&C&1&F&F&lBLUE GLOW'
     lore:
@@ -136,7 +135,7 @@ glows:
   darkblue:
     slot: 20
     permission: eglow.color.darkblue
-    command: eglow darkblue
+    command: 'eglow:eglow darkblue'
     color: '#003BFF'
     display-name: '&x&0&0&3&B&F&F&lDARK BLUE GLOW'
     lore:
@@ -150,7 +149,7 @@ glows:
   purple:
     slot: 21
     permission: eglow.color.purple
-    command: eglow purple
+    command: 'eglow:eglow purple'
     color: '#8000FF'
     display-name: '&x&8&0&0&0&F&F&lPURPLE GLOW'
     lore:
@@ -164,7 +163,7 @@ glows:
   pink:
     slot: 22
     permission: eglow.color.pink
-    command: eglow pink
+    command: 'eglow:eglow pink'
     color: '#FF74DF'
     display-name: '&x&F&F&7&4&D&F&lPINK GLOW'
     lore:
@@ -178,7 +177,7 @@ glows:
   white:
     slot: 23
     permission: eglow.color.white
-    command: eglow white
+    command: 'eglow:eglow white'
     color: '#FFFFFF'
     display-name: '&f&lWHITE GLOW'
     lore:
@@ -192,7 +191,7 @@ glows:
   gray:
     slot: 24
     permission: eglow.color.gray
-    command: eglow gray
+    command: 'eglow:eglow gray'
     color: '#808080'
     display-name: '&7&lGRAY GLOW'
     lore:
@@ -206,7 +205,7 @@ glows:
   black:
     slot: 25
     permission: eglow.color.black
-    command: eglow black
+    command: 'eglow:eglow black'
     color: '#1A1A1A'
     display-name: '&8&lBLACK GLOW'
     lore:

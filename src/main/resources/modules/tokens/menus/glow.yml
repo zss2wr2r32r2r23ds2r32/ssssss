@@ -1,4 +1,4 @@
-config-version: 4
+config-version: 5
 menu_title: 'Token Shop | Glows'
 open_command: glowshop
 size: 54
@@ -25,7 +25,6 @@ items:
       - '&x&F&F&0&0&0&0| &fAnd Enhance your looks!'
       - ''
       - '&x&F&F&0&0&0&0⚓ &fCost: &x&F&F&0&0&0&0500 Tokens'
-      - '&x&F&F&0&0&0&0⚓ &fOwned: %glow_owned_red%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
@@ -47,7 +46,6 @@ items:
       - '&x&A&7&0&0&0&0| &fAnd Enhance your looks!'
       - ''
       - '&x&A&7&0&0&0&0⚓ &fCost: &x&A&7&0&0&0&0500 Tokens'
-      - '&x&A&7&0&0&0&0⚓ &fOwned: %glow_owned_darkred%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
@@ -69,7 +67,6 @@ items:
       - '&x&F&F&F&8&0&0| &fAnd Enhance your looks!'
       - ''
       - '&x&F&F&F&8&0&0⚓ &fCost: &x&F&F&F&8&0&0500 Tokens'
-      - '&x&F&F&F&8&0&0⚓ &fOwned: %glow_owned_yellow%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
@@ -91,7 +88,6 @@ items:
       - '&x&F&F&C&4&0&0| &fAnd Enhance your looks!'
       - ''
       - '&x&F&F&C&4&0&0⚓ &fCost: &x&F&F&C&4&0&0500 Tokens'
-      - '&x&F&F&C&4&0&0⚓ &fOwned: %glow_owned_gold%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
@@ -113,7 +109,6 @@ items:
       - '&x&8&A&F&F&0&0| &fAnd Enhance your looks!'
       - ''
       - '&x&8&A&F&F&0&0⚓ &fCost: &x&8&A&F&F&0&0500 Tokens'
-      - '&x&8&A&F&F&0&0⚓ &fOwned: %glow_owned_green%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
@@ -135,7 +130,6 @@ items:
       - '&x&5&A&A&5&0&0| &fAnd Enhance your looks!'
       - ''
       - '&x&5&A&A&5&0&0⚓ &fCost: &x&5&A&A&5&0&0500 Tokens'
-      - '&x&5&A&A&5&0&0⚓ &fOwned: %glow_owned_darkgreen%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
@@ -157,7 +151,6 @@ items:
       - '&x&0&0&F&F&E&0| &fAnd Enhance your looks!'
       - ''
       - '&x&0&0&F&F&E&0⚓ &fCost: &x&0&0&F&F&E&0500 Tokens'
-      - '&x&0&0&F&F&E&0⚓ &fOwned: %glow_owned_cyan%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
@@ -179,7 +172,6 @@ items:
       - '&x&0&0&C&1&F&F| &fAnd Enhance your looks!'
       - ''
       - '&x&0&0&C&1&F&F⚓ &fCost: &x&0&0&C&1&F&F500 Tokens'
-      - '&x&0&0&C&1&F&F⚓ &fOwned: %glow_owned_blue%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
@@ -201,7 +193,6 @@ items:
       - '&x&0&0&3&B&F&F| &fAnd Enhance your looks!'
       - ''
       - '&x&0&0&3&B&F&F⚓ &fCost: &x&0&0&3&B&F&F500 Tokens'
-      - '&x&0&0&3&B&F&F⚓ &fOwned: %glow_owned_darkblue%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
@@ -223,7 +214,6 @@ items:
       - '&x&8&0&0&0&F&F| &fAnd Enhance your looks!'
       - ''
       - '&x&8&0&0&0&F&F⚓ &fCost: &x&8&0&0&0&F&F500 Tokens'
-      - '&x&8&0&0&0&F&F⚓ &fOwned: %glow_owned_purple%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
@@ -245,7 +235,6 @@ items:
       - '&x&F&F&7&4&D&F| &fAnd Enhance your looks!'
       - ''
       - '&x&F&F&7&4&D&F⚓ &fCost: &x&F&F&7&4&D&F500 Tokens'
-      - '&x&F&F&7&4&D&F⚓ &fOwned: %glow_owned_pink%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
@@ -267,7 +256,6 @@ items:
       - '&f| &fAnd Enhance your looks!'
       - ''
       - '&f⚓ &fCost: &f500 Tokens'
-      - '&f⚓ &fOwned: %glow_owned_white%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
@@ -289,7 +277,6 @@ items:
       - '&7| &fAnd Enhance your looks!'
       - ''
       - '&7⚓ &fCost: &7500 Tokens'
-      - '&7⚓ &fOwned: %glow_owned_gray%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
@@ -311,7 +298,6 @@ items:
       - '&8| &fAnd Enhance your looks!'
       - ''
       - '&8⚓ &fCost: &8500 Tokens'
-      - '&8⚓ &fOwned: %glow_owned_black%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:

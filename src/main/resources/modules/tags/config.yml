@@ -1,4 +1,4 @@
-config-version: 1
+config-version: 2
 
 menu-title: 'Tags'
 menu-size: 27
@@ -6,14 +6,14 @@ limited-menu-title: 'Limited Time Tags'
 limited-menu-size: 27
 limited-close-slot: 26
 
-apply-command: 'eternaltags set %tag_id%'
-custom-apply-command: 'eternaltags set %custom%'
+apply-command: 'eternaltags:tags set %tag_id% %player_name%'
+custom-apply-command: '[console] lp user %player_name% meta setsuffix " %custom%"'
+block-limited-tag-copy: true
 
-owned:
-  show-in-lore: true
-  yes: '&#9FFF00Yes'
-  no: '&#FF2727No'
-  lore-line: '%color%⚓ &fOwned: %owned%'
+placeholders:
+  owned-yes: '&#9FFF00Yes'
+  owned-no: '&#FF2727No'
+  none: '&7None'
 
 close-button:
   enabled: true
@@ -36,8 +36,6 @@ custom-tag-blacklist:
   - badword
   - admin
   - owner
-  - nigger
-  - faggot
 
 tags:
   mvp:
@@ -52,6 +50,8 @@ tags:
       - '&x&F&F&C&F&0&0| &fEquip the &x&F&F&C&F&0&0MVP Tag'
       - '&x&F&F&C&F&0&0| &fAnd Stand out on TAB!'
       - ''
+      - '&x&F&F&C&F&0&0⚓ &fOwned: %tag_owned_mvp%'
+      - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
   diamond:
     slot: 11
@@ -64,6 +64,8 @@ tags:
       - '&x&0&0&8&3&F&FInformation:'
       - '&x&0&0&8&3&F&F| &fEquip the &x&0&0&8&3&F&FDiamond Tag'
       - '&x&0&0&8&3&F&F| &fAnd Stand out on TAB!'
+      - ''
+      - '&x&0&0&8&3&F&F⚓ &fOwned: %tag_owned_diamond%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
   elite:
@@ -78,6 +80,8 @@ tags:
       - '&x&F&F&0&0&0&0| &fEquip the &x&F&F&0&0&0&0Elite Tag'
       - '&x&F&F&0&0&0&0| &fAnd Stand out on TAB!'
       - ''
+      - '&x&F&F&0&0&0&0⚓ &fOwned: %tag_owned_elite%'
+      - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
   sweat:
     slot: 13
@@ -90,6 +94,8 @@ tags:
       - '&x&B&3&F&F&0&0Information:'
       - '&x&B&3&F&F&0&0| &fEquip the &x&B&3&F&F&0&0Sweat Tag'
       - '&x&B&3&F&F&0&0| &fAnd Stand out on TAB!'
+      - ''
+      - '&x&B&3&F&F&0&0⚓ &fOwned: %tag_owned_sweat%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
   goat:
@@ -104,22 +110,25 @@ tags:
       - '&x&F&F&0&0&7&C| &fEquip the &x&F&F&0&0&7&CGoat Tag'
       - '&x&F&F&0&0&7&C| &fAnd Stand out on TAB!'
       - ''
+      - '&x&F&F&0&0&7&C⚓ &fOwned: %tag_owned_goat%'
+      - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
   custom:
     slot: 16
     permission: eternaltags.tag.custom
     material: NAME_TAG
     custom-input: true
-    apply-command: 'eternaltags set %custom%'
     display-name: '&x&F&F&0&A&0&0&lCUSTOM &x&F&F&0&A&0&0Tag'
     lore:
       - '&8Description'
       - ''
       - '&x&F&F&0&A&0&0Information:'
-      - '&x&F&F&0&A&0&0| &fCreate a &x&F&F&0&A&0&0Custom Tag'
-      - '&x&F&F&0&A&0&0| &fAnd Stand out on TAB!'
+      - '&x&F&F&0&A&0&0| &fClick to equip your saved tag'
+      - '&x&F&F&0&A&0&0| &fUse &f/tag custom &7to set a new one'
+      - ''
+      - '&x&F&F&0&A&0&0⚓ &fOwned: %tag_owned_custom%'
+      - '&x&F&F&0&A&0&0⚓ &fSaved: %last_custom_tag%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
 
-# Add limited-time tags here — copy a tag block and set permission/slot/display-name
 limited-tags: {}

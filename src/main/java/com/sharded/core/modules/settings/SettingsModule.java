@@ -34,7 +34,6 @@ public final class SettingsModule extends Module implements CommandExecutor {
         plugin.gui().registerMenuExtras("settings", this::placeholders);
 
         registerCommand("settings", this);
-        registerCommand("sb", this);
         registerCommand("deathtoggle", this);
         registerCommand("jointoggle", this);
         registerCommand("mobtoggle", this);
@@ -90,7 +89,6 @@ public final class SettingsModule extends Module implements CommandExecutor {
             return true;
         }
         switch (cmd) {
-            case "sb" -> toggleScoreboard(player);
             case "deathtoggle", "deathmessages", "dtoggle" -> toggleDeath(player);
             case "jointoggle", "joinmessages", "joinleave", "jtoggle" -> toggleJoin(player);
             case "mobtoggle", "mobspawn", "mtoggle" -> toggleMobSpawn(player);
