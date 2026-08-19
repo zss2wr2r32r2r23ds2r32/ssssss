@@ -1,5 +1,7 @@
 # Hides bundle EMPTY/FULL and smithing-template tooltips in plugin menus.
 # Does not affect items players craft or hold normally.
 
+config-version: 3
+# message-mode: inherit  # chat | actionbar | both — overrides global message-mode
 strip-bundles: true
 strip-trim-templates: true

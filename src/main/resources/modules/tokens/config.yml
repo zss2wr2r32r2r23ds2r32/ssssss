@@ -1,10 +1,7 @@
+config-version: 3
+# message-mode: inherit  # chat | actionbar | both — overrides global message-mode
 prefix: '&x&5&C&9&4&F&C&lTOKENS &8▷ &r'
 main-menu: mainmenu
-
-filler:
-  material: BLACK_STAINED_GLASS_PANE
-  name: ' '
-  auto-fill: true
 
 # Topper holder name must be "token":
 #   holders:

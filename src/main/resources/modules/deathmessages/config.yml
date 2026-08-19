@@ -10,6 +10,8 @@
 #   %killer%      - the killer's name (killed-by-player only)
 #   %killer_rank% - LuckPerms prefix of the killer
 
+config-version: 3
+# message-mode: inherit  # chat | actionbar | both — overrides global message-mode
 formats:
   default:
     permission: '' # empty = everyone

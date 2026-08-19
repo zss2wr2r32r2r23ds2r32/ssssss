@@ -6,6 +6,7 @@ import com.sharded.core.modules.chat.ChatToggleModule;
 import com.sharded.core.modules.nightvision.NightVisionModule;
 import com.sharded.core.modules.privatemessages.PrivateMessagesModule;
 import com.sharded.core.util.PlayerToggles;
+import com.sharded.core.util.ConfigSync;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -27,7 +28,7 @@ public final class SettingsModule extends Module implements CommandExecutor {
     @Override
     protected void onEnable() {
         File guiFile = new File(moduleFolder(), "gui.yml");
-        if (!guiFile.exists()) plugin.saveResource("modules/settings/gui.yml", false);
+        ConfigSync.sync(plugin, guiFile, "modules/settings/gui.yml");
         plugin.gui().loadMenu(guiFile, "settings");
 
         plugin.gui().registerAction("toggle_chat", this::toggleChat);

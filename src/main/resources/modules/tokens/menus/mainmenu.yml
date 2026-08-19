@@ -1,3 +1,4 @@
+config-version: 3
 menu_title: '⛃ Token Shop'
 open_command:
   - tokenshop

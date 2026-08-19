@@ -2,6 +2,8 @@ package com.sharded.core.modules.portalrtp;
 
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
+import com.sharded.core.util.ConfigSync;
+import com.sharded.core.util.MessageUtil;
 import com.sharded.core.util.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -48,7 +50,7 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
         triggers = new PortalTriggerStore(plugin, moduleFolder());
 
         File guiFile = new File(moduleFolder(), "gui.yml");
-        if (!guiFile.exists()) plugin.saveResource("modules/portalrtp/gui.yml", false);
+        ConfigSync.sync(plugin, guiFile, "modules/portalrtp/gui.yml");
         plugin.gui().loadMenu(guiFile, "portalrtp");
         plugin.gui().registerAction("rtp_confirm", this::startCountdown);
     }
@@ -187,11 +189,7 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
                 return;
             }
             String msg = raw("countdown", "%seconds%", String.valueOf(remaining[0]));
-            if (config.getBoolean("countdown-actionbar", true)) {
-                player.sendActionBar(Text.c(msg));
-            } else {
-                player.sendMessage(Text.c(msg));
-            }
+            MessageUtil.deliver(player, msg, resolveDelivery("countdown"));
             remaining[0]--;
         }, 0L, 20L);
         pending.put(player.getUniqueId(), new PendingTeleport(start, task));

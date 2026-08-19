@@ -1,3 +1,4 @@
+config-version: 3
 menu_title: 'Token Shop | Cosmetics'
 open_command: cosmetics
 size: 27

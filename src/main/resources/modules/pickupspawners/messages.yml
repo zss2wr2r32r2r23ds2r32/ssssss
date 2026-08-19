@@ -1,4 +1,9 @@
+config-version: 3
 prefix: '&#00A2FF&lCORE &8▷ &r'
+
+message-modes:
+  actionbar-hint: actionbar
+
 players-only: '%prefix%&#FF2727Only players can use this command.'
 no-permission: '%prefix%&#FF2727You don''t have permission.'
 usage: '%prefix%&#FF2727Usage: /spawners pay [amount]'

@@ -1,3 +1,4 @@
+config-version: 3
 prefix: '%prefix%'
 no-permission: '%prefix%&#FF2727You don''t have permission to do that.'
 grave-created: '%prefix%&7Your items are stored in a grave at &f%x%, %y%, %z% &7for

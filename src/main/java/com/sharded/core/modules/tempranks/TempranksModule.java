@@ -3,6 +3,7 @@ package com.sharded.core.modules.tempranks;
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.modules.tokens.TokenService;
+import com.sharded.core.util.ConfigSync;
 import com.sharded.core.util.Numbers;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
@@ -28,7 +29,7 @@ public final class TempranksModule extends Module implements CommandExecutor, Ta
     @Override
     protected void onEnable() {
         File menuFile = new File(moduleFolder(), "tempranks.yml");
-        if (!menuFile.exists()) plugin.saveResource("modules/tempranks/tempranks.yml", false);
+        ConfigSync.sync(plugin, menuFile, "modules/tempranks/tempranks.yml");
         plugin.gui().loadMenu(menuFile, "tempranks");
 
         registerCommand("temprank", this);

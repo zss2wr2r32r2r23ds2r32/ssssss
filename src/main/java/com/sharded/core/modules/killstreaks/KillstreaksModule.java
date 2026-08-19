@@ -4,6 +4,7 @@ import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.TabCompleteHelper;
+import com.sharded.core.util.MessageUtil;
 import com.sharded.core.util.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -158,13 +159,20 @@ public final class KillstreaksModule extends Module implements CommandExecutor, 
     }
 
     private void announce(String message, Player killer) {
-        if (config.getBoolean("announce-actionbar", false)) {
-            killer.sendActionBar(Text.c(message));
-            for (Player online : Bukkit.getOnlinePlayers()) {
-                if (online != killer) online.sendMessage(Text.c(message));
+        MessageUtil.Delivery mode = resolveDelivery("broadcast");
+        var component = Text.c(message);
+        switch (mode) {
+            case ACTIONBAR -> {
+                killer.sendActionBar(component);
+                for (Player online : Bukkit.getOnlinePlayers()) {
+                    if (online != killer) online.sendMessage(component);
+                }
             }
-        } else {
-            Bukkit.getServer().broadcast(Text.c(message));
+            case BOTH -> {
+                Bukkit.getServer().broadcast(component);
+                killer.sendActionBar(component);
+            }
+            default -> Bukkit.getServer().broadcast(component);
         }
     }
 }

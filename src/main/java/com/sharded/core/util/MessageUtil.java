@@ -4,28 +4,44 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-/** Sends chat or action bar based on module config. */
+/** Sends chat or action bar based on delivery mode. */
 public final class MessageUtil {
+
+    public enum Delivery {
+        CHAT,
+        ACTIONBAR,
+        BOTH;
+
+        public static Delivery parse(String raw) {
+            if (raw == null || raw.isBlank() || raw.equalsIgnoreCase("inherit")) return null;
+            return switch (raw.trim().toLowerCase().replace('-', '_')) {
+                case "actionbar", "action_bar" -> ACTIONBAR;
+                case "both" -> BOTH;
+                default -> CHAT;
+            };
+        }
+    }
 
     private MessageUtil() {
     }
 
-    public static void send(ModuleMessages messages, CommandSender to, String key, String... replacements) {
-        String msg = messages.raw(key, replacements);
-        if (msg.isEmpty()) return;
-        if (messages.useActionBar(key) && to instanceof Player player) {
-            player.sendActionBar(Text.c(msg));
+    public static void deliver(CommandSender to, Component component, Delivery mode) {
+        if (mode == null) mode = Delivery.CHAT;
+        if (to instanceof Player player) {
+            switch (mode) {
+                case ACTIONBAR -> player.sendActionBar(component);
+                case BOTH -> {
+                    player.sendMessage(component);
+                    player.sendActionBar(component);
+                }
+                default -> to.sendMessage(component);
+            }
         } else {
-            to.sendMessage(Text.c(msg));
+            to.sendMessage(component);
         }
     }
 
-    /** Lightweight message accessor for non-Module classes. */
-    public interface ModuleMessages {
-        String raw(String key, String... replacements);
-
-        default boolean useActionBar(String key) {
-            return false;
-        }
+    public static void deliver(CommandSender to, String legacyMessage, Delivery mode) {
+        deliver(to, Text.c(legacyMessage), mode);
     }
 }

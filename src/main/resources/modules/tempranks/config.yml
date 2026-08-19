@@ -1,3 +1,5 @@
+config-version: 3
+# message-mode: inherit  # chat | actionbar | both — overrides global message-mode
 prefix: '&x&F&F&0&0&7&2&lRANKS &8▷ &r'
 main-menu: tempranks
 

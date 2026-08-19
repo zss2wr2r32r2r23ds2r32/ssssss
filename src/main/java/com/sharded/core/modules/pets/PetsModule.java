@@ -38,6 +38,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.scheduler.BukkitTask;
 
+import com.sharded.core.util.ConfigSync;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +83,7 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         petOwnerKey = new NamespacedKey(plugin, "pet_owner");
 
         File guiFile = new File(moduleFolder(), "gui.yml");
-        if (!guiFile.exists()) plugin.saveResource("modules/pets/gui.yml", false);
+        ConfigSync.sync(plugin, guiFile, "modules/pets/gui.yml");
         plugin.gui().loadMenu(guiFile, "pets");
 
         for (PetType type : PetType.values()) {

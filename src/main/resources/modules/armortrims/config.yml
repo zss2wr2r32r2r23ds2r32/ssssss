@@ -1,5 +1,6 @@
 # Armor Trims — /trims, /armortrims, /trimstation
-# Pattern | Armor | Material layout. Click sides to cycle, center slot for armor.
+config-version: 3
+# message-mode: inherit  # chat | actionbar | both
 
 title: '&8Armor Trim Station'
 permission: sharded.armortrims.use
@@ -40,7 +41,6 @@ filters:
   excluded-patterns: []
   excluded-materials: []
 
-# Override trim material slot icons (registry key -> material name)
 material-icons:
   quartz: QUARTZ
   iron: IRON_INGOT
@@ -52,8 +52,6 @@ material-icons:
   lapis: LAPIS_LAZULI
   amethyst: AMETHYST_SHARD
 
-# Override pattern slot icons (registry key -> material name). Unlisted patterns use <KEY>_ARMOR_TRIM_SMITHING_TEMPLATE
 pattern-icons: {}
-
 pattern-icon-fallback: PAPER
 material-icon-fallback: EMERALD

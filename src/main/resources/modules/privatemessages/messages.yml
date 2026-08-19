@@ -1,3 +1,4 @@
+config-version: 3
 prefix: '&#00A2FF&lCORE &8▷ &r'
 players-only: '%prefix%&#FF2727Only players can use this command.'
 no-permission: '%prefix%&#FF2727You don''t have permission to do that.'

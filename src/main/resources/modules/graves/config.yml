@@ -1,6 +1,8 @@
 # sharded.graves.use = skip graves (normal drops). Grant to paid ranks.
 # Everyone else gets a grave. Anyone can open any grave.
 
+config-version: 3
+# message-mode: inherit  # chat | actionbar | both — overrides global message-mode
 enabled-worlds: []
 expire-seconds: 300
 drop-items-on-expire: true

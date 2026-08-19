@@ -3,6 +3,8 @@
 # Auto Smelt pickaxe drop their smelted form automatically.
 # Fortune still works because drop amounts are calculated before smelting.
 
+config-version: 3
+# message-mode: inherit  # chat | actionbar | both — overrides global message-mode
 lore-line: '&7Auto Smelt I'
 play-sound: false
 

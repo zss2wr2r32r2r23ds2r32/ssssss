@@ -6,6 +6,8 @@ import com.sharded.core.hook.LuckPermsHook;
 import com.sharded.core.hook.PlaceholderHook;
 import com.sharded.core.module.ModuleManager;
 import com.sharded.core.util.CommandHelp;
+import com.sharded.core.util.ConfigSync;
+import com.sharded.core.util.MessageUtil;
 import com.sharded.core.util.PlayerStateStore;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
@@ -29,7 +31,9 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
     @Override
     public void onEnable() {
         instance = this;
+        if (!getDataFolder().exists()) getDataFolder().mkdirs();
         saveDefaultConfig();
+        ConfigSync.syncMainConfig(this);
 
         this.luckPerms = new LuckPermsHook(this);
         this.placeholderHook = new PlaceholderHook(this);
@@ -63,14 +67,30 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
         if (!command.getName().equalsIgnoreCase("shardedcore")) return false;
         if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
             if (!sender.hasPermission("sharded.admin")) {
-                sender.sendMessage(Text.c(getConfig().getString("prefix", "&8[&bSharded&8] &r") + "&cYou don't have permission."));
+                MessageUtil.deliver(sender, getConfig().getString("prefix", "&8[&bSharded&8] &r") + "&cYou don't have permission.",
+                        globalDelivery());
                 return true;
             }
-            reloadConfig();
+            ConfigSync.syncMainConfig(this);
             moduleManager.reload();
             stateStore.saveNow();
-            sender.sendMessage(Text.c(getConfig().getString("prefix", "&8[&bSharded&8] &r")
-                    + "&aConfiguration reloaded. &7(" + moduleManager.enabledCount() + " modules enabled)"));
+            MessageUtil.deliver(sender, getConfig().getString("prefix", "&8[&bSharded&8] &r")
+                            + "&aConfiguration reloaded. &7(" + moduleManager.enabledCount() + " modules enabled)",
+                    globalDelivery());
+            return true;
+        }
+        if (args.length > 0 && args[0].equalsIgnoreCase("resetconfigs")) {
+            if (!sender.hasPermission("sharded.admin")) {
+                MessageUtil.deliver(sender, getConfig().getString("prefix", "&8[&bSharded&8] &r") + "&cYou don't have permission.",
+                        globalDelivery());
+                return true;
+            }
+            int count = ConfigSync.resetAll(this);
+            reloadConfig();
+            moduleManager.reload();
+            MessageUtil.deliver(sender, getConfig().getString("prefix", "&8[&bSharded&8] &r")
+                            + "&aReset &f" + count + " &aconfig files from plugin defaults.",
+                    globalDelivery());
             return true;
         }
         CommandHelp.send(sender, getConfig().getString("prefix", "&8[&bSharded&8] &r"));
@@ -81,7 +101,7 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (!command.getName().equalsIgnoreCase("shardedcore")) return List.of();
         if (args.length == 1) {
-            return TabCompleteHelper.filter(args[0], "reload", "help");
+            return TabCompleteHelper.filter(args[0], "reload", "resetconfigs", "help");
         }
         return List.of();
     }
@@ -104,5 +124,10 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
 
     public ModuleManager modules() {
         return moduleManager;
+    }
+
+    public MessageUtil.Delivery globalDelivery() {
+        MessageUtil.Delivery mode = MessageUtil.Delivery.parse(getConfig().getString("message-mode", "chat"));
+        return mode != null ? mode : MessageUtil.Delivery.CHAT;
     }
 }

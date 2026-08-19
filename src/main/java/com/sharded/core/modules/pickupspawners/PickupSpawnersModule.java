@@ -4,7 +4,7 @@ import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.modules.tokens.TokenService;
 import com.sharded.core.util.TabCompleteHelper;
-import com.sharded.core.util.Text;
+import com.sharded.core.util.MessageUtil;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
@@ -104,7 +104,7 @@ public final class PickupSpawnersModule extends Module implements CommandExecuto
 
         if (paidPickups.getOrDefault(player.getUniqueId(), 0) <= 0) {
             event.setCancelled(true);
-            player.sendActionBar(Text.c(raw("actionbar-hint", "%price%", String.valueOf(price()))));
+            MessageUtil.deliver(player, raw("actionbar-hint", "%price%", String.valueOf(price())), resolveDelivery("actionbar-hint"));
             return;
         }
 

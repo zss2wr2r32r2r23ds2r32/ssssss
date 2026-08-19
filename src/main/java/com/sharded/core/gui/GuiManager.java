@@ -3,6 +3,7 @@ package com.sharded.core.gui;
 import com.sharded.core.ShardedCore;
 import com.sharded.core.modules.tokens.TokenService;
 import com.sharded.core.util.ColorUtil;
+import com.sharded.core.util.MessageUtil;
 import com.sharded.core.util.Numbers;
 import com.sharded.core.util.Prefix;
 import com.sharded.core.util.Text;
@@ -173,11 +174,8 @@ public final class GuiManager {
 
     public void message(CommandSender sender, String message, boolean actionBar) {
         String formatted = applyPlaceholders(sender instanceof Player p ? p : null, message);
-        if (actionBar && sender instanceof Player player) {
-            player.sendActionBar(Text.c(formatted));
-        } else {
-            sender.sendMessage(Text.c(formatted));
-        }
+        MessageUtil.Delivery mode = actionBar ? MessageUtil.Delivery.ACTIONBAR : plugin.globalDelivery();
+        MessageUtil.deliver(sender, formatted, mode);
     }
 
     public String tokenPrefix() {

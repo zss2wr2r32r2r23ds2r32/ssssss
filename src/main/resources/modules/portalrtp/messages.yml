@@ -1,4 +1,9 @@
+config-version: 3
 prefix: '%prefix%'
+
+message-modes:
+  countdown: actionbar
+
 players-only: '%prefix%&#FF2727Only players can use this command.'
 no-permission: '%prefix%&#FF2727You don''t have permission.'
 wrong-world: '%prefix%&#FF2727RTP only works in the &f%world% &#FF2727world.'

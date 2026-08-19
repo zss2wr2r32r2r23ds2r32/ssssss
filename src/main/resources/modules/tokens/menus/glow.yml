@@ -1,3 +1,4 @@
+config-version: 3
 menu_title: 'Token Shop | Glows'
 open_command: glows
 size: 27

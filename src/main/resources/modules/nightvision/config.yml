@@ -1,2 +1,4 @@
 # Night vision module - /nightvision (alias /nv)
+config-version: 3
+# message-mode: inherit  # chat | actionbar | both — overrides global message-mode
 show-icon: false

@@ -1,6 +1,8 @@
 package com.sharded.core.module;
 
 import com.sharded.core.ShardedCore;
+import com.sharded.core.util.ConfigSync;
+import com.sharded.core.util.MessageUtil;
 import com.sharded.core.util.Text;
 import com.sharded.core.util.ColorUtil;
 import com.sharded.core.util.Prefix;
@@ -13,10 +15,6 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,29 +86,9 @@ public abstract class Module implements Listener {
 
     private YamlConfiguration loadYaml(String fileName) {
         File folder = new File(plugin.getDataFolder(), "modules/" + id);
-        if (!folder.exists()) folder.mkdirs();
         File file = new File(folder, fileName);
         String resourcePath = "modules/" + id + "/" + fileName;
-
-        if (!file.exists() && plugin.getResource(resourcePath) != null) {
-            plugin.saveResource(resourcePath, false);
-        }
-
-        YamlConfiguration yaml = file.exists() ? YamlConfiguration.loadConfiguration(file) : new YamlConfiguration();
-
-        // Merge in new default keys from the jar so updates don't break old files.
-        InputStream defaults = plugin.getResource(resourcePath);
-        if (defaults != null) {
-            YamlConfiguration def = YamlConfiguration.loadConfiguration(new InputStreamReader(defaults, StandardCharsets.UTF_8));
-            yaml.setDefaults(def);
-            yaml.options().copyDefaults(true);
-            try {
-                yaml.save(file);
-            } catch (IOException e) {
-                plugin.getLogger().warning("Could not save " + resourcePath + ": " + e.getMessage());
-            }
-        }
-        return yaml;
+        return ConfigSync.load(plugin, file, resourcePath);
     }
 
     public final File moduleFolder() {
@@ -159,6 +137,20 @@ public abstract class Module implements Listener {
     public final void send(CommandSender to, String key, String... replacements) {
         String msg = raw(key, replacements);
         if (msg.isEmpty()) return;
-        to.sendMessage(Text.c(msg));
+        MessageUtil.deliver(to, Text.c(msg), resolveDelivery(key));
+    }
+
+    /** chat | actionbar | both — per-key override in messages.yml {@code message-modes}, then module config, then global. */
+    public final MessageUtil.Delivery resolveDelivery(String key) {
+        if (messages != null && messages.isString("message-modes." + key)) {
+            MessageUtil.Delivery mode = MessageUtil.Delivery.parse(messages.getString("message-modes." + key));
+            if (mode != null) return mode;
+        }
+        if (config != null && config.isString("message-mode")) {
+            MessageUtil.Delivery mode = MessageUtil.Delivery.parse(config.getString("message-mode"));
+            if (mode != null) return mode;
+        }
+        MessageUtil.Delivery global = MessageUtil.Delivery.parse(plugin.getConfig().getString("message-mode", "chat"));
+        return global != null ? global : MessageUtil.Delivery.CHAT;
     }
 }

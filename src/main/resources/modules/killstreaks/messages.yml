@@ -1,3 +1,4 @@
+config-version: 3
 prefix: '%prefix%'
 milestone: '%prefix%&#9FFF00Killstreak: &f%streak%&#9FFF00!'
 streak-announce: '%prefix%&6%player% &eis on a &#FF2727&l%streak% &ekill streak!'

@@ -12,6 +12,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import com.sharded.core.util.ConfigSync;
 import java.io.File;
 import java.util.List;
 import java.util.Locale;
@@ -60,11 +61,8 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
     private void copyDefaultMenus(File folder) {
         folder.mkdirs();
         for (String menu : List.of("mainmenu", "glow", "keys", "cosmetics", "gradients", "chatcolors", "tags")) {
-            File out = new File(folder, menu + ".yml");
-            if (!out.exists()) {
-                String path = "modules/tokens/menus/" + menu + ".yml";
-                if (plugin.getResource(path) != null) plugin.saveResource(path, false);
-            }
+            String path = "modules/tokens/menus/" + menu + ".yml";
+            ConfigSync.sync(plugin, new File(folder, menu + ".yml"), path);
         }
     }
 

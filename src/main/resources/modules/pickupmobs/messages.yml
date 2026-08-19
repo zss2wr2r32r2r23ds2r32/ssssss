@@ -1,2 +1,3 @@
+config-version: 3
 prefix: '&#00A2FF&lCORE &8▷ &r'
 picked-up: '%prefix%&#9FFF00You picked up a &f%mob%&#9FFF00.'

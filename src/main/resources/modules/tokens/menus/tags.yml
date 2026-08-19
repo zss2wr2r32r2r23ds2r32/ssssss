@@ -1,3 +1,4 @@
+config-version: 3
 menu_title: 'Token Shop | Tags'
 open_command: tags
 size: 27
