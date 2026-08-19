@@ -6,7 +6,7 @@
 # Placeholders: %player%, %rank% (LuckPerms prefix), %group%
 
 config-version: 3
-message-mode: inherit
+message-mode: chat
 formats:
   default:
     permission: '' # empty = everyone

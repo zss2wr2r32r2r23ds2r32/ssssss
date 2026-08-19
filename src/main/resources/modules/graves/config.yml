@@ -2,7 +2,7 @@
 # Everyone else gets a grave. Anyone can open any grave.
 
 config-version: 3
-message-mode: inherit
+message-mode: chat
 enabled-worlds: []
 expire-seconds: 300
 drop-items-on-expire: true

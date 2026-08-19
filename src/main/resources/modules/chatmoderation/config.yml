@@ -1,5 +1,5 @@
 config-version: 1
-message-mode: inherit
+message-mode: chat
 
 anti-swear:
   enabled: true

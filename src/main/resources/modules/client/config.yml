@@ -1,5 +1,5 @@
 config-version: 2
-message-mode: inherit
+message-mode: chat
 
 apply-delay-ticks: 40
 

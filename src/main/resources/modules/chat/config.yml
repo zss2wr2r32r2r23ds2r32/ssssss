@@ -1,5 +1,5 @@
 # Chat module - lets players toggle public chat visibility with /chattoggle.
 
 config-version: 3
-message-mode: inherit
+message-mode: chat
 {}

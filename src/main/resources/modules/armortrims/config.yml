@@ -1,6 +1,6 @@
 # Armor Trims — /trims, /armortrims, /trimstation
 config-version: 5
-message-mode: inherit
+message-mode: chat
 
 title: '&8Armor Trim Station'
 permission: sharded.armortrims.use

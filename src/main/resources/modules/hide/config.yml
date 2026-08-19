@@ -1,6 +1,6 @@
 # Hide — Steve skin + scrambled nametag above head for others. Tab name stays normal.
 config-version: 3
-message-mode: inherit
+message-mode: chat
 scrambled-name: "&kaaaaaaaaaa"
 random-scramble: true
 scramble-length: 12

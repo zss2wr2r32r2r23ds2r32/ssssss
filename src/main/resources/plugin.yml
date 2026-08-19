@@ -200,6 +200,9 @@ commands:
   kick:
     description: Kick a player
     usage: /kick <player> [reason]
+  mute:
+    description: Mute a player
+    usage: /mute <player> [reason] [duration]
   announce:
     description: Broadcast a server announcement
     usage: /announce <message>

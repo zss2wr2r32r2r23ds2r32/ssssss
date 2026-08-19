@@ -75,6 +75,10 @@ public final class GuiManager {
         menus.clear();
     }
 
+    public GuiMenu menu(String menuId) {
+        return menus.get(menuId);
+    }
+
     public void open(Player player, String menuId) {
         open(player, menuId, Map.of());
     }

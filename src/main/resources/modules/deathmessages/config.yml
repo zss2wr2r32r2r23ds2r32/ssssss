@@ -11,7 +11,7 @@
 #   %killer_rank% - LuckPerms prefix of the killer
 
 config-version: 3
-message-mode: inherit
+message-mode: chat
 formats:
   default:
     permission: '' # empty = everyone

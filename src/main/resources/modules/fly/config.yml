@@ -14,7 +14,7 @@
 # Players in creative or spectator are never force-cancelled.
 
 config-version: 4
-message-mode: inherit
+message-mode: chat
 world: spawn
 
 region:

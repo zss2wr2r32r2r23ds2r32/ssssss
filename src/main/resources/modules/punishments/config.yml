@@ -1,6 +1,6 @@
 config-version: 2
 
-message-mode: inherit
+message-mode: chat
 
 default-reason: 'Unfair Modifications'
 discord: '.gg/shardedmc'
@@ -64,6 +64,44 @@ ban-screen-permanent:
   - '&#AD4EFF⛨&r &fBy: &#AD4EFF%staff%'
   - '&#FF007B⚐&r &fReason: &#FF007B%reason%'
 
+mute-screen:
+  - '&#AD4EFF&lSHARDEDMC'
+  - '&cYou have been muted!'
+  - ''
+  - '&#AD4EFF⛨&r &fBy: &#AD4EFF%staff%'
+  - '&#FF007B⚐&r &fReason: &#FF007B%reason%'
+  - '&#45FF17☄&r &fDuration: &#45FF17%time_left%'
+  - ''
+  - '&#4498DB☀&r &fExpires on: &#4498DB%expires%'
+
+mute-screen-permanent:
+  - '&#AD4EFF&lSHARDEDMC'
+  - '&cYou have been permanently muted!'
+  - ''
+  - '&#AD4EFF⛨&r &fBy: &#AD4EFF%staff%'
+  - '&#FF007B⚐&r &fReason: &#FF007B%reason%'
+
+mute-screen-title:
+  enabled: true
+  title: '&#FF2727&lMUTED'
+  subtitle: '&#FF007B%reason%'
+
+mute:
+  default-reason: Spam
+  blocked-commands:
+    - msg
+    - tell
+    - w
+    - whisper
+    - r
+    - reply
+    - me
+    - pm
+    - dm
+    - message
+    - say
+    - broadcast
+
 kick:
   default-reason: 'No reason specified'
 
@@ -103,21 +141,6 @@ mute-reasons:
   Toxicity: 6h
   Advertising: 1d
   Hate-Speech: 7d
-
-mute:
-  blocked-commands:
-    - msg
-    - tell
-    - w
-    - whisper
-    - r
-    - reply
-    - me
-    - pm
-    - dm
-    - message
-    - say
-    - broadcast
 
 punish:
   reason-title: '&8🔥 %type% &8| &8%player%'

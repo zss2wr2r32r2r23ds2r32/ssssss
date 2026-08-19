@@ -138,7 +138,11 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
             send(player, "wrong-world", "%world%", portalWorld());
             return true;
         }
-        openGui(player);
+        if (config.getBoolean("use-gui", false)) {
+            openGui(player);
+        } else {
+            startCountdown(player);
+        }
         return true;
     }
 
@@ -149,6 +153,11 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
     }
 
     private void openGui(Player player) {
+        if (plugin.gui().menu("portalrtp") == null) {
+            File guiFile = new File(moduleFolder(), "gui.yml");
+            ConfigSync.sync(plugin, guiFile, "modules/portalrtp/gui.yml");
+            plugin.gui().loadMenu(guiFile, "portalrtp");
+        }
         Map<String, String> ph = Map.of(
                 "target_world", targetWorld(),
                 "radius", config.getString("radius-label", "50K x 50K"),
@@ -205,7 +214,7 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
     }
 
     private void finishTeleport(Player player, long cooldownSeconds) {
-        World world = Bukkit.getWorld(targetWorld());
+        World world = resolveWorld(targetWorld());
         if (world == null) {
             send(player, "world-not-found", "%world%", targetWorld());
             return;
@@ -218,16 +227,33 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
         if (!player.hasPermission("sharded.rtp.bypass")) {
             rtpCooldown.put(player.getUniqueId(), System.currentTimeMillis() + cooldownSeconds * 1000L);
         }
+        Location finalLocation = location;
+        World finalWorld = world;
         player.teleportAsync(location, PlayerTeleportEvent.TeleportCause.PLUGIN).thenAccept(success -> {
-            if (success) {
-                player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 0.8f, 1f);
-                send(player, "teleported",
-                        "%x%", String.valueOf(location.getBlockX()),
-                        "%y%", String.valueOf(location.getBlockY()),
-                        "%z%", String.valueOf(location.getBlockZ()),
-                        "%world%", world.getName());
-            }
+            plugin.getServer().getScheduler().runTask(plugin, () -> {
+                if (!player.isOnline()) return;
+                if (success) {
+                    player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 0.8f, 1f);
+                    send(player, "teleported",
+                            "%x%", String.valueOf(finalLocation.getBlockX()),
+                            "%y%", String.valueOf(finalLocation.getBlockY()),
+                            "%z%", String.valueOf(finalLocation.getBlockZ()),
+                            "%world%", finalWorld.getName());
+                } else {
+                    send(player, "teleport-failed");
+                }
+            });
         });
+    }
+
+    private World resolveWorld(String name) {
+        if (name == null || name.isBlank()) return null;
+        World world = Bukkit.getWorld(name);
+        if (world != null) return world;
+        for (World loaded : Bukkit.getWorlds()) {
+            if (loaded.getName().equalsIgnoreCase(name)) return loaded;
+        }
+        return null;
     }
 
     public String targetWorldName() {
@@ -236,6 +262,14 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
 
     /** Finds a safe random location using this module's RTP settings. */
     public Location findSafeLocation(World world) {
-        return SafeLocationFinder.find(world, config);
+        Location found = SafeLocationFinder.find(world, config);
+        if (found != null) return found;
+        int attempts = config.getInt("max-attempts", 25) * 2;
+        return SafeLocationFinder.find(world,
+                config.getInt("center-x", 0),
+                config.getInt("center-z", 0),
+                config.getInt("min-radius", 100),
+                config.getInt("max-radius", 500),
+                attempts);
     }
 }

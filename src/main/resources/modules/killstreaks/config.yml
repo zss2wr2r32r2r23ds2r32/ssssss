@@ -1,6 +1,6 @@
 # Killstreak rewards — add as many as you want (5, 10, 15, 20, 25, ...)
 config-version: 3
-message-mode: inherit
+message-mode: chat
 announce-all-streaks: true
 announce-actionbar: false
 

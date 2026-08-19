@@ -350,6 +350,29 @@ public final class PunishmentDatabase {
         return names;
     }
 
+    public synchronized List<String> activePunishedPlayerNames(PunishmentType type) {
+        List<String> names = new ArrayList<>();
+        long now = System.currentTimeMillis();
+        try (PreparedStatement ps = connection.prepareStatement("""
+                SELECT DISTINCT player_name, expires_at FROM punishments
+                WHERE type = ? AND active = 1
+                ORDER BY player_name COLLATE NOCASE
+                """)) {
+            ps.setString(1, type.name());
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    long expires = rs.getLong("expires_at");
+                    if (!rs.wasNull() && expires > 0 && now >= expires) continue;
+                    String name = rs.getString("player_name");
+                    if (name != null && !name.isBlank()) names.add(name);
+                }
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().warning("[punishments] Failed to list active " + type + " names: " + e.getMessage());
+        }
+        return names;
+    }
+
     private PunishmentRecord readPunishment(ResultSet rs) throws SQLException {
         long expires = rs.getLong("expires_at");
         return new PunishmentRecord(

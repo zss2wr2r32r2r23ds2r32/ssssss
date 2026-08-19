@@ -4,7 +4,7 @@
 # Fortune still works because drop amounts are calculated before smelting.
 
 config-version: 3
-message-mode: inherit
+message-mode: chat
 lore-line: '&7Auto Smelt I'
 play-sound: false
 

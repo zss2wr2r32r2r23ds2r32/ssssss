@@ -79,6 +79,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         registerCommand("ban", this);
         registerCommand("banip", this);
         registerCommand("kick", this);
+        registerCommand("mute", this);
         registerCommand("offend", this);
         registerCommand("unban", this);
         registerCommand("unmute", this);
@@ -102,6 +103,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
             case "ban" -> handleBanCmd(sender, args);
             case "banip" -> handleBanIpCmd(sender, args);
             case "kick" -> handleKickCmd(sender, args);
+            case "mute" -> handleMuteCmd(sender, args);
             case "offend" -> handleOffendCmd(sender, args);
             case "unban" -> handleUnbanCmd(sender, args);
             case "unmute" -> handleUnmuteCmd(sender, args);
@@ -165,6 +167,27 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         String reason = args.length >= 2 ? args[1] : config.getString("default-reason", "Unfair Modifications");
         String duration = args.length >= 3 ? args[2] : defaultDuration("reasons", reason);
         banIp(sender, target, reason, duration);
+        return true;
+    }
+
+    private boolean handleMuteCmd(CommandSender sender, String[] args) {
+        if (args.length == 0) {
+            send(sender, "mute-usage");
+            return true;
+        }
+        OfflinePlayer target = OfflinePlayers.resolve(args[0]);
+        if (target == null) {
+            send(sender, "player-not-found");
+            return true;
+        }
+        String reason = args.length >= 2 ? joinArgs(args, 1, args.length - (args.length >= 3 ? 1 : 0))
+                : config.getString("mute.default-reason", "Spam");
+        String duration = args.length >= 3 ? args[args.length - 1] : defaultDuration("mute-reasons", reason);
+        if (args.length == 2 && config.getConfigurationSection("mute-reasons") != null
+                && config.getConfigurationSection("mute-reasons").contains(reason)) {
+            duration = defaultDuration("mute-reasons", reason);
+        }
+        mute(sender, target, reason, duration);
         return true;
     }
 
@@ -308,11 +331,24 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         String name = command.getName().toLowerCase(Locale.ROOT);
         if (args.length == 1) {
-            return TabCompleteHelper.knownPlayers(args[0]);
+            return switch (name) {
+                case "unban" -> TabCompleteHelper.filter(args[0], database.activePunishedPlayerNames(PunishmentDatabase.PunishmentType.BAN));
+                case "unmute" -> TabCompleteHelper.filter(args[0], database.activePunishedPlayerNames(PunishmentDatabase.PunishmentType.MUTE));
+                case "pardon" -> {
+                    List<String> names = new ArrayList<>(database.activePunishedPlayerNames(PunishmentDatabase.PunishmentType.BAN));
+                    for (String muted : database.activePunishedPlayerNames(PunishmentDatabase.PunishmentType.MUTE)) {
+                        if (!names.contains(muted)) names.add(muted);
+                    }
+                    yield TabCompleteHelper.filter(args[0], names);
+                }
+                case "kick" -> TabCompleteHelper.onlinePlayers(args[0]);
+                default -> TabCompleteHelper.knownPlayers(args[0]);
+            };
         }
         if (args.length == 2) {
             return switch (name) {
-                case "ban", "banip" -> TabCompleteHelper.configKeys(args[1], banReasons());
+                case "ban", "banip", "offend" -> TabCompleteHelper.configKeys(args[1], banReasons());
+                case "mute" -> TabCompleteHelper.configKeys(args[1], muteReasons());
                 case "kick" -> TabCompleteHelper.configKeys(args[1], kickReasons());
                 case "wipe" -> TabCompleteHelper.configKeys(args[1], wipeReasons());
                 default -> List.of();
@@ -588,7 +624,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         send(staff, "muted", "%player%", OfflinePlayers.name(target.getUniqueId()),
                 "%reason%", reason, "%duration%", formatDurationLabel(durationRaw, expiresAt));
         Player online = target.getPlayer();
-        if (online != null) send(online, "muted-target", "%reason%", reason);
+        if (online != null) showMuteScreen(online, staffName, reason, expiresAt);
         broadcastPunishment("Mute", target, staffName, reason);
     }
 
@@ -817,6 +853,50 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         return Component.join(net.kyori.adventure.text.JoinConfiguration.newlines(), parts);
     }
 
+    private void showMuteScreen(Player target, String staff, String reason, Long expiresAt) {
+        Component screen = buildMuteScreen(staff, reason, expiresAt);
+        target.sendMessage(screen);
+        if (config.getBoolean("mute-screen-title.enabled", true)) {
+            target.showTitle(net.kyori.adventure.title.Title.title(
+                    Text.c(config.getString("mute-screen-title.title", "&#FF2727&lMUTED")),
+                    Text.c(Text.apply(config.getString("mute-screen-title.subtitle", "&f%reason%"),
+                            "%reason%", reason,
+                            "%staff%", staff,
+                            "%time_left%", expiresAt == null ? "Permanent" : DurationUtil.formatRemaining(expiresAt),
+                            "%expires%", expiresAt == null ? "Never" : DurationUtil.formatExpires(expiresAt))),
+                    net.kyori.adventure.title.Title.Times.times(
+                            java.time.Duration.ofMillis(250),
+                            java.time.Duration.ofMillis(3500),
+                            java.time.Duration.ofMillis(500))));
+        }
+    }
+
+    private Component buildMuteScreen(String staff, String reason, Long expiresAt) {
+        boolean permanent = expiresAt == null || DurationUtil.isPermanent(String.valueOf(expiresAt));
+        List<String> lines = permanent
+                ? config.getStringList("mute-screen-permanent")
+                : config.getStringList("mute-screen");
+        if (lines.isEmpty()) {
+            lines = List.of(
+                    "&#AD4EFF&lSHARDEDMC",
+                    "&cYou have been muted!",
+                    "",
+                    "&#AD4EFF⛨&r &fBy: &#AD4EFF%staff%",
+                    "&#FF007B⚐&r &fReason: &#FF007B%reason%",
+                    "&#45FF17☄&r &fDuration: &#45FF17%time_left%");
+        }
+        List<Component> parts = new ArrayList<>();
+        for (String line : lines) {
+            parts.add(Text.c(Text.apply(line,
+                    "%staff%", staff,
+                    "%reason%", reason,
+                    "%time_left%", expiresAt == null ? "Permanent" : DurationUtil.formatRemaining(expiresAt),
+                    "%expires%", expiresAt == null ? "Never" : DurationUtil.formatExpires(expiresAt),
+                    "%discord%", config.getString("discord", "discord.gg/shardedmc"))));
+        }
+        return Component.join(net.kyori.adventure.text.JoinConfiguration.newlines(), parts);
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPreLogin(AsyncPlayerPreLoginEvent event) {
         if (database.isDoxxed(event.getUniqueId())) {
@@ -887,7 +967,8 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         PunishmentDatabase.PunishmentRecord mute = database.getActive(event.getPlayer().getUniqueId(), PunishmentDatabase.PunishmentType.MUTE);
         if (mute == null) return;
         event.setCancelled(true);
-        send(event.getPlayer(), "muted-chat", "%reason%", mute.reason());
+        plugin.getServer().getScheduler().runTask(plugin, () ->
+                showMuteScreen(event.getPlayer(), mute.staffName(), mute.reason(), mute.expiresAt()));
     }
 
     private void broadcastPunishment(String action, OfflinePlayer target, String staff, String reason) {

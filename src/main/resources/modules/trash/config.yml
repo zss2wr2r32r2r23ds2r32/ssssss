@@ -1,6 +1,6 @@
 # Trash module - /trash opens a disposal menu. Items inside are deleted on close.
 config-version: 3
-message-mode: inherit
+message-mode: chat
 title: Trash
 rows: 4
 play-sound: true

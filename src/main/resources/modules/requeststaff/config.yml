@@ -1,6 +1,6 @@
 config-version: 2
 
-message-mode: inherit
+message-mode: chat
 cooldown-seconds: 30
 staff-permission: sharded.staff
 respond-permission: sharded.staff.requeststaff

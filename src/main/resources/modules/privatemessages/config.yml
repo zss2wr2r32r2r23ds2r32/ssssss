@@ -1,4 +1,4 @@
 # Private messages module - /msg, /reply, /msgtoggle
 config-version: 3
-message-mode: inherit
+message-mode: chat
 play-sound: true

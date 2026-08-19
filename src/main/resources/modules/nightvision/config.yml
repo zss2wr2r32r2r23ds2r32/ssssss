@@ -1,4 +1,4 @@
 # Night vision module - /nightvision (alias /nv)
 config-version: 3
-message-mode: inherit
+message-mode: chat
 show-icon: false

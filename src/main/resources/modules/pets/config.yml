@@ -1,6 +1,6 @@
 # Pets module — /pets, /pet equip <type>
 config-version: 5
-message-mode: inherit
+message-mode: chat
 
 # Permissions (grant per pet):
 #   sharded.pets.use       — open menu / use commands

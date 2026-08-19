@@ -1,7 +1,7 @@
 config-version: 2
 
 # chat | actionbar | both | inherit — controls sender feedback (sent, usage, etc.)
-message-mode: inherit
+message-mode: chat
 
 # title | chat | both — how announcements are shown to all players
 display-mode: title

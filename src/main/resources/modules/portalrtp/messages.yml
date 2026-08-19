@@ -1,8 +1,5 @@
-config-version: 3
+config-version: 4
 prefix: '%prefix%'
-
-message-modes:
-  countdown: actionbar
 
 players-only: '%prefix%&#FF2727Only players can use this command.'
 no-permission: '%prefix%&#FF2727You don''t have permission.'
@@ -12,6 +9,7 @@ no-safe-location: '%prefix%&#FF2727Couldn''t find a safe location.'
 on-cooldown: '%prefix%&#FF2727Wait &f%time% &#FF2727before teleporting again.'
 countdown: '%prefix%&7Teleporting in &f%seconds%&7... &#FF2727Don''t move!'
 countdown-cancelled: '%prefix%&#FF2727Teleport cancelled — you moved!'
+teleport-failed: '%prefix%&#FF2727Teleport failed — try again.'
 teleported: '%prefix%&#9FFF00Teleported to &f%x%, %y%, %z% &#9FFF00in &f%world%&#9FFF00!'
 wand-given: '%prefix%&#9FFF00Portal wand given. Right-click any block to register
   an RTP trigger.'

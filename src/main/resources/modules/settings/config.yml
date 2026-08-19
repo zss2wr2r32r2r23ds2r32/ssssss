@@ -1,5 +1,5 @@
 config-version: 5
-message-mode: inherit
+message-mode: chat
 
 prefix: '&#00A2FF&lCORE &8▷ &r'
 

@@ -1,5 +1,5 @@
 config-version: 1
-message-mode: inherit
+message-mode: chat
 
 permission: sharded.staffchat.use
 format: '&#AD4EFF&lSTAFF &8▷ &f%player%&7: &f%message%'

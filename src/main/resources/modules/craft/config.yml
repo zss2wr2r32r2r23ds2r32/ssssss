@@ -1,4 +1,4 @@
 # Craft module - /craft opens a portable crafting table.
 config-version: 3
-message-mode: inherit
+message-mode: chat
 play-sound: true

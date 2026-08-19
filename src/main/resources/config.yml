@@ -5,9 +5,8 @@
 config-version: 8
 
 prefix: '&#00A2FF&lCORE &8▷ &r'
-# Override per module in modules/<name>/config.yml (message-mode: actionbar)
-# Override per message in modules/<name>/messages.yml (message-modes.<key>: actionbar)
-message-mode: actionbar
+# chat | actionbar | both — global default for all modules
+message-mode: chat
 
 modules:
   craft: true

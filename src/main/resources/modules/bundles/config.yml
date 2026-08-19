@@ -2,6 +2,6 @@
 # Does not affect items players craft or hold normally.
 
 config-version: 3
-message-mode: inherit
+message-mode: chat
 strip-bundles: true
 strip-trim-templates: true
