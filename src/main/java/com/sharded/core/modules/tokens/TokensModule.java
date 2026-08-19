@@ -2,10 +2,8 @@ package com.sharded.core.modules.tokens;
 
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
-import com.sharded.core.util.ColorUtil;
 import com.sharded.core.util.Numbers;
 import com.sharded.core.util.OfflinePlayers;
-import com.sharded.core.util.Prefix;
 import com.sharded.core.util.TabCompleteHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -37,7 +35,7 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
     }
 
     public String tokenPrefix() {
-        return ColorUtil.normalize(config.getString("prefix", Prefix.get()));
+        return messagePrefix();
     }
 
     @Override

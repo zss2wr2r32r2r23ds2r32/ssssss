@@ -1,18 +1,18 @@
-prefix: "%prefix%"
-players-only: "%prefix%&cOnly players can use this command."
-no-permission: "%prefix%&cYou don't have permission."
-usage: "%prefix%&cUsage: /pet <equip|remove|rename> [args]"
-equip-usage: "%prefix%&cUsage: /pet equip <parrot|axolotl|bee|warden|enderdragon>"
-rename-usage: "%prefix%&cUsage: /pet rename <name>"
-unknown-pet: "%prefix%&cUnknown pet. Use parrot, axolotl, bee, warden, or enderdragon."
-no-pet-permission: "%prefix%&cYou don't have permission for the &f%pet% &cpet."
-no-pet: "%prefix%&cYou don't have a pet equipped."
-equipped: "%prefix%&aEquipped &f%pet% &apet."
-removed: "%prefix%&aPet removed."
-renamed: "%prefix%&aPet renamed to &f%name%&a."
-blacklisted: "%prefix%&cThat name contains a blocked word."
-default-name-parrot: "&bParrot"
-default-name-axolotl: "&dAxolotl"
-default-name-bee: "&eBee"
-default-name-warden: "&3Warden"
-default-name-enderdragon: "&5Dragon"
+prefix: '%prefix%'
+players-only: '%prefix%&c#FF2727Only players can use this command.'
+no-permission: '%prefix%&c#FF2727You don''t have permission.'
+usage: '%prefix%&c#FF2727Usage: /pet <equip|remove|rename> [args]'
+equip-usage: '%prefix%&c#FF2727Usage: /pet equip <parrot|axolotl|bee|warden|enderdragon>'
+rename-usage: '%prefix%&c#FF2727Usage: /pet rename <name>'
+unknown-pet: '%prefix%&c#FF2727Unknown pet. Use parrot, axolotl, bee, warden, or enderdragon.'
+no-pet-permission: '%prefix%&c#FF2727You don''t have permission for the &f%pet% &c#FF2727pet.'
+no-pet: '%prefix%&c#FF2727You don''t have a pet equipped.'
+equipped: '%prefix%&a#9FFF00Equipped &f%pet% &a#9FFF00pet.'
+removed: '%prefix%&a#9FFF00Pet removed.'
+renamed: '%prefix%&a#9FFF00Pet renamed to &f%name%&a#9FFF00.'
+blacklisted: '%prefix%&c#FF2727That name contains a blocked word.'
+default-name-parrot: '&bParrot'
+default-name-axolotl: '&dAxolotl'
+default-name-bee: '&eBee'
+default-name-warden: '&3Warden'
+default-name-enderdragon: '&5Dragon'

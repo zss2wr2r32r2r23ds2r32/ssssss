@@ -1,2 +1,2 @@
-prefix: "&8[&bSharded&8] &r"
-picked-up: "%prefix%&aYou picked up a &f%mob%&a."
+prefix: '&8[&bSharded&8] &r'
+picked-up: '%prefix%&a#9FFF00You picked up a &f%mob%&a#9FFF00.'

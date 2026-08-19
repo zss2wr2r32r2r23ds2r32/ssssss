@@ -1,7 +1,0 @@
-effects:
-  ez:
-    permission: sharded.killeffect.ez
-    particle: DRAGON_BREATH
-    count: 45
-    spread: 0.45
-    speed: 0.02

@@ -2,6 +2,7 @@ package com.sharded.core.modules.graves;
 
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
+import com.sharded.core.util.LastDamagerTracker;
 import com.sharded.core.util.ItemSerializer;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
@@ -119,9 +120,12 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
         if (event.getKeepInventory()) return;
 
         // Graves only when a player WITH permission kills another player (PvP).
-        Player killer = victim.getKiller();
-        if (killer == null || killer.equals(victim)) return;
-        if (!killer.hasPermission("sharded.graves.use")) return;
+        LastDamagerTracker tracker = LastDamagerTracker.get();
+        if (tracker == null) return;
+        UUID killerId = tracker.killerIdOf(victim);
+        if (killerId == null || killerId.equals(victim.getUniqueId())) return;
+        if (!tracker.killerHadGravePermission(victim)) return;
+        Player killer = tracker.killerOf(victim);
 
         List<String> worlds = config.getStringList("enabled-worlds");
         if (!worlds.isEmpty() && !worlds.contains(victim.getWorld().getName())) return;
@@ -156,24 +160,30 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
         spawnHolograms(grave);
         saveGraves();
 
-        send(killer, "grave-created-killer",
-                "%player%", victim.getName(),
-                "%x%", String.valueOf(location.getBlockX()),
-                "%y%", String.valueOf(location.getBlockY()),
-                "%z%", String.valueOf(location.getBlockZ()),
-                "%time%", Text.time(lifetime));
+        String killerName = killer != null
+                ? killer.getName()
+                : Bukkit.getOfflinePlayer(killerId).getName();
+        if (killerName == null) killerName = "Unknown";
+        if (killer != null) {
+            send(killer, "grave-created-killer",
+                    "%player%", victim.getName(),
+                    "%x%", String.valueOf(location.getBlockX()),
+                    "%y%", String.valueOf(location.getBlockY()),
+                    "%z%", String.valueOf(location.getBlockZ()),
+                    "%time%", Text.time(lifetime));
+        }
         send(victim, "grave-created-victim",
-                "%killer%", killer.getName(),
+                "%killer%", killerName,
                 "%time%", Text.time(lifetime));
     }
 
     private Location findGraveLocation(Location deathLocation) {
         World world = deathLocation.getWorld();
         if (world == null) return null;
-        int x = deathLocation.getBlockX();
-        int z = deathLocation.getBlockZ();
-        int y = Math.max(deathLocation.getBlockY(), world.getHighestBlockYAt(x, z));
-        Location grave = new Location(world, x + 0.5, y + 0.15, z + 0.5);
+        Location grave = deathLocation.clone();
+        grave.setX(Math.floor(grave.getX()) + 0.5);
+        grave.setZ(Math.floor(grave.getZ()) + 0.5);
+        grave.setY(deathLocation.getY() + 0.15);
         for (int attempt = 0; attempt < 5; attempt++) {
             if (!gravesByLocation.containsKey(locationKey(grave))) return grave;
             grave = grave.clone().add(0, 0.5, 0);

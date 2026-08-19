@@ -1,8 +1,8 @@
-prefix: "%prefix%"
-players-only: "%prefix%&cOnly players can use this command."
-no-permission: "%prefix%&cYou don't have permission."
-no-item: "%prefix%&cHold an item to rename it."
-blacklisted: "%prefix%&cThat name contains a blocked word."
-cleared: "%prefix%&aItem name cleared."
-renamed: "%prefix%&aRenamed item to &f%name%&a."
-failed: "%prefix%&cCould not rename that item."
+prefix: '%prefix%'
+players-only: '%prefix%&#FF2727Only players can use this command.'
+no-permission: '%prefix%&#FF2727You don''t have permission.'
+no-item: '%prefix%&#FF2727Hold an item to rename it.'
+blacklisted: '%prefix%&#FF2727That name contains a blocked word.'
+cleared: '%prefix%&#9FFF00Item name cleared.'
+renamed: '%prefix%&#9FFF00Renamed item to &#9FFF00%name%&#9FFF00.'
+failed: '%prefix%&#FF2727Could not rename that item.'

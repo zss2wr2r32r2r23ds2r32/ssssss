@@ -2,6 +2,8 @@ package com.sharded.core.module;
 
 import com.sharded.core.ShardedCore;
 import com.sharded.core.util.Text;
+import com.sharded.core.util.ColorUtil;
+import com.sharded.core.util.Prefix;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -137,14 +139,19 @@ public abstract class Module implements Listener {
 
     /* ------------------------------------------------------------ */
 
-    /** Raw message from messages.yml with global + module prefix and placeholders applied. */
+    /** Prefix for this module's messages — config {@code prefix} overrides messages.yml. */
+    protected String messagePrefix() {
+        if (config != null && config.isString("prefix")) {
+            return ColorUtil.normalize(config.getString("prefix"));
+        }
+        String modulePrefix = messages.getString("prefix", "%prefix%");
+        return modulePrefix.replace("%prefix%", Prefix.get());
+    }
+
+    /** Raw message from messages.yml with module prefix and placeholders applied. */
     public final String raw(String key, String... replacements) {
         String msg = messages.getString(key, "<missing message: " + id + "/" + key + ">");
-        String modulePrefix = messages.getString("prefix", "%prefix%");
-        msg = msg.replace("%prefix%", com.sharded.core.util.Prefix.get());
-        if (!modulePrefix.isEmpty() && !modulePrefix.equals("%prefix%")) {
-            msg = msg.replace("%module_prefix%", modulePrefix);
-        }
+        msg = msg.replace("%prefix%", messagePrefix());
         return Text.apply(msg, replacements);
     }
 

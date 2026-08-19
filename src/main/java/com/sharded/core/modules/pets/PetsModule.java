@@ -28,6 +28,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.entity.EntityMountEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.persistence.PersistentDataType;
@@ -51,11 +52,13 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         final PetType type;
         UUID entityId;
         String displayName;
+        String variant;
 
-        ActivePet(PetType type, UUID entityId, String displayName) {
+        ActivePet(PetType type, UUID entityId, String displayName, String variant) {
             this.type = type;
             this.entityId = entityId;
             this.displayName = displayName;
+            this.variant = variant;
         }
     }
 
@@ -82,7 +85,7 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         plugin.gui().loadMenu(guiFile, "pets");
 
         for (PetType type : PetType.values()) {
-            plugin.gui().registerAction("pet_equip_" + type.id(), p -> equip(p, type));
+            plugin.gui().registerAction("pet_equip_" + type.id(), p -> equip(p, type, null));
         }
 
         registerCommand("pets", this);
@@ -108,7 +111,7 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
             if (!event.getPlayer().isOnline() || database == null) return;
             PetDatabase.PetRecord record = database.get(event.getPlayer().getUniqueId());
             if (record != null && record.type() != null) {
-                spawnPet(event.getPlayer(), record.type(), record.name());
+                spawnPet(event.getPlayer(), record.type(), record.name(), record.variant());
             }
         }, 20L);
     }
@@ -116,6 +119,16 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         removePet(event.getPlayer().getUniqueId());
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onMount(EntityMountEvent event) {
+        if (isPet(event.getEntity()) && event.getMount() instanceof Player owner) {
+            UUID ownerId = petOwner(event.getEntity());
+            if (ownerId != null && ownerId.equals(owner.getUniqueId())) {
+                event.setCancelled(true);
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -191,7 +204,15 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
                     send(player, "unknown-pet");
                     yield true;
                 }
-                equip(player, type);
+                String variant = null;
+                if (type.supportsVariant() && args.length >= 3) {
+                    variant = args[2];
+                    if (!PetType.isValidAxolotlColor(variant)) {
+                        send(player, "unknown-color");
+                        yield true;
+                    }
+                }
+                equip(player, type, variant);
                 yield true;
             }
             case "remove" -> {
@@ -215,7 +236,7 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
                 }
                 pet.displayName = name;
                 applyName(player.getUniqueId(), pet);
-                if (database != null) database.save(player.getUniqueId(), pet.type, name);
+                if (database != null) database.save(player.getUniqueId(), pet.type, name, pet.variant);
                 send(player, "renamed", "%name%", name);
                 yield true;
             }
@@ -239,18 +260,24 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
             }
             return TabCompleteHelper.filter(args[1], types);
         }
+        if (args.length == 3 && args[0].equalsIgnoreCase("equip") && args[1].equalsIgnoreCase("axolotl")) {
+            return TabCompleteHelper.filter(args[2], PetType.axolotlColorNames());
+        }
         return List.of();
     }
 
-    private void equip(Player player, PetType type) {
+    private void equip(Player player, PetType type, String variant) {
         if (!player.hasPermission(type.permission())) {
             send(player, "no-pet-permission", "%pet%", type.id());
             return;
         }
         removePet(player.getUniqueId());
         String defaultName = raw("default-name-" + type.id());
-        spawnPet(player, type, defaultName);
-        if (database != null) database.save(player.getUniqueId(), type, defaultName);
+        String savedVariant = type.supportsVariant()
+                ? PetType.parseAxolotlVariant(variant).name().toLowerCase(Locale.ROOT)
+                : null;
+        spawnPet(player, type, defaultName, savedVariant);
+        if (database != null) database.save(player.getUniqueId(), type, defaultName, savedVariant);
         send(player, "equipped", "%pet%", type.id());
     }
 
@@ -264,10 +291,11 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         send(player, "removed");
     }
 
-    private void spawnPet(Player owner, PetType type, String displayName) {
+    private void spawnPet(Player owner, PetType type, String displayName, String variant) {
         removePet(owner.getUniqueId());
         Location spawn = owner.getLocation();
         Entity entity;
+        String axolotlVariant = variant;
 
         if (type.armorStand()) {
             entity = owner.getWorld().spawn(spawn, ArmorStand.class, stand -> {
@@ -277,14 +305,14 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
                 stand.setBasePlate(false);
                 stand.setArms(false);
                 stand.getEquipment().setHelmet(new ItemBuilder(type.helmet()).build());
-                configurePet(stand, owner.getUniqueId(), type);
+                configurePet(stand, owner.getUniqueId(), type, null);
             });
         } else {
             entity = owner.getWorld().spawn(
                     spawn,
                     type.entityType().getEntityClass(),
                     CreatureSpawnEvent.SpawnReason.CUSTOM,
-                    e -> configurePet(e, owner.getUniqueId(), type));
+                    e -> configurePet(e, owner.getUniqueId(), type, axolotlVariant));
         }
 
         if (!(entity instanceof LivingEntity)) {
@@ -293,19 +321,19 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
             return;
         }
 
-        active.put(owner.getUniqueId(), new ActivePet(type, entity.getUniqueId(), displayName));
+        active.put(owner.getUniqueId(), new ActivePet(type, entity.getUniqueId(), displayName, axolotlVariant));
         applyName(owner.getUniqueId(), active.get(owner.getUniqueId()));
         tickFollow(owner.getUniqueId());
     }
 
-    private void configurePet(Entity entity, UUID ownerId, PetType type) {
+    private void configurePet(Entity entity, UUID ownerId, PetType type, String axolotlVariant) {
         entity.setInvulnerable(true);
         entity.setSilent(true);
         entity.setPersistent(false);
         entity.getPersistentDataContainer().set(petOwnerKey, PersistentDataType.STRING, ownerId.toString());
 
-        boolean onGround = type.groundSnap();
-        entity.setGravity(onGround);
+        // Pets are cosmetic — never use gravity (warden was sinking underground).
+        entity.setGravity(false);
 
         if (entity instanceof LivingEntity living) {
             living.setCollidable(false);
@@ -330,6 +358,7 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         }
         if (entity instanceof Axolotl axolotl) {
             axolotl.setPlayingDead(false);
+            axolotl.setVariant(PetType.parseAxolotlVariant(axolotlVariant));
         }
     }
 
@@ -358,7 +387,7 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         if (owner == null || !owner.isOnline() || pet == null) return;
         Entity entity = Bukkit.getEntity(pet.entityId);
         if (entity == null || entity.isDead()) {
-            spawnPet(owner, pet.type, pet.displayName);
+            spawnPet(owner, pet.type, pet.displayName, pet.variant);
         }
     }
 
@@ -376,7 +405,7 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
 
         Entity entity = Bukkit.getEntity(pet.entityId);
         if (entity == null || entity.isDead()) {
-            spawnPet(owner, pet.type, pet.displayName);
+            spawnPet(owner, pet.type, pet.displayName, pet.variant);
             return;
         }
         if (!entity.getWorld().equals(owner.getWorld())) {
@@ -385,8 +414,9 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         }
 
         Location target;
-        if (pet.type.shoulder()) {
-            target = shoulderLocation(owner);
+        if (pet.type.flyOrbit()) {
+            clearParrotFromShoulder(owner, entity);
+            target = flyOrbitLocation(owner, ownerId);
         } else if (pet.type.groundSnap()) {
             target = groundFollowLocation(owner);
         } else {
@@ -395,15 +425,22 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         entity.teleport(target);
     }
 
-    private Location shoulderLocation(Player player) {
-        Location base = player.getLocation().clone();
-        double yaw = Math.toRadians(base.getYaw());
-        double side = -0.28;
-        double forward = 0.08;
-        return base.add(
-                -Math.sin(yaw) * side + Math.cos(yaw) * forward,
-                1.52,
-                Math.cos(yaw) * side + Math.sin(yaw) * forward);
+    private void clearParrotFromShoulder(Player owner, Entity petEntity) {
+        Entity left = owner.getShoulderEntityLeft();
+        Entity right = owner.getShoulderEntityRight();
+        if (left != null && left.getUniqueId().equals(petEntity.getUniqueId())) {
+            owner.releaseLeftShoulderEntity();
+        }
+        if (right != null && right.getUniqueId().equals(petEntity.getUniqueId())) {
+            owner.releaseRightShoulderEntity();
+        }
+    }
+
+    private Location flyOrbitLocation(Player player, UUID ownerId) {
+        long tick = System.currentTimeMillis() / 80L + ownerId.hashCode();
+        double angle = (tick % 360) * Math.PI / 180.0;
+        Location center = player.getLocation().clone().add(0, 1.9, 0);
+        return center.add(Math.cos(angle) * 1.4, Math.sin(angle * 2) * 0.25, Math.sin(angle) * 1.4);
     }
 
     private Location followLocation(Player player) {
@@ -414,9 +451,7 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
 
     private Location groundFollowLocation(Player player) {
         Location loc = followLocation(player);
-        World world = player.getWorld();
-        int groundY = world.getHighestBlockYAt(loc.getBlockX(), loc.getBlockZ());
-        loc.setY(groundY + 0.02);
+        loc.setY(player.getLocation().getY());
         return loc;
     }
 }

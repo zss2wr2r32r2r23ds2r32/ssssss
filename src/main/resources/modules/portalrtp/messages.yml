@@ -1,15 +1,16 @@
-prefix: "%prefix%"
-players-only: "%prefix%&cOnly players can use this command."
-no-permission: "%prefix%&cYou don't have permission."
-wrong-world: "%prefix%&cRTP only works in the &f%world% &cworld."
-world-not-found: "%prefix%&cWorld &f%world% &cis not loaded."
-no-safe-location: "%prefix%&cCouldn't find a safe location."
-on-cooldown: "%prefix%&cWait &f%time% &cbefore teleporting again."
-countdown: "%prefix%&7Teleporting in &f%seconds%&7... &cDon't move!"
-countdown-cancelled: "%prefix%&cTeleport cancelled — you moved!"
-teleported: "%prefix%&aTeleported to &f%x%, %y%, %z% &ain &f%world%&a!"
-wand-given: "%prefix%&aPortal wand given. Right-click any block to register an RTP trigger."
-wand-set: "%prefix%&aRTP trigger set on &f%block%&a! &7(&f%count% &7registered)"
-wand-removed: "%prefix%&cRTP trigger removed from &f%block%&c. &7(&f%count% &7remaining)"
-wand-name: "&5&lPortal Wand"
-wand-lore: "&7Right-click any block|&7to register an RTP trigger location"
+prefix: '%prefix%'
+players-only: '%prefix%&c#FF2727Only players can use this command.'
+no-permission: '%prefix%&c#FF2727You don''t have permission.'
+wrong-world: '%prefix%&c#FF2727RTP only works in the &f%world% &c#FF2727world.'
+world-not-found: '%prefix%&c#FF2727World &f%world% &c#FF2727is not loaded.'
+no-safe-location: '%prefix%&c#FF2727Couldn''t find a safe location.'
+on-cooldown: '%prefix%&c#FF2727Wait &f%time% &c#FF2727before teleporting again.'
+countdown: '%prefix%&7Teleporting in &f%seconds%&7... &c#FF2727Don''t move!'
+countdown-cancelled: '%prefix%&c#FF2727Teleport cancelled — you moved!'
+teleported: '%prefix%&a#9FFF00Teleported to &f%x%, %y%, %z% &a#9FFF00in &f%world%&a#9FFF00!'
+wand-given: '%prefix%&a#9FFF00Portal wand given. Right-click any block to register an RTP
+  trigger.'
+wand-set: '%prefix%&a#9FFF00RTP trigger set on &f%block%&a#9FFF00! &7(&f%count% &7registered)'
+wand-removed: '%prefix%&c#FF2727RTP trigger removed from &f%block%&c#FF2727. &7(&f%count% &7remaining)'
+wand-name: '&5&lPortal Wand'
+wand-lore: '&7Right-click any block|&7to register an RTP trigger location'

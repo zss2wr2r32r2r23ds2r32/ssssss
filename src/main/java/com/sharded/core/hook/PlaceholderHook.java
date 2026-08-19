@@ -25,18 +25,17 @@ import java.util.Locale;
  * <p>Topper example ({@code plugins/Topper/config.yml}):
  * <pre>
  * holders:
- *   killstreaks:
- *     type: placeholder
- *     placeholder: '%xkillstreak_best%'
- *     online: true
- *   tokens:
+ *   token:
  *     type: placeholder
  *     placeholder: '%shardedcore_tokens%'
  *     online: true
  *
- * Hologram lines (holder MUST match config name, use semicolons):
- *   %topper_tokens;top_name;1% &7- &b%topper_tokens;top_value;1%
- * Also works: %playerpoints_points% %shardedcore_tokens_formatted%
+ * Hologram lines (holder MUST match config name exactly — use semicolons):
+ *   %topper_token;top_name;1% &7| %topper_token;top_value;1%
+ *   %topper_token;top_rank% &7| %playerpoints_points_shorthand%
+ *
+ * Direct fallback (no Topper):
+ *   %shardedcore_token_top_1_name% %shardedcore_token_top_1_value%
  * </pre>
  */
 public final class PlaceholderHook implements Listener {
@@ -53,10 +52,11 @@ public final class PlaceholderHook implements Listener {
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") == null) return;
 
         new ShardedCoreExpansion().register();
+        new TokenExpansion().register();
         new XKillstreakExpansion().register();
         new PlayerPointsExpansion().register();
         registered = true;
-        plugin.getLogger().info("Registered PlaceholderAPI expansions (shardedcore, xkillstreak, playerpoints).");
+        plugin.getLogger().info("Registered PlaceholderAPI expansions (shardedcore, token, xkillstreak, playerpoints).");
     }
 
     @EventHandler
@@ -113,11 +113,57 @@ public final class PlaceholderHook implements Listener {
                 }
             }
 
-            if (p.startsWith("tokens_top_")) {
-                return leaderboardValue(p.substring("tokens_top_".length()), true);
+            if (p.startsWith("tokens_top_") || p.startsWith("token_top_")) {
+                String spec = p.startsWith("tokens_top_")
+                        ? p.substring("tokens_top_".length())
+                        : p.substring("token_top_".length());
+                return leaderboardValue(spec, true);
             }
             if (p.startsWith("killstreak_top_")) {
                 return leaderboardValue(p.substring("killstreak_top_".length()), false);
+            }
+            return null;
+        }
+    }
+
+    /** Alias expansion for Topper holder name {@code token}: {@code %token_top_1_name%}. */
+    private final class TokenExpansion extends PlaceholderExpansion {
+        @Override
+        public @NotNull String getIdentifier() {
+            return "token";
+        }
+
+        @Override
+        public @NotNull String getAuthor() {
+            return "Sharded";
+        }
+
+        @Override
+        public @NotNull String getVersion() {
+            return plugin.getDescription().getVersion();
+        }
+
+        @Override
+        public boolean persist() {
+            return true;
+        }
+
+        @Override
+        public @Nullable String onRequest(OfflinePlayer player, @NotNull String params) {
+            String p = params.toLowerCase(Locale.ROOT);
+            if (player != null) {
+                TokensModule tokens = plugin.modules().get(TokensModule.class);
+                if (tokens != null && tokens.service() != null) {
+                    if (p.equals("amount") || p.equals("balance") || p.equals("tokens")) {
+                        return String.valueOf(tokens.service().getBalance(player.getUniqueId()));
+                    }
+                    if (p.equals("formatted")) {
+                        return Numbers.format(tokens.service().getBalance(player.getUniqueId()));
+                    }
+                }
+            }
+            if (p.startsWith("top_")) {
+                return leaderboardValue(p.substring("top_".length()), true);
             }
             return null;
         }
@@ -188,8 +234,9 @@ public final class PlaceholderHook implements Listener {
             if (tokens == null || tokens.service() == null) return "0";
             long balance = tokens.service().getBalance(player.getUniqueId());
             return switch (params.toLowerCase(Locale.ROOT)) {
-                case "points", "points_formatted", "balance", "balance_formatted" ->
-                        params.contains("formatted") ? Numbers.format(balance) : String.valueOf(balance);
+                case "points", "balance" -> String.valueOf(balance);
+                case "points_formatted", "balance_formatted" -> Numbers.format(balance);
+                case "points_shorthand" -> Numbers.format(balance);
                 default -> null;
             };
         }

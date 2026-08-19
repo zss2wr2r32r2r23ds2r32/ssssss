@@ -1,15 +1,15 @@
-prefix: "&8[&bSharded&8] &r"
-players-only: "%prefix%&cOnly players can use this command."
-no-permission: "%prefix%&cYou don't have permission."
-balance: "%prefix%&7Balance: &f%amount% &7(&f%formatted%&7)"
-tokens-usage: "%prefix%&cUsage: /tokens <give|set|remove|reset|giveall> ..."
-give-usage: "%prefix%&cUsage: /tokens give <player> <amount>"
-set-usage: "%prefix%&cUsage: /tokens set <player> <amount>"
-remove-usage: "%prefix%&cUsage: /tokens remove <player> <amount>"
-reset-usage: "%prefix%&cUsage: /tokens reset <player>"
-giveall-usage: "%prefix%&cUsage: /tokens giveall <amount>"
-given: "%prefix%&aGave &f%amount% &atokens to &f%player%&a."
-set: "%prefix%&aSet &f%player%&a's balance to &f%amount%&a."
-removed: "%prefix%&aRemoved &f%amount% &afrom &f%player%&a."
-reset: "%prefix%&aReset &f%player%&a's token balance."
-giveall: "%prefix%&aGave &f%amount% &atokens to &f%count% &aonline players."
+prefix: '%prefix%'
+players-only: '%prefix%&#FF2727Only players can use this command.'
+no-permission: '%prefix%&#FF2727You don''t have permission.'
+balance: '%prefix%&7Balance: &#9FFF00%amount%'
+tokens-usage: '%prefix%&#FF2727Usage: /tokens <give|set|remove|reset|giveall> ...'
+give-usage: '%prefix%&#FF2727Usage: /tokens give <player> <amount>'
+set-usage: '%prefix%&#FF2727Usage: /tokens set <player> <amount>'
+remove-usage: '%prefix%&#FF2727Usage: /tokens remove <player> <amount>'
+reset-usage: '%prefix%&#FF2727Usage: /tokens reset <player>'
+giveall-usage: '%prefix%&#FF2727Usage: /tokens giveall <amount>'
+given: '%prefix%&7Gave &#9FFF00%amount% &7tokens to &#9FFF00%player%.'
+set: '%prefix%&7Set &#9FFF00%player%''s &7balance to &#9FFF00%amount%.'
+removed: '%prefix%&7Removed &#9FFF00%amount% &7from &#9FFF00%player%.'
+reset: '%prefix%&7Reset &#9FFF00%player%''s &7token balance.'
+giveall: '%prefix%&7Gave &#9FFF00%amount% &7tokens to &#9FFF00%count% &7online players.'

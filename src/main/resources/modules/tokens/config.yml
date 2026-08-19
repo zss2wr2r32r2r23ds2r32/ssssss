@@ -1,16 +1,17 @@
-prefix: "&x&5&C&9&4&F&C&l✦ &r"
+prefix: '&x&5&C&9&4&F&C&lTOKENS &8▷ &r'
 main-menu: mainmenu
 
 # ---- Topper leaderboard setup ----
 # plugins/Topper/config.yml:
 #   holders:
-#     tokens:
+#     token:
 #       type: placeholder
 #       placeholder: '%shardedcore_tokens%'
 #       online: true
 #
-# DecentHolograms lines (holder name = tokens, lowercase, semicolons):
-#   %topper_tokens;top_name;1% &7- &b%topper_tokens;top_value;1%
+# DecentHolograms lines (holder name MUST be "token", lowercase, semicolons):
+#   %topper_token;top_name;1% &7| &x&5&C&9&4&F&C%topper_token;top_value;1%
+#   %topper_token;top_rank% &7| %playerpoints_points_shorthand%
 #
-# Personal balance hologram:
-#   %playerpoints_points%  OR  %shardedcore_tokens%
+# Direct fallback (no Topper):
+#   %shardedcore_token_top_1_name% %shardedcore_token_top_1_value%

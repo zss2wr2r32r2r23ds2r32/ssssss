@@ -1,12 +1,12 @@
-prefix: "%prefix%"
-players-only: "%prefix%&cOnly players can use this command."
-no-permission: "%prefix%&cYou don't have permission."
-no-permission-actionbar: "%prefix%&cYou don't have permission for that setting."
-scoreboard-on: "%prefix%&aScoreboard enabled."
-scoreboard-off: "%prefix%&cScoreboard hidden."
-death-on: "%prefix%&aDeath messages visible."
-death-off: "%prefix%&cDeath messages hidden."
-join-on: "%prefix%&aJoin/leave messages visible."
-join-off: "%prefix%&cJoin/leave messages hidden."
-mobspawn-on: "%prefix%&aMob spawning enabled near you."
-mobspawn-off: "%prefix%&cMob spawning disabled near you."
+prefix: '%prefix%'
+players-only: '%prefix%&c#FF2727Only players can use this command.'
+no-permission: '%prefix%&c#FF2727You don''t have permission.'
+no-permission-actionbar: '%prefix%&c#FF2727You don''t have permission for that setting.'
+scoreboard-on: '%prefix%&a#9FFF00Scoreboard enabled.'
+scoreboard-off: '%prefix%&c#FF2727Scoreboard hidden.'
+death-on: '%prefix%&a#9FFF00Death messages visible.'
+death-off: '%prefix%&c#FF2727Death messages hidden.'
+join-on: '%prefix%&a#9FFF00Join/leave messages visible.'
+join-off: '%prefix%&c#FF2727Join/leave messages hidden.'
+mobspawn-on: '%prefix%&a#9FFF00Mob spawning enabled near you.'
+mobspawn-off: '%prefix%&c#FF2727Mob spawning disabled near you.'

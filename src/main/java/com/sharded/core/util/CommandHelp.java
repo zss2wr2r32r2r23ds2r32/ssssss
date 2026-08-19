@@ -32,7 +32,6 @@ public final class CommandHelp {
         list.add(new CommandInfo("/rtp", "Random teleport menu", "sharded.rtp.use"));
         list.add(new CommandInfo("/pets", "Open pets menu", "sharded.pets.use"));
         list.add(new CommandInfo("/pet equip|remove|rename", "Manage cosmetic pet", "sharded.pets.use"));
-        list.add(new CommandInfo("/killeffect equip|disable|toggle", "Kill particle effects", "sharded.killeffect.use"));
         list.add(new CommandInfo("/sb", "Toggle scoreboard", "sharded.settings.scoreboard"));
         list.add(new CommandInfo("/deathtoggle", "Toggle death messages", "sharded.settings.deathmessages"));
         list.add(new CommandInfo("/jointoggle", "Toggle join/leave messages", "sharded.settings.joinmessages"));

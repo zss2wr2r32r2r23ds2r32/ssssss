@@ -1,6 +1,6 @@
-prefix: "&8[&bSharded&8] &r"
-players-only: "%prefix%&cOnly players can use this command."
-no-permission: "%prefix%&cYou don't have permission to use /autosmelt."
-not-a-pickaxe: "%prefix%&cAuto Smelt can only be applied to &fpickaxes&c."
-already-enchanted: "%prefix%&cThat pickaxe already has &7Auto Smelt&c."
-applied: "%prefix%&aYour pickaxe now has &7Auto Smelt I&a! Mined ores will smelt automatically."
+prefix: '&8[&bSharded&8] &r'
+players-only: '%prefix%&c#FF2727Only players can use this command.'
+no-permission: '%prefix%&c#FF2727You don''t have permission to use /autosmelt.'
+not-a-pickaxe: '%prefix%&c#FF2727Auto Smelt can only be applied to &fpickaxes&c#FF2727.'
+already-enchanted: '%prefix%&c#FF2727That pickaxe already has &7Auto Smelt&c#FF2727.'
+applied: '%prefix%&a#9FFF00Your pickaxe now has &7Auto Smelt I&a#9FFF00! Mined ores will smelt automatically.'

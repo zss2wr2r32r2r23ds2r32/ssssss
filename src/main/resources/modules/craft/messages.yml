@@ -1,4 +1,4 @@
-prefix: "&8[&bSharded&8] &r"
-players-only: "%prefix%&cOnly players can use this command."
-no-permission: "%prefix%&cYou don't have permission to use /craft."
-opened: "%prefix%&7You opened a &fportable crafting table&7."
+prefix: '&8[&bSharded&8] &r'
+players-only: '%prefix%&c#FF2727Only players can use this command.'
+no-permission: '%prefix%&c#FF2727You don''t have permission to use /craft.'
+opened: '%prefix%&7You opened a &fportable crafting table&7.'

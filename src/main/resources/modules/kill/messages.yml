@@ -1,5 +1,5 @@
-prefix: "&8[&bSharded&8] &r"
-players-only: "%prefix%&cOnly players can use this command."
-no-permission: "%prefix%&cYou don't have permission to use /kill."
-player-not-found: "%prefix%&cPlayer &f%player% &cis not online."
-killed-other: "%prefix%&cKilled &f%player%&c."
+prefix: '&8[&bSharded&8] &r'
+players-only: '%prefix%&c#FF2727Only players can use this command.'
+no-permission: '%prefix%&c#FF2727You don''t have permission to use /kill.'
+player-not-found: '%prefix%&c#FF2727Player &f%player% &c#FF2727is not online.'
+killed-other: '%prefix%&c#FF2727Killed &f%player%&c#FF2727.'

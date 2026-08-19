@@ -1,14 +1,15 @@
-prefix: "&8[&bSharded&8] &r"
-no-permission: "%prefix%&cYou don't have permission to do that."
-grave-created-killer: "%prefix%&aYou created a grave for &f%player% &7at &f%x%, %y%, %z% &7(&f%time%&7)."
-grave-created-victim: "%prefix%&c&f%killer% &7sent your items to a grave (&f%time%&7)."
-grave-expired: "%prefix%&cYour grave has expired."
-grave-emptied: "%prefix%&aGrave of &f%player% &acollected."
-not-your-grave: "%prefix%&cThis grave belongs to &f%player%&c."
-xp-claimed: "%prefix%&aYou recovered &f%xp% XP &afrom the grave."
-purged: "%prefix%&cPurged &f%count% &cgraves."
-list-header: "%prefix%&7Active graves: &f%count%"
-list-entry: "&8- &f%player% &7at &f%x%, %y%, %z% &8(&7%time% left&8)"
-hologram-name: "&c☠ &f%player%"
-hologram-timer: "&7Despawns in: &f%time%"
-hologram-xp: "&a%xp% XP stored"
+prefix: '&8[&bSharded&8] &r'
+no-permission: '%prefix%&c#FF2727You don''t have permission to do that.'
+grave-created-killer: '%prefix%&a#9FFF00You created a grave for &f%player% &7at &f%x%, %y%,
+  %z% &7(&f%time%&7).'
+grave-created-victim: '%prefix%&c#FF2727&f%killer% &7sent your items to a grave (&f%time%&7).'
+grave-expired: '%prefix%&c#FF2727Your grave has expired.'
+grave-emptied: '%prefix%&a#9FFF00Grave of &f%player% &a#9FFF00collected.'
+not-your-grave: '%prefix%&c#FF2727This grave belongs to &f%player%&c#FF2727.'
+xp-claimed: '%prefix%&a#9FFF00You recovered &f%xp% XP &a#9FFF00from the grave.'
+purged: '%prefix%&c#FF2727Purged &f%count% &c#FF2727graves.'
+list-header: '%prefix%&7Active graves: &f%count%'
+list-entry: '&8- &f%player% &7at &f%x%, %y%, %z% &8(&7%time% left&8)'
+hologram-name: '&c#FF2727☠ &f%player%'
+hologram-timer: '&7Despawns in: &f%time%'
+hologram-xp: '&a#9FFF00%xp% XP stored'

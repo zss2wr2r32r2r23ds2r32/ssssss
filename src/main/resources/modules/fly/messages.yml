@@ -1,19 +1,20 @@
-prefix: "&8[&bSharded&8] &r"
-players-only: "%prefix%&cOnly players can use this command."
-no-permission: "%prefix%&cYou don't have permission to do that."
-player-not-found: "%prefix%&cPlayer &f%player% &cis not online."
-enabled: "%prefix%&aFlight enabled."
-disabled: "%prefix%&cFlight disabled."
-enabled-other: "%prefix%&aFlight enabled for &f%player%&a."
-disabled-other: "%prefix%&cFlight disabled for &f%player%&c."
-region-not-set: "%prefix%&cThe fly region has not been set yet. &7(/fly pos1, /fly pos2, /fly setregion)"
-wrong-world: "%prefix%&cYou can only fly in the &f%world% &cworld."
-not-in-region: "%prefix%&cYou are not inside the fly region."
-left-region: "%prefix%&cYou left the fly region - flight disabled."
-speed-usage: "%prefix%&cUsage: /fly speed <1-10> [player]"
-speed-set: "%prefix%&aFly speed set to &f%speed% &afor &f%player%&a."
-speed-set-by-other: "%prefix%&7Your fly speed was set to &f%speed%&7."
-pos-set: "%prefix%&aPosition &f%pos% &aset to your location."
-region-need-positions: "%prefix%&cSet both positions first: /fly pos1 and /fly pos2"
-region-wrong-world: "%prefix%&cBoth positions must be in the &f%world% &cworld."
-region-saved: "%prefix%&aFly region saved for world &f%world%&a."
+prefix: '&8[&bSharded&8] &r'
+players-only: '%prefix%&c#FF2727Only players can use this command.'
+no-permission: '%prefix%&c#FF2727You don''t have permission to do that.'
+player-not-found: '%prefix%&c#FF2727Player &f%player% &c#FF2727is not online.'
+enabled: '%prefix%&a#9FFF00Flight enabled.'
+disabled: '%prefix%&c#FF2727Flight disabled.'
+enabled-other: '%prefix%&a#9FFF00Flight enabled for &f%player%&a#9FFF00.'
+disabled-other: '%prefix%&c#FF2727Flight disabled for &f%player%&c#FF2727.'
+region-not-set: '%prefix%&c#FF2727The fly region has not been set yet. &7(/fly pos1, /fly
+  pos2, /fly setregion)'
+wrong-world: '%prefix%&c#FF2727You can only fly in the &f%world% &c#FF2727world.'
+not-in-region: '%prefix%&c#FF2727You are not inside the fly region.'
+left-region: '%prefix%&c#FF2727You left the fly region - flight disabled.'
+speed-usage: '%prefix%&c#FF2727Usage: /fly speed <1-10> [player]'
+speed-set: '%prefix%&a#9FFF00Fly speed set to &f%speed% &a#9FFF00for &f%player%&a#9FFF00.'
+speed-set-by-other: '%prefix%&7Your fly speed was set to &f%speed%&7.'
+pos-set: '%prefix%&a#9FFF00Position &f%pos% &a#9FFF00set to your location.'
+region-need-positions: '%prefix%&c#FF2727Set both positions first: /fly pos1 and /fly pos2'
+region-wrong-world: '%prefix%&c#FF2727Both positions must be in the &f%world% &c#FF2727world.'
+region-saved: '%prefix%&a#9FFF00Fly region saved for world &f%world%&a#9FFF00.'
