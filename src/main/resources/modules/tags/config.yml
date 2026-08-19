@@ -1,4 +1,4 @@
-config-version: 4
+config-version: 5
 
 menu-title: 'Tags'
 menu-size: 27
@@ -13,6 +13,7 @@ block-limited-tag-copy: true
 
 clear-equipped-commands:
   - '[console] eternaltags:tags clear %player_name%'
+  - '[console] eternaltags tags clear %player_name%'
   - '[console] lp user %player_name% meta clearsuffix'
 
 custom-tag-blacklist:

@@ -286,8 +286,12 @@ public final class TagsModule extends Module implements CommandExecutor {
             return;
         }
         clearEquippedTag(player);
-        runApplyCommand(player, tag, null);
-        send(player, "equipped", "%tag%", tag.displayName());
+        TagOption chosen = tag;
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+            if (!player.isOnline()) return;
+            runApplyCommand(player, chosen, null);
+            send(player, "equipped", "%tag%", chosen.displayName());
+        }, 2L);
     }
 
     private void runApplyCommand(Player player, TagOption tag, String customValue) {
@@ -363,15 +367,20 @@ public final class TagsModule extends Module implements CommandExecutor {
 
         clearEquippedTag(player);
 
-        String cmd = config.getString("custom-apply-command",
-                        "[console] lp user %player_name% meta setsuffix \"%custom%\"")
-                .replace("%player%", player.getName())
-                .replace("%player_name%", player.getName())
-                .replace("%custom%", input);
-        dispatchCommand(player, cmd);
+        String finalInput = input;
+        boolean chatCreation = fromChat;
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+            if (!player.isOnline()) return;
+            String cmd = config.getString("custom-apply-command",
+                            "[console] lp user %player_name% meta setsuffix \"%custom%\"")
+                    .replace("%player%", player.getName())
+                    .replace("%player_name%", player.getName())
+                    .replace("%custom%", finalInput);
+            dispatchCommand(player, cmd);
 
-        if (database != null) database.saveLastCustomTag(player.getUniqueId(), input, fromChat);
-        send(player, fromChat ? "custom-set" : "custom-reapplied", "%tag%", input);
+            if (database != null) database.saveLastCustomTag(player.getUniqueId(), finalInput, chatCreation);
+            send(player, chatCreation ? "custom-set" : "custom-reapplied", "%tag%", finalInput);
+        }, 2L);
     }
 
     private void clearEquippedTag(Player player) {
@@ -379,6 +388,9 @@ public final class TagsModule extends Module implements CommandExecutor {
             if (line == null || line.isBlank()) continue;
             String cmd = line.replace("%player%", player.getName()).replace("%player_name%", player.getName());
             dispatchCommand(player, cmd);
+        }
+        if (plugin.luckPerms().isAvailable()) {
+            plugin.luckPerms().runConsole("lp user " + player.getName() + " meta clearsuffix");
         }
     }
 

@@ -1,4 +1,6 @@
-config-version: 1
+config-version: 2
+
+audit-prefix: '&#AD4EFF&lAUDIT LOGS &8> &r'
 
 audit-enabled: true
 audit-log-to-file: true
@@ -7,7 +9,7 @@ audit-notify-staff: true
 audit-notify-permission: sharded.staff.notify
 audit-null-permission-commands: false
 
-# Commands always audited when run by staff (sharded.staff)
+# Base commands audited when run by staff (sharded.staff)
 audit-commands:
   - gamemode
   - gm
@@ -36,6 +38,43 @@ audit-commands:
   - fill
   - summon
   - shardedcore
+  - tokens
+  - keys
+
+# Full command lines audited (command + subcommand)
+audit-subcommands:
+  - tokens give
+  - tokens set
+  - tokens remove
+  - tokens take
+  - tokens reset
+  - tokens giveall
+  - keys give
+  - keys set
+  - keys take
+  - keys remove
+
+# LuckPerms / plugin permissions — audit when staff run commands requiring these
+audit-permissions:
+  - sharded.tokens.admin
+  - sharded.staff.gamemode
+  - sharded.graves.admin
+  - sharded.spawn.admin
+  - sharded.backpack.admin
+  - sharded.fly.admin
+  - sharded.admin
+  - sharded.kill.others
+  - sharded.msg.bypass
+
+# Maps command subcommands to permissions (used with audit-permissions)
+audit-command-permissions:
+  tokens:
+    give: sharded.tokens.admin
+    set: sharded.tokens.admin
+    remove: sharded.tokens.admin
+    take: sharded.tokens.admin
+    reset: sharded.tokens.admin
+    giveall: sharded.tokens.admin
 
 discord-webhook:
   enabled: false

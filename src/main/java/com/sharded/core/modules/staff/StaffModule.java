@@ -10,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -35,6 +36,8 @@ public final class StaffModule extends Module implements CommandExecutor {
 
     private File auditLogFile;
     private Set<String> auditCommands;
+    private Set<String> auditSubcommands;
+    private Set<String> auditPermissions;
 
     public StaffModule(ShardedCore plugin) {
         super(plugin, "staff");
@@ -43,19 +46,26 @@ public final class StaffModule extends Module implements CommandExecutor {
     @Override
     protected void onEnable() {
         auditLogFile = new File(moduleFolder(), config.getString("audit-log-file", "audit.log"));
-        reloadAuditCommands();
+        reloadAuditLists();
         registerCommand("gmc", this);
         registerCommand("gms", this);
         registerCommand("gmsp", this);
     }
 
-    private void reloadAuditCommands() {
-        auditCommands = new HashSet<>();
-        for (String entry : config.getStringList("audit-commands")) {
+    private void reloadAuditLists() {
+        auditCommands = loadLowerSet("audit-commands");
+        auditSubcommands = loadLowerSet("audit-subcommands");
+        auditPermissions = loadLowerSet("audit-permissions");
+    }
+
+    private Set<String> loadLowerSet(String path) {
+        Set<String> set = new HashSet<>();
+        for (String entry : config.getStringList(path)) {
             if (entry != null && !entry.isBlank()) {
-                auditCommands.add(entry.toLowerCase(Locale.ROOT));
+                set.add(entry.toLowerCase(Locale.ROOT));
             }
         }
+        return set;
     }
 
     @Override
@@ -77,7 +87,6 @@ public final class StaffModule extends Module implements CommandExecutor {
         if (mode == null) return true;
         player.setGameMode(mode);
         send(player, "gamemode-set", "%mode%", mode.name().toLowerCase(Locale.ROOT));
-        recordAudit(player, "/" + label);
         return true;
     }
 
@@ -90,37 +99,83 @@ public final class StaffModule extends Module implements CommandExecutor {
         String message = event.getMessage().trim();
         if (message.isEmpty() || message.charAt(0) != '/') return;
 
-        String[] parts = message.substring(1).split("\\s+");
+        String body = message.substring(1).trim();
+        String[] parts = body.split("\\s+");
         if (parts.length == 0) return;
-        String label = parts[0].toLowerCase(Locale.ROOT);
-        int colon = label.indexOf(':');
-        if (colon >= 0) label = label.substring(colon + 1);
 
-        if (!shouldAudit(label)) return;
+        String label = normalizeLabel(parts[0]);
+        String[] args = new String[parts.length - 1];
+        System.arraycopy(parts, 1, args, 0, args.length);
+
+        if (!shouldAudit(player, label, args, body)) return;
         recordAudit(player, message);
     }
 
-    private boolean shouldAudit(String label) {
+    private String normalizeLabel(String raw) {
+        String label = raw.toLowerCase(Locale.ROOT);
+        int colon = label.indexOf(':');
+        if (colon >= 0) label = label.substring(colon + 1);
+        return label;
+    }
+
+    private boolean shouldAudit(Player player, String label, String[] args, String body) {
+        String lowerBody = body.toLowerCase(Locale.ROOT);
+
+        for (String pattern : auditSubcommands) {
+            if (lowerBody.equals(pattern) || lowerBody.startsWith(pattern + " ")) return true;
+        }
+
         if (auditCommands.contains(label) || auditCommands.contains("*")) return true;
-        if (commandPermissionDefaultOp(label)) return true;
-        return false;
+
+        String mappedPerm = mappedPermission(label, args);
+        if (mappedPerm != null && player.hasPermission(mappedPerm) && isAuditedPermission(mappedPerm)) {
+            return true;
+        }
+
+        String commandPerm = commandPermission(label);
+        if (commandPerm != null && player.hasPermission(commandPerm) && isAuditedPermission(commandPerm)) {
+            return true;
+        }
+
+        return commandPermissionDefaultOp(label);
+    }
+
+    private String mappedPermission(String label, String[] args) {
+        ConfigurationSection section = config.getConfigurationSection("audit-command-permissions." + label);
+        if (section == null || args.length == 0) return null;
+        return section.getString(args[0].toLowerCase(Locale.ROOT));
+    }
+
+    private boolean isAuditedPermission(String permission) {
+        if (permission == null || permission.isBlank()) return false;
+        if (auditPermissions.contains("*") || auditPermissions.contains(permission.toLowerCase(Locale.ROOT))) {
+            return true;
+        }
+        Permission node = Bukkit.getPluginManager().getPermission(permission);
+        return node != null && node.getDefault() != PermissionDefault.TRUE;
+    }
+
+    private String commandPermission(String label) {
+        Command command = Bukkit.getCommandMap().getCommand(label);
+        if (command == null) return null;
+        String perm = command.getPermission();
+        if (perm != null && !perm.isBlank()) return perm;
+        PluginCommand pluginCommand = plugin.getCommand(label);
+        return pluginCommand == null ? null : pluginCommand.getPermission();
     }
 
     private boolean commandPermissionDefaultOp(String label) {
-        Command command = Bukkit.getCommandMap().getCommand(label);
-        if (command == null) return false;
-        String perm = command.getPermission();
+        String perm = commandPermission(label);
         if (perm == null || perm.isBlank()) {
             return config.getBoolean("audit-null-permission-commands", false);
         }
         Permission permission = Bukkit.getPluginManager().getPermission(perm);
-        if (permission == null) {
-            PluginCommand pluginCommand = plugin.getCommand(label);
-            if (pluginCommand != null && pluginCommand.getPermission() != null) {
-                permission = Bukkit.getPluginManager().getPermission(pluginCommand.getPermission());
-            }
-        }
         return permission != null && permission.getDefault() == PermissionDefault.OP;
+    }
+
+    private String auditPrefix() {
+        return com.sharded.core.util.ColorUtil.normalize(
+                config.getString("audit-prefix", "&#AD4EFF&lAUDIT LOGS &8> &r"));
     }
 
     private void recordAudit(Player player, String commandLine) {
@@ -148,11 +203,15 @@ public final class StaffModule extends Module implements CommandExecutor {
     private void notifyStaff(Player actor, String commandLine) {
         if (!config.getBoolean("audit-notify-staff", true)) return;
         String notifyPerm = config.getString("audit-notify-permission", "sharded.staff.notify");
-        String formatted = raw("audit-staff", "%player%", actor.getName(), "%command%", commandLine);
+        String body = Text.apply(
+                messages.getString("audit-staff", "&f%player% &7used &f%command%"),
+                "%player%", actor.getName(),
+                "%command%", commandLine);
+        var formatted = Text.c(auditPrefix() + body);
         for (Player online : Bukkit.getOnlinePlayers()) {
             if (online.equals(actor)) continue;
             if (online.hasPermission(notifyPerm)) {
-                online.sendMessage(Text.c(formatted));
+                online.sendMessage(formatted);
             }
         }
     }
