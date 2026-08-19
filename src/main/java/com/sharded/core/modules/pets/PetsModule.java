@@ -3,14 +3,19 @@ package com.sharded.core.modules.pets;
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.util.ColorUtil;
+import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
 import com.sharded.core.util.WordBlacklist;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.EnderDragon;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Axolotl;
+import org.bukkit.entity.Bee;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
@@ -18,6 +23,7 @@ import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -35,7 +41,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -54,7 +59,7 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         }
     }
 
-    private final Map<UUID, ActivePet> active = new ConcurrentHashMap<>();
+    private final java.util.Map<UUID, ActivePet> active = new ConcurrentHashMap<>();
     private PetDatabase database;
     private NamespacedKey petOwnerKey;
     private BukkitTask followTask;
@@ -76,21 +81,21 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         if (!guiFile.exists()) plugin.saveResource("modules/pets/gui.yml", false);
         plugin.gui().loadMenu(guiFile, "pets");
 
-        plugin.gui().registerAction("pet_equip_parrot", p -> equip(p, PetType.PARROT));
-        plugin.gui().registerAction("pet_equip_warden", p -> equip(p, PetType.WARDEN));
-        plugin.gui().registerAction("pet_equip_enderdragon", p -> equip(p, PetType.ENDER_DRAGON));
+        for (PetType type : PetType.values()) {
+            plugin.gui().registerAction("pet_equip_" + type.id(), p -> equip(p, type));
+        }
 
         registerCommand("pets", this);
         registerCommand("pet", this);
 
-        followTask = plugin.getServer().getScheduler().runTaskTimer(plugin, (Runnable) this::tickFollow, 2L, 2L);
+        followTask = plugin.getServer().getScheduler().runTaskTimer(plugin, (Runnable) this::tickFollow, 1L, 1L);
     }
 
     @Override
     protected void onDisable() {
         if (followTask != null) followTask.cancel();
         for (UUID uuid : new ArrayList<>(active.keySet())) {
-            removePet(uuid, false);
+            removePet(uuid);
         }
         active.clear();
         if (database != null) database.close();
@@ -110,7 +115,7 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        removePet(event.getPlayer().getUniqueId(), false);
+        removePet(event.getPlayer().getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -136,7 +141,7 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         event.setDroppedExp(0);
         UUID ownerId = petOwner(event.getEntity());
         if (ownerId != null) {
-            plugin.getServer().getScheduler().runTask(plugin, () -> tickFollow(ownerId));
+            plugin.getServer().getScheduler().runTask(plugin, () -> respawnIfNeeded(ownerId));
         }
     }
 
@@ -242,7 +247,7 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
             send(player, "no-pet-permission", "%pet%", type.id());
             return;
         }
-        removePet(player.getUniqueId(), false);
+        removePet(player.getUniqueId());
         String defaultName = raw("default-name-" + type.id());
         spawnPet(player, type, defaultName);
         if (database != null) database.save(player.getUniqueId(), type, defaultName);
@@ -254,19 +259,40 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
             send(player, "no-pet");
             return;
         }
-        removePet(player.getUniqueId(), true);
+        removePet(player.getUniqueId());
         if (database != null) database.clear(player.getUniqueId());
         send(player, "removed");
     }
 
     private void spawnPet(Player owner, PetType type, String displayName) {
+        removePet(owner.getUniqueId());
         Location spawn = owner.getLocation();
-        Entity entity = owner.getWorld().spawn(spawn, type.entityType().getEntityClass(),
-                e -> configurePet(e, owner.getUniqueId(), type));
-        if (!(entity instanceof LivingEntity living)) {
+        Entity entity;
+
+        if (type.armorStand()) {
+            entity = owner.getWorld().spawn(spawn, ArmorStand.class, stand -> {
+                stand.setInvisible(true);
+                stand.setMarker(true);
+                stand.setSmall(true);
+                stand.setBasePlate(false);
+                stand.setArms(false);
+                stand.getEquipment().setHelmet(new ItemBuilder(type.helmet()).build());
+                configurePet(stand, owner.getUniqueId(), type);
+            });
+        } else {
+            entity = owner.getWorld().spawn(
+                    spawn,
+                    type.entityType().getEntityClass(),
+                    CreatureSpawnEvent.SpawnReason.CUSTOM,
+                    e -> configurePet(e, owner.getUniqueId(), type));
+        }
+
+        if (!(entity instanceof LivingEntity)) {
             entity.remove();
+            plugin.getLogger().warning("Failed to spawn pet " + type.id() + " for " + owner.getName());
             return;
         }
+
         active.put(owner.getUniqueId(), new ActivePet(type, entity.getUniqueId(), displayName));
         applyName(owner.getUniqueId(), active.get(owner.getUniqueId()));
         tickFollow(owner.getUniqueId());
@@ -276,8 +302,10 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         entity.setInvulnerable(true);
         entity.setSilent(true);
         entity.setPersistent(false);
-        entity.setGravity(false);
         entity.getPersistentDataContainer().set(petOwnerKey, PersistentDataType.STRING, ownerId.toString());
+
+        boolean onGround = type.groundSnap();
+        entity.setGravity(onGround);
 
         if (entity instanceof LivingEntity living) {
             living.setCollidable(false);
@@ -295,8 +323,13 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
             parrot.setTamed(true);
             parrot.setAdult();
         }
-        if (entity instanceof EnderDragon dragon) {
-            dragon.setPhase(EnderDragon.Phase.HOVER);
+        if (entity instanceof Bee bee) {
+            bee.setAnger(0);
+            bee.setHasStung(false);
+            bee.setHasNectar(false);
+        }
+        if (entity instanceof Axolotl axolotl) {
+            axolotl.setPlayingDead(false);
         }
     }
 
@@ -312,16 +345,26 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         living.setCustomNameVisible(true);
     }
 
-    private void removePet(UUID ownerId, boolean notify) {
+    private void removePet(UUID ownerId) {
         ActivePet pet = active.remove(ownerId);
         if (pet == null) return;
         Entity entity = Bukkit.getEntity(pet.entityId);
         if (entity != null) entity.remove();
     }
 
+    private void respawnIfNeeded(UUID ownerId) {
+        Player owner = Bukkit.getPlayer(ownerId);
+        ActivePet pet = active.get(ownerId);
+        if (owner == null || !owner.isOnline() || pet == null) return;
+        Entity entity = Bukkit.getEntity(pet.entityId);
+        if (entity == null || entity.isDead()) {
+            spawnPet(owner, pet.type, pet.displayName);
+        }
+    }
+
     private void tickFollow() {
         if (active.isEmpty()) return;
-        for (UUID ownerId : active.keySet()) {
+        for (UUID ownerId : new ArrayList<>(active.keySet())) {
             tickFollow(ownerId);
         }
     }
@@ -341,21 +384,39 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
             return;
         }
 
-        Location target = pet.type.shoulder()
-                ? shoulderLocation(owner)
-                : followLocation(owner);
+        Location target;
+        if (pet.type.shoulder()) {
+            target = shoulderLocation(owner);
+        } else if (pet.type.groundSnap()) {
+            target = groundFollowLocation(owner);
+        } else {
+            target = followLocation(owner);
+        }
         entity.teleport(target);
     }
 
     private Location shoulderLocation(Player player) {
-        Location loc = player.getLocation().clone();
-        double yaw = Math.toRadians(loc.getYaw());
-        return loc.add(-Math.sin(yaw) * 0.35, 1.45, Math.cos(yaw) * 0.35);
+        Location base = player.getLocation().clone();
+        double yaw = Math.toRadians(base.getYaw());
+        double side = -0.28;
+        double forward = 0.08;
+        return base.add(
+                -Math.sin(yaw) * side + Math.cos(yaw) * forward,
+                1.52,
+                Math.cos(yaw) * side + Math.sin(yaw) * forward);
     }
 
     private Location followLocation(Player player) {
         Location loc = player.getLocation().clone();
         double yaw = Math.toRadians(loc.getYaw() + 180);
-        return loc.add(-Math.sin(yaw) * 1.2, 0.5, Math.cos(yaw) * 1.2);
+        return loc.add(-Math.sin(yaw) * 1.0, 0.55, Math.cos(yaw) * 1.0);
+    }
+
+    private Location groundFollowLocation(Player player) {
+        Location loc = followLocation(player);
+        World world = player.getWorld();
+        int groundY = world.getHighestBlockYAt(loc.getBlockX(), loc.getBlockZ());
+        loc.setY(groundY + 0.02);
+        return loc;
     }
 }

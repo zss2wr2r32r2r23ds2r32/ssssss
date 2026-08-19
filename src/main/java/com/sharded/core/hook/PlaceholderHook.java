@@ -33,6 +33,10 @@ import java.util.Locale;
  *     type: placeholder
  *     placeholder: '%shardedcore_tokens%'
  *     online: true
+ *
+ * Hologram lines (holder MUST match config name, use semicolons):
+ *   %topper_tokens;top_name;1% &7- &b%topper_tokens;top_value;1%
+ * Also works: %playerpoints_points% %shardedcore_tokens_formatted%
  * </pre>
  */
 public final class PlaceholderHook implements Listener {
@@ -50,8 +54,9 @@ public final class PlaceholderHook implements Listener {
 
         new ShardedCoreExpansion().register();
         new XKillstreakExpansion().register();
+        new PlayerPointsExpansion().register();
         registered = true;
-        plugin.getLogger().info("Registered PlaceholderAPI expansions (shardedcore, xkillstreak).");
+        plugin.getLogger().info("Registered PlaceholderAPI expansions (shardedcore, xkillstreak, playerpoints).");
     }
 
     @EventHandler
@@ -149,6 +154,42 @@ public final class PlaceholderHook implements Listener {
             return switch (params.toLowerCase(Locale.ROOT)) {
                 case "current", "streak" -> String.valueOf(ks.getCurrent(player.getUniqueId()));
                 case "best", "max" -> String.valueOf(ks.getBest(player.getUniqueId()));
+                default -> null;
+            };
+        }
+    }
+
+    /** PlayerPoints-compatible placeholders for holograms: {@code %playerpoints_points%}. */
+    private final class PlayerPointsExpansion extends PlaceholderExpansion {
+        @Override
+        public @NotNull String getIdentifier() {
+            return "playerpoints";
+        }
+
+        @Override
+        public @NotNull String getAuthor() {
+            return "Sharded";
+        }
+
+        @Override
+        public @NotNull String getVersion() {
+            return plugin.getDescription().getVersion();
+        }
+
+        @Override
+        public boolean persist() {
+            return true;
+        }
+
+        @Override
+        public @Nullable String onRequest(OfflinePlayer player, @NotNull String params) {
+            if (player == null) return "0";
+            TokensModule tokens = plugin.modules().get(TokensModule.class);
+            if (tokens == null || tokens.service() == null) return "0";
+            long balance = tokens.service().getBalance(player.getUniqueId());
+            return switch (params.toLowerCase(Locale.ROOT)) {
+                case "points", "points_formatted", "balance", "balance_formatted" ->
+                        params.contains("formatted") ? Numbers.format(balance) : String.valueOf(balance);
                 default -> null;
             };
         }

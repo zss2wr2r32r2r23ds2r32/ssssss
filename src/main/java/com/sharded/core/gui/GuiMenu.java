@@ -1,5 +1,6 @@
 package com.sharded.core.gui;
 
+import com.sharded.core.util.BundleUtil;
 import com.sharded.core.util.ColorUtil;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.ItemsAdderHook;
@@ -107,7 +108,9 @@ public final class GuiMenu {
         holder.inventory = inventory;
 
         for (GuiItem guiItem : itemsBySlot.values()) {
-            inventory.setItem(guiItem.slot(), applyItem(guiItem, player, extraPlaceholders, manager));
+            ItemStack placed = applyItem(guiItem, player, extraPlaceholders, manager);
+            BundleUtil.stripMenuTooltip(placed);
+            inventory.setItem(guiItem.slot(), placed);
         }
         player.openInventory(inventory);
         manager.runCommands(player, openCommands, extraPlaceholders);

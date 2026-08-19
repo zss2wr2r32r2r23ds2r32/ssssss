@@ -28,3 +28,4 @@ modules:
   pickupspawners: true
   tokens: true
   toolname: true
+  bundles: true

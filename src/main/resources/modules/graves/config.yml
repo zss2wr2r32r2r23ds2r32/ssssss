@@ -1,6 +1,7 @@
-# Permission sharded.graves.use — default FALSE (members do not get graves)
-# Grant to ranks via LuckPerms, e.g.:
-#   /lp group vip permission set sharded.graves.use true
+# Permission sharded.graves.use on the KILLER (not the victim).
+# When a player with this permission kills someone, the victim's items go into a grave for 5 minutes.
+# Normal deaths / kills without permission = items drop normally.
+# Grant to ranks: /lp group vip permission set sharded.graves.use true
 
 enabled-worlds: []
 expire-seconds: 300

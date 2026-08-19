@@ -115,35 +115,40 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onDeath(PlayerDeathEvent event) {
-        Player player = event.getPlayer();
+        Player victim = event.getPlayer();
         if (event.getKeepInventory()) return;
-        if (!player.hasPermission("sharded.graves.use")) return;
+
+        // Graves only when a player WITH permission kills another player (PvP).
+        Player killer = victim.getKiller();
+        if (killer == null || killer.equals(victim)) return;
+        if (!killer.hasPermission("sharded.graves.use")) return;
+
         List<String> worlds = config.getStringList("enabled-worlds");
-        if (!worlds.isEmpty() && !worlds.contains(player.getWorld().getName())) return;
+        if (!worlds.isEmpty() && !worlds.contains(victim.getWorld().getName())) return;
 
         List<ItemStack> items = new ArrayList<>();
         for (ItemStack drop : event.getDrops()) {
             if (drop != null && !drop.getType().isAir()) items.add(drop.clone());
         }
         if (items.isEmpty()) {
-            for (ItemStack stack : player.getInventory().getContents()) {
+            for (ItemStack stack : victim.getInventory().getContents()) {
                 if (stack != null && !stack.getType().isAir()) items.add(stack.clone());
             }
-            ItemStack off = player.getInventory().getItemInOffHand();
+            ItemStack off = victim.getInventory().getItemInOffHand();
             if (off != null && !off.getType().isAir()) items.add(off.clone());
         }
         int xp = config.getBoolean("store-xp", true) ? event.getDroppedExp() : 0;
         if (items.isEmpty() && xp <= 0) return;
 
-        Location location = findGraveLocation(player.getLocation());
+        Location location = findGraveLocation(victim.getLocation());
         if (location == null) return;
 
         event.getDrops().clear();
-        player.getInventory().clear();
+        victim.getInventory().clear();
         if (config.getBoolean("store-xp", true)) event.setDroppedExp(0);
 
         long lifetime = config.getLong("expire-seconds", 300L);
-        Grave grave = new Grave(UUID.randomUUID(), player.getUniqueId(), player.getName(), location,
+        Grave grave = new Grave(UUID.randomUUID(), victim.getUniqueId(), victim.getName(), location,
                 items, xp, xp <= 0, System.currentTimeMillis(), System.currentTimeMillis() + lifetime * 1000L);
         gravesByLocation.put(locationKey(location), grave);
         gravesById.put(grave.id, grave);
@@ -151,10 +156,14 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
         spawnHolograms(grave);
         saveGraves();
 
-        send(player, "grave-created",
+        send(killer, "grave-created-killer",
+                "%player%", victim.getName(),
                 "%x%", String.valueOf(location.getBlockX()),
                 "%y%", String.valueOf(location.getBlockY()),
                 "%z%", String.valueOf(location.getBlockZ()),
+                "%time%", Text.time(lifetime));
+        send(victim, "grave-created-victim",
+                "%killer%", killer.getName(),
                 "%time%", Text.time(lifetime));
     }
 

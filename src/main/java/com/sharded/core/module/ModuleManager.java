@@ -1,6 +1,7 @@
 package com.sharded.core.module;
 
 import com.sharded.core.ShardedCore;
+import com.sharded.core.modules.bundles.BundlesModule;
 import com.sharded.core.modules.armortrims.ArmorTrimsModule;
 import com.sharded.core.modules.autosmelt.AutoSmeltModule;
 import com.sharded.core.modules.backpack.BackpackModule;
@@ -61,6 +62,7 @@ public final class ModuleManager {
         register(new PickupSpawnersModule(plugin));
         register(new TokensModule(plugin));
         register(new ToolNameModule(plugin));
+        register(new BundlesModule(plugin));
     }
 
     private void register(Module module) {

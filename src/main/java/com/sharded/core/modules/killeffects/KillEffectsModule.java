@@ -13,14 +13,22 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /** Kill particle effects — /killeffect equip ez, disable, toggle visibility for others. */
 public final class KillEffectsModule extends Module implements CommandExecutor, TabCompleter {
+
+    private final Map<UUID, UUID> lastPlayerDamager = new ConcurrentHashMap<>();
 
     public KillEffectsModule(ShardedCore plugin) {
         super(plugin, "killeffects");
@@ -98,10 +106,19 @@ public final class KillEffectsModule extends Module implements CommandExecutor, 
         return List.of();
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onDamage(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof Player victim)) return;
+        Player attacker = resolveAttacker(event.getDamager());
+        if (attacker != null && !attacker.equals(victim)) {
+            lastPlayerDamager.put(victim.getUniqueId(), attacker.getUniqueId());
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onDeath(PlayerDeathEvent event) {
         Player victim = event.getEntity();
-        Player killer = victim.getKiller();
+        Player killer = resolveKiller(victim);
         if (killer == null || killer.equals(victim)) return;
 
         String effectId = PlayerToggles.killEffect(killer);
@@ -110,22 +127,42 @@ public final class KillEffectsModule extends Module implements CommandExecutor, 
         ConfigurationSection effect = config.getConfigurationSection("effects." + effectId);
         if (effect == null) return;
 
-        Location loc = victim.getLocation().clone().add(0, 1, 0);
-        Particle particle = Particle.valueOf(effect.getString("particle", "DRAGON_BREATH"));
-        int count = effect.getInt("count", 30);
-        double spread = effect.getDouble("spread", 0.4);
-        double speed = effect.getDouble("speed", 0.02);
+        Location loc = victim.getLocation().clone().add(0, 1.2, 0);
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> playEffect(killer, loc, effect), 1L);
+    }
 
+    private Player resolveKiller(Player victim) {
+        Player killer = victim.getKiller();
+        if (killer != null) {
+            lastPlayerDamager.remove(victim.getUniqueId());
+            return killer;
+        }
+        UUID damagerId = lastPlayerDamager.remove(victim.getUniqueId());
+        return damagerId == null ? null : Bukkit.getPlayer(damagerId);
+    }
+
+    private Player resolveAttacker(org.bukkit.entity.Entity damager) {
+        if (damager instanceof Player player) return player;
+        if (damager instanceof Projectile projectile && projectile.getShooter() instanceof Player shooter) {
+            return shooter;
+        }
+        return null;
+    }
+
+    private void playEffect(Player killer, Location loc, ConfigurationSection effect) {
+        if (loc.getWorld() == null) return;
+        Particle particle = Particle.valueOf(effect.getString("particle", "DRAGON_BREATH"));
+        int count = effect.getInt("count", 45);
+        double spread = effect.getDouble("spread", 0.45);
+        double speed = effect.getDouble("speed", 0.02);
         boolean killerShowsOthers = PlayerToggles.killEffectShowOthers(killer);
+
         for (Player viewer : Bukkit.getOnlinePlayers()) {
             if (!viewer.getWorld().equals(loc.getWorld())) continue;
             if (!PlayerToggles.seeKillEffects(viewer)) continue;
-            if (viewer.equals(killer)) {
+            if (viewer.equals(killer) || killerShowsOthers) {
                 viewer.spawnParticle(particle, loc, count, spread, spread, spread, speed);
-                continue;
             }
-            if (!killerShowsOthers) continue;
-            viewer.spawnParticle(particle, loc, count, spread, spread, spread, speed);
         }
     }
 }

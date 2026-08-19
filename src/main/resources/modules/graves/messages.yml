@@ -1,6 +1,7 @@
 prefix: "&8[&bSharded&8] &r"
 no-permission: "%prefix%&cYou don't have permission to do that."
-grave-created: "%prefix%&7Your items are stored in a grave at &f%x%, %y%, %z% &7for &f%time%&7."
+grave-created-killer: "%prefix%&aYou created a grave for &f%player% &7at &f%x%, %y%, %z% &7(&f%time%&7)."
+grave-created-victim: "%prefix%&c&f%killer% &7sent your items to a grave (&f%time%&7)."
 grave-expired: "%prefix%&cYour grave has expired."
 grave-emptied: "%prefix%&aGrave of &f%player% &acollected."
 not-your-grave: "%prefix%&cThis grave belongs to &f%player%&c."

@@ -223,6 +223,10 @@ permissions:
     default: true
   sharded.pets.parrot:
     default: true
+  sharded.pets.axolotl:
+    default: true
+  sharded.pets.bee:
+    default: true
   sharded.pets.warden:
     default: op
   sharded.pets.enderdragon:
