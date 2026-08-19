@@ -1,9 +1,10 @@
-prefix: '&8[&bSharded&8] &r'
+prefix: '&#00A2FF&lCORE &8▷ &r'
 players-only: '%prefix%&#FF2727Only players can use this command.'
 no-permission: '%prefix%&#FF2727You don''t have permission.'
 usage: '%prefix%&#FF2727Usage: /spawners pay [amount]'
-paid: '%prefix%&#9FFF00You paid &f%price% &#9FFF00tokens. Mine a spawner with silk touch to pick
-  it up!'
-not-enough: '%prefix%&#FF2727You need &f%price% &#FF2727tokens. Use &f/bal &#FF2727to check your balance.'
+paid: '%prefix%&#9FFF00You paid &f%price% &#9FFF00tokens. Mine a spawner with silk
+  touch to pick it up!'
+not-enough: '%prefix%&#FF2727You need &f%price% &#FF2727tokens. Use &f/bal &#FF2727to
+  check your balance.'
 picked-up: '%prefix%&#9FFF00Spawner picked up!'
 actionbar-hint: '%prefix%&#9FFF00You need to &f/spawners pay %price% &#9FFF00first!'

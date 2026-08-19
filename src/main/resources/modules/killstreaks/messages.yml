@@ -1,4 +1,4 @@
-prefix: '&8[&bSharded&8] &r'
+prefix: '%prefix%'
 milestone: '%prefix%&#9FFF00Killstreak: &f%streak%&#9FFF00!'
 streak-announce: '%prefix%&6%player% &eis on a &#FF2727&l%streak% &ekill streak!'
 no-permission: '%prefix%&#FF2727You don''t have permission.'

@@ -1,6 +1,7 @@
 prefix: '%prefix%'
 no-permission: '%prefix%&#FF2727You don''t have permission to do that.'
-grave-created: '%prefix%&7Your items are stored in a grave at &f%x%, %y%, %z% &7for &f%time%&7.'
+grave-created: '%prefix%&7Your items are stored in a grave at &f%x%, %y%, %z% &7for
+  &f%time%&7.'
 grave-expired: '%prefix%&#FF2727Your grave has expired.'
 grave-emptied: '%prefix%&#9FFF00Grave of &f%player% &#9FFF00collected.'
 xp-claimed: '%prefix%&#9FFF00You recovered &f%xp% XP &#9FFF00from the grave.'

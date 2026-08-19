@@ -1,4 +1,4 @@
-prefix: '&8[&bSharded&8] &r'
+prefix: '%prefix%'
 players-only: '%prefix%&#FF2727Only players can use this command.'
 no-permission: '%prefix%&#FF2727You don''t have permission to use /nightvision.'
 nv-enabled: '%prefix%&#9FFF00Night vision &#9FFF00enabled&7.'

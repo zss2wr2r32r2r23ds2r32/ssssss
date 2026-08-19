@@ -157,10 +157,17 @@ public final class BackpackModule extends Module implements CommandExecutor, Tab
         Inventory inventory = Bukkit.createInventory(holder, 9, Text.c(title));
         holder.inventory = inventory;
 
-        ItemStack filler = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+        Material fillerMat = Material.BLACK_STAINED_GLASS_PANE;
+        String fillerName = " ";
+        if (config.isConfigurationSection("filler")) {
+            fillerMat = Material.matchMaterial(config.getString("filler.material", "BLACK_STAINED_GLASS_PANE").toUpperCase(java.util.Locale.ROOT));
+            if (fillerMat == null) fillerMat = Material.BLACK_STAINED_GLASS_PANE;
+            fillerName = config.getString("filler.name", " ");
+        }
+        ItemStack filler = new ItemStack(fillerMat);
         var fillerMeta = filler.getItemMeta();
         if (fillerMeta != null) {
-            fillerMeta.displayName(Text.c(" "));
+            fillerMeta.displayName(Text.c(fillerName));
             filler.setItemMeta(fillerMeta);
         }
         for (int i = 0; i < 9; i++) inventory.setItem(i, filler);

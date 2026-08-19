@@ -1,44 +1,38 @@
-menu_title: '&a&lRANDOM TELEPORT'
-size: 54
+menu_title: 'RTP'
+size: 27
 open_permission: sharded.rtp.use
 
 open_commands:
   - '[sound] BLOCK_PORTAL_AMBIENT'
 
 items:
-  filler:
-    material: GRAY_STAINED_GLASS_PANE
-    slots: [0,1,2,3,4,5,6,7,8,9,17,18,26,27,35,36,44,45,46,47,48,49,50,51,52,53]
-    display_name: ' '
-
   info_side:
     material: BLACK_STAINED_GLASS_PANE
-    slots: [10,11,12,19,20,21,28,29,30,37,38,39,14,15,16,23,24,25,32,33,34,41,42,43]
+    slots: [0,1,2,3,4,5,6,7,8,9,10,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
     display_name: ' '
 
   overworld:
     material: GRASS_BLOCK
-    slot: 22
-    display_name: '&x&5&5&F&F&5&5&lOVERWORLD &8(/RTP)'
+    slot: 11
+    display_name: '&#9FFF00&lOVERWORLD'
     lore:
-      - '&8[&x&5&5&F&F&5&5RANDOM TELEPORT&8]'
+      - '&8Description'
       - ''
-      - '&x&5&5&F&F&5&5DESCRIPTION:'
-      - '&f| &7CLICK TO RANDOMLY TELEPORT'
-      - '&f| &7SOMEWHERE INSIDE THE &x&5&5&F&F&5&5&l&nOVERWORLD&r&7!'
+      - '&#9FFF00Information:'
+      - '&#9FFF00| &fClick me to randomly teleport'
+      - '&#9FFF00| &fSomewhere inside the &#9FFF00Overworld!'
       - ''
-      - '&x&0&0&B&7&F&F⚓ &fPLAYERS: &x&5&5&F&F&5&5%players_online%'
-      - '&x&F&F&0&0&0&0🚩 &fRADIUS: &x&F&F&9&1&0&0%radius%'
-      - '&x&0&0&B&7&F&F🌊 &fBORDER: &x&5&5&F&F&5&5%border%'
+      - '&#9FFF00⚓ &fPlayers: &#9FFF00%players_online%'
+      - '&#FF0067⛨ &fBorder: &#FF0067%border%'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0TO TELEPORT'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport'
     click_commands:
       - '[close]'
       - '[rtp_confirm]'
 
   cancel:
     material: BARRIER
-    slot: 40
+    slot: 26
     display_name: '&x&F&F&0&0&0&0&lCANCEL'
     click_commands:
       - '[close]'

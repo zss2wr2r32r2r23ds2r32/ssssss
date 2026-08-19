@@ -7,6 +7,7 @@ import com.sharded.core.util.ItemsAdderHook;
 import com.sharded.core.util.Text;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -46,6 +47,9 @@ public final class GuiMenu {
     private final String openPermission;
     private final List<String> openCommands;
     private final Map<Integer, GuiItem> itemsBySlot = new HashMap<>();
+    private final boolean autoFill;
+    private final Material fillerMaterial;
+    private final String fillerName;
 
     public GuiMenu(String id, YamlConfiguration yaml) {
         this.id = id;
@@ -53,6 +57,15 @@ public final class GuiMenu {
         this.size = Math.max(9, Math.min(54, yaml.getInt("size", 27)));
         this.openPermission = yaml.getString("open_permission", "");
         this.openCommands = yaml.getStringList("open_commands");
+        ConfigurationSection filler = yaml.getConfigurationSection("filler");
+        this.autoFill = filler == null ? true : filler.getBoolean("auto-fill", true);
+        Material mat = Material.BLACK_STAINED_GLASS_PANE;
+        if (filler != null) {
+            Material parsed = Material.matchMaterial(filler.getString("material", "BLACK_STAINED_GLASS_PANE").toUpperCase(java.util.Locale.ROOT));
+            if (parsed != null) mat = parsed;
+        }
+        this.fillerMaterial = mat;
+        this.fillerName = filler != null ? filler.getString("name", " ") : " ";
         loadItems(yaml.getConfigurationSection("items"));
     }
 
@@ -111,6 +124,15 @@ public final class GuiMenu {
             ItemStack placed = applyItem(guiItem, player, extraPlaceholders, manager);
             BundleUtil.stripMenuTooltip(placed);
             inventory.setItem(guiItem.slot(), placed);
+        }
+        if (autoFill) {
+            ItemStack filler = new ItemBuilder(fillerMaterial).name(fillerName).hideAll().build();
+            for (int slot = 0; slot < size; slot++) {
+                ItemStack existing = inventory.getItem(slot);
+                if (existing == null || existing.getType().isAir()) {
+                    inventory.setItem(slot, filler.clone());
+                }
+            }
         }
         player.openInventory(inventory);
         manager.runCommands(player, openCommands, extraPlaceholders);
