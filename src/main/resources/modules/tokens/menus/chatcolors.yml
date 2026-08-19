@@ -8,24 +8,24 @@ items:
   back_button:
     material: BARRIER
     slot: 26
-    display_name: '&#FF0000&lBACK'
+    display_name: '&x&F&F&0&0&0&0&lBACK'
     left_click_commands:
       - '[openguimenu] mainmenu'
 
   red_chat:
     material: RED_DYE
     slot: 10
-    display_name: '&#FF0000&lRED &#FF0000Chat Colour'
+    display_name: '&x&F&F&0&0&0&0&lRED &x&F&F&0&0&0&0Chat Colour'
     lore:
       - '&8Description'
       - ''
-      - '&#FF0000Information:'
-      - '&#FF0000| &fPurchase the &#FF0000Red Chat Colour'
-      - '&#FF0000| &fAnd customize your chat!'
+      - '&x&F&F&0&0&0&0Information:'
+      - '&x&F&F&0&0&0&0| &fPurchase the &x&F&F&0&0&0&0Red Chat Colour'
+      - '&x&F&F&0&0&0&0| &fAnd customize your chat!'
       - ''
-      - '&#FF0000⚓ &fCost: &#FF0000300 Tokens'
+      - '&x&F&F&0&0&0&0⚓ &fCost: &x&F&F&0&0&0&0300 Tokens'
       - ''
-      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
       - '[tokens_take] 300'
       - '[console] lp user %player_name% permission set chatcolor.red true'
@@ -35,17 +35,17 @@ items:
   orange_chat:
     material: ORANGE_DYE
     slot: 11
-    display_name: '&#FF9100&lORANGE &#FF9100Chat Colour'
+    display_name: '&x&F&F&9&1&0&0&lORANGE &x&F&F&9&1&0&0Chat Colour'
     lore:
       - '&8Description'
       - ''
-      - '&#FF9100Information:'
-      - '&#FF9100| &fPurchase the &#FF9100Orange Chat Colour'
-      - '&#FF9100| &fAnd customize your chat!'
+      - '&x&F&F&9&1&0&0Information:'
+      - '&x&F&F&9&1&0&0| &fPurchase the &x&F&F&9&1&0&0Orange Chat Colour'
+      - '&x&F&F&9&1&0&0| &fAnd customize your chat!'
       - ''
-      - '&#FF9100⚓ &fCost: &#FF9100300 Tokens'
+      - '&x&F&F&9&1&0&0⚓ &fCost: &x&F&F&9&1&0&0300 Tokens'
       - ''
-      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
       - '[tokens_take] 300'
       - '[console] lp user %player_name% permission set chatcolor.orange true'
@@ -55,17 +55,17 @@ items:
   yellow_chat:
     material: YELLOW_DYE
     slot: 12
-    display_name: '&#FCFF00&lYELLOW &#FCFF00Chat Colour'
+    display_name: '&x&F&C&F&F&0&0&lYELLOW &x&F&C&F&F&0&0Chat Colour'
     lore:
       - '&8Description'
       - ''
-      - '&#FCFF00Information:'
-      - '&#FCFF00| &fPurchase the &#FCFF00Yellow Chat Colour'
-      - '&#FCFF00| &fAnd customize your chat!'
+      - '&x&F&C&F&F&0&0Information:'
+      - '&x&F&C&F&F&0&0| &fPurchase the &x&F&C&F&F&0&0Yellow Chat Colour'
+      - '&x&F&C&F&F&0&0| &fAnd customize your chat!'
       - ''
-      - '&#FCFF00⚓ &fCost: &#FCFF00300 Tokens'
+      - '&x&F&C&F&F&0&0⚓ &fCost: &x&F&C&F&F&0&0300 Tokens'
       - ''
-      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
       - '[tokens_take] 300'
       - '[console] lp user %player_name% permission set chatcolor.yellow true'
@@ -75,17 +75,17 @@ items:
   lime_chat:
     material: LIME_DYE
     slot: 13
-    display_name: '&#94FF00&lLIME &#94FF00Chat Colour'
+    display_name: '&x&9&4&F&F&0&0&lLIME &x&9&4&F&F&0&0Chat Colour'
     lore:
       - '&8Description'
       - ''
-      - '&#94FF00Information:'
-      - '&#94FF00| &fPurchase the &#94FF00Lime Chat Colour'
-      - '&#94FF00| &fAnd customize your chat!'
+      - '&x&9&4&F&F&0&0Information:'
+      - '&x&9&4&F&F&0&0| &fPurchase the &x&9&4&F&F&0&0Lime Chat Colour'
+      - '&x&9&4&F&F&0&0| &fAnd customize your chat!'
       - ''
-      - '&#94FF00⚓ &fCost: &#94FF00300 Tokens'
+      - '&x&9&4&F&F&0&0⚓ &fCost: &x&9&4&F&F&0&0300 Tokens'
       - ''
-      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
       - '[tokens_take] 300'
       - '[console] lp user %player_name% permission set chatcolor.lime true'
@@ -95,17 +95,17 @@ items:
   aqua_chat:
     material: LIGHT_BLUE_DYE
     slot: 14
-    display_name: '&#00B7FF&lAQUA &#00B7FFAqua Colour'
+    display_name: '&x&0&0&B&7&F&F&lAQUA &x&0&0&B&7&F&FAqua Colour'
     lore:
       - '&8Description'
       - ''
-      - '&#00B7FFInformation:'
-      - '&#00B7FF| &fPurchase the &#00B7FFAqua Chat Colour'
-      - '&#00B7FF| &fAnd customize your chat!'
+      - '&x&0&0&B&7&F&FInformation:'
+      - '&x&0&0&B&7&F&F| &fPurchase the &x&0&0&B&7&F&FAqua Chat Colour'
+      - '&x&0&0&B&7&F&F| &fAnd customize your chat!'
       - ''
-      - '&#00B7FF⚓ &fCost: &#00B7FF300 Tokens'
+      - '&x&0&0&B&7&F&F⚓ &fCost: &x&0&0&B&7&F&F300 Tokens'
       - ''
-      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
       - '[tokens_take] 300'
       - '[console] lp user %player_name% permission set chatcolor.aqua true'
@@ -115,17 +115,17 @@ items:
   purple_chat:
     material: PURPLE_DYE
     slot: 15
-    display_name: '&#8A00FF&lPURPLE &#8A00FFChat Colour'
+    display_name: '&x&8&A&0&0&F&F&lPURPLE &x&8&A&0&0&F&FChat Colour'
     lore:
       - '&8Description'
       - ''
-      - '&#8A00FFInformation:'
-      - '&#8A00FF| &fPurchase the &#8A00FFPurple Chat Colour'
-      - '&#8A00FF| &fAnd customize your chat!'
+      - '&x&8&A&0&0&F&FInformation:'
+      - '&x&8&A&0&0&F&F| &fPurchase the &x&8&A&0&0&F&FPurple Chat Colour'
+      - '&x&8&A&0&0&F&F| &fAnd customize your chat!'
       - ''
-      - '&#8A00FF⚓ &fCost: &#8A00FF300 Tokens'
+      - '&x&8&A&0&0&F&F⚓ &fCost: &x&8&A&0&0&F&F300 Tokens'
       - ''
-      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
       - '[tokens_take] 300'
       - '[console] lp user %player_name% permission set chatcolor.purple true'
@@ -135,17 +135,17 @@ items:
   rainbow_chat:
     material: NETHER_STAR
     slot: 16
-    display_name: '&#FF0000&lR&#FF4800&lA&#FFF800&lI&#80FC37&lN&#00FF6E&lB&#00C1FF&lO&#3364E9&lW &#3364E9Chat'
+    display_name: '&x&F&F&0&0&0&0&lR&x&F&F&4&8&0&0&lA&x&F&F&F&8&0&0&lI&x&8&0&F&C&3&7&lN&x&0&0&F&F&6&E&lB&x&0&0&C&1&F&F&lO&x&3&3&6&4&E&9&lW &x&3&3&6&4&E&9Chat'
     lore:
       - '&8Description'
       - ''
-      - '&#3364E9Information:'
-      - '&#3364E9| &fPurchase the &#3364E9Rainbow Chat Colour'
-      - '&#3364E9| &fAnd customize your chat!'
+      - '&x&3&3&6&4&E&9Information:'
+      - '&x&3&3&6&4&E&9| &fPurchase the &x&3&3&6&4&E&9Rainbow Chat Colour'
+      - '&x&3&3&6&4&E&9| &fAnd customize your chat!'
       - ''
-      - '&#3364E9⚓ &fCost: &#3364E91500 Tokens'
+      - '&x&3&3&6&4&E&9⚓ &fCost: &x&3&3&6&4&E&91500 Tokens'
       - ''
-      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
       - '[tokens_take] 1500'
       - '[console] lp user %player_name% permission set chatcolor.rainbow true'

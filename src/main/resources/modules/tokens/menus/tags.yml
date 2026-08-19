@@ -8,120 +8,132 @@ items:
   back_button:
     material: BARRIER
     slot: 26
-    display_name: '&#FF0000&lBACK'
+    display_name: '&x&F&F&0&0&0&0&lBACK'
     click_commands:
       - '[openguimenu] mainmenu'
 
   vip_tag:
     material: PAPER
     slot: 10
-    display_name: '&8[&#FFCF00&lMVP&8] &#FFCF00Tag'
+    display_name: '&8[&x&F&F&C&F&0&0&lMVP&8] &x&F&F&C&F&0&0Tag'
     lore:
       - '&8Description'
       - ''
-      - '&#FFCF00Information:'
-      - '&#FFCF00| &fUnlock the &#FFCF00MVP Tag'
-      - '&#FFCF00| &fAnd Stand out on TAB!'
+      - '&x&F&F&C&F&0&0Information:'
+      - '&x&F&F&C&F&0&0| &fUnlock the &x&F&F&C&F&0&0MVP Tag'
+      - '&x&F&F&C&F&0&0| &fAnd Stand out on TAB!'
       - ''
-      - '&#FFCF00⚓ &fCost: &#FFCF00100 Tokens'
+      - '&x&F&F&C&F&0&0⚓ &fCost: &x&F&F&C&F&0&0100 Tokens'
       - ''
-      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     click_commands:
       - '[deny_if_permission] tag.mvp'
       - '[tokens_take] 100'
       - '[console] lp user %player_name% permission set tag.mvp true'
-      - '[message] %token_prefix%&x&9&S&F&F&0&0You unlocked the MVP Tag!'
+      - '[message] %token_prefix%&#9FFF00You unlocked the MVP Tag!'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   pro_tag:
     material: PAPER
     slot: 11
-    display_name: '&8[&#0083FF&lDIAMOND&8] &#0083FFTag'
+    display_name: '&8[&x&0&0&8&3&F&F&lDIAMOND&8] &x&0&0&8&3&F&FTag'
     lore:
       - '&8Description'
       - ''
-      - '&#0083FFInformation:'
-      - '&#0083FF| &fUnlock the &#0083FFDiamond Tag'
-      - '&#0083FF| &fAnd Stand out on TAB!'
+      - '&x&0&0&8&3&F&FInformation:'
+      - '&x&0&0&8&3&F&F| &fUnlock the &x&0&0&8&3&F&FDiamond Tag'
+      - '&x&0&0&8&3&F&F| &fAnd Stand out on TAB!'
       - ''
-      - '&#0083FF⚓ &fCost: &#0083FF600 Tokens'
+      - '&x&0&0&8&3&F&F⚓ &fCost: &x&0&0&8&3&F&F600 Tokens'
       - ''
-      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     click_commands:
       - '[deny_if_permission] tag.pro'
       - '[tokens_take] 600'
       - '[console] lp user %player_name% permission set tag.pro true'
-      - '[message] %token_prefix%&x&9&S&F&F&0&0You unlocked the Diamond Tag!'
+      - '[message] %token_prefix%&#9FFF00You unlocked the Diamond Tag!'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   elite_tag:
     material: PAPER
     slot: 12
-    display_name: '&8[&#FF0000&lELITE&8] &#FF0000Tag'
+    display_name: '&8[&x&F&F&0&0&0&0&lELITE&8] &x&F&F&0&0&0&0Tag'
     lore:
       - '&8Description'
       - ''
-      - '&#FF0000Information:'
-      - '&#FF0000| &fUnlock the &#FF0000Elite Tag'
-      - '&#FF0000| &fAnd Stand out on TAB!'
+      - '&x&F&F&0&0&0&0Information:'
+      - '&x&F&F&0&0&0&0| &fUnlock the &x&F&F&0&0&0&0Elite Tag'
+      - '&x&F&F&0&0&0&0| &fAnd Stand out on TAB!'
       - ''
-      - '&#FF0000⚓ &fCost: &#FF0000800 Tokens'
+      - '&x&F&F&0&0&0&0⚓ &fCost: &x&F&F&0&0&0&0800 Tokens'
       - ''
-      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     click_commands:
       - '[deny_if_permission] tag.elite'
       - '[tokens_take] 800'
       - '[console] lp user %player_name% permission set tag.elite true'
-      - '[message] %token_prefix%&x&9&S&F&F&0&0You unlocked the Elite Tag!'
+      - '[message] %token_prefix%&#9FFF00You unlocked the Elite Tag!'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   legend_tag:
     material: PAPER
     slot: 13
-    display_name: '&8[&#B3FF00&lSWEAT&8] &#B3FF00Tag'
+    display_name: '&8[&x&B&3&F&F&0&0&lSWEAT&8] &x&B&3&F&F&0&0Tag'
     lore:
       - '&8Description'
       - ''
-      - '&#B3FF00| &fCost: &#B3FF001000 Tokens'
+      - '&x&B&3&F&F&0&0Information:'
+      - '&x&B&3&F&F&0&0| &fUnlock the &x&B&3&F&F&0&0Sweat Tag'
+      - '&x&B&3&F&F&0&0| &fAnd Stand out on TAB!'
       - ''
-      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
+      - '&x&B&3&F&F&0&0⚓ &fCost: &x&B&3&F&F&0&01000 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     click_commands:
       - '[deny_if_permission] tag.legend'
       - '[tokens_take] 1000'
       - '[console] lp user %player_name% permission set tag.legend true'
-      - '[message] %token_prefix%&x&9&S&F&F&0&0You unlocked the Sweat Tag!'
+      - '[message] %token_prefix%&#9FFF00You unlocked the Sweat Tag!'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   mythic_tag:
     material: PAPER
     slot: 14
-    display_name: '&8[&#FF007C&lGOAT&8] &#FF007CTag'
+    display_name: '&8[&x&F&F&0&0&7&C&lGOAT&8] &x&F&F&0&0&7&CTag'
     lore:
       - '&8Description'
       - ''
-      - '&#FF007C| &fCost: &#FF007C1500 Tokens'
+      - '&x&F&F&0&0&7&CInformation:'
+      - '&x&F&F&0&0&7&C| &fUnlock the &x&F&F&0&0&7&CGoat Tag'
+      - '&x&F&F&0&0&7&C| &fAnd Stand out on TAB!'
       - ''
-      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
+      - '&x&F&F&0&0&7&C⚓ &fCost: &x&F&F&0&0&7&C1500 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     click_commands:
       - '[deny_if_permission] tag.mythic'
       - '[tokens_take] 1500'
       - '[console] lp user %player_name% permission set tag.mythic true'
-      - '[message] %token_prefix%&x&9&S&F&F&0&0You unlocked the Goat Tag!'
+      - '[message] %token_prefix%&#9FFF00You unlocked the Goat Tag!'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   custom_tag:
     material: WRITABLE_BOOK
     slot: 16
-    display_name: '&#FF0A00&lCUSTOM &#FF0A00Tag'
+    display_name: '&x&F&F&0&A&0&0&lCUSTOM &x&F&F&0&A&0&0Tag'
     lore:
       - '&8Description'
       - ''
-      - '&#FF0A00| &fCost: &#FF0A003000 Tokens'
+      - '&x&F&F&0&A&0&0Information:'
+      - '&x&F&F&0&A&0&0| &fUnlock the &x&F&F&0&A&0&0Custom Tag'
+      - '&x&F&F&0&A&0&0| &fAnd Stand out on TAB!'
       - ''
-      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
+      - '&x&F&F&0&A&0&0⚓ &fCost: &x&F&F&0&A&0&03000 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     click_commands:
       - '[deny_if_permission] tag.custom'
       - '[tokens_take] 3000'
       - '[console] lp user %player_name% permission set tag.custom true'
-      - '[message] %token_prefix%&x&9&S&F&F&0&0You unlocked a Custom Tag! Open a ticket to set it.'
+      - '[message] %token_prefix%&#9FFF00You unlocked a Custom Tag! Open a ticket to set it.'
       - '[sound] ENTITY_PLAYER_LEVELUP'

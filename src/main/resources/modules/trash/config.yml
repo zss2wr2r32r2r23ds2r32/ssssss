@@ -1,4 +1,4 @@
 # Trash module - /trash opens a disposal menu. Items inside are deleted on close.
-title: "&8Trash &7(closing deletes items)"
+title: Trash
 rows: 4
 play-sound: true

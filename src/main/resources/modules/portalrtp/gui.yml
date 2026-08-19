@@ -19,19 +19,19 @@ items:
   overworld:
     material: GRASS_BLOCK
     slot: 22
-    display_name: '&#55FF55&lOVERWORLD &8(/RTP)'
+    display_name: '&x&5&5&F&F&5&5&lOVERWORLD &8(/RTP)'
     lore:
-      - '&8[&#55FF55RANDOM TELEPORT&8]'
+      - '&8[&x&5&5&F&F&5&5RANDOM TELEPORT&8]'
       - ''
-      - '&#55FF55DESCRIPTION:'
+      - '&x&5&5&F&F&5&5DESCRIPTION:'
       - '&f| &7CLICK TO RANDOMLY TELEPORT'
-      - '&f| &7SOMEWHERE INSIDE THE &#55FF55&l&nOVERWORLD&r&7!'
+      - '&f| &7SOMEWHERE INSIDE THE &x&5&5&F&F&5&5&l&nOVERWORLD&r&7!'
       - ''
-      - '&#00B7FF⚓ &fPLAYERS: &#55FF55%players_online%'
-      - '&#FF0000🚩 &fRADIUS: &#FF9100%radius%'
-      - '&#00B7FF🌊 &fBORDER: &#55FF55%border%'
+      - '&x&0&0&B&7&F&F⚓ &fPLAYERS: &x&5&5&F&F&5&5%players_online%'
+      - '&x&F&F&0&0&0&0🚩 &fRADIUS: &x&F&F&9&1&0&0%radius%'
+      - '&x&0&0&B&7&F&F🌊 &fBORDER: &x&5&5&F&F&5&5%border%'
       - ''
-      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00TO TELEPORT'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0TO TELEPORT'
     click_commands:
       - '[close]'
       - '[rtp_confirm]'
@@ -39,6 +39,6 @@ items:
   cancel:
     material: BARRIER
     slot: 40
-    display_name: '&#FF0000&lCANCEL'
+    display_name: '&x&F&F&0&0&0&0&lCANCEL'
     click_commands:
       - '[close]'

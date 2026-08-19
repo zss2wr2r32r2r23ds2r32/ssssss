@@ -1,2 +1,2 @@
 prefix: '&8[&bSharded&8] &r'
-picked-up: '%prefix%&x&9&S&F&F&0&0You picked up a &f%mob%&x&9&S&F&F&0&0.'
+picked-up: '%prefix%&#9FFF00You picked up a &f%mob%&#9FFF00.'

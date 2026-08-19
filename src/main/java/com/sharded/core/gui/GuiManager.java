@@ -144,13 +144,13 @@ public final class GuiManager {
                 if (service == null) yield false;
                 long amount = parseLong(payload, 0);
                 if (amount > 0 && service.take(player.getUniqueId(), amount)) yield true;
-                message(player, tokenPrefix() + "&x&F&F&2&7&2&7You don't have enough tokens!", false);
+                message(player, tokenPrefix() + "&#FF2727You don't have enough tokens!", false);
                 yield false;
             }
             case "deny_if_permission" -> {
                 String perm = payload.startsWith("sharded.") ? payload : payload;
                 if (player.hasPermission(perm)) {
-                    message(player, tokenPrefix() + "&x&F&F&2&7&2&7You already own this!", false);
+                    message(player, tokenPrefix() + "&#FF2727You already own this!", false);
                     player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
                     yield false;
                 }

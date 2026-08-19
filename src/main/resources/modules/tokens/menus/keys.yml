@@ -8,24 +8,24 @@ items:
   back_button:
     material: BARRIER
     slot: 26
-    display_name: '&#FF0000&lCLOSE'
+    display_name: '&x&F&F&0&0&0&0&lCLOSE'
     left_click_commands:
       - '[openguimenu] mainmenu'
 
   common_key:
     material: RED_CANDLE
     slot: 13
-    display_name: '&#FF0000&lKILL &#FF0000Key'
+    display_name: '&x&F&F&0&0&0&0&lKILL &x&F&F&0&0&0&0Key'
     lore:
       - '&8Description'
       - ''
-      - '&#FF0000Information:'
-      - '&#FF0000| &fPurchase the &#FF0000Kill Key'
-      - '&#FF0000| &fAnd Unlock Unique Rewards!'
+      - '&x&F&F&0&0&0&0Information:'
+      - '&x&F&F&0&0&0&0| &fPurchase the &x&F&F&0&0&0&0Kill Key'
+      - '&x&F&F&0&0&0&0| &fAnd Unlock Unique Rewards!'
       - ''
-      - '&#FF0000⚓ &fCost: &#FF00001500 Tokens'
+      - '&x&F&F&0&0&0&0⚓ &fCost: &x&F&F&0&0&0&01500 Tokens'
       - ''
-      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
       - '[tokens_take] 250'
       - '[console] crates give %player_name% CommonKey 1'
@@ -43,17 +43,17 @@ items:
   rare_key:
     material: PURPLE_CANDLE
     slot: 11
-    display_name: '&#9400FF&lCOSMETIC &#9400FFKey'
+    display_name: '&x&9&4&0&0&F&F&lCOSMETIC &x&9&4&0&0&F&FKey'
     lore:
       - '&8Description'
       - ''
-      - '&#9400FFInformation:'
-      - '&#9400FF| &fPurchase the &#9400FFCosmetic Key'
-      - '&#9400FF| &fAnd Unlock Unique Rewards!'
+      - '&x&9&4&0&0&F&FInformation:'
+      - '&x&9&4&0&0&F&F| &fPurchase the &x&9&4&0&0&F&FCosmetic Key'
+      - '&x&9&4&0&0&F&F| &fAnd Unlock Unique Rewards!'
       - ''
-      - '&#9400FF⚓ &fCost: &#9400FF1000 Tokens'
+      - '&x&9&4&0&0&F&F⚓ &fCost: &x&9&4&0&0&F&F1000 Tokens'
       - ''
-      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
       - '[tokens_take] 750'
       - '[console] crates give %player_name% RareKey 1'
@@ -81,11 +81,11 @@ items:
       - ''
       - '&#0045FF⚓ &fCost: &#0045FF3000 Tokens'
       - ''
-      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
       - '[tokens_take] 2000'
       - '[console] crates give %player_name% LegendaryKey 1'
-      - '[message] &#FF0000COMING SOON!'
+      - '[message] &x&F&F&0&0&0&0COMING SOON!'
       - '[sound] ENTITY_PLAYER_LEVELUP'
     left_click_requirement:
       requirements:

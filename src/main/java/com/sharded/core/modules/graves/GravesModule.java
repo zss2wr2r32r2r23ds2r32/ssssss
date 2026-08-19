@@ -146,10 +146,11 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
     /** Default expire-seconds, extended by duration-permissions (highest wins). */
     private long graveLifetime(Player player) {
         long seconds = config.getLong("expire-seconds", 300L);
-        if (config.isConfigurationSection("duration-permissions")) {
-            for (String permission : config.getConfigurationSection("duration-permissions").getKeys(false)) {
+        ConfigurationSection durations = config.getConfigurationSection("duration-permissions");
+        if (durations != null) {
+            for (String permission : durations.getKeys(false)) {
                 if (player.hasPermission(permission)) {
-                    seconds = Math.max(seconds, config.getLong("duration-permissions." + permission, seconds));
+                    seconds = Math.max(seconds, durations.getLong(permission, seconds));
                 }
             }
         }

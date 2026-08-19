@@ -1,2 +1,9 @@
-prefix: '&#5C94FC&lTOKENS &8▷ &r'
+prefix: '&x&5&C&9&4&F&C&lTOKENS &8▷ &r'
 main-menu: mainmenu
+
+# Topper holder name must be "token":
+#   holders:
+#     token:
+#       type: placeholder
+#       placeholder: '%shardedcore_tokens%'
+#       online: true

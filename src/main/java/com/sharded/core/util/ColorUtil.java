@@ -3,24 +3,26 @@ package com.sharded.core.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/** Converts &amp;x&amp;R&amp;R&amp;G&amp;G&amp;B&amp;B and bare hex to legacy &amp;#RRGGBB for Adventure. */
+/** Converts &amp;x&amp;R&amp;R&amp;G&amp;G&amp;B&amp;B to &amp;#RRGGBB for Adventure legacy serializer. */
 public final class ColorUtil {
 
     private static final Pattern EXTENDED_HEX = Pattern.compile("(?i)&x((?:&[0-9a-fA-F]){6})");
-    private static final Pattern BARE_HEX = Pattern.compile("(?<![0-9a-fA-F#])#([0-9a-fA-F]{6})(?![0-9a-fA-F])");
-    private static final Pattern LEGACY_BROKEN = Pattern.compile("(?i)[&§][0-9a-fk-orx]#([0-9a-fA-F]{6})");
-    /** Truncated &amp;x&amp;5&amp;0 style fragments from broken YAML. */
-    private static final Pattern TRUNCATED_HEX = Pattern.compile("(?i)&x((?:&[0-9a-fA-F]){1,5})(?=&[^0-9a-fA-F]|$|\\s)");
+    /** &#RRGGBB (exactly 6 hex digits). */
+    private static final Pattern FULL_HEX = Pattern.compile("(?i)&#([0-9a-fA-F]{6})");
+    /** Mistaken &#f / &#7 — only 1 hex digit, should be legacy &f / &7. */
+    private static final Pattern SHORT_HEX = Pattern.compile("(?i)&#([0-9a-fA-F])(?![0-9a-fA-F])");
+    private static final Pattern DOUBLE_AMP = Pattern.compile("&&+");
 
     private ColorUtil() {
     }
 
     public static String normalize(String input) {
         if (input == null || input.isEmpty()) return "";
-        String normalized = input.replace('§', '&');
-        normalized = fixBrokenHex(normalized);
-        normalized = convertExtendedHex(normalized);
-        return normalized;
+        String s = input.replace('§', '&');
+        s = DOUBLE_AMP.matcher(s).replaceAll("&");
+        s = convertExtendedHex(s);
+        s = fixShortHex(s);
+        return s;
     }
 
     private static String convertExtendedHex(String input) {
@@ -44,24 +46,8 @@ public final class ColorUtil {
         return out.toString();
     }
 
-    private static String fixBrokenHex(String input) {
-        Matcher legacy = LEGACY_BROKEN.matcher(input);
-        StringBuilder fixed = new StringBuilder();
-        while (legacy.find()) {
-            legacy.appendReplacement(fixed, Matcher.quoteReplacement("&#" + legacy.group(1)));
-        }
-        legacy.appendTail(fixed);
-        input = fixed.toString();
-
-        Matcher bare = BARE_HEX.matcher(input);
-        StringBuilder out = new StringBuilder();
-        while (bare.find()) {
-            bare.appendReplacement(out, Matcher.quoteReplacement("&#" + bare.group(1)));
-        }
-        bare.appendTail(out);
-        input = out.toString();
-
-        // Drop orphaned truncated &x fragments that would show literally in chat.
-        return TRUNCATED_HEX.matcher(input).replaceAll("");
+    /** &#f → &f so placeholders like &f%player% are not eaten by the hex parser. */
+    private static String fixShortHex(String input) {
+        return SHORT_HEX.matcher(input).replaceAll("&$1");
     }
 }

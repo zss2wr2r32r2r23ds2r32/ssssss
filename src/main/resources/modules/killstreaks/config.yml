@@ -3,23 +3,23 @@ announce-all-streaks: false
 announce-actionbar: false
 
 rewards:
-  5:
-    broadcast: "&6%player% &eis on a &6&l5 &ekill streak!"
+  '5':
+    broadcast: '&6%player% &eis on a &6&l5 &ekill streak!'
     commands:
-      - "give %player% golden_apple 2"
-  10:
-    broadcast: "&6%player% &eis on a &c&l10 &ekill streak!"
+    - give %player% golden_apple 2
+  '10':
+    broadcast: '&6%player% &eis on a &c&l10 &ekill streak!'
     commands:
-      - "give %player% diamond 1"
-  15:
-    broadcast: "&6%player% &eis on a &4&l15 &ekill streak!"
+    - give %player% diamond 1
+  '15':
+    broadcast: '&6%player% &eis on a &4&l15 &ekill streak!'
     commands:
-      - "give %player% netherite_ingot 1"
-  20:
-    broadcast: "&6%player% &eis on a &4&l20 &ekill streak!"
+    - give %player% netherite_ingot 1
+  '20':
+    broadcast: '&6%player% &eis on a &4&l20 &ekill streak!'
     commands:
-      - "give %player% emerald_block 1"
-  25:
-    broadcast: "&6%player% &eis on a &4&l25 &ekill streak!"
+    - give %player% emerald_block 1
+  '25':
+    broadcast: '&6%player% &eis on a &4&l25 &ekill streak!'
     commands:
-      - "give %player% netherite_block 1"
+    - give %player% netherite_block 1

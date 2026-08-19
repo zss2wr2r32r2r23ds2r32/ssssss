@@ -1,14 +1,14 @@
 # Words blocked from /toolname (case-insensitive, partial match)
 blacklist:
-  - fuck
-  - shit
-  - bitch
-  - asshole
-  - nigger
-  - nigga
-  - faggot
-  - fag
-  - retard
-  - whore
-  - slut
-  - cunt
+- fuck
+- shit
+- bitch
+- asshole
+- nigger
+- nigga
+- faggot
+- fag
+- retard
+- whore
+- slut
+- cunt

@@ -7,18 +7,18 @@
 
 formats:
   default:
-    permission: ""            # empty = everyone
+    permission: '' # empty = everyone
     priority: 0
-    join: "&8[&a+&8] &7%rank%&f%player% &7joined the server."
-    first-join: "&8[&d★&8] &7Welcome &f%player% &7to the server!"
-    quit: "&8[&c-&8] &7%rank%&f%player% &7left the server."
+    join: '&8[&a+&8] &7%rank%&f%player% &7joined the server.'
+    first-join: '&8[&d★&8] &7Welcome &f%player% &7to the server!'
+    quit: '&8[&c-&8] &7%rank%&f%player% &7left the server.'
   vip:
-    permission: "sharded.joinmessages.vip"
+    permission: sharded.joinmessages.vip
     priority: 10
-    join: "&8[&a+&8] &6%rank%&e%player% &7joined the server!"
-    quit: "&8[&c-&8] &6%rank%&e%player% &7left the server."
+    join: '&8[&a+&8] &6%rank%&e%player% &7joined the server!'
+    quit: '&8[&c-&8] &6%rank%&e%player% &7left the server.'
   admin:
-    permission: "sharded.joinmessages.admin"
+    permission: sharded.joinmessages.admin
     priority: 100
-    join: "&8[&a+&8] &c%rank%&c%player% &7has arrived."
-    quit: "&8[&c-&8] &c%rank%&c%player% &7has left."
+    join: '&8[&a+&8] &c%rank%&c%player% &7has arrived.'
+    quit: '&8[&c-&8] &c%rank%&c%player% &7has left.'

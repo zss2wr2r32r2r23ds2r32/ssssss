@@ -1,8 +1,8 @@
 # Portal RTP
-portal-world: "factions"
-target-world: "world"
-radius-label: "50K x 50K"
-border-label: "100K x 100K"
+portal-world: factions
+target-world: world
+radius-label: 50K x 50K
+border-label: 100K x 100K
 gui-cooldown-ms: 2000
 countdown-seconds: 5
 countdown-actionbar: true

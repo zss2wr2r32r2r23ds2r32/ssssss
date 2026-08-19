@@ -3,7 +3,7 @@
 # Auto Smelt pickaxe drop their smelted form automatically.
 # Fortune still works because drop amounts are calculated before smelting.
 
-lore-line: "&7Auto Smelt I"
+lore-line: '&7Auto Smelt I'
 play-sound: false
 
 # Drop -> smelted result (item that WOULD drop -> item that drops instead).
@@ -11,9 +11,9 @@ smelt-map:
   raw_iron: iron_ingot
   raw_gold: gold_ingot
   raw_copper: copper_ingot
-  gold_nugget: gold_ingot        # nether gold ore
+  gold_nugget: gold_ingot # nether gold ore
   ancient_debris: netherite_scrap
-  iron_ore: iron_ingot           # silk touch mined ores also smelt
+  iron_ore: iron_ingot # silk touch mined ores also smelt
   deepslate_iron_ore: iron_ingot
   gold_ore: gold_ingot
   deepslate_gold_ore: gold_ingot

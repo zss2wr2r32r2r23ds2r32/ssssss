@@ -12,17 +12,17 @@
 
 formats:
   default:
-    permission: ""            # empty = everyone
+    permission: '' # empty = everyone
     priority: 0
-    death: "&8☠ &7%rank%&f%player% &7died."
-    killed-by-player: "&8☠ &7%rank%&f%player% &7was slain by %killer_rank%&f%killer%&7."
+    death: '&8☠ &7%rank%&f%player% &7died.'
+    killed-by-player: '&8☠ &7%rank%&f%player% &7was slain by %killer_rank%&f%killer%&7.'
   vip:
-    permission: "sharded.deathmessages.vip"
+    permission: sharded.deathmessages.vip
     priority: 10
-    death: "&8☠ &6%rank%&e%player% &7met an unfortunate end."
-    killed-by-player: "&8☠ &6%rank%&e%player% &7was destroyed by %killer_rank%&f%killer%&7!"
+    death: '&8☠ &6%rank%&e%player% &7met an unfortunate end.'
+    killed-by-player: '&8☠ &6%rank%&e%player% &7was destroyed by %killer_rank%&f%killer%&7!'
   admin:
-    permission: "sharded.deathmessages.admin"
+    permission: sharded.deathmessages.admin
     priority: 100
-    death: "&8☠ &c%rank%&c%player% &7has fallen!"
-    killed-by-player: "&8☠ &c%rank%&c%player% &7was eliminated by %killer_rank%&f%killer%&7!"
+    death: '&8☠ &c%rank%&c%player% &7has fallen!'
+    killed-by-player: '&8☠ &c%rank%&c%player% &7was eliminated by %killer_rank%&f%killer%&7!'

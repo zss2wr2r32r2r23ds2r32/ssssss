@@ -13,7 +13,7 @@
 #
 # Players in creative or spectator are never force-cancelled.
 
-world: "factions"
+world: factions
 
 region:
   set: false
