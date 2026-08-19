@@ -15,8 +15,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
@@ -201,14 +205,61 @@ public final class WardrobeModule extends Module implements CommandExecutor {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onDrop(PlayerDropItemEvent event) {
+        if (isWardrobeHat(event.getItemDrop().getItemStack())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onHatMove(InventoryClickEvent event) {
+        if (event.getView().getTopInventory().getHolder() instanceof MenuHolder) return;
+        if (isWardrobeHat(event.getCurrentItem()) || isWardrobeHat(event.getCursor())) {
+            event.setCancelled(true);
+            return;
+        }
+        if (event.getClick() == ClickType.NUMBER_KEY) {
+            ItemStack hotbar = event.getWhoClicked().getInventory().getItem(event.getHotbarButton());
+            if (isWardrobeHat(hotbar)) {
+                event.setCancelled(true);
+                return;
+            }
+        }
+        if (event.getSlotType() == InventoryType.SlotType.ARMOR && event.getRawSlot() == 39) {
+            if (event.getWhoClicked() instanceof Player player && isWardrobeHat(player.getInventory().getHelmet())) {
+                event.setCancelled(true);
+            }
+        }
+        if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
+            ItemStack clicked = event.getCurrentItem();
+            if (isWardrobeHat(clicked)) event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onHatDrag(InventoryDragEvent event) {
+        if (event.getView().getTopInventory().getHolder() instanceof MenuHolder) return;
+        for (ItemStack stack : event.getNewItems().values()) {
+            if (isWardrobeHat(stack)) {
+                event.setCancelled(true);
+                return;
+            }
+        }
+        ItemStack oldCursor = event.getOldCursor();
+        if (isWardrobeHat(oldCursor)) event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onDeath(PlayerDeathEvent event) {
         event.getDrops().removeIf(this::isWardrobeHat);
         PlayerInventory inv = event.getEntity().getInventory();
         for (int i = 0; i < inv.getSize(); i++) {
             if (isWardrobeHat(inv.getItem(i))) inv.setItem(i, null);
         }
-        inv.setHelmet(null);
+        if (isWardrobeHat(inv.getHelmet())) inv.setHelmet(null);
+        ItemStack off = inv.getItemInOffHand();
+        if (isWardrobeHat(off)) inv.setItemInOffHand(null);
     }
 
     @EventHandler

@@ -294,7 +294,7 @@ permissions:
   sharded.spawners.use:
     default: true
   sharded.spawners.pickup:
-    default: true
+    default: false
   sharded.tokens.admin:
     default: op
   sharded.tokenshop.use:

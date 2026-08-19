@@ -99,9 +99,18 @@ public final class SettingsModule extends Module implements CommandExecutor {
 
     public void toggleScoreboardExternal(Player player) {
         if (!check(player, "sharded.settings.scoreboard")) return;
-        player.performCommand("sb");
-        PlayerToggles.flipScoreboardDisplay(player);
-        send(player, PlayerToggles.scoreboardDisplay(player) ? "scoreboard-on" : "scoreboard-off");
+        if (canUseTabScoreboard(player)) {
+            player.performCommand("sb");
+            PlayerToggles.flipScoreboardDisplay(player);
+            return;
+        }
+        toggleScoreboard(player);
+    }
+
+    private boolean canUseTabScoreboard(Player player) {
+        return player.hasPermission("tab.scoreboard.toggle")
+                || player.hasPermission("tab.scoreboard.show")
+                || player.hasPermission("tab.use");
     }
 
     private void toggleScoreboard(Player player) {
