@@ -39,6 +39,7 @@ public final class CommandHelp {
         list.add(new CommandInfo("/killstreak [best|player]", "View killstreak stats", "sharded.killstreak.use"));
         list.add(new CommandInfo("/bal", "Check token balance", null));
         list.add(new CommandInfo("/tokenshop", "Open token shop", "sharded.tokenshop.use"));
+        list.add(new CommandInfo("/temprank shop", "Temporary rank shop", "sharded.tempranks.use"));
         list.add(new CommandInfo("/toolname [name]", "Rename held item", "sharded.toolname.use"));
         list.add(new CommandInfo("/spawners pay", "Pay to pick up spawners", "sharded.spawners.use"));
         list.add(new CommandInfo("/tokens ...", "Token admin commands", "sharded.tokens.admin"));

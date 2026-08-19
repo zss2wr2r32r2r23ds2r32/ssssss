@@ -16,6 +16,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Axolotl;
 import org.bukkit.entity.Bee;
+import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
@@ -308,11 +309,18 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
                 configurePet(stand, owner.getUniqueId(), type, null);
             });
         } else {
-            entity = owner.getWorld().spawn(
-                    spawn,
-                    type.entityType().getEntityClass(),
-                    CreatureSpawnEvent.SpawnReason.CUSTOM,
-                    e -> configurePet(e, owner.getUniqueId(), type, axolotlVariant));
+            try {
+                entity = owner.getWorld().spawn(
+                        spawn,
+                        type.entityType().getEntityClass(),
+                        CreatureSpawnEvent.SpawnReason.CUSTOM,
+                        e -> configurePet(e, owner.getUniqueId(), type, axolotlVariant));
+            } catch (Exception ex) {
+                plugin.getLogger().warning("Could not spawn pet " + type.id() + " for " + owner.getName()
+                        + " in world " + owner.getWorld().getName() + ": " + ex.getMessage());
+                send(owner, "spawn-failed", "%pet%", type.id());
+                return;
+            }
         }
 
         if (!(entity instanceof LivingEntity)) {
@@ -359,6 +367,10 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         if (entity instanceof Axolotl axolotl) {
             axolotl.setPlayingDead(false);
             axolotl.setVariant(PetType.parseAxolotlVariant(axolotlVariant));
+        }
+        if (entity instanceof EnderDragon dragon) {
+            dragon.setAI(false);
+            dragon.setAware(false);
         }
     }
 

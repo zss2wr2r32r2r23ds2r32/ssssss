@@ -5,7 +5,6 @@ import com.sharded.core.gui.GuiManager;
 import com.sharded.core.hook.LuckPermsHook;
 import com.sharded.core.hook.PlaceholderHook;
 import com.sharded.core.module.ModuleManager;
-import com.sharded.core.util.LastDamagerTracker;
 import com.sharded.core.util.CommandHelp;
 import com.sharded.core.util.PlayerStateStore;
 import com.sharded.core.util.TabCompleteHelper;
@@ -36,7 +35,6 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
         this.placeholderHook = new PlaceholderHook(this);
         getServer().getPluginManager().registerEvents(placeholderHook, this);
         this.stateStore = new PlayerStateStore(this);
-        LastDamagerTracker.register(this);
         this.guiManager = new GuiManager(this);
         getServer().getPluginManager().registerEvents(new GuiListener(guiManager), this);
 

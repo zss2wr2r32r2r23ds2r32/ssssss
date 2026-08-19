@@ -1,0 +1,155 @@
+menu_title: 'Rank Shop'
+open_command:
+  - rankshop
+  - temprankshop
+size: 36
+open_permission: tempranks.use
+
+open_commands:
+  - '[sound] BLOCK_CHEST_OPEN'
+
+items:
+
+  ruby_7d:
+    material: RED_HARNESS
+    slot: 11
+    display_name: '&x&F&F&2&B&2&B&lRUBY &x&F&F&2&B&2&BRank &7[7D]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&2&B&2&BInformation:'
+      - '&x&F&F&2&B&2&B| &fPurchase Ranks using tokens'
+      - '&x&F&F&2&B&2&B| &ftokens can be obtained by &x&F&F&2&B&2&BKill Streaks'
+      - ''
+      - '&x&F&F&2&B&2&B| &fTokens: &x&F&F&2&B&2&B500'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    click_commands:
+      - '[temprank_buy] ruby 7 500'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  ruby_14d:
+    material: RED_HARNESS
+    slot: 20
+    display_name: '&x&F&F&2&B&2&B&lRUBY &x&F&F&2&B&2&BRank &7[14D]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&2&B&2&B| &fTokens: &x&F&F&2&B&2&B900'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    click_commands:
+      - '[temprank_buy] ruby 14 900'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  sapphire_7d:
+    material: BLUE_HARNESS
+    slot: 12
+    display_name: '&x&0&0&6&E&F&F&lSAPPHIRE &x&0&0&6&E&F&FRank &7[7D]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&0&0&6&E&F&F| &fTokens: &x&0&0&6&E&F&F750'
+      - ''
+      - '&x&F&F&C&F&0&0▷ &x&F&F&C&F&0&0&l&nCLICK&r &x&F&F&C&F&0&0To Purchase'
+    click_commands:
+      - '[temprank_buy] sapphire 7 750'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  sapphire_14d:
+    material: BLUE_HARNESS
+    slot: 21
+    display_name: '&x&0&0&6&E&F&F&lSAPPHIRE &x&0&0&6&E&F&FRank &7[14D]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&0&0&6&E&F&F| &fTokens: &x&0&0&6&E&F&F1350'
+      - ''
+      - '&x&F&F&C&F&0&0▷ &x&F&F&C&F&0&0&l&nCLICK&r &x&F&F&C&F&0&0To Purchase'
+    click_commands:
+      - '[temprank_buy] sapphire 14 1350'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  onyx_7d:
+    material: YELLOW_HARNESS
+    slot: 13
+    display_name: '&x&F&F&C&F&0&0&lONYX &x&F&F&C&F&0&0Rank &7[7D]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&C&F&0&0| &fTokens: &x&F&F&C&F&0&01000'
+      - ''
+      - '&x&F&F&C&F&0&0▷ &x&F&F&C&F&0&0&l&nCLICK&r &x&F&F&C&F&0&0To Purchase'
+    click_commands:
+      - '[temprank_buy] onyx 7 1000'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  onyx_14d:
+    material: YELLOW_HARNESS
+    slot: 22
+    display_name: '&x&F&F&C&F&0&0&lONYX &x&F&F&C&F&0&0Rank &7[14D]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&C&F&0&0| &fTokens: &x&F&F&C&F&0&01800'
+      - ''
+      - '&x&F&F&C&F&0&0▷ &x&F&F&C&F&0&0&l&nCLICK&r &x&F&F&C&F&0&0To Purchase'
+    click_commands:
+      - '[temprank_buy] onyx 14 1800'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  aether_7d:
+    material: LIGHT_BLUE_HARNESS
+    slot: 14
+    display_name: '&x&7&D&E&B&F&F&lAETHER &x&7&D&E&B&F&FRank &7[7D]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&7&D&E&B&F&F| &fTokens: &x&7&D&E&B&F&F1500'
+      - ''
+      - '&x&F&F&C&F&0&0▷ &x&F&F&C&F&0&0&l&nCLICK&r &x&F&F&C&F&0&0To Purchase'
+    click_commands:
+      - '[temprank_buy] aether 7 1500'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  aether_14d:
+    material: LIGHT_BLUE_HARNESS
+    slot: 23
+    display_name: '&x&7&D&E&B&F&F&lAETHER &x&7&D&E&B&F&FRank &7[14D]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&7&D&E&B&F&F| &fTokens: &x&7&D&E&B&F&F2700'
+      - ''
+      - '&x&F&F&C&F&0&0▷ &x&F&F&C&F&0&0&l&nCLICK&r &x&F&F&C&F&0&0To Purchase'
+    click_commands:
+      - '[temprank_buy] aether 14 2700'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  flawless_7d:
+    material: PURPLE_HARNESS
+    slot: 15
+    display_name: '&x&8&B&5&C&F&6&lFLAWLESS &x&8&B&5&C&F&6Rank &7[7D]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&8&B&5&C&F&6| &fTokens: &x&8&B&5&C&F&62000'
+      - ''
+      - '&x&F&F&C&F&0&0▷ &x&F&F&C&F&0&0&l&nCLICK&r &x&F&F&C&F&0&0To Purchase'
+    click_commands:
+      - '[temprank_buy] flawless 7 2000'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  flawless_14d:
+    material: PURPLE_HARNESS
+    slot: 24
+    display_name: '&x&8&B&5&C&F&6&lFLAWLESS &x&8&B&5&C&F&6Rank &7[14D]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&8&B&5&C&F&6| &fTokens: &x&8&B&5&C&F&63600'
+      - ''
+      - '&x&F&F&C&F&0&0▷ &x&F&F&C&F&0&0&l&nCLICK&r &x&F&F&C&F&0&0To Purchase'
+    click_commands:
+      - '[temprank_buy] flawless 14 3600'
+      - '[sound] ENTITY_PLAYER_LEVELUP'

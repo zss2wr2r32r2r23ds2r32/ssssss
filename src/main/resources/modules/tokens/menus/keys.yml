@@ -71,15 +71,15 @@ items:
   legendary_key:
     material: BLUE_CANDLE
     slot: 15
-    display_name: '&#0045FF&lASTRAL &#0045FFKey'
+    display_name: '&x&0&0&4&5&F&F&lASTRAL &x&0&0&4&5&F&FKey'
     lore:
       - '&8Description'
       - ''
-      - '&#0045FFInformation:'
-      - '&#0045FF| &fPurchase the &#0045FFAstral Key'
-      - '&#0045FF| &fAnd Unlock Unique Rewards!'
+      - '&x&0&0&4&5&F&FInformation:'
+      - '&x&0&0&4&5&F&F| &fPurchase the &x&0&0&4&5&F&FAstral Key'
+      - '&x&0&0&4&5&F&F| &fAnd Unlock Unique Rewards!'
       - ''
-      - '&#0045FF⚓ &fCost: &#0045FF3000 Tokens'
+      - '&x&0&0&4&5&F&F⚓ &fCost: &x&0&0&4&5&F&F3000 Tokens'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:

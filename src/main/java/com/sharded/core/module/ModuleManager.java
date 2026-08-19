@@ -25,6 +25,7 @@ import com.sharded.core.modules.privatemessages.PrivateMessagesModule;
 import com.sharded.core.modules.settings.SettingsModule;
 import com.sharded.core.modules.joinmessages.JoinMessagesModule;
 import com.sharded.core.modules.pets.PetsModule;
+import com.sharded.core.modules.tempranks.TempranksModule;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -56,6 +57,7 @@ public final class ModuleManager {
         register(new KillModule(plugin));
         register(new KillstreaksModule(plugin));
         register(new PetsModule(plugin));
+        register(new TempranksModule(plugin));
         register(new PickupMobsModule(plugin));
         register(new PickupSpawnersModule(plugin));
         register(new TokensModule(plugin));

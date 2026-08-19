@@ -11,7 +11,7 @@ public enum PetType {
     AXOLOTL("axolotl", EntityType.AXOLOTL, 0.45, false, false, false, false, null),
     BEE("bee", EntityType.BEE, 0.45, false, false, false, false, null),
     WARDEN("warden", EntityType.WARDEN, 0.22, false, true, false, false, null),
-    ENDER_DRAGON("enderdragon", null, 0.35, false, false, true, false, Material.DRAGON_HEAD);
+    ENDER_DRAGON("enderdragon", EntityType.ENDER_DRAGON, 0.18, false, false, false, false, null);
 
     private final String id;
     private final EntityType entityType;

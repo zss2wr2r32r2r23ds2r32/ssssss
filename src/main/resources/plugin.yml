@@ -109,6 +109,10 @@ commands:
   pet:
     description: Manage your cosmetic pet
     usage: /pet <equip|remove|rename> [args]
+  temprank:
+    description: Open the temporary rank shop
+    usage: /temprank shop
+    aliases: [rankshop, temprankshop]
 
 permissions:
   sharded.admin:
@@ -162,7 +166,7 @@ permissions:
   sharded.backpack.slots.9:
     default: op
   sharded.graves.use:
-    description: Create a grave on death — grant to ranks via LuckPerms (default off for members)
+    description: Store items in a grave on death — grant to ranks via LuckPerms (default off)
     default: false
   sharded.graves.bypass:
     default: op
@@ -228,3 +232,6 @@ permissions:
     default: op
   sharded.pets.enderdragon:
     default: op
+  sharded.tempranks.use:
+    description: Open and purchase from the temp rank shop
+    default: true

@@ -144,8 +144,24 @@ public final class GuiManager {
                 if (service == null) yield false;
                 long amount = parseLong(payload, 0);
                 if (amount > 0 && service.take(player.getUniqueId(), amount)) yield true;
-                message(player, tokenPrefix() + "&cYou don't have enough tokens!", false);
+                message(player, tokenPrefix() + "&x&F&F&2&7&2&7You don't have enough tokens!", false);
                 yield false;
+            }
+            case "deny_if_permission" -> {
+                String perm = payload.startsWith("sharded.") ? payload : payload;
+                if (player.hasPermission(perm)) {
+                    message(player, tokenPrefix() + "&x&F&F&2&7&2&7You already own this!", false);
+                    player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
+                    yield false;
+                }
+                yield true;
+            }
+            case "temprank_buy" -> {
+                String[] parts = payload.split("\\s+");
+                if (parts.length < 3) yield false;
+                var module = plugin.modules().get(com.sharded.core.modules.tempranks.TempranksModule.class);
+                if (module == null) yield false;
+                yield module.tryPurchase(player, parts[0], (int) parseLong(parts[1], 0), parseLong(parts[2], 0));
             }
             default -> {
                 Consumer<Player> action = customActions.get(tag);

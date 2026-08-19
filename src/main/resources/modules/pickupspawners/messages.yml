@@ -1,9 +1,9 @@
 prefix: '&8[&bSharded&8] &r'
-players-only: '%prefix%&c#FF2727Only players can use this command.'
-no-permission: '%prefix%&c#FF2727You don''t have permission.'
-usage: '%prefix%&c#FF2727Usage: /spawners pay [amount]'
-paid: '%prefix%&a#9FFF00You paid &f%price% &a#9FFF00tokens. Mine a spawner with silk touch to pick
+players-only: '%prefix%&x&F&F&2&7&2&7Only players can use this command.'
+no-permission: '%prefix%&x&F&F&2&7&2&7You don''t have permission.'
+usage: '%prefix%&x&F&F&2&7&2&7Usage: /spawners pay [amount]'
+paid: '%prefix%&x&9&S&F&F&0&0You paid &f%price% &x&9&S&F&F&0&0tokens. Mine a spawner with silk touch to pick
   it up!'
-not-enough: '%prefix%&c#FF2727You need &f%price% &c#FF2727tokens. Use &f/bal &c#FF2727to check your balance.'
-picked-up: '%prefix%&a#9FFF00Spawner picked up!'
-actionbar-hint: '%prefix%&a#9FFF00You need to &f/spawners pay %price% &a#9FFF00first!'
+not-enough: '%prefix%&x&F&F&2&7&2&7You need &f%price% &x&F&F&2&7&2&7tokens. Use &f/bal &x&F&F&2&7&2&7to check your balance.'
+picked-up: '%prefix%&x&9&S&F&F&0&0Spawner picked up!'
+actionbar-hint: '%prefix%&x&9&S&F&F&0&0You need to &f/spawners pay %price% &x&9&S&F&F&0&0first!'
