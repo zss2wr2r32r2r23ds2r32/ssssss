@@ -371,6 +371,7 @@ public final class TagsModule extends Module implements CommandExecutor {
         boolean chatCreation = fromChat;
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             if (!player.isOnline()) return;
+            removeCustomSuffix(player, finalInput);
             String cmd = config.getString("custom-apply-command",
                             "[console] lp user %player_name% meta setsuffix \"%custom%\"")
                     .replace("%player%", player.getName())
@@ -386,12 +387,50 @@ public final class TagsModule extends Module implements CommandExecutor {
     private void clearEquippedTag(Player player) {
         for (String line : config.getStringList("clear-equipped-commands")) {
             if (line == null || line.isBlank()) continue;
+            String lower = line.toLowerCase(java.util.Locale.ROOT);
+            if (lower.contains("clearsuffix") || lower.contains("removesuffix")) continue;
             String cmd = line.replace("%player%", player.getName()).replace("%player_name%", player.getName());
             dispatchCommand(player, cmd);
         }
-        if (plugin.luckPerms().isAvailable()) {
+        removeCustomSuffix(player, null);
+    }
+
+    /** Removes the player's saved/custom LP suffix via removesuffix (falls back to clearsuffix). */
+    private void removeCustomSuffix(Player player, String exceptTag) {
+        if (!plugin.luckPerms().isAvailable()) return;
+
+        String saved = database == null ? null : database.getLastCustomTag(player.getUniqueId());
+        boolean removed = false;
+
+        if (saved != null && !saved.isBlank() && !saved.equals(exceptTag)) {
+            removed |= runRemoveSuffix(player, saved);
+            removed |= runRemoveSuffix(player, " " + saved);
+        }
+
+        String live = plugin.luckPerms().suffix(player);
+        if (live != null && !live.isBlank()) {
+            String normalizedLive = ColorUtil.normalize(live.replace('§', '&'));
+            if (!normalizedLive.equals(exceptTag)
+                    && (saved == null || !normalizedLive.equals(ColorUtil.normalize(saved)))) {
+                removed |= runRemoveSuffix(player, normalizedLive);
+                removed |= runRemoveSuffix(player, " " + normalizedLive);
+            }
+        }
+
+        if (!removed && (saved == null || saved.isBlank())) {
             plugin.luckPerms().runConsole("lp user " + player.getName() + " meta clearsuffix");
         }
+    }
+
+    private boolean runRemoveSuffix(Player player, String suffix) {
+        if (suffix == null || suffix.isBlank()) return false;
+        String cmd = config.getString("custom-remove-command",
+                        "[console] lp user %player_name% meta removesuffix \"%custom%\"")
+                .replace("%player%", player.getName())
+                .replace("%player_name%", player.getName())
+                .replace("%custom%", suffix);
+        dispatchCommand(player, cmd);
+        return true;
     }
 
     private boolean matchesLimitedTag(String input) {

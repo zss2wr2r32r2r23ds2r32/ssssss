@@ -1,4 +1,4 @@
-config-version: 5
+config-version: 6
 
 menu-title: 'Tags'
 menu-size: 27
@@ -8,13 +8,13 @@ limited-close-slot: 26
 
 apply-command: 'eternaltags:tags set %tag_id% %player_name%'
 custom-apply-command: '[console] lp user %player_name% meta setsuffix "%custom%"'
+custom-remove-command: '[console] lp user %player_name% meta removesuffix "%custom%"'
 custom-cooldown-hours: 24
 block-limited-tag-copy: true
 
 clear-equipped-commands:
   - '[console] eternaltags:tags clear %player_name%'
   - '[console] eternaltags tags clear %player_name%'
-  - '[console] lp user %player_name% meta clearsuffix'
 
 custom-tag-blacklist:
   - badword
