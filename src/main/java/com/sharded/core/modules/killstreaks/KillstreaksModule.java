@@ -17,11 +17,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class KillstreaksModule extends Module implements CommandExecutor, TabCompleter {
 
     private KillstreakDatabase database;
+    private final Map<UUID, Map<UUID, List<Long>>> recentKills = new ConcurrentHashMap<>();
 
     public KillstreaksModule(ShardedCore plugin) {
         super(plugin, "killstreaks");
@@ -136,6 +142,7 @@ public final class KillstreaksModule extends Module implements CommandExecutor, 
 
         Player killer = victim.getKiller();
         if (killer == null || killer.equals(victim) || database == null) return;
+        if (!shouldCountKill(killer, victim)) return;
 
         int streak = database.getCurrent(killer.getUniqueId()) + 1;
         database.setStreak(killer.getUniqueId(), streak);
@@ -156,6 +163,37 @@ public final class KillstreaksModule extends Module implements CommandExecutor, 
                     .replace("%uuid%", killer.getUniqueId().toString());
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
         }
+    }
+
+    private boolean shouldCountKill(Player killer, Player victim) {
+        if (!config.getBoolean("anti-farm.enabled", true)) return true;
+        if (killer.hasPermission("sharded.killstreak.farm.bypass")) return true;
+
+        if (config.getBoolean("anti-farm.block-same-ip", true)) {
+            String killerIp = killer.getAddress() == null ? null : killer.getAddress().getAddress().getHostAddress();
+            String victimIp = victim.getAddress() == null ? null : victim.getAddress().getAddress().getHostAddress();
+            if (killerIp != null && killerIp.equals(victimIp)) {
+                send(killer, "farm-same-ip");
+                return false;
+            }
+        }
+
+        long windowMs = config.getLong("anti-farm.window-minutes", 60L) * 60_000L;
+        int limit = config.getInt("anti-farm.same-victim-limit", 3);
+        long now = System.currentTimeMillis();
+
+        Map<UUID, List<Long>> byVictim = recentKills.computeIfAbsent(killer.getUniqueId(), k -> new ConcurrentHashMap<>());
+        List<Long> times = byVictim.computeIfAbsent(victim.getUniqueId(), k -> new ArrayList<>());
+        times.add(now);
+        Iterator<Long> it = times.iterator();
+        while (it.hasNext()) {
+            if (now - it.next() > windowMs) it.remove();
+        }
+        if (times.size() > limit) {
+            send(killer, "farm-same-victim", "%player%", victim.getName());
+            return false;
+        }
+        return true;
     }
 
     private void announce(String message, Player killer) {

@@ -1,0 +1,4 @@
+config-version: 1
+
+cooldown-seconds: 30
+staff-permission: sharded.staff

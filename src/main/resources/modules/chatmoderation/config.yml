@@ -1,0 +1,23 @@
+config-version: 1
+
+anti-swear:
+  enabled: true
+
+swear-words:
+  - badword1
+  - badword2
+
+anti-spam:
+  enabled: true
+  cooldown-ms: 1500
+  repeat-limit: 3
+
+anti-spam-commands:
+  enabled: true
+  cooldown-ms: 3000
+  commands:
+    - msg
+    - tell
+    - w
+    - r
+    - reply

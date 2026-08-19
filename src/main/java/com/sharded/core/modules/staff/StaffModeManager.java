@@ -1,7 +1,7 @@
 package com.sharded.core.modules.staff;
 
 import com.sharded.core.ShardedCore;
-import com.sharded.core.util.ColorUtil;
+import com.sharded.core.modules.punishments.PunishmentsModule;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.Text;
 import org.bukkit.Bukkit;
@@ -94,6 +94,7 @@ public final class StaffModeManager implements Listener {
             setVanished(player, true, false);
         }
         staffMode.add(player.getUniqueId());
+        disableEglow(player);
         module.send(player, "staffmode-enabled");
     }
 
@@ -199,7 +200,14 @@ public final class StaffModeManager implements Listener {
         module.send(staff, "randomtp", "%player%", target.getName());
     }
 
+    private void disableEglow(Player player) {
+        String cmd = module.config().getString("staffmode.disable-eglow-command", "eglow:eglow disable");
+        if (cmd.startsWith("/")) player.performCommand(cmd.substring(1));
+        else player.performCommand(cmd);
+    }
+
     private boolean canSeeVanished(Player viewer) {
+        if (isStaffMode(viewer.getUniqueId())) return true;
         return viewer.hasPermission(module.config().getString("vanish.see-permission", "sharded.staff.seevanished"));
     }
 
@@ -365,7 +373,8 @@ public final class StaffModeManager implements Listener {
             return;
         }
         if ("punish".equals(id) && event.getRightClicked() instanceof Player target) {
-            module.punishments().openPunishMenu(player, target);
+            PunishmentsModule punishments = plugin.modules().get(PunishmentsModule.class);
+            if (punishments != null) punishments.openPunishMenu(player, target);
         }
     }
 
@@ -377,7 +386,8 @@ public final class StaffModeManager implements Listener {
         String id = staffItemId(staff.getInventory().getItemInMainHand());
         if (!"punish".equals(id)) return;
         event.setCancelled(true);
-        module.punishments().openPunishMenu(staff, target);
+        PunishmentsModule punishments = plugin.modules().get(PunishmentsModule.class);
+        if (punishments != null) punishments.openPunishMenu(staff, target);
     }
 
     private void handleStaffItem(Player player, String id, boolean leftClick) {

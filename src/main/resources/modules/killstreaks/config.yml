@@ -1,18 +1,24 @@
 # Killstreak rewards — add as many as you want (5, 10, 15, 20, 25, ...)
 config-version: 3
 # message-mode: inherit  # chat | actionbar | both — overrides global message-mode
-announce-all-streaks: false
+announce-all-streaks: true
 announce-actionbar: false
+
+anti-farm:
+  enabled: true
+  same-victim-limit: 3
+  window-minutes: 60
+  block-same-ip: true
 
 rewards:
   '5':
-    broadcast: '&6%player% &eis on a &6&l5 &ekill streak!'
+    broadcast: '&#FF0000🗡 %player% &7is on a &#FF00005 &7kill streak!'
     commands:
-    - give %player% golden_apple 2
+    - tokens give %player% 100
   '10':
-    broadcast: '&6%player% &eis on a &c&l10 &ekill streak!'
+    broadcast: '&#FF0000🗡 %player% &7is on a &#FF000010 &7kill streak!'
     commands:
-    - give %player% diamond 1
+    - tokens give %player% 250
   '15':
     broadcast: '&6%player% &eis on a &4&l15 &ekill streak!'
     commands:

@@ -1,0 +1,14 @@
+config-version: 1
+prefix: '%prefix%'
+
+players-only: '%prefix%&#FF2727Only players can use this command.'
+no-permission: '%prefix%&#FF2727You don''t have permission.'
+cooldown: '%prefix%&#FF2727Please wait &f%time%&7s before requesting staff again.'
+sent: '%prefix%&#9FFF00Staff have been notified.'
+staff-alert: '%prefix%&#FF8300%player% &7needs support from staff — '
+click-here: '&#9FFF00&l[CLICK TO TELEPORT]'
+click-hover: '&#9FFF00Click to teleport to this player'
+teleported: '%prefix%&#9FFF00Teleported to &f%player%&#9FFF00.'
+target-offline: '%prefix%&#FF2727That player is no longer online.'
+already-helping: '%prefix%&#FF2727Another staff member is helping support this player.'
+staff-coming: '%prefix%&#9FFF00Staff member &f%staff% &ais coming to help you.'

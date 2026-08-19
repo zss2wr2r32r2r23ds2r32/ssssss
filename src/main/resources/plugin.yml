@@ -193,9 +193,28 @@ commands:
   stafflist:
     description: List online staff
     usage: /stafflist
-  randomtp:
-    description: Teleport to a random player
-    usage: /randomtp
+  kick:
+    description: Kick a player
+    usage: /kick <player> [reason]
+  announce:
+    description: Broadcast a server announcement
+    usage: /announce <message>
+  announcement:
+    description: Broadcast a server announcement
+    usage: /announcement <message>
+  invrollback:
+    description: Open inventory rollback for a player
+    usage: /invrollback <player>
+  screenshare:
+    description: Start or stop a screenshare
+    usage: /screenshare <player>
+  staffchat:
+    description: Send a message to staff chat
+    usage: /staffchat <message>
+    aliases: [sc]
+  requeststaff:
+    description: Request staff assistance
+    usage: /requeststaff
 
 permissions:
   sharded.admin:
@@ -420,4 +439,40 @@ permissions:
     default: op
   sharded.staff.randomtp:
     description: Use /randomtp
+    default: op
+  sharded.punishments.punish:
+    default: op
+  sharded.punishments.ban:
+    default: op
+  sharded.punishments.banip:
+    default: op
+  sharded.punishments.kick:
+    default: op
+  sharded.punishments.mute:
+    default: op
+  sharded.punishments.unban:
+    default: op
+  sharded.punishments.unmute:
+    default: op
+  sharded.punishments.pardon:
+    default: op
+  sharded.punishments.offend:
+    default: op
+  sharded.punishments.wipe:
+    default: op
+  sharded.punishments.alts:
+    default: op
+  sharded.chatmoderation.bypass:
+    default: op
+  sharded.announce.use:
+    default: op
+  sharded.invrollback.use:
+    default: op
+  sharded.screenshare.use:
+    default: op
+  sharded.staffchat.use:
+    default: op
+  sharded.requeststaff.use:
+    default: true
+  sharded.killstreak.farm.bypass:
     default: op

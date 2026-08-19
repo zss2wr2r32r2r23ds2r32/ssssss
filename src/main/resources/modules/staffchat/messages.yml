@@ -1,0 +1,5 @@
+config-version: 1
+prefix: '%prefix%'
+
+usage: '%prefix%&#FF2727Usage: &f/staffchat <message>'
+no-permission: '%prefix%&#FF2727You don''t have permission.'

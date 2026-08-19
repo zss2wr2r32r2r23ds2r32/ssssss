@@ -1,4 +1,4 @@
-package com.sharded.core.modules.staff;
+package com.sharded.core.modules.punishments;
 
 import com.sharded.core.ShardedCore;
 
@@ -10,7 +10,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public final class StaffDatabase {
+public final class PunishmentDatabase {
+
+    public record AltAccount(String name, UUID uuid) {
+    }
 
     public enum PunishmentType {
         BAN, MUTE, IP_BAN, WARN, KICK
@@ -40,9 +43,9 @@ public final class StaffDatabase {
     private final ShardedCore plugin;
     private Connection connection;
 
-    public StaffDatabase(ShardedCore plugin, File folder) throws SQLException {
+    public PunishmentDatabase(ShardedCore plugin, File folder) throws SQLException {
         this.plugin = plugin;
-        File dbFile = new File(folder, "staff.db");
+        File dbFile = new File(folder, "punishments.db");
         connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
         try (Statement statement = connection.createStatement()) {
             statement.execute("""
@@ -57,9 +60,14 @@ public final class StaffDatabase {
                         created_at INTEGER NOT NULL,
                         expires_at INTEGER,
                         active INTEGER NOT NULL DEFAULT 1,
-                        ip TEXT
+                        ip TEXT,
+                        doxxed INTEGER NOT NULL DEFAULT 0
                     )
                     """);
+            try {
+                statement.execute("ALTER TABLE punishments ADD COLUMN doxxed INTEGER NOT NULL DEFAULT 0");
+            } catch (SQLException ignored) {
+            }
             statement.execute("""
                     CREATE TABLE IF NOT EXISTS player_ips (
                         uuid TEXT NOT NULL,
@@ -103,20 +111,61 @@ public final class StaffDatabase {
         }
     }
 
-    public synchronized List<String> findAlts(String ip, UUID exclude) {
-        List<String> names = new ArrayList<>();
-        if (ip == null || ip.isBlank()) return names;
+    public synchronized List<AltAccount> findAlts(String ip, UUID exclude) {
+        List<AltAccount> alts = new ArrayList<>();
+        if (ip == null || ip.isBlank()) return alts;
         try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT DISTINCT player_name FROM player_ips WHERE ip = ? AND uuid != ? ORDER BY last_seen DESC")) {
+                "SELECT uuid, player_name FROM player_ips WHERE ip = ? AND uuid != ? ORDER BY last_seen DESC")) {
             ps.setString(1, ip);
             ps.setString(2, exclude.toString());
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) names.add(rs.getString("player_name"));
+                while (rs.next()) {
+                    alts.add(new AltAccount(rs.getString("player_name"), UUID.fromString(rs.getString("uuid"))));
+                }
             }
         } catch (SQLException e) {
-            plugin.getLogger().warning("[staff] Failed to lookup alts: " + e.getMessage());
+            plugin.getLogger().warning("[punishments] Failed to lookup alts: " + e.getMessage());
         }
-        return names;
+        return alts;
+    }
+
+    public synchronized boolean isDoxxed(UUID uuid) {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT 1 FROM punishments WHERE uuid = ? AND doxxed = 1 AND active = 1 LIMIT 1")) {
+            ps.setString(1, uuid.toString());
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public synchronized boolean hasBannedAltOnIp(String ip, UUID joiningUuid) {
+        if (ip == null || ip.isBlank()) return false;
+        try (PreparedStatement ps = connection.prepareStatement("""
+                SELECT 1 FROM player_ips pi
+                JOIN punishments p ON p.uuid = pi.uuid
+                WHERE pi.ip = ? AND pi.uuid != ? AND p.type = 'BAN' AND p.active = 1
+                LIMIT 1
+                """)) {
+            ps.setString(1, ip);
+            ps.setString(2, joiningUuid.toString());
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public synchronized void markDoxxed(UUID uuid) {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "UPDATE punishments SET doxxed = 1 WHERE uuid = ? AND type = 'BAN' AND active = 1")) {
+            ps.setString(1, uuid.toString());
+            ps.executeUpdate();
+        } catch (SQLException ignored) {
+        }
     }
 
     public synchronized String latestIp(UUID uuid) {
@@ -132,10 +181,10 @@ public final class StaffDatabase {
     }
 
     public synchronized long addPunishment(UUID uuid, String playerName, UUID staffUuid, String staffName,
-                                           PunishmentType type, String reason, Long expiresAt, String ip) {
+                                           PunishmentType type, String reason, Long expiresAt, String ip, boolean doxxed) {
         try (PreparedStatement ps = connection.prepareStatement("""
-                INSERT INTO punishments (uuid, player_name, staff_uuid, staff_name, type, reason, created_at, expires_at, active, ip)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?)
+                INSERT INTO punishments (uuid, player_name, staff_uuid, staff_name, type, reason, created_at, expires_at, active, ip, doxxed)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)
                 """, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, uuid.toString());
             ps.setString(2, playerName);
@@ -147,6 +196,7 @@ public final class StaffDatabase {
             if (expiresAt == null) ps.setNull(8, Types.BIGINT);
             else ps.setLong(8, expiresAt);
             ps.setString(9, ip);
+            ps.setInt(10, doxxed ? 1 : 0);
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) return keys.getLong(1);

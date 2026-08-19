@@ -176,6 +176,7 @@ vanish:
 
 staffmode:
   vanish-on-enter: true
+  disable-eglow-command: 'eglow:eglow disable'
   items:
     vanish:
       slot: 0

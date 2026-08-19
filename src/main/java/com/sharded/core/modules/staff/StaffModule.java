@@ -3,7 +3,7 @@ package com.sharded.core.modules.staff;
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.util.DiscordWebhook;
-import com.sharded.core.util.OfflinePlayers;
+import com.sharded.core.modules.punishments.PunishmentsModule;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
 import org.bukkit.Bukkit;
@@ -39,9 +39,7 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
 
     private static final DateTimeFormatter LOG_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    private StaffDatabase database;
     private StaffModeManager staffMode;
-    private PunishmentManager punishments;
 
     private File auditLogFile;
     private Set<String> auditCommands;
@@ -56,8 +54,8 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         return config;
     }
 
-    public PunishmentManager punishments() {
-        return punishments;
+    public PunishmentsModule punishments() {
+        return plugin.modules().get(PunishmentsModule.class);
     }
 
     public StaffModeManager staffMode() {
@@ -66,15 +64,8 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
 
     @Override
     protected void onEnable() {
-        try {
-            database = new StaffDatabase(plugin, moduleFolder());
-        } catch (Exception e) {
-            throw new IllegalStateException("Could not open staff database", e);
-        }
         staffMode = new StaffModeManager(plugin, this);
-        punishments = new PunishmentManager(plugin, this, database);
         registerListener(staffMode);
-        registerListener(punishments);
 
         auditLogFile = new File(moduleFolder(), config.getString("audit-log-file", "audit.log"));
         reloadAuditLists();
@@ -86,25 +77,13 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         registerCommand("sfmode", this);
         registerCommand("vanish", this);
         registerCommand("freeze", this);
-        registerCommand("punish", this);
-        registerCommand("ban", this);
-        registerCommand("banip", this);
-        registerCommand("offend", this);
-        registerCommand("unban", this);
-        registerCommand("unmute", this);
-        registerCommand("pardon", this);
-        registerCommand("wipe", this);
-        registerCommand("alts", this);
         registerCommand("stafflist", this);
         registerCommand("randomtp", this);
     }
 
     @Override
     protected void onDisable() {
-        if (database != null) database.close();
-        database = null;
         staffMode = null;
-        punishments = null;
     }
 
     private void reloadAuditLists() {
@@ -129,15 +108,6 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
             case "staffmode", "sfmode" -> handleStaffMode(sender);
             case "vanish" -> handleVanish(sender);
             case "freeze" -> handleFreeze(sender, args);
-            case "punish" -> handlePunish(sender, args);
-            case "ban" -> handleBan(sender, args);
-            case "banip" -> handleBanIp(sender, args);
-            case "offend" -> handleOffend(sender, args);
-            case "unban" -> handleSimpleUnpunish(sender, args, "unban");
-            case "unmute" -> handleSimpleUnpunish(sender, args, "unmute");
-            case "pardon" -> handleSimpleUnpunish(sender, args, "pardon");
-            case "wipe" -> handleWipe(sender, args);
-            case "alts" -> handleAlts(sender, args);
             case "stafflist" -> handleStaffList(sender);
             case "randomtp" -> handleRandomTp(sender);
             default -> false;
@@ -208,128 +178,12 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         return true;
     }
 
-    private boolean handlePunish(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player staff)) {
-            send(sender, "players-only");
-            return true;
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (args.length == 1 && command.getName().equalsIgnoreCase("freeze")) {
+            return TabCompleteHelper.knownPlayers(args[0]);
         }
-        if (args.length == 0) {
-            send(staff, "punish-usage");
-            return true;
-        }
-        OfflinePlayer target = OfflinePlayers.resolve(args[0]);
-        if (target == null || (target.getName() == null && !target.hasPlayedBefore())) {
-            send(staff, "player-not-found");
-            return true;
-        }
-        punishments.openPunishMenu(staff, target);
-        return true;
-    }
-
-    private boolean handleBan(CommandSender sender, String[] args) {
-        if (args.length == 0) {
-            send(sender, "ban-usage");
-            return true;
-        }
-        OfflinePlayer target = OfflinePlayers.resolve(args[0]);
-        if (target == null) {
-            send(sender, "player-not-found");
-            return true;
-        }
-        String reason = args.length >= 2 ? args[1] : config.getString("ban.default-reason", "No reason specified");
-        String duration = args.length >= 3 ? args[2] : defaultDuration("reasons", reason);
-        punishments.ban(sender, target, reason, duration);
-        return true;
-    }
-
-    private boolean handleBanIp(CommandSender sender, String[] args) {
-        if (args.length == 0) {
-            send(sender, "banip-usage");
-            return true;
-        }
-        OfflinePlayer target = OfflinePlayers.resolve(args[0]);
-        if (target == null) {
-            send(sender, "player-not-found");
-            return true;
-        }
-        String reason = args.length >= 2 ? args[1] : config.getString("ban.default-reason", "No reason specified");
-        String duration = args.length >= 3 ? args[2] : defaultDuration("reasons", reason);
-        punishments.banIp(sender, target, reason, duration);
-        return true;
-    }
-
-    private boolean handleOffend(CommandSender sender, String[] args) {
-        if (args.length == 0) {
-            send(sender, "offend-usage");
-            return true;
-        }
-        OfflinePlayer target = OfflinePlayers.resolve(args[0]);
-        if (target == null) {
-            send(sender, "player-not-found");
-            return true;
-        }
-        punishments.showOffenses(sender, target);
-        return true;
-    }
-
-    private boolean handleSimpleUnpunish(CommandSender sender, String[] args, String type) {
-        if (args.length == 0) {
-            send(sender, type + "-usage");
-            return true;
-        }
-        OfflinePlayer target = OfflinePlayers.resolve(args[0]);
-        if (target == null) {
-            send(sender, "player-not-found");
-            return true;
-        }
-        switch (type) {
-            case "unban" -> punishments.unban(sender, target);
-            case "unmute" -> punishments.unmute(sender, target);
-            case "pardon" -> punishments.pardon(sender, target);
-        }
-        return true;
-    }
-
-    private boolean handleWipe(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player staff)) {
-            send(sender, "players-only");
-            return true;
-        }
-        if (args.length == 0) {
-            send(staff, "wipe-usage");
-            return true;
-        }
-        OfflinePlayer target = OfflinePlayers.resolve(args[0]);
-        if (target == null) {
-            send(staff, "player-not-found");
-            return true;
-        }
-        String reason = args.length >= 2 ? args[1] : "default";
-        if (config.getBoolean("wipe.confirm-gui", true)) {
-            punishments.openWipeConfirm(staff, target, reason);
-        } else {
-            punishments.wipePlayer(staff, target.getUniqueId(), OfflinePlayers.name(target.getUniqueId()), reason);
-        }
-        return true;
-    }
-
-    private boolean handleAlts(CommandSender sender, String[] args) {
-        OfflinePlayer target;
-        if (args.length == 0) {
-            if (!(sender instanceof Player player)) {
-                send(sender, "alts-usage");
-                return true;
-            }
-            target = player;
-        } else {
-            target = OfflinePlayers.resolve(args[0]);
-        }
-        if (target == null) {
-            send(sender, "player-not-found");
-            return true;
-        }
-        punishments.showAlts(sender, target);
-        return true;
+        return List.of();
     }
 
     private boolean handleStaffList(CommandSender sender) {
@@ -362,45 +216,6 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         }
         staffMode.teleportToRandomPlayer(player);
         return true;
-    }
-
-    private String defaultDuration(String sectionPath, String reason) {
-        ConfigurationSection section = config.getConfigurationSection(sectionPath);
-        if (section == null || !section.contains(reason)) return "permanent";
-        Object raw = section.get(reason);
-        if (raw instanceof List<?> list && !list.isEmpty()) return String.valueOf(list.get(0));
-        return raw == null ? "permanent" : String.valueOf(raw);
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        String name = command.getName().toLowerCase(Locale.ROOT);
-        if (args.length == 1) {
-            return switch (name) {
-                case "freeze", "punish", "ban", "banip", "offend", "unban", "unmute", "pardon", "wipe", "alts" ->
-                        TabCompleteHelper.knownPlayers(args[0]);
-                default -> List.of();
-            };
-        }
-        if (args.length == 2) {
-            return switch (name) {
-                case "ban", "banip" -> TabCompleteHelper.configKeys(args[1], punishments.banReasons());
-                case "wipe" -> TabCompleteHelper.configKeys(args[1], punishments.wipeReasons());
-                default -> List.of();
-            };
-        }
-        if (args.length == 3 && (name.equals("ban") || name.equals("banip"))) {
-            ConfigurationSection section = config.getConfigurationSection("reasons");
-            if (section == null || !section.contains(args[1])) return List.of();
-            Object raw = section.get(args[1]);
-            if (raw instanceof List<?> list) {
-                List<String> durations = new ArrayList<>();
-                for (Object entry : list) durations.add(String.valueOf(entry));
-                return TabCompleteHelper.filter(args[2], durations);
-            }
-            return TabCompleteHelper.filter(args[2], String.valueOf(raw));
-        }
-        return List.of();
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

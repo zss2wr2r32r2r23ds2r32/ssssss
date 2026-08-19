@@ -5,11 +5,9 @@
 config-version: 8
 
 prefix: '&#00A2FF&lCORE &8▷ &r'
-
-# How module messages are sent: chat | actionbar | both
 # Override per module in modules/<name>/config.yml (message-mode: actionbar)
 # Override per message in modules/<name>/messages.yml (message-modes.<key>: actionbar)
-message-mode: chat
+message-mode: actionbar
 
 modules:
   craft: true
@@ -44,4 +42,11 @@ modules:
   toolname: true
   bundles: true
   staff: true
+  punishments: true
+  chatmoderation: true
+  announce: true
+  invrollback: true
+  screenshare: true
+  staffchat: true
+  requeststaff: true
   client: true

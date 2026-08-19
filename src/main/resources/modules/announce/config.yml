@@ -1,0 +1,3 @@
+config-version: 1
+
+format: '%prefix%&#00A2FF&lANNOUNCEMENT &8▷ &r%message%'

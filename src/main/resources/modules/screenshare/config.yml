@@ -1,0 +1,29 @@
+config-version: 1
+
+countdown-seconds: 120
+chat-warning-interval-seconds: 5
+
+ban:
+  reason: 'SS-Refuse'
+  duration: '7d'
+  fallback-command: 'ban %player% SS-Refuse'
+
+discord-url: 'https://discord.gg/shardedmc'
+
+action-bar:
+  enabled: true
+  bar-length: 20
+  bar-char: '|'
+  filled-color: '&#FF007B'
+  empty-color: '&#FF0000'
+  format: '%bar% &f%seconds%s &fremaining'
+
+messages:
+  title: '&#FF0000&lSCREENSHARE'
+  subtitle: '&fYou have &#FF0000%seconds% &fseconds left!'
+  chat-warning-lines:
+    - ''
+    - '&#FF0000&lSCREENSHARE&r &8| &fA staff member is screensharing you.'
+    - '&fDo not log out, leaving counts as a refuse and will ban you.'
+    - '&fTime left &8| &#FF0000%seconds%s'
+    - ''

@@ -33,7 +33,14 @@ import com.sharded.core.modules.chatcolor.ChatColorModule;
 import com.sharded.core.modules.namecolor.NameColorModule;
 import com.sharded.core.modules.abilities.AbilitiesShopModule;
 import com.sharded.core.modules.tempranks.TempranksModule;
+import com.sharded.core.modules.announce.AnnounceModule;
+import com.sharded.core.modules.chatmoderation.ChatModerationModule;
+import com.sharded.core.modules.invrollback.InvRollbackModule;
 import com.sharded.core.modules.staff.StaffModule;
+import com.sharded.core.modules.punishments.PunishmentsModule;
+import com.sharded.core.modules.requeststaff.RequestStaffModule;
+import com.sharded.core.modules.screenshare.ScreenshareModule;
+import com.sharded.core.modules.staffchat.StaffChatModule;
 import com.sharded.core.modules.client.ClientModule;
 
 import java.util.ArrayList;
@@ -80,6 +87,13 @@ public final class ModuleManager {
         register(new ToolNameModule(plugin));
         register(new BundlesModule(plugin));
         register(new StaffModule(plugin));
+        register(new PunishmentsModule(plugin));
+        register(new ChatModerationModule(plugin));
+        register(new AnnounceModule(plugin));
+        register(new InvRollbackModule(plugin));
+        register(new ScreenshareModule(plugin));
+        register(new StaffChatModule(plugin));
+        register(new RequestStaffModule(plugin));
         register(new ClientModule(plugin));
     }
 
