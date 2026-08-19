@@ -1,4 +1,4 @@
-config-version: 3
+config-version: 5
 menu_title: '&#8PETS'
 size: 45
 open_permission: sharded.pets.use
@@ -12,6 +12,7 @@ items:
   parrot:
     material: FEATHER
     slot: 10
+    permission: sharded.pets.parrot
     display_name: '&#bParrot'
     lore:
       - '&#7Flies in orbit around you'
@@ -22,6 +23,7 @@ items:
   axolotl:
     material: AXOLOTL_BUCKET
     slot: 12
+    permission: sharded.pets.axolotl
     display_name: '&#dTiny Axolotl'
     lore:
       - '&#7Follows you around'
@@ -33,6 +35,7 @@ items:
   bee:
     material: HONEYCOMB
     slot: 14
+    permission: sharded.pets.bee
     display_name: '&#eTiny Bee'
     lore:
       - '&#7Follows you around'
@@ -43,6 +46,7 @@ items:
   warden:
     material: SCULK_CATALYST
     slot: 16
+    permission: sharded.pets.warden
     display_name: '&#3Tiny Warden'
     lore:
       - '&#7Follows you on the ground'
@@ -53,6 +57,7 @@ items:
   allay:
     material: AMETHYST_SHARD
     slot: 22
+    permission: sharded.pets.allay
     display_name: '&#bTiny Allay'
     lore:
       - '&#7Flies around you'

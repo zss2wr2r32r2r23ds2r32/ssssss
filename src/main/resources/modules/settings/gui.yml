@@ -1,4 +1,4 @@
-config-version: 4
+config-version: 5
 menu_title: 'Settings'
 size: 36
 open_permission: sharded.settings.use
@@ -23,8 +23,16 @@ items:
       - 7
       - 8
       - 9
+      - 10
+      - 16
       - 17
       - 18
+      - 19
+      - 20
+      - 21
+      - 23
+      - 24
+      - 25
       - 26
       - 27
       - 28
@@ -39,6 +47,7 @@ items:
   scoreboard:
     material: OAK_SIGN
     slot: 11
+    permission: sharded.settings.scoreboard
     display_name: '&#0098FF&lSCOREBOARD'
     lore:
       - '&8Description'
@@ -57,6 +66,7 @@ items:
   death_messages:
     material: SKELETON_SKULL
     slot: 12
+    permission: sharded.settings.deathmessages
     display_name: '&#FF3400&lDEATH MESSAGES'
     lore:
       - '&8Description'
@@ -75,6 +85,7 @@ items:
   join_messages:
     material: OAK_DOOR
     slot: 13
+    permission: sharded.settings.joinmessages
     display_name: '&#FFD900&lJOIN/LEAVE MESSAGES'
     lore:
       - '&8Description'
@@ -93,6 +104,7 @@ items:
   mob_toggle:
     material: SPAWNER
     slot: 14
+    permission: sharded.settings.mobspawn
     display_name: '&#56FF00&lMOB TOGGLE'
     lore:
       - '&8Description'
@@ -111,6 +123,7 @@ items:
   public_chat:
     material: NAME_TAG
     slot: 15
+    permission: sharded.chat.toggle
     display_name: '&#FF0072&lPUBLIC CHAT'
     lore:
       - '&8Description'
@@ -129,6 +142,7 @@ items:
   private_messages:
     material: WRITABLE_BOOK
     slot: 22
+    permission: sharded.msg.toggle
     display_name: '&#FF0000&lPRIVATE MESSAGES'
     lore:
       - '&8Description'

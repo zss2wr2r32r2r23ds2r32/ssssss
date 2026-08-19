@@ -60,7 +60,7 @@ public final class ArmorTrimsModule extends Module implements CommandExecutor {
     private String fillerName = "&r";
     private Material confirmMaterial = Material.LIME_DYE;
     private Material patternDisplayMaterial = Material.PAPER;
-    private boolean useTemplateIcon = false;
+    private boolean useTemplateIcon = true;
     private String patternDisplayName = "&#0083FF&l%pattern%";
     private String materialDisplayName = "&#0083FF&l%material%";
     private boolean patternGlow = true;
@@ -99,7 +99,7 @@ public final class ArmorTrimsModule extends Module implements CommandExecutor {
             ConfigurationSection patternItem = gui.getConfigurationSection("pattern-item");
             if (patternItem != null) {
                 patternDisplayMaterial = parseMaterial(patternItem.getString("material"), Material.PAPER);
-                useTemplateIcon = patternItem.getBoolean("use-template-icon", false);
+                useTemplateIcon = patternItem.getBoolean("use-template-icon", true);
                 patternDisplayName = patternItem.getString("display-name", patternDisplayName);
                 patternGlow = patternItem.getBoolean("glow", true);
             }
@@ -198,6 +198,7 @@ public final class ArmorTrimsModule extends Module implements CommandExecutor {
             if (key == null) continue;
             String name = key.getKey().toLowerCase(Locale.ROOT);
             if (excludeNetherite && name.contains("netherite")) continue;
+            if (name.equals("silence")) continue;
             if (excludedPatterns.contains(name)) continue;
             holder.patterns.add(p);
         }
@@ -261,10 +262,12 @@ public final class ArmorTrimsModule extends Module implements CommandExecutor {
     }
 
     private Material patternDisplayMaterial(NamespacedKey key) {
-        if (useTemplateIcon) {
+        if (useTemplateIcon && key != null) {
             Material template = patternIcon(key);
-            if (template != patternFallback || key != null) return template;
+            if (template != Material.PAPER) return template;
         }
+        Material override = key != null ? patternIcons.get(key.getKey().toLowerCase(Locale.ROOT)) : null;
+        if (override != null) return override;
         return patternDisplayMaterial;
     }
 

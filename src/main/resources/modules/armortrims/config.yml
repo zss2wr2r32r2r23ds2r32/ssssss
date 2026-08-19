@@ -1,5 +1,5 @@
 # Armor Trims — /trims, /armortrims, /trimstation
-config-version: 4
+config-version: 5
 # message-mode: inherit  # chat | actionbar | both
 
 title: '&8Armor Trim Station'
@@ -16,8 +16,7 @@ gui:
     material: 16
     confirm: 22
   pattern-item:
-    material: PAPER
-    use-template-icon: false
+    use-template-icon: true
     display-name: '&#0083FF&l%pattern%'
     glow: true
   material-item:
@@ -40,7 +39,8 @@ sounds:
 
 filters:
   exclude-netherite: true
-  excluded-patterns: []
+  excluded-patterns:
+    - silence
   excluded-materials: []
 
 material-icons:

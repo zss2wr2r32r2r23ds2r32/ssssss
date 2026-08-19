@@ -38,7 +38,7 @@ public final class GuiMenu {
     }
 
     public record GuiItem(int slot, ItemStack display, String rawName, List<String> rawLore,
-                          List<String> leftClickCommands, List<String> clickCommands) {
+                          List<String> leftClickCommands, List<String> clickCommands, String permission) {
     }
 
     private final String id;
@@ -88,13 +88,14 @@ public final class GuiMenu {
             List<String> click = item.getStringList("click_commands");
             if (click.isEmpty()) click = left;
             if (click.isEmpty()) click = item.getStringList("right_click_commands");
+            String permission = item.getString("permission", "");
 
             List<Integer> slots = new ArrayList<>();
             if (item.contains("slot")) slots.add(item.getInt("slot"));
             if (item.contains("slots")) slots.addAll(item.getIntegerList("slots"));
 
             for (int slot : slots) {
-                itemsBySlot.put(slot, new GuiItem(slot, stack, name, lore, left, click));
+                itemsBySlot.put(slot, new GuiItem(slot, stack, name, lore, left, click, permission));
             }
         }
     }
@@ -169,11 +170,12 @@ public final class GuiMenu {
     public static String apply(String input, Player player, Map<String, String> extra, GuiManager manager) {
         if (input == null) return "";
         String out = input.replace("%player_name%", player.getName()).replace("%player%", player.getName());
+        out = manager.applyPlaceholders(player, out);
         if (extra != null) {
             for (Map.Entry<String, String> e : extra.entrySet()) {
                 out = out.replace("%" + e.getKey() + "%", e.getValue() == null ? "" : e.getValue());
             }
         }
-        return manager.applyPlaceholders(player, out);
+        return out;
     }
 }

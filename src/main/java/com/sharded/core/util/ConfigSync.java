@@ -15,7 +15,7 @@ import java.nio.file.StandardCopyOption;
 public final class ConfigSync {
 
     /** Bump when bundled defaults change and should overwrite older server files. */
-    public static final int VERSION = 4;
+    public static final int VERSION = 5;
 
     private ConfigSync() {
     }

@@ -94,23 +94,47 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         registerCommand("pet", this);
 
         followTask = plugin.getServer().getScheduler().runTaskTimer(plugin, (Runnable) this::tickFollow, 1L, 1L);
+        respawnOnlinePlayers();
+    }
+
+    /** Re-spawn equipped pets for online players (join + plugin reload). */
+    private void respawnOnlinePlayers() {
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+            if (database == null) return;
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                if (active.containsKey(player.getUniqueId())) continue;
+                PetDatabase.PetRecord record = database.get(player.getUniqueId());
+                if (record != null && record.type() != null) {
+                    spawnPet(player, record.type(), record.name(), record.variant());
+                }
+            }
+        }, 1L);
     }
 
     @Override
     protected void onDisable() {
         if (followTask != null) followTask.cancel();
-        for (UUID uuid : new ArrayList<>(active.keySet())) {
-            removePet(uuid);
-        }
+        followTask = null;
+        despawnAllEntities();
         active.clear();
         if (database != null) database.close();
         database = null;
+    }
+
+    private void despawnAllEntities() {
+        for (UUID uuid : new ArrayList<>(active.keySet())) {
+            ActivePet pet = active.get(uuid);
+            if (pet == null) continue;
+            Entity entity = Bukkit.getEntity(pet.entityId);
+            if (entity != null) entity.remove();
+        }
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             if (!event.getPlayer().isOnline() || database == null) return;
+            if (active.containsKey(event.getPlayer().getUniqueId())) return;
             PetDatabase.PetRecord record = database.get(event.getPlayer().getUniqueId());
             if (record != null && record.type() != null) {
                 spawnPet(event.getPlayer(), record.type(), record.name(), record.variant());
@@ -120,7 +144,14 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        removePet(event.getPlayer().getUniqueId());
+        despawnEntity(event.getPlayer().getUniqueId());
+    }
+
+    private void despawnEntity(UUID ownerId) {
+        ActivePet pet = active.remove(ownerId);
+        if (pet == null) return;
+        Entity entity = Bukkit.getEntity(pet.entityId);
+        if (entity != null) entity.remove();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -273,7 +304,11 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
             send(player, "no-pet-permission", "%pet%", type.id());
             return;
         }
-        removePet(player.getUniqueId());
+        if (!player.hasPermission("sharded.pets.use")) {
+            send(player, "no-permission");
+            return;
+        }
+        despawnEntity(player.getUniqueId());
         String defaultName = raw("default-name-" + type.id());
         String savedVariant = type.supportsVariant()
                 ? PetType.parseAxolotlVariant(variant).name().toLowerCase(Locale.ROOT)
@@ -293,8 +328,13 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         send(player, "removed");
     }
 
+    /** Removes entity and active entry; optionally clears saved pet. */
+    private void removePet(UUID ownerId) {
+        despawnEntity(ownerId);
+    }
+
     private void spawnPet(Player owner, PetType type, String displayName, String variant) {
-        removePet(owner.getUniqueId());
+        despawnEntity(owner.getUniqueId());
         Location spawn = owner.getLocation();
         Entity entity;
         String axolotlVariant = variant;
@@ -381,13 +421,6 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         }
         living.customName(Text.c(pet.displayName));
         living.setCustomNameVisible(true);
-    }
-
-    private void removePet(UUID ownerId) {
-        ActivePet pet = active.remove(ownerId);
-        if (pet == null) return;
-        Entity entity = Bukkit.getEntity(pet.entityId);
-        if (entity != null) entity.remove();
     }
 
     private void respawnIfNeeded(UUID ownerId) {

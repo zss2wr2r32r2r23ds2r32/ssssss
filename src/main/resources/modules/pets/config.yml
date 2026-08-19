@@ -1,13 +1,22 @@
-# Pet rename blacklist (same style as /toolname)
-config-version: 3
-# message-mode: inherit  # chat | actionbar | both — overrides global message-mode
+# Pets module — /pets, /pet equip <type>
+config-version: 5
+# message-mode: inherit  # chat | actionbar | both
+
+# Permissions (grant per pet):
+#   sharded.pets.use       — open menu / use commands
+#   sharded.pets.parrot    — parrot pet
+#   sharded.pets.axolotl   — axolotl pet
+#   sharded.pets.bee       — bee pet
+#   sharded.pets.warden    — warden pet
+#   sharded.pets.allay     — allay pet
+
 blacklist:
-- nigger
-- nigga
-- faggot
-- fag
-- retard
-- rape
-- pedo
-- hitler
-- nazi
+  - nigger
+  - nigga
+  - faggot
+  - fag
+  - retard
+  - rape
+  - pedo
+  - hitler
+  - nazi

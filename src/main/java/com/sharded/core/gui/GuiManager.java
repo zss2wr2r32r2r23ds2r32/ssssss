@@ -100,6 +100,13 @@ public final class GuiManager {
         if (menu == null) return;
         GuiMenu.GuiItem item = menu.itemAt(slot);
         if (item == null) return;
+        if (item.permission() != null && !item.permission().isBlank()) {
+            String perm = item.permission().startsWith("sharded.") ? item.permission() : "sharded." + item.permission();
+            if (!player.hasPermission(perm)) {
+                message(player, noPermissionMessage(), false);
+                return;
+            }
+        }
         List<String> commands = item.clickCommands();
         if (commands.isEmpty()) commands = item.leftClickCommands();
         runCommands(player, menuId, commands, Map.of());
@@ -160,7 +167,7 @@ public final class GuiManager {
             }
             case "refresh" -> {
                 String target = payload.isBlank() ? menuId : payload;
-                open(player, target);
+                plugin.getServer().getScheduler().runTask(plugin, () -> open(player, target));
                 yield true;
             }
             case "tokens_take" -> {
@@ -211,6 +218,12 @@ public final class GuiManager {
         String out = input.replace("%prefix%", Prefix.get())
                 .replace("%token_prefix%", tokenPrefix());
         if (player != null) {
+            var settings = plugin.modules().get(com.sharded.core.modules.settings.SettingsModule.class);
+            if (settings != null && settings.isEnabled()) {
+                for (Map.Entry<String, String> entry : settings.placeholders(player).entrySet()) {
+                    out = out.replace("%" + entry.getKey() + "%", entry.getValue() == null ? "" : entry.getValue());
+                }
+            }
             TokenService tokens = plugin.modules().tokens();
             if (tokens != null) {
                 long bal = tokens.getBalance(player.getUniqueId());
