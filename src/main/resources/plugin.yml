@@ -66,6 +66,23 @@ commands:
     description: Open the random teleport menu (factions world only)
     usage: /rtp
     aliases: [randomtp, wild]
+  spawn:
+    description: Open the spawn selector or choose a spawn type
+    usage: /spawn [main/vanilla]
+  spawnselect:
+    description: Open the spawn selector menu
+    usage: /spawnselect
+  setspawn:
+    description: Set main or vanilla spawn locations
+    usage: /setspawn <main/vanilla> [world]
+  eglow:
+    description: Open the glow equip menu
+    usage: /eglow [color/off]
+    aliases: [glows, glowing]
+  tags:
+    description: Open the tag equip menu
+    usage: /tags
+    aliases: [tag]
   sb:
     description: Toggle the sidebar scoreboard
     usage: /sb
@@ -217,6 +234,15 @@ permissions:
     default: true
   sharded.rtp.bypass:
     default: op
+  sharded.spawn.admin:
+    description: Set main and vanilla spawn locations
+    default: op
+  eglow.use:
+    description: Open the glow equip menu
+    default: true
+  sharded.tags.use:
+    description: Open the tag equip menu
+    default: true
   sharded.settings.use:
     default: true
   sharded.settings.scoreboard:

@@ -15,7 +15,7 @@ import java.nio.file.StandardCopyOption;
 public final class ConfigSync {
 
     /** Bump when bundled defaults change and should overwrite older server files. */
-    public static final int VERSION = 5;
+    public static final int VERSION = 6;
 
     private ConfigSync() {
     }
@@ -112,6 +112,13 @@ public final class ConfigSync {
         count += resetIfExists(plugin, "modules/portalrtp/config.yml");
         count += resetIfExists(plugin, "modules/portalrtp/messages.yml");
         count += resetIfExists(plugin, "modules/portalrtp/gui.yml");
+        count += resetIfExists(plugin, "modules/spawnselect/config.yml");
+        count += resetIfExists(plugin, "modules/spawnselect/messages.yml");
+        count += resetIfExists(plugin, "modules/spawnselect/gui.yml");
+        count += resetIfExists(plugin, "modules/eglow/config.yml");
+        count += resetIfExists(plugin, "modules/eglow/messages.yml");
+        count += resetIfExists(plugin, "modules/tags/config.yml");
+        count += resetIfExists(plugin, "modules/tags/messages.yml");
         count += resetIfExists(plugin, "modules/privatemessages/config.yml");
         count += resetIfExists(plugin, "modules/privatemessages/messages.yml");
         count += resetIfExists(plugin, "modules/settings/config.yml");

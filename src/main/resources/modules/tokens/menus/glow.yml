@@ -1,14 +1,14 @@
-config-version: 3
+config-version: 4
 menu_title: 'Token Shop | Glows'
-open_command: glows
-size: 27
+open_command: glowshop
+size: 54
 open_permission: tokenshop.use
 
 items:
 
   back_button:
     material: BARRIER
-    slot: 26
+    slot: 53
     display_name: '&x&F&F&0&0&0&0&lBACK'
     left_click_commands:
       - '[openguimenu] mainmenu'
@@ -16,7 +16,7 @@ items:
   red_glow:
     material: RED_HARNESS
     slot: 10
-    display_name: '&x&F&F&0&0&0&0&lRED &x&F&F&0&0&0&0Glow'
+    display_name: '&x&F&F&0&0&0&0&lRED GLOW'
     lore:
       - '&8Description'
       - ''
@@ -25,130 +25,298 @@ items:
       - '&x&F&F&0&0&0&0| &fAnd Enhance your looks!'
       - ''
       - '&x&F&F&0&0&0&0⚓ &fCost: &x&F&F&0&0&0&0500 Tokens'
+      - '&x&F&F&0&0&0&0⚓ &fOwned: %glow_owned_red%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
+      - '[deny_if_permission] eglow.color.red'
       - '[tokens_take] 500'
-      - '[console] lp user %player_name% permission set glow.red true'
-      - '[message] &aYou unlocked the Red Glow!'
+      - '[console] lp user %player_name% permission set eglow.color.red true'
+      - '[message] %token_prefix%&#9FFF00You unlocked Red Glow! Use &f/glows &#9FFF00to equip.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
-  orange_glow:
-    material: ORANGE_HARNESS
+  darkred_glow:
+    material: RED_HARNESS
     slot: 11
-    display_name: '&x&F&F&9&1&0&0&lORANGE &x&F&F&9&1&0&0Glow'
+    display_name: '&x&A&7&0&0&0&0&lDARK RED GLOW'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&F&9&1&0&0Information:'
-      - '&x&F&F&9&1&0&0| &fPurchase the &x&F&F&9&1&0&0Orange Glow'
-      - '&x&F&F&9&1&0&0| &fAnd Enhance your looks!'
+      - '&x&A&7&0&0&0&0Information:'
+      - '&x&A&7&0&0&0&0| &fPurchase the &x&A&7&0&0&0&0Dark Red Glow'
+      - '&x&A&7&0&0&0&0| &fAnd Enhance your looks!'
       - ''
-      - '&x&F&F&9&1&0&0⚓ &fCost: &x&F&F&9&1&0&0500 Tokens'
+      - '&x&A&7&0&0&0&0⚓ &fCost: &x&A&7&0&0&0&0500 Tokens'
+      - '&x&A&7&0&0&0&0⚓ &fOwned: %glow_owned_darkred%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
+      - '[deny_if_permission] eglow.color.darkred'
       - '[tokens_take] 500'
-      - '[console] lp user %player_name% permission set glow.orange true'
-      - '[message] &aYou unlocked the Orange Glow!'
+      - '[console] lp user %player_name% permission set eglow.color.darkred true'
+      - '[message] %token_prefix%&#9FFF00You unlocked Dark Red Glow! Use &f/glows &#9FFF00to equip.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   yellow_glow:
     material: YELLOW_HARNESS
     slot: 12
-    display_name: '&x&F&C&F&F&0&0&lYELLOW &x&F&C&F&F&0&0Glow'
+    display_name: '&x&F&F&F&8&0&0&lYELLOW GLOW'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&C&F&F&0&0Information:'
-      - '&x&F&C&F&F&0&0| &fPurchase the &x&F&C&F&F&0&0Yellow Glow'
-      - '&x&F&C&F&F&0&0| &fAnd Enhance your looks!'
+      - '&x&F&F&F&8&0&0Information:'
+      - '&x&F&F&F&8&0&0| &fPurchase the &x&F&F&F&8&0&0Yellow Glow'
+      - '&x&F&F&F&8&0&0| &fAnd Enhance your looks!'
       - ''
-      - '&x&F&C&F&F&0&0⚓ &fCost: &x&F&C&F&F&0&0500 Tokens'
+      - '&x&F&F&F&8&0&0⚓ &fCost: &x&F&F&F&8&0&0500 Tokens'
+      - '&x&F&F&F&8&0&0⚓ &fOwned: %glow_owned_yellow%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
+      - '[deny_if_permission] eglow.color.yellow'
       - '[tokens_take] 500'
-      - '[console] lp user %player_name% permission set glow.yellow true'
-      - '[message] &aYou unlocked the Yellow Glow!'
+      - '[console] lp user %player_name% permission set eglow.color.yellow true'
+      - '[message] %token_prefix%&#9FFF00You unlocked Yellow Glow! Use &f/glows &#9FFF00to equip.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
-  lime_glow:
-    material: LIME_HARNESS
+  gold_glow:
+    material: ORANGE_HARNESS
     slot: 13
-    display_name: '&x&9&4&F&F&0&0&lLIME &x&9&4&F&F&0&0Glow'
+    display_name: '&x&F&F&C&4&0&0&lGOLD GLOW'
     lore:
       - '&8Description'
       - ''
-      - '&x&9&4&F&F&0&0Information:'
-      - '&x&9&4&F&F&0&0| &fPurchase the &x&9&4&F&F&0&0Lime Glow'
-      - '&x&9&4&F&F&0&0| &fAnd Enhance your looks!'
+      - '&x&F&F&C&4&0&0Information:'
+      - '&x&F&F&C&4&0&0| &fPurchase the &x&F&F&C&4&0&0Gold Glow'
+      - '&x&F&F&C&4&0&0| &fAnd Enhance your looks!'
       - ''
-      - '&x&9&4&F&F&0&0⚓ &fCost: &x&9&4&F&F&0&0500 Tokens'
+      - '&x&F&F&C&4&0&0⚓ &fCost: &x&F&F&C&4&0&0500 Tokens'
+      - '&x&F&F&C&4&0&0⚓ &fOwned: %glow_owned_gold%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
+      - '[deny_if_permission] eglow.color.gold'
       - '[tokens_take] 500'
-      - '[console] lp user %player_name% permission set glow.lime true'
-      - '[message] &aYou unlocked the Lime Glow!'
+      - '[console] lp user %player_name% permission set eglow.color.gold true'
+      - '[message] %token_prefix%&#9FFF00You unlocked Gold Glow! Use &f/glows &#9FFF00to equip.'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  green_glow:
+    material: LIME_HARNESS
+    slot: 14
+    display_name: '&x&8&A&F&F&0&0&lGREEN GLOW'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&8&A&F&F&0&0Information:'
+      - '&x&8&A&F&F&0&0| &fPurchase the &x&8&A&F&F&0&0Green Glow'
+      - '&x&8&A&F&F&0&0| &fAnd Enhance your looks!'
+      - ''
+      - '&x&8&A&F&F&0&0⚓ &fCost: &x&8&A&F&F&0&0500 Tokens'
+      - '&x&8&A&F&F&0&0⚓ &fOwned: %glow_owned_green%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] eglow.color.green'
+      - '[tokens_take] 500'
+      - '[console] lp user %player_name% permission set eglow.color.green true'
+      - '[message] %token_prefix%&#9FFF00You unlocked Green Glow! Use &f/glows &#9FFF00to equip.'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  darkgreen_glow:
+    material: LIME_HARNESS
+    slot: 15
+    display_name: '&x&5&A&A&5&0&0&lDARK GREEN GLOW'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&5&A&A&5&0&0Information:'
+      - '&x&5&A&A&5&0&0| &fPurchase the &x&5&A&A&5&0&0Dark Green Glow'
+      - '&x&5&A&A&5&0&0| &fAnd Enhance your looks!'
+      - ''
+      - '&x&5&A&A&5&0&0⚓ &fCost: &x&5&A&A&5&0&0500 Tokens'
+      - '&x&5&A&A&5&0&0⚓ &fOwned: %glow_owned_darkgreen%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] eglow.color.darkgreen'
+      - '[tokens_take] 500'
+      - '[console] lp user %player_name% permission set eglow.color.darkgreen true'
+      - '[message] %token_prefix%&#9FFF00You unlocked Dark Green Glow! Use &f/glows &#9FFF00to equip.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   cyan_glow:
     material: CYAN_HARNESS
-    slot: 14
-    display_name: '&x&0&0&E&0&F&F&lCYAN &x&0&0&E&0&F&FGlow'
+    slot: 16
+    display_name: '&x&0&0&F&F&E&0&lCYAN GLOW'
     lore:
       - '&8Description'
       - ''
-      - '&x&0&0&E&0&F&FInformation:'
-      - '&x&0&0&E&0&F&F| &fPurchase the &x&0&0&E&0&F&FCyan Glow'
-      - '&x&0&0&E&0&F&F| &fAnd Enhance your looks!'
+      - '&x&0&0&F&F&E&0Information:'
+      - '&x&0&0&F&F&E&0| &fPurchase the &x&0&0&F&F&E&0Cyan Glow'
+      - '&x&0&0&F&F&E&0| &fAnd Enhance your looks!'
       - ''
-      - '&x&0&0&E&0&F&F⚓ &fCost: &x&0&0&E&0&F&F500 Tokens'
+      - '&x&0&0&F&F&E&0⚓ &fCost: &x&0&0&F&F&E&0500 Tokens'
+      - '&x&0&0&F&F&E&0⚓ &fOwned: %glow_owned_cyan%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
+      - '[deny_if_permission] eglow.color.cyan'
       - '[tokens_take] 500'
-      - '[console] lp user %player_name% permission set glow.cyan true'
-      - '[message] &aYou unlocked the Cyan Glow!'
+      - '[console] lp user %player_name% permission set eglow.color.cyan true'
+      - '[message] %token_prefix%&#9FFF00You unlocked Cyan Glow! Use &f/glows &#9FFF00to equip.'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  blue_glow:
+    material: BLUE_HARNESS
+    slot: 19
+    display_name: '&x&0&0&C&1&F&F&lBLUE GLOW'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&0&0&C&1&F&FInformation:'
+      - '&x&0&0&C&1&F&F| &fPurchase the &x&0&0&C&1&F&FBlue Glow'
+      - '&x&0&0&C&1&F&F| &fAnd Enhance your looks!'
+      - ''
+      - '&x&0&0&C&1&F&F⚓ &fCost: &x&0&0&C&1&F&F500 Tokens'
+      - '&x&0&0&C&1&F&F⚓ &fOwned: %glow_owned_blue%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] eglow.color.blue'
+      - '[tokens_take] 500'
+      - '[console] lp user %player_name% permission set eglow.color.blue true'
+      - '[message] %token_prefix%&#9FFF00You unlocked Blue Glow! Use &f/glows &#9FFF00to equip.'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  darkblue_glow:
+    material: BLUE_HARNESS
+    slot: 20
+    display_name: '&x&0&0&3&B&F&F&lDARK BLUE GLOW'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&0&0&3&B&F&FInformation:'
+      - '&x&0&0&3&B&F&F| &fPurchase the &x&0&0&3&B&F&FDark Blue Glow'
+      - '&x&0&0&3&B&F&F| &fAnd Enhance your looks!'
+      - ''
+      - '&x&0&0&3&B&F&F⚓ &fCost: &x&0&0&3&B&F&F500 Tokens'
+      - '&x&0&0&3&B&F&F⚓ &fOwned: %glow_owned_darkblue%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] eglow.color.darkblue'
+      - '[tokens_take] 500'
+      - '[console] lp user %player_name% permission set eglow.color.darkblue true'
+      - '[message] %token_prefix%&#9FFF00You unlocked Dark Blue Glow! Use &f/glows &#9FFF00to equip.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   purple_glow:
     material: PURPLE_HARNESS
-    slot: 15
-    display_name: '&x&9&4&0&0&F&F&lPURPLE &x&9&4&0&0&F&FGlow'
+    slot: 21
+    display_name: '&x&8&0&0&0&F&F&lPURPLE GLOW'
     lore:
       - '&8Description'
       - ''
-      - '&x&9&4&0&0&F&FInformation:'
-      - '&x&9&4&0&0&F&F| &fPurchase the &x&9&4&0&0&F&FPurple Glow'
-      - '&x&9&4&0&0&F&F| &fAnd Enhance your looks!'
+      - '&x&8&0&0&0&F&FInformation:'
+      - '&x&8&0&0&0&F&F| &fPurchase the &x&8&0&0&0&F&FPurple Glow'
+      - '&x&8&0&0&0&F&F| &fAnd Enhance your looks!'
       - ''
-      - '&x&9&4&0&0&F&F⚓ &fCost: &x&9&4&0&0&F&F500 Tokens'
+      - '&x&8&0&0&0&F&F⚓ &fCost: &x&8&0&0&0&F&F500 Tokens'
+      - '&x&8&0&0&0&F&F⚓ &fOwned: %glow_owned_purple%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
+      - '[deny_if_permission] eglow.color.purple'
       - '[tokens_take] 500'
-      - '[console] lp user %player_name% permission set glow.purple true'
-      - '[message] &aYou unlocked the Purple Glow!'
+      - '[console] lp user %player_name% permission set eglow.color.purple true'
+      - '[message] %token_prefix%&#9FFF00You unlocked Purple Glow! Use &f/glows &#9FFF00to equip.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
-  rainbow_glow:
-    material: NETHER_STAR
-    slot: 16
-    display_name: '&x&F&F&0&0&0&0&lR&x&F&F&4&8&0&0&lA&x&F&F&F&8&0&0&lI&x&8&0&F&C&3&7&lN&x&0&0&F&F&6&E&lB&x&0&0&C&1&F&F&lO&x&3&3&6&4&E&9&lW &x&3&3&6&4&E&9Glow'
+  pink_glow:
+    material: PINK_HARNESS
+    slot: 22
+    display_name: '&x&F&F&7&4&D&F&lPINK GLOW'
     lore:
       - '&8Description'
       - ''
-      - '&x&3&3&6&4&E&9Information:'
-      - '&x&3&3&6&4&E&9| &fPurchase the &x&3&3&6&4&E&9Rainbow Glow'
-      - '&x&3&3&6&4&E&9| &fAnd Enhance your looks!'
+      - '&x&F&F&7&4&D&FInformation:'
+      - '&x&F&F&7&4&D&F| &fPurchase the &x&F&F&7&4&D&FPink Glow'
+      - '&x&F&F&7&4&D&F| &fAnd Enhance your looks!'
       - ''
-      - '&x&3&3&6&4&E&9⚓ &fCost: &x&3&3&6&4&E&91500 Tokens'
+      - '&x&F&F&7&4&D&F⚓ &fCost: &x&F&F&7&4&D&F500 Tokens'
+      - '&x&F&F&7&4&D&F⚓ &fOwned: %glow_owned_pink%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
-      - '[tokens_take] 2500'
-      - '[console] lp user %player_name% permission set glow.rainbow true'
-      - '[message] &aYou unlocked the Rainbow Glow!'
+      - '[deny_if_permission] eglow.color.pink'
+      - '[tokens_take] 500'
+      - '[console] lp user %player_name% permission set eglow.color.pink true'
+      - '[message] %token_prefix%&#9FFF00You unlocked Pink Glow! Use &f/glows &#9FFF00to equip.'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  white_glow:
+    material: WHITE_HARNESS
+    slot: 23
+    display_name: '&f&lWHITE GLOW'
+    lore:
+      - '&8Description'
+      - ''
+      - '&fInformation:'
+      - '&f| &fPurchase the &fWhite Glow'
+      - '&f| &fAnd Enhance your looks!'
+      - ''
+      - '&f⚓ &fCost: &f500 Tokens'
+      - '&f⚓ &fOwned: %glow_owned_white%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] eglow.color.white'
+      - '[tokens_take] 500'
+      - '[console] lp user %player_name% permission set eglow.color.white true'
+      - '[message] %token_prefix%&#9FFF00You unlocked White Glow! Use &f/glows &#9FFF00to equip.'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  gray_glow:
+    material: GRAY_HARNESS
+    slot: 24
+    display_name: '&7&lGRAY GLOW'
+    lore:
+      - '&8Description'
+      - ''
+      - '&7Information:'
+      - '&7| &fPurchase the &7Gray Glow'
+      - '&7| &fAnd Enhance your looks!'
+      - ''
+      - '&7⚓ &fCost: &7500 Tokens'
+      - '&7⚓ &fOwned: %glow_owned_gray%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] eglow.color.gray'
+      - '[tokens_take] 500'
+      - '[console] lp user %player_name% permission set eglow.color.gray true'
+      - '[message] %token_prefix%&#9FFF00You unlocked Gray Glow! Use &f/glows &#9FFF00to equip.'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  black_glow:
+    material: BLACK_HARNESS
+    slot: 25
+    display_name: '&8&lBLACK GLOW'
+    lore:
+      - '&8Description'
+      - ''
+      - '&8Information:'
+      - '&8| &fPurchase the &8Black Glow'
+      - '&8| &fAnd Enhance your looks!'
+      - ''
+      - '&8⚓ &fCost: &8500 Tokens'
+      - '&8⚓ &fOwned: %glow_owned_black%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] eglow.color.black'
+      - '[tokens_take] 500'
+      - '[console] lp user %player_name% permission set eglow.color.black true'
+      - '[message] %token_prefix%&#9FFF00You unlocked Black Glow! Use &f/glows &#9FFF00to equip.'
       - '[sound] ENTITY_PLAYER_LEVELUP'

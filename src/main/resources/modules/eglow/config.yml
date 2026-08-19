@@ -1,0 +1,219 @@
+config-version: 1
+
+menu-rows: 4
+disable-command: eglow off
+
+disable:
+  slot: 4
+  display-name: '&x&F&F&0&0&0&0&lDISABLE GLOW'
+  lore:
+    - '&8ᴅᴇsᴄʀɪᴘᴛɪᴏɴ'
+    - ''
+    - '&x&F&F&0&0&0&0Information'
+    - '&x&F&F&0&0&0&0| &fDont want a glow?'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Remove'
+
+owned:
+  show-in-lore: true
+  yes: '&#9FFF00Yes'
+  no: '&#FF2727No'
+  lore-line: '%color%⚓ &fOwned: %owned%'
+
+glows:
+  red:
+    slot: 10
+    permission: eglow.color.red
+    command: eglow red
+    color: '#FF0000'
+    display-name: '&x&F&F&0&0&0&0&lRED GLOW'
+    lore:
+      - '&8ɢʟᴏᴡs'
+      - ''
+      - '&x&F&F&0&0&0&0Information:'
+      - '&x&F&F&0&0&0&0| &fClick to glow and'
+      - '&x&F&F&0&0&0&0| &fenhance your looks!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  darkred:
+    slot: 11
+    permission: eglow.color.darkred
+    command: eglow darkred
+    color: '#A70000'
+    display-name: '&x&A&7&0&0&0&0&lDARK RED GLOW'
+    lore:
+      - '&8ɢʟᴏᴡs'
+      - ''
+      - '&x&A&7&0&0&0&0Information:'
+      - '&x&A&7&0&0&0&0| &fClick to glow and'
+      - '&x&A&7&0&0&0&0| &fenhance your looks!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  yellow:
+    slot: 12
+    permission: eglow.color.yellow
+    command: eglow yellow
+    color: '#FFF800'
+    display-name: '&x&F&F&F&8&0&0&lYELLOW GLOW'
+    lore:
+      - '&8ɢʟᴏᴡs'
+      - ''
+      - '&x&F&F&F&8&0&0Information:'
+      - '&x&F&F&F&8&0&0| &fClick to glow and'
+      - '&x&F&F&F&8&0&0| &fenhance your looks!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  gold:
+    slot: 13
+    permission: eglow.color.gold
+    command: eglow gold
+    color: '#FFC400'
+    display-name: '&x&F&F&C&4&0&0&lGOLD GLOW'
+    lore:
+      - '&8ɢʟᴏᴡs'
+      - ''
+      - '&x&F&F&C&4&0&0Information:'
+      - '&x&F&F&C&4&0&0| &fClick to glow and'
+      - '&x&F&F&C&4&0&0| &fenhance your looks!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  green:
+    slot: 14
+    permission: eglow.color.green
+    command: eglow green
+    color: '#8AFF00'
+    display-name: '&x&8&A&F&F&0&0&lGREEN GLOW'
+    lore:
+      - '&8ɢʟᴏᴡs'
+      - ''
+      - '&x&8&A&F&F&0&0Information:'
+      - '&x&8&A&F&F&0&0| &fClick to glow and'
+      - '&x&8&A&F&F&0&0| &fenhance your looks!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  darkgreen:
+    slot: 15
+    permission: eglow.color.darkgreen
+    command: eglow darkgreen
+    color: '#5AA500'
+    display-name: '&x&5&A&A&5&0&0&lDARK GREEN GLOW'
+    lore:
+      - '&8ɢʟᴏᴡs'
+      - ''
+      - '&x&5&A&A&5&0&0Information:'
+      - '&x&5&A&A&5&0&0| &fClick to glow and'
+      - '&x&5&A&A&5&0&0| &fenhance your looks!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  cyan:
+    slot: 16
+    permission: eglow.color.cyan
+    command: eglow cyan
+    color: '#00FFE0'
+    display-name: '&x&0&0&F&F&E&0&lCYAN GLOW'
+    lore:
+      - '&8ɢʟᴏᴡs'
+      - ''
+      - '&x&0&0&F&F&E&0Information:'
+      - '&x&0&0&F&F&E&0| &fClick to glow and'
+      - '&x&0&0&F&F&E&0| &fenhance your looks!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  blue:
+    slot: 19
+    permission: eglow.color.blue
+    command: eglow blue
+    color: '#00C1FF'
+    display-name: '&x&0&0&C&1&F&F&lBLUE GLOW'
+    lore:
+      - '&8ɢʟᴏᴡs'
+      - ''
+      - '&x&0&0&C&1&F&FInformation:'
+      - '&x&0&0&C&1&F&F| &fClick to glow and'
+      - '&x&0&0&C&1&F&F| &fenhance your looks!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  darkblue:
+    slot: 20
+    permission: eglow.color.darkblue
+    command: eglow darkblue
+    color: '#003BFF'
+    display-name: '&x&0&0&3&B&F&F&lDARK BLUE GLOW'
+    lore:
+      - '&8ɢʟᴏᴡs'
+      - ''
+      - '&x&0&0&3&B&F&FInformation:'
+      - '&x&0&0&3&B&F&F| &fClick to glow and'
+      - '&x&0&0&3&B&F&F| &fenhance your looks!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  purple:
+    slot: 21
+    permission: eglow.color.purple
+    command: eglow purple
+    color: '#8000FF'
+    display-name: '&x&8&0&0&0&F&F&lPURPLE GLOW'
+    lore:
+      - '&8ɢʟᴏᴡs'
+      - ''
+      - '&x&8&0&0&0&F&FInformation:'
+      - '&x&8&0&0&0&F&F| &fClick to glow and'
+      - '&x&8&0&0&0&F&F| &fenhance your looks!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  pink:
+    slot: 22
+    permission: eglow.color.pink
+    command: eglow pink
+    color: '#FF74DF'
+    display-name: '&x&F&F&7&4&D&F&lPINK GLOW'
+    lore:
+      - '&8ɢʟᴏᴡs'
+      - ''
+      - '&x&F&F&7&4&D&FInformation:'
+      - '&x&F&F&7&4&D&F| &fClick to glow and'
+      - '&x&F&F&7&4&D&F| &fenhance your looks!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  white:
+    slot: 23
+    permission: eglow.color.white
+    command: eglow white
+    color: '#FFFFFF'
+    display-name: '&f&lWHITE GLOW'
+    lore:
+      - '&8ɢʟᴏᴡs'
+      - ''
+      - '&fInformation:'
+      - '&f| &fClick to glow and'
+      - '&f| &fenhance your looks!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  gray:
+    slot: 24
+    permission: eglow.color.gray
+    command: eglow gray
+    color: '#808080'
+    display-name: '&7&lGRAY GLOW'
+    lore:
+      - '&8ɢʟᴏᴡs'
+      - ''
+      - '&7Information:'
+      - '&7| &fClick to glow and'
+      - '&7| &fenhance your looks!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  black:
+    slot: 25
+    permission: eglow.color.black
+    command: eglow black
+    color: '#1A1A1A'
+    display-name: '&8&lBLACK GLOW'
+    lore:
+      - '&8ɢʟᴏᴡs'
+      - ''
+      - '&8Information:'
+      - '&8| &fClick to glow and'
+      - '&8| &fenhance your looks!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'

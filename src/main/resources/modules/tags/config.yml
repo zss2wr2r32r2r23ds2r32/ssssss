@@ -1,0 +1,125 @@
+config-version: 1
+
+menu-title: 'Tags'
+menu-size: 27
+limited-menu-title: 'Limited Time Tags'
+limited-menu-size: 27
+limited-close-slot: 26
+
+apply-command: 'eternaltags set %tag_id%'
+custom-apply-command: 'eternaltags set %custom%'
+
+owned:
+  show-in-lore: true
+  yes: '&#9FFF00Yes'
+  no: '&#FF2727No'
+  lore-line: '%color%⚓ &fOwned: %owned%'
+
+close-button:
+  enabled: true
+  slot: 26
+  display-name: '&x&F&F&0&0&0&0&lCLOSE'
+
+limited-button:
+  enabled: true
+  slot: 22
+  material: CLOCK
+  display-name: '&x&F&F&0&0&0&0&lLIMITED TIME'
+  lore:
+    - '&8Limited Tags'
+    - ''
+    - '&x&F&F&0&0&0&0| &fView limited-time tags'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open'
+
+custom-tag-blacklist:
+  - badword
+  - admin
+  - owner
+  - nigger
+  - faggot
+
+tags:
+  mvp:
+    slot: 10
+    permission: eternaltags.tag.mvp
+    material: PAPER
+    display-name: '&8[&x&F&F&C&F&0&0&lMVP&8] &x&F&F&C&F&0&0Tag'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&C&F&0&0Information:'
+      - '&x&F&F&C&F&0&0| &fEquip the &x&F&F&C&F&0&0MVP Tag'
+      - '&x&F&F&C&F&0&0| &fAnd Stand out on TAB!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  diamond:
+    slot: 11
+    permission: eternaltags.tag.diamond
+    material: PAPER
+    display-name: '&8[&x&0&0&8&3&F&F&lDIAMOND&8] &x&0&0&8&3&F&FTag'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&0&0&8&3&F&FInformation:'
+      - '&x&0&0&8&3&F&F| &fEquip the &x&0&0&8&3&F&FDiamond Tag'
+      - '&x&0&0&8&3&F&F| &fAnd Stand out on TAB!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  elite:
+    slot: 12
+    permission: eternaltags.tag.elite
+    material: PAPER
+    display-name: '&8[&x&F&F&0&0&0&0&lELITE&8] &x&F&F&0&0&0&0Tag'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&0&0&0Information:'
+      - '&x&F&F&0&0&0&0| &fEquip the &x&F&F&0&0&0&0Elite Tag'
+      - '&x&F&F&0&0&0&0| &fAnd Stand out on TAB!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  sweat:
+    slot: 13
+    permission: eternaltags.tag.sweat
+    material: PAPER
+    display-name: '&8[&x&B&3&F&F&0&0&lSWEAT&8] &x&B&3&F&F&0&0Tag'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&B&3&F&F&0&0Information:'
+      - '&x&B&3&F&F&0&0| &fEquip the &x&B&3&F&F&0&0Sweat Tag'
+      - '&x&B&3&F&F&0&0| &fAnd Stand out on TAB!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  goat:
+    slot: 14
+    permission: eternaltags.tag.goat
+    material: PAPER
+    display-name: '&8[&x&F&F&0&0&7&C&lGOAT&8] &x&F&F&0&0&7&CTag'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&0&7&CInformation:'
+      - '&x&F&F&0&0&7&C| &fEquip the &x&F&F&0&0&7&CGoat Tag'
+      - '&x&F&F&0&0&7&C| &fAnd Stand out on TAB!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  custom:
+    slot: 16
+    permission: eternaltags.tag.custom
+    material: NAME_TAG
+    custom-input: true
+    apply-command: 'eternaltags set %custom%'
+    display-name: '&x&F&F&0&A&0&0&lCUSTOM &x&F&F&0&A&0&0Tag'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&A&0&0Information:'
+      - '&x&F&F&0&A&0&0| &fCreate a &x&F&F&0&A&0&0Custom Tag'
+      - '&x&F&F&0&A&0&0| &fAnd Stand out on TAB!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+
+# Add limited-time tags here — copy a tag block and set permission/slot/display-name
+limited-tags: {}

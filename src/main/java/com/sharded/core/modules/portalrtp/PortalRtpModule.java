@@ -4,13 +4,12 @@ import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.util.ConfigSync;
 import com.sharded.core.util.MessageUtil;
+import com.sharded.core.util.SafeLocationFinder;
 import com.sharded.core.util.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -28,7 +27,6 @@ import java.io.File;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ThreadLocalRandom;
 
 public final class PortalRtpModule extends Module implements CommandExecutor {
 
@@ -230,26 +228,12 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
         });
     }
 
-    private Location findSafeLocation(World world) {
-        int minRadius = config.getInt("min-radius", 100);
-        int maxRadius = config.getInt("max-radius", 50000);
-        int centerX = config.getInt("center-x", 0);
-        int centerZ = config.getInt("center-z", 0);
-        int attempts = config.getInt("max-attempts", 25);
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-        for (int i = 0; i < attempts; i++) {
-            int distance = random.nextInt(minRadius, Math.max(minRadius + 1, maxRadius));
-            double angle = random.nextDouble() * Math.PI * 2;
-            int x = centerX + (int) (Math.cos(angle) * distance);
-            int z = centerZ + (int) (Math.sin(angle) * distance);
-            int y = world.getHighestBlockYAt(x, z);
-            if (y <= world.getMinHeight()) continue;
-            Block ground = world.getBlockAt(x, y, z);
-            Material type = ground.getType();
-            if (type == Material.LAVA || type == Material.WATER || type == Material.CACTUS
-                    || type == Material.MAGMA_BLOCK || type == Material.POWDER_SNOW || type.isAir()) continue;
-            return new Location(world, x + 0.5, y + 1.0, z + 0.5);
-        }
-        return null;
+    public String targetWorldName() {
+        return targetWorld();
+    }
+
+    /** Finds a safe random location using this module's RTP settings. */
+    public Location findSafeLocation(World world) {
+        return SafeLocationFinder.find(world, config);
     }
 }

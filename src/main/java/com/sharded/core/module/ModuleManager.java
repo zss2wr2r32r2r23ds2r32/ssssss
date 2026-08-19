@@ -25,6 +25,9 @@ import com.sharded.core.modules.privatemessages.PrivateMessagesModule;
 import com.sharded.core.modules.settings.SettingsModule;
 import com.sharded.core.modules.joinmessages.JoinMessagesModule;
 import com.sharded.core.modules.pets.PetsModule;
+import com.sharded.core.modules.spawnselect.SpawnSelectModule;
+import com.sharded.core.modules.eglow.EGlowModule;
+import com.sharded.core.modules.tags.TagsModule;
 import com.sharded.core.modules.tempranks.TempranksModule;
 
 import java.util.ArrayList;
@@ -53,6 +56,7 @@ public final class ModuleManager {
         register(new FlyModule(plugin));
         register(new AutoSmeltModule(plugin));
         register(new PortalRtpModule(plugin));
+        register(new SpawnSelectModule(plugin));
         register(new SettingsModule(plugin));
         register(new KillModule(plugin));
         register(new KillstreaksModule(plugin));
@@ -61,6 +65,8 @@ public final class ModuleManager {
         register(new PickupMobsModule(plugin));
         register(new PickupSpawnersModule(plugin));
         register(new TokensModule(plugin));
+        register(new EGlowModule(plugin));
+        register(new TagsModule(plugin));
         register(new ToolNameModule(plugin));
         register(new BundlesModule(plugin));
     }

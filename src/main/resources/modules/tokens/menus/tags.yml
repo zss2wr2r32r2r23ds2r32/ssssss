@@ -1,6 +1,6 @@
-config-version: 3
+config-version: 4
 menu_title: 'Token Shop | Tags'
-open_command: tags
+open_command: tagshop
 size: 27
 open_permission: tokenshop.use
 
@@ -10,7 +10,7 @@ items:
     material: BARRIER
     slot: 26
     display_name: '&x&F&F&0&0&0&0&lBACK'
-    click_commands:
+    left_click_commands:
       - '[openguimenu] mainmenu'
 
   vip_tag:
@@ -25,13 +25,14 @@ items:
       - '&x&F&F&C&F&0&0| &fAnd Stand out on TAB!'
       - ''
       - '&x&F&F&C&F&0&0⚓ &fCost: &x&F&F&C&F&0&0100 Tokens'
+      - '&x&F&F&C&F&0&0⚓ &fOwned: %tag_owned_mvp%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
-    click_commands:
-      - '[deny_if_permission] tag.mvp'
+    left_click_commands:
+      - '[deny_if_permission] eternaltags.tag.mvp'
       - '[tokens_take] 100'
-      - '[console] lp user %player_name% permission set tag.mvp true'
-      - '[message] %token_prefix%&#9FFF00You unlocked the MVP Tag!'
+      - '[console] lp user %player_name% permission set eternaltags.tag.mvp true'
+      - '[message] %token_prefix%&#9FFF00You unlocked the MVP Tag! Use &f/tags &#9FFF00to equip.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   pro_tag:
@@ -46,13 +47,14 @@ items:
       - '&x&0&0&8&3&F&F| &fAnd Stand out on TAB!'
       - ''
       - '&x&0&0&8&3&F&F⚓ &fCost: &x&0&0&8&3&F&F600 Tokens'
+      - '&x&0&0&8&3&F&F⚓ &fOwned: %tag_owned_diamond%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
-    click_commands:
-      - '[deny_if_permission] tag.pro'
+    left_click_commands:
+      - '[deny_if_permission] eternaltags.tag.diamond'
       - '[tokens_take] 600'
-      - '[console] lp user %player_name% permission set tag.pro true'
-      - '[message] %token_prefix%&#9FFF00You unlocked the Diamond Tag!'
+      - '[console] lp user %player_name% permission set eternaltags.tag.diamond true'
+      - '[message] %token_prefix%&#9FFF00You unlocked the Diamond Tag! Use &f/tags &#9FFF00to equip.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   elite_tag:
@@ -67,13 +69,14 @@ items:
       - '&x&F&F&0&0&0&0| &fAnd Stand out on TAB!'
       - ''
       - '&x&F&F&0&0&0&0⚓ &fCost: &x&F&F&0&0&0&0800 Tokens'
+      - '&x&F&F&0&0&0&0⚓ &fOwned: %tag_owned_elite%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
-    click_commands:
-      - '[deny_if_permission] tag.elite'
+    left_click_commands:
+      - '[deny_if_permission] eternaltags.tag.elite'
       - '[tokens_take] 800'
-      - '[console] lp user %player_name% permission set tag.elite true'
-      - '[message] %token_prefix%&#9FFF00You unlocked the Elite Tag!'
+      - '[console] lp user %player_name% permission set eternaltags.tag.elite true'
+      - '[message] %token_prefix%&#9FFF00You unlocked the Elite Tag! Use &f/tags &#9FFF00to equip.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   legend_tag:
@@ -88,13 +91,14 @@ items:
       - '&x&B&3&F&F&0&0| &fAnd Stand out on TAB!'
       - ''
       - '&x&B&3&F&F&0&0⚓ &fCost: &x&B&3&F&F&0&01000 Tokens'
+      - '&x&B&3&F&F&0&0⚓ &fOwned: %tag_owned_sweat%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
-    click_commands:
-      - '[deny_if_permission] tag.legend'
+    left_click_commands:
+      - '[deny_if_permission] eternaltags.tag.sweat'
       - '[tokens_take] 1000'
-      - '[console] lp user %player_name% permission set tag.legend true'
-      - '[message] %token_prefix%&#9FFF00You unlocked the Sweat Tag!'
+      - '[console] lp user %player_name% permission set eternaltags.tag.sweat true'
+      - '[message] %token_prefix%&#9FFF00You unlocked the Sweat Tag! Use &f/tags &#9FFF00to equip.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   mythic_tag:
@@ -109,32 +113,34 @@ items:
       - '&x&F&F&0&0&7&C| &fAnd Stand out on TAB!'
       - ''
       - '&x&F&F&0&0&7&C⚓ &fCost: &x&F&F&0&0&7&C1500 Tokens'
+      - '&x&F&F&0&0&7&C⚓ &fOwned: %tag_owned_goat%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
-    click_commands:
-      - '[deny_if_permission] tag.mythic'
+    left_click_commands:
+      - '[deny_if_permission] eternaltags.tag.goat'
       - '[tokens_take] 1500'
-      - '[console] lp user %player_name% permission set tag.mythic true'
-      - '[message] %token_prefix%&#9FFF00You unlocked the Goat Tag!'
+      - '[console] lp user %player_name% permission set eternaltags.tag.goat true'
+      - '[message] %token_prefix%&#9FFF00You unlocked the Goat Tag! Use &f/tags &#9FFF00to equip.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   custom_tag:
-    material: WRITABLE_BOOK
+    material: NAME_TAG
     slot: 16
     display_name: '&x&F&F&0&A&0&0&lCUSTOM &x&F&F&0&A&0&0Tag'
     lore:
       - '&8Description'
       - ''
       - '&x&F&F&0&A&0&0Information:'
-      - '&x&F&F&0&A&0&0| &fUnlock the &x&F&F&0&A&0&0Custom Tag'
+      - '&x&F&F&0&A&0&0| &fUnlock a &x&F&F&0&A&0&0Custom Tag'
       - '&x&F&F&0&A&0&0| &fAnd Stand out on TAB!'
       - ''
       - '&x&F&F&0&A&0&0⚓ &fCost: &x&F&F&0&A&0&03000 Tokens'
+      - '&x&F&F&0&A&0&0⚓ &fOwned: %tag_owned_custom%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
-    click_commands:
-      - '[deny_if_permission] tag.custom'
+    left_click_commands:
+      - '[deny_if_permission] eternaltags.tag.custom'
       - '[tokens_take] 3000'
-      - '[console] lp user %player_name% permission set tag.custom true'
-      - '[message] %token_prefix%&#9FFF00You unlocked a Custom Tag! Open a ticket to set it.'
+      - '[console] lp user %player_name% permission set eternaltags.tag.custom true'
+      - '[message] %token_prefix%&#9FFF00You unlocked a Custom Tag! Use &f/tags &#9FFF00to set it.'
       - '[sound] ENTITY_PLAYER_LEVELUP'

@@ -1,0 +1,14 @@
+config-version: 1
+
+# World used when portal RTP module is disabled
+fallback-world: world
+
+# Fallback RTP radius if portal RTP is disabled (normally uses portalrtp/config.yml)
+rtp-fallback:
+  center-x: 0
+  center-z: 0
+  min-radius: 100
+  max-radius: 500
+  max-attempts: 25
+
+# main-spawn and vanilla-world are set via /setspawn
