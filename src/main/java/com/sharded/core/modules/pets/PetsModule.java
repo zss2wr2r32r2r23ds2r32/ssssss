@@ -43,6 +43,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.scheduler.BukkitTask;
 
 import com.sharded.core.util.ConfigSync;
+import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -397,6 +398,9 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         entity.setPersistent(false);
         entity.getPersistentDataContainer().set(petOwnerKey, PersistentDataType.STRING, ownerId.toString());
 
+        // Paper 1.21+ requires a non-null velocity in the add_entity packet.
+        entity.setVelocity(new Vector(0, 0, 0));
+
         // Pets are cosmetic — never use gravity (warden was sinking underground).
         entity.setGravity(false);
 
@@ -468,6 +472,7 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         }
         if (!entity.getWorld().equals(owner.getWorld())) {
             entity.teleport(owner.getLocation());
+            entity.setVelocity(new Vector(0, 0, 0));
             return;
         }
 
@@ -481,6 +486,7 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
             target = followLocation(owner);
         }
         entity.teleport(target);
+        entity.setVelocity(new Vector(0, 0, 0));
     }
 
     private void clearParrotFromShoulder(Player owner, Entity petEntity) {

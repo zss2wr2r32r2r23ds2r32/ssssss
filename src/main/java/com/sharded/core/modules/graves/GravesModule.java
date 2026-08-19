@@ -23,6 +23,7 @@ import org.bukkit.entity.Display;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TextDisplay;
+import org.bukkit.util.Vector;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -211,6 +212,7 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
                 entity.setPersistent(false);
                 entity.setShadowed(true);
                 entity.setSeeThrough(false);
+                entity.setVelocity(new Vector(0, 0, 0));
                 entity.getPersistentDataContainer().set(hologramKey, PersistentDataType.STRING, grave.id.toString());
             });
             display.text(Text.c(lines[i]));
