@@ -319,7 +319,7 @@ public final class TagsModule extends Module implements CommandExecutor {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onCustomChat(AsyncChatEvent event) {
         Player player = event.getPlayer();
-        if (!awaitingCustomTag.remove(player.getUniqueId())) return;
+        if (!Boolean.TRUE.equals(awaitingCustomTag.remove(player.getUniqueId()))) return;
         event.setCancelled(true);
 
         String input = PlainTextComponentSerializer.plainText().serialize(event.message()).trim();
@@ -369,68 +369,48 @@ public final class TagsModule extends Module implements CommandExecutor {
 
         String finalInput = input;
         boolean chatCreation = fromChat;
+        long delay = config.getLong("custom-apply-delay-ticks", 5L);
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             if (!player.isOnline()) return;
-            removeCustomSuffix(player, finalInput);
-            String cmd = config.getString("custom-apply-command",
-                            "[console] lp user %player_name% meta setsuffix \"%custom%\"")
-                    .replace("%player%", player.getName())
-                    .replace("%player_name%", player.getName())
-                    .replace("%custom%", finalInput);
-            dispatchCommand(player, cmd);
+            dispatchCommand(player, buildLpCommand(player, config.getString("custom-apply-command",
+                    "[console] lp user %player_name% meta setsuffix %priority% \"%custom%\""), finalInput));
 
             if (database != null) database.saveLastCustomTag(player.getUniqueId(), finalInput, chatCreation);
             send(player, chatCreation ? "custom-set" : "custom-reapplied", "%tag%", finalInput);
-        }, 2L);
+        }, delay);
     }
 
     private void clearEquippedTag(Player player) {
         for (String line : config.getStringList("clear-equipped-commands")) {
             if (line == null || line.isBlank()) continue;
             String lower = line.toLowerCase(java.util.Locale.ROOT);
-            if (lower.contains("clearsuffix") || lower.contains("removesuffix")) continue;
+            if (lower.contains("clearsuffix") || lower.contains("removesuffix") || lower.contains("setsuffix")) {
+                continue;
+            }
             String cmd = line.replace("%player%", player.getName()).replace("%player_name%", player.getName());
             dispatchCommand(player, cmd);
         }
-        removeCustomSuffix(player, null);
+        removeCustomSuffix(player);
     }
 
-    /** Removes the player's saved/custom LP suffix via removesuffix (falls back to clearsuffix). */
-    private void removeCustomSuffix(Player player, String exceptTag) {
+    /** LuckPerms removesuffix uses priority (e.g. 1), not the suffix text. */
+    private void removeCustomSuffix(Player player) {
         if (!plugin.luckPerms().isAvailable()) return;
-
-        String saved = database == null ? null : database.getLastCustomTag(player.getUniqueId());
-        boolean removed = false;
-
-        if (saved != null && !saved.isBlank() && !saved.equals(exceptTag)) {
-            removed |= runRemoveSuffix(player, saved);
-            removed |= runRemoveSuffix(player, " " + saved);
-        }
-
-        String live = plugin.luckPerms().suffix(player);
-        if (live != null && !live.isBlank()) {
-            String normalizedLive = ColorUtil.normalize(live.replace('§', '&'));
-            if (!normalizedLive.equals(exceptTag)
-                    && (saved == null || !normalizedLive.equals(ColorUtil.normalize(saved)))) {
-                removed |= runRemoveSuffix(player, normalizedLive);
-                removed |= runRemoveSuffix(player, " " + normalizedLive);
-            }
-        }
-
-        if (!removed && (saved == null || saved.isBlank())) {
-            plugin.luckPerms().runConsole("lp user " + player.getName() + " meta clearsuffix");
-        }
+        dispatchCommand(player, buildLpCommand(player, config.getString("custom-remove-command",
+                "[console] lp user %player_name% meta removesuffix %priority%"), null));
     }
 
-    private boolean runRemoveSuffix(Player player, String suffix) {
-        if (suffix == null || suffix.isBlank()) return false;
-        String cmd = config.getString("custom-remove-command",
-                        "[console] lp user %player_name% meta removesuffix \"%custom%\"")
+    private String buildLpCommand(Player player, String template, String custom) {
+        if (template == null || template.isBlank()) return "";
+        return template
                 .replace("%player%", player.getName())
                 .replace("%player_name%", player.getName())
-                .replace("%custom%", suffix);
-        dispatchCommand(player, cmd);
-        return true;
+                .replace("%custom%", custom == null ? "" : custom)
+                .replace("%priority%", String.valueOf(suffixPriority()));
+    }
+
+    private int suffixPriority() {
+        return config.getInt("custom-suffix-priority", 1);
     }
 
     private boolean matchesLimitedTag(String input) {

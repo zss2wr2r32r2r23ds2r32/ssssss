@@ -1,4 +1,4 @@
-config-version: 6
+config-version: 7
 
 menu-title: 'Tags'
 menu-size: 27
@@ -7,8 +7,10 @@ limited-menu-size: 27
 limited-close-slot: 26
 
 apply-command: 'eternaltags:tags set %tag_id% %player_name%'
-custom-apply-command: '[console] lp user %player_name% meta setsuffix "%custom%"'
-custom-remove-command: '[console] lp user %player_name% meta removesuffix "%custom%"'
+custom-suffix-priority: 1
+custom-apply-delay-ticks: 5
+custom-apply-command: '[console] lp user %player_name% meta setsuffix %priority% "%custom%"'
+custom-remove-command: '[console] lp user %player_name% meta removesuffix %priority%'
 custom-cooldown-hours: 24
 block-limited-tag-copy: true
 

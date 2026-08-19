@@ -2,7 +2,7 @@
 
 All-in-one core plugin for **Paper 1.21.11** (Java 21). Every feature is a module with its own folder (`config.yml`, `messages.yml`, and optional `gui.yml` menus in DeluxeMenus-style format).
 
-Pre-built jar: [`release/ShardedCore-1.4.12.jar`](release/ShardedCore-1.4.12.jar)
+Pre-built jar: [`release/ShardedCore-1.4.13.jar`](release/ShardedCore-1.4.13.jar)
 
 ## Global config
 

@@ -201,7 +201,7 @@ public final class NameColorModule extends Module implements CommandExecutor {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onChat(AsyncChatEvent event) {
         Player player = event.getPlayer();
-        if (!awaitingGradient.remove(player.getUniqueId())) return;
+        if (!Boolean.TRUE.equals(awaitingGradient.remove(player.getUniqueId()))) return;
         event.setCancelled(true);
         String input = PlainTextComponentSerializer.plainText().serialize(event.message()).trim();
         Bukkit.getScheduler().runTask(plugin, () -> handleGradientInput(player, input));
