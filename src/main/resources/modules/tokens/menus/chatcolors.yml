@@ -1,4 +1,4 @@
-config-version: 6
+config-version: 7
 menu_title: 'Token Shop | Chat Colours'
 open_command: chatcolors
 size: 27
@@ -20,6 +20,10 @@ items:
     lore:
       - '&8Description'
       - ''
+      - '&x&F&F&0&0&0&0Information:'
+      - '&x&F&F&0&0&0&0| &fUnlock &x&F&F&0&0&0&0Red Chat Colour'
+      - '&x&F&F&0&0&0&0| &fEquip via &f/chatcolor'
+      - ''
       - '&x&F&F&0&0&0&0⚓ &fCost: &x&F&F&0&0&0&0300 Tokens'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
@@ -35,6 +39,12 @@ items:
     slot: 11
     display_name: '&x&F&F&6&7&0&0&lORANGE &x&F&F&6&7&0&0Chat Colour'
     lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&6&7&0&0Information:'
+      - '&x&F&F&6&7&0&0| &fUnlock &x&F&F&6&7&0&0Orange Chat Colour'
+      - '&x&F&F&6&7&0&0| &fEquip via &f/chatcolor'
+      - ''
       - '&x&F&F&6&7&0&0⚓ &fCost: &x&F&F&6&7&0&0300 Tokens'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
@@ -49,6 +59,16 @@ items:
     material: YELLOW_DYE
     slot: 12
     display_name: '&x&F&C&F&F&0&0&lYELLOW &x&F&C&F&F&0&0Chat Colour'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&C&F&F&0&0Information:'
+      - '&x&F&C&F&F&0&0| &fUnlock &x&F&C&F&F&0&0Yellow Chat Colour'
+      - '&x&F&C&F&F&0&0| &fEquip via &f/chatcolor'
+      - ''
+      - '&x&F&C&F&F&0&0⚓ &fCost: &x&F&C&F&F&0&0300 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
       - '[deny_if_permission] ezcolor.color.yellow'
       - '[tokens_take] 300'
@@ -60,6 +80,16 @@ items:
     material: LIME_DYE
     slot: 13
     display_name: '&x&9&F&F&F&0&0&lLIME &x&9&F&F&F&0&0Chat Colour'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&9&F&F&F&0&0Information:'
+      - '&x&9&F&F&F&0&0| &fUnlock &x&9&F&F&F&0&0Lime Chat Colour'
+      - '&x&9&F&F&F&0&0| &fEquip via &f/chatcolor'
+      - ''
+      - '&x&9&F&F&F&0&0⚓ &fCost: &x&9&F&F&F&0&0300 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
       - '[deny_if_permission] ezcolor.color.lime'
       - '[tokens_take] 300'
@@ -71,6 +101,16 @@ items:
     material: LIGHT_BLUE_DYE
     slot: 14
     display_name: '&x&0&0&B&7&F&F&lAQUA &x&0&0&B&7&F&FChat Colour'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&0&0&B&7&F&FInformation:'
+      - '&x&0&0&B&7&F&F| &fUnlock &x&0&0&B&7&F&FAqua Chat Colour'
+      - '&x&0&0&B&7&F&F| &fEquip via &f/chatcolor'
+      - ''
+      - '&x&0&0&B&7&F&F⚓ &fCost: &x&0&0&B&7&F&F300 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
       - '[deny_if_permission] ezcolor.color.aqua'
       - '[tokens_take] 300'
@@ -82,6 +122,16 @@ items:
     material: PURPLE_DYE
     slot: 15
     display_name: '&x&A&D&4&E&F&F&lPURPLE &x&A&D&4&E&F&FChat Colour'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&A&D&4&E&F&FInformation:'
+      - '&x&A&D&4&E&F&F| &fUnlock &x&A&D&4&E&F&FPurple Chat Colour'
+      - '&x&A&D&4&E&F&F| &fEquip via &f/chatcolor'
+      - ''
+      - '&x&A&D&4&E&F&F⚓ &fCost: &x&A&D&4&E&F&F300 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
       - '[deny_if_permission] ezcolor.color.purple'
       - '[tokens_take] 300'
@@ -94,6 +144,12 @@ items:
     slot: 16
     display_name: '&x&3&3&6&4&E&9&lRAINBOW &x&3&3&6&4&E&9Chat'
     lore:
+      - '&8Description'
+      - ''
+      - '&x&3&3&6&4&E&9Information:'
+      - '&x&3&3&6&4&E&9| &fUnlock &x&3&3&6&4&E&9Rainbow Chat Colour'
+      - '&x&3&3&6&4&E&9| &fEquip via &f/chatcolor'
+      - ''
       - '&x&3&3&6&4&E&9⚓ &fCost: &x&3&3&6&4&E&91500 Tokens'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'

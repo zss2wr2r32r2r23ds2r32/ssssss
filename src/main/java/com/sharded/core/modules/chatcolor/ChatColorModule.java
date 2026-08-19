@@ -101,6 +101,14 @@ public final class ChatColorModule extends Module implements CommandExecutor {
                     .hideAll()
                     .build());
         }
+
+        int removeSlot = config.getInt("remove.slot", 4);
+        inventory.setItem(removeSlot, new ItemBuilder(Material.BARRIER)
+                .name(config.getString("remove.display-name", "&c&lREMOVE CHAT COLOUR"))
+                .lore(apply(config.getStringList("remove.lore"), ph))
+                .hideAll()
+                .build());
+
         player.openInventory(inventory);
     }
 
@@ -120,6 +128,14 @@ public final class ChatColorModule extends Module implements CommandExecutor {
         if (!(event.getView().getTopInventory().getHolder() instanceof MenuHolder)) return;
         event.setCancelled(true);
         if (event.getClickedInventory() != event.getView().getTopInventory()) return;
+
+        if (event.getSlot() == config.getInt("remove.slot", 4)) {
+            player.closeInventory();
+            run(player, config.getString("remove.command", "ezcolors reset"));
+            send(player, "removed");
+            return;
+        }
+
         for (ColorOption color : colors.values()) {
             if (color.slot() != event.getSlot()) continue;
             player.closeInventory();

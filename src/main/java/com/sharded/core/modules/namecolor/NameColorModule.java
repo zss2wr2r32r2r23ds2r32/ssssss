@@ -132,6 +132,14 @@ public final class NameColorModule extends Module implements CommandExecutor {
                     .hideAll()
                     .build());
         }
+
+        int resetSlot = config.getInt("reset.slot", 4);
+        inventory.setItem(resetSlot, new ItemBuilder(Material.BARRIER)
+                .name(config.getString("reset.display-name", "&c&lRESET NAME COLOUR"))
+                .lore(apply(config.getStringList("reset.lore"), ph))
+                .hideAll()
+                .build());
+
         player.openInventory(inventory);
     }
 
@@ -154,6 +162,14 @@ public final class NameColorModule extends Module implements CommandExecutor {
         if (!(event.getView().getTopInventory().getHolder() instanceof MenuHolder)) return;
         event.setCancelled(true);
         if (event.getClickedInventory() != event.getView().getTopInventory()) return;
+
+        if (event.getSlot() == config.getInt("reset.slot", 4)) {
+            player.closeInventory();
+            run(player, config.getString("reset.command", "namecolor:namecolor white"));
+            send(player, "reset");
+            return;
+        }
+
         for (ColorOption color : colors.values()) {
             if (color.slot() != event.getSlot()) continue;
             player.closeInventory();

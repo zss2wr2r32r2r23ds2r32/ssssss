@@ -1,10 +1,22 @@
-config-version: 1
-menu-rows: 4
+config-version: 2
+menu-rows: 3
 filler-material: BLACK_STAINED_GLASS_PANE
 
 placeholders:
   owned-yes: '&#9FFF00&nYes'
   owned-no: '&#FF2727&nNo'
+
+remove:
+  slot: 4
+  command: 'ezcolors reset'
+  display-name: '&c&lREMOVE CHAT COLOUR'
+  lore:
+    - '&8Description'
+    - ''
+    - '&7Information:'
+    - '&7| &fRemove your chat colour'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Remove'
 
 colors:
   red:
@@ -31,6 +43,9 @@ colors:
     lore:
       - '&8Description'
       - ''
+      - '&x&F&F&6&7&0&0Information:'
+      - '&x&F&F&6&7&0&0| &fEquip orange chat colour'
+      - ''
       - '&x&F&F&6&7&0&0| ⚓ &fOwned: %chatcolor_owned_orange%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
@@ -42,6 +57,9 @@ colors:
     display-name: '&x&F&C&F&F&0&0&lYELLOW &x&F&C&F&F&0&0Chat Colour'
     lore:
       - '&8Description'
+      - ''
+      - '&x&F&C&F&F&0&0Information:'
+      - '&x&F&C&F&F&0&0| &fEquip yellow chat colour'
       - ''
       - '&x&F&C&F&F&0&0| ⚓ &fOwned: %chatcolor_owned_yellow%'
       - ''
@@ -55,6 +73,9 @@ colors:
     lore:
       - '&8Description'
       - ''
+      - '&x&9&F&F&F&0&0Information:'
+      - '&x&9&F&F&F&0&0| &fEquip lime chat colour'
+      - ''
       - '&x&9&F&F&F&0&0| ⚓ &fOwned: %chatcolor_owned_lime%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
@@ -66,6 +87,9 @@ colors:
     display-name: '&x&0&0&B&7&F&F&lAQUA &x&0&0&B&7&F&FChat Colour'
     lore:
       - '&8Description'
+      - ''
+      - '&x&0&0&B&7&F&FInformation:'
+      - '&x&0&0&B&7&F&F| &fEquip aqua chat colour'
       - ''
       - '&x&0&0&B&7&F&F| ⚓ &fOwned: %chatcolor_owned_aqua%'
       - ''
@@ -79,17 +103,23 @@ colors:
     lore:
       - '&8Description'
       - ''
+      - '&x&A&D&4&E&F&FInformation:'
+      - '&x&A&D&4&E&F&F| &fEquip purple chat colour'
+      - ''
       - '&x&A&D&4&E&F&F| ⚓ &fOwned: %chatcolor_owned_purple%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
   rainbow:
     slot: 16
     permission: ezcolor.color.rainbow
-    command: 'ezcolor rainbow 2'
+    command: 'ezcolor rainbow2'
     material: NETHER_STAR
     display-name: '&x&F&F&0&0&0&0&lR&x&F&F&4&8&0&0&lA&x&F&F&F&8&0&0&lI&x&8&0&F&C&3&7&lN&x&0&0&F&F&6&E&lB&x&0&0&C&1&F&F&lO&x&3&3&6&4&E&9&lW'
     lore:
       - '&8Description'
+      - ''
+      - '&x&3&3&6&4&E&9Information:'
+      - '&x&3&3&6&4&E&9| &fEquip rainbow chat colour'
       - ''
       - '&x&3&3&6&4&E&9| ⚓ &fOwned: %chatcolor_owned_rainbow%'
       - ''

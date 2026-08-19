@@ -1,4 +1,4 @@
-config-version: 2
+config-version: 3
 menu-rows: 4
 filler-material: BLACK_STAINED_GLASS_PANE
 show-all-hats: true
@@ -16,7 +16,12 @@ remove:
   slot: 4
   display-name: '&c&lREMOVE HAT'
   lore:
-    - '&7Click to take off your cosmetic hat'
+    - '&8Description'
+    - ''
+    - '&7Information:'
+    - '&7| &fTake off your cosmetic hat'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Remove'
 
 hats:
   tophat:
@@ -26,8 +31,11 @@ hats:
     material: 'itemsadder-hats:tophat'
     display-name: '&x&F&F&0&0&5&3&lTOP &x&F&F&0&0&5&3Hat'
     lore:
-      - '&7Equip as your helmet'
-      - '&7Prot IV · Unb III · Mending'
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&0&5&3Information:'
+      - '&x&F&F&0&0&5&3| &fEquip as your helmet'
+      - '&x&F&F&0&0&5&3| &fProt IV · Unb III · Mending'
       - ''
       - '&x&F&F&0&0&5&3| ⚓ &fOwned: %wardrobe_owned_tophat%'
       - ''
@@ -39,8 +47,11 @@ hats:
     material: 'itemsadder-hats:crown'
     display-name: '&x&F&F&E&3&0&0&lCROWN'
     lore:
-      - '&7Equip as your helmet'
-      - '&7Prot IV · Unb III · Mending'
+      - '&8Description'
+      - ''
+      - '&x&F&F&E&3&0&0Information:'
+      - '&x&F&F&E&3&0&0| &fEquip as your helmet'
+      - '&x&F&F&E&3&0&0| &fProt IV · Unb III · Mending'
       - ''
       - '&x&F&F&E&3&0&0| ⚓ &fOwned: %wardrobe_owned_crown%'
       - ''
@@ -52,8 +63,11 @@ hats:
     material: 'itemsadder-hats:propeller_hat'
     display-name: '&x&0&0&8&D&F&F&lPROPELLER &x&0&0&8&D&F&FHat'
     lore:
-      - '&7Equip as your helmet'
-      - '&7Prot IV · Unb III · Mending'
+      - '&8Description'
+      - ''
+      - '&x&0&0&8&D&F&FInformation:'
+      - '&x&0&0&8&D&F&F| &fEquip as your helmet'
+      - '&x&0&0&8&D&F&F| &fProt IV · Unb III · Mending'
       - ''
       - '&x&0&0&8&D&F&F| ⚓ &fOwned: %wardrobe_owned_propeller_hat%'
       - ''
@@ -65,8 +79,11 @@ hats:
     material: 'itemsadder-hats:clown_mask'
     display-name: '&x&F&F&0&0&0&0&lCLOWN &x&F&F&0&0&0&0Mask'
     lore:
-      - '&7Equip as your helmet'
-      - '&7Prot IV · Unb III · Mending'
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&0&0&0Information:'
+      - '&x&F&F&0&0&0&0| &fEquip as your helmet'
+      - '&x&F&F&0&0&0&0| &fProt IV · Unb III · Mending'
       - ''
       - '&x&F&F&0&0&0&0| ⚓ &fOwned: %wardrobe_owned_clown_mask%'
       - ''
@@ -78,8 +95,11 @@ hats:
     material: 'itemsadder-hats:sstraw_hat'
     display-name: '&x&B&3&F&F&0&0&lSTRAW &x&B&3&F&F&0&0Hat'
     lore:
-      - '&7Equip as your helmet'
-      - '&7Prot IV · Unb III · Mending'
+      - '&8Description'
+      - ''
+      - '&x&B&3&F&F&0&0Information:'
+      - '&x&B&3&F&F&0&0| &fEquip as your helmet'
+      - '&x&B&3&F&F&0&0| &fProt IV · Unb III · Mending'
       - ''
       - '&x&B&3&F&F&0&0| ⚓ &fOwned: %wardrobe_owned_sstraw_hat%'
       - ''

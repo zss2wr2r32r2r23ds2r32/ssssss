@@ -1,4 +1,4 @@
-config-version: 6
+config-version: 7
 menu_title: 'Token Shop | Cosmetics'
 open_command: cosmetics
 size: 27
@@ -20,6 +20,10 @@ items:
     lore:
       - '&8Description'
       - ''
+      - '&x&F&F&0&0&5&3Information:'
+      - '&x&F&F&0&0&5&3| &fUnlock the &x&F&F&0&0&5&3Top Hat'
+      - '&x&F&F&0&0&5&3| &fEquip via &f/wardrobe'
+      - ''
       - '&x&F&F&0&0&5&3⚓ &fCost: &x&F&F&0&0&5&3800 Tokens'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
@@ -35,6 +39,16 @@ items:
     material: 'itemsadder-hats:crown'
     slot: 12
     display_name: '&x&F&F&E&3&0&0&lCROWN &7(/wardrobe)'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&E&3&0&0Information:'
+      - '&x&F&F&E&3&0&0| &fUnlock the &x&F&F&E&3&0&0Crown'
+      - '&x&F&F&E&3&0&0| &fEquip via &f/wardrobe'
+      - ''
+      - '&x&F&F&E&3&0&0⚓ &fCost: &x&F&F&E&3&0&01200 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
       - '[deny_if_permission] sharded.wardrobe.crown'
       - '[tokens_take] 1200'
@@ -47,6 +61,16 @@ items:
     material: 'itemsadder-hats:propeller_hat'
     slot: 13
     display_name: '&x&0&0&8&D&F&F&lPROPELLER &x&0&0&8&D&F&FHat &7(/wardrobe)'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&0&0&8&D&F&FInformation:'
+      - '&x&0&0&8&D&F&F| &fUnlock the &x&0&0&8&D&F&FPropeller Hat'
+      - '&x&0&0&8&D&F&F| &fEquip via &f/wardrobe'
+      - ''
+      - '&x&0&0&8&D&F&F⚓ &fCost: &x&0&0&8&D&F&F900 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
       - '[deny_if_permission] sharded.wardrobe.propeller_hat'
       - '[tokens_take] 900'
@@ -59,6 +83,16 @@ items:
     material: 'itemsadder-hats:clown_mask'
     slot: 14
     display_name: '&x&F&F&0&0&0&0&lCLOWN &x&F&F&0&0&0&0Mask &7(/wardrobe)'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&0&0&0Information:'
+      - '&x&F&F&0&0&0&0| &fUnlock the &x&F&F&0&0&0&0Clown Mask'
+      - '&x&F&F&0&0&0&0| &fEquip via &f/wardrobe'
+      - ''
+      - '&x&F&F&0&0&0&0⚓ &fCost: &x&F&F&0&0&0&0700 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
       - '[deny_if_permission] sharded.wardrobe.clown_mask'
       - '[tokens_take] 700'
@@ -71,6 +105,16 @@ items:
     material: 'itemsadder-hats:sstraw_hat'
     slot: 15
     display_name: '&x&B&3&F&F&0&0&lSTRAW &x&B&3&F&F&0&0Hat &7(/wardrobe)'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&B&3&F&F&0&0Information:'
+      - '&x&B&3&F&F&0&0| &fUnlock the &x&B&3&F&F&0&0Straw Hat'
+      - '&x&B&3&F&F&0&0| &fEquip via &f/wardrobe'
+      - ''
+      - '&x&B&3&F&F&0&0⚓ &fCost: &x&B&3&F&F&0&0600 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
       - '[deny_if_permission] sharded.wardrobe.sstraw_hat'
       - '[tokens_take] 600'
