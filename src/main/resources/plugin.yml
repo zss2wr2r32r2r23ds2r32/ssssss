@@ -64,7 +64,7 @@ commands:
     usage: /autosmelt
   rtp:
     description: Open the random teleport menu (factions world only)
-    usage: /rtp [wand]
+    usage: /rtp
     aliases: [randomtp, wild]
   sb:
     description: Toggle the sidebar scoreboard
@@ -103,6 +103,15 @@ commands:
   tokenshop:
     description: Open the token shop
     usage: /tokenshop
+  pets:
+    description: Open the pets menu
+    usage: /pets
+  pet:
+    description: Manage your cosmetic pet
+    usage: /pet <equip|remove|rename> [args]
+  killeffect:
+    description: Manage kill particle effects
+    usage: /killeffect <equip|disable|toggle> [effect]
 
 permissions:
   sharded.admin:
@@ -156,8 +165,8 @@ permissions:
   sharded.backpack.slots.9:
     default: op
   sharded.graves.use:
-    description: Create a grave on death (give to ranks via LuckPerms)
-    default: true
+    description: Create a grave on death — grant to ranks via LuckPerms (default off for members)
+    default: false
   sharded.graves.bypass:
     default: op
   sharded.graves.admin:
@@ -180,9 +189,6 @@ permissions:
   sharded.rtp.use:
     default: true
   sharded.rtp.bypass:
-    default: op
-  sharded.rtp.admin:
-    description: Portal wand and trigger management
     default: op
   sharded.settings.use:
     default: true
@@ -211,4 +217,19 @@ permissions:
   sharded.tokens.admin:
     default: op
   sharded.tokenshop.use:
+    default: true
+  sharded.pets.use:
+    description: Use the pets system
+    default: true
+  sharded.pets.parrot:
+    default: true
+  sharded.pets.warden:
+    default: op
+  sharded.pets.enderdragon:
+    default: op
+  sharded.killeffect.use:
+    description: Use kill effects
+    default: true
+  sharded.killeffect.ez:
+    description: Use the EZ dragon breath kill effect
     default: true

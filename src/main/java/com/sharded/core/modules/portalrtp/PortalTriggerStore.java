@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/** Stores portal block locations where the RTP GUI should open (set via portal wand). */
+/** Stores portal block locations — edit plugins/ShardedCore/modules/portalrtp/portal-triggers.yml */
 public final class PortalTriggerStore {
 
     private final ShardedCore plugin;

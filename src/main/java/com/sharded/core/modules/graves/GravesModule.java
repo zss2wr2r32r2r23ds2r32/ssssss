@@ -28,7 +28,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -66,6 +66,8 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
     }
 
     private final Map<String, Grave> gravesByLocation = new LinkedHashMap<>();
+    private final Map<UUID, Grave> gravesById = new LinkedHashMap<>();
+    private final Map<UUID, Grave> gravesByEntity = new LinkedHashMap<>();
     private NamespacedKey hologramKey;
     private NamespacedKey graveMarkerKey;
     /** Legacy key for cleaning up old player-head blocks. */
@@ -105,6 +107,8 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
         }
         saveGraves();
         gravesByLocation.clear();
+        gravesById.clear();
+        gravesByEntity.clear();
     }
 
     /* ----------------------------- creation ----------------------------- */
@@ -142,6 +146,7 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
         Grave grave = new Grave(UUID.randomUUID(), player.getUniqueId(), player.getName(), location,
                 items, xp, xp <= 0, System.currentTimeMillis(), System.currentTimeMillis() + lifetime * 1000L);
         gravesByLocation.put(locationKey(location), grave);
+        gravesById.put(grave.id, grave);
         spawnMarker(grave);
         spawnHolograms(grave);
         saveGraves();
@@ -185,7 +190,7 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
 
         ArmorStand stand = world.spawn(grave.location, ArmorStand.class, entity -> {
             entity.setInvisible(true);
-            entity.setMarker(true);
+            entity.setMarker(false);
             entity.setSmall(true);
             entity.setGravity(false);
             entity.setBasePlate(false);
@@ -195,23 +200,28 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
             entity.getPersistentDataContainer().set(graveMarkerKey, PersistentDataType.STRING, grave.id.toString());
         });
         grave.markerEntityId = stand.getUniqueId();
+        gravesByEntity.put(stand.getUniqueId(), grave);
     }
 
     private void despawnMarker(Grave grave) {
         if (grave.markerEntityId == null) return;
+        gravesByEntity.remove(grave.markerEntityId);
         Entity entity = Bukkit.getEntity(grave.markerEntityId);
         if (entity != null) entity.remove();
         grave.markerEntityId = null;
     }
 
     private Grave graveFromEntity(Entity entity) {
+        Grave mapped = gravesByEntity.get(entity.getUniqueId());
+        if (mapped != null) return mapped;
         if (!(entity instanceof ArmorStand stand)) return null;
         String id = stand.getPersistentDataContainer().get(graveMarkerKey, PersistentDataType.STRING);
         if (id == null) return null;
-        for (Grave grave : gravesByLocation.values()) {
-            if (grave.id.toString().equals(id)) return grave;
+        try {
+            return gravesById.get(UUID.fromString(id));
+        } catch (IllegalArgumentException e) {
+            return null;
         }
-        return null;
     }
 
     /** Removes legacy player-head blocks from older versions. */
@@ -315,11 +325,20 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
     /* ----------------------------- opening ----------------------------- */
 
     @EventHandler
-    public void onInteractEntity(PlayerInteractEntityEvent event) {
-        Grave grave = graveFromEntity(event.getRightClicked());
+    public void onInteractEntity(org.bukkit.event.player.PlayerInteractEntityEvent event) {
+        tryOpenGrave(event.getPlayer(), event.getRightClicked(), event);
+    }
+
+    @EventHandler
+    public void onInteractAtEntity(PlayerInteractAtEntityEvent event) {
+        tryOpenGrave(event.getPlayer(), event.getRightClicked(), event);
+    }
+
+    private void tryOpenGrave(Player player, Entity clicked, org.bukkit.event.Cancellable event) {
+        Grave grave = graveFromEntity(clicked);
         if (grave == null) return;
         event.setCancelled(true);
-        openGrave(event.getPlayer(), grave);
+        openGrave(player, grave);
     }
 
     private void openGrave(Player player, Grave grave) {
@@ -399,6 +418,7 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
             }
         }
         gravesByLocation.remove(locationKey(grave.location));
+        gravesById.remove(grave.id);
     }
 
     /* ----------------------------- admin cmd ----------------------------- */
@@ -482,6 +502,7 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
                     }
                 }
                 gravesByLocation.put(locationKey(location), grave);
+                gravesById.put(grave.id, grave);
             } catch (Exception e) {
                 plugin.getLogger().warning("Skipping corrupt grave entry '" + key + "': " + e.getMessage());
             }

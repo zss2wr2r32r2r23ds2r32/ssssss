@@ -2,47 +2,38 @@ package com.sharded.core.modules.portalrtp;
 
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
-import com.sharded.core.util.ItemBuilder;
-import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityPortalEnterEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
-public final class PortalRtpModule extends Module implements CommandExecutor, TabCompleter {
+public final class PortalRtpModule extends Module implements CommandExecutor {
 
-    private NamespacedKey wandKey;
     private PortalTriggerStore triggers;
-    private final Map<UUID, Long> portalGuiCooldown = new HashMap<>();
-    private final Map<UUID, Long> rtpCooldown = new HashMap<>();
-    private final Map<UUID, PendingTeleport> pending = new HashMap<>();
+    private final Map<UUID, Long> portalGuiCooldown = new ConcurrentHashMap<>();
+    private final Map<UUID, Long> rtpCooldown = new ConcurrentHashMap<>();
+    private final Map<UUID, PendingTeleport> pending = new ConcurrentHashMap<>();
 
     private record PendingTeleport(Location start, BukkitTask task) {
     }
@@ -54,7 +45,6 @@ public final class PortalRtpModule extends Module implements CommandExecutor, Ta
     @Override
     protected void onEnable() {
         registerCommand("rtp", this);
-        wandKey = new NamespacedKey(plugin, "portal_wand");
         triggers = new PortalTriggerStore(plugin, moduleFolder());
 
         File guiFile = new File(moduleFolder(), "gui.yml");
@@ -139,21 +129,6 @@ public final class PortalRtpModule extends Module implements CommandExecutor, Ta
             send(sender, "players-only");
             return true;
         }
-        if (args.length > 0 && args[0].equalsIgnoreCase("wand")) {
-            if (!player.hasPermission("sharded.rtp.admin")) {
-                send(player, "no-permission");
-                return true;
-            }
-            ItemStack wand = new ItemBuilder(Material.BLAZE_ROD)
-                    .name(raw("wand-name"))
-                    .lore(java.util.Arrays.asList(raw("wand-lore").split("\\|")))
-                    .glow(true)
-                    .edit(meta -> meta.getPersistentDataContainer().set(wandKey, PersistentDataType.BYTE, (byte) 1))
-                    .build();
-            player.getInventory().addItem(wand);
-            send(player, "wand-given");
-            return true;
-        }
         if (!player.hasPermission("sharded.rtp.use")) {
             send(player, "no-permission");
             return true;
@@ -166,33 +141,10 @@ public final class PortalRtpModule extends Module implements CommandExecutor, Ta
         return true;
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onWandUse(PlayerInteractEvent event) {
-        if (event.getHand() != org.bukkit.inventory.EquipmentSlot.HAND) return;
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock() == null) return;
-        ItemStack item = event.getItem();
-        if (item == null || item.getType().isAir() || item.getItemMeta() == null
-                || !item.getItemMeta().getPersistentDataContainer().has(wandKey, PersistentDataType.BYTE)) return;
-        Player player = event.getPlayer();
-        if (!player.hasPermission("sharded.rtp.admin")) return;
-        event.setCancelled(true);
-        event.setUseInteractedBlock(org.bukkit.event.Event.Result.DENY);
-        event.setUseItemInHand(org.bukkit.event.Event.Result.DENY);
-        Location loc = event.getClickedBlock().getLocation();
-        if (player.isSneaking()) {
-            triggers.remove(loc);
-            send(player, "wand-removed", "%count%", String.valueOf(triggers.count()),
-                    "%block%", event.getClickedBlock().getType().name());
-            return;
-        }
-        triggers.add(loc);
-        send(player, "wand-set", "%count%", String.valueOf(triggers.count()),
-                "%block%", event.getClickedBlock().getType().name());
-    }
-
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         cancelPending(event.getPlayer().getUniqueId(), false);
+        portalGuiCooldown.remove(event.getPlayer().getUniqueId());
     }
 
     private void openGui(Player player) {
@@ -301,13 +253,5 @@ public final class PortalRtpModule extends Module implements CommandExecutor, Ta
             return new Location(world, x + 0.5, y + 1.0, z + 0.5);
         }
         return null;
-    }
-
-    @Override
-    public java.util.List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (args.length == 1) {
-            return TabCompleteHelper.ifPermission(sender, "sharded.rtp.admin", args[0], "wand");
-        }
-        return java.util.List.of();
     }
 }

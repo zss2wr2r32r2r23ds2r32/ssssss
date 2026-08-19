@@ -22,6 +22,8 @@ modules:
   settings: true
   kill: true
   killstreaks: true
+  pets: true
+  killeffects: true
   pickupmobs: true
   pickupspawners: true
   tokens: true

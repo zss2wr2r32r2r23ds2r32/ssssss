@@ -12,6 +12,9 @@ public final class PlayerToggles {
     public static final String DEATH_MSG = "toggle-death-messages";
     public static final String JOIN_MSG = "toggle-join-messages";
     public static final String MOB_SPAWN = "toggle-mob-spawn";
+    public static final String KILL_EFFECT = "killeffect-type";
+    public static final String KILL_EFFECT_SHOW_OTHERS = "killeffect-show-others";
+    public static final String SEE_KILL_EFFECTS = "toggle-see-killeffects";
 
     private PlayerToggles() {
     }
@@ -56,6 +59,30 @@ public final class PlayerToggles {
 
     public static void setMobSpawn(Player player, boolean enabled) {
         plugin().stateStore().setBool(player.getUniqueId(), MOB_SPAWN, enabled);
+    }
+
+    public static String killEffect(Player player) {
+        return plugin().stateStore().getString(player.getUniqueId(), KILL_EFFECT, "");
+    }
+
+    public static void setKillEffect(Player player, String effectId) {
+        plugin().stateStore().setString(player.getUniqueId(), KILL_EFFECT, effectId == null ? "" : effectId);
+    }
+
+    public static boolean killEffectShowOthers(Player player) {
+        return plugin().stateStore().getBool(player.getUniqueId(), KILL_EFFECT_SHOW_OTHERS, true);
+    }
+
+    public static void setKillEffectShowOthers(Player player, boolean show) {
+        plugin().stateStore().setBool(player.getUniqueId(), KILL_EFFECT_SHOW_OTHERS, show);
+    }
+
+    public static boolean seeKillEffects(Player player) {
+        return plugin().stateStore().getBool(player.getUniqueId(), SEE_KILL_EFFECTS, true);
+    }
+
+    public static void setSeeKillEffects(Player player, boolean enabled) {
+        plugin().stateStore().setBool(player.getUniqueId(), SEE_KILL_EFFECTS, enabled);
     }
 
     public static void noPermissionActionBar(Player player, String message) {

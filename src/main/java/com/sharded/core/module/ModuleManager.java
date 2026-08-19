@@ -23,6 +23,8 @@ import com.sharded.core.modules.portalrtp.PortalRtpModule;
 import com.sharded.core.modules.privatemessages.PrivateMessagesModule;
 import com.sharded.core.modules.settings.SettingsModule;
 import com.sharded.core.modules.joinmessages.JoinMessagesModule;
+import com.sharded.core.modules.killeffects.KillEffectsModule;
+import com.sharded.core.modules.pets.PetsModule;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -53,6 +55,8 @@ public final class ModuleManager {
         register(new SettingsModule(plugin));
         register(new KillModule(plugin));
         register(new KillstreaksModule(plugin));
+        register(new PetsModule(plugin));
+        register(new KillEffectsModule(plugin));
         register(new PickupMobsModule(plugin));
         register(new PickupSpawnersModule(plugin));
         register(new TokensModule(plugin));

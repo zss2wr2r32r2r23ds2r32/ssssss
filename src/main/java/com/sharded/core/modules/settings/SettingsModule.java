@@ -6,6 +6,7 @@ import com.sharded.core.modules.chat.ChatToggleModule;
 import com.sharded.core.modules.nightvision.NightVisionModule;
 import com.sharded.core.modules.privatemessages.PrivateMessagesModule;
 import com.sharded.core.util.PlayerToggles;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -123,9 +124,12 @@ public final class SettingsModule extends Module implements CommandExecutor {
     @EventHandler
     public void onMobSpawn(CreatureSpawnEvent event) {
         if (event.getSpawnReason() != CreatureSpawnEvent.SpawnReason.NATURAL) return;
-        for (Player player : event.getEntity().getWorld().getPlayers()) {
+        World world = event.getEntity().getWorld();
+        if (world.getPlayers().isEmpty()) return;
+        var loc = event.getLocation();
+        for (Player player : world.getPlayers()) {
             if (PlayerToggles.mobSpawn(player)) continue;
-            if (player.getLocation().distanceSquared(event.getLocation()) <= 256) {
+            if (player.getLocation().distanceSquared(loc) <= 256) {
                 event.setCancelled(true);
                 return;
             }

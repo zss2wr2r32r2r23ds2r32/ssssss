@@ -1,6 +1,6 @@
-# Graves module
-# Permission sharded.graves.use - give to ranks via LuckPerms to enable graves on death
-# Example: /lp group default permission set sharded.graves.use true
+# Permission sharded.graves.use — default FALSE (members do not get graves)
+# Grant to ranks via LuckPerms, e.g.:
+#   /lp group vip permission set sharded.graves.use true
 
 enabled-worlds: []
 expire-seconds: 300

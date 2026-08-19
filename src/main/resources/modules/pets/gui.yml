@@ -1,0 +1,47 @@
+menu_title: '&8PETS'
+size: 27
+open_permission: sharded.pets.use
+
+items:
+  filler:
+    material: GRAY_STAINED_GLASS_PANE
+    slots: [0,1,2,3,4,5,6,7,8,9,17,18,19,20,21,22,23,24,25,26]
+    display_name: ' '
+
+  parrot:
+    material: FEATHER
+    slot: 11
+    display_name: '&bParrot &7(shoulder)'
+    lore:
+      - '&7Tiny parrot on your shoulder'
+      - '&e▷ CLICK TO EQUIP'
+    click_commands:
+      - '[pet_equip_parrot]'
+
+  warden:
+    material: SCULK_CATALYST
+    slot: 13
+    display_name: '&3Tiny Warden'
+    lore:
+      - '&7Follows you around'
+      - '&e▷ CLICK TO EQUIP'
+    click_commands:
+      - '[pet_equip_warden]'
+
+  enderdragon:
+    material: DRAGON_HEAD
+    slot: 15
+    display_name: '&5Tiny Ender Dragon'
+    lore:
+      - '&7Follows you around'
+      - '&e▷ CLICK TO EQUIP'
+    click_commands:
+      - '[pet_equip_enderdragon]'
+
+  remove:
+    material: BARRIER
+    slot: 22
+    display_name: '&cRemove Pet'
+    click_commands:
+      - '[player] pet remove'
+      - '[close]'
