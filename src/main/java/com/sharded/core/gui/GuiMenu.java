@@ -2,6 +2,7 @@ package com.sharded.core.gui;
 
 import com.sharded.core.util.BundleUtil;
 import com.sharded.core.util.ColorUtil;
+import com.sharded.core.util.HeadUtil;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.ItemsAdderHook;
 import com.sharded.core.util.Text;
@@ -75,8 +76,12 @@ public final class GuiMenu {
             ConfigurationSection item = section.getConfigurationSection(key);
             if (item == null) continue;
 
-            ItemStack stack = ItemsAdderHook.parseItem(item.getString("material", "STONE"));
-            if (stack == null) stack = new ItemStack(org.bukkit.Material.STONE);
+            ItemStack stack = HeadUtil.parse(item.getString("material", "STONE"));
+            if (stack == null) stack = ItemsAdderHook.parseItem(item.getString("material", "STONE"));
+            if (stack == null) {
+                Material mat = Material.matchMaterial(item.getString("material", "STONE").toUpperCase(java.util.Locale.ROOT));
+                stack = new ItemStack(mat == null ? Material.STONE : mat);
+            }
 
             String name = item.getString("display_name", " ");
             List<String> lore = new ArrayList<>();
@@ -141,6 +146,13 @@ public final class GuiMenu {
 
     private ItemStack applyItem(GuiItem item, Player player, Map<String, String> extra, GuiManager manager) {
         ItemStack copy = item.display().clone();
+        if (copy.getType() == Material.PLAYER_HEAD) {
+            var meta = copy.getItemMeta();
+            if (meta instanceof org.bukkit.inventory.meta.SkullMeta skull
+                    && skull.getPlayerProfile().getProperties().isEmpty()) {
+                copy = HeadUtil.applyViewer(copy, player);
+            }
+        }
         var meta = copy.getItemMeta();
         if (meta == null) return copy;
         if (item.rawName() != null && !item.rawName().isBlank()) {

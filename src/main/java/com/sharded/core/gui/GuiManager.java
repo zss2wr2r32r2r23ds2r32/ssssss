@@ -199,6 +199,20 @@ public final class GuiManager {
                 if (module == null) yield false;
                 yield module.unlock(player, payload.trim());
             }
+            case "backpack_buy" -> {
+                String[] parts = payload.split("\\s+");
+                if (parts.length < 2) yield false;
+                var module = plugin.modules().get(com.sharded.core.modules.backpack.BackpackModule.class);
+                if (module == null) yield false;
+                yield module.tryPurchaseSlot(player, (int) parseLong(parts[0], 0), parseLong(parts[1], 0));
+            }
+            case "ability_buy" -> {
+                String[] parts = payload.split("\\s+", 3);
+                if (parts.length < 3) yield false;
+                var module = plugin.modules().get(com.sharded.core.modules.abilities.AbilitiesShopModule.class);
+                if (module == null) yield false;
+                yield module.tryPurchase(player, parts[0], (int) parseLong(parts[1], 0), parseLong(parts[2], 0));
+            }
             default -> {
                 Consumer<Player> action = customActions.get(tag);
                 if (action != null) action.accept(player);

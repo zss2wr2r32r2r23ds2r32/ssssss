@@ -31,6 +31,7 @@ import com.sharded.core.modules.tags.TagsModule;
 import com.sharded.core.modules.wardrobe.WardrobeModule;
 import com.sharded.core.modules.chatcolor.ChatColorModule;
 import com.sharded.core.modules.namecolor.NameColorModule;
+import com.sharded.core.modules.abilities.AbilitiesShopModule;
 import com.sharded.core.modules.tempranks.TempranksModule;
 
 import java.util.ArrayList;
@@ -65,6 +66,7 @@ public final class ModuleManager {
         register(new KillstreaksModule(plugin));
         register(new PetsModule(plugin));
         register(new TempranksModule(plugin));
+        register(new AbilitiesShopModule(plugin));
         register(new PickupMobsModule(plugin));
         register(new PickupSpawnersModule(plugin));
         register(new TokensModule(plugin));

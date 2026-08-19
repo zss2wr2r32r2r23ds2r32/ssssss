@@ -130,12 +130,15 @@ public final class ConfigSync {
         count += resetIfExists(plugin, "modules/settings/config.yml");
         count += resetIfExists(plugin, "modules/settings/messages.yml");
         count += resetIfExists(plugin, "modules/settings/gui.yml");
+        count += resetIfExists(plugin, "modules/abilities/config.yml");
+        count += resetIfExists(plugin, "modules/abilities/messages.yml");
+        count += resetIfExists(plugin, "modules/abilities/shop.yml");
         count += resetIfExists(plugin, "modules/tempranks/config.yml");
         count += resetIfExists(plugin, "modules/tempranks/messages.yml");
         count += resetIfExists(plugin, "modules/tempranks/tempranks.yml");
         count += resetIfExists(plugin, "modules/tokens/config.yml");
         count += resetIfExists(plugin, "modules/tokens/messages.yml");
-        for (String menu : new String[]{"mainmenu", "glow", "keys", "cosmetics", "gradients", "chatcolors", "tags"}) {
+        for (String menu : new String[]{"mainmenu", "glow", "keys", "cosmetics", "gradients", "chatcolors", "tags", "backpack"}) {
             count += resetIfExists(plugin, "modules/tokens/menus/" + menu + ".yml");
         }
         count += resetIfExists(plugin, "modules/toolname/config.yml");

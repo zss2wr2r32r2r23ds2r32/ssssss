@@ -1,4 +1,4 @@
-config-version: 3
+config-version: 4
 menu_title: '⛃ Token Shop'
 open_command:
   - tokenshop
@@ -271,8 +271,24 @@ items:
       - '[openguimenu] tags'
       - '[sound] UI_BUTTON_CLICK'
 
+  backpack_category:
+    material: CHEST
+    slot: 21
+    display_name: '&x&5&C&9&4&F&C&lBACKPACK'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&5&C&9&4&F&CInformation:'
+      - '&x&5&C&9&4&F&C| &fBuy extra &f/backpack'
+      - '&x&5&C&9&4&F&C| &fstorage slots'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+    click_commands:
+      - '[openguimenu] backpack'
+      - '[sound] UI_BUTTON_CLICK'
+
   your_balance:
-    material: SUNFLOWER
+    material: PLAYER_HEAD
     slot: 22
     display_name: '&x&5&C&9&4&F&C&lYOUR TOKENS'
     lore:
@@ -286,6 +302,22 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&lSTORE'
     click_commands:
+      - '[sound] UI_BUTTON_CLICK'
+
+  abilities_category:
+    material: NETHER_STAR
+    slot: 23
+    display_name: '&x&F&F&6&7&0&0&lABILITIES'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&6&7&0&0Information:'
+      - '&x&F&F&6&7&0&0| &fBuy temporary perks'
+      - '&x&F&F&6&7&0&0| &fFly, craft, smelt & more!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+    click_commands:
+      - '[openguimenu] abilities'
       - '[sound] UI_BUTTON_CLICK'
 
   close_menu:

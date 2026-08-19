@@ -60,7 +60,7 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
 
     private void copyDefaultMenus(File folder) {
         folder.mkdirs();
-        for (String menu : List.of("mainmenu", "glow", "keys", "cosmetics", "gradients", "chatcolors", "tags")) {
+        for (String menu : List.of("mainmenu", "glow", "keys", "cosmetics", "gradients", "chatcolors", "tags", "backpack")) {
             String path = "modules/tokens/menus/" + menu + ".yml";
             ConfigSync.sync(plugin, new File(folder, menu + ".yml"), path);
         }

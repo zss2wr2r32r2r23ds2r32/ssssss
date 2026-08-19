@@ -2,9 +2,12 @@ package com.sharded.core.modules.backpack;
 
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
+import com.sharded.core.modules.tokens.TokenService;
+import com.sharded.core.util.Numbers;
 import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
+import org.bukkit.Sound;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -92,6 +95,46 @@ public final class BackpackModule extends Module implements CommandExecutor, Tab
             if (player.hasPermission("sharded.backpack.slots." + i)) return i;
         }
         return slots;
+    }
+
+    /** Called from token shop [backpack_buy] slotCount tokens */
+    public boolean tryPurchaseSlot(Player player, int slotCount, long cost) {
+        if (!player.hasPermission("sharded.tokenshop.use")) {
+            send(player, "no-permission");
+            return false;
+        }
+        if (slotCount < 2 || slotCount > maxSlots()) return false;
+        String perm = "sharded.backpack.slots." + slotCount;
+        if (player.hasPermission(perm)) {
+            send(player, "slot-owned", "%slots%", String.valueOf(slotCount));
+            return false;
+        }
+        if (slotCount > 2 && !player.hasPermission("sharded.backpack.slots." + (slotCount - 1))) {
+            send(player, "slot-needs-previous", "%slots%", String.valueOf(slotCount - 1));
+            return false;
+        }
+
+        TokenService tokens = plugin.modules().tokens();
+        if (tokens == null) return false;
+        long balance = tokens.getBalance(player.getUniqueId());
+        if (balance < cost) {
+            send(player, "not-enough-tokens", "%missing%", Numbers.format(cost - balance));
+            return false;
+        }
+        if (!tokens.take(player.getUniqueId(), cost)) {
+            send(player, "not-enough-tokens", "%missing%", Numbers.format(cost - balance));
+            return false;
+        }
+
+        if (!plugin.luckPerms().isAvailable()) {
+            tokens.give(player.getUniqueId(), cost);
+            send(player, "lp-missing");
+            return false;
+        }
+        plugin.luckPerms().runConsole("lp user " + player.getName() + " permission set " + perm + " true");
+        send(player, "slot-purchased", "%slots%", String.valueOf(slotCount));
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
+        return true;
     }
 
     private int[] storageSlots(int count) {
