@@ -84,6 +84,18 @@ public final class KillstreakDatabase {
         return list;
     }
 
+    public synchronized void reset(UUID uuid) {
+        try (PreparedStatement ps = connection.prepareStatement("""
+                INSERT INTO killstreaks (uuid, current_streak, best_streak) VALUES (?, 0, 0)
+                ON CONFLICT(uuid) DO UPDATE SET current_streak = 0, best_streak = 0
+                """)) {
+            ps.setString(1, uuid.toString());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getLogger().warning("Failed to reset killstreak: " + e.getMessage());
+        }
+    }
+
     public synchronized void close() {
         try {
             if (connection != null && !connection.isClosed()) connection.close();

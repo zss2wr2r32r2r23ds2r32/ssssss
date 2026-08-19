@@ -178,6 +178,18 @@ public final class TagsModule extends Module implements CommandExecutor {
                             .build());
         }
 
+        if (!limited && config.getBoolean("remove-button.enabled", true)) {
+            List<String> removeLore = applyPlaceholders(config.getStringList("remove-button.lore"), placeholders);
+            Material mat = Material.matchMaterial(config.getString("remove-button.material", "REDSTONE"));
+            if (mat == null) mat = Material.REDSTONE;
+            inventory.setItem(config.getInt("remove-button.slot", 15),
+                    new ItemBuilder(mat)
+                            .name(config.getString("remove-button.display-name", "&x&F&F&0&0&0&0&lREMOVE TAG"))
+                            .lore(removeLore)
+                            .hideAll()
+                            .build());
+        }
+
         if (limited || config.getBoolean("close-button.enabled", true)) {
             int closeSlot = limited ? config.getInt("limited-close-slot", 26) : config.getInt("close-button.slot", 26);
             inventory.setItem(closeSlot, new ItemBuilder(Material.BARRIER)
@@ -241,6 +253,13 @@ public final class TagsModule extends Module implements CommandExecutor {
         if (event.getClickedInventory() != event.getView().getTopInventory()) return;
 
         int slot = event.getSlot();
+        if (!holder.limited() && slot == config.getInt("remove-button.slot", 15)
+                && config.getBoolean("remove-button.enabled", true)) {
+            player.closeInventory();
+            removeTag(player);
+            return;
+        }
+
         if (slot == config.getInt("close-button.slot", 26)
                 || (holder.limited() && slot == config.getInt("limited-close-slot", 26))) {
             player.closeInventory();
@@ -378,6 +397,11 @@ public final class TagsModule extends Module implements CommandExecutor {
             if (database != null) database.saveLastCustomTag(player.getUniqueId(), finalInput, chatCreation);
             send(player, chatCreation ? "custom-set" : "custom-reapplied", "%tag%", finalInput);
         }, delay);
+    }
+
+    private void removeTag(Player player) {
+        clearEquippedTag(player);
+        send(player, "removed");
     }
 
     private void clearEquippedTag(Player player) {

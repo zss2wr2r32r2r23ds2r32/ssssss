@@ -125,8 +125,8 @@ commands:
     description: Pay to pick up spawners
     usage: /spawners pay [amount]
   bal:
-    description: Check your token balance
-    usage: /bal
+    description: Check token balance
+    usage: /bal [player]
     aliases: [balance]
   tokens:
     description: Token admin commands
@@ -153,6 +153,49 @@ commands:
   gmsp:
     description: Set spectator mode
     usage: /gmsp
+  staffmode:
+    description: Toggle staff mode
+    usage: /staffmode
+    aliases: [sfmode]
+  vanish:
+    description: Toggle vanish
+    usage: /vanish
+  freeze:
+    description: Freeze or unfreeze a player
+    usage: /freeze <player>
+  punish:
+    description: Open punish menu for a player
+    usage: /punish <player>
+  ban:
+    description: Ban a player
+    usage: /ban <player> [reason] [duration]
+  banip:
+    description: IP ban a player
+    usage: /banip <player> [reason] [duration]
+  offend:
+    description: View a player's offense history
+    usage: /offend <player>
+  unban:
+    description: Unban a player
+    usage: /unban <player>
+  unmute:
+    description: Unmute a player
+    usage: /unmute <player>
+  pardon:
+    description: Pardon a player (unban + unmute)
+    usage: /pardon <player>
+  wipe:
+    description: Wipe a player's data
+    usage: /wipe <player> [reason]
+  alts:
+    description: Show linked alt accounts
+    usage: /alts [player]
+  stafflist:
+    description: List online staff
+    usage: /stafflist
+  randomtp:
+    description: Teleport to a random player
+    usage: /randomtp
 
 permissions:
   sharded.admin:
@@ -332,4 +375,49 @@ permissions:
     default: op
   sharded.staff.gamemode:
     description: Use /gmc /gms /gmsp
+    default: op
+  sharded.staff.mode:
+    description: Use /staffmode and /sfmode
+    default: op
+  sharded.staff.vanish:
+    description: Use /vanish
+    default: op
+  sharded.staff.seevanished:
+    description: See vanished staff
+    default: op
+  sharded.staff.freeze:
+    description: Use /freeze
+    default: op
+  sharded.staff.punish:
+    description: Use /punish and punish GUI
+    default: op
+  sharded.staff.ban:
+    description: Use /ban
+    default: op
+  sharded.staff.banip:
+    description: Use /banip
+    default: op
+  sharded.staff.unban:
+    description: Use /unban and /pardon
+    default: op
+  sharded.staff.unmute:
+    description: Use /unmute
+    default: op
+  sharded.staff.pardon:
+    description: Use /pardon
+    default: op
+  sharded.staff.offend:
+    description: Use /offend
+    default: op
+  sharded.staff.wipe:
+    description: Use /wipe
+    default: op
+  sharded.staff.alts:
+    description: Use /alts
+    default: op
+  sharded.staff.list:
+    description: Use /stafflist
+    default: op
+  sharded.staff.randomtp:
+    description: Use /randomtp
     default: op

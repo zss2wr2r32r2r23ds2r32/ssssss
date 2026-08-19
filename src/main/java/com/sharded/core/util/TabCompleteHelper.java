@@ -50,4 +50,21 @@ public final class TabCompleteHelper {
         if (!sender.hasPermission(permission)) return List.of();
         return filter(input, options);
     }
+
+    public static List<String> knownPlayers(String input) {
+        List<String> names = new ArrayList<>();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            names.add(player.getName());
+        }
+        for (var offline : Bukkit.getOfflinePlayers()) {
+            if (offline.getName() != null && !offline.isOnline()) {
+                names.add(offline.getName());
+            }
+        }
+        return filter(input, names);
+    }
+
+    public static List<String> configKeys(String input, java.util.Collection<String> keys) {
+        return filter(input, keys);
+    }
 }

@@ -158,7 +158,7 @@ public final class SpawnSelectModule extends Module implements CommandExecutor, 
         return plugin.stateStore().getString(player.getUniqueId(), STATE_KEY, "");
     }
 
-    private Location mainSpawn() {
+    public Location mainSpawn() {
         return LocationUtil.read(config.getConfigurationSection("main-spawn"));
     }
 

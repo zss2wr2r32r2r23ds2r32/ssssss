@@ -130,12 +130,20 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         switch (command.getName().toLowerCase(Locale.ROOT)) {
             case "bal" -> {
-                if (!(sender instanceof Player player)) {
-                    send(sender, "players-only");
+                if (args.length == 0) {
+                    if (!(sender instanceof Player player)) {
+                        send(sender, "players-only");
+                        return true;
+                    }
+                    long bal = service.getBalance(player.getUniqueId());
+                    send(player, "balance-self", "%amount%", String.valueOf(bal));
                     return true;
                 }
-                long bal = service.getBalance(player.getUniqueId());
-                send(player, "balance", "%amount%", String.valueOf(bal), "%formatted%", Numbers.format(bal));
+                OfflinePlayer target = service.resolve(args[0]);
+                long bal = service.getBalance(target.getUniqueId());
+                send(sender, "balance-other", "%player%", name(target),
+                        "%amount%", String.valueOf(bal), "%formatted%", Numbers.format(bal));
+                return true;
             }
             case "tokenshop" -> {
                 if (!(sender instanceof Player player)) {
@@ -237,11 +245,7 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
     }
 
     private long parseAmount(String raw) {
-        try {
-            return Math.max(0, Long.parseLong(raw));
-        } catch (NumberFormatException e) {
-            return 0;
-        }
+        return Numbers.parseAmount(raw);
     }
 
     private String name(OfflinePlayer player) {
@@ -250,14 +254,25 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (!command.getName().equalsIgnoreCase("tokens") || !sender.hasPermission("sharded.tokens.admin")) {
+        String cmd = command.getName().toLowerCase(Locale.ROOT);
+        if (cmd.equals("bal")) {
+            if (args.length == 1) return TabCompleteHelper.onlinePlayers(args[0]);
+            return List.of();
+        }
+        if (!cmd.equals("tokens") || !sender.hasPermission("sharded.tokens.admin")) {
             return List.of();
         }
         if (args.length == 1) {
             return TabCompleteHelper.filter(args[0], "give", "set", "remove", "take", "reset", "giveall");
         }
         if (args.length == 2 && !args[0].equalsIgnoreCase("giveall")) {
-            return TabCompleteHelper.onlinePlayers(args[1]);
+            return TabCompleteHelper.knownPlayers(args[1]);
+        }
+        if (args.length == 3 && !args[0].equalsIgnoreCase("reset") && !args[0].equalsIgnoreCase("giveall")) {
+            return TabCompleteHelper.filter(args[2], "1", "100", "1k", "10k", "100k", "1m", "10m");
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("giveall")) {
+            return TabCompleteHelper.filter(args[1], "1k", "10k", "100k", "1m", "10m");
         }
         return List.of();
     }

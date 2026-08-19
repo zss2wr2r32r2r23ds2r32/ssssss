@@ -155,6 +155,15 @@ public final class PlayerStateStore {
         }
     }
 
+    public synchronized void clear(UUID uuid) {
+        try (PreparedStatement ps = connection.prepareStatement("DELETE FROM player_state WHERE uuid = ?")) {
+            ps.setString(1, uuid.toString());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getLogger().warning("Failed to clear player state: " + e.getMessage());
+        }
+    }
+
     public synchronized void saveNow() {
         // SQLite commits immediately; kept for API compatibility.
     }

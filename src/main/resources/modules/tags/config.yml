@@ -1,4 +1,4 @@
-config-version: 7
+config-version: 8
 
 menu-title: 'Tags'
 menu-size: 27
@@ -33,6 +33,18 @@ placeholders:
   owned-no: '&#FF2727&nNo'
   none: '&7None'
   cooldown-ready: '&#9FFF00Ready'
+
+remove-button:
+  enabled: true
+  slot: 15
+  material: REDSTONE
+  display-name: '&x&F&F&0&0&0&0&lREMOVE TAG'
+  lore:
+    - '&8Description'
+    - ''
+    - '&x&F&F&0&0&0&0| &fClick to remove your current tag'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Remove'
 
 close-button:
   enabled: true

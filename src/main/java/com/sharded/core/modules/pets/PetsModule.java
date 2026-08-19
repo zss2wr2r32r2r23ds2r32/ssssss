@@ -27,8 +27,12 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityMountEvent;
+import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.entity.Allay;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.persistence.PersistentDataType;
@@ -152,6 +156,18 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         if (pet == null) return;
         Entity entity = Bukkit.getEntity(pet.entityId);
         if (entity != null) entity.remove();
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onAllayInteract(PlayerInteractEntityEvent event) {
+        if (!(event.getRightClicked() instanceof Allay allay) || !isPet(allay)) return;
+        event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onAllayInteractAt(PlayerInteractAtEntityEvent event) {
+        if (!(event.getRightClicked() instanceof Allay allay) || !isPet(allay)) return;
+        event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -488,7 +504,7 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
     private Location followLocation(Player player) {
         Location loc = player.getLocation().clone();
         double yaw = Math.toRadians(loc.getYaw() + 180);
-        return loc.add(-Math.sin(yaw) * 1.0, 0.55, Math.cos(yaw) * 1.0);
+        return loc.add(-Math.sin(yaw) * 1.6, 0.85, Math.cos(yaw) * 1.6);
     }
 
     private Location groundFollowLocation(Player player) {
