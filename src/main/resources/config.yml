@@ -25,7 +25,7 @@ modules:
   portalrtp: true
   spawnselect: true
   settings: true
-  kill: true
+  kill: false
   killstreaks: true
   pets: true
   tempranks: true

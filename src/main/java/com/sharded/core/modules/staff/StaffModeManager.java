@@ -57,6 +57,8 @@ public final class StaffModeManager implements Listener {
     private final StaffModule module;
     private final NamespacedKey staffItemKey;
 
+    private static final String STAFF_MODE_STATE = "staff-mode-active";
+
     private final Set<UUID> staffMode = ConcurrentHashMap.newKeySet();
     private final Set<UUID> vanished = ConcurrentHashMap.newKeySet();
     private final Set<UUID> frozen = ConcurrentHashMap.newKeySet();
@@ -97,6 +99,7 @@ public final class StaffModeManager implements Listener {
         staffMode.add(player.getUniqueId());
         disableEglow(player);
         enableStaffChat(player);
+        plugin.stateStore().setBool(player.getUniqueId(), STAFF_MODE_STATE, true);
         module.send(player, "staffmode-enabled");
     }
 
@@ -108,6 +111,7 @@ public final class StaffModeManager implements Listener {
         if (backup != null) restore(player, backup);
         staffMode.remove(player.getUniqueId());
         disableStaffChat(player);
+        plugin.stateStore().setBool(player.getUniqueId(), STAFF_MODE_STATE, false);
         module.send(player, "staffmode-disabled");
     }
 
@@ -186,6 +190,7 @@ public final class StaffModeManager implements Listener {
         staffMode.remove(uuid);
         vanished.remove(uuid);
         frozen.remove(uuid);
+        plugin.stateStore().setBool(uuid, STAFF_MODE_STATE, false);
     }
 
     public List<Player> onlineStaff() {
@@ -316,8 +321,15 @@ public final class StaffModeManager implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDrop(PlayerDropItemEvent event) {
-        String id = staffItemId(event.getItemDrop().getItemStack());
-        if (id != null || isStaffMode(event.getPlayer().getUniqueId())) event.setCancelled(true);
+        if (staffItemId(event.getItemDrop().getItemStack()) != null) event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onDeath(org.bukkit.event.entity.PlayerDeathEvent event) {
+        if (!isStaffMode(event.getPlayer().getUniqueId())) return;
+        event.setKeepInventory(true);
+        event.getDrops().clear();
+        event.setDroppedExp(0);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -342,7 +354,47 @@ public final class StaffModeManager implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        refreshVanishForJoin(event.getPlayer());
+        Player player = event.getPlayer();
+        refreshVanishForJoin(player);
+        if (plugin.stateStore().getBool(player.getUniqueId(), STAFF_MODE_STATE, false)
+                || hasStaffItems(player)) {
+            forceExitStaffMode(player);
+        }
+    }
+
+    private void forceExitStaffMode(Player player) {
+        UUID uuid = player.getUniqueId();
+        staffMode.remove(uuid);
+        backups.remove(uuid);
+        setVanished(player, false, false);
+        removeStaffItems(player);
+        if (player.getGameMode() == GameMode.CREATIVE) player.setGameMode(GameMode.SURVIVAL);
+        disableStaffChat(player);
+        plugin.stateStore().setBool(uuid, STAFF_MODE_STATE, false);
+    }
+
+    private boolean hasStaffItems(Player player) {
+        for (ItemStack item : player.getInventory().getContents()) {
+            if (staffItemId(item) != null) return true;
+        }
+        if (staffItemId(player.getInventory().getItemInOffHand()) != null) return true;
+        return false;
+    }
+
+    private void removeStaffItems(Player player) {
+        PlayerInventory inv = player.getInventory();
+        ItemStack[] contents = inv.getContents();
+        for (int i = 0; i < contents.length; i++) {
+            if (staffItemId(contents[i]) != null) contents[i] = null;
+        }
+        inv.setContents(contents);
+        if (staffItemId(inv.getItemInOffHand()) != null) inv.setItemInOffHand(null);
+        ItemStack[] armor = inv.getArmorContents();
+        for (int i = 0; i < armor.length; i++) {
+            if (staffItemId(armor[i]) != null) armor[i] = null;
+        }
+        inv.setArmorContents(armor);
+        player.updateInventory();
     }
 
     @EventHandler

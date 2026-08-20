@@ -45,9 +45,6 @@ commands:
     description: Toggle night vision
     usage: /nightvision
     aliases: [nv]
-  kill:
-    description: Kill yourself or another player
-    usage: /kill [player]
   backpack:
     description: Open a backpack (single slot)
     usage: /backpack [player]

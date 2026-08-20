@@ -24,7 +24,6 @@ public final class CommandHelp {
         list.add(new CommandInfo("/reply <msg>", "Reply to last PM", "sharded.msg.use"));
         list.add(new CommandInfo("/msgtoggle", "Toggle receiving PMs", "sharded.msg.toggle"));
         list.add(new CommandInfo("/nightvision", "Toggle night vision", "sharded.nightvision.use"));
-        list.add(new CommandInfo("/kill [player]", "Kill yourself or another player", "sharded.kill.use"));
         list.add(new CommandInfo("/backpack [player]", "Open backpack storage", "sharded.backpack.use"));
         list.add(new CommandInfo("/armortrims (/trims)", "Armor trim station", "sharded.armortrims.use"));
         list.add(new CommandInfo("/fly", "Toggle flight", "sharded.fly.use"));

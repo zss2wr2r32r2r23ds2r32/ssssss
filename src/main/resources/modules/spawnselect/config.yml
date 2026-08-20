@@ -1,11 +1,11 @@
-config-version: 2
+config-version: 3
 message-mode: chat
 
 # World used when portal RTP module is disabled
 fallback-world: world
 
-# Open spawn selector on first join only — must pick before closing (SQLite player-state.db)
-prompt-on-join: true
+# Open spawn selector on first join (optional — closing without picking defaults to vanilla)
+prompt-on-join: false
 prompt-delay-ticks: 40
 
 # Fallback RTP radius if portal RTP is disabled (normally uses portalrtp/config.yml)

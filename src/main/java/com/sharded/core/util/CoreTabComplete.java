@@ -28,7 +28,7 @@ public final class CoreTabComplete implements TabCompleter {
         String name = command.getName().toLowerCase(Locale.ROOT);
         if (args.length == 1) {
             return switch (name) {
-                case "kill", "backpack", "punish", "ban", "banip", "kick", "mute", "offend",
+                case "backpack", "punish", "ban", "banip", "kick", "mute", "offend",
                      "wipe", "invrollback", "screenshare", "freeze" -> TabCompleteHelper.onlinePlayers(args[0]);
                 case "fly" -> {
                     List<String> options = new ArrayList<>(TabCompleteHelper.onlinePlayers(args[0]));
@@ -53,7 +53,7 @@ public final class CoreTabComplete implements TabCompleter {
         if (args.length == 2) {
             return switch (name) {
                 case "msg", "tell", "whisper", "w", "pm" -> TabCompleteHelper.onlinePlayers(args[1]);
-                case "kill", "backpack" -> TabCompleteHelper.onlinePlayers(args[1]);
+                case "backpack" -> TabCompleteHelper.onlinePlayers(args[1]);
                 case "fly" -> {
                     if (args[0].equalsIgnoreCase("speed")) {
                         yield TabCompleteHelper.filter(args[1], "1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
