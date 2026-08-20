@@ -10,6 +10,7 @@ import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.MessageUtil;
 import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.TabCompleteHelper;
+import com.sharded.core.util.VanillaBanHelper;
 import com.sharded.core.util.Text;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -243,6 +244,8 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         int kicks = database.deleteKicks();
         int history = database.deleteHistory();
         database.revokeAllIpBans();
+        for (String ip : VanillaBanHelper.vanillaIpBans()) VanillaBanHelper.pardonIp(ip);
+        for (String name : VanillaBanHelper.vanillaNameBans()) VanillaBanHelper.pardonName(name);
 
         String scope = config.getString("revoke-console-scope", "server:global");
         plugin.getLogger().info("Removed " + bans + " bans from " + scope + ".");
@@ -300,7 +303,9 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         }
         List<String> ips = database.activeIpBans();
         List<String> bannedPlayers = database.activePunishedPlayerNames(PunishmentDatabase.PunishmentType.BAN);
-        if (ips.isEmpty() && bannedPlayers.isEmpty()) {
+        List<String> vanillaIps = VanillaBanHelper.vanillaIpBans();
+        List<String> vanillaNames = VanillaBanHelper.vanillaNameBans();
+        if (ips.isEmpty() && bannedPlayers.isEmpty() && vanillaIps.isEmpty() && vanillaNames.isEmpty()) {
             send(sender, "unbanip-list-empty");
             return;
         }
@@ -310,12 +315,33 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
                 sender.sendMessage(com.sharded.core.util.Text.c(messagePrefix() + "&7- &f" + ip + " &8(/unbanip " + ip + ")"));
             }
         }
+        if (!vanillaIps.isEmpty()) {
+            send(sender, "unbanip-vanilla-header", "%count%", String.valueOf(vanillaIps.size()));
+            for (String ip : vanillaIps) {
+                sender.sendMessage(com.sharded.core.util.Text.c(messagePrefix() + "&7- &c" + ip + " &8(vanilla — /unbanip " + ip + ")"));
+            }
+        }
         if (!bannedPlayers.isEmpty()) {
             send(sender, "unban-list-header", "%count%", String.valueOf(bannedPlayers.size()));
             for (String name : bannedPlayers) {
                 sender.sendMessage(com.sharded.core.util.Text.c(messagePrefix() + "&7- &f" + name + " &8(/unban " + name + ")"));
             }
+        }
+        if (!vanillaNames.isEmpty()) {
+            send(sender, "unban-vanilla-header", "%count%", String.valueOf(vanillaNames.size()));
+            for (String name : vanillaNames) {
+                sender.sendMessage(com.sharded.core.util.Text.c(messagePrefix() + "&7- &c" + name + " &8(vanilla — /unban " + name + ")"));
+            }
+        }
+        if (!bannedPlayers.isEmpty() || !vanillaNames.isEmpty()) {
             send(sender, "unbanip-hint-player-ban");
+        }
+    }
+
+    private void pardonVanillaForPlayer(String playerName, List<String> ips) {
+        VanillaBanHelper.pardonName(playerName);
+        if (ips != null) {
+            for (String ip : ips) VanillaBanHelper.pardonIp(ip);
         }
     }
 
@@ -391,7 +417,10 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
                         yield TabCompleteHelper.filter(args[0], "list");
                     }
                     List<String> options = new ArrayList<>(database.activeIpBans());
-                    options.addAll(TabCompleteHelper.knownPlayers(args[0]));
+                    options.addAll(VanillaBanHelper.vanillaIpBans());
+                    for (String player : database.knownPlayerNames()) {
+                        if (!options.contains(player)) options.add(player);
+                    }
                     yield TabCompleteHelper.filter(args[0], options);
                 }
                 case "unmute" -> TabCompleteHelper.filter(args[0], database.activePunishedPlayerNames(PunishmentDatabase.PunishmentType.MUTE));
@@ -725,8 +754,11 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
             send(staff, "no-permission");
             return;
         }
+        String name = OfflinePlayers.name(target.getUniqueId());
+        List<String> ips = database.ipsForPlayer(target.getUniqueId());
         database.clearAllBansForPlayer(target.getUniqueId());
-        send(staff, "unbanned", "%player%", OfflinePlayers.name(target.getUniqueId()));
+        pardonVanillaForPlayer(name, ips);
+        send(staff, "unbanned", "%player%", name);
     }
 
     public void clearAllBansForPlayer(CommandSender staff, OfflinePlayer target) {
@@ -734,8 +766,11 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
             send(staff, "no-permission");
             return;
         }
+        String name = OfflinePlayers.name(target.getUniqueId());
+        List<String> ips = database.ipsForPlayer(target.getUniqueId());
         database.clearAllBansForPlayer(target.getUniqueId());
-        send(staff, "unbanip-player-cleared", "%player%", OfflinePlayers.name(target.getUniqueId()));
+        pardonVanillaForPlayer(name, ips);
+        send(staff, "unbanip-player-cleared", "%player%", name);
     }
 
     public void unbanIp(CommandSender staff, String ip) {
@@ -747,9 +782,11 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
             send(staff, "unbanip-usage");
             return;
         }
-        boolean hadBlock = database.hasAnyIpBlock(ip);
+        boolean hadSharded = database.hasAnyIpBlock(ip);
+        boolean hadVanilla = VanillaBanHelper.isIpBanned(ip);
         database.clearIpBlock(ip);
-        if (!hadBlock) {
+        VanillaBanHelper.pardonIp(ip);
+        if (!hadSharded && !hadVanilla) {
             send(staff, "unbanip-not-found", "%ip%", ip);
             return;
         }

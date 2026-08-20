@@ -246,8 +246,39 @@ public final class PunishmentDatabase {
     public synchronized void clearAllBansForPlayer(UUID uuid) {
         deactivatePunishments(uuid, PunishmentType.BAN);
         deactivatePunishments(uuid, PunishmentType.IP_BAN);
-        String ip = latestIp(uuid);
-        if (ip != null) clearIpBlock(ip);
+        for (String ip : ipsForPlayer(uuid)) {
+            clearIpBlock(ip);
+        }
+    }
+
+    public synchronized List<String> ipsForPlayer(UUID uuid) {
+        List<String> ips = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT ip FROM player_ips WHERE uuid = ?")) {
+            ps.setString(1, uuid.toString());
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String ip = rs.getString("ip");
+                    if (ip != null && !ip.isBlank()) ips.add(ip);
+                }
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().warning("[punishments] Failed to list player IPs: " + e.getMessage());
+        }
+        String latest = latestIp(uuid);
+        if (latest != null && !latest.isBlank() && !ips.contains(latest)) ips.add(latest);
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT DISTINCT ip FROM punishments WHERE uuid = ? AND ip IS NOT NULL AND ip != ''")) {
+            ps.setString(1, uuid.toString());
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String ip = rs.getString("ip");
+                    if (ip != null && !ip.isBlank() && !ips.contains(ip)) ips.add(ip);
+                }
+            }
+        } catch (SQLException ignored) {
+        }
+        return ips;
     }
 
     public synchronized void addIpBan(String ip, String reason, String staffName, Long expiresAt) {
