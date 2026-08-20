@@ -31,6 +31,18 @@ public final class StaffChatModule extends Module implements CommandExecutor {
         return toggleMode.contains(uuid);
     }
 
+    /** Enables or disables staff chat toggle mode. */
+    public void setEnabled(Player player, boolean enabled, boolean notify) {
+        if (enabled) toggleMode.add(player.getUniqueId());
+        else toggleMode.remove(player.getUniqueId());
+        if (notify) send(player, enabled ? "enabled" : "disabled");
+    }
+
+    public boolean isLockedByStaffMode(Player player) {
+        var staff = plugin.modules().get(com.sharded.core.modules.staff.StaffModule.class);
+        return staff != null && staff.staffMode() != null && staff.staffMode().isStaffMode(player.getUniqueId());
+    }
+
     @Override
     protected void onEnable() {
         registerListener(this);
@@ -52,11 +64,14 @@ public final class StaffChatModule extends Module implements CommandExecutor {
             broadcast(player.getName(), String.join(" ", args));
             return true;
         }
-        if (toggleMode.remove(player.getUniqueId())) {
-            send(player, "disabled");
+        if (toggleMode.contains(player.getUniqueId())) {
+            if (isLockedByStaffMode(player)) {
+                send(player, "staffmode-locked");
+                return true;
+            }
+            setEnabled(player, false, true);
         } else {
-            toggleMode.add(player.getUniqueId());
-            send(player, "enabled");
+            setEnabled(player, true, true);
         }
         return true;
     }

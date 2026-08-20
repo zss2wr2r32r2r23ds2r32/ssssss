@@ -2,6 +2,7 @@ package com.sharded.core.modules.staff;
 
 import com.sharded.core.ShardedCore;
 import com.sharded.core.modules.punishments.PunishmentsModule;
+import com.sharded.core.modules.staffchat.StaffChatModule;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.Text;
 import org.bukkit.Bukkit;
@@ -95,6 +96,7 @@ public final class StaffModeManager implements Listener {
         }
         staffMode.add(player.getUniqueId());
         disableEglow(player);
+        enableStaffChat(player);
         module.send(player, "staffmode-enabled");
     }
 
@@ -105,7 +107,18 @@ public final class StaffModeManager implements Listener {
         player.getInventory().clear();
         if (backup != null) restore(player, backup);
         staffMode.remove(player.getUniqueId());
+        disableStaffChat(player);
         module.send(player, "staffmode-disabled");
+    }
+
+    private void enableStaffChat(Player player) {
+        StaffChatModule staffChat = plugin.modules().get(StaffChatModule.class);
+        if (staffChat != null) staffChat.setEnabled(player, true, false);
+    }
+
+    private void disableStaffChat(Player player) {
+        StaffChatModule staffChat = plugin.modules().get(StaffChatModule.class);
+        if (staffChat != null) staffChat.setEnabled(player, false, false);
     }
 
     public void toggleVanish(Player player) {
@@ -168,6 +181,7 @@ public final class StaffModeManager implements Listener {
         if (isStaffMode(uuid)) {
             StaffBackup backup = backups.remove(uuid);
             if (backup != null) restore(player, backup);
+            disableStaffChat(player);
         }
         staffMode.remove(uuid);
         vanished.remove(uuid);

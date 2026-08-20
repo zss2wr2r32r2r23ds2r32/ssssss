@@ -1,7 +1,9 @@
 # Portal RTP
-config-version: 8
+config-version: 9
 message-mode: chat
 portal-world: spawn
+# /rtp only works while standing in portal-world (unless sharded.rtp.bypass)
+command-require-portal-world: true
 target-world: world
 radius-label: 1K x 1K
 border-label: 5k x 5k
