@@ -1,0 +1,77 @@
+# ╔═══════════════════════════════════════════════════════╗
+# ║   SeaTeams 2.0 — Members Menu                         ║
+# ║   4 × 9 = 36 slots. Top 3 rows = members (max 27).    ║
+# ║   Bottom row layout (per user screenshot):            ║
+# ║     [red] [.] [.] [book] [.] [.] [.] [.] [lime]       ║
+# ║   No back button — close with ESC.                    ║
+# ╚═══════════════════════════════════════════════════════╝
+
+inventory:
+  rows: 4
+  title: '&8⚐ Team Members'
+
+# Member item template — appears for each team member (top 3 rows, paginated)
+member-item:
+  material: PLAYER_HEAD
+  name: '&#00d4ff%player%'
+  lore:
+    - ''
+    - '&7Role: %role%'
+    - '&7Status: %status%'
+    - ''
+    - '&8» &7Click to manage'
+
+navigation:
+  previous-page:
+    slot: 27     # 1-indexed slot 28 → code 27 — bottom row first slot
+    material: RED_SHULKER_BOX
+    name: '&#ff4444← Previous Page'
+    lore:
+      - ''
+      - '&7Go to the previous page.'
+
+  invite-player:
+    slot: 31     # 1-indexed slot 5 of the bottom row (slot 32 in full-inventory numbering) → code 31
+    material: WRITABLE_BOOK
+    name: '&#22c55e+ Invite Player'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7invite a new player to'
+      - '&7your team.'
+
+  next-page:
+    slot: 35     # 1-indexed slot 36 → code 35 — bottom row last slot
+    material: LIME_SHULKER_BOX
+    name: '&#22c55eNext Page →'
+    lore:
+      - ''
+      - '&7Go to the next page.'
+
+# Per-member options sub-menu
+member-options:
+  promote:
+    material: GREEN_DYE
+    name: '&#22c55e↑ Promote'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7promote this member to'
+      - '&7%next_role%&7.'
+
+  demote:
+    material: ORANGE_DYE
+    name: '&#ff8800↓ Demote'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7demote this member to'
+      - '&7%prev_role%&7.'
+
+  kick:
+    material: BARRIER
+    name: '&#ff4444✗ Kick'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7remove this member.'

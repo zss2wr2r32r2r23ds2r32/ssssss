@@ -1,0 +1,50 @@
+# ╔═══════════════════════════════════════════════════════╗
+# ║   SeaTeams 2.0 — Allies Menu                          ║
+# ╚═══════════════════════════════════════════════════════╝
+
+inventory:
+  rows: 4
+  title: '&8⚑ Allies'
+  ally-slots: [10, 11, 12, 13, 14, 15, 16]
+
+ally-item:
+  material: PLAYER_HEAD
+  name: '&#ff8800%team_name%'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#FF0000Information:'
+    - ''
+    - '&#FF0000| &fClick here, to return'
+    - '&#FF0000| &fto your main section.'
+    - ''
+    - '&#FFD900▷ &n&lCLICK&#FFD900 To Go Back'
+
+add-ally-slot:
+  slot: 31
+  material: WRITABLE_BOOK
+  name: '&#22c55e+ Add Ally'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#FF0000Information:'
+    - ''
+    - '&#FF0000| &fClick here, to return'
+    - '&#FF0000| &fto your main section.'
+    - ''
+    - '&#FFD900▷ &n&lCLICK&#FFD900 To Go Back'
+
+navigation:
+  back:
+    slot: 27
+    material: SPECTRAL_ARROW
+    name: '&#FF0000&lBACK'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF0000Information:'
+      - ''
+      - '&#FF0000| &fClick here, to return'
+      - '&#FF0000| &fto your main section.'
+      - ''
+      - '&#FFD900▷ &n&lCLICK&#FFD900 To Go Back'

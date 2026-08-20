@@ -1,0 +1,15 @@
+# ╔══════════════════════════════════════════════════════╗
+# ║   SeaTeams 2.0 — Configuration                       ║
+# ╚══════════════════════════════════════════════════════╝
+
+# ─── License Key ────────────────────────────────────────
+# SeaTeams is FREE. To get your license key:
+#
+#   1. Join our Discord: discord.com/invite/vsyRNWApUm
+#   2. Find the key in the #license-key channel
+#   3. Paste it below and restart your server
+#
+# Without a valid key, the plugin runs but all commands
+# are blocked until a key is entered.
+#
+license-key: 'ZVAULT-67E0-CDBF-0CB'
