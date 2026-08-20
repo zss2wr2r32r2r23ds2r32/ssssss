@@ -1,7 +1,4 @@
-config-version: 1
+config-version: 2
 prefix: '%prefix%'
 
-swear-blocked: '%prefix%&#FF2727Please do not swear in chat.'
-spam-cooldown: '%prefix%&#FF2727Slow down! Wait &f%time%&7s.'
-repeat-spam: '%prefix%&#FF2727Stop repeating the same message.'
-command-spam: '%prefix%&#FF2727Slow down! Wait &f%time%&7s before using &f/%command%&7 again.'
+swear-blocked: '%prefix%&#FF2727That word is not allowed in chat.'

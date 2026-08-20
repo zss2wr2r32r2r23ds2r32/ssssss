@@ -111,7 +111,11 @@ public abstract class Module implements Listener {
             return;
         }
         cmd.setExecutor(executor);
-        if (executor instanceof TabCompleter tab) cmd.setTabCompleter(tab);
+        if (executor instanceof TabCompleter tab) {
+            cmd.setTabCompleter(tab);
+        } else {
+            cmd.setTabCompleter(plugin.coreTabComplete());
+        }
         commands.add(name);
     }
 

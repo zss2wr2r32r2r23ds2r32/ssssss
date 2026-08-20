@@ -41,6 +41,7 @@ import com.sharded.core.modules.punishments.PunishmentsModule;
 import com.sharded.core.modules.requeststaff.RequestStaffModule;
 import com.sharded.core.modules.screenshare.ScreenshareModule;
 import com.sharded.core.modules.staffchat.StaffChatModule;
+import com.sharded.core.modules.guide.GuideModule;
 import com.sharded.core.modules.client.ClientModule;
 
 import java.util.ArrayList;
@@ -94,6 +95,7 @@ public final class ModuleManager {
         register(new ScreenshareModule(plugin));
         register(new StaffChatModule(plugin));
         register(new RequestStaffModule(plugin));
+        register(new GuideModule(plugin));
         register(new ClientModule(plugin));
     }
 

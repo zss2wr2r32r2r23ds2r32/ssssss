@@ -1,0 +1,141 @@
+menu_title: 'Server Guide'
+config-version: 1
+size: 54
+open_permission: sharded.guide.use
+
+open_commands:
+  - '[sound] BLOCK_CHEST_OPEN'
+
+items:
+  filler:
+    material: BLACK_STAINED_GLASS_PANE
+    slots: [0,1,2,3,4,5,6,7,8,9,17,18,26,27,35,36,44,45,46,47,48,49,50,51,52,53]
+    display_name: ' '
+
+  server_guide:
+    material: COMPASS
+    slot: 19
+    display_name: '&#9FFF00&lSERVER GUIDE'
+    lore:
+      - '&8Item Description'
+      - ''
+      - '&#9FFF00Information:'
+      - '&#9FFF00| &fHere you can find all important'
+      - '&#9FFF00| &finformation about the server!'
+      - ''
+      - '&#9FFF00Need Help?'
+      - '&#9FFF00| &fIf you need further help you'
+      - '&#9FFF00| &fcan always open a &aTicket!'
+      - '&#9FFF00| &fin our &bDiscord &fserver'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
+    click_commands:
+      - '[message] &#9FFF00&lGUIDE &8▷ &fUse &a/guide &for &a/rules &fto browse server info anytime.'
+
+  server_shop:
+    material: EMERALD
+    slot: 20
+    display_name: '&#9FFF00&lSERVER SHOP'
+    lore:
+      - '&8Item Description'
+      - ''
+      - '&#9FFF00Information:'
+      - '&#9FFF00| &fVisit our server shop to buy and'
+      - '&#9FFF00| &fsell items to earn money!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
+    click_commands:
+      - '[close]'
+      - '[player] tokenshop'
+
+  server_kits:
+    material: CHEST
+    slot: 21
+    display_name: '&#FF69B4&lSERVER KITS'
+    lore:
+      - '&8Item Description'
+      - ''
+      - '&#FF69B4Information:'
+      - '&#FF69B4| &fClaim your starter kit or unlock'
+      - '&#FF69B4| &fbetter kits with a rank!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
+    click_commands:
+      - '[message] &#FF69B4&lKITS &8▷ &fStarter kits are available at spawn. Rank kits unlock in the &a/webstore&7.'
+
+  random_location:
+    material: GRASS_BLOCK
+    slot: 22
+    display_name: '&#9FFF00&lRANDOM LOCATION'
+    lore:
+      - '&8Item Description'
+      - ''
+      - '&#9FFF00Information:'
+      - '&#9FFF00| &fTeleport to a random location'
+      - '&#9FFF00| &fin the wild!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
+    click_commands:
+      - '[close]'
+      - '[player] rtp'
+
+  crystal_shop:
+    material: AMETHYST_SHARD
+    slot: 28
+    display_name: '&#FF69B4&lCRYSTAL SHOP'
+    lore:
+      - '&8Item Description'
+      - ''
+      - '&#FF69B4Information:'
+      - '&#FF69B4| &fSpend your crystals in'
+      - '&#FF69B4| &four exclusive crystal shop!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
+    click_commands:
+      - '[close]'
+      - '[player] tokenshop'
+
+  discord:
+    material: PAPER
+    slot: 29
+    display_name: '&#55FFFF&lDISCORD SERVER'
+    lore:
+      - '&8Item Description'
+      - ''
+      - '&#55FFFFInformation:'
+      - '&#55FFFF| &fJoin our Discord server to stay'
+      - '&#55FFFF| &finformed of changes, updates & more!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
+    click_commands:
+      - '[message] &#55FFFF&lDISCORD &8▷ &fJoin us at &b%discord%'
+
+  webstore:
+    material: GOLD_INGOT
+    slot: 30
+    display_name: '&#FFD700&lSERVER WEBSTORE'
+    lore:
+      - '&8Item Description'
+      - ''
+      - '&#FFD700Information:'
+      - '&#FFD700| &fVisit our webstore to buy'
+      - '&#FFD700| &franks, crate keys & more!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
+    click_commands:
+      - '[message] &#FFD700&lWEBSTORE &8▷ &fVisit &e%webstore%'
+
+  server_rules:
+    material: WRITABLE_BOOK
+    slot: 31
+    display_name: '&#FF2727&lSERVER RULES'
+    lore:
+      - '&8Item Description'
+      - ''
+      - '&#FF2727Information:'
+      - '&#FF2727| &fYou can read all our rules by clicking'
+      - '&#FF2727| &fhere which will prevent punishments!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
+    click_commands:
+      - '[openguimenu] guide_rules'

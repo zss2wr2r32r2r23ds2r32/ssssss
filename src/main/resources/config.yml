@@ -2,7 +2,7 @@
 #  ShardedCore - main configuration
 # ---------------------------------------------------------
 
-config-version: 8
+config-version: 9
 
 prefix: '&#00A2FF&lCORE &8▷ &r'
 # chat | actionbar | both — global default for all modules
@@ -48,4 +48,5 @@ modules:
   screenshare: true
   staffchat: true
   requeststaff: true
+  guide: true
   client: true

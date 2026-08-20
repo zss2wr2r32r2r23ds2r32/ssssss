@@ -63,9 +63,13 @@ commands:
     description: Apply Auto Smelt to your pickaxe
     usage: /autosmelt
   rtp:
-    description: Open the random teleport menu (spawn world only)
+    description: Open the random teleport menu
     usage: /rtp
-    aliases: [randomtp, wild]
+    aliases: [wild]
+  randomtp:
+    description: Teleport to a random online player (staff)
+    usage: /randomtp
+    permission: sharded.staff.randomtp
   spawn:
     description: Open the spawn selector or choose a spawn type
     usage: /spawn [main/vanilla]
@@ -178,6 +182,16 @@ commands:
   unban:
     description: Unban a player
     usage: /unban <player>
+  unbanip:
+    description: Remove an IP ban
+    usage: /unbanip <ip>
+    aliases: [unban-ip]
+  guide:
+    description: Open the server guide menu
+    usage: /guide
+  rules:
+    description: Open the server rules menu
+    usage: /rules
   unmute:
     description: Unmute a player
     usage: /unmute <player>
@@ -322,6 +336,9 @@ permissions:
     default: true
   sharded.rtp.bypass:
     default: op
+  sharded.guide.use:
+    description: Open the server guide and rules menus
+    default: true
   sharded.spawn.admin:
     description: Set main and vanilla spawn locations
     default: op
@@ -427,6 +444,9 @@ permissions:
   sharded.staff.unban:
     description: Use /unban and /pardon
     default: op
+  sharded.staff.unbanip:
+    description: Use /unbanip
+    default: op
   sharded.staff.unmute:
     description: Use /unmute
     default: op
@@ -485,6 +505,8 @@ permissions:
   sharded.punishments.mute:
     default: op
   sharded.punishments.unban:
+    default: op
+  sharded.punishments.unbanip:
     default: op
   sharded.punishments.unmute:
     default: op

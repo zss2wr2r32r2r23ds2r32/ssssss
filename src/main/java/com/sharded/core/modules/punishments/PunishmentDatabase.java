@@ -373,6 +373,25 @@ public final class PunishmentDatabase {
         return names;
     }
 
+    public synchronized List<String> activeIpBans() {
+        List<String> ips = new ArrayList<>();
+        long now = System.currentTimeMillis();
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT ip, expires_at FROM ip_bans WHERE active = 1 ORDER BY ip")) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    long expires = rs.getLong("expires_at");
+                    if (!rs.wasNull() && expires > 0 && now >= expires) continue;
+                    String ip = rs.getString("ip");
+                    if (ip != null && !ip.isBlank()) ips.add(ip);
+                }
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().warning("[punishments] Failed to list active IP bans: " + e.getMessage());
+        }
+        return ips;
+    }
+
     private PunishmentRecord readPunishment(ResultSet rs) throws SQLException {
         long expires = rs.getLong("expires_at");
         return new PunishmentRecord(

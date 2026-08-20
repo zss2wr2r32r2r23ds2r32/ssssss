@@ -1,0 +1,36 @@
+menu_title: '&#55FFFF&lCHAT RULES'
+config-version: 1
+size: 54
+open_permission: sharded.guide.use
+
+open_commands:
+  - '[sound] BLOCK_CHEST_OPEN'
+
+items:
+  filler:
+    material: BLACK_STAINED_GLASS_PANE
+    slots: [0,1,2,3,4,5,6,7,8,9,17,18,26,27,35,36,44,45,46,47,48,49,50,51,52,53]
+    display_name: ' '
+
+  rules:
+    material: BOOK
+    slot: 22
+    display_name: '&#55FFFF&lCHAT RULES'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#55FFFF● &fNo Spamming or Encouraging Others to Spam'
+      - '&#55FFFF● &fNo Harassment'
+      - '&#55FFFF● &fNo Advertising or Promotion'
+      - '&#55FFFF● &fNo Discrimination or Hate Speech'
+      - '&#55FFFF● &fNo Death Threats'
+      - '&#55FFFF● &fNo Sharing Others'' Private Information'
+      - '&#55FFFF● &fNo Impersonation'
+      - '&#55FFFF● &fNo Ban Evasion'
+      - '&#55FFFF● &fNo Lying to Staff'
+      - '&#55FFFF● &fReport All Bugs, Glitches, and Cheaters on Discord'
+      - '&#55FFFF  &7(%discord%)'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Go Back'
+    click_commands:
+      - '[openguimenu] guide_rules'

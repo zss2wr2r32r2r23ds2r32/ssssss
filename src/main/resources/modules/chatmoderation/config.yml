@@ -1,8 +1,5 @@
-config-version: 3
+config-version: 4
 message-mode: chat
-
-# Minimum time between spam warning messages (prevents chat flood)
-warn-cooldown-ms: 3000
 
 anti-swear:
   enabled: true
@@ -10,18 +7,3 @@ anti-swear:
 swear-words:
   - badword1
   - badword2
-
-anti-spam:
-  enabled: true
-  cooldown-ms: 3000
-  repeat-limit: 8
-
-anti-spam-commands:
-  enabled: true
-  cooldown-ms: 5000
-  commands:
-    - msg
-    - tell
-    - w
-    - r
-    - reply

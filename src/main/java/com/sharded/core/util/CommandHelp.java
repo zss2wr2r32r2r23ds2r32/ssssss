@@ -30,6 +30,8 @@ public final class CommandHelp {
         list.add(new CommandInfo("/fly", "Toggle flight", "sharded.fly.use"));
         list.add(new CommandInfo("/autosmelt", "Auto smelt pickaxe", "sharded.autosmelt.use"));
         list.add(new CommandInfo("/rtp", "Random teleport menu", "sharded.rtp.use"));
+        list.add(new CommandInfo("/guide", "Server guide menu", "sharded.guide.use"));
+        list.add(new CommandInfo("/rules", "Server rules menu", "sharded.guide.use"));
         list.add(new CommandInfo("/spawn (/spawnselect)", "Spawn selector", "sharded.spawn.use"));
         list.add(new CommandInfo("/pets", "Open pets menu", "sharded.pets.use"));
         list.add(new CommandInfo("/pet equip|remove|rename", "Manage cosmetic pet", "sharded.pets.use"));
@@ -63,6 +65,7 @@ public final class CommandHelp {
         list.add(new CommandInfo("/offend <player>", "Ban repeat offender", "sharded.staff.offend"));
         list.add(new CommandInfo("/banip <player> [reason]", "IP ban a player", "sharded.staff.banip"));
         list.add(new CommandInfo("/unban <player>", "Unban a player", "sharded.staff.unban"));
+        list.add(new CommandInfo("/unbanip (/unban-ip) <ip>", "Remove an IP ban", "sharded.staff.unbanip"));
         list.add(new CommandInfo("/unmute <player>", "Unmute a player", "sharded.staff.unmute"));
         list.add(new CommandInfo("/pardon <player>", "Unban + unmute", "sharded.staff.pardon"));
         list.add(new CommandInfo("/wipe <player>", "Wipe player data", "sharded.staff.wipe"));

@@ -7,6 +7,7 @@ import com.sharded.core.hook.PlaceholderHook;
 import com.sharded.core.module.ModuleManager;
 import com.sharded.core.util.CommandHelp;
 import com.sharded.core.util.ConfigSync;
+import com.sharded.core.util.CoreTabComplete;
 import com.sharded.core.util.MessageUtil;
 import com.sharded.core.util.PlayerStateStore;
 import com.sharded.core.util.TabCompleteHelper;
@@ -27,6 +28,7 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
     private PlayerStateStore stateStore;
     private GuiManager guiManager;
     private ModuleManager moduleManager;
+    private CoreTabComplete coreTabComplete;
 
     @Override
     public void onEnable() {
@@ -40,6 +42,7 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
         getServer().getPluginManager().registerEvents(placeholderHook, this);
         this.stateStore = new PlayerStateStore(this);
         this.guiManager = new GuiManager(this);
+        this.coreTabComplete = new CoreTabComplete(this);
         getServer().getPluginManager().registerEvents(new GuiListener(guiManager), this);
 
         this.moduleManager = new ModuleManager(this);
@@ -128,6 +131,10 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
 
     public ModuleManager modules() {
         return moduleManager;
+    }
+
+    public CoreTabComplete coreTabComplete() {
+        return coreTabComplete;
     }
 
     public MessageUtil.Delivery globalDelivery() {

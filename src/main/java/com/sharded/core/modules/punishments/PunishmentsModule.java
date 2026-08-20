@@ -82,6 +82,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         registerCommand("mute", this);
         registerCommand("offend", this);
         registerCommand("unban", this);
+        registerCommand("unbanip", this);
         registerCommand("unmute", this);
         registerCommand("pardon", this);
         registerCommand("wipe", this);
@@ -106,6 +107,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
             case "mute" -> handleMuteCmd(sender, args);
             case "offend" -> handleOffendCmd(sender, args);
             case "unban" -> handleUnbanCmd(sender, args);
+            case "unbanip" -> handleUnbanIpCmd(sender, args);
             case "unmute" -> handleUnmuteCmd(sender, args);
             case "pardon" -> handlePardonCmd(sender, args);
             case "wipe" -> handleWipeCmd(sender, args);
@@ -262,7 +264,21 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
             send(sender, "unban-usage");
             return true;
         }
-        unban(sender, OfflinePlayers.resolve(args[0]));
+        OfflinePlayer target = OfflinePlayers.resolve(args[0]);
+        if (target == null) {
+            send(sender, "player-not-found");
+            return true;
+        }
+        unban(sender, target);
+        return true;
+    }
+
+    private boolean handleUnbanIpCmd(CommandSender sender, String[] args) {
+        if (args.length == 0) {
+            send(sender, "unbanip-usage");
+            return true;
+        }
+        unbanIp(sender, args[0]);
         return true;
     }
 
@@ -333,6 +349,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         if (args.length == 1) {
             return switch (name) {
                 case "unban" -> TabCompleteHelper.filter(args[0], database.activePunishedPlayerNames(PunishmentDatabase.PunishmentType.BAN));
+                case "unbanip" -> TabCompleteHelper.filter(args[0], database.activeIpBans());
                 case "unmute" -> TabCompleteHelper.filter(args[0], database.activePunishedPlayerNames(PunishmentDatabase.PunishmentType.MUTE));
                 case "pardon" -> {
                     List<String> names = new ArrayList<>(database.activePunishedPlayerNames(PunishmentDatabase.PunishmentType.BAN));
@@ -668,6 +685,23 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         String ip = database.latestIp(target.getUniqueId());
         if (ip != null) database.deactivateIpBan(ip);
         send(staff, "unbanned", "%player%", OfflinePlayers.name(target.getUniqueId()));
+    }
+
+    public void unbanIp(CommandSender staff, String ip) {
+        if (!can(staff, "sharded.punishments.unbanip")) {
+            send(staff, "no-permission");
+            return;
+        }
+        if (ip == null || ip.isBlank()) {
+            send(staff, "unbanip-usage");
+            return;
+        }
+        if (database.getActiveIpBan(ip) == null) {
+            send(staff, "unbanip-not-found", "%ip%", ip);
+            return;
+        }
+        database.deactivateIpBan(ip);
+        send(staff, "unbanip-done", "%ip%", ip);
     }
 
     public void unmute(CommandSender staff, OfflinePlayer target) {

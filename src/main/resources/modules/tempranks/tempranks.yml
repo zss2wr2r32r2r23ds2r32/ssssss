@@ -1,4 +1,4 @@
-config-version: 3
+config-version: 4
 menu_title: 'Rank Shop'
 open_command:
   - rankshop
@@ -19,7 +19,7 @@ items:
       - '&8Description'
       - ''
       - '&#FF2B2BInformation:'
-      - '&#FF2B2B| &fPurchase Ranks using tokens'
+      - '&#FF2B2B| &fPurchase ranks using tokens'
       - '&#FF2B2B| &ftokens can be obtained by &#FF2B2BKill Streaks'
       - ''
       - '&#FF2B2B| &fTokens: &#FF2B2B500'
@@ -36,6 +36,10 @@ items:
     lore:
       - '&8Description'
       - ''
+      - '&#FF2B2BInformation:'
+      - '&#FF2B2B| &fPurchase ranks using tokens'
+      - '&#FF2B2B| &ftokens can be obtained by &#FF2B2BKill Streaks'
+      - ''
       - '&#FF2B2B| &fTokens: &#FF2B2B900'
       - ''
       - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
@@ -49,6 +53,10 @@ items:
     display_name: '&#006EFF&lSAPPHIRE &#006EFFRank &7[7D]'
     lore:
       - '&8Description'
+      - ''
+      - '&#006EFFInformation:'
+      - '&#006EFF| &fPurchase ranks using tokens'
+      - '&#006EFF| &ftokens can be obtained by &#006EFFKill Streaks'
       - ''
       - '&#006EFF| &fTokens: &#006EFF750'
       - ''
@@ -64,6 +72,10 @@ items:
     lore:
       - '&8Description'
       - ''
+      - '&#006EFFInformation:'
+      - '&#006EFF| &fPurchase ranks using tokens'
+      - '&#006EFF| &ftokens can be obtained by &#006EFFKill Streaks'
+      - ''
       - '&#006EFF| &fTokens: &#006EFF1350'
       - ''
       - '&#FFCF00▷ &#FFCF00&l&nCLICK&r &#FFCF00To Purchase'
@@ -77,6 +89,10 @@ items:
     display_name: '&#FFCF00&lONYX &#FFCF00Rank &7[7D]'
     lore:
       - '&8Description'
+      - ''
+      - '&#FFCF00Information:'
+      - '&#FFCF00| &fPurchase ranks using tokens'
+      - '&#FFCF00| &ftokens can be obtained by &#FFCF00Kill Streaks'
       - ''
       - '&#FFCF00| &fTokens: &#FFCF001000'
       - ''
@@ -92,6 +108,10 @@ items:
     lore:
       - '&8Description'
       - ''
+      - '&#FFCF00Information:'
+      - '&#FFCF00| &fPurchase ranks using tokens'
+      - '&#FFCF00| &ftokens can be obtained by &#FFCF00Kill Streaks'
+      - ''
       - '&#FFCF00| &fTokens: &#FFCF001800'
       - ''
       - '&#FFCF00▷ &#FFCF00&l&nCLICK&r &#FFCF00To Purchase'
@@ -105,6 +125,10 @@ items:
     display_name: '&#7DEBFF&lAETHER &#7DEBFFRank &7[7D]'
     lore:
       - '&8Description'
+      - ''
+      - '&#7DEBFFInformation:'
+      - '&#7DEBFF| &fPurchase ranks using tokens'
+      - '&#7DEBFF| &ftokens can be obtained by &#7DEBFFKill Streaks'
       - ''
       - '&#7DEBFF| &fTokens: &#7DEBFF1500'
       - ''
@@ -120,6 +144,10 @@ items:
     lore:
       - '&8Description'
       - ''
+      - '&#7DEBFFInformation:'
+      - '&#7DEBFF| &fPurchase ranks using tokens'
+      - '&#7DEBFF| &ftokens can be obtained by &#7DEBFFKill Streaks'
+      - ''
       - '&#7DEBFF| &fTokens: &#7DEBFF2700'
       - ''
       - '&#FFCF00▷ &#FFCF00&l&nCLICK&r &#FFCF00To Purchase'
@@ -134,6 +162,10 @@ items:
     lore:
       - '&8Description'
       - ''
+      - '&#8B5CF6Information:'
+      - '&#8B5CF6| &fPurchase ranks using tokens'
+      - '&#8B5CF6| &ftokens can be obtained by &#8B5CF6Kill Streaks'
+      - ''
       - '&#8B5CF6| &fTokens: &#8B5CF62000'
       - ''
       - '&#FFCF00▷ &#FFCF00&l&nCLICK&r &#FFCF00To Purchase'
@@ -147,6 +179,10 @@ items:
     display_name: '&#8B5CF6&lFLAWLESS &#8B5CF6Rank &7[14D]'
     lore:
       - '&8Description'
+      - ''
+      - '&#8B5CF6Information:'
+      - '&#8B5CF6| &fPurchase ranks using tokens'
+      - '&#8B5CF6| &ftokens can be obtained by &#8B5CF6Kill Streaks'
       - ''
       - '&#8B5CF6| &fTokens: &#8B5CF63600'
       - ''
