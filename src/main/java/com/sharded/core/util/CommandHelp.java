@@ -65,7 +65,7 @@ public final class CommandHelp {
         list.add(new CommandInfo("/offend <player>", "Ban repeat offender", "sharded.staff.offend"));
         list.add(new CommandInfo("/banip <player> [reason]", "IP ban a player", "sharded.staff.banip"));
         list.add(new CommandInfo("/unban <player>", "Unban a player", "sharded.staff.unban"));
-        list.add(new CommandInfo("/unbanip (/unban-ip) <ip>", "Remove an IP ban", "sharded.staff.unbanip"));
+        list.add(new CommandInfo("/unbanip (/unban-ip) <ip|player|list>", "Remove an IP ban", "sharded.staff.unbanip"));
         list.add(new CommandInfo("/unmute <player>", "Unmute a player", "sharded.staff.unmute"));
         list.add(new CommandInfo("/pardon <player>", "Unban + unmute", "sharded.staff.pardon"));
         list.add(new CommandInfo("/wipe <player>", "Wipe player data", "sharded.staff.wipe"));

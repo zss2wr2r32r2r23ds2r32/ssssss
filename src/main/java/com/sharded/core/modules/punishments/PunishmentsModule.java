@@ -58,8 +58,9 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         return database;
     }
 
-    /** Accepts sharded.punishments.* or matching sharded.staff.* permission. */
+    /** Accepts sharded.punishments.*, matching sharded.staff.*, or sharded.admin. */
     private boolean can(CommandSender sender, String punishNode) {
+        if (sender.hasPermission("sharded.admin")) return true;
         if (sender.hasPermission(punishNode)) return true;
         if (punishNode.startsWith("sharded.punishments.")) {
             return sender.hasPermission("sharded.staff." + punishNode.substring("sharded.punishments.".length()));
@@ -278,8 +279,37 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
             send(sender, "unbanip-usage");
             return true;
         }
-        unbanIp(sender, args[0]);
+        if (args[0].equalsIgnoreCase("list")) {
+            listIpBans(sender);
+            return true;
+        }
+        String input = args[0].trim();
+        OfflinePlayer target = OfflinePlayers.resolve(input);
+        if (target != null) {
+            String ip = database.latestIp(target.getUniqueId());
+            if (ip != null) {
+                unbanIp(sender, ip);
+                return true;
+            }
+        }
+        unbanIp(sender, input);
         return true;
+    }
+
+    private void listIpBans(CommandSender sender) {
+        if (!can(sender, "sharded.punishments.unbanip")) {
+            send(sender, "no-permission");
+            return;
+        }
+        List<String> ips = database.activeIpBans();
+        if (ips.isEmpty()) {
+            send(sender, "unbanip-list-empty");
+            return;
+        }
+        send(sender, "unbanip-list-header", "%count%", String.valueOf(ips.size()));
+        for (String ip : ips) {
+            sender.sendMessage(com.sharded.core.util.Text.c(messagePrefix() + "&7- &f" + ip));
+        }
     }
 
     private boolean handleUnmuteCmd(CommandSender sender, String[] args) {
@@ -349,7 +379,14 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         if (args.length == 1) {
             return switch (name) {
                 case "unban" -> TabCompleteHelper.filter(args[0], database.activePunishedPlayerNames(PunishmentDatabase.PunishmentType.BAN));
-                case "unbanip" -> TabCompleteHelper.filter(args[0], database.activeIpBans());
+                case "unbanip" -> {
+                    if ("list".startsWith(args[0].toLowerCase(Locale.ROOT))) {
+                        yield TabCompleteHelper.filter(args[0], "list");
+                    }
+                    List<String> options = new ArrayList<>(database.activeIpBans());
+                    options.addAll(TabCompleteHelper.knownPlayers(args[0]));
+                    yield TabCompleteHelper.filter(args[0], options);
+                }
                 case "unmute" -> TabCompleteHelper.filter(args[0], database.activePunishedPlayerNames(PunishmentDatabase.PunishmentType.MUTE));
                 case "pardon" -> {
                     List<String> names = new ArrayList<>(database.activePunishedPlayerNames(PunishmentDatabase.PunishmentType.BAN));
