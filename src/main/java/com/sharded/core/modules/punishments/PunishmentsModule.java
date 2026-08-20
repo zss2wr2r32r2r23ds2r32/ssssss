@@ -286,11 +286,8 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         String input = args[0].trim();
         OfflinePlayer target = OfflinePlayers.resolve(input);
         if (target != null) {
-            String ip = database.latestIp(target.getUniqueId());
-            if (ip != null) {
-                unbanIp(sender, ip);
-                return true;
-            }
+            clearAllBansForPlayer(sender, target);
+            return true;
         }
         unbanIp(sender, input);
         return true;
@@ -302,13 +299,23 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
             return;
         }
         List<String> ips = database.activeIpBans();
-        if (ips.isEmpty()) {
+        List<String> bannedPlayers = database.activePunishedPlayerNames(PunishmentDatabase.PunishmentType.BAN);
+        if (ips.isEmpty() && bannedPlayers.isEmpty()) {
             send(sender, "unbanip-list-empty");
             return;
         }
-        send(sender, "unbanip-list-header", "%count%", String.valueOf(ips.size()));
-        for (String ip : ips) {
-            sender.sendMessage(com.sharded.core.util.Text.c(messagePrefix() + "&7- &f" + ip));
+        if (!ips.isEmpty()) {
+            send(sender, "unbanip-list-header", "%count%", String.valueOf(ips.size()));
+            for (String ip : ips) {
+                sender.sendMessage(com.sharded.core.util.Text.c(messagePrefix() + "&7- &f" + ip + " &8(/unbanip " + ip + ")"));
+            }
+        }
+        if (!bannedPlayers.isEmpty()) {
+            send(sender, "unban-list-header", "%count%", String.valueOf(bannedPlayers.size()));
+            for (String name : bannedPlayers) {
+                sender.sendMessage(com.sharded.core.util.Text.c(messagePrefix() + "&7- &f" + name + " &8(/unban " + name + ")"));
+            }
+            send(sender, "unbanip-hint-player-ban");
         }
     }
 
@@ -718,10 +725,17 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
             send(staff, "no-permission");
             return;
         }
-        database.deactivatePunishments(target.getUniqueId(), PunishmentDatabase.PunishmentType.BAN);
-        String ip = database.latestIp(target.getUniqueId());
-        if (ip != null) database.deactivateIpBan(ip);
+        database.clearAllBansForPlayer(target.getUniqueId());
         send(staff, "unbanned", "%player%", OfflinePlayers.name(target.getUniqueId()));
+    }
+
+    public void clearAllBansForPlayer(CommandSender staff, OfflinePlayer target) {
+        if (!can(staff, "sharded.punishments.unbanip") && !can(staff, "sharded.punishments.unban")) {
+            send(staff, "no-permission");
+            return;
+        }
+        database.clearAllBansForPlayer(target.getUniqueId());
+        send(staff, "unbanip-player-cleared", "%player%", OfflinePlayers.name(target.getUniqueId()));
     }
 
     public void unbanIp(CommandSender staff, String ip) {
@@ -733,11 +747,12 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
             send(staff, "unbanip-usage");
             return;
         }
-        if (database.getActiveIpBan(ip) == null) {
+        boolean hadBlock = database.hasAnyIpBlock(ip);
+        database.clearIpBlock(ip);
+        if (!hadBlock) {
             send(staff, "unbanip-not-found", "%ip%", ip);
             return;
         }
-        database.deactivateIpBan(ip);
         send(staff, "unbanip-done", "%ip%", ip);
     }
 

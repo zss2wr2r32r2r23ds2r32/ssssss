@@ -229,6 +229,27 @@ public final class PunishmentDatabase {
         }
     }
 
+    /** Clears an IP block from ip_bans and punishments (IP_BAN rows). */
+    public synchronized void clearIpBlock(String ip) {
+        if (ip == null || ip.isBlank()) return;
+        deactivateIpBan(ip);
+        try (PreparedStatement ps = connection.prepareStatement(
+                "UPDATE punishments SET active = 0 WHERE ip = ? AND type = 'IP_BAN' AND active = 1")) {
+            ps.setString(1, ip);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getLogger().warning("[punishments] Failed to clear IP_BAN punishments: " + e.getMessage());
+        }
+    }
+
+    /** Removes UUID ban, IP_BAN record, and ip_bans entry for a player. */
+    public synchronized void clearAllBansForPlayer(UUID uuid) {
+        deactivatePunishments(uuid, PunishmentType.BAN);
+        deactivatePunishments(uuid, PunishmentType.IP_BAN);
+        String ip = latestIp(uuid);
+        if (ip != null) clearIpBlock(ip);
+    }
+
     public synchronized void addIpBan(String ip, String reason, String staffName, Long expiresAt) {
         if (ip == null || ip.isBlank()) return;
         try (PreparedStatement ps = connection.prepareStatement("""
@@ -277,6 +298,12 @@ public final class PunishmentDatabase {
 
     public synchronized PunishmentRecord getActiveIpBan(String ip) {
         if (ip == null || ip.isBlank()) return null;
+        PunishmentRecord fromTable = getActiveIpBanFromTable(ip);
+        if (fromTable != null) return fromTable;
+        return getActiveIpBanFromPunishments(ip);
+    }
+
+    private PunishmentRecord getActiveIpBanFromTable(String ip) {
         try (PreparedStatement ps = connection.prepareStatement(
                 "SELECT * FROM ip_bans WHERE ip = ? AND active = 1")) {
             ps.setString(1, ip);
@@ -303,6 +330,32 @@ public final class PunishmentDatabase {
         } catch (SQLException e) {
             return null;
         }
+    }
+
+    private PunishmentRecord getActiveIpBanFromPunishments(String ip) {
+        long now = System.currentTimeMillis();
+        try (PreparedStatement ps = connection.prepareStatement("""
+                SELECT * FROM punishments
+                WHERE ip = ? AND type = 'IP_BAN' AND active = 1
+                ORDER BY created_at DESC LIMIT 1
+                """)) {
+            ps.setString(1, ip);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) return null;
+                PunishmentRecord record = readPunishment(rs);
+                if (record.expiresAt() != null && record.expiresAt() > 0 && now >= record.expiresAt()) {
+                    expirePunishment(record.id());
+                    return null;
+                }
+                return record;
+            }
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    public synchronized boolean hasAnyIpBlock(String ip) {
+        return getActiveIpBan(ip) != null;
     }
 
     public synchronized int countActivePunishments(UUID uuid, PunishmentType type) {
@@ -374,7 +427,7 @@ public final class PunishmentDatabase {
     }
 
     public synchronized List<String> activeIpBans() {
-        List<String> ips = new ArrayList<>();
+        Set<String> ips = new LinkedHashSet<>();
         long now = System.currentTimeMillis();
         try (PreparedStatement ps = connection.prepareStatement(
                 "SELECT ip, expires_at FROM ip_bans WHERE active = 1 ORDER BY ip")) {
@@ -389,7 +442,23 @@ public final class PunishmentDatabase {
         } catch (SQLException e) {
             plugin.getLogger().warning("[punishments] Failed to list active IP bans: " + e.getMessage());
         }
-        return ips;
+        try (PreparedStatement ps = connection.prepareStatement("""
+                SELECT DISTINCT ip, expires_at FROM punishments
+                WHERE type = 'IP_BAN' AND active = 1 AND ip IS NOT NULL AND ip != ''
+                ORDER BY ip
+                """)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    long expires = rs.getLong("expires_at");
+                    if (!rs.wasNull() && expires > 0 && now >= expires) continue;
+                    String ip = rs.getString("ip");
+                    if (ip != null && !ip.isBlank()) ips.add(ip);
+                }
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().warning("[punishments] Failed to list IP_BAN punishments: " + e.getMessage());
+        }
+        return new ArrayList<>(ips);
     }
 
     private PunishmentRecord readPunishment(ResultSet rs) throws SQLException {
@@ -477,12 +546,19 @@ public final class PunishmentDatabase {
     }
 
     public synchronized int revokeAllIpBans() {
+        int count = 0;
         try (PreparedStatement ps = connection.prepareStatement(
                 "UPDATE ip_bans SET active = 0 WHERE active = 1")) {
-            return ps.executeUpdate();
+            count += ps.executeUpdate();
         } catch (SQLException e) {
             plugin.getLogger().warning("[punishments] Failed to revoke IP bans: " + e.getMessage());
-            return 0;
         }
+        try (PreparedStatement ps = connection.prepareStatement(
+                "UPDATE punishments SET active = 0 WHERE type = 'IP_BAN' AND active = 1")) {
+            count += ps.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getLogger().warning("[punishments] Failed to revoke IP_BAN punishments: " + e.getMessage());
+        }
+        return count;
     }
 }
