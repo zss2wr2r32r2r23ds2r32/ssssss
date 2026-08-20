@@ -1,17 +1,12 @@
 # Portal RTP
-config-version: 7
+config-version: 8
 message-mode: chat
-# /rtp opens the GUI first; set false to start countdown immediately
-use-gui: true
-# When false, /rtp works from any world (portal triggers still require portal-world)
-command-require-portal-world: false
 portal-world: spawn
 target-world: world
 radius-label: 1K x 1K
 border-label: 5k x 5k
 gui-cooldown-ms: 2000
 countdown-seconds: 5
-countdown-actionbar: true
 cooldown-seconds: 30
 
 center-x: 0

@@ -93,6 +93,10 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
                     globalDelivery());
             return true;
         }
+        if (args.length > 0 && args[0].equalsIgnoreCase("staff")) {
+            CommandHelp.sendStaff(sender, getConfig().getString("prefix", "&8[&bSharded&8] &r"));
+            return true;
+        }
         CommandHelp.send(sender, getConfig().getString("prefix", "&8[&bSharded&8] &r"));
         return true;
     }
@@ -101,7 +105,7 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (!command.getName().equalsIgnoreCase("shardedcore")) return List.of();
         if (args.length == 1) {
-            return TabCompleteHelper.filter(args[0], "reload", "resetconfigs", "help");
+            return TabCompleteHelper.filter(args[0], "reload", "resetconfigs", "staff", "help");
         }
         return List.of();
     }

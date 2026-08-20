@@ -133,16 +133,7 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
             send(player, "no-permission");
             return true;
         }
-        if (config.getBoolean("command-require-portal-world", false)
-                && !player.getWorld().getName().equalsIgnoreCase(portalWorld())) {
-            send(player, "wrong-world", "%world%", portalWorld());
-            return true;
-        }
-        if (config.getBoolean("use-gui", false)) {
-            openGui(player);
-        } else {
-            startCountdown(player);
-        }
+        openGui(player);
         return true;
     }
 
@@ -167,11 +158,6 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
     }
 
     private void startCountdown(Player player) {
-        if (config.getBoolean("command-require-portal-world", false)
-                && !player.getWorld().getName().equalsIgnoreCase(portalWorld())) {
-            send(player, "wrong-world", "%world%", portalWorld());
-            return;
-        }
         long cooldownSeconds = config.getLong("cooldown-seconds", 30L);
         if (!player.hasPermission("sharded.rtp.bypass")) {
             Long nextUse = rtpCooldown.get(player.getUniqueId());

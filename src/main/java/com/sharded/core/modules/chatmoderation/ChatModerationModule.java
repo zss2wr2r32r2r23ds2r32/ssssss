@@ -1,5 +1,6 @@
 package com.sharded.core.modules.chatmoderation;
 
+import com.sharded.core.modules.staffchat.StaffChatModule;
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.util.WordBlacklist;
@@ -47,10 +48,13 @@ public final class ChatModerationModule extends Module {
         lastCommandWarn.remove(uuid);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOW)
     public void onChat(AsyncChatEvent event) {
         Player player = event.getPlayer();
         if (player.hasPermission("sharded.chatmoderation.bypass")) return;
+
+        var staffChat = plugin.modules().get(StaffChatModule.class);
+        if (staffChat != null && staffChat.isStaffChatMode(player.getUniqueId())) return;
 
         String text = PlainTextComponentSerializer.plainText().serialize(event.message());
         UUID uuid = player.getUniqueId();
@@ -65,7 +69,7 @@ public final class ChatModerationModule extends Module {
         }
 
         if (config.getBoolean("anti-spam.enabled", true)) {
-            long cooldownMs = config.getLong("anti-spam.cooldown-ms", 1500L);
+            long cooldownMs = config.getLong("anti-spam.cooldown-ms", 3000L);
             Long last = lastMessage.get(uuid);
             if (last != null && now - last < cooldownMs) {
                 event.setCancelled(true);
@@ -76,16 +80,16 @@ public final class ChatModerationModule extends Module {
             lastMessage.put(uuid, now);
 
             String normalized = text.trim().toLowerCase(Locale.ROOT);
-            if (normalized.equals(lastText.getOrDefault(uuid, ""))) {
+            if (!normalized.isEmpty() && normalized.equals(lastText.getOrDefault(uuid, ""))) {
                 int count = repeatCount.merge(uuid, 1, Integer::sum);
-                if (count >= config.getInt("anti-spam.repeat-limit", 3)) {
+                if (count >= config.getInt("anti-spam.repeat-limit", 8)) {
                     event.setCancelled(true);
                     warnChat(player, "repeat-spam", warnCooldownMs());
                     return;
                 }
             } else {
                 repeatCount.put(uuid, 0);
-                lastText.put(uuid, normalized);
+                if (!normalized.isEmpty()) lastText.put(uuid, normalized);
             }
         }
     }

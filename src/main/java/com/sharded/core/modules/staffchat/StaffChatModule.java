@@ -27,6 +27,10 @@ public final class StaffChatModule extends Module implements CommandExecutor {
         super(plugin, "staffchat");
     }
 
+    public boolean isStaffChatMode(UUID uuid) {
+        return toggleMode.contains(uuid);
+    }
+
     @Override
     protected void onEnable() {
         registerListener(this);
@@ -57,7 +61,7 @@ public final class StaffChatModule extends Module implements CommandExecutor {
         return true;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onChat(AsyncChatEvent event) {
         Player player = event.getPlayer();
         if (!toggleMode.contains(player.getUniqueId())) return;
@@ -79,7 +83,10 @@ public final class StaffChatModule extends Module implements CommandExecutor {
 
     private void broadcast(String playerName, String message) {
         String perm = config.getString("permission", "sharded.staffchat.use");
-        String formatted = raw("format", "%player%", playerName, "%message%", message);
+        String format = config.getString("format", messages.getString("format",
+                "&#AD4EFF&lSTAFF &8▷ &f%player%&7: &f%message%"));
+        String formatted = Text.apply(format.replace("%prefix%", messagePrefix()),
+                "%player%", playerName, "%message%", message);
         var component = Text.c(formatted);
         for (Player online : Bukkit.getOnlinePlayers()) {
             if (online.hasPermission(perm)) online.sendMessage(component);

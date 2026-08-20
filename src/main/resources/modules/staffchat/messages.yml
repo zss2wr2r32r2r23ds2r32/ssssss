@@ -1,6 +1,7 @@
-config-version: 2
+config-version: 3
 prefix: '%prefix%'
 
+format: '&#AD4EFF&lSTAFF &8▷ &f%player%&7: &f%message%'
 players-only: '%prefix%&#FF2727Only players can use this command.'
 no-permission: '%prefix%&#FF2727You don''t have permission.'
 enabled: '%prefix%&#9FFF00Staff chat &aenabled&7 — type in chat to message staff.'
