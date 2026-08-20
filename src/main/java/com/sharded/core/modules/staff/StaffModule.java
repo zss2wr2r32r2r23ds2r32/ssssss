@@ -32,12 +32,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Level;
 
 /** Staff tools: staffmode, punishments, audit logging, vanish, freeze, wipe, alts. */
 public final class StaffModule extends Module implements CommandExecutor, TabCompleter {
 
     private static final DateTimeFormatter LOG_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    private static final String GMSP_PREVIOUS = "gmsp-previous-mode";
 
     private StaffModeManager staffMode;
 
@@ -79,6 +82,8 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         registerCommand("freeze", this);
         registerCommand("stafflist", this);
         registerCommand("randomtp", this);
+        registerCommand("gtp", this);
+        registerCommand("gotoplayer", this);
     }
 
     @Override
@@ -110,6 +115,7 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
             case "freeze" -> handleFreeze(sender, args);
             case "stafflist" -> handleStaffList(sender);
             case "randomtp" -> handleRandomTp(sender);
+            case "gtp", "gotoplayer" -> handleGoToPlayer(sender, args);
             default -> false;
         };
     }
@@ -123,6 +129,9 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
             send(sender, "no-permission");
             return true;
         }
+        if ("gmsp".equals(cmd)) {
+            return handleSpectatorToggle(player);
+        }
         GameMode mode = switch (cmd) {
             case "gmc" -> GameMode.CREATIVE;
             case "gms" -> GameMode.SURVIVAL;
@@ -130,6 +139,53 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         };
         player.setGameMode(mode);
         send(player, "gamemode-set", "%mode%", mode.name().toLowerCase(Locale.ROOT));
+        return true;
+    }
+
+    private boolean handleSpectatorToggle(Player player) {
+        UUID uuid = player.getUniqueId();
+        if (player.getGameMode() == GameMode.SPECTATOR) {
+            String saved = plugin.stateStore().getString(uuid, GMSP_PREVIOUS, GameMode.SURVIVAL.name());
+            GameMode restore;
+            try {
+                restore = GameMode.valueOf(saved.toUpperCase(Locale.ROOT));
+            } catch (IllegalArgumentException e) {
+                restore = GameMode.SURVIVAL;
+            }
+            player.setGameMode(restore);
+            plugin.stateStore().setString(uuid, GMSP_PREVIOUS, "");
+            send(player, "gamemode-set", "%mode%", restore.name().toLowerCase(Locale.ROOT));
+            return true;
+        }
+        plugin.stateStore().setString(uuid, GMSP_PREVIOUS, player.getGameMode().name());
+        player.setGameMode(GameMode.SPECTATOR);
+        send(player, "gamemode-set", "%mode%", "spectator");
+        return true;
+    }
+
+    private boolean handleGoToPlayer(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player player)) {
+            send(sender, "players-only");
+            return true;
+        }
+        if (!player.hasPermission("sharded.staff.teleport")) {
+            send(sender, "no-permission");
+            return true;
+        }
+        if (args.length == 0) {
+            send(sender, "gtp-usage");
+            return true;
+        }
+        Player target = Bukkit.getPlayerExact(args[0]);
+        if (target == null) {
+            send(sender, "player-not-found");
+            return true;
+        }
+        player.teleportAsync(target.getLocation()).thenAccept(success -> {
+            if (success && player.isOnline()) {
+                send(player, "teleported-to", "%player%", target.getName());
+            }
+        });
         return true;
     }
 
@@ -180,8 +236,13 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (args.length == 1 && command.getName().equalsIgnoreCase("freeze")) {
+        String name = command.getName().toLowerCase(Locale.ROOT);
+        if (args.length == 1 && name.equals("freeze")) {
             return TabCompleteHelper.knownPlayers(args[0]);
+        }
+        if (args.length == 1 && (name.equals("gtp") || name.equals("gotoplayer"))
+                && sender.hasPermission("sharded.staff.teleport")) {
+            return TabCompleteHelper.onlinePlayers(args[0]);
         }
         return List.of();
     }

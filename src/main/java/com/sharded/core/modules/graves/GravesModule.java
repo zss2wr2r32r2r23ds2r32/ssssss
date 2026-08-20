@@ -27,6 +27,7 @@ import org.bukkit.util.Vector;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -189,15 +190,25 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
 
     private void placeGraveBlock(Grave grave) {
         Block block = grave.location.getBlock();
-        Material blockType = Material.matchMaterial(config.getString("block-material", "CHEST"));
-        if (blockType == null) blockType = Material.CHEST;
+        Material blockType = Material.matchMaterial(config.getString("block-material", "PLAYER_HEAD"));
+        if (blockType == null) blockType = Material.PLAYER_HEAD;
         block.setType(blockType, false);
+        if (block.getState() instanceof Skull skull) {
+            skull.setOwningPlayer(Bukkit.getOfflinePlayer(grave.owner));
+            skull.update(true, false);
+        }
     }
 
     /** Re-applies block + holograms for a grave loaded from disk. */
     private void restoreGraveInWorld(Grave grave) {
-        if (grave.location.getBlock().getType() != Material.CHEST && grave.location.getBlock().getType() != Material.TRAPPED_CHEST) {
+        Material current = grave.location.getBlock().getType();
+        if (current != Material.PLAYER_HEAD && current != Material.SKELETON_SKULL && current != Material.CHEST
+                && current != Material.TRAPPED_CHEST) {
             placeGraveBlock(grave);
+        } else if (grave.location.getBlock().getState() instanceof Skull skull
+                && skull.getOwningPlayer() == null) {
+            skull.setOwningPlayer(Bukkit.getOfflinePlayer(grave.owner));
+            skull.update(true, false);
         }
         cleanupStrayHolograms(grave.location);
         spawnHolograms(grave);
@@ -295,6 +306,13 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
         if (grave == null) return;
         event.setCancelled(true);
         openGrave(event.getPlayer(), grave);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onFluidFlow(BlockFromToEvent event) {
+        if (gravesByBlock.containsKey(blockKey(event.getToBlock().getLocation()))) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -422,7 +440,15 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
         ItemStack head = new ItemStack(Material.PLAYER_HEAD);
         if (head.getItemMeta() instanceof SkullMeta meta) {
             meta.setOwningPlayer(player);
-            meta.displayName(Text.c("&f" + player.getName() + "'s Head"));
+            String display = config.getString("head-drop.display-name", "&f%player%'s Head")
+                    .replace("%player%", player.getName());
+            meta.displayName(Text.c(display));
+            List<String> lore = config.getStringList("head-drop.lore");
+            if (!lore.isEmpty()) {
+                meta.lore(lore.stream()
+                        .map(line -> Text.c(line.replace("%player%", player.getName())))
+                        .toList());
+            }
             head.setItemMeta(meta);
         }
         return head;

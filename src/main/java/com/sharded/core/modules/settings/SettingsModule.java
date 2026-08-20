@@ -4,7 +4,6 @@ import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.modules.chat.ChatToggleModule;
 import com.sharded.core.modules.privatemessages.PrivateMessagesModule;
-import com.sharded.core.util.ConfigSync;
 import com.sharded.core.util.PlayerToggles;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -28,8 +27,7 @@ public final class SettingsModule extends Module implements CommandExecutor {
 
     @Override
     protected void onEnable() {
-        File guiFile = new File(moduleFolder(), "gui.yml");
-        ConfigSync.sync(plugin, guiFile, "modules/settings/gui.yml");
+        File guiFile = syncJarResource("gui.yml");
         plugin.gui().loadMenu(guiFile, "settings");
         plugin.gui().registerMenuExtras("settings", this::placeholders);
         plugin.gui().registerAction("scoreboard_toggle", this::toggleScoreboardExternal);
@@ -46,7 +44,9 @@ public final class SettingsModule extends Module implements CommandExecutor {
             return;
         }
         plugin.gui().open(player, "settings", placeholders(player));
-        send(player, "opened");
+        if (plugin.gui().menu("settings") != null) {
+            send(player, "opened");
+        }
     }
 
     public Map<String, String> placeholders(Player player) {

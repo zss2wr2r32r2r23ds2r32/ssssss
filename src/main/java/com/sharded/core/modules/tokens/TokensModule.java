@@ -2,7 +2,6 @@ package com.sharded.core.modules.tokens;
 
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
-import com.sharded.core.util.ConfigSync;
 import com.sharded.core.util.Numbers;
 import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.TabCompleteHelper;
@@ -59,8 +58,7 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
         }
 
         plugin.gui().setNoPermissionMessage(raw("no-permission"));
-        File menusFolder = new File(moduleFolder(), "menus");
-        copyDefaultMenus(menusFolder);
+        File menusFolder = syncMenusFolder();
         plugin.gui().loadFolder(menusFolder, "");
 
         registerCommand("bal", this);
@@ -109,12 +107,13 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
         onlineSince.remove(event.getPlayer().getUniqueId());
     }
 
-    private void copyDefaultMenus(File folder) {
+    private File syncMenusFolder() {
+        File folder = new File(moduleFolder(), "menus");
         folder.mkdirs();
         for (String menu : List.of("mainmenu", "glow", "keys", "cosmetics", "gradients", "chatcolors", "tags", "backpack")) {
-            String path = "modules/tokens/menus/" + menu + ".yml";
-            ConfigSync.sync(plugin, new File(folder, menu + ".yml"), path);
+            syncJarResource("menus/" + menu + ".yml");
         }
+        return folder;
     }
 
     @Override

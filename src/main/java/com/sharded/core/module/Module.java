@@ -104,10 +104,24 @@ public abstract class Module implements Listener {
         return ConfigSync.load(plugin, file, resourcePath);
     }
 
-    private String resolveResourcePath(String fileName) {
+    /** Jar path for an extra file (gui, menus, etc.) with categorized + legacy fallback. */
+    protected final String jarResourcePath(String fileName) {
         String categorized = ModulePaths.resourcePath(id, fileName);
         if (plugin.getResource(categorized) != null) return categorized;
-        return "modules/" + id + "/" + fileName;
+        String legacy = "modules/" + id + "/" + fileName;
+        if (plugin.getResource(legacy) != null) return legacy;
+        return categorized;
+    }
+
+    /** Copies a jar resource into this module folder when missing or outdated. */
+    protected final File syncJarResource(String fileName) {
+        File file = new File(moduleFolder(), fileName);
+        ConfigSync.sync(plugin, file, jarResourcePath(fileName));
+        return file;
+    }
+
+    private String resolveResourcePath(String fileName) {
+        return jarResourcePath(fileName);
     }
 
     private void migrateLegacyFolder() {

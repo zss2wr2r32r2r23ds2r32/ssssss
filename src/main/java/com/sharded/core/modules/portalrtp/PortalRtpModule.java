@@ -2,7 +2,6 @@ package com.sharded.core.modules.portalrtp;
 
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
-import com.sharded.core.util.ConfigSync;
 import com.sharded.core.util.MessageUtil;
 import com.sharded.core.util.SafeLocationFinder;
 import com.sharded.core.util.Text;
@@ -47,8 +46,7 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
         registerCommand("rtp", this);
         triggers = new PortalTriggerStore(plugin, moduleFolder());
 
-        File guiFile = new File(moduleFolder(), "gui.yml");
-        ConfigSync.sync(plugin, guiFile, "modules/portalrtp/gui.yml");
+        File guiFile = syncJarResource("gui.yml");
         plugin.gui().loadMenu(guiFile, "portalrtp");
         plugin.gui().registerAction("rtp_confirm", this::startCountdown);
     }
@@ -155,9 +153,7 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
 
     private void openGui(Player player) {
         if (plugin.gui().menu("portalrtp") == null) {
-            File guiFile = new File(moduleFolder(), "gui.yml");
-            ConfigSync.sync(plugin, guiFile, "modules/portalrtp/gui.yml");
-            plugin.gui().loadMenu(guiFile, "portalrtp");
+            plugin.gui().loadMenu(syncJarResource("gui.yml"), "portalrtp");
         }
         Map<String, String> ph = Map.of(
                 "target_world", targetWorld(),

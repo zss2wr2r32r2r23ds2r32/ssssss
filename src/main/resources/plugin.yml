@@ -257,15 +257,26 @@ commands:
   daily:
     description: Claim your daily reward
     usage: /daily
+  weeklyrewards:
+    description: Claim your weekly reward
+    usage: /weeklyrewards
+  weekly:
+    description: Claim your weekly reward
+    usage: /weekly
   tokenmethods:
     description: List ways to earn tokens
     usage: /tokenmethods
   module:
     description: Open the module manager
     usage: /module
-  modules:
-    description: Open the module manager
-    usage: /modules
+  gtp:
+    description: Teleport to a player
+    usage: /gtp <player>
+    permission: sharded.staff.teleport
+  gotoplayer:
+    description: Teleport to a player
+    usage: /gotoplayer <player>
+    permission: sharded.staff.teleport
 
 permissions:
   sharded.admin:
@@ -289,9 +300,11 @@ permissions:
     default: op
   sharded.nightvision.use:
     default: true
-  sharded.kill.use:
+  sharded.weeklyrewards.use:
+    description: Claim weekly rewards
     default: true
-  sharded.kill.others:
+  sharded.staff.teleport:
+    description: Use /gtp and /gotoplayer
     default: op
   sharded.backpack.use:
     default: true

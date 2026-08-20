@@ -2,7 +2,7 @@
 #  ShardedCore - main configuration
 # ---------------------------------------------------------
 
-config-version: 10
+config-version: 11
 
 prefix: '&#00A2FF&lCORE &8▷ &r'
 # chat | actionbar | both — global default for all modules
@@ -25,7 +25,6 @@ modules:
   portalrtp: true
   spawnselect: true
   settings: true
-  kill: false
   killstreaks: true
   pets: true
   tempranks: true
@@ -54,4 +53,5 @@ modules:
   commandwhitelist: true
   teams: true
   dailyrewards: true
+  weeklyrewards: true
   modulesadmin: true

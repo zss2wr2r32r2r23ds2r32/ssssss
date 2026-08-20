@@ -10,7 +10,7 @@ public enum PetType {
     PARROT("parrot", EntityType.PARROT, 0.55, false, false, false, true, null),
     AXOLOTL("axolotl", EntityType.AXOLOTL, 0.45, false, false, false, false, null),
     BEE("bee", EntityType.BEE, 0.45, false, false, false, false, null),
-    WARDEN("warden", EntityType.WARDEN, 0.22, false, true, false, false, null),
+    WARDEN("warden", EntityType.WARDEN, 0.22, false, false, false, false, null),
     ALLAY("allay", EntityType.ALLAY, 0.65, false, false, false, true, null);
 
     private final String id;

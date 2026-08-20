@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -76,7 +77,14 @@ public final class GuiManager {
     }
 
     public GuiMenu menu(String menuId) {
-        return menus.get(menuId);
+        return resolveMenu(menuId);
+    }
+
+    private GuiMenu resolveMenu(String menuId) {
+        if (menuId == null || menuId.isBlank()) return null;
+        GuiMenu menu = menus.get(menuId);
+        if (menu != null) return menu;
+        return menus.get(menuId.toLowerCase(Locale.ROOT));
     }
 
     public void open(Player player, String menuId) {
@@ -84,7 +92,7 @@ public final class GuiManager {
     }
 
     public void open(Player player, String menuId, Map<String, String> extra) {
-        GuiMenu menu = menus.get(menuId);
+        GuiMenu menu = resolveMenu(menuId);
         if (menu == null) {
             player.sendMessage(Text.c(Prefix.get() + "&cUnknown menu: &f" + menuId));
             return;

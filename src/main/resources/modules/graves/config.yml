@@ -1,6 +1,6 @@
 # sharded.graves.use = use graves on death (default true)
 
-config-version: 4
+config-version: 5
 message-mode: chat
 enabled-worlds: []
 expire-seconds: 300
@@ -8,11 +8,20 @@ drop-items-on-expire: true
 store-xp: true
 hologram-height: 1.6
 gui-title: '&8Grave of &f%player%'
-block-material: CHEST
+block-material: PLAYER_HEAD
 
 head-drop:
   enabled: true
   chance-percent: 10
+  display-name: '&#FF2727&l%player%''s Head'
+  lore:
+    - '&7[GRAVES]'
+    - ''
+    - '&#FF2727&lDESCRIPTION:'
+    - '&#FF2727| &fDropped on PvP kill.'
+    - '&#FF2727| &fTrade with &f/headtokens'
+    - ''
+    - '&#FFD700▷ &#FFD700&l&nCLICK&r &#FFD700TO VIEW'
 
 head-tokens:
   value: 50

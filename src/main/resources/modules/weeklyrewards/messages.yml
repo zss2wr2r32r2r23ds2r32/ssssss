@@ -1,0 +1,6 @@
+prefix: '&#FFD700&lWEEKLY &8▷ '
+players-only: '%prefix%&#FF2727Players only.'
+no-permission: '%prefix%&#FF2727You do not have permission.'
+cooldown: '%prefix%&#FF2727You can claim again in &f%time%&#FF2727.'
+no-rewards: '%prefix%&#FF2727No weekly rewards are configured.'
+won: '%prefix%&#9FFF00You won &f%reward% &8(%rarity%&8)&#9FFF00!'

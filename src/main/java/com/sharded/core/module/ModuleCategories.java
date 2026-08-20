@@ -14,7 +14,7 @@ public final class ModuleCategories {
         category("settings", "deathmessages", "nightvision", "privatemessages", "chat", "joinmessages", "settings");
         category("tokens", "tokens", "eglow", "chatcolor", "namecolor", "wardrobe");
         category("perks", "trash", "fly", "pickupmobs", "pickupspawners", "autosmelt", "craft", "fix",
-                "portalrtp", "abilities", "bundles", "armortrims", "toolname", "backpack", "tempranks", "kill");
+                "portalrtp", "abilities", "bundles", "armortrims", "toolname", "backpack", "tempranks");
     }
 
     private static void category(String cat, String... ids) {

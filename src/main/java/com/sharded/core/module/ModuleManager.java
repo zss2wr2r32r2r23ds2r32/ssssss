@@ -15,7 +15,6 @@ import com.sharded.core.modules.tokens.TokenService;
 import com.sharded.core.modules.tokens.TokensModule;
 import com.sharded.core.modules.toolname.ToolNameModule;
 import com.sharded.core.modules.trash.TrashModule;
-import com.sharded.core.modules.kill.KillModule;
 import com.sharded.core.modules.killstreaks.KillstreaksModule;
 import com.sharded.core.modules.nightvision.NightVisionModule;
 import com.sharded.core.modules.pickupmobs.PickupMobsModule;
@@ -46,6 +45,7 @@ import com.sharded.core.modules.client.ClientModule;
 import com.sharded.core.modules.collisions.CollisionsModule;
 import com.sharded.core.modules.commandwhitelist.CommandWhitelistModule;
 import com.sharded.core.modules.dailyrewards.DailyRewardsModule;
+import com.sharded.core.modules.weeklyrewards.WeeklyRewardsModule;
 import com.sharded.core.modules.teams.TeamsModule;
 import com.sharded.core.modules.modulesadmin.ModulesAdminModule;
 
@@ -78,7 +78,6 @@ public final class ModuleManager {
         register(new PortalRtpModule(plugin));
         register(new SpawnSelectModule(plugin));
         register(new SettingsModule(plugin));
-        register(new KillModule(plugin));
         register(new KillstreaksModule(plugin));
         register(new PetsModule(plugin));
         register(new TempranksModule(plugin));
@@ -107,6 +106,7 @@ public final class ModuleManager {
         register(new CommandWhitelistModule(plugin));
         register(new TeamsModule(plugin));
         register(new DailyRewardsModule(plugin));
+        register(new WeeklyRewardsModule(plugin));
         register(new ModulesAdminModule(plugin));
     }
 
