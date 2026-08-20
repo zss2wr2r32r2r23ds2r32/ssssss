@@ -3,16 +3,25 @@ package com.sharded.core.modules.staffchat;
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.util.Text;
+import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.Locale;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
-/** Staff-only chat channel. */
+/** Staff-only chat channel with toggle mode. */
 public final class StaffChatModule extends Module implements CommandExecutor {
+
+    private final Set<UUID> toggleMode = ConcurrentHashMap.newKeySet();
 
     public StaffChatModule(ShardedCore plugin) {
         super(plugin, "staffchat");
@@ -20,8 +29,8 @@ public final class StaffChatModule extends Module implements CommandExecutor {
 
     @Override
     protected void onEnable() {
+        registerListener(this);
         registerCommand("staffchat", this);
-        registerCommand("sc", this);
     }
 
     @Override
@@ -31,18 +40,49 @@ public final class StaffChatModule extends Module implements CommandExecutor {
             send(sender, "no-permission");
             return true;
         }
-        if (args.length == 0) {
-            send(sender, "usage");
+        if (!(sender instanceof Player player)) {
+            send(sender, "players-only");
             return true;
         }
-        String name = sender.getName() == null ? "Console" : sender.getName();
-        String message = String.join(" ", args);
-        String formatted = raw("format", "%player%", name, "%message%", message);
+        if (args.length > 0) {
+            broadcast(player.getName(), String.join(" ", args));
+            return true;
+        }
+        if (toggleMode.remove(player.getUniqueId())) {
+            send(player, "disabled");
+        } else {
+            toggleMode.add(player.getUniqueId());
+            send(player, "enabled");
+        }
+        return true;
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onChat(AsyncChatEvent event) {
+        Player player = event.getPlayer();
+        if (!toggleMode.contains(player.getUniqueId())) return;
+        String perm = config.getString("permission", "sharded.staffchat.use");
+        if (!player.hasPermission(perm)) {
+            toggleMode.remove(player.getUniqueId());
+            return;
+        }
+        event.setCancelled(true);
+        String message = PlainTextComponentSerializer.plainText().serialize(event.message());
+        if (message.isBlank()) return;
+        plugin.getServer().getScheduler().runTask(plugin, () -> broadcast(player.getName(), message));
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        toggleMode.remove(event.getPlayer().getUniqueId());
+    }
+
+    private void broadcast(String playerName, String message) {
+        String perm = config.getString("permission", "sharded.staffchat.use");
+        String formatted = raw("format", "%player%", playerName, "%message%", message);
         var component = Text.c(formatted);
         for (Player online : Bukkit.getOnlinePlayers()) {
             if (online.hasPermission(perm)) online.sendMessage(component);
         }
-        if (!(sender instanceof Player)) Bukkit.getConsoleSender().sendMessage(component);
-        return true;
     }
 }

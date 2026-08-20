@@ -1,4 +1,4 @@
-config-version: 1
+config-version: 2
 message-mode: chat
 
 permission: sharded.staffchat.use

@@ -1,8 +1,8 @@
 # Portal RTP
-config-version: 6
+config-version: 7
 message-mode: chat
-# /rtp starts countdown immediately; set true to open the GUI first
-use-gui: false
+# /rtp opens the GUI first; set false to start countdown immediately
+use-gui: true
 # When false, /rtp works from any world (portal triggers still require portal-world)
 command-require-portal-world: false
 portal-world: spawn

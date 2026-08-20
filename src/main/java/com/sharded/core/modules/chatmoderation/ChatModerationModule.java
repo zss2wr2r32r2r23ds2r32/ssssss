@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.List;
 import java.util.Locale;
@@ -23,6 +24,8 @@ public final class ChatModerationModule extends Module {
     private final Map<UUID, Integer> repeatCount = new ConcurrentHashMap<>();
     private final Map<UUID, String> lastText = new ConcurrentHashMap<>();
     private final Map<UUID, Long> commandCooldown = new ConcurrentHashMap<>();
+    private final Map<UUID, Long> lastChatWarn = new ConcurrentHashMap<>();
+    private final Map<UUID, Long> lastCommandWarn = new ConcurrentHashMap<>();
 
     public ChatModerationModule(ShardedCore plugin) {
         super(plugin, "chatmoderation");
@@ -31,6 +34,17 @@ public final class ChatModerationModule extends Module {
     @Override
     protected void onEnable() {
         registerListener(this);
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        UUID uuid = event.getPlayer().getUniqueId();
+        lastMessage.remove(uuid);
+        repeatCount.remove(uuid);
+        lastText.remove(uuid);
+        commandCooldown.remove(uuid);
+        lastChatWarn.remove(uuid);
+        lastCommandWarn.remove(uuid);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -45,7 +59,7 @@ public final class ChatModerationModule extends Module {
         if (config.getBoolean("anti-swear.enabled", true)) {
             if (WordBlacklist.contains(config, "swear-words", text)) {
                 event.setCancelled(true);
-                send(player, "swear-blocked");
+                warnChat(player, "swear-blocked", warnCooldownMs());
                 return;
             }
         }
@@ -55,7 +69,8 @@ public final class ChatModerationModule extends Module {
             Long last = lastMessage.get(uuid);
             if (last != null && now - last < cooldownMs) {
                 event.setCancelled(true);
-                send(player, "spam-cooldown", "%time%", String.valueOf((cooldownMs - (now - last)) / 1000L + 1));
+                long secondsLeft = (cooldownMs - (now - last)) / 1000L + 1;
+                warnChat(player, "spam-cooldown", warnCooldownMs(), "%time%", String.valueOf(secondsLeft));
                 return;
             }
             lastMessage.put(uuid, now);
@@ -65,7 +80,7 @@ public final class ChatModerationModule extends Module {
                 int count = repeatCount.merge(uuid, 1, Integer::sum);
                 if (count >= config.getInt("anti-spam.repeat-limit", 3)) {
                     event.setCancelled(true);
-                    send(player, "repeat-spam");
+                    warnChat(player, "repeat-spam", warnCooldownMs());
                     return;
                 }
             } else {
@@ -81,19 +96,49 @@ public final class ChatModerationModule extends Module {
         Player player = event.getPlayer();
         if (player.hasPermission("sharded.chatmoderation.bypass")) return;
 
-        String body = event.getMessage().substring(1).split("\\s+")[0].toLowerCase(Locale.ROOT);
+        String raw = event.getMessage().substring(1).trim();
+        if (raw.isEmpty()) return;
+        String label = raw.split("\\s+")[0].toLowerCase(Locale.ROOT);
+        int colon = label.indexOf(':');
+        if (colon >= 0) label = label.substring(colon + 1);
+        final String commandLabel = label;
+
         List<String> watched = config.getStringList("anti-spam-commands.commands");
-        boolean match = watched.stream().anyMatch(c -> c.equalsIgnoreCase(body));
+        boolean match = watched.stream().anyMatch(c -> c.equalsIgnoreCase(commandLabel));
         if (!match) return;
 
         long cooldownMs = config.getLong("anti-spam-commands.cooldown-ms", 3000L);
         long now = System.currentTimeMillis();
-        Long last = commandCooldown.get(player.getUniqueId());
+        UUID uuid = player.getUniqueId();
+        Long last = commandCooldown.get(uuid);
         if (last != null && now - last < cooldownMs) {
             event.setCancelled(true);
-            send(player, "command-spam", "%command%", body);
+            long secondsLeft = (cooldownMs - (now - last)) / 1000L + 1;
+            warnCommand(player, "command-spam", warnCooldownMs(), "%command%", commandLabel, "%time%", String.valueOf(secondsLeft));
             return;
         }
-        commandCooldown.put(player.getUniqueId(), now);
+        commandCooldown.put(uuid, now);
+    }
+
+    private long warnCooldownMs() {
+        return config.getLong("warn-cooldown-ms", 2500L);
+    }
+
+    private void warnChat(Player player, String key, long throttleMs, String... replacements) {
+        if (!shouldWarn(player.getUniqueId(), lastChatWarn, throttleMs)) return;
+        send(player, key, replacements);
+    }
+
+    private void warnCommand(Player player, String key, long throttleMs, String... replacements) {
+        if (!shouldWarn(player.getUniqueId(), lastCommandWarn, throttleMs)) return;
+        send(player, key, replacements);
+    }
+
+    private boolean shouldWarn(UUID uuid, Map<UUID, Long> lastWarn, long throttleMs) {
+        long now = System.currentTimeMillis();
+        Long last = lastWarn.get(uuid);
+        if (last != null && now - last < throttleMs) return false;
+        lastWarn.put(uuid, now);
+        return true;
     }
 }

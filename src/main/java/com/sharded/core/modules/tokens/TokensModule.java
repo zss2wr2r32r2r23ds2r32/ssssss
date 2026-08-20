@@ -136,7 +136,7 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
                         return true;
                     }
                     long bal = service.getBalance(player.getUniqueId());
-                    send(player, "balance-self", "%amount%", String.valueOf(bal));
+                    send(player, "balance-self", "%amount%", String.valueOf(bal), "%formatted%", Numbers.format(bal));
                     return true;
                 }
                 OfflinePlayer target = service.resolve(args[0]);

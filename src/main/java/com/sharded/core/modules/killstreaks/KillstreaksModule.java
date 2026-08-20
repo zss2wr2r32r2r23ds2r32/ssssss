@@ -28,6 +28,7 @@ public final class KillstreaksModule extends Module implements CommandExecutor, 
 
     private KillstreakDatabase database;
     private final Map<UUID, Map<UUID, List<Long>>> recentKills = new ConcurrentHashMap<>();
+    private final Map<UUID, List<Long>> recentVictimDeaths = new ConcurrentHashMap<>();
 
     public KillstreaksModule(ShardedCore plugin) {
         super(plugin, "killstreaks");
@@ -142,6 +143,9 @@ public final class KillstreaksModule extends Module implements CommandExecutor, 
 
         Player killer = victim.getKiller();
         if (killer == null || killer.equals(victim) || database == null) return;
+
+        recordVictimDeath(victim);
+
         if (!shouldCountKill(killer, victim)) return;
 
         int streak = database.getCurrent(killer.getUniqueId()) + 1;
@@ -165,9 +169,34 @@ public final class KillstreaksModule extends Module implements CommandExecutor, 
         }
     }
 
+    private void recordVictimDeath(Player victim) {
+        if (!config.getBoolean("anti-farm.enabled", true)) return;
+        long windowMs = config.getLong("anti-farm.victim-death-window-seconds", 60L) * 1000L;
+        long now = System.currentTimeMillis();
+        List<Long> deaths = recentVictimDeaths.computeIfAbsent(victim.getUniqueId(), k -> new ArrayList<>());
+        deaths.add(now);
+        deaths.removeIf(t -> now - t > windowMs);
+    }
+
+    private boolean isVictimDeathFarming(Player victim) {
+        if (!config.getBoolean("anti-farm.enabled", true)) return false;
+        int limit = config.getInt("anti-farm.victim-death-limit", 5);
+        long windowMs = config.getLong("anti-farm.victim-death-window-seconds", 60L) * 1000L;
+        List<Long> deaths = recentVictimDeaths.get(victim.getUniqueId());
+        if (deaths == null || deaths.isEmpty()) return false;
+        long now = System.currentTimeMillis();
+        long count = deaths.stream().filter(t -> now - t <= windowMs).count();
+        return count >= limit;
+    }
+
     private boolean shouldCountKill(Player killer, Player victim) {
         if (!config.getBoolean("anti-farm.enabled", true)) return true;
         if (killer.hasPermission("sharded.killstreak.farm.bypass")) return true;
+
+        if (isVictimDeathFarming(victim)) {
+            send(killer, "farm-victim-deaths", "%player%", victim.getName());
+            return false;
+        }
 
         if (config.getBoolean("anti-farm.block-same-ip", true)) {
             String killerIp = killer.getAddress() == null ? null : killer.getAddress().getAddress().getHostAddress();

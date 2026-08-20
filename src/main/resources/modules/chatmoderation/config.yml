@@ -1,5 +1,8 @@
-config-version: 1
+config-version: 2
 message-mode: chat
+
+# Minimum time between spam warning messages (prevents chat flood)
+warn-cooldown-ms: 2500
 
 anti-swear:
   enabled: true
