@@ -1,0 +1,325 @@
+# ╔═══════════════════════════════════════════════════════╗
+# ║   SeaTeams 2.0 — Language File                        ║
+# ║   Supports: & color codes, &#rrggbb hex, MiniMessage  ║
+# ╚═══════════════════════════════════════════════════════╝
+# Display types: CHAT | ACTIONBAR | TITLE | BOTH | NONE
+
+# ─── General ─────────────────────────────────────────────
+no-permission:
+  text: '&cYou don''t have permission to do that.'
+  type: CHAT
+player-only:
+  text: '&cThis command can only be used by players.'
+  type: CHAT
+unknown-player:
+  text: '&cPlayer &7%player% &cis not online or doesn''t exist.'
+  type: CHAT
+invalid-usage:
+  text: '&cUsage: &7%usage%'
+  type: CHAT
+action-cancelled:
+  text: '&#ff4444✗ Action cancelled.'
+  type: ACTIONBAR
+
+# ─── Team Creation ───────────────────────────────────────
+create-prompt-name:
+  text: '&#00d4ff✎ Enter your &lteam name &r&#00d4ffin chat. &8(Max: %max% chars | Type &7cancel&8 to abort)'
+  type: CHAT
+create-prompt-tag:
+  text: '&#00d4ff✎ Enter your &lteam tag &r&#00d4ffin chat. &8(Max: %max% chars | Type &7cancel&8 to abort)'
+  type: CHAT
+create-success:
+  text: '&#00d4ff✔ Team &l%name% &r&#00d4ffhas been created!'
+  type: BOTH
+create-cost-insufficient:
+  text: '&#ff4444✗ You need &l$%amount% &r&#ff4444to create a team.'
+  type: CHAT
+create-name-taken:
+  text: '&#ff4444✗ A team with that name already exists.'
+  type: CHAT
+create-name-banned:
+  text: '&#ff4444✗ That name contains a banned word.'
+  type: CHAT
+create-name-too-short:
+  text: '&#ff4444✗ Team name must be at least &l%min% &r&#ff4444characters.'
+  type: CHAT
+create-name-too-long:
+  text: '&#ff4444✗ Team name can be at most &l%max% &r&#ff4444characters.'
+  type: CHAT
+already-in-team:
+  text: '&#ff4444✗ You''re already in a team. Leave first.'
+  type: CHAT
+
+# ─── Team General ────────────────────────────────────────
+not-in-team:
+  text: '&#ff4444✗ You are not in a team.'
+  type: CHAT
+target-not-in-team:
+  text: '&#ff4444✗ &7%player% &cis not in a team.'
+  type: CHAT
+
+# ─── Invites ─────────────────────────────────────────────
+invite-prompt:
+  text: '&#00d4ff✎ Enter the name of the player to invite. &8(Type &7cancel &8to abort)'
+  type: CHAT
+invite-sent:
+  text: '&#00d4ff✉ Invite sent to &l%player%&r&#00d4ff.'
+  type: CHAT
+invite-received:
+  text: '&#ffd700⚑ &l%team% &r&#ffd700has invited you to join! &8(Type &7/team accept &8or &7/team deny&8)'
+  type: CHAT
+invite-accepted:
+  text: '&#00d4ff✔ You joined &l%team%&r&#00d4ff!'
+  type: BOTH
+invite-accepted-broadcast:
+  text: '&#00d4ff✔ &l%player% &r&#00d4ffhas joined the team!'
+  type: CHAT
+invite-denied:
+  text: '&#ff9900⚠ &l%player% &r&#ff9900declined the invite.'
+  type: CHAT
+invite-expired:
+  text: '&#ff4444✗ Your invite to &l%team% &r&#ff4444has expired.'
+  type: CHAT
+invite-already-pending:
+  text: '&#ff4444✗ This player already has a pending invite.'
+  type: CHAT
+invite-no-pending:
+  text: '&#ff4444✗ You have no pending team invites.'
+  type: CHAT
+invite-target-in-team:
+  text: '&#ff4444✗ &7%player% &cis already in a team.'
+  type: CHAT
+invite-pending-on-join:
+  text: '&#ffd700⚑ You have &l%count% &r&#ffd700pending team invite(s). Type &7/team accept'
+  type: CHAT
+
+# ─── Leave / Kick / Disband ──────────────────────────────
+leave-success:
+  text: '&#ff9900⚑ You left the team.'
+  type: CHAT
+leave-broadcast:
+  text: '&#ff9900⚑ &l%player% &r&#ff9900has left the team.'
+  type: CHAT
+leader-must-disband:
+  text: '&#ff4444✗ As the leader, you must disband the team or transfer leadership before leaving.'
+  type: CHAT
+kick-success:
+  text: '&#ff9900⚑ Kicked &l%player%&r&#ff9900 from the team.'
+  type: CHAT
+kick-notification:
+  text: '&#ff4444✗ You were kicked from &l%team%&r&#ff4444.'
+  type: BOTH
+kick-broadcast:
+  text: '&#ff9900⚑ &l%player% &r&#ff9900was kicked from the team.'
+  type: CHAT
+cannot-kick-leader:
+  text: '&#ff4444✗ You cannot kick the team leader.'
+  type: CHAT
+cannot-kick-higher-rank:
+  text: '&#ff4444✗ That player outranks you.'
+  type: CHAT
+disband-broadcast:
+  text: '&#ff4444⚑ Your team has been disbanded.'
+  type: BOTH
+disband-success:
+  text: '&#ff4444✔ Team disbanded.'
+  type: CHAT
+
+# ─── Roles ───────────────────────────────────────────────
+promote-success:
+  text: '&#22c55e✦ Promoted &l%player% &r&#22c55eto &l%role%&r&#22c55e.'
+  type: CHAT
+promote-notification:
+  text: '&#22c55e✦ You were promoted to &l%role%&r&#22c55e.'
+  type: BOTH
+demote-success:
+  text: '&#ff9900✦ Demoted &l%player% &r&#ff9900to &l%role%&r&#ff9900.'
+  type: CHAT
+demote-notification:
+  text: '&#ff9900✦ You were demoted to &l%role%&r&#ff9900.'
+  type: CHAT
+already-highest-role:
+  text: '&#ff4444✗ That player is already at the highest non-leader role.'
+  type: CHAT
+already-lowest-role:
+  text: '&#ff4444✗ That player is already at the lowest role.'
+  type: CHAT
+
+# ─── Team Settings ───────────────────────────────────────
+name-changed:
+  text: '&#00d4ff✔ Team renamed to &l%name%&r&#00d4ff.'
+  type: CHAT
+tag-changed:
+  text: '&#00d4ff✔ Tag changed to &l[%tag%]&r&#00d4ff.'
+  type: CHAT
+description-changed:
+  text: '&#00d4ff✔ Team description updated.'
+  type: CHAT
+
+# ─── Bank ────────────────────────────────────────────────
+bank-deposit-success:
+  text: '&#22c55e✔ Deposited &l$%amount%&r&#22c55e. Bank: &l$%balance%'
+  type: CHAT
+bank-withdraw-success:
+  text: '&#22c55e✔ Withdrew &l$%amount%&r&#22c55e. Bank: &l$%balance%'
+  type: CHAT
+bank-insufficient-personal:
+  text: '&#ff4444✗ You don''t have enough money.'
+  type: CHAT
+bank-insufficient-team:
+  text: '&#ff4444✗ Your team bank doesn''t have enough.'
+  type: CHAT
+bank-limit-reached:
+  text: '&#ff4444✗ Your team bank has reached its limit.'
+  type: CHAT
+
+# ─── Home ────────────────────────────────────────────────
+home-set:
+  text: '&#22c55e✔ Team home set to your current location.'
+  type: BOTH
+home-not-set:
+  text: '&#ff4444✗ Your team has no home set.'
+  type: CHAT
+home-teleporting:
+  text: '&#00d4ff⌛ Teleporting in &l%time%s&r&#00d4ff... &7(don''t move)'
+  type: ACTIONBAR
+home-teleported:
+  text: '&#22c55e✔ Welcome home!'
+  type: ACTIONBAR
+home-cancelled:
+  text: '&#ff4444✗ Teleport cancelled — you moved.'
+  type: ACTIONBAR
+home-already-teleporting:
+  text: '&#ff4444✗ You are already teleporting.'
+  type: CHAT
+
+# ─── Allies ──────────────────────────────────────────────
+ally-prompt:
+  text: '&#00d4ff✎ Enter the name of a player from the team you want to ally. &8(Type &7cancel &8to abort)'
+  type: CHAT
+ally-request-sent:
+  text: '&#00d4ff✉ Ally request sent to &l%team%&r&#00d4ff.'
+  type: CHAT
+ally-request-received:
+  text: '&#ffd700⚑ Team &l%team% &r&#ffd700requests an alliance. &8(use /team ally to accept)'
+  type: CHAT
+ally-success:
+  text: '&#00d4ff✔ Allied with &l%team%&r&#00d4ff!'
+  type: BOTH
+ally-already-allied:
+  text: '&#ff4444✗ You are already allied with that team.'
+  type: CHAT
+ally-cannot-self:
+  text: '&#ff4444✗ You can''t ally yourself.'
+  type: CHAT
+ally-max-reached:
+  text: '&#ff4444✗ Maximum &l%max% &r&#ff4444allies reached.'
+  type: CHAT
+ally-removed:
+  text: '&#ff9900⚑ Alliance with &l%team% &r&#ff9900has been ended.'
+  type: CHAT
+ally-betrayed:
+  text: '&#ff4444⚑ &l%team% &r&#ff4444has ended your alliance.'
+  type: CHAT
+
+# ─── Chat Toggle ─────────────────────────────────────────
+chat-team-toggled-on:
+  text: '&#00d4ff✔ Team chat &lON&r&#00d4ff.'
+  type: ACTIONBAR
+chat-team-toggled-off:
+  text: '&#7f7f7f✗ Team chat &lOFF&r&#7f7f7f.'
+  type: ACTIONBAR
+chat-ally-toggled-on:
+  text: '&#ffb300✔ Ally chat &lON&r&#ffb300.'
+  type: ACTIONBAR
+chat-ally-toggled-off:
+  text: '&#7f7f7f✗ Ally chat &lOFF&r&#7f7f7f.'
+  type: ACTIONBAR
+
+# ─── Player Info ─────────────────────────────────────────
+player-team-info:
+  text: '&#00d4ff⚐ &l%player% &r&#00d4ff» &8[&f%tag%&8] &f%name% &7(%role%)'
+  type: CHAT
+
+# ─── Progression ─────────────────────────────────────────
+team-level-up:
+  text: '&#ffd700✦ &lLEVEL UP! &r&#ffd700Your team is now level &l%level%&r&#ffd700!'
+  type: BOTH
+
+# ─── Admin ───────────────────────────────────────────────
+admin-reload-success:
+  text: '&#22c55e✔ SeaTeams reloaded.'
+  type: CHAT
+admin-team-deleted:
+  text: '&#ff4444⚑ Your team &l%team% &r&#ff4444was deleted by an administrator.'
+  type: BOTH
+
+# ─── Help Feature ────────────────────────────────────────
+help-sent:
+  text: '&#22c55e✔ Alert sent to your team. They have been notified.'
+  type: BOTH
+help-cooldown:
+  text: '&#ff4444✗ Please wait &l%seconds%s &r&#ff4444before using help again.'
+  type: ACTIONBAR
+help-alert-broadcast:
+  text: '&#ff4444⚠ HELP NEEDED &7- &f%player% &#ff4444needs assistance!'
+  type: BOTH
+help-alert-location:
+  text: '&7Location: &f%world% &8(&f%x%&7, &f%y%&7, &f%z%&8)'
+  type: CHAT
+
+# ─── Logs Feature ────────────────────────────────────────
+logs-no-permission:
+  text: '&#ff4444✗ You need &lCo-Leader &r&#ff4444or higher to view logs.'
+  type: CHAT
+logs-empty:
+  text: '&7No log entries found in this date range.'
+  type: CHAT
+logs-header:
+  text: '&#a855f7══════ %type% Logs (%count% entries) ══════'
+  type: CHAT
+logs-prompt-custom:
+  text: '&#00d4ff✎ Type a date range like &f2026-01-01 2026-01-31 &#00d4ffin chat. &8(Type &7cancel &8to abort)'
+  type: CHAT
+logs-bad-date:
+  text: '&#ff4444✗ Invalid date format. Use &fyyyy-MM-dd yyyy-MM-dd'
+  type: CHAT
+
+# ─── Player Stats Feature ────────────────────────────────
+player-stats-header:
+  text: '&#22c55e══════ Your Stats in %team% ══════'
+  type: CHAT
+team-full:
+  text: '&#ff4444✗ This team is full (&l%limit% members&r&#ff4444).'
+  type: CHAT
+
+# Friendly Fire toggle feedback
+ff-enabled:
+  text: '&#22c55e✔ Friendly Fire is now &lON&r&#22c55e — team members can damage each other.'
+  type: ACTIONBAR
+ff-disabled:
+  text: '&#ff4444✗ Friendly Fire is now &lOFF&r&#ff4444 — team members cannot damage each other.'
+  type: ACTIONBAR
+
+# Bank without Vault
+bank-vault-required:
+  text: '&#ff4444✗ Bank requires &lVault &r&#ff4444economy plugin to be installed.'
+  type: CHAT
+
+# Mass mail (admin)
+admin-mail-broadcast-success:
+  text: '&#22c55e✔ Mailed &f%count% &#22c55eteams with &f%item%&#22c55e.'
+  type: CHAT
+admin-mail-no-item:
+  text: '&#ff4444✗ Hold an item in your hand first.'
+  type: CHAT
+
+# Inspect tab-complete
+inspect-no-teams:
+  text: '&7No teams exist yet.'
+  type: CHAT
+
+# Invite full inbox
+invite-target-inbox-full:
+  text: '&#ff4444✗ &f%player% &#ff4444has too many pending invites already.'
+  type: CHAT

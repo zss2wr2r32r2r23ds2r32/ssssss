@@ -1,0 +1,189 @@
+# ╔═══════════════════════════════════════════════════════╗
+# ║   SeaTeams 2.0 — Statistics Menu                      ║
+# ║   4 × 9 = 36 slots. User-specified layout (1-indexed): ║
+# ║                                                       ║
+# ║   Row 1: . . . . L M C . .   (5 Lev, 6 Mny, 7 Time)  ║
+# ║   Row 2: . . . K D X P B .   (13 Kil 14 Dth 15 Mob   ║
+# ║                                16 Plc 17 Brk)         ║
+# ║   Row 3: . . . . . . . . .   (empty)                  ║
+# ║   Row 4: GG GG GG GG b GG GG GG GG  (33=back)         ║
+# ╚═══════════════════════════════════════════════════════╝
+
+inventory:
+  rows: 4
+  title: '&8⚔ Statistics'
+
+layout:
+  - '...LMC...'
+  - '..KDXPB..'
+  - '.........'
+  - '....b....'
+
+items:
+
+  levels:
+    symbol: L
+    material: LECTERN
+    name: '&#22c55e✦ Levels'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7view player levels.'
+    action: stats_player_levels
+
+  money:
+    symbol: M
+    material: GOLD_INGOT
+    name: '&#ffd700$ Money'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7view player balances.'
+    action: stats_player_money
+
+  playtime:
+    symbol: C
+    material: CLOCK
+    name: '&#00d4ff⌚ Playtime'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7view playtime per member.'
+    action: stats_playtime
+
+  kills:
+    symbol: K
+    material: NETHERITE_SWORD
+    name: '&#ff4444⚔ Kills'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7see kills per member.'
+    action: stats_kills
+
+  deaths:
+    symbol: D
+    material: SKELETON_SKULL
+    name: '&#7f7f7f☠ Deaths'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7see deaths per member.'
+    action: stats_deaths
+
+  mobs:
+    symbol: X
+    material: DIAMOND_SWORD
+    name: '&#22c55e⚒ Mobs Killed'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7see mobs killed per member.'
+    action: stats_mobs
+
+  blocks-placed:
+    symbol: P
+    material: DIRT
+    name: '&#a855f7▣ Blocks Placed'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7see blocks placed per member.'
+    action: stats_blocks_placed
+
+  blocks-broken:
+    symbol: B
+    material: DIAMOND_PICKAXE
+    name: '&#94a3b8⛏ Blocks Broken'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7see blocks broken per member.'
+    action: stats_blocks_broken
+
+  back:
+    symbol: b
+    material: SPECTRAL_ARROW
+    name: '&#00d4ff← Back'
+    lore:
+      - ''
+      - '&7Return to the main menu.'
+    action: go_back
+
+# ─── Member-list drill-down (used for any clickable category) ──
+# 9×4. Top 3 rows = member heads (max 27 per page).
+# Bottom row: slot 28 prev (red shulker), 32 back (spectral), 35 next (green shulker).
+member-stat-view:
+  rows: 4
+  title: '&8⚔ %stat_name%'
+
+  prev-page-slot: 27   # user said slot 28 (1-indexed) → code 27
+  back-slot: 31        # user said slot 32 (1-indexed) → code 31
+  next-page-slot: 35   # user said slot 36 = last slot → code 35
+
+  # Default member head template — applies to all stats.
+  # Available placeholders:  %player% %stat_name% %value% %role%
+  member-item:
+    material: PLAYER_HEAD
+    name: '&f%player%'
+    lore:
+      - ''
+      - '&7%stat_name%: &f%value%'
+      - '&7Role: %role%'
+
+  # ─── Per-stat overrides ───────────────────────────────────────
+  # These let you customise the drill-down title and member-item
+  # lore for each individual stat. Any stat not listed here falls
+  # back to the defaults above.
+  #
+  # Available placeholders in title: %stat_name%
+  # Available placeholders in lore:  %player% %stat_name% %value% %role%
+  stat-overrides:
+    kills:
+      title: '&#ff4444⚔ Player Kills'
+      lore:
+        - ''
+        - '&#ff4444⚔ &7Kills: &f%value%'
+        - '&7Role: %role%'
+    deaths:
+      title: '&#7f7f7f☠ Deaths'
+      lore:
+        - ''
+        - '&#7f7f7f☠ &7Deaths: &f%value%'
+        - '&7Role: %role%'
+    mobs:
+      title: '&#22c55e🗡 Mobs Killed'
+      lore:
+        - ''
+        - '&#22c55e🗡 &7Mobs: &f%value%'
+        - '&7Role: %role%'
+    blocks_placed:
+      title: '&#a855f7▣ Blocks Placed'
+      lore:
+        - ''
+        - '&#a855f7▣ &7Placed: &f%value%'
+        - '&7Role: %role%'
+    blocks_broken:
+      title: '&#94a3b8⛏ Blocks Broken'
+      lore:
+        - ''
+        - '&#94a3b8⛏ &7Broken: &f%value%'
+        - '&7Role: %role%'
+    playtime:
+      title: '&#00d4ff⌚ Playtime'
+      lore:
+        - ''
+        - '&#00d4ff⌚ &7Playtime: &f%value%'
+        - '&7Role: %role%'
+    level:
+      title: '&#22c55e✦ Player Levels'
+      lore:
+        - ''
+        - '&#22c55e✦ &7Level: &f%value%'
+        - '&7Role: %role%'
+    money:
+      title: '&#ffd700$ Player Balance'
+      lore:
+        - ''
+        - '&#ffd700$ &7Balance: &f%value%'
+        - '&7Role: %role%'

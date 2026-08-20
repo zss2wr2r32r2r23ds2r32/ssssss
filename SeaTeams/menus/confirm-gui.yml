@@ -1,0 +1,41 @@
+# ╔═══════════════════════════════════════════════════════╗
+# ║   SeaTeams 2.0 — Confirmation Dialog                  ║
+# ╚═══════════════════════════════════════════════════════╝
+
+inventory:
+  rows: 3
+  title: '&8⚠ Confirm Action'
+
+layout:
+  - '....i....'
+  - '...y.n...'
+  - '.........'
+
+items:
+  info:
+    symbol: i
+    material: PAPER
+    name: '&#ff4444⚠ Are you sure?'
+    lore:
+      - ''
+      - '&7%action_description%'
+      - ''
+      - '&c&oThis cannot be undone.'
+
+  yes:
+    symbol: y
+    material: LIME_WOOL
+    name: '&#22c55e✔ Confirm'
+    lore:
+      - ''
+      - '&7Click to proceed.'
+    action: confirm
+
+  no:
+    symbol: n
+    material: RED_WOOL
+    name: '&#ff4444✗ Cancel'
+    lore:
+      - ''
+      - '&7Click to cancel.'
+    action: cancel

@@ -1,0 +1,52 @@
+# ╔═══════════════════════════════════════════════════════╗
+# ║   SeaTeams 2.0 — Team Home Menu                       ║
+# ║   HOPPER inventory (5 slots × 1 row).                 ║
+# ║                                                       ║
+# ║   Slot 1 (code 0): back arrow (spectral)              ║
+# ║   Slot 2 (code 1): empty                              ║
+# ║   Slot 3 (code 2): red bed — teleport to home         ║
+# ║   Slot 4 (code 3): empty                              ║
+# ║   Slot 5 (code 4): nether star — set home (Lead/Co)   ║
+# ╚═══════════════════════════════════════════════════════╝
+
+inventory:
+  type: HOPPER
+  title: '&8⌂ Team Home'
+
+# Hopper slot layout: positions 0-4
+# Empty slots (1, 3) are LEFT EMPTY (no glass — hopper is too small)
+slots:
+
+  back:
+    slot: 0
+    material: SPECTRAL_ARROW
+    name: '&#00d4ff← Back'
+    lore:
+      - ''
+      - '&7Return to the main menu.'
+    action: go_back
+
+  teleport-home:
+    slot: 2
+    material: RED_BED
+    name: '&#ffaa00⌂ Teleport Home'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7teleport to the team home.'
+      - ''
+      - '&8» &7Status: %home_status%'
+    action: teleport_home
+
+  set-home:
+    slot: 4
+    material: NETHER_STAR
+    name: '&#22c55e⊕ Set Team Home'
+    lore:
+      - ''
+      - '&7Click on this item to set'
+      - '&7the team home to your'
+      - '&7current location.'
+      - ''
+      - '&c&oLeader / Co-Leader only.'
+    action: set_home

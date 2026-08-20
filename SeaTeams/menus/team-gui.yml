@@ -1,0 +1,153 @@
+# ╔═══════════════════════════════════════════════════════╗
+# ║   SeaTeams 2.0 — Main Menu                            ║
+# ║   3 × 9. Items have colorful names; menu title black. ║
+# ║   Slot map (1-indexed user numbers, 0-indexed code):  ║
+# ║                                                       ║
+# ║   Row 1: . . . . D . . . .   (5 = Disband/Leave)      ║
+# ║   Row 2: . A . m . F . S .   (11 Allies 13 Members   ║
+# ║                                15 FF 17 Stats)        ║
+# ║   Row 3: . . . L ? . . . .   (22 Leaderboard 23 Help) ║
+# ║                                                       ║
+# ║   Home, Mailbox, Enderchest & Bank removed.           ║
+# ╚═══════════════════════════════════════════════════════╝
+
+inventory:
+  rows: 3
+  title: '&8⚐ Main Menu'
+
+  disposition-in-team:
+    - '....d....'
+    - '.A.m.F.S.'
+    - '...L?....'
+
+  disposition-no-team:
+    - '.........'
+    - '....c....'
+    - '....i....'
+
+items:
+
+  # Row 1 - Disband (leader) / Leave (member). Same symbol 'd', GuiManager picks based on role.
+  disband:
+    symbol: d
+    material: DARK_OAK_DOOR
+    name: '&#ff4444⌧ Disband Team'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7permanently disband the team.'
+      - ''
+      - '&c&oCannot be undone.'
+    action: disband_team
+
+  leave:
+    symbol: d
+    material: DARK_OAK_DOOR
+    name: '&#ff8800⌧ Leave Team'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7leave your current team.'
+    action: leave_team
+
+  # Row 2
+  allies:
+    symbol: A
+    material: WHITE_BANNER
+    name: '&#ff8800⚑ Allies'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7view and manage alliances.'
+      - ''
+      - '&8» &7Allies: &f%count%/%max%'
+    action: show_allies
+
+  members:
+    symbol: m
+    material: PLAYER_HEAD
+    name: '&#00d4ff⚐ Members'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7view all team members.'
+      - ''
+      - '&8» &7Total: &f%total% &7Online: &a%online%'
+    action: show_members
+
+  friendly-fire:
+    symbol: F
+    material: LIME_WOOL
+    material-off: RED_WOOL
+    name: '&#ff4444⚔ Friendly Fire'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7toggle friendly fire'
+      - '&7between team members.'
+      - ''
+      - '&8» &7Status: %ff_status%'
+    action: toggle_friendly_fire
+
+  stats:
+    symbol: S
+    material: BOOK
+    name: '&#a855f7⚔ Statistics'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7view team statistics.'
+    action: show_stats
+
+  # Row 3
+  leaderboard:
+    symbol: L
+    material: MOJANG_BANNER_PATTERN
+    name: '&#ffd700★ Leaderboard'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7see top teams ranked by'
+      - '&7score.'
+      - ''
+      - '&8» &7Your rank: &f#%rank%'
+    action: show_leaderboard
+
+  help:
+    symbol: '?'
+    material: BELL
+    name: '&#ff4444⚠ Help'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7alert your online team'
+      - '&7that you need assistance.'
+      - ''
+      - '&c&oUse only when truly needed.'
+    action: send_help
+
+  # No-team items
+  create-team:
+    symbol: c
+    material: ANVIL
+    name: '&#00d4ff+ Create Team'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7create a new team and'
+      - '&7become its leader.'
+      - '%cost_line%'
+    action: create_team
+
+  invites:
+    symbol: i
+    material: PAPER
+    name: '&#ffd700✉ Pending Invites'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7view your pending'
+      - '&7team invitations.'
+      - ''
+      - '&8» &7Pending: &f%count%'
+    action: show_invites
