@@ -110,8 +110,7 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getPlayer();
         if (event.getKeepInventory()) return;
-        // Players WITH sharded.graves.use keep normal drops (no grave). Everyone else gets a grave.
-        if (player.hasPermission("sharded.graves.use")) return;
+        if (!player.hasPermission("sharded.graves.use")) return;
         List<String> worlds = config.getStringList("enabled-worlds");
         if (!worlds.isEmpty() && !worlds.contains(player.getWorld().getName())) return;
         if (event.getDrops().isEmpty() && event.getDroppedExp() <= 0) return;

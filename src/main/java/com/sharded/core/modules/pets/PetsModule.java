@@ -70,6 +70,7 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
     }
 
     private final java.util.Map<UUID, ActivePet> active = new ConcurrentHashMap<>();
+    private final java.util.Map<UUID, ActivePet> pendingRestore = new ConcurrentHashMap<>();
     private PetDatabase database;
     private NamespacedKey petOwnerKey;
     private BukkitTask followTask;
@@ -340,6 +341,34 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         send(player, "equipped", "%pet%", type.id());
     }
 
+    /** Temporarily hides an equipped pet (e.g. staff mode) without clearing saved data. */
+    public void hideEquippedPet(Player player) {
+        if (!active.containsKey(player.getUniqueId())) return;
+        ActivePet pet = active.remove(player.getUniqueId());
+        if (pet == null) return;
+        Entity entity = Bukkit.getEntity(pet.entityId);
+        if (entity != null) entity.remove();
+        pendingRestore.put(player.getUniqueId(), pet);
+    }
+
+    /** Restores a pet hidden by {@link #hideEquippedPet(Player)}. */
+    public void restoreEquippedPet(Player player) {
+        ActivePet pet = pendingRestore.remove(player.getUniqueId());
+        if (pet != null) {
+            spawnPet(player, pet.type, pet.displayName, pet.variant);
+            return;
+        }
+        if (active.containsKey(player.getUniqueId()) || database == null) return;
+        PetDatabase.PetRecord record = database.get(player.getUniqueId());
+        if (record != null && record.type() != null) {
+            spawnPet(player, record.type(), record.name(), record.variant());
+        }
+    }
+
+    public boolean hasEquippedPet(UUID uuid) {
+        return active.containsKey(uuid) || pendingRestore.containsKey(uuid);
+    }
+
     private void unequip(Player player) {
         if (!active.containsKey(player.getUniqueId())) {
             send(player, "no-pet");
@@ -427,6 +456,8 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
             }
             living.setCustomNameVisible(false);
         }
+        var collisions = plugin.modules().get(com.sharded.core.modules.collisions.CollisionsModule.class);
+        if (collisions != null) collisions.applyEntityCollision(entity);
         if (entity instanceof Mob mob) {
             mob.setAI(false);
             mob.setAware(false);

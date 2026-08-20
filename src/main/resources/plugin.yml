@@ -234,6 +234,20 @@ commands:
   requeststaff:
     description: Request staff assistance
     usage: /requeststaff
+  team:
+    description: Team management
+    usage: /team [subcommand]
+  teams:
+    description: Open the teams menu
+    usage: /teams
+    aliases: [t]
+  discord:
+    description: Show the Discord invite link
+    usage: /discord
+  store:
+    description: Show the webstore link
+    usage: /store
+    aliases: [webstore, shop]
 
 permissions:
   sharded.admin:
@@ -287,8 +301,8 @@ permissions:
   sharded.backpack.slots.9:
     default: op
   sharded.graves.use:
-    description: Skip graves on death (normal item drops) — grant to paid ranks
-    default: false
+    description: Use graves on death
+    default: true
   sharded.graves.duration.vip:
     description: Graves last 10 minutes
     default: false
@@ -336,6 +350,15 @@ permissions:
   sharded.guide.use:
     description: Open the server guide and rules menus
     default: true
+  sharded.teams.use:
+    description: Use team commands and GUI
+    default: true
+  sharded.teams.admin:
+    description: Team admin commands
+    default: op
+  sharded.commandwhitelist.bypass:
+    description: Bypass command whitelist restrictions
+    default: op
   sharded.spawn.admin:
     description: Set main and vanilla spawn locations
     default: op

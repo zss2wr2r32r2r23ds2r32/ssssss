@@ -43,6 +43,9 @@ import com.sharded.core.modules.screenshare.ScreenshareModule;
 import com.sharded.core.modules.staffchat.StaffChatModule;
 import com.sharded.core.modules.guide.GuideModule;
 import com.sharded.core.modules.client.ClientModule;
+import com.sharded.core.modules.collisions.CollisionsModule;
+import com.sharded.core.modules.commandwhitelist.CommandWhitelistModule;
+import com.sharded.core.modules.teams.TeamsModule;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -97,6 +100,9 @@ public final class ModuleManager {
         register(new RequestStaffModule(plugin));
         register(new GuideModule(plugin));
         register(new ClientModule(plugin));
+        register(new CollisionsModule(plugin));
+        register(new CommandWhitelistModule(plugin));
+        register(new TeamsModule(plugin));
     }
 
     private void register(Module module) {

@@ -6,6 +6,7 @@ import com.sharded.core.util.ConfigSync;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -13,7 +14,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 /** Server guide and rules menus. */
-public final class GuideModule extends Module implements CommandExecutor {
+public final class GuideModule extends Module implements CommandExecutor, org.bukkit.command.TabCompleter {
 
     public GuideModule(ShardedCore plugin) {
         super(plugin, "guide");
@@ -30,6 +31,8 @@ public final class GuideModule extends Module implements CommandExecutor {
         }
         registerCommand("guide", this);
         registerCommand("rules", this);
+        registerCommand("discord", this);
+        registerCommand("store", this);
     }
 
     private void loadMenus() {
@@ -43,16 +46,29 @@ public final class GuideModule extends Module implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        String cmd = command.getName().toLowerCase();
+        if (cmd.equals("discord")) {
+            send(sender, "discord-link", "%discord%", config.getString("discord", "discord.gg/shardedmc"));
+            return true;
+        }
+        if (cmd.equals("store")) {
+            send(sender, "store-link", "%webstore%", config.getString("webstore", "store.shardedmc.com"));
+            return true;
+        }
         if (!(sender instanceof Player player)) {
             send(sender, "players-only");
             return true;
         }
-        String cmd = command.getName().toLowerCase();
         if (cmd.equals("rules")) {
             plugin.gui().open(player, "guide_rules");
             return true;
         }
         plugin.gui().open(player, "guide");
         return true;
+    }
+
+    @Override
+    public java.util.List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        return java.util.List.of();
     }
 }

@@ -98,6 +98,7 @@ public final class StaffModeManager implements Listener {
         }
         staffMode.add(player.getUniqueId());
         disableEglow(player);
+        hideStaffModePets(player);
         enableStaffChat(player);
         plugin.stateStore().setBool(player.getUniqueId(), STAFF_MODE_STATE, true);
         module.send(player, "staffmode-enabled");
@@ -111,6 +112,7 @@ public final class StaffModeManager implements Listener {
         if (backup != null) restore(player, backup);
         staffMode.remove(player.getUniqueId());
         disableStaffChat(player);
+        restoreStaffModePets(player);
         plugin.stateStore().setBool(player.getUniqueId(), STAFF_MODE_STATE, false);
         module.send(player, "staffmode-disabled");
     }
@@ -123,6 +125,16 @@ public final class StaffModeManager implements Listener {
     private void disableStaffChat(Player player) {
         StaffChatModule staffChat = plugin.modules().get(StaffChatModule.class);
         if (staffChat != null) staffChat.setEnabled(player, false, false);
+    }
+
+    private void hideStaffModePets(Player player) {
+        var pets = plugin.modules().get(com.sharded.core.modules.pets.PetsModule.class);
+        if (pets != null) pets.hideEquippedPet(player);
+    }
+
+    private void restoreStaffModePets(Player player) {
+        var pets = plugin.modules().get(com.sharded.core.modules.pets.PetsModule.class);
+        if (pets != null) pets.restoreEquippedPet(player);
     }
 
     public void toggleVanish(Player player) {

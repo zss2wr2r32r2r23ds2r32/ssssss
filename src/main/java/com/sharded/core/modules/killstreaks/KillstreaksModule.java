@@ -28,6 +28,7 @@ public final class KillstreaksModule extends Module implements CommandExecutor, 
 
     private KillstreakDatabase database;
     private final Map<UUID, Map<UUID, List<Long>>> recentKills = new ConcurrentHashMap<>();
+    private final Map<UUID, List<Long>> recentSameIpKills = new ConcurrentHashMap<>();
     private final Map<UUID, List<Long>> recentVictimDeaths = new ConcurrentHashMap<>();
 
     public KillstreaksModule(ShardedCore plugin) {
@@ -198,18 +199,26 @@ public final class KillstreaksModule extends Module implements CommandExecutor, 
             return false;
         }
 
-        if (config.getBoolean("anti-farm.block-same-ip", true)) {
+        long now = System.currentTimeMillis();
+
+        if (config.getBoolean("anti-farm.track-same-ip", true)) {
             String killerIp = killer.getAddress() == null ? null : killer.getAddress().getAddress().getHostAddress();
             String victimIp = victim.getAddress() == null ? null : victim.getAddress().getAddress().getHostAddress();
-            if (killerIp != null && killerIp.equals(victimIp)) {
-                send(killer, "farm-same-ip");
-                return false;
+            if (killerIp != null && victimIp != null && killerIp.equals(victimIp)) {
+                long ipWindowMs = config.getLong("anti-farm.same-ip-window-minutes", 60L) * 60_000L;
+                int ipLimit = config.getInt("anti-farm.same-ip-kill-limit", 2);
+                List<Long> ipTimes = recentSameIpKills.computeIfAbsent(killer.getUniqueId(), k -> new ArrayList<>());
+                ipTimes.add(now);
+                ipTimes.removeIf(t -> now - t > ipWindowMs);
+                if (ipTimes.size() > ipLimit) {
+                    send(killer, "farm-same-ip");
+                    return false;
+                }
             }
         }
 
         long windowMs = config.getLong("anti-farm.window-minutes", 60L) * 60_000L;
         int limit = config.getInt("anti-farm.same-victim-limit", 3);
-        long now = System.currentTimeMillis();
 
         Map<UUID, List<Long>> byVictim = recentKills.computeIfAbsent(killer.getUniqueId(), k -> new ConcurrentHashMap<>());
         List<Long> times = byVictim.computeIfAbsent(victim.getUniqueId(), k -> new ArrayList<>());

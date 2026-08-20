@@ -1,5 +1,5 @@
 # Killstreak rewards — add as many as you want (5, 10, 15, 20, 25, ...)
-config-version: 4
+config-version: 5
 
 message-mode: chat
 announce-all-streaks: true
@@ -9,7 +9,8 @@ anti-farm:
   enabled: true
   same-victim-limit: 3
   window-minutes: 60
-  block-same-ip: true
+  same-ip-kill-limit: 2
+  same-ip-window-minutes: 60
   victim-death-limit: 5
   victim-death-window-seconds: 60
 

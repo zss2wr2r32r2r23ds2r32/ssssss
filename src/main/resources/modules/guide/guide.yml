@@ -1,6 +1,6 @@
 menu_title: 'Server Guide'
-config-version: 1
-size: 54
+config-version: 2
+size: 27
 open_permission: sharded.guide.use
 
 open_commands:
@@ -9,12 +9,12 @@ open_commands:
 items:
   filler:
     material: BLACK_STAINED_GLASS_PANE
-    slots: [0,1,2,3,4,5,6,7,8,9,17,18,26,27,35,36,44,45,46,47,48,49,50,51,52,53]
+    slots: [0,1,2,3,4,5,6,7,8,9,17,18,19,20,21,23,24,25,26]
     display_name: ' '
 
   server_guide:
     material: COMPASS
-    slot: 19
+    slot: 10
     display_name: '&#9FFF00&lSERVER GUIDE'
     lore:
       - '&8Item Description'
@@ -27,14 +27,10 @@ items:
       - '&#9FFF00| &fIf you need further help you'
       - '&#9FFF00| &fcan always open a &aTicket!'
       - '&#9FFF00| &fin our &bDiscord &fserver'
-      - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
-    click_commands:
-      - '[message] &#9FFF00&lGUIDE &8▷ &fUse &a/guide &for &a/rules &fto browse server info anytime.'
 
   server_shop:
     material: EMERALD
-    slot: 20
+    slot: 11
     display_name: '&#9FFF00&lSERVER SHOP'
     lore:
       - '&8Item Description'
@@ -48,24 +44,24 @@ items:
       - '[close]'
       - '[player] tokenshop'
 
-  server_kits:
-    material: CHEST
-    slot: 21
-    display_name: '&#FF69B4&lSERVER KITS'
+  server_info:
+    material: BOOK
+    slot: 12
+    display_name: '&#FF69B4&lSERVER INFORMATION'
     lore:
       - '&8Item Description'
       - ''
       - '&#FF69B4Information:'
-      - '&#FF69B4| &fClaim your starter kit or unlock'
-      - '&#FF69B4| &fbetter kits with a rank!'
+      - '&#FF69B4| &fRead server info, rules, and'
+      - '&#FF69B4| &fhelpful tips for new players!'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
     click_commands:
-      - '[message] &#FF69B4&lKITS &8▷ &fStarter kits are available at spawn. Rank kits unlock in the &a/webstore&7.'
+      - '[openguimenu] guide_rules'
 
   random_location:
     material: GRASS_BLOCK
-    slot: 22
+    slot: 13
     display_name: '&#9FFF00&lRANDOM LOCATION'
     lore:
       - '&8Item Description'
@@ -79,25 +75,25 @@ items:
       - '[close]'
       - '[player] rtp'
 
-  crystal_shop:
-    material: AMETHYST_SHARD
-    slot: 28
-    display_name: '&#FF69B4&lCRYSTAL SHOP'
+  teams:
+    material: WHITE_BANNER
+    slot: 14
+    display_name: '&#FF3399&lTEAMS'
     lore:
       - '&8Item Description'
       - ''
-      - '&#FF69B4Information:'
-      - '&#FF69B4| &fSpend your crystals in'
-      - '&#FF69B4| &four exclusive crystal shop!'
+      - '&#FF3399Information:'
+      - '&#FF3399| &fCreate or manage your team,'
+      - '&#FF3399| &fview stats, allies, and more!'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
     click_commands:
       - '[close]'
-      - '[player] tokenshop'
+      - '[player] team gui'
 
   discord:
     material: PAPER
-    slot: 29
+    slot: 15
     display_name: '&#55FFFF&lDISCORD SERVER'
     lore:
       - '&8Item Description'
@@ -108,11 +104,12 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
     click_commands:
-      - '[message] &#55FFFF&lDISCORD &8▷ &fJoin us at &b%discord%'
+      - '[close]'
+      - '[player] discord'
 
   webstore:
     material: GOLD_INGOT
-    slot: 30
+    slot: 16
     display_name: '&#FFD700&lSERVER WEBSTORE'
     lore:
       - '&8Item Description'
@@ -123,11 +120,12 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
     click_commands:
-      - '[message] &#FFD700&lWEBSTORE &8▷ &fVisit &e%webstore%'
+      - '[close]'
+      - '[player] store'
 
   server_rules:
     material: WRITABLE_BOOK
-    slot: 31
+    slot: 22
     display_name: '&#FF2727&lSERVER RULES'
     lore:
       - '&8Item Description'

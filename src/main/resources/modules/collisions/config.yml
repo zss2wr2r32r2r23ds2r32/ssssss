@@ -1,0 +1,4 @@
+config-version: 1
+
+disable-player-collisions: true
+disable-pet-collisions: true

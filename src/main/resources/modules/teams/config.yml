@@ -1,0 +1,31 @@
+config-version: 1
+message-mode: chat
+prefix: '&#FF3399&lTEAMS &8▷ '
+
+creation:
+  min-name-length: 3
+  max-name-length: 16
+  max-members: 18
+  banned-keywords:
+    - fuck
+    - nazi
+
+invites:
+  lifetime-seconds: 120
+
+ally:
+  max-allies: 1
+  request-lifetime-seconds: 120
+
+emergency:
+  cooldown-seconds: 60
+
+leaderboard:
+  limit: 10
+  token-weight: 1
+  kill-weight: 100
+  playtime-hour-weight: 50
+
+chat:
+  team-format: '&#FF3399[TEAM] &f%player% &8» &7%message%'
+  ally-format: '&#ffb300[ALLY] &f%player% &8» &7%message%'

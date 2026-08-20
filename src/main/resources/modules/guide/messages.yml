@@ -2,3 +2,5 @@ config-version: 1
 prefix: '%prefix%'
 
 players-only: '%prefix%&#FF2727Only players can use this command.'
+discord-link: '%prefix%&#55FFFF&lDISCORD &8▷ &fJoin us at &b%discord%'
+store-link: '%prefix%&#FFD700&lWEBSTORE &8▷ &fVisit &e%webstore%'
