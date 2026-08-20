@@ -1,0 +1,101 @@
+config-version: 1
+menu_title: 'Token Shop | Backpack'
+open_command: backpackshop
+size: 27
+open_permission: tokenshop.use
+
+items:
+
+  back_button:
+    material: BARRIER
+    slot: 26
+    display_name: '&x&F&F&0&0&0&0&lBACK'
+    left_click_commands:
+      - '[openguimenu] mainmenu'
+
+  slot_2:
+    material: CHEST
+    slot: 11
+    display_name: '&x&5&C&9&4&F&C&l+1 BACKPACK SLOT'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&5&C&9&4&F&CInformation:'
+      - '&x&5&C&9&4&F&C| &fExpand your &f/backpack'
+      - '&x&5&C&9&4&F&C| &fto &f2 slots &7(permanent)'
+      - ''
+      - '&x&5&C&9&4&F&C⚓ &fCost: &x&5&C&9&4&F&C3000 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] sharded.backpack.slots.2'
+      - '[backpack_buy] 2 3000'
+
+  slot_3:
+    material: CHEST
+    slot: 12
+    display_name: '&x&5&C&9&4&F&C&l+2 BACKPACK SLOTS'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&5&C&9&4&F&CInformation:'
+      - '&x&5&C&9&4&F&C| &fExpand your &f/backpack'
+      - '&x&5&C&9&4&F&C| &fto &f3 slots &7(permanent)'
+      - ''
+      - '&x&5&C&9&4&F&C⚓ &fCost: &x&5&C&9&4&F&C6000 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] sharded.backpack.slots.3'
+      - '[backpack_buy] 3 6000'
+  slot_4:
+    material: CHEST
+    slot: 13
+    display_name: '&x&5&C&9&4&F&C&l+3 BACKPACK SLOTS'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&5&C&9&4&F&CInformation:'
+      - '&x&5&C&9&4&F&C| &fExpand your &f/backpack'
+      - '&x&5&C&9&4&F&C| &fto &f4 slots &7(permanent)'
+      - ''
+      - '&x&5&C&9&4&F&C⚓ &fCost: &x&5&C&9&4&F&C10000 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] sharded.backpack.slots.4'
+      - '[backpack_buy] 4 10000'
+  slot_5:
+    material: ENDER_CHEST
+    slot: 14
+    display_name: '&x&9&4&0&0&F&F&l+4 BACKPACK SLOTS'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&9&4&0&0&F&FInformation:'
+      - '&x&9&4&0&0&F&F| &fExpand your &f/backpack'
+      - '&x&9&4&0&0&F&F| &fto &f5 slots &7(permanent)'
+      - ''
+      - '&x&9&4&0&0&F&F⚓ &fCost: &x&9&4&0&0&F&F15000 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] sharded.backpack.slots.5'
+      - '[backpack_buy] 5 15000'
+  slot_6:
+    material: ENDER_CHEST
+    slot: 15
+    display_name: '&x&F&F&0&0&5&3&l+5 BACKPACK SLOTS'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&0&5&3Information:'
+      - '&x&F&F&0&0&5&3| &fExpand your &f/backpack'
+      - '&x&F&F&0&0&5&3| &fto &f6 slots &7(max · permanent)'
+      - ''
+      - '&x&F&F&0&0&5&3⚓ &fCost: &x&F&F&0&0&5&322000 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] sharded.backpack.slots.6'
+      - '[backpack_buy] 6 22000'

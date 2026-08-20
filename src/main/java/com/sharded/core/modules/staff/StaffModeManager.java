@@ -194,6 +194,9 @@ public final class StaffModeManager implements Listener {
 
     public void cleanup(Player player) {
         UUID uuid = player.getUniqueId();
+        if (isVanished(uuid) || player.isInvisible()) {
+            setVanished(player, false, false);
+        }
         if (isStaffMode(uuid)) {
             StaffBackup backup = backups.remove(uuid);
             if (backup != null) restore(player, backup);
@@ -367,6 +370,12 @@ public final class StaffModeManager implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+        if (player.isInvisible() && !vanished.contains(player.getUniqueId())) {
+            player.setInvisible(false);
+            for (Player online : Bukkit.getOnlinePlayers()) {
+                if (!online.equals(player)) online.showPlayer(plugin, player);
+            }
+        }
         refreshVanishForJoin(player);
         if (plugin.stateStore().getBool(player.getUniqueId(), STAFF_MODE_STATE, false)
                 || hasStaffItems(player)) {

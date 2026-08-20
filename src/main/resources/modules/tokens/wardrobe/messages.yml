@@ -1,0 +1,12 @@
+config-version: 1
+prefix: '%prefix%'
+players-only: '%prefix%&#FF2727Only players can use this command.'
+no-permission: '%prefix%&#FF2727You don''t have permission.'
+not-owned: '%prefix%&#FF2727You don''t own %hat%&#FF2727!'
+equipped: '%prefix%&#9FFF00Equipped %hat%&#9FFF00!'
+removed: '%prefix%&#9FFF00Hat removed.'
+unlocked: '%prefix%&#9FFF00%hat% &#9FFF00added to your wardrobe! Use &f/wardrobe&#9FFF00.'
+item-missing: '%prefix%&#FF2727Could not load %hat%&#FF2727 — is ItemsAdder installed?'
+
+message-modes:
+  equipped: actionbar

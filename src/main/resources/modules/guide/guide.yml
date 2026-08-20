@@ -1,5 +1,5 @@
 menu_title: 'Server Guide'
-config-version: 2
+config-version: 3
 size: 27
 open_permission: sharded.guide.use
 
@@ -9,7 +9,7 @@ open_commands:
 items:
   filler:
     material: BLACK_STAINED_GLASS_PANE
-    slots: [0,1,2,3,4,5,6,7,8,9,17,18,19,20,21,23,24,25,26]
+    slots: [0,1,2,3,4,5,6,7,8,9,17,18,19,20,21,22,23,24,25,26]
     display_name: ' '
 
   server_guide:
@@ -22,11 +22,6 @@ items:
       - '&#9FFF00Information:'
       - '&#9FFF00| &fHere you can find all important'
       - '&#9FFF00| &finformation about the server!'
-      - ''
-      - '&#9FFF00Need Help?'
-      - '&#9FFF00| &fIf you need further help you'
-      - '&#9FFF00| &fcan always open a &aTicket!'
-      - '&#9FFF00| &fin our &bDiscord &fserver'
 
   server_shop:
     material: EMERALD
@@ -83,13 +78,12 @@ items:
       - '&8Item Description'
       - ''
       - '&#FF3399Information:'
-      - '&#FF3399| &fCreate or manage your team,'
-      - '&#FF3399| &fview stats, allies, and more!'
+      - '&#FF3399| &fCreate or manage your team!'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
     click_commands:
       - '[close]'
-      - '[player] team gui'
+      - '[player] team'
 
   discord:
     material: PAPER
@@ -99,8 +93,7 @@ items:
       - '&8Item Description'
       - ''
       - '&#55FFFFInformation:'
-      - '&#55FFFF| &fJoin our Discord server to stay'
-      - '&#55FFFF| &finformed of changes, updates & more!'
+      - '&#55FFFF| &fJoin our Discord server!'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
     click_commands:
@@ -115,25 +108,9 @@ items:
       - '&8Item Description'
       - ''
       - '&#FFD700Information:'
-      - '&#FFD700| &fVisit our webstore to buy'
-      - '&#FFD700| &franks, crate keys & more!'
+      - '&#FFD700| &fVisit our webstore!'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
     click_commands:
       - '[close]'
       - '[player] store'
-
-  server_rules:
-    material: WRITABLE_BOOK
-    slot: 22
-    display_name: '&#FF2727&lSERVER RULES'
-    lore:
-      - '&8Item Description'
-      - ''
-      - '&#FF2727Information:'
-      - '&#FF2727| &fYou can read all our rules by clicking'
-      - '&#FF2727| &fhere which will prevent punishments!'
-      - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
-    click_commands:
-      - '[openguimenu] guide_rules'

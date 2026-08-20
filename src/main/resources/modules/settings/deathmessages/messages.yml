@@ -1,0 +1,3 @@
+config-version: 3
+prefix: '&8[&bSharded&8] &r'
+# Death message formats live in config.yml (formats section).

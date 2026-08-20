@@ -1,5 +1,5 @@
 menu_title: 'Server Rules'
-config-version: 1
+config-version: 2
 size: 27
 open_permission: sharded.guide.use
 
@@ -14,35 +14,29 @@ items:
 
   game_rules:
     material: WRITABLE_BOOK
-    slot: 10
-    display_name: '&#9FFF00&lSERVER RULES'
+    slot: 12
+    display_name: 'Server Rules'
     lore:
-      - '&8Description'
+      - '&7Gameplay rules for the server'
       - ''
-      - '&#9FFF00Information:'
-      - '&#9FFF00| &fGameplay rules for the server'
-      - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
+      - '&fClick to read'
     click_commands:
       - '[openguimenu] guide_server_rules'
 
   chat_rules:
     material: WRITABLE_BOOK
-    slot: 12
-    display_name: '&#55FFFF&lCHAT RULES'
+    slot: 14
+    display_name: 'Chat Rules'
     lore:
-      - '&8Description'
+      - '&7Chat behaviour rules'
       - ''
-      - '&#55FFFFInformation:'
-      - '&#55FFFF| &fChat behaviour rules for the server'
-      - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
+      - '&fClick to read'
     click_commands:
       - '[openguimenu] guide_chat_rules'
 
   back:
     material: BARRIER
-    slot: 16
-    display_name: '&x&F&F&0&0&0&0&lBACK'
+    slot: 22
+    display_name: '&cBack'
     click_commands:
       - '[openguimenu] guide'

@@ -14,12 +14,15 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import org.bukkit.scheduler.BukkitTask;
+
 /** Disables player-to-player and pet collisions. */
 public final class CollisionsModule extends Module {
 
     private static final String TEAM_NAME = "sc_nocollide";
     private NamespacedKey petKey;
     private Team noCollideTeam;
+    private BukkitTask refreshTask;
 
     public CollisionsModule(ShardedCore plugin) {
         super(plugin, "collisions");
@@ -32,6 +35,18 @@ public final class CollisionsModule extends Module {
         for (Player player : Bukkit.getOnlinePlayers()) {
             applyPlayerCollision(player);
         }
+        long interval = Math.max(10L, config.getLong("refresh-interval-ticks", 20L));
+        refreshTask = plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                applyPlayerCollision(player);
+            }
+        }, interval, interval);
+    }
+
+    @Override
+    protected void onDisable() {
+        if (refreshTask != null) refreshTask.cancel();
+        refreshTask = null;
     }
 
     private void setupTeam() {
@@ -56,8 +71,15 @@ public final class CollisionsModule extends Module {
     public void applyPlayerCollision(Player player) {
         if (!config.getBoolean("disable-player-collisions", true)) return;
         player.setCollidable(false);
-        if (noCollideTeam != null && !noCollideTeam.hasEntry(player.getName())) {
-            noCollideTeam.addEntry(player.getName());
+        if (noCollideTeam != null) {
+            String entry = player.getUniqueId().toString();
+            if (!noCollideTeam.hasEntry(entry)) {
+                noCollideTeam.addEntry(entry);
+            }
+            // Legacy name entry for clients that require it
+            if (!noCollideTeam.hasEntry(player.getName())) {
+                noCollideTeam.addEntry(player.getName());
+            }
         }
     }
 

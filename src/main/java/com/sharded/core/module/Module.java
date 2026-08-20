@@ -25,6 +25,7 @@ import java.util.List;
 public abstract class Module implements Listener {
 
     protected final ShardedCore plugin;
+    private final String category;
     private final String id;
     private final List<String> commands = new ArrayList<>();
     private final List<Listener> listeners = new ArrayList<>();
@@ -35,7 +36,18 @@ public abstract class Module implements Listener {
 
     protected Module(ShardedCore plugin, String id) {
         this.plugin = plugin;
+        this.category = ModuleCategories.categoryOf(id);
         this.id = id;
+    }
+
+    protected Module(ShardedCore plugin, String category, String id) {
+        this.plugin = plugin;
+        this.category = category == null ? ModuleCategories.categoryOf(id) : category;
+        this.id = id;
+    }
+
+    public final String categoryLabel() {
+        return category;
     }
 
     public final String id() {
@@ -85,14 +97,45 @@ public abstract class Module implements Listener {
     }
 
     private YamlConfiguration loadYaml(String fileName) {
-        File folder = new File(plugin.getDataFolder(), "modules/" + id);
+        migrateLegacyFolder();
+        File folder = moduleFolder();
         File file = new File(folder, fileName);
-        String resourcePath = "modules/" + id + "/" + fileName;
+        String resourcePath = resolveResourcePath(fileName);
         return ConfigSync.load(plugin, file, resourcePath);
     }
 
+    private String resolveResourcePath(String fileName) {
+        String categorized = ModulePaths.resourcePath(id, fileName);
+        if (plugin.getResource(categorized) != null) return categorized;
+        return "modules/" + id + "/" + fileName;
+    }
+
+    private void migrateLegacyFolder() {
+        if ("core".equals(category)) return;
+        File legacy = new File(plugin.getDataFolder(), "modules/" + id);
+        File target = moduleFolder();
+        if (!legacy.exists() || legacy.getAbsolutePath().equals(target.getAbsolutePath())) return;
+        if (target.exists() && target.list() != null && target.list().length > 0) return;
+        try {
+            java.nio.file.Files.walk(legacy.toPath()).forEach(path -> {
+                try {
+                    java.nio.file.Path dest = target.toPath().resolve(legacy.toPath().relativize(path));
+                    if (java.nio.file.Files.isDirectory(path)) {
+                        java.nio.file.Files.createDirectories(dest);
+                    } else {
+                        java.nio.file.Files.createDirectories(dest.getParent());
+                        java.nio.file.Files.copy(path, dest, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                    }
+                } catch (Exception ignored) {
+                }
+            });
+        } catch (Exception e) {
+            plugin.getLogger().warning("Could not migrate module folder for " + id + ": " + e.getMessage());
+        }
+    }
+
     public final File moduleFolder() {
-        File folder = new File(plugin.getDataFolder(), "modules/" + id);
+        File folder = ModulePaths.moduleFolder(plugin, id);
         if (!folder.exists()) folder.mkdirs();
         return folder;
     }

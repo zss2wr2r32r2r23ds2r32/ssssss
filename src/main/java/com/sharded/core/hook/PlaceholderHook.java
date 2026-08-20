@@ -3,6 +3,8 @@ package com.sharded.core.hook;
 import com.sharded.core.ShardedCore;
 import com.sharded.core.modules.killstreaks.KillstreakDatabase;
 import com.sharded.core.modules.killstreaks.KillstreaksModule;
+import com.sharded.core.modules.teams.TeamDatabase;
+import com.sharded.core.modules.teams.TeamsModule;
 import com.sharded.core.modules.tokens.TokenDatabase;
 import com.sharded.core.modules.tokens.TokensModule;
 import com.sharded.core.util.Numbers;
@@ -109,6 +111,19 @@ public final class PlaceholderHook implements Listener {
                     }
                     if (p.equals("killstreak_best")) {
                         return String.valueOf(ks.getBest(player.getUniqueId()));
+                    }
+                }
+
+                TeamsModule teams = plugin.modules().get(TeamsModule.class);
+                if (teams != null && teams.database() != null) {
+                    if (p.equals("team") || p.equals("team_name") || p.equals("teamname")) {
+                        Integer id = teams.database().getTeamId(player.getUniqueId());
+                        if (id == null) {
+                            var tm = plugin.modules().get(TeamsModule.class);
+                            return tm == null ? "N/A" : tm.notInTeamPlaceholder();
+                        }
+                        TeamDatabase.Team team = teams.database().getTeamById(id);
+                        return team == null ? teams.notInTeamPlaceholder() : team.name();
                     }
                 }
             }

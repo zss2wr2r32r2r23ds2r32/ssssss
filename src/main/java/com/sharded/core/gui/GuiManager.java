@@ -217,6 +217,11 @@ public final class GuiManager {
                 if (module == null) yield false;
                 yield module.tryPurchase(player, parts[0], (int) parseLong(parts[1], 0), parseLong(parts[2], 0));
             }
+            case "action" -> {
+                Consumer<Player> action = customActions.get(payload.toLowerCase());
+                if (action != null) action.accept(player);
+                yield true;
+            }
             default -> {
                 Consumer<Player> action = customActions.get(tag);
                 if (action != null) action.accept(player);

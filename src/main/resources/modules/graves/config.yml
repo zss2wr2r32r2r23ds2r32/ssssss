@@ -1,7 +1,6 @@
-# sharded.graves.use = skip graves (normal drops). Grant to paid ranks.
-# Everyone else gets a grave. Anyone can open any grave.
+# sharded.graves.use = use graves on death (default true)
 
-config-version: 3
+config-version: 4
 message-mode: chat
 enabled-worlds: []
 expire-seconds: 300
@@ -9,8 +8,15 @@ drop-items-on-expire: true
 store-xp: true
 hologram-height: 1.6
 gui-title: '&8Grave of &f%player%'
+block-material: CHEST
 
-# Longer grave time — grant permission to rank groups (highest value wins).
+head-drop:
+  enabled: true
+  chance-percent: 10
+
+head-tokens:
+  value: 50
+
 duration-permissions:
   'sharded.graves.duration.vip': 600
   'sharded.graves.duration.mvp': 900
@@ -19,3 +25,7 @@ duration-permissions:
   'sharded.graves.duration.onyx': 1800
   'sharded.graves.duration.aether': 2400
   'sharded.graves.duration.flawless': 3600
+
+sounds:
+  open: BLOCK_CHEST_OPEN
+  emptied: ENTITY_PLAYER_LEVELUP

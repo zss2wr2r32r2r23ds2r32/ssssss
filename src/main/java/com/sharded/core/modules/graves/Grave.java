@@ -20,8 +20,8 @@ public final class Grave {
     public final long createdAt;
     public final long expiresAt;
 
-    /** Spawned marker entity (player head armor stand). */
-    public UUID markerEntityId;
+    /** Optional wardrobe hat stored separately (not lootable until grave expires). */
+    public ItemStack wardrobeHat;
 
     /** Spawned TextDisplay hologram entity ids (name, timer, xp). */
     public final List<UUID> hologramIds = new ArrayList<>();

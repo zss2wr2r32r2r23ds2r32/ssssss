@@ -19,8 +19,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.util.*;
@@ -30,7 +32,9 @@ import java.util.stream.Collectors;
 public final class TeamsModule extends Module implements CommandExecutor, TabCompleter {
 
     private TeamDatabase database;
+    private TeamGuiHandler guiHandler;
     private final Set<UUID> teamChatMode = ConcurrentHashMap.newKeySet();
+    private final Set<UUID> awaitingTeamName = ConcurrentHashMap.newKeySet();
     private final Map<UUID, Long> onlineSince = new ConcurrentHashMap<>();
     private final Map<UUID, Long> emergencyCooldown = new ConcurrentHashMap<>();
 
@@ -38,8 +42,38 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
         super(plugin, "teams");
     }
 
+    ShardedCore plugin() {
+        return plugin;
+    }
+
+    org.bukkit.configuration.file.YamlConfiguration teamConfig() {
+        return config;
+    }
+
+    boolean isTeamChat(UUID uuid) {
+        return teamChatMode.contains(uuid);
+    }
+
+    String formatPlaytime(long ms) {
+        long hours = ms / 3_600_000L;
+        long minutes = (ms % 3_600_000L) / 60_000L;
+        return hours + "h " + minutes + "m";
+    }
+
+    String roleName(int role) {
+        return switch (role) {
+            case TeamDatabase.ROLE_LEADER -> raw("role-leader");
+            case TeamDatabase.ROLE_OFFICER -> raw("role-officer");
+            default -> raw("role-member");
+        };
+    }
+
     public TeamDatabase database() {
         return database;
+    }
+
+    public String notInTeamPlaceholder() {
+        return config.getString("placeholders.not-in-team", "N/A");
     }
 
     @Override
@@ -50,78 +84,106 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
             throw new IllegalStateException("Could not open teams database", e);
         }
 
-        File guiFile = new File(moduleFolder(), "gui.yml");
-        ConfigSync.sync(plugin, guiFile, "modules/teams/gui.yml");
-        plugin.gui().loadMenu(guiFile, "teams");
-
-        registerGuiActions();
-        plugin.gui().registerMenuExtras("teams", this::guiPlaceholders);
-
+        guiHandler = new TeamGuiHandler(this);
         registerCommand("team", this);
         registerCommand("teams", this);
     }
 
     @Override
     protected void onDisable() {
+        awaitingTeamName.clear();
         flushPlaytimeAll();
         teamChatMode.clear();
         onlineSince.clear();
         if (database != null) database.close();
         database = null;
+        guiHandler = null;
     }
 
-    private void registerGuiActions() {
-        plugin.gui().registerAction("team_create", p -> p.performCommand("team create"));
-        plugin.gui().registerAction("team_members", p -> p.performCommand("team members"));
-        plugin.gui().registerAction("team_invite_prompt", p -> {
-            send(p, "gui-invite-hint");
-            p.closeInventory();
-        });
-        plugin.gui().registerAction("team_stats", p -> p.performCommand("team stats"));
-        plugin.gui().registerAction("team_leaderboard", p -> p.performCommand("team leaderboard"));
-        plugin.gui().registerAction("team_emergency", p -> p.performCommand("team emergency"));
-        plugin.gui().registerAction("team_chat_toggle", p -> p.performCommand("team chat"));
-        plugin.gui().registerAction("team_ally_prompt", p -> {
-            send(p, "gui-ally-hint");
-            p.closeInventory();
-        });
-        plugin.gui().registerAction("team_leave", p -> p.performCommand("team leave"));
-        plugin.gui().registerAction("team_disband", p -> p.performCommand("team disband"));
-        plugin.gui().registerAction("team_accept", p -> p.performCommand("team accept"));
-        plugin.gui().registerAction("team_promote_prompt", p -> {
-            send(p, "gui-promote-hint");
-            p.closeInventory();
-        });
-        plugin.gui().registerAction("team_demote_prompt", p -> {
-            send(p, "gui-demote-hint");
-            p.closeInventory();
-        });
-        plugin.gui().registerAction("team_kick_prompt", p -> {
-            send(p, "gui-kick-hint");
-            p.closeInventory();
-        });
-    }
-
-    private Map<String, String> guiPlaceholders(Player player) {
-        Map<String, String> map = new HashMap<>();
-        Integer teamId = database == null ? null : database.getTeamId(player.getUniqueId());
-        if (teamId == null) {
-            map.put("team_name", raw("no-team"));
-            map.put("team_role", raw("no-team"));
-            map.put("member_count", "0");
-            map.put("ally_count", "0");
-            map.put("ally_max", String.valueOf(config.getInt("ally.max-allies", 1)));
-            return map;
+    void beginCreateNameInput(Player player) {
+        if (database.getTeamId(player.getUniqueId()) != null) {
+            send(player, "already-in-team");
+            return;
         }
-        TeamDatabase.Team team = database.getTeamById(teamId);
-        TeamDatabase.Member member = database.getMember(teamId, player.getUniqueId());
-        map.put("team_name", team == null ? "?" : team.name());
-        map.put("team_role", roleName(member == null ? TeamDatabase.ROLE_MEMBER : member.role()));
-        map.put("member_count", String.valueOf(database.getMembers(teamId).size()));
-        map.put("ally_count", String.valueOf(database.allyCount(teamId)));
-        map.put("ally_max", String.valueOf(config.getInt("ally.max-allies", 1)));
-        map.put("team_chat", teamChatMode.contains(player.getUniqueId()) ? "&aON" : "&cOFF");
-        return map;
+        awaitingTeamName.add(player.getUniqueId());
+        player.closeInventory();
+        send(player, "create-name-prompt");
+    }
+
+    void confirmCreate(Player player, String name) {
+        if (!validateTeamName(player, name)) return;
+        TeamDatabase.Team team = database.createTeam(name, player.getUniqueId());
+        if (team == null) {
+            send(player, "create-failed");
+            return;
+        }
+        send(player, "created", "%team%", team.name());
+    }
+
+    boolean validateTeamName(Player player, String name) {
+        if (database.getTeamId(player.getUniqueId()) != null) {
+            send(player, "already-in-team");
+            return false;
+        }
+        name = name.trim();
+        int min = config.getInt("creation.min-name-length", 3);
+        int max = config.getInt("creation.max-name-length", 16);
+        if (name.length() < min || name.length() > max) {
+            send(player, "create-length", "%min%", String.valueOf(min), "%max%", String.valueOf(max));
+            return false;
+        }
+        if (!name.matches("[a-zA-Z0-9_]+")) {
+            send(player, "create-invalid");
+            return false;
+        }
+        for (String banned : config.getStringList("creation.banned-keywords")) {
+            if (name.toLowerCase(Locale.ROOT).contains(banned.toLowerCase(Locale.ROOT))) {
+                send(player, "create-banned");
+                return false;
+            }
+        }
+        if (database.getTeamByName(name) != null) {
+            send(player, "create-exists");
+            return false;
+        }
+        return true;
+    }
+
+    void handleMemberHeadClick(Player player, UUID targetId) {
+        Integer teamId = requireTeam(player);
+        if (teamId == null) return;
+        TeamDatabase.Member self = database.getMember(teamId, player.getUniqueId());
+        TeamDatabase.Member target = database.getMember(teamId, targetId);
+        if (self == null || target == null) return;
+
+        boolean leader = isLeader(player, teamId);
+        if (leader) {
+            if (target.role() == TeamDatabase.ROLE_MEMBER) {
+                database.setRole(teamId, targetId, TeamDatabase.ROLE_OFFICER);
+                send(player, "promoted", "%player%", OfflinePlayers.name(targetId));
+            } else if (target.role() == TeamDatabase.ROLE_OFFICER) {
+                database.setRole(teamId, targetId, TeamDatabase.ROLE_MEMBER);
+                send(player, "demoted", "%player%", OfflinePlayers.name(targetId));
+            }
+            return;
+        }
+        if (self.role() <= TeamDatabase.ROLE_OFFICER && target.role() > TeamDatabase.ROLE_OFFICER) {
+            database.removeMember(teamId, targetId);
+            send(player, "kicked", "%player%", OfflinePlayers.name(targetId));
+            Player online = Bukkit.getPlayer(targetId);
+            if (online != null) send(online, "kicked-you", "%team%", database.getTeamById(teamId).name());
+        } else {
+            send(player, "no-permission-rank");
+        }
+    }
+
+    @EventHandler
+    public void onGuiClick(InventoryClickEvent event) {
+        if (!(event.getWhoClicked() instanceof Player player)) return;
+        if (!(event.getView().getTopInventory().getHolder() instanceof TeamGuiHandler.TeamGuiHolder holder)) return;
+        event.setCancelled(true);
+        if (event.getClickedInventory() != event.getView().getTopInventory()) return;
+        guiHandler.handleClick(player, holder, event.getSlot(), event.getCurrentItem());
     }
 
     @Override
@@ -236,41 +298,12 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
     }
 
     private void openGui(Player player) {
-        plugin.gui().open(player, "teams");
+        guiHandler.openFor(player);
     }
 
     private void handleCreate(Player player, String name) {
-        if (database.getTeamId(player.getUniqueId()) != null) {
-            send(player, "already-in-team");
-            return;
-        }
-        name = name.trim();
-        int min = config.getInt("creation.min-name-length", 3);
-        int max = config.getInt("creation.max-name-length", 16);
-        if (name.length() < min || name.length() > max) {
-            send(player, "create-length", "%min%", String.valueOf(min), "%max%", String.valueOf(max));
-            return;
-        }
-        if (!name.matches("[a-zA-Z0-9_]+")) {
-            send(player, "create-invalid");
-            return;
-        }
-        for (String banned : config.getStringList("creation.banned-keywords")) {
-            if (name.toLowerCase(Locale.ROOT).contains(banned.toLowerCase(Locale.ROOT))) {
-                send(player, "create-banned");
-                return;
-            }
-        }
-        if (database.getTeamByName(name) != null) {
-            send(player, "create-exists");
-            return;
-        }
-        TeamDatabase.Team team = database.createTeam(name, player.getUniqueId());
-        if (team == null) {
-            send(player, "create-failed");
-            return;
-        }
-        send(player, "created", "%team%", team.name());
+        if (!validateTeamName(player, name)) return;
+        confirmCreate(player, name.trim());
     }
 
     private void handleInvite(Player player, String targetName) {
@@ -363,7 +396,7 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
         }
     }
 
-    private void handleLeave(Player player) {
+    void handleLeave(Player player) {
         Integer teamId = requireTeam(player);
         if (teamId == null) return;
         TeamDatabase.Team team = database.getTeamById(teamId);
@@ -377,7 +410,7 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
         broadcastTeam(teamId, raw("left-broadcast", "%player%", player.getName()));
     }
 
-    private void handleDisband(Player player) {
+    void handleDisband(Player player) {
         Integer teamId = requireTeam(player);
         if (teamId == null) return;
         TeamDatabase.Team team = database.getTeamById(teamId);
@@ -456,7 +489,7 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
         }
     }
 
-    private void handleStats(Player player) {
+    void handleStats(Player player) {
         Integer teamId = requireTeam(player);
         if (teamId == null) return;
         TeamDatabase.Team team = database.getTeamById(teamId);
@@ -513,7 +546,7 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
         }
     }
 
-    private void handleEmergency(Player player) {
+    void handleEmergency(Player player) {
         Integer teamId = requireTeam(player);
         if (teamId == null) return;
         long cooldownMs = config.getLong("emergency.cooldown-seconds", 60L) * 1000L;
@@ -607,7 +640,7 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
         broadcastTeam(request.fromTeamId(), raw("ally-formed-broadcast", "%team%", a.name()));
     }
 
-    private void toggleTeamChat(Player player) {
+    void toggleTeamChat(Player player) {
         if (database.getTeamId(player.getUniqueId()) == null) {
             send(player, "not-in-team");
             return;
@@ -624,6 +657,21 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onChat(AsyncChatEvent event) {
         Player player = event.getPlayer();
+        if (awaitingTeamName.contains(player.getUniqueId())) {
+            event.setCancelled(true);
+            String message = PlainTextComponentSerializer.plainText().serialize(event.message()).trim();
+            awaitingTeamName.remove(player.getUniqueId());
+            if (message.equalsIgnoreCase("cancel")) {
+                send(player, "create-cancelled");
+                return;
+            }
+            plugin.getServer().getScheduler().runTask(plugin, () -> {
+                if (validateTeamName(player, message)) {
+                    guiHandler.openCreateConfirm(player, message);
+                }
+            });
+            return;
+        }
         if (!teamChatMode.contains(player.getUniqueId())) return;
         Integer teamId = database.getTeamId(player.getUniqueId());
         if (teamId == null) {
@@ -671,6 +719,7 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
         UUID uuid = event.getPlayer().getUniqueId();
         flushPlaytime(uuid);
         teamChatMode.remove(uuid);
+        awaitingTeamName.remove(uuid);
         onlineSince.remove(uuid);
         emergencyCooldown.remove(uuid);
     }
@@ -707,20 +756,6 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
             Player online = Bukkit.getPlayer(member.uuid());
             if (online != null) online.sendMessage(Text.c(message));
         }
-    }
-
-    private String roleName(int role) {
-        return switch (role) {
-            case TeamDatabase.ROLE_LEADER -> raw("role-leader");
-            case TeamDatabase.ROLE_OFFICER -> raw("role-officer");
-            default -> raw("role-member");
-        };
-    }
-
-    private String formatPlaytime(long ms) {
-        long hours = ms / 3_600_000L;
-        long minutes = (ms % 3_600_000L) / 60_000L;
-        return hours + "h " + minutes + "m";
     }
 
     private String name(OfflinePlayer player) {

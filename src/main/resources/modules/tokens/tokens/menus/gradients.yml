@@ -1,0 +1,161 @@
+config-version: 7
+menu_title: 'Token Shop | Name Colours'
+open_command: namecolors
+size: 27
+open_permission: tokenshop.use
+
+items:
+
+  back_button:
+    material: BARRIER
+    slot: 26
+    display_name: '&x&F&F&0&0&0&0&lBACK'
+    left_click_commands:
+      - '[openguimenu] mainmenu'
+
+  red_name:
+    material: RED_DYE
+    slot: 10
+    display_name: '&x&F&F&0&0&0&0&lRED &x&F&F&0&0&0&0Name Colour'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&0&0&0Information:'
+      - '&x&F&F&0&0&0&0| &fUnlock &x&F&F&0&0&0&0Red Name Colour'
+      - '&x&F&F&0&0&0&0| &fEquip via &f/namecolor'
+      - ''
+      - '&x&F&F&0&0&0&0⚓ &fCost: &x&F&F&0&0&0&0400 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] namecolor.set.color.red'
+      - '[tokens_take] 400'
+      - '[console] lp user %player_name% permission set namecolor.set.color.red true'
+      - '[message] %token_prefix%&#9FFF00Unlocked Red Name Colour! Use &f/namecolor&#9FFF00.'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  orange_name:
+    material: ORANGE_DYE
+    slot: 11
+    display_name: '&x&F&F&6&7&0&0&lORANGE &x&F&F&6&7&0&0Name Colour'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&6&7&0&0Information:'
+      - '&x&F&F&6&7&0&0| &fUnlock &x&F&F&6&7&0&0Orange Name Colour'
+      - '&x&F&F&6&7&0&0| &fEquip via &f/namecolor'
+      - ''
+      - '&x&F&F&6&7&0&0⚓ &fCost: &x&F&F&6&7&0&0400 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] namecolor.set.color.orange'
+      - '[tokens_take] 400'
+      - '[console] lp user %player_name% permission set namecolor.set.color.orange true'
+      - '[message] %token_prefix%&#9FFF00Unlocked Orange Name Colour! Use &f/namecolor&#9FFF00.'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  yellow_name:
+    material: YELLOW_DYE
+    slot: 12
+    display_name: '&x&F&C&F&F&0&0&lYELLOW &x&F&C&F&F&0&0Name Colour'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&C&F&F&0&0Information:'
+      - '&x&F&C&F&F&0&0| &fUnlock &x&F&C&F&F&0&0Yellow Name Colour'
+      - '&x&F&C&F&F&0&0| &fEquip via &f/namecolor'
+      - ''
+      - '&x&F&C&F&F&0&0⚓ &fCost: &x&F&C&F&F&0&0400 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] namecolor.set.color.yellow'
+      - '[tokens_take] 400'
+      - '[console] lp user %player_name% permission set namecolor.set.color.yellow true'
+      - '[message] %token_prefix%&#9FFF00Unlocked Yellow Name Colour! Use &f/namecolor&#9FFF00.'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  lime_name:
+    material: LIME_DYE
+    slot: 13
+    display_name: '&x&9&F&F&F&0&0&lLIME &x&9&F&F&F&0&0Name Colour'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&9&F&F&F&0&0Information:'
+      - '&x&9&F&F&F&0&0| &fUnlock &x&9&F&F&F&0&0Lime Name Colour'
+      - '&x&9&F&F&F&0&0| &fEquip via &f/namecolor'
+      - ''
+      - '&x&9&F&F&F&0&0⚓ &fCost: &x&9&F&F&F&0&0400 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] namecolor.set.color.lime'
+      - '[tokens_take] 400'
+      - '[console] lp user %player_name% permission set namecolor.set.color.lime true'
+      - '[message] %token_prefix%&#9FFF00Unlocked Lime Name Colour! Use &f/namecolor&#9FFF00.'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  aqua_name:
+    material: LIGHT_BLUE_DYE
+    slot: 14
+    display_name: '&x&0&0&B&7&F&F&lAQUA &x&0&0&B&7&F&FName Colour'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&0&0&B&7&F&FInformation:'
+      - '&x&0&0&B&7&F&F| &fUnlock &x&0&0&B&7&F&FAqua Name Colour'
+      - '&x&0&0&B&7&F&F| &fEquip via &f/namecolor'
+      - ''
+      - '&x&0&0&B&7&F&F⚓ &fCost: &x&0&0&B&7&F&F400 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] namecolor.set.color.aqua'
+      - '[tokens_take] 400'
+      - '[console] lp user %player_name% permission set namecolor.set.color.aqua true'
+      - '[message] %token_prefix%&#9FFF00Unlocked Aqua Name Colour! Use &f/namecolor&#9FFF00.'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  purple_name:
+    material: PURPLE_DYE
+    slot: 15
+    display_name: '&x&A&D&4&E&F&F&lPURPLE &x&A&D&4&E&F&FName Colour'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&A&D&4&E&F&FInformation:'
+      - '&x&A&D&4&E&F&F| &fUnlock &x&A&D&4&E&F&FPurple Name Colour'
+      - '&x&A&D&4&E&F&F| &fEquip via &f/namecolor'
+      - ''
+      - '&x&A&D&4&E&F&F⚓ &fCost: &x&A&D&4&E&F&F400 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] namecolor.set.color.purple'
+      - '[tokens_take] 400'
+      - '[console] lp user %player_name% permission set namecolor.set.color.purple true'
+      - '[message] %token_prefix%&#9FFF00Unlocked Purple Name Colour! Use &f/namecolor&#9FFF00.'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  custom_name:
+    material: NAME_TAG
+    slot: 16
+    display_name: '&x&0&0&5&A&F&F&lCUSTOM &x&0&0&5&A&F&FGradient'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&0&0&5&A&F&FInformation:'
+      - '&x&0&0&5&A&F&F| &fUnlock &x&0&0&5&A&F&FCustom Gradient'
+      - '&x&0&0&5&A&F&F| &fSet via &f/namecolor custom'
+      - ''
+      - '&x&0&0&5&A&F&F⚓ &fCost: &x&0&0&5&A&F&F2000 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] namecolor.set.color.custom'
+      - '[tokens_take] 2000'
+      - '[console] lp user %player_name% permission set namecolor.set.color.custom true'
+      - '[message] %token_prefix%&#9FFF00Unlocked Custom Gradient! Use &f/namecolor custom&#9FFF00.'
+      - '[sound] ENTITY_PLAYER_LEVELUP'

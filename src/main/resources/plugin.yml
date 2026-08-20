@@ -5,7 +5,7 @@ api-version: '1.21'
 author: Sharded
 description: All-in-one core plugin for Paper 1.21.11
 softdepend: [LuckPerms, PlaceholderAPI, ItemsAdder, Topper]
-load: POSTWORLD
+load: STARTUP
 
 commands:
   shardedcore:
@@ -248,6 +248,24 @@ commands:
     description: Show the webstore link
     usage: /store
     aliases: [webstore, shop]
+  headtokens:
+    description: Convert a player head to tokens
+    usage: /headtokens
+  dailyrewards:
+    description: Claim your daily reward
+    usage: /dailyrewards
+  daily:
+    description: Claim your daily reward
+    usage: /daily
+  tokenmethods:
+    description: List ways to earn tokens
+    usage: /tokenmethods
+  module:
+    description: Open the module manager
+    usage: /module
+  modules:
+    description: Open the module manager
+    usage: /modules
 
 permissions:
   sharded.admin:
@@ -256,7 +274,7 @@ permissions:
   sharded.craft.use:
     default: true
   sharded.fix.use:
-    default: true
+    default: false
   sharded.fix.bypass:
     default: op
   sharded.trash.use:
@@ -329,7 +347,7 @@ permissions:
   sharded.graves.admin:
     default: op
   sharded.armortrims.use:
-    default: true
+    default: false
   sharded.fly.use:
     default: op
   sharded.fly.speed:
@@ -358,6 +376,15 @@ permissions:
     default: op
   sharded.commandwhitelist.bypass:
     description: Bypass command whitelist restrictions
+    default: op
+  sharded.dailyrewards.use:
+    description: Claim daily rewards
+    default: true
+  sharded.graves.headtokens:
+    description: Convert player heads to tokens
+    default: true
+  sharded.modules.admin:
+    description: Manage modules in-game
     default: op
   sharded.spawn.admin:
     description: Set main and vanilla spawn locations
@@ -404,7 +431,7 @@ permissions:
     description: View other players' killstreaks
     default: op
   sharded.toolname.use:
-    default: true
+    default: false
   sharded.pickupmobs.use:
     default: op
   sharded.spawners.use:
@@ -417,13 +444,13 @@ permissions:
     default: true
   sharded.pets.use:
     description: Use the pets system
-    default: true
+    default: false
   sharded.pets.parrot:
-    default: true
+    default: false
   sharded.pets.axolotl:
-    default: true
+    default: false
   sharded.pets.bee:
-    default: true
+    default: false
   sharded.pets.warden:
     default: op
   sharded.pets.allay:

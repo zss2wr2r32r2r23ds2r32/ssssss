@@ -1,6 +1,6 @@
-menu_title: '&#9FFF00&lSERVER RULES'
-config-version: 1
-size: 54
+menu_title: 'Server Rules'
+config-version: 2
+size: 27
 open_permission: sharded.guide.use
 
 open_commands:
@@ -9,26 +9,24 @@ open_commands:
 items:
   filler:
     material: BLACK_STAINED_GLASS_PANE
-    slots: [0,1,2,3,4,5,6,7,8,9,17,18,26,27,35,36,44,45,46,47,48,49,50,51,52,53]
+    slots: [0,1,2,3,4,5,6,7,8,9,11,13,15,17,18,19,20,21,23,24,25,26]
     display_name: ' '
 
   rules:
     material: BOOK
-    slot: 22
-    display_name: '&#9FFF00&lSERVER RULES'
+    slot: 13
+    display_name: 'Server Rules'
     lore:
-      - '&8Description'
+      - '&7● &fNo Hacked Clients'
+      - '&7● &fNo Movement Mods'
+      - '&7● &fNo Inventory Mods'
+      - '&7● &fNo Health Indicators'
+      - '&7● &fNo Radar, ESP, or Freecam'
+      - '&7● &fNo Auto / Easy Place'
+      - '&7● &fNo Macros, Scripts, or Auto Clickers'
+      - '&7● &fNo Mouse Tweak Mods or Scrolling Exploits'
+      - '&7● &fNo Crafting Modifications'
       - ''
-      - '&#9FFF00● &fNo Hacked Clients'
-      - '&#9FFF00● &fNo Movement Mods'
-      - '&#9FFF00● &fNo Inventory Mods'
-      - '&#9FFF00● &fNo Health Indicators'
-      - '&#9FFF00● &fNo Radar, ESP, or Freecam'
-      - '&#9FFF00● &fNo Auto / Easy Place'
-      - '&#9FFF00● &fNo Macros, Scripts, or Auto Clickers'
-      - '&#9FFF00● &fNo Mouse Tweak Mods or Scrolling Exploits'
-      - '&#9FFF00● &fNo Crafting Modifications'
-      - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Go Back'
+      - '&fClick to go back'
     click_commands:
       - '[openguimenu] guide_rules'

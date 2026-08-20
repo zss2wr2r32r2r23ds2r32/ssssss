@@ -1,6 +1,6 @@
 config-version: 3
 prefix: '%prefix%'
-milestone: '%prefix%&#9FFF00Killstreak: &f%streak%&#9FFF00!'
+milestone: ''
 streak-announce: '%prefix%&6%player% &eis on a &#FF2727&l%streak% &ekill streak!'
 no-permission: '%prefix%&#FF2727You don''t have permission.'
 no-permission-others: '%prefix%&#FF2727You don''t have permission to view other players''

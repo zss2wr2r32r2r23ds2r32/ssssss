@@ -37,6 +37,7 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -46,6 +47,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Graves: when a player dies, their items are stored in a grave shown as the
@@ -80,6 +82,7 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
     protected void onEnable() {
         hologramKey = new NamespacedKey(plugin, "grave_hologram");
         registerCommand("graves", this);
+        registerCommand("headtokens", this);
         loadGraves();
         for (Grave grave : List.copyOf(gravesByBlock.values())) {
             if (grave.location.getWorld() != null && grave.location.isChunkLoaded()) {
@@ -119,6 +122,16 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
         for (ItemStack drop : event.getDrops()) {
             if (drop != null && !drop.getType().isAir()) items.add(drop.clone());
         }
+
+        ItemStack wardrobeHat = extractWardrobeHat(player, items);
+
+        if (config.getBoolean("head-drop.enabled", true) && event.getEntity().getKiller() != null) {
+            double chance = config.getDouble("head-drop.chance-percent", 10.0);
+            if (ThreadLocalRandom.current().nextDouble(100.0) < chance) {
+                items.add(createPlayerHead(player));
+            }
+        }
+
         int xp = config.getBoolean("store-xp", true) ? event.getDroppedExp() : 0;
         if (items.isEmpty() && xp <= 0) return;
 
@@ -131,6 +144,7 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
         long lifetime = graveLifetime(player);
         Grave grave = new Grave(UUID.randomUUID(), player.getUniqueId(), player.getName(), location,
                 items, xp, xp <= 0, System.currentTimeMillis(), System.currentTimeMillis() + lifetime * 1000L);
+        grave.wardrobeHat = wardrobeHat;
         gravesByBlock.put(blockKey(location), grave);
         placeGraveBlock(grave);
         spawnHolograms(grave);
@@ -175,16 +189,14 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
 
     private void placeGraveBlock(Grave grave) {
         Block block = grave.location.getBlock();
-        block.setType(Material.PLAYER_HEAD, false);
-        if (block.getState() instanceof Skull skull) {
-            skull.setOwningPlayer(Bukkit.getOfflinePlayer(grave.owner));
-            skull.update(true, false);
-        }
+        Material blockType = Material.matchMaterial(config.getString("block-material", "CHEST"));
+        if (blockType == null) blockType = Material.CHEST;
+        block.setType(blockType, false);
     }
 
     /** Re-applies block + holograms for a grave loaded from disk. */
     private void restoreGraveInWorld(Grave grave) {
-        if (grave.location.getBlock().getType() != Material.PLAYER_HEAD) {
+        if (grave.location.getBlock().getType() != Material.CHEST && grave.location.getBlock().getType() != Material.TRAPPED_CHEST) {
             placeGraveBlock(grave);
         }
         cleanupStrayHolograms(grave.location);
@@ -367,6 +379,9 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
             for (ItemStack item : grave.items) {
                 grave.location.getWorld().dropItemNaturally(grave.location.clone().add(0.5, 0.5, 0.5), item);
             }
+            if (grave.wardrobeHat != null && !grave.wardrobeHat.getType().isAir()) {
+                grave.location.getWorld().dropItemNaturally(grave.location.clone().add(0.5, 0.5, 0.5), grave.wardrobeHat);
+            }
         }
         removeGrave(grave, false);
         Player owner = Bukkit.getPlayer(grave.owner);
@@ -377,21 +392,75 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
     private void removeGrave(Grave grave, boolean dropContents) {
         despawnHolograms(grave);
         if (grave.location.getWorld() != null && grave.location.isChunkLoaded()
-                && grave.location.getBlock().getType() == Material.PLAYER_HEAD) {
+                && grave.location.getBlock().getType() != Material.AIR
+                && !grave.location.getBlock().getType().isAir()) {
             grave.location.getBlock().setType(Material.AIR, false);
         }
         if (dropContents && grave.location.getWorld() != null && grave.location.isChunkLoaded()) {
             for (ItemStack item : grave.items) {
                 grave.location.getWorld().dropItemNaturally(grave.location.clone().add(0.5, 0.5, 0.5), item);
             }
+            if (grave.wardrobeHat != null && !grave.wardrobeHat.getType().isAir()) {
+                grave.location.getWorld().dropItemNaturally(grave.location.clone().add(0.5, 0.5, 0.5), grave.wardrobeHat);
+            }
         }
         gravesByBlock.remove(blockKey(grave.location));
+    }
+
+    private ItemStack extractWardrobeHat(Player player, List<ItemStack> items) {
+        NamespacedKey hatKey = new NamespacedKey(plugin, "wardrobe_hat");
+        ItemStack helmet = player.getInventory().getHelmet();
+        if (helmet == null || helmet.getType().isAir()) return null;
+        if (!helmet.getPersistentDataContainer().has(hatKey, PersistentDataType.BYTE)) return null;
+        ItemStack hat = helmet.clone();
+        player.getInventory().setHelmet(null);
+        items.removeIf(item -> item != null && item.isSimilar(hat));
+        return hat;
+    }
+
+    private ItemStack createPlayerHead(Player player) {
+        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+        if (head.getItemMeta() instanceof SkullMeta meta) {
+            meta.setOwningPlayer(player);
+            meta.displayName(Text.c("&f" + player.getName() + "'s Head"));
+            head.setItemMeta(meta);
+        }
+        return head;
+    }
+
+    private boolean handleHeadTokens(CommandSender sender) {
+        if (!(sender instanceof Player player)) {
+            send(sender, "players-only");
+            return true;
+        }
+        if (!player.hasPermission("sharded.graves.headtokens")) {
+            send(player, "no-permission");
+            return true;
+        }
+        ItemStack hand = player.getInventory().getItemInMainHand();
+        if (hand.getType() != Material.PLAYER_HEAD) {
+            send(player, "headtokens-no-head");
+            return true;
+        }
+        long tokens = config.getLong("head-tokens.value", 50L);
+        var tokenService = plugin.modules().tokens();
+        if (tokenService == null) {
+            send(player, "headtokens-no-service");
+            return true;
+        }
+        hand.setAmount(hand.getAmount() - 1);
+        tokenService.give(player.getUniqueId(), tokens);
+        send(player, "headtokens-success", "%amount%", String.valueOf(tokens));
+        return true;
     }
 
     /* ----------------------------- admin cmd ----------------------------- */
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (command.getName().equalsIgnoreCase("headtokens")) {
+            return handleHeadTokens(sender);
+        }
         if (!sender.hasPermission("sharded.graves.admin")) {
             send(sender, "no-permission");
             return true;

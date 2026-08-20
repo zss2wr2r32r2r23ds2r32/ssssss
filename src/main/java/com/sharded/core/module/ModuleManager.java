@@ -45,9 +45,12 @@ import com.sharded.core.modules.guide.GuideModule;
 import com.sharded.core.modules.client.ClientModule;
 import com.sharded.core.modules.collisions.CollisionsModule;
 import com.sharded.core.modules.commandwhitelist.CommandWhitelistModule;
+import com.sharded.core.modules.dailyrewards.DailyRewardsModule;
 import com.sharded.core.modules.teams.TeamsModule;
+import com.sharded.core.modules.modulesadmin.ModulesAdminModule;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,10 +106,16 @@ public final class ModuleManager {
         register(new CollisionsModule(plugin));
         register(new CommandWhitelistModule(plugin));
         register(new TeamsModule(plugin));
+        register(new DailyRewardsModule(plugin));
+        register(new ModulesAdminModule(plugin));
     }
 
     private void register(Module module) {
         modules.put(module.id(), module);
+    }
+
+    public Collection<Module> allModules() {
+        return modules.values();
     }
 
     public void enableModules() {

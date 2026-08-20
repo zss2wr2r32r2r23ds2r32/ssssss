@@ -66,6 +66,7 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
         registerCommand("bal", this);
         registerCommand("tokens", this);
         registerCommand("tokenshop", this);
+        registerCommand("tokenmethods", this);
 
         startPlaytimeRewards();
     }
@@ -155,6 +156,12 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
                     return true;
                 }
                 plugin.gui().open(player, config.getString("main-menu", "mainmenu"));
+            }
+            case "tokenmethods" -> {
+                for (String line : rawList("token-methods")) {
+                    sender.sendMessage(com.sharded.core.util.Text.c(line));
+                }
+                return true;
             }
             case "tokens" -> handleTokensAdmin(sender, args);
         }

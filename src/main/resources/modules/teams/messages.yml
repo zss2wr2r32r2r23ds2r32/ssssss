@@ -82,8 +82,61 @@ role-member: 'Member'
 
 target-in-team: '%prefix%&#FF2727%player% &#FF2727is already in a team.'
 
-gui-invite-hint: '%prefix%&#9FFF00Use &f/team invite <player>'
-gui-ally-hint: '%prefix%&#9FFF00Use &f/team ally <team>'
-gui-promote-hint: '%prefix%&#9FFF00Use &f/team promote <player>'
-gui-demote-hint: '%prefix%&#9FFF00Use &f/team demote <player>'
-gui-kick-hint: '%prefix%&#9FFF00Use &f/team kick <player>'
+# GUI text
+gui-create-title: '&8Create Team'
+gui-create-anvil-name: '&fCreate Team'
+gui-create-anvil-lore:
+  - '&7Click then type your team name in chat'
+create-name-prompt: '%prefix%&#9FFF00Type your team name in chat (&fcancel&#9FFF00 to abort).'
+create-cancelled: '%prefix%&#FF2727Team creation cancelled.'
+gui-confirm-title: '&8Confirm &f%team%'
+gui-cancel-name: '&cCancel'
+gui-cancel-lore:
+  - '&7Go back'
+gui-confirm-name: '&aConfirm'
+gui-confirm-lore:
+  - '&7Create this team'
+gui-main-title: '&8Team &f%team%'
+gui-members-name: '&fMembers'
+gui-members-lore:
+  - '&7View team members'
+  - '&7Total: &f%count%'
+gui-stats-name: '&fStats'
+gui-stats-lore:
+  - '&7View team stats'
+gui-leaderboard-name: '&fLeaderboard'
+gui-leaderboard-lore:
+  - '&7Top teams'
+gui-emergency-name: '&fEmergency'
+gui-emergency-lore:
+  - '&7Alert your team'
+gui-chat-name: '&fTeam Chat'
+gui-chat-lore:
+  - '&7Toggle team chat'
+  - '&7Status: %status%'
+gui-allies-name: '&fAllies'
+gui-allies-lore:
+  - '&7Allies: &f%count%/%max%'
+  - '&7Use &f/team ally <team>'
+gui-disband-name: '&fDisband'
+gui-disband-lore:
+  - '&7Permanently disband'
+gui-leave-name: '&fLeave'
+gui-leave-lore:
+  - '&7Leave your team'
+gui-back-name: '&fBack'
+gui-members-title: '&8Members &f%team%'
+gui-member-head-lore:
+  - '&7Role: &f%role%'
+  - '&7%status%'
+  - ''
+  - '&7Leader click: promote/demote'
+  - '&7Officer click: kick member'
+gui-leaderboard-title: '&8Team Leaderboard'
+gui-leaderboard-line-name: '&f#%rank% &d%team%'
+gui-leaderboard-line-lore:
+  - '&7Score: &f%score%'
+  - '&7Tokens: &f%tokens% &7Kills: &f%kills%'
+  - '&7Playtime: &f%playtime%'
+
+not-in-team-placeholder: 'N/A'

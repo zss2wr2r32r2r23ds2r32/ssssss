@@ -53,3 +53,5 @@ modules:
   collisions: true
   commandwhitelist: true
   teams: true
+  dailyrewards: true
+  modulesadmin: true

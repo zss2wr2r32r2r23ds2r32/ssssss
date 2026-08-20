@@ -1,0 +1,127 @@
+config-version: 2
+message-mode: chat
+menu-rows: 3
+filler-material: BLACK_STAINED_GLASS_PANE
+
+placeholders:
+  owned-yes: '&#9FFF00&nYes'
+  owned-no: '&#FF2727&nNo'
+
+remove:
+  slot: 4
+  command: 'ezcolors reset'
+  display-name: '&c&lREMOVE CHAT COLOUR'
+  lore:
+    - '&8Description'
+    - ''
+    - '&7Information:'
+    - '&7| &fRemove your chat colour'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Remove'
+
+colors:
+  red:
+    slot: 10
+    permission: ezcolor.color.red
+    command: 'ezcolor #FF0000'
+    material: RED_DYE
+    display-name: '&x&F&F&0&0&0&0&lRED &x&F&F&0&0&0&0Chat Colour'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&0&0&0Information:'
+      - '&x&F&F&0&0&0&0| &fEquip red chat colour'
+      - ''
+      - '&x&F&F&0&0&0&0| ⚓ &fOwned: %chatcolor_owned_red%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  orange:
+    slot: 11
+    permission: ezcolor.color.orange
+    command: 'ezcolor #FF6700'
+    material: ORANGE_DYE
+    display-name: '&x&F&F&6&7&0&0&lORANGE &x&F&F&6&7&0&0Chat Colour'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&6&7&0&0Information:'
+      - '&x&F&F&6&7&0&0| &fEquip orange chat colour'
+      - ''
+      - '&x&F&F&6&7&0&0| ⚓ &fOwned: %chatcolor_owned_orange%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  yellow:
+    slot: 12
+    permission: ezcolor.color.yellow
+    command: 'ezcolor #FCFF00'
+    material: YELLOW_DYE
+    display-name: '&x&F&C&F&F&0&0&lYELLOW &x&F&C&F&F&0&0Chat Colour'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&C&F&F&0&0Information:'
+      - '&x&F&C&F&F&0&0| &fEquip yellow chat colour'
+      - ''
+      - '&x&F&C&F&F&0&0| ⚓ &fOwned: %chatcolor_owned_yellow%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  lime:
+    slot: 13
+    permission: ezcolor.color.lime
+    command: 'ezcolor #9FFF00'
+    material: LIME_DYE
+    display-name: '&x&9&F&F&F&0&0&lLIME &x&9&F&F&F&0&0Chat Colour'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&9&F&F&F&0&0Information:'
+      - '&x&9&F&F&F&0&0| &fEquip lime chat colour'
+      - ''
+      - '&x&9&F&F&F&0&0| ⚓ &fOwned: %chatcolor_owned_lime%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  aqua:
+    slot: 14
+    permission: ezcolor.color.aqua
+    command: 'ezcolor #00B7FF'
+    material: LIGHT_BLUE_DYE
+    display-name: '&x&0&0&B&7&F&F&lAQUA &x&0&0&B&7&F&FChat Colour'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&0&0&B&7&F&FInformation:'
+      - '&x&0&0&B&7&F&F| &fEquip aqua chat colour'
+      - ''
+      - '&x&0&0&B&7&F&F| ⚓ &fOwned: %chatcolor_owned_aqua%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  purple:
+    slot: 15
+    permission: ezcolor.color.purple
+    command: 'ezcolor #AD4EFF'
+    material: PURPLE_DYE
+    display-name: '&x&A&D&4&E&F&F&lPURPLE &x&A&D&4&E&F&FChat Colour'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&A&D&4&E&F&FInformation:'
+      - '&x&A&D&4&E&F&F| &fEquip purple chat colour'
+      - ''
+      - '&x&A&D&4&E&F&F| ⚓ &fOwned: %chatcolor_owned_purple%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+  rainbow:
+    slot: 16
+    permission: ezcolor.color.rainbow
+    command: 'ezcolor rainbow2'
+    material: NETHER_STAR
+    display-name: '&x&F&F&0&0&0&0&lR&x&F&F&4&8&0&0&lA&x&F&F&F&8&0&0&lI&x&8&0&F&C&3&7&lN&x&0&0&F&F&6&E&lB&x&0&0&C&1&F&F&lO&x&3&3&6&4&E&9&lW'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&3&3&6&4&E&9Information:'
+      - '&x&3&3&6&4&E&9| &fEquip rainbow chat colour'
+      - ''
+      - '&x&3&3&6&4&E&9| ⚓ &fOwned: %chatcolor_owned_rainbow%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'

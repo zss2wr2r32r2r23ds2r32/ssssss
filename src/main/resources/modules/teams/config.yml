@@ -29,3 +29,6 @@ leaderboard:
 chat:
   team-format: '&#FF3399[TEAM] &f%player% &8» &7%message%'
   ally-format: '&#ffb300[ALLY] &f%player% &8» &7%message%'
+
+placeholders:
+  not-in-team: 'N/A'
