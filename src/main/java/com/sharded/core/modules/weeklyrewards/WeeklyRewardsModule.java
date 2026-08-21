@@ -44,12 +44,18 @@ public final class WeeklyRewardsModule extends Module implements CommandExecutor
             send(player, "cooldown", "%time%", Text.timeDaysHours(left));
             return true;
         }
+        if (RewardSpin.isClaiming(player.getUniqueId())) {
+            send(player, "already-claiming");
+            return true;
+        }
         List<RewardSpin.RewardOption> options = RewardSpin.loadOptions(config.getConfigurationSection("rewards"));
         if (options.isEmpty()) {
             send(player, "no-rewards");
             return true;
         }
-        RewardSpin.spin(this, plugin, player, options, LAST_CLAIM, "won", config);
+        if (!RewardSpin.spin(this, plugin, player, options, LAST_CLAIM, "won", config)) {
+            send(player, "already-claiming");
+        }
         return true;
     }
 }

@@ -361,6 +361,12 @@ public final class TagsModule extends Module implements CommandExecutor {
         }
         input = formatted;
 
+        int maxLetters = config.getInt("custom-max-letters", 5);
+        if (countLetters(input) > maxLetters) {
+            send(player, "custom-too-long");
+            return;
+        }
+
         if (containsBlockedEmoji(input)) {
             send(player, "custom-emoji-blocked");
             return;
@@ -472,6 +478,16 @@ public final class TagsModule extends Module implements CommandExecutor {
             return "&8[" + color + text + "&8]";
         }
         return null;
+    }
+
+    private int countLetters(String formattedTag) {
+        String inner = extractInnerTagText(formattedTag);
+        String text = inner != null ? stripColors(inner) : stripColors(formattedTag);
+        int count = 0;
+        for (int i = 0; i < text.length(); i++) {
+            if (Character.isLetter(text.charAt(i))) count++;
+        }
+        return count;
     }
 
     private boolean containsBlockedEmoji(String input) {

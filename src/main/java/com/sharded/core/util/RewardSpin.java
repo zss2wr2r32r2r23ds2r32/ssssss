@@ -11,10 +11,15 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 /** Weighted action-bar reward spin with configurable rarity colors. */
 public final class RewardSpin {
+
+    private static final Set<UUID> ACTIVE = ConcurrentHashMap.newKeySet();
 
     public record RewardOption(String display, String rarityLabel, String rarityColor, double weight,
                                double percent, List<String> commands) {
@@ -32,6 +37,10 @@ public final class RewardSpin {
     }
 
     private RewardSpin() {
+    }
+
+    public static boolean isClaiming(UUID uuid) {
+        return ACTIVE.contains(uuid);
     }
 
     public static List<RewardOption> loadOptions(ConfigurationSection rewardsSection) {
@@ -62,9 +71,17 @@ public final class RewardSpin {
         return list;
     }
 
-    public static void spin(com.sharded.core.module.Module module, ShardedCore plugin, Player player,
-                            List<RewardOption> options, String lastClaimKey, String winMessageKey,
-                            YamlConfiguration config) {
+    /** Starts a spin; returns false if the player is already claiming. */
+    public static boolean spin(com.sharded.core.module.Module module, ShardedCore plugin, Player player,
+                               List<RewardOption> options, String lastClaimKey, String winMessageKey,
+                               YamlConfiguration config) {
+        UUID uuid = player.getUniqueId();
+        if (!ACTIVE.add(uuid)) {
+            return false;
+        }
+
+        plugin.stateStore().setLong(uuid, lastClaimKey, System.currentTimeMillis());
+
         RewardOption winner = weightedPick(options);
         int spins = config.getInt("spin-ticks", 40);
         String format = config.getString("spin-format",
@@ -78,6 +95,7 @@ public final class RewardSpin {
             public void run() {
                 if (!player.isOnline()) {
                     holder[0].cancel();
+                    ACTIVE.remove(uuid);
                     return;
                 }
                 RewardOption shown = tick >= spins - 1
@@ -88,16 +106,17 @@ public final class RewardSpin {
                 if (tick >= spins) {
                     holder[0].cancel();
                     grant(player, winner);
-                    plugin.stateStore().setLong(player.getUniqueId(), lastClaimKey, System.currentTimeMillis());
                     module.send(player, winMessageKey,
                             "%reward%", winner.display(),
                             "%rarity%", winner.coloredRarity(),
                             "%percent%", winner.percentText());
                     playSound(player, config.getString("sounds.win", "ENTITY_PLAYER_LEVELUP"));
+                    ACTIVE.remove(uuid);
                 }
             }
         }, 0L, 2L);
         playSound(player, config.getString("sounds.spin", "UI_BUTTON_CLICK"));
+        return true;
     }
 
     private static String applyFormat(String format, RewardOption option) {

@@ -1,4 +1,4 @@
-config-version: 2
+config-version: 3
 message-mode: chat
 fetch-limit: 5000
 
@@ -104,7 +104,6 @@ gui:
   stats-head-lore:
     - '&8Statistics'
     - ''
-    - '&x&F&F&0&0&6&7Information:'
     - '&x&F&F&0&0&6&7| &fRank: %prefix%'
     - '&x&F&F&0&0&0&0| &fKills: &x&F&F&0&0&0&0%kills%'
     - '&x&0&0&B&7&F&F| &fDeaths: &x&0&0&B&7&F&F%deaths%'

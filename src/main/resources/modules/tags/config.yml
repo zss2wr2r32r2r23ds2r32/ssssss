@@ -1,4 +1,4 @@
-config-version: 8
+config-version: 9
 message-mode: chat
 
 menu-title: 'Tags'
@@ -13,6 +13,7 @@ custom-apply-delay-ticks: 5
 custom-apply-command: '[console] lp user %player_name% meta setsuffix %priority% "%custom%"'
 custom-remove-command: '[console] lp user %player_name% meta removesuffix %priority%'
 custom-cooldown-hours: 24
+custom-max-letters: 5
 block-limited-tag-copy: true
 
 clear-equipped-commands:
