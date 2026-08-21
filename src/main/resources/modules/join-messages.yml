@@ -4,12 +4,30 @@ enabled: true
 
 set-adventure-mode: true
 disable-vanilla-join-message: true
+disable-vanilla-quit-message: true
+
+join-title:
+  enabled: true
+  text: "&aWelcome %player%"
+  subtitle: "&7Use command &f/server <name> &7to get started"
+  admin-subtitle: "&7Use &f/fly &7to toggle flight"
+  fade-in: 10
+  stay: 60
+  fade-out: 10
+
+admin-fly:
+  enabled: true
+  permission: shardedlobbycore.fly
+  enable-on-join: true
+  messages:
+    enabled: "&aFlight enabled."
+    disabled: "&cFlight disabled."
 
 first-join:
   enabled: true
   title:
-    enabled: true
-    text: "&a&lWelcome %player%!"
+    enabled: false
+    text: "Welcome to ShardedMC %player%"
     subtitle: "&7Use command &f/server <name> &7to get started"
 
 chat-message:
@@ -31,14 +49,12 @@ chat-message:
 
 broadcast-first-join:
   enabled: true
-  message: "&a+ &7%player% &8(First Join)"
+  message: "#45FF17+ &f%player%"
 
 broadcast-join:
-  enabled: false
+  enabled: true
   message: "&a+ &7%player%"
 
 broadcast-quit:
-  enabled: false
-  message: "&c- &7%player%"
-
-disable-vanilla-quit-message: true
+  enabled: true
+  message: "#FF0000- &f%player%"

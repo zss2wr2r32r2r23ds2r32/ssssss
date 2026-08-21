@@ -8,4 +8,4 @@ vertical-boost: 0.8
 play-sound: true
 
 messages:
-  used: ""
+  used: "&7You have used Double jump."

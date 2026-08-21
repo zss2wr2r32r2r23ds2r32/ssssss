@@ -4,12 +4,12 @@
 enabled: true
 
 spawn:
-  world: ""
-  x: 0
-  y: 64
-  z: 0
-  yaw: 0
-  pitch: 0
+  world: world
+  x: 17.43926004200134
+  y: 64.0
+  z: 102.41467848665218
+  yaw: 0.8398235
+  pitch: -0.9323191
 
 messages:
-  set: "&aSpawn point set to your current location!"
+  set: '&aSpawn point set to your current location!'

@@ -3,9 +3,11 @@ package com.shardedmc.lobbycore.module.impl;
 import com.shardedmc.lobbycore.ShardedLobbyCore;
 import com.shardedmc.lobbycore.module.Module;
 import com.shardedmc.lobbycore.util.MessageUtil;
-import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,10 +17,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.time.Duration;
 import java.util.List;
 
-public class JoinMessagesModule implements Module, Listener {
+public class JoinMessagesModule implements Module, Listener, CommandExecutor {
 
     private ShardedLobbyCore plugin;
     private FileConfiguration config;
@@ -38,10 +39,17 @@ public class JoinMessagesModule implements Module, Listener {
         this.plugin = plugin;
         this.config = config;
         Bukkit.getPluginManager().registerEvents(this, plugin);
+
+        if (plugin.getCommand("fly") != null) {
+            plugin.getCommand("fly").setExecutor(this);
+        }
     }
 
     @Override
     public void disable() {
+        if (plugin.getCommand("fly") != null) {
+            plugin.getCommand("fly").setExecutor(null);
+        }
         HandlerList.unregisterAll(this);
     }
 
@@ -56,10 +64,6 @@ public class JoinMessagesModule implements Module, Listener {
 
         if (config.getBoolean("disable-vanilla-join-message", true)) {
             event.joinMessage(null);
-        }
-
-        if (config.getBoolean("disable-vanilla-quit-message", true)) {
-            // Handled in quit listener if needed
         }
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> sendJoinMessages(player, firstJoin), 5L);
@@ -78,16 +82,27 @@ public class JoinMessagesModule implements Module, Listener {
     }
 
     private void sendJoinMessages(Player player, boolean firstJoin) {
-        if (firstJoin && config.getBoolean("first-join.enabled", true)) {
-            if (config.getBoolean("first-join.title.enabled", true)) {
-                String title = MessageUtil.format(config.getString("first-join.title.text", "&aWelcome %player%!"), player);
-                String subtitle = MessageUtil.format(config.getString("first-join.title.subtitle", "&7Use &f/server <name> &7to get started"), player);
-                player.showTitle(Title.title(
-                        MessageUtil.component(title),
-                        MessageUtil.component(subtitle),
-                        Title.Times.times(Duration.ofMillis(500), Duration.ofSeconds(3), Duration.ofMillis(500))
-                ));
-            }
+        if (config.getBoolean("join-title.enabled", true)) {
+            String title = MessageUtil.format(config.getString("join-title.text", "&aWelcome %player%"), player);
+            String subtitlePath = player.hasPermission(config.getString("admin-fly.permission", "shardedlobbycore.fly")) &&
+                    config.getBoolean("admin-fly.enabled", true) ?
+                    "join-title.admin-subtitle" : "join-title.subtitle";
+            String subtitle = MessageUtil.format(config.getString(subtitlePath, "&7Use &f/server <name> &7to get started"), player);
+            MessageUtil.showTitle(player, title, subtitle,
+                    config.getInt("join-title.fade-in", 10),
+                    config.getInt("join-title.stay", 60),
+                    config.getInt("join-title.fade-out", 10));
+        } else if (firstJoin && config.getBoolean("first-join.enabled", true) &&
+                config.getBoolean("first-join.title.enabled", true)) {
+            String title = MessageUtil.format(config.getString("first-join.title.text", "&aWelcome %player%!"), player);
+            String subtitle = MessageUtil.format(config.getString("first-join.title.subtitle", "&7Use &f/server <name> &7to get started"), player);
+            MessageUtil.showTitle(player, title, subtitle, 10, 60, 10);
+        }
+
+        if (config.getBoolean("admin-fly.enabled", true) &&
+                player.hasPermission(config.getString("admin-fly.permission", "shardedlobbycore.fly")) &&
+                config.getBoolean("admin-fly.enable-on-join", true)) {
+            player.setAllowFlight(true);
         }
 
         if (config.getBoolean("chat-message.enabled", true)) {
@@ -111,5 +126,26 @@ public class JoinMessagesModule implements Module, Listener {
             String broadcast = config.getString("broadcast-first-join.message", "&a+ &7%player% &8(First Join)");
             Bukkit.broadcast(MessageUtil.component(MessageUtil.format(broadcast, player)));
         }
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player player)) {
+            MessageUtil.send(sender, "player-only");
+            return true;
+        }
+
+        if (!player.hasPermission(config.getString("admin-fly.permission", "shardedlobbycore.fly"))) {
+            MessageUtil.send(sender, "no-permission");
+            return true;
+        }
+
+        boolean flying = !player.isFlying();
+        player.setAllowFlight(true);
+        player.setFlying(flying);
+        MessageUtil.sendFormatted(player, flying ?
+                config.getString("admin-fly.messages.enabled", "&aFlight enabled.") :
+                config.getString("admin-fly.messages.disabled", "&cFlight disabled."));
+        return true;
     }
 }

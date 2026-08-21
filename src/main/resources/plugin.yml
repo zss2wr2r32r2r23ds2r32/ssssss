@@ -20,6 +20,9 @@ commands:
   lockchat:
     description: Lock or unlock the chat
     permission: shardedlobbycore.lockchat
+  fly:
+    description: Toggle flight
+    permission: shardedlobbycore.fly
 
 permissions:
   shardedlobbycore.admin:
@@ -39,6 +42,9 @@ permissions:
     default: op
   shardedlobbycore.bypass.antiswear:
     description: Bypass anti-swear
+    default: op
+  shardedlobbycore.fly:
+    description: Toggle flight in lobby
     default: op
   shardedlobbycore.chatprefix.*:
     description: Chat prefix permissions

@@ -4,9 +4,9 @@
 enabled: true
 
 interval-seconds: 120
-prefix: "&8[&bAnnouncement&8] &r"
+prefix: "&#FF0000&lANNOUNCEMENTS &r"
 
 messages:
-  - "&7Welcome to &bShardedMC&7! Use &f/server <name> &7to play."
-  - "&7Join our Discord at &bdiscord.gg/shardedmc"
-  - "&7Store: &bstore.shardedmc.com"
+  - "&7Welcome to &#AD4EFF&ShardedMC&7! Use &f/server <name> &7to play."
+  - "&7Join our Discord at &#AD4EFF&discord.gg/shardedmc"
+  - "&7Store: &#AD4EFF&store.shardedmc.net"

@@ -25,6 +25,8 @@ public class PlayerVisibilityModule implements Module, Listener {
     private ShardedLobbyCore plugin;
     private FileConfiguration config;
     private final Set<UUID> hiddenPlayers = new HashSet<>();
+    private Material enabledMaterial;
+    private Material disabledMaterial;
 
     @Override
     public String getId() {
@@ -40,6 +42,14 @@ public class PlayerVisibilityModule implements Module, Listener {
     public void enable(ShardedLobbyCore plugin, FileConfiguration config) {
         this.plugin = plugin;
         this.config = config;
+        enabledMaterial = Material.matchMaterial(config.getString("item.material", "LIME_DYE"));
+        disabledMaterial = Material.matchMaterial(config.getString("item.material-disabled", "RED_DYE"));
+        if (enabledMaterial == null) {
+            enabledMaterial = Material.LIME_DYE;
+        }
+        if (disabledMaterial == null) {
+            disabledMaterial = Material.RED_DYE;
+        }
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
@@ -64,6 +74,7 @@ public class PlayerVisibilityModule implements Module, Listener {
                 hider.hidePlayer(plugin, joined);
             }
         }
+        Bukkit.getScheduler().runTaskLater(plugin, () -> updateItem(joined), 3L);
     }
 
     @EventHandler
@@ -73,18 +84,7 @@ public class PlayerVisibilityModule implements Module, Listener {
         }
 
         ItemStack item = event.getItem();
-        if (item == null) {
-            return;
-        }
-
-        Material material = Material.matchMaterial(config.getString("item.material", "LIME_DYE"));
-        String baseName = config.getString("item.name-enabled", "&aPLAYER VISIBILITY");
-        if (material == null || item.getType() != material) {
-            return;
-        }
-
-        if (!ItemBuilder.matchesName(item, MessageUtil.colorize(baseName)) &&
-                !ItemBuilder.matchesName(item, MessageUtil.colorize(config.getString("item.name-disabled", "&cPLAYER VISIBILITY")))) {
+        if (item == null || !isVisibilityItem(item)) {
             return;
         }
 
@@ -94,15 +94,19 @@ public class PlayerVisibilityModule implements Module, Listener {
         updateItem(player);
     }
 
+    private boolean isVisibilityItem(ItemStack item) {
+        return item.getType() == enabledMaterial || item.getType() == disabledMaterial;
+    }
+
     private void toggleVisibility(Player player) {
         if (hiddenPlayers.contains(player.getUniqueId())) {
             hiddenPlayers.remove(player.getUniqueId());
             showAllPlayers(player);
-            MessageUtil.sendFormatted(player, config.getString("messages.shown", "&aPlayers are now visible."));
+            MessageUtil.sendFormatted(player, config.getString("messages.shown", "&aAll players are now visible."));
         } else {
             hiddenPlayers.add(player.getUniqueId());
             hideAllPlayers(player);
-            MessageUtil.sendFormatted(player, config.getString("messages.hidden", "&cPlayers are now hidden."));
+            MessageUtil.sendFormatted(player, config.getString("messages.hidden", "&cAll players are now hidden."));
         }
     }
 
@@ -123,14 +127,11 @@ public class PlayerVisibilityModule implements Module, Listener {
     public void updateItem(Player player) {
         int slot = config.getInt("item.slot", 8);
         boolean hidden = hiddenPlayers.contains(player.getUniqueId());
-        Material material = Material.matchMaterial(hidden ?
-                config.getString("item.material-disabled", "GRAY_DYE") :
-                config.getString("item.material", "LIME_DYE"));
-        if (material == null) {
-            material = Material.LIME_DYE;
-        }
+        Material material = hidden ? disabledMaterial : enabledMaterial;
 
-        String status = hidden ? config.getString("status.disabled", "&7[DISABLED]") : config.getString("status.enabled", "&7[ENABLED]");
+        String status = hidden ?
+                config.getString("status.disabled", "&7[DISABLED]") :
+                config.getString("status.enabled", "&7[ENABLED]");
         String nameKey = hidden ? "item.name-disabled" : "item.name-enabled";
         String loreKey = hidden ? "item.lore-disabled" : "item.lore-enabled";
 

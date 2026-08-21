@@ -1,0 +1,43 @@
+# Server Selector Module
+# GUI opened when right-clicking the server selector compass
+
+enabled: true
+
+gui:
+  title: "&#AD4EFF&lSERVER SELECTOR"
+  rows: 3
+
+filler:
+  material: GRAY_STAINED_GLASS_PANE
+  name: " "
+
+servers:
+  lobby:
+    slot: 11
+    material: NETHER_STAR
+    name: "&#AD4EFF&lLOBBY"
+    lore:
+      - "&7You are already here!"
+      - ""
+      - "&#FFD900▷ &n&lCLICK&#FFD900 To Stay"
+    command: "spawn"
+
+  survival:
+    slot: 13
+    material: GRASS_BLOCK
+    name: "&#45FF17&lSURVIVAL"
+    lore:
+      - "&7Play survival with friends!"
+      - ""
+      - "&#FFD900▷ &n&lCLICK&#FFD900 To Join"
+    command: "server survival"
+
+  skyblock:
+    slot: 15
+    material: GRASS_BLOCK
+    name: "&#4498DB&lSKYBLOCK"
+    lore:
+      - "&7Island skyblock gamemode!"
+      - ""
+      - "&#FFD900▷ &n&lCLICK&#FFD900 To Join"
+    command: "server skyblock"

@@ -7,7 +7,6 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -46,11 +45,7 @@ public final class ItemBuilder {
 
     public ItemBuilder lore(List<String> lore) {
         ItemMeta meta = item.getItemMeta();
-        List<net.kyori.adventure.text.Component> components = new ArrayList<>();
-        for (String line : lore) {
-            components.add(MessageUtil.component(line));
-        }
-        meta.lore(components);
+        meta.lore(lore.stream().map(MessageUtil::component).toList());
         item.setItemMeta(meta);
         return this;
     }
@@ -98,9 +93,13 @@ public final class ItemBuilder {
         if (!item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
             return false;
         }
-        String plain = net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText()
-                .serialize(item.getItemMeta().displayName());
-        return plain.equalsIgnoreCase(org.bukkit.ChatColor.stripColor(MessageUtil.colorize(displayName)));
+        String itemPlain = MessageUtil.plainText(item.getItemMeta().displayName());
+        String configPlain = MessageUtil.plainText(displayName);
+        return itemPlain.equalsIgnoreCase(configPlain);
+    }
+
+    public static boolean matchesMaterial(ItemStack item, Material material) {
+        return item != null && material != null && item.getType() == material;
     }
 
     public static ItemStack fromConfig(org.bukkit.configuration.ConfigurationSection section, Player player) {

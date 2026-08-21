@@ -20,6 +20,7 @@ public class ConfigManager {
 
     private static final String[] MODULE_FILES = {
             "default-items",
+            "server-selector",
             "player-visibility",
             "parkour",
             "pvp",

@@ -23,6 +23,7 @@ public class ModuleManager {
 
     private void registerModules() {
         register(new DefaultItemsModule());
+        register(new ServerSelectorModule());
         register(new PlayerVisibilityModule());
         register(new ParkourModule());
         register(new PvpModule());

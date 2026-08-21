@@ -10,7 +10,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -89,6 +88,7 @@ public class PvpModule implements Module, Listener {
 
         HoldTracker tracker = enterTrackers.computeIfAbsent(uuid, k -> new HoldTracker());
         tracker.update(player);
+        showActionBar(player, tracker, holdMillis, "action-bar.enter", "&cEntering PvP in &f%seconds%s");
 
         if (tracker.hasHeldFor(holdMillis)) {
             enterTrackers.remove(uuid);
@@ -105,6 +105,7 @@ public class PvpModule implements Module, Listener {
 
         HoldTracker tracker = leaveTrackers.computeIfAbsent(uuid, k -> new HoldTracker());
         tracker.update(player);
+        showActionBar(player, tracker, holdMillis, "action-bar.leave", "&aLeaving PvP in &f%seconds%s");
 
         if (tracker.hasHeldFor(holdMillis)) {
             leaveTrackers.remove(uuid);
@@ -112,13 +113,20 @@ public class PvpModule implements Module, Listener {
         }
     }
 
+    private void showActionBar(Player player, HoldTracker tracker, long holdMillis, String path, String fallback) {
+        long remainingMs = holdMillis - tracker.getHeldMillis();
+        long seconds = Math.max(1, (remainingMs + 999) / 1000);
+        String message = config.getString(path, fallback).replace("%seconds%", String.valueOf(seconds));
+        MessageUtil.sendActionBar(player, MessageUtil.format(message, player));
+    }
+
     private boolean isEnterSword(ItemStack item) {
         if (item == null) {
             return false;
         }
         Material material = Material.matchMaterial(config.getString("enter-item.material", "DIAMOND_SWORD"));
-        return material != null && item.getType() == material &&
-                ItemBuilder.matchesName(item, MessageUtil.colorize(config.getString("enter-item.name", "&cPvP Sword")));
+        return ItemBuilder.matchesMaterial(item, material) &&
+                ItemBuilder.matchesName(item, config.getString("enter-item.name", "&cPvP Sword"));
     }
 
     private boolean isLeaveSword(ItemStack item) {
@@ -126,8 +134,8 @@ public class PvpModule implements Module, Listener {
             return false;
         }
         Material material = Material.matchMaterial(config.getString("leave-item.material", "WOODEN_SWORD"));
-        return material != null && item.getType() == material &&
-                ItemBuilder.matchesName(item, MessageUtil.colorize(config.getString("leave-item.name", "&aLeave PvP")));
+        return ItemBuilder.matchesMaterial(item, material) &&
+                ItemBuilder.matchesName(item, config.getString("leave-item.name", "&aLeave PvP"));
     }
 
     private void enterPvp(Player player) {
@@ -161,6 +169,8 @@ public class PvpModule implements Module, Listener {
         ItemStack[] armor = savedArmor.remove(uuid);
         GameMode mode = savedGameModes.remove(uuid);
 
+        inPvp.remove(uuid);
+
         if (inv != null) {
             player.getInventory().setContents(inv);
         }
@@ -171,10 +181,13 @@ public class PvpModule implements Module, Listener {
             player.setGameMode(mode);
         }
 
-        inPvp.remove(uuid);
         DefaultItemsModule defaultItems = (DefaultItemsModule) plugin.getModuleManager().getModule("default-items");
         if (defaultItems != null) {
             defaultItems.giveItems(player);
+        }
+        PlayerVisibilityModule visibility = (PlayerVisibilityModule) plugin.getModuleManager().getModule("player-visibility");
+        if (visibility != null) {
+            visibility.updateItem(player);
         }
         MessageUtil.sendFormatted(player, config.getString("messages.left", "&aYou left PvP mode!"));
     }

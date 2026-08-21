@@ -7,17 +7,21 @@ enabled: true
 
 hold-seconds: 5
 
+action-bar:
+  enter: "&#FF0000Entering PvP in &f%seconds%s"
+  leave: "&#22FF00Leaving PvP in &f%seconds%s"
+
 enter-item:
   material: DIAMOND_SWORD
-  name: "&c&lPVP SWORD"
+  name: "&#FF0000&lPVP SWORD"
 
 leave-item:
   material: WOODEN_SWORD
-  name: "&a&lLEAVE PVP"
+  name: "&#22FF00&lLEAVE PVP"
 
 messages:
-  entered: "&cYou entered PvP mode! Fight!"
-  left: "&aYou left PvP mode."
+  entered: "&#FF0000You have entered PvP mode, you may fight!"
+  left: "&#22FF00You have left PvP mode, PvP is now disabled."
 
 kit:
   armor:
@@ -33,16 +37,9 @@ kit:
     sword:
       slot: 0
       material: DIAMOND_SWORD
-      name: "&c&lPVP SWORD"
+      name: "&#FF0000&lPVP SWORD"
       enchantments:
         sharpness: 4
-      unbreakable: true
-    leave-sword:
-      slot: 1
-      material: WOODEN_SWORD
-      name: "&a&lLEAVE PVP"
-      lore:
-        - "&7Hold for &f5 seconds &7to leave PvP."
       unbreakable: true
     golden-apples:
       slot: 2
@@ -52,7 +49,16 @@ kit:
     bow:
       slot: 3
       material: BOW
-      name: "&e&lPVP BOW"
+      name: "&#4498DB&lPVP BOW"
       enchantments:
         infinity: 1
+      unbreakable: true
+    leave-sword:
+      slot: 8
+      material: WOODEN_SWORD
+      name: "&#22FF00&lLEAVE PVP"
+      lore:
+        - "&7Hold for &f5 seconds &7to leave PvP."
+        - ""
+        - "&#FFD900▷ &n&lHOLD&#FFD900 To Leave PvP"
       unbreakable: true

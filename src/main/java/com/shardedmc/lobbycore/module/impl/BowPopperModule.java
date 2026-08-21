@@ -6,6 +6,7 @@ import com.shardedmc.lobbycore.util.ItemBuilder;
 import com.shardedmc.lobbycore.util.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Arrow;
@@ -16,11 +17,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
 public class BowPopperModule implements Module, Listener {
 
     private ShardedLobbyCore plugin;
     private FileConfiguration config;
+    private NamespacedKey arrowKey;
 
     @Override
     public String getId() {
@@ -36,6 +39,7 @@ public class BowPopperModule implements Module, Listener {
     public void enable(ShardedLobbyCore plugin, FileConfiguration config) {
         this.plugin = plugin;
         this.config = config;
+        this.arrowKey = new NamespacedKey(plugin, "bow-popper-arrow");
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
@@ -53,12 +57,13 @@ public class BowPopperModule implements Module, Listener {
             return;
         }
 
-        ItemStack bow = player.getInventory().getItemInMainHand();
-        if (!isBowPopper(bow)) {
-            bow = player.getInventory().getItemInOffHand();
-            if (!isBowPopper(bow)) {
-                return;
-            }
+        PvpModule pvpModule = (PvpModule) plugin.getModuleManager().getModule("pvp");
+        if (pvpModule != null && pvpModule.isInPvp(player.getUniqueId())) {
+            return;
+        }
+
+        if (!isBowPopperBow(player)) {
+            return;
         }
 
         if (plugin.getCooldownManager().isOnCooldown(player.getUniqueId(), "bow-popper")) {
@@ -69,7 +74,7 @@ public class BowPopperModule implements Module, Listener {
             return;
         }
 
-        arrow.setShooter(player);
+        arrow.getPersistentDataContainer().set(arrowKey, PersistentDataType.BYTE, (byte) 1);
         arrow.setPickupStatus(AbstractArrow.PickupStatus.DISALLOWED);
     }
 
@@ -81,13 +86,8 @@ public class BowPopperModule implements Module, Listener {
         if (!(arrow.getShooter() instanceof Player player)) {
             return;
         }
-
-        ItemStack bow = player.getInventory().getItemInMainHand();
-        if (!isBowPopper(bow)) {
-            bow = player.getInventory().getItemInOffHand();
-            if (!isBowPopper(bow)) {
-                return;
-            }
+        if (!arrow.getPersistentDataContainer().has(arrowKey, PersistentDataType.BYTE)) {
+            return;
         }
 
         long cooldown = config.getLong("cooldown-seconds", 5);
@@ -98,12 +98,35 @@ public class BowPopperModule implements Module, Listener {
         MessageUtil.sendFormatted(player, config.getString("messages.teleported", "&aTeleported to your arrow!"));
     }
 
-    private boolean isBowPopper(ItemStack item) {
+    private boolean isBowPopperBow(Player player) {
+        ItemStack main = player.getInventory().getItemInMainHand();
+        ItemStack off = player.getInventory().getItemInOffHand();
+        if (isBowPopperItem(main)) {
+            return true;
+        }
+        return isBowPopperItem(off);
+    }
+
+    private boolean isBowPopperItem(ItemStack item) {
         if (item == null) {
             return false;
         }
-        Material material = Material.matchMaterial(config.getString("item.material", "BOW"));
-        return material != null && item.getType() == material &&
-                ItemBuilder.matchesName(item, MessageUtil.colorize(config.getString("item.name", "&dBow Popper")));
+
+        Material configMaterial = Material.matchMaterial(config.getString("item.material", "BOW"));
+        if (ItemBuilder.matchesMaterial(item, configMaterial) &&
+                ItemBuilder.matchesName(item, config.getString("item.name", "&d&lBOW POPPER"))) {
+            return true;
+        }
+
+        DefaultItemsModule defaultItems = (DefaultItemsModule) plugin.getModuleManager().getModule("default-items");
+        if (defaultItems != null) {
+            var section = defaultItems.getItemSection("bow-popper");
+            if (section != null) {
+                Material material = Material.matchMaterial(section.getString("material", "BOW"));
+                return ItemBuilder.matchesMaterial(item, material) &&
+                        ItemBuilder.matchesName(item, section.getString("name", "&d&lBOW POPPER"));
+            }
+        }
+        return false;
     }
 }

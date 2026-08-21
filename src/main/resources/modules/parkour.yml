@@ -4,6 +4,6 @@
 enabled: true
 
 block:
-  material: EMERALD_BLOCK
+  material: LIME_GLAZED_TERRACOTTA
 
 command: "ajparkour start"

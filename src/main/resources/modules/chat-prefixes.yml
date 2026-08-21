@@ -1,6 +1,6 @@
 # Chat Prefixes Module
 
-enabled: true
+enabled: false
 
 default-prefix: "&7"
 format: "%prefix%%player%&8: &f%message%"

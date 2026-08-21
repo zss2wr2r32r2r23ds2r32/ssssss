@@ -9,16 +9,14 @@ items:
     slot: 4
     material: COMPASS
     amount: 1
-    name: "&b&lSERVER SELECTOR"
+    name: "&#AD4EFF&lSERVER SELECTOR"
     lore:
       - "&7Right-click to open the"
       - "&7server selection menu!"
       - ""
-      - "&eClick to browse servers"
+      - "&#FFD900▷ &n&lCLICK&#FFD900 To Browse The Servers"
     actions:
-      - "[MESSAGE] &b&lShardedMC Network"
-      - "[MESSAGE] &7Use command: &f/server <name>"
-      - "[COMMAND] server"
+      - "[OPEN_MENU] server-selector"
 
   player-visibility:
     slot: 8
@@ -26,7 +24,9 @@ items:
     amount: 1
     name: "&aPLAYER VISIBILITY &7[ENABLED]"
     lore:
-      - "&7Click to hide all players."
+      - "&7Right click me to hide players"
+      - ""
+      - "&#FFD900▷ &n&lCLICK&#FFD900 To Hide Players"
 
   bow-popper:
     slot: 1
@@ -38,6 +38,7 @@ items:
       - "&7wherever it lands!"
       - ""
       - "&75 second cooldown"
+      - "&#FFD900▷ &n&lHOLD&#FFD900 Right Click To Teleport"
     enchantments:
       infinity: 1
     unbreakable: true
@@ -46,9 +47,10 @@ items:
     slot: 0
     material: DIAMOND_SWORD
     amount: 1
-    name: "&c&lPVP SWORD"
+    name: "&#FF0000&lPVP SWORD"
     lore:
       - "&7Hold for &f5 seconds &7to enter PvP."
       - ""
       - "&cSharpness IV kit included!"
+      - "&#FFD900▷ &n&lHOLD&#FFD900 To Enter PvP Mode"
     unbreakable: true

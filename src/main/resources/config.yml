@@ -1,7 +1,7 @@
 # ShardedLobbyCore - Main Configuration
 # Reload with /shardedlobbycore reload
 
-prefix: "&8[&bShardedLobbyCore&8] &r"
+prefix: "&#00A2FF&lCORE &8▷ &r"
 
 # All modules are configured in the modules/ folder.
 # Set enabled: false in any module file to disable it.

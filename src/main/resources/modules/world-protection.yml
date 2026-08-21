@@ -8,6 +8,8 @@ disable-block-break: true
 disable-block-place: true
 disable-weather: true
 disable-item-drop: true
-disable-inventory-move: false
+disable-inventory-move: true
+allow-inventory-move-in-pvp: true
+allow-drop-in-pvp: false
 disable-block-interact: true
 disable-fire-spread: true

@@ -5,13 +5,17 @@ enabled: true
 item:
   slot: 8
   material: LIME_DYE
-  material-disabled: GRAY_DYE
+  material-disabled: RED_DYE
   name-enabled: "&aPLAYER VISIBILITY"
   name-disabled: "&cPLAYER VISIBILITY"
   lore-enabled:
-    - "&7CLICK TO HIDE PLAYERS."
+    - "&7Right click me to hide players"
+    - ""
+    - "&#FFD900▷ &n&lCLICK&#FFD900 To Hide Players"
   lore-disabled:
-    - "&7CLICK TO SHOW PLAYERS."
+    - "&7Right click me to show players"
+    - ""
+    - "&#FFD900▷ &n&lCLICK&#FFD900 To Show Players"
 
 status:
   enabled: "&7[ENABLED]"

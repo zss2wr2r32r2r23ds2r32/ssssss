@@ -3,10 +3,13 @@ package com.shardedmc.lobbycore.util;
 import com.shardedmc.lobbycore.ShardedLobbyCore;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.title.Title;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,6 +19,7 @@ public final class MessageUtil {
 
     private static ShardedLobbyCore plugin;
     private static final Pattern HEX_PATTERN = Pattern.compile("&#([A-Fa-f0-9]{6})");
+    private static final Pattern STANDALONE_HEX_PATTERN = Pattern.compile("#([A-Fa-f0-9]{6})");
     private static final LegacyComponentSerializer LEGACY = LegacyComponentSerializer.legacySection();
 
     private MessageUtil() {
@@ -29,6 +33,7 @@ public final class MessageUtil {
         if (text == null) {
             return "";
         }
+        text = convertStandaloneHex(text);
         Matcher matcher = HEX_PATTERN.matcher(text);
         StringBuilder buffer = new StringBuilder();
         while (matcher.find()) {
@@ -43,8 +48,51 @@ public final class MessageUtil {
         return ChatColor.translateAlternateColorCodes('&', buffer.toString());
     }
 
+    private static String convertStandaloneHex(String text) {
+        Matcher matcher = STANDALONE_HEX_PATTERN.matcher(text);
+        StringBuilder buffer = new StringBuilder();
+        while (matcher.find()) {
+            int start = matcher.start();
+            if (start > 0 && text.charAt(start - 1) == '&') {
+                matcher.appendReplacement(buffer, Matcher.quoteReplacement(matcher.group()));
+                continue;
+            }
+            matcher.appendReplacement(buffer, "&#" + matcher.group(1));
+        }
+        matcher.appendTail(buffer);
+        return buffer.toString();
+    }
+
     public static Component component(String text) {
-        return LEGACY.deserialize(colorize(text));
+        String colored = colorize(text);
+        if (!colored.startsWith("§r")) {
+            colored = "§r" + colored;
+        }
+        return LEGACY.deserialize(colored).decoration(TextDecoration.ITALIC, false);
+    }
+
+    public static String plainText(Component component) {
+        return net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText().serialize(component);
+    }
+
+    public static String plainText(String text) {
+        return plainText(component(text));
+    }
+
+    public static void sendActionBar(Player player, String message) {
+        player.sendActionBar(component(message));
+    }
+
+    public static void showTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+        player.showTitle(Title.title(
+                component(title),
+                component(subtitle == null ? "" : subtitle),
+                Title.Times.times(
+                        Duration.ofMillis(fadeIn * 50L),
+                        Duration.ofMillis(stay * 50L),
+                        Duration.ofMillis(fadeOut * 50L)
+                )
+        ));
     }
 
     public static String get(String path) {
@@ -78,14 +126,14 @@ public final class MessageUtil {
     }
 
     public static void send(CommandSender sender, String path) {
-        sender.sendMessage(get(path));
+        sender.sendMessage(component(get(path)));
     }
 
     public static void sendRaw(CommandSender sender, String message) {
-        sender.sendMessage(colorize(message));
+        sender.sendMessage(component(message));
     }
 
     public static void sendFormatted(Player player, String message) {
-        player.sendMessage(format(message, player));
+        player.sendMessage(component(format(message, player)));
     }
 }

@@ -12,6 +12,7 @@ whitelist:
   - "tell"
   - "r"
   - "help"
+  - "fly"
   - "shardedlobbycore"
   - "slc"
   - "ajparkour"

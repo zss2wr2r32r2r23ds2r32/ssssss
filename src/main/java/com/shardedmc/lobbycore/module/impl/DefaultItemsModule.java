@@ -64,11 +64,18 @@ public class DefaultItemsModule implements Module, Listener {
         }
 
         for (Map.Entry<String, ConfigurationSection> entry : items.entrySet()) {
+            if ("player-visibility".equals(entry.getKey())) {
+                continue;
+            }
             ConfigurationSection itemSection = entry.getValue();
             int slot = itemSection.getInt("slot", 0);
             ItemStack item = ItemBuilder.fromConfig(itemSection, player);
             player.getInventory().setItem(slot, item);
         }
+    }
+
+    public ConfigurationSection getItemSection(String key) {
+        return items.get(key);
     }
 
     @EventHandler
@@ -94,18 +101,28 @@ public class DefaultItemsModule implements Module, Listener {
             return;
         }
 
-        for (ConfigurationSection itemSection : items.values()) {
+        for (Map.Entry<String, ConfigurationSection> entry : items.entrySet()) {
+            ConfigurationSection itemSection = entry.getValue();
             Material material = Material.matchMaterial(itemSection.getString("material", "STONE"));
             String name = itemSection.getString("name");
-            if (material != null && hand.getType() == material && ItemBuilder.matchesName(hand, MessageUtil.format(name, player))) {
-                if (itemSection.isList("actions")) {
-                    for (String action : itemSection.getStringList("actions")) {
-                        executeAction(player, action);
-                    }
-                    event.setCancelled(true);
-                }
-                return;
+            if (material == null || !ItemBuilder.matchesMaterial(hand, material)) {
+                continue;
             }
+            if (name != null && !ItemBuilder.matchesName(hand, MessageUtil.format(name, player))) {
+                continue;
+            }
+
+            if ("player-visibility".equals(entry.getKey())) {
+                continue;
+            }
+
+            if (itemSection.isList("actions")) {
+                for (String action : itemSection.getStringList("actions")) {
+                    executeAction(player, action);
+                }
+                event.setCancelled(true);
+            }
+            return;
         }
     }
 
@@ -117,8 +134,13 @@ public class DefaultItemsModule implements Module, Listener {
         } else if (action.startsWith("[CONSOLE]")) {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), action.substring(9).trim().replace("%player%", player.getName()));
         } else if (action.startsWith("[OPEN_MENU]")) {
-            // Reserved for future GUI menus
-            MessageUtil.sendFormatted(player, action.substring(11).trim());
+            String menuId = action.substring(11).trim();
+            if ("server-selector".equals(menuId)) {
+                ServerSelectorModule selector = (ServerSelectorModule) plugin.getModuleManager().getModule("server-selector");
+                if (selector != null) {
+                    selector.openMenu(player);
+                }
+            }
         }
     }
 }

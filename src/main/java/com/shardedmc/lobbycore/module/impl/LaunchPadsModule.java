@@ -3,7 +3,10 @@ package com.shardedmc.lobbycore.module.impl;
 import com.shardedmc.lobbycore.ShardedLobbyCore;
 import com.shardedmc.lobbycore.module.Module;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -37,8 +40,8 @@ public class LaunchPadsModule implements Module, Listener {
     public void enable(ShardedLobbyCore plugin, FileConfiguration config) {
         this.plugin = plugin;
         this.config = config;
-        if (plugin.getModuleManager().getModule("double-jump") != null) {
-            doubleJumpModule = (DoubleJumpModule) plugin.getModuleManager().getModule("double-jump");
+        if (plugin.getModuleManager().getModule("double-jump") instanceof DoubleJumpModule module) {
+            doubleJumpModule = module;
         }
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
@@ -51,23 +54,12 @@ public class LaunchPadsModule implements Module, Listener {
 
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
-        if (event.getTo() == null || event.getFrom().getBlock().equals(event.getTo().getBlock())) {
+        if (event.getTo() == null) {
             return;
         }
 
         Player player = event.getPlayer();
-        Material below = player.getLocation().subtract(0, 0.1, 0).getBlock().getType();
-        List<String> plates = config.getStringList("materials");
-
-        boolean isPlate = plates.stream()
-                .map(Material::matchMaterial)
-                .anyMatch(m -> m != null && m == below);
-
-        if (!isPlate && config.getBoolean("any-pressure-plate", true)) {
-            isPlate = below.name().endsWith("_PRESSURE_PLATE");
-        }
-
-        if (!isPlate) {
+        if (!isOnPressurePlate(player)) {
             return;
         }
 
@@ -87,5 +79,32 @@ public class LaunchPadsModule implements Module, Listener {
         }
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> cooldown.remove(uuid), config.getLong("cooldown-ticks", 10));
+    }
+
+    private boolean isOnPressurePlate(Player player) {
+        Block feet = player.getLocation().getBlock();
+        Block below = feet.getRelative(BlockFace.DOWN);
+        Block under = player.getLocation().subtract(0, 0.25, 0).getBlock();
+
+        return isPressurePlate(feet.getType()) ||
+                isPressurePlate(below.getType()) ||
+                isPressurePlate(under.getType());
+    }
+
+    private boolean isPressurePlate(Material material) {
+        if (material == null || material.isAir()) {
+            return false;
+        }
+
+        List<String> plates = config.getStringList("materials");
+        boolean listed = plates.stream()
+                .map(Material::matchMaterial)
+                .anyMatch(m -> m != null && m == material);
+
+        if (listed) {
+            return true;
+        }
+
+        return config.getBoolean("any-pressure-plate", true) && material.name().endsWith("_PRESSURE_PLATE");
     }
 }

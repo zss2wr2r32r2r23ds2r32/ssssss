@@ -10,12 +10,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.*;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 
 public class WorldProtectionModule implements Module, Listener {
@@ -45,11 +46,40 @@ public class WorldProtectionModule implements Module, Listener {
         HandlerList.unregisterAll(this);
     }
 
+    private boolean isInPvp(Player player) {
+        PvpModule pvp = (PvpModule) plugin.getModuleManager().getModule("pvp");
+        return pvp != null && pvp.isInPvp(player.getUniqueId());
+    }
+
+    private boolean bypassProtection(Player player) {
+        return player.hasPermission("shardedlobbycore.admin") || player.getGameMode() == GameMode.CREATIVE;
+    }
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageEvent event) {
-        if (config.getBoolean("disable-damage", true) && event.getEntity() instanceof Player) {
-            event.setCancelled(true);
+        if (!config.getBoolean("disable-damage", true) || !(event.getEntity() instanceof Player victim)) {
+            return;
         }
+
+        if (event instanceof EntityDamageByEntityEvent damageByEntity) {
+            Player attacker = resolveAttacker(damageByEntity);
+            if (attacker != null && isInPvp(victim) && isInPvp(attacker)) {
+                return;
+            }
+        }
+
+        event.setCancelled(true);
+    }
+
+    private Player resolveAttacker(EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof Player player) {
+            return player;
+        }
+        if (event.getDamager() instanceof org.bukkit.entity.Projectile projectile &&
+                projectile.getShooter() instanceof Player shooter) {
+            return shooter;
+        }
+        return null;
     }
 
     @EventHandler
@@ -61,33 +91,61 @@ public class WorldProtectionModule implements Module, Listener {
     }
 
     @EventHandler
-    public void onBreak(BlockBreakEvent event) {
-        if (config.getBoolean("disable-block-break", true) && !event.getPlayer().hasPermission("shardedlobbycore.admin")) {
+    public void onBreak(org.bukkit.event.block.BlockBreakEvent event) {
+        if (config.getBoolean("disable-block-break", true) && !bypassProtection(event.getPlayer())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
-    public void onPlace(BlockPlaceEvent event) {
-        if (config.getBoolean("disable-block-place", true) && !event.getPlayer().hasPermission("shardedlobbycore.admin")) {
+    public void onPlace(org.bukkit.event.block.BlockPlaceEvent event) {
+        if (config.getBoolean("disable-block-place", true) && !bypassProtection(event.getPlayer())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onDrop(PlayerDropItemEvent event) {
-        if (config.getBoolean("disable-item-drop", true) && event.getPlayer().getGameMode() != GameMode.CREATIVE) {
-            event.setCancelled(true);
+        if (!config.getBoolean("disable-item-drop", true)) {
+            return;
         }
+        Player player = event.getPlayer();
+        if (player.getGameMode() == GameMode.CREATIVE || bypassProtection(player)) {
+            return;
+        }
+        if (isInPvp(player) && config.getBoolean("allow-drop-in-pvp", false)) {
+            return;
+        }
+        event.setCancelled(true);
     }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (config.getBoolean("disable-inventory-move", false) && event.getWhoClicked() instanceof Player player) {
-            if (player.getGameMode() != GameMode.CREATIVE) {
-                event.setCancelled(true);
-            }
+        if (!config.getBoolean("disable-inventory-move", true) || !(event.getWhoClicked() instanceof Player player)) {
+            return;
         }
+        if (player.getGameMode() == GameMode.CREATIVE || bypassProtection(player)) {
+            return;
+        }
+        if (isInPvp(player) && config.getBoolean("allow-inventory-move-in-pvp", true)) {
+            return;
+        }
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onSwapHands(PlayerSwapHandItemsEvent event) {
+        if (!config.getBoolean("disable-inventory-move", true)) {
+            return;
+        }
+        Player player = event.getPlayer();
+        if (player.getGameMode() == GameMode.CREATIVE || bypassProtection(player)) {
+            return;
+        }
+        if (isInPvp(player) && config.getBoolean("allow-inventory-move-in-pvp", true)) {
+            return;
+        }
+        event.setCancelled(true);
     }
 
     @EventHandler
@@ -116,14 +174,14 @@ public class WorldProtectionModule implements Module, Listener {
     }
 
     @EventHandler
-    public void onBurn(BlockBurnEvent event) {
+    public void onBurn(org.bukkit.event.block.BlockBurnEvent event) {
         if (config.getBoolean("disable-fire-spread", true)) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
-    public void onSpread(BlockSpreadEvent event) {
+    public void onSpread(org.bukkit.event.block.BlockSpreadEvent event) {
         if (config.getBoolean("disable-fire-spread", true)) {
             event.setCancelled(true);
         }
