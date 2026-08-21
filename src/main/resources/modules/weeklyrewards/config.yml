@@ -1,41 +1,50 @@
-config-version: 1
+config-version: 2
 message-mode: chat
 cooldown-hours: 168
-spin-ticks: 40
-spin-format: '&6Weekly spin... &f%reward% &8[%rarity%&8]'
+picker-title: '&8Weekly Rewards'
+picker-size: 27
 
 sounds:
-  spin: UI_BUTTON_CLICK
   win: ENTITY_PLAYER_LEVELUP
 
 rewards:
   tokens_small:
     display: '500 Tokens'
-    rarity-label: 'Common &8[35%]'
-    weight: 35
+    rarity-label: 'Common'
+    rarity-color: '&7'
+    material: SUNFLOWER
+    slot: 11
     commands:
       - 'tokens give %player% 500'
   tokens_medium:
     display: '1500 Tokens'
-    rarity-label: 'Uncommon &8[25%]'
-    weight: 25
+    rarity-label: 'Uncommon'
+    rarity-color: '&a'
+    material: GOLD_INGOT
+    slot: 12
     commands:
       - 'tokens give %player% 1500'
   tokens_large:
     display: '3000 Tokens'
-    rarity-label: 'Rare &8[20%]'
-    weight: 20
+    rarity-label: 'Rare'
+    rarity-color: '&b'
+    material: DIAMOND
+    slot: 13
     commands:
       - 'tokens give %player% 3000'
   shard_key:
     display: '3 Shard Keys'
-    rarity-label: 'Epic &8[10%]'
-    weight: 10
+    rarity-label: 'Epic'
+    rarity-color: '&d'
+    material: PURPLE_CANDLE
+    slot: 14
     commands:
       - 'crate key give %player% shard 3'
   craft_week:
     display: '/craft for 7 days'
-    rarity-label: 'Legendary &8[10%]'
-    weight: 10
+    rarity-label: 'Legendary'
+    rarity-color: '&6'
+    material: CRAFTING_TABLE
+    slot: 15
     commands:
       - 'lp user %player% permission settemp sharded.craft.use true 7d'

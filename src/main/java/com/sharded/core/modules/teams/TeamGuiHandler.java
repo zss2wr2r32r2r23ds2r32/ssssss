@@ -1,7 +1,6 @@
 package com.sharded.core.modules.teams;
 
 import com.sharded.core.modules.leaderboards.LeaderboardsModule;
-import com.sharded.core.util.HeadUtil;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.Text;
@@ -176,12 +175,12 @@ final class TeamGuiHandler {
         }
 
         if (page > 0) {
-            inv.setItem(45, navItem(Material.ARROW, module.guiRaw("previous-name"), page - 1));
+            inv.setItem(45, navItem(Material.ARROW, module.guiRaw("previous-name")));
         }
         if (page < maxPage) {
-            inv.setItem(53, navItem(Material.ARROW, module.guiRaw("next-name"), page + 1));
+            inv.setItem(52, navItem(Material.ARROW, module.guiRaw("next-name")));
         }
-        inv.setItem(49, button(Material.ARROW, module.guiRaw("back-name"), List.of()));
+        inv.setItem(53, button(Material.ARROW, module.guiRaw("back-name"), List.of()));
         player.openInventory(inv);
     }
 
@@ -200,18 +199,15 @@ final class TeamGuiHandler {
                 Text.c(module.guiRaw("profile-title", "%team%", team.name())));
         fill(inv);
 
-        ItemStack icon = HeadUtil.textureHead(
-                "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjc2MWQxNjJmMmQ1ZjNkMjlkN2RiYzlkNDNmZTQ5NzlkMzEwM2M5ZmM2N2U5OGQ0MzU0NzVjNGQ3YzJiMzBlIn19fQ==");
-        inv.setItem(13, new ItemBuilder(icon)
-                .name(module.guiRaw("profile-item-name", "%team%", team.name()))
-                .lore(module.guiRawList("profile-item-lore",
+        inv.setItem(13, ownerHead(team.leaderUuid(),
+                module.guiRaw("profile-item-name", "%team%", team.name()),
+                module.guiRawList("profile-item-lore",
                         "%rank%", rankText,
                         "%count%", String.valueOf(module.database().getMembers(teamId).size()),
                         "%kills%", String.valueOf(stats.kills),
                         "%tokens%", String.valueOf(stats.tokens),
                         "%playtime%", module.formatPlaytime(stats.playtime),
-                        "%score%", String.valueOf(score)))
-                .build());
+                        "%score%", String.valueOf(score))));
         inv.setItem(22, button(Material.ARROW, module.guiRaw("back-name"), List.of()));
         player.openInventory(inv);
     }
@@ -276,7 +272,7 @@ final class TeamGuiHandler {
     }
 
     private void handleBrowseClick(Player player, TeamGuiHolder holder, int slot) {
-        if (slot == 49) {
+        if (slot == 53) {
             openMain(player);
             return;
         }
@@ -284,7 +280,7 @@ final class TeamGuiHandler {
             openBrowse(player, holder.page - 1);
             return;
         }
-        if (slot == 53) {
+        if (slot == 52) {
             openBrowse(player, holder.page + 1);
             return;
         }
@@ -311,20 +307,18 @@ final class TeamGuiHandler {
     private ItemStack browseItem(TeamDatabase.Team team) {
         int rank = teamRank(team.id());
         String rankText = rank > 0 ? String.valueOf(rank) : module.guiRaw("unranked");
-        ItemStack item = new ItemBuilder(Material.ALLAY_SPAWN_EGG)
-                .name(module.guiRaw("browse-entry-name", "%team%", team.name()))
-                .lore(module.guiRawList("browse-entry-lore",
+        ItemStack head = ownerHead(team.leaderUuid(),
+                module.guiRaw("browse-entry-name", "%team%", team.name()),
+                module.guiRawList("browse-entry-lore",
                         "%count%", String.valueOf(module.database().getMembers(team.id()).size()),
-                        "%rank%", rankText))
-                .build();
-        return module.tagTeamId(item, team.id());
+                        "%rank%", rankText));
+        return module.tagTeamId(head, team.id());
     }
 
-    private ItemStack navItem(Material mat, String name, int targetPage) {
-        ItemStack item = new ItemBuilder(mat).name(name)
+    private ItemStack navItem(Material mat, String name) {
+        return new ItemBuilder(mat).name(name)
                 .lore(List.of("", module.guiRaw("click-footer") + "To View"))
                 .build();
-        return module.tagPage(item, targetPage);
     }
 
     private int teamRank(int teamId) {

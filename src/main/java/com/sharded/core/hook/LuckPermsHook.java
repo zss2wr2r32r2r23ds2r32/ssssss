@@ -46,6 +46,19 @@ public final class LuckPermsHook {
         return meta(player, true);
     }
 
+    public String prefix(UUID uuid) {
+        if (!available) return "";
+        try {
+            User user = user(uuid);
+            if (user == null) return "";
+            CachedMetaData meta = user.getCachedData().getMetaData();
+            String value = meta.getPrefix();
+            return value == null ? "" : value;
+        } catch (Throwable t) {
+            return "";
+        }
+    }
+
     public String suffix(Player player) {
         return meta(player, false);
     }

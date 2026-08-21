@@ -58,6 +58,24 @@ public final class Text {
         return sb.toString().trim();
     }
 
+    /** Formats minutes as "2d 5h 13m". */
+    public static String formatPlaytime(long totalMinutes) {
+        if (totalMinutes <= 0) return "0m";
+        long days = totalMinutes / 1440;
+        long hours = (totalMinutes % 1440) / 60;
+        long mins = totalMinutes % 60;
+        StringBuilder sb = new StringBuilder();
+        if (days > 0) sb.append(days).append("d ");
+        if (hours > 0) sb.append(hours).append("h ");
+        if (mins > 0 || sb.isEmpty()) sb.append(mins).append("m");
+        return sb.toString().trim();
+    }
+
+    /** Converts Minecraft PLAY_ONE_MINUTE statistic ticks to whole minutes. */
+    public static long ticksToMinutes(long ticks) {
+        return Math.max(0L, ticks / 1200L);
+    }
+
     /** Pretty name for an enum-like key: "iron_ingot" -> "Iron Ingot". */
     public static String pretty(String key) {
         String[] parts = key.toLowerCase().replace('_', ' ').split(" ");

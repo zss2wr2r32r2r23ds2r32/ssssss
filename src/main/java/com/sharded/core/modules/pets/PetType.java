@@ -10,8 +10,7 @@ public enum PetType {
     PARROT("parrot", EntityType.PARROT, 0.55, false, false, false, true, null, null),
     AXOLOTL("axolotl", EntityType.AXOLOTL, 0.45, false, false, false, false, null, null),
     BEE("bee", EntityType.BEE, 0.45, false, false, false, false, null, null),
-    WARDEN("warden", EntityType.WARDEN, 0.35, false, false, true, false, null,
-            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDdhMzY5ZmM1Y2FkYjM2Y2Y4NzE5ZjNjYzMzNGE0NzNjNDg5YjNmNDEyNDY3YzJkMDU5ZWE1MDMzODQ2In19fQ=="),
+    HAPPY_GHAST("happy_ghast", EntityType.HAPPY_GHAST, 0.55, false, false, false, true, null, null),
     ALLAY("allay", EntityType.ALLAY, 0.65, false, false, false, true, null, null);
 
     private final String id;

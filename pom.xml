@@ -6,7 +6,7 @@
 
     <groupId>com.sharded</groupId>
     <artifactId>ShardedCore</artifactId>
-    <version>1.4.32</version>
+    <version>1.4.33</version>
     <packaging>jar</packaging>
 
     <name>ShardedCore</name>

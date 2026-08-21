@@ -300,12 +300,18 @@ commands:
     usage: /crate
     permission: sharded.crates.use
   roles:
-    description: Apply role permission bundle
-    usage: /roles <player> <role>
-    permission: sharded.roles.admin
+    description: Apply role permission bundle to yourself
+    usage: /role <rank>
+    aliases: [roles]
+    permission: sharded.role.use
+  role:
+    description: Apply role permission bundle to yourself
+    usage: /role <rank>
+    permission: sharded.role.use
   module:
-    description: Open the module manager
+    description: Disabled
     usage: /module
+    permission: sharded.modules.admin
   gtp:
     description: Teleport to a player
     usage: /gtp <player>
@@ -331,8 +337,11 @@ permissions:
   sharded.crates.use:
     description: Open crate preview menu
     default: true
+  sharded.role.use:
+    description: Apply a role bundle to yourself with /role
+    default: op
   sharded.roles.admin:
-    description: Apply role permission bundles
+    description: Apply role bundles to other players
     default: op
   sharded.admin:
     description: Access to /shardedcore reload
@@ -519,7 +528,7 @@ permissions:
     default: false
   sharded.pets.bee:
     default: false
-  sharded.pets.warden:
+  sharded.pets.happy_ghast:
     default: op
   sharded.pets.allay:
     default: op

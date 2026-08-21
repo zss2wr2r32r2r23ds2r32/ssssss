@@ -95,12 +95,12 @@ final class LeaderboardGuiHandler {
         inv.setItem(31, selfHead(player, type, selfRank, service.entries(type)));
 
         if (page > 0) {
-            inv.setItem(27, navItem(Material.ARROW, cfg.getString("gui.previous-name", "&ePrevious Page"), page - 1));
+            inv.setItem(30, navItem(Material.ARROW, cfg.getString("gui.previous-name", "&ePrevious Page")));
         }
         if (page < maxPage) {
-            inv.setItem(35, navItem(Material.ARROW, cfg.getString("gui.next-name", "&eNext Page"), page + 1));
+            inv.setItem(32, navItem(Material.ARROW, cfg.getString("gui.next-name", "&eNext Page")));
         }
-        inv.setItem(26, backItem());
+        inv.setItem(35, backItem());
         player.openInventory(inv);
     }
 
@@ -112,8 +112,7 @@ final class LeaderboardGuiHandler {
         holder.inventory = inv;
         fill(inv, 27);
 
-        inv.setItem(10, headItem(targetId, stats.name(),
-                lore(cfg, "gui.stats-head-lore", stats)));
+        inv.setItem(10, headItem(targetId, stats));
         inv.setItem(11, statItem("kills", Material.DIAMOND_SWORD, stats.kills()));
         inv.setItem(12, statItem("deaths", Material.SKELETON_SKULL, stats.deaths()));
         inv.setItem(14, statItem("killstreaks", Material.NETHERITE_SWORD, stats.bestStreak()));
@@ -131,9 +130,9 @@ final class LeaderboardGuiHandler {
                 if (type != null) openBoard(player, type, 0);
             }
             case BOARD -> {
-                if (slot == 26) openHub(player);
-                else if (slot == 27 && holder.page > 0) openBoard(player, holder.boardType, holder.page - 1);
-                else if (slot == 35) openBoard(player, holder.boardType, holder.page + 1);
+                if (slot == 35) openHub(player);
+                else if (slot == 30 && holder.page > 0) openBoard(player, holder.boardType, holder.page - 1);
+                else if (slot == 32) openBoard(player, holder.boardType, holder.page + 1);
             }
             case STATS -> {
                 if (slot == 26) player.closeInventory();
@@ -231,26 +230,35 @@ final class LeaderboardGuiHandler {
         );
     }
 
-    private ItemStack headItem(UUID uuid, String name, List<String> loreLines) {
+    private ItemStack headItem(UUID uuid, LeaderboardService.StatsSnapshot stats) {
         ItemStack head = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) head.getItemMeta();
         meta.setOwningPlayer(Bukkit.getOfflinePlayer(uuid));
-        meta.displayName(Text.c(cfg.getString("gui.stats-head-name", "&x&F&F&0&0&6&7%name%")
-                .replace("%name%", name)));
-        meta.lore(loreLines.stream().map(Text::c).toList());
+        String nameLine = cfg.getString("gui.stats-head-name", "&x&F&F&0&0&6&7%name%");
+        if (!stats.prefix().isBlank()) {
+            nameLine = stats.prefix() + stats.name();
+        } else {
+            nameLine = nameLine.replace("%name%", stats.name());
+        }
+        meta.displayName(Text.c(nameLine));
+        meta.lore(lore(cfg, "gui.stats-head-lore", stats).stream().map(Text::c).toList());
         head.setItemMeta(meta);
         return head;
     }
 
     private ItemStack statItem(String key, Material mat, long value) {
         String color = cfg.getString("gui.colors." + key, "&f");
-        String name = cfg.getString("gui.stats-items." + key + ".name", "&f" + key);
+        String label = cfg.getString("gui.labels." + key, key);
+        String formatted = "playtime".equals(key) ? service.formatValue("playtime", value) : String.valueOf(value);
+        String name = cfg.getString("gui.stats-items." + key + ".name", color + "&l" + label);
         List<String> lore = cfg.getStringList("gui.stats-items." + key + ".lore");
         if (lore.isEmpty()) {
             lore = List.of("&8Statistics", "", color + "Information:",
-                    color + "| &f" + cfg.getString("gui.labels." + key, key) + ": " + color + value);
+                    color + "| &f" + label + ": " + color + formatted);
         } else {
-            lore = lore.stream().map(l -> l.replace("%value%", String.valueOf(value))).toList();
+            lore = lore.stream()
+                    .map(l -> l.replace("%value%", formatted).replace("%color%", color))
+                    .toList();
         }
         return new ItemBuilder(mat).name(name).lore(lore).build();
     }
@@ -279,7 +287,7 @@ final class LeaderboardGuiHandler {
                 "", CLICK + "To View");
     }
 
-    private ItemStack navItem(Material mat, String name, int targetPage) {
+    private ItemStack navItem(Material mat, String name) {
         return new ItemBuilder(mat).name(name).lore(List.of("", CLICK + "To View")).build();
     }
 

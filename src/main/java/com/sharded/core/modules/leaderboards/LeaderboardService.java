@@ -8,6 +8,7 @@ import com.sharded.core.modules.teams.TeamsModule;
 import com.sharded.core.modules.tokens.TokenDatabase;
 import com.sharded.core.modules.tokens.TokensModule;
 import com.sharded.core.util.OfflinePlayers;
+import com.sharded.core.util.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
@@ -99,6 +100,7 @@ final class LeaderboardService {
             if (offline.getUniqueId() == null) continue;
             try {
                 long value = offline.getStatistic(stat);
+                if (stat == Statistic.PLAY_ONE_MINUTE) value = Text.ticksToMinutes(value);
                 if (value <= 0) continue;
                 out.add(new Entry(offline.getUniqueId().toString(), OfflinePlayers.name(offline.getUniqueId()), value, offline.getUniqueId()));
             } catch (IllegalStateException | UnsupportedOperationException ignored) {
@@ -142,24 +144,16 @@ final class LeaderboardService {
 
     String formatValue(String type, long value) {
         return switch (type.toLowerCase()) {
-            case "playtime", "time" -> formatMinutes(value);
+            case "playtime", "time" -> Text.formatPlaytime(value);
             default -> String.valueOf(value);
         };
-    }
-
-    private static String formatMinutes(long ticksOrMinutes) {
-        long minutes = ticksOrMinutes;
-        long hours = minutes / 60;
-        long mins = minutes % 60;
-        if (hours > 0) return hours + "h " + mins + "m";
-        return mins + "m";
     }
 
     StatsSnapshot statsFor(UUID uuid) {
         OfflinePlayer offline = Bukkit.getOfflinePlayer(uuid);
         long kills = safeStat(offline, Statistic.PLAYER_KILLS);
         long deaths = safeStat(offline, Statistic.DEATHS);
-        long playMinutes = safeStat(offline, Statistic.PLAY_ONE_MINUTE);
+        long playMinutes = Text.ticksToMinutes(safeStat(offline, Statistic.PLAY_ONE_MINUTE));
         long tokens = 0;
         TokensModule tokensModule = plugin.modules().get(TokensModule.class);
         if (tokensModule != null && tokensModule.service() != null) {
@@ -177,9 +171,7 @@ final class LeaderboardService {
                 if (team != null) teamName = team.name();
             }
         }
-        String prefix = "";
-        Player online = Bukkit.getPlayer(uuid);
-        if (online != null) prefix = plugin.luckPerms().prefix(online);
+        String prefix = plugin.luckPerms().prefix(uuid);
         return new StatsSnapshot(OfflinePlayers.name(uuid), prefix, kills, deaths, playMinutes, tokens, bestStreak, teamName);
     }
 

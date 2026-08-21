@@ -9,7 +9,7 @@ gui:
     playtime:
       slot: 11
       material: CLOCK
-      name: '&x&F&F&E&E&0&0&lHourly Playtime'
+      name: '&x&F&F&E&E&0&0&lHourly Playtime &7(#%rank%)'
       color: '&x&F&F&E&E&0&0'
       lore:
         - '&8Descriptions'

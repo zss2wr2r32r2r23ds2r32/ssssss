@@ -39,6 +39,7 @@ final class TokenMethodsGuiHandler {
         String click = module.configString("gui.click-footer",
                 "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View");
 
+        int rank = 1;
         for (Map.Entry<String, ConfigurationSection> entry : methods) {
             ConfigurationSection m = entry.getValue();
             int slot = m.getInt("slot", 13);
@@ -47,12 +48,18 @@ final class TokenMethodsGuiHandler {
             List<String> lore = new ArrayList<>();
             for (String line : m.getStringList("lore")) {
                 lore.add(line.replace("%click%", click)
-                        .replace("%amount%", String.valueOf(m.getLong("amount", 50L))));
+                        .replace("%amount%", String.valueOf(m.getLong("amount", 50L)))
+                        .replace("%rank%", String.valueOf(rank)));
+            }
+            String name = m.getString("name", entry.getKey());
+            if (!name.contains("#")) {
+                name = name + " &7(#" + rank + ")";
             }
             inv.setItem(slot, new ItemBuilder(mat)
-                    .name(m.getString("name", entry.getKey()))
+                    .name(name.replace("%rank%", String.valueOf(rank)))
                     .lore(lore)
                     .build());
+            rank++;
         }
         player.openInventory(inv);
     }

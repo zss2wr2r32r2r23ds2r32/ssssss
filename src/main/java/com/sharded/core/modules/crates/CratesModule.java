@@ -6,22 +6,34 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 
-import java.io.File;
-
-/** Crate preview/open hub (/crates). */
+/** ExcellentCrates crate preview/open hub (/crates). */
 public final class CratesModule extends Module implements CommandExecutor {
+
+    private CratesGuiHandler gui;
 
     public CratesModule(ShardedCore plugin) {
         super(plugin, "crates");
     }
 
+    ShardedCore plugin() {
+        return plugin;
+    }
+
     @Override
     protected void onEnable() {
         syncJarResource("gui.yml");
-        plugin.gui().loadMenu(new File(moduleFolder(), "gui.yml"), "crates");
+        gui = new CratesGuiHandler(this, plugin);
         registerCommand("crates", this);
         registerCommand("crate", this);
+    }
+
+    @Override
+    protected void onDisable() {
+        gui = null;
     }
 
     @Override
@@ -34,7 +46,16 @@ public final class CratesModule extends Module implements CommandExecutor {
             send(player, "no-permission");
             return true;
         }
-        plugin.gui().open(player, "crates");
+        gui.open(player);
         return true;
+    }
+
+    @EventHandler
+    public void onClick(InventoryClickEvent event) {
+        if (!(event.getWhoClicked() instanceof Player player)) return;
+        if (!(event.getView().getTopInventory().getHolder() instanceof CratesGuiHandler.Holder)) return;
+        event.setCancelled(true);
+        if (event.getClickedInventory() != event.getView().getTopInventory()) return;
+        gui.handleClick(player, event.getSlot(), event.getClick());
     }
 }

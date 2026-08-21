@@ -36,7 +36,7 @@ public final class ModulesAdminModule extends Module implements CommandExecutor 
 
     @Override
     protected void onEnable() {
-        registerCommand("module", this);
+        // Command removed — /module disabled
     }
 
     @Override

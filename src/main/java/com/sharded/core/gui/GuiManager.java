@@ -267,6 +267,9 @@ public final class GuiManager {
                         .replace("%tokens_formatted%", Numbers.format(bal))
                         .replace("%playerpoints_points%", String.valueOf(bal));
             }
+            if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+                out = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, out);
+            }
         }
         return applyLeaderboardPlaceholders(player, out);
     }

@@ -60,9 +60,7 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
     }
 
     String formatPlaytime(long ms) {
-        long hours = ms / 3_600_000L;
-        long minutes = (ms % 3_600_000L) / 60_000L;
-        return hours + "h " + minutes + "m";
+        return Text.formatPlaytime(ms / 60_000L);
     }
 
     String roleName(int role) {

@@ -24,6 +24,9 @@ public final class HeadUtil {
         if (value.equalsIgnoreCase("PLAYER_HEAD") || value.equalsIgnoreCase("%player_head%")) {
             return new ItemStack(Material.PLAYER_HEAD);
         }
+        if (value.regionMatches(true, 0, "basehead-", 0, 9)) {
+            return textureHead(value.substring(9).trim());
+        }
         if (value.regionMatches(true, 0, "head:", 0, 5)) {
             return namedHead(value.substring(5).trim());
         }
@@ -79,6 +82,7 @@ public final class HeadUtil {
         String lower = raw.toLowerCase(Locale.ROOT);
         return lower.equals("player_head")
                 || lower.equals("%player_head%")
+                || lower.startsWith("basehead-")
                 || lower.startsWith("head:")
                 || lower.startsWith("texture:")
                 || raw.startsWith("eyJ");
