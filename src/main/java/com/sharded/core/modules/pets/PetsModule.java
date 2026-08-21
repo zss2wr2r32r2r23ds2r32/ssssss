@@ -31,7 +31,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityMountEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.entity.Allay;
+import org.bukkit.entity.HappyGhast;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -163,24 +163,21 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onAllayInteract(PlayerInteractEntityEvent event) {
-        if (!(event.getRightClicked() instanceof Allay allay) || !isPet(allay)) return;
+    public void onPetInteract(PlayerInteractEntityEvent event) {
+        if (!isPet(event.getRightClicked())) return;
         event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onAllayInteractAt(PlayerInteractAtEntityEvent event) {
-        if (!(event.getRightClicked() instanceof Allay allay) || !isPet(allay)) return;
+    public void onPetInteractAt(PlayerInteractAtEntityEvent event) {
+        if (!isPet(event.getRightClicked())) return;
         event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onMount(EntityMountEvent event) {
-        if (isPet(event.getEntity()) && event.getMount() instanceof Player owner) {
-            UUID ownerId = petOwner(event.getEntity());
-            if (ownerId != null && ownerId.equals(owner.getUniqueId())) {
-                event.setCancelled(true);
-            }
+        if (isPet(event.getEntity())) {
+            event.setCancelled(true);
         }
     }
 
@@ -485,6 +482,9 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         if (entity instanceof Axolotl axolotl) {
             axolotl.setPlayingDead(false);
             axolotl.setVariant(PetType.parseAxolotlVariant(axolotlVariant));
+        }
+        if (entity instanceof HappyGhast ghast) {
+            ghast.setAI(false);
         }
     }
 

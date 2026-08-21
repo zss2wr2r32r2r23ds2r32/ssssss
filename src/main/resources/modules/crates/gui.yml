@@ -20,7 +20,6 @@ items:
       - 7
       - 8
       - 9
-      - 11
       - 16
       - 17
       - 18
@@ -36,7 +35,7 @@ items:
 
   keyallcrate:
     material: LIME_SHULKER_BOX
-    slot: 12
+    slot: 11
     display_name: '&x&6&0&F&F&0&0&lKEYALL &x&6&0&F&F&0&0Crate'
     lore:
       - '&8Description'
@@ -45,17 +44,17 @@ items:
       - '&x&6&0&F&F&0&0| &fLeft-Click To &x&6&0&F&F&0&0Preview'
       - '&x&6&0&F&F&0&0| &fRight-Click To &x&6&0&F&F&0&0Open'
       - ''
-      - '&x&6&0&F&F&0&0⚓ &fKeys: &x&6&0&F&F&0&0&n%excellentcrates_keys_keyall%'
+      - '&x&6&0&F&F&0&0⚓ &fKeys: &x&6&0&F&F&0&0&n%excellentcrates_keys_KEYALL%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open'
     left_click_commands:
-      - '[player] crates preview keyall'
+      - '[player] excellentcrates preview KEYALL'
     right_click_commands:
-      - '[player] crates open keyall'
+      - '[player] excellentcrates open KEYALL'
 
   killcrate:
     material: RED_SHULKER_BOX
-    slot: 13
+    slot: 12
     display_name: '&x&F&F&0&0&0&0&lKILL &x&F&F&0&0&0&0Crate'
     lore:
       - '&8Description'
@@ -64,37 +63,18 @@ items:
       - '&x&F&F&0&0&0&0| &fLeft-Click To &x&F&F&0&0&0&0Preview'
       - '&x&F&F&0&0&0&0| &fRight-Click To &x&F&F&0&0&0&0Open'
       - ''
-      - '&x&F&F&0&0&0&0⚓ &fKeys: &x&F&F&0&0&0&0&n%excellentcrates_keys_kill_crate%'
+      - '&x&F&F&0&0&0&0⚓ &fKeys: &x&F&F&0&0&0&0&n%excellentcrates_keys_KILL_CRATE%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open'
     left_click_commands:
-      - '[player] crates preview kill_crate'
+      - '[player] excellentcrates preview KILL_CRATE'
     right_click_commands:
-      - '[player] crates open kill_crate'
+      - '[player] excellentcrates open KILL_CRATE'
 
-  astralcrate:
-    material: BLUE_SHULKER_BOX
-    slot: 14
-    display_name: '&x&0&0&8&D&F&F&lASTRAL &x&0&0&8&D&F&FCrate'
-    lore:
-      - '&8Description'
-      - ''
-      - '&x&0&0&8&D&F&FInformation:'
-      - '&x&0&0&8&D&F&F| &fLeft-Click To &x&0&0&8&D&F&FPreview'
-      - '&x&0&0&8&D&F&F| &fRight-Click To &x&0&0&8&D&F&FOpen'
-      - ''
-      - '&x&0&0&8&D&F&F⚓ &fKeys: &x&0&0&8&D&F&F&n%excellentcrates_keys_vote_crate%'
-      - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open'
-    left_click_commands:
-      - '[player] crates preview vote_crate'
-    right_click_commands:
-      - '[player] crates open vote_crate'
-
-  cosmeticcrate:
+  shardcrate:
     material: PURPLE_SHULKER_BOX
-    slot: 15
-    display_name: '&x&7&5&0&0&F&F&lCOSMETIC &x&7&5&0&0&F&FCrate'
+    slot: 13
+    display_name: '&x&7&5&0&0&F&F&lSHARD &x&7&5&0&0&F&FCrate'
     lore:
       - '&8Description'
       - ''
@@ -102,13 +82,51 @@ items:
       - '&x&7&5&0&0&F&F| &fLeft-Click To &x&7&5&0&0&F&FPreview'
       - '&x&7&5&0&0&F&F| &fRight-Click To &x&7&5&0&0&F&FOpen'
       - ''
-      - '&x&7&5&0&0&F&F⚓ &fKeys: &x&7&5&0&0&F&F&n%excellentcrates_keys_cosmetics_crate%'
+      - '&x&7&5&0&0&F&F⚓ &fKeys: &x&7&5&0&0&F&F&n%excellentcrates_keys_SHARD%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open'
     left_click_commands:
-      - '[player] crates preview cosmetics_crate'
+      - '[player] excellentcrates preview SHARD'
     right_click_commands:
-      - '[player] crates open cosmetics_crate'
+      - '[player] excellentcrates open SHARD'
+
+  summercrate:
+    material: YELLOW_SHULKER_BOX
+    slot: 14
+    display_name: '&x&F&F&D&7&0&0&lSUMMER &x&F&F&D&7&0&0Crate'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&D&7&0&0Information:'
+      - '&x&F&F&D&7&0&0| &fLeft-Click To &x&F&F&D&7&0&0Preview'
+      - '&x&F&F&D&7&0&0| &fRight-Click To &x&F&F&D&7&0&0Open'
+      - ''
+      - '&x&F&F&D&7&0&0⚓ &fKeys: &x&F&F&D&7&0&0&n%excellentcrates_keys_SUMMER%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open'
+    left_click_commands:
+      - '[player] excellentcrates preview SUMMER'
+    right_click_commands:
+      - '[player] excellentcrates open SUMMER'
+
+  votecrate:
+    material: BLUE_SHULKER_BOX
+    slot: 15
+    display_name: '&x&0&0&8&D&F&F&lVOTE &x&0&0&8&D&F&FCrate'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&0&0&8&D&F&FInformation:'
+      - '&x&0&0&8&D&F&F| &fLeft-Click To &x&0&0&8&D&F&FPreview'
+      - '&x&0&0&8&D&F&F| &fRight-Click To &x&0&0&8&D&F&FOpen'
+      - ''
+      - '&x&0&0&8&D&F&F⚓ &fKeys: &x&0&0&8&D&F&F&n%excellentcrates_keys_VOTE_CRATE%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open'
+    left_click_commands:
+      - '[player] excellentcrates preview VOTE_CRATE'
+    right_click_commands:
+      - '[player] excellentcrates open VOTE_CRATE'
 
   store:
     material: PINK_HARNESS
@@ -124,10 +142,10 @@ items:
       - '&x&F&F&0&0&7&2| &fObtain Keyall Keys through &x&F&F&0&0&7&2Admins'
       - '&x&F&F&0&0&7&2| &fHosting Events &x&F&F&0&0&7&2/discord &ffor notifications'
       - ''
-      - '&x&F&F&0&0&7&2| &fObtain Astral Keys through different Crates'
+      - '&x&F&F&0&0&7&2| &fObtain Shard Keys through different Crates'
       - '&x&F&F&0&0&7&2| &fOr purchasing through &x&F&F&0&0&7&2/tokenshop'
       - ''
-      - '&x&F&F&0&0&7&2| &fObtain Cosmetic Keys through buying Ranks'
+      - '&x&F&F&0&0&7&2| &fObtain Vote Keys through voting'
       - '&x&F&F&0&0&7&2| &fOr purchasing through &x&F&F&0&0&7&2/tokenshop'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'

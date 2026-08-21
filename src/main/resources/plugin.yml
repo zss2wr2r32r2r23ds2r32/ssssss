@@ -308,10 +308,6 @@ commands:
     description: Apply role permission bundle to yourself
     usage: /role <rank>
     permission: sharded.role.use
-  module:
-    description: Disabled
-    usage: /module
-    permission: sharded.modules.admin
   gtp:
     description: Teleport to a player
     usage: /gtp <player>

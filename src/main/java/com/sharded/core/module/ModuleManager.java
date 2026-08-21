@@ -51,7 +51,6 @@ import com.sharded.core.modules.media.MediaModule;
 import com.sharded.core.modules.crates.CratesModule;
 import com.sharded.core.modules.roles.RolesModule;
 import com.sharded.core.modules.teams.TeamsModule;
-import com.sharded.core.modules.modulesadmin.ModulesAdminModule;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -115,7 +114,6 @@ public final class ModuleManager {
         register(new MediaModule(plugin));
         register(new CratesModule(plugin));
         register(new RolesModule(plugin));
-        register(new ModulesAdminModule(plugin));
     }
 
     private void register(Module module) {

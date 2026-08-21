@@ -3,7 +3,6 @@ package com.sharded.core.modules.roles;
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.util.TabCompleteHelper;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,7 +16,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-/** Apply LuckPerms role permission bundles (/role <rank> or /role <player> <rank>). */
+/** Apply LuckPerms role permission bundles (/role <rank> on yourself). */
 public final class RolesModule extends Module implements CommandExecutor, TabCompleter {
 
     public RolesModule(ShardedCore plugin) {
@@ -32,33 +31,20 @@ public final class RolesModule extends Module implements CommandExecutor, TabCom
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player player)) {
+            send(sender, "players-only");
+            return true;
+        }
         if (args.length < 1) {
             send(sender, "usage");
             return true;
         }
-
-        Player target;
-        String roleId;
-
-        if (args.length >= 2 && sender.hasPermission("sharded.roles.admin")) {
-            target = Bukkit.getPlayerExact(args[0]);
-            if (target == null) {
-                send(sender, "player-not-found", "%player%", args[0]);
-                return true;
-            }
-            roleId = args[1].toLowerCase(Locale.ROOT);
-        } else if (sender instanceof Player player) {
-            if (!player.hasPermission("sharded.role.use") && !player.hasPermission("sharded.roles.admin")) {
-                send(sender, "no-permission");
-                return true;
-            }
-            target = player;
-            roleId = args[0].toLowerCase(Locale.ROOT);
-        } else {
-            send(sender, "players-only");
+        if (!player.hasPermission("sharded.role.use") && !player.hasPermission("sharded.roles.admin")) {
+            send(sender, "no-permission");
             return true;
         }
 
+        String roleId = args[0].toLowerCase(Locale.ROOT);
         ConfigurationSection role = config.getConfigurationSection("roles." + roleId);
         if (role == null) {
             send(sender, "unknown-role", "%role%", roleId);
@@ -71,17 +57,13 @@ public final class RolesModule extends Module implements CommandExecutor, TabCom
 
         Set<String> perms = collectPermissions(roleId, role);
         String group = role.getString("luckperms-group", roleId);
-        plugin.luckPerms().runConsole("lp user " + target.getName() + " parent set " + group);
+        plugin.luckPerms().runConsole("lp user " + player.getName() + " parent set " + group);
         for (String perm : perms) {
             if (perm == null || perm.isBlank()) continue;
-            plugin.luckPerms().runConsole("lp user " + target.getName() + " permission set " + perm + " true");
+            plugin.luckPerms().runConsole("lp user " + player.getName() + " permission set " + perm + " true");
         }
-        send(sender, "applied", "%player%", target.getName(), "%role%", roleId, "%count%", String.valueOf(perms.size()));
-        if (!target.equals(sender)) {
-            send(target, "received", "%role%", roleId);
-        } else {
-            send(target, "received-self", "%role%", roleId);
-        }
+        send(player, "applied", "%player%", player.getName(), "%role%", roleId, "%count%", String.valueOf(perms.size()));
+        send(player, "received-self", "%role%", roleId);
         return true;
     }
 
@@ -124,17 +106,8 @@ public final class RolesModule extends Module implements CommandExecutor, TabCom
         }
         ConfigurationSection section = config.getConfigurationSection("roles");
         if (section == null) return List.of();
-        List<String> roles = new ArrayList<>(section.getKeys(false));
         if (args.length == 1) {
-            if (sender.hasPermission("sharded.roles.admin")) {
-                List<String> combined = new ArrayList<>(TabCompleteHelper.onlinePlayers(args[0]));
-                combined.addAll(TabCompleteHelper.filter(args[0], roles));
-                return combined;
-            }
-            return TabCompleteHelper.filter(args[0], roles);
-        }
-        if (args.length == 2 && sender.hasPermission("sharded.roles.admin")) {
-            return TabCompleteHelper.filter(args[1], roles);
+            return TabCompleteHelper.filter(args[0], new ArrayList<>(section.getKeys(false)));
         }
         return List.of();
     }

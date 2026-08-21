@@ -58,4 +58,3 @@ modules:
   media: true
   crates: true
   roles: true
-  modulesadmin: true
