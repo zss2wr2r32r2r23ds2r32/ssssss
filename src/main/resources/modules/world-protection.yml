@@ -1,0 +1,13 @@
+# World Protection Module
+
+enabled: true
+
+disable-hunger: true
+disable-damage: true
+disable-block-break: true
+disable-block-place: true
+disable-weather: true
+disable-item-drop: true
+disable-inventory-move: false
+disable-block-interact: true
+disable-fire-spread: true

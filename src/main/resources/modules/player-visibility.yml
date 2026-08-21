@@ -1,0 +1,22 @@
+# Player Visibility Module
+
+enabled: true
+
+item:
+  slot: 8
+  material: LIME_DYE
+  material-disabled: GRAY_DYE
+  name-enabled: "&aPLAYER VISIBILITY"
+  name-disabled: "&cPLAYER VISIBILITY"
+  lore-enabled:
+    - "&7CLICK TO HIDE PLAYERS."
+  lore-disabled:
+    - "&7CLICK TO SHOW PLAYERS."
+
+status:
+  enabled: "&7[ENABLED]"
+  disabled: "&7[DISABLED]"
+
+messages:
+  hidden: "&cAll players are now hidden."
+  shown: "&aAll players are now visible."

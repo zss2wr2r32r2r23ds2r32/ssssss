@@ -1,0 +1,9 @@
+# Parkour Module
+# Right-click the configured block to start parkour
+
+enabled: true
+
+block:
+  material: EMERALD_BLOCK
+
+command: "ajparkour start"

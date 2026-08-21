@@ -1,0 +1,44 @@
+# Join Messages Module
+
+enabled: true
+
+set-adventure-mode: true
+disable-vanilla-join-message: true
+
+first-join:
+  enabled: true
+  title:
+    enabled: true
+    text: "&a&lWelcome %player%!"
+    subtitle: "&7Use command &f/server <name> &7to get started"
+
+chat-message:
+  enabled: true
+  first-join:
+    - ""
+    - "&b&lShardedMC Network"
+    - ""
+    - "&aWelcome &f%player%&a!"
+    - "&7Use command: &f/server <name>"
+    - ""
+  returning:
+    - ""
+    - "&b&lShardedMC Network"
+    - ""
+    - "&7Welcome Back &f%player%"
+    - "&7Use command: &f/server <name>"
+    - ""
+
+broadcast-first-join:
+  enabled: true
+  message: "&a+ &7%player% &8(First Join)"
+
+broadcast-join:
+  enabled: false
+  message: "&a+ &7%player%"
+
+broadcast-quit:
+  enabled: false
+  message: "&c- &7%player%"
+
+disable-vanilla-quit-message: true

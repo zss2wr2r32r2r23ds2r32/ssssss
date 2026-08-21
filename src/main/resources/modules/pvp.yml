@@ -1,0 +1,58 @@
+# PvP Module
+# Hold the enter sword for 5 seconds to enter PvP
+# Switch slots cancels the timer
+# Hold the leave sword for 5 seconds to exit PvP
+
+enabled: true
+
+hold-seconds: 5
+
+enter-item:
+  material: DIAMOND_SWORD
+  name: "&c&lPVP SWORD"
+
+leave-item:
+  material: WOODEN_SWORD
+  name: "&a&lLEAVE PVP"
+
+messages:
+  entered: "&cYou entered PvP mode! Fight!"
+  left: "&aYou left PvP mode."
+
+kit:
+  armor:
+    helmet:
+      material: DIAMOND_HELMET
+    chestplate:
+      material: DIAMOND_CHESTPLATE
+    leggings:
+      material: DIAMOND_LEGGINGS
+    boots:
+      material: DIAMOND_BOOTS
+  items:
+    sword:
+      slot: 0
+      material: DIAMOND_SWORD
+      name: "&c&lPVP SWORD"
+      enchantments:
+        sharpness: 4
+      unbreakable: true
+    leave-sword:
+      slot: 1
+      material: WOODEN_SWORD
+      name: "&a&lLEAVE PVP"
+      lore:
+        - "&7Hold for &f5 seconds &7to leave PvP."
+      unbreakable: true
+    golden-apples:
+      slot: 2
+      material: GOLDEN_APPLE
+      amount: 8
+      name: "&6Golden Apples"
+    bow:
+      slot: 3
+      material: BOW
+      name: "&e&lPVP BOW"
+      enchantments:
+        infinity: 1
+      unbreakable: true

@@ -1,0 +1,19 @@
+# Command Whitelist Module
+# Only whitelisted commands can be used in the lobby
+# Supports regex patterns
+
+enabled: true
+
+whitelist:
+  - "server"
+  - "servers"
+  - "spawn"
+  - "msg"
+  - "tell"
+  - "r"
+  - "help"
+  - "shardedlobbycore"
+  - "slc"
+  - "ajparkour"
+
+message: "&cYou cannot use that command in the lobby."

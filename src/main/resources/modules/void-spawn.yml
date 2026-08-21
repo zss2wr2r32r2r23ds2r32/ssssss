@@ -1,0 +1,7 @@
+# Void Spawn Module
+# Teleports players to spawn when they fall below void-y
+
+enabled: true
+
+void-y: 0
+reset-fall-damage: true

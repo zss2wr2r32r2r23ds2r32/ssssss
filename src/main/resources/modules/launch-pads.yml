@@ -1,0 +1,16 @@
+# Launch Pads Module
+# Stepping on pressure plates launches you like double jump
+
+enabled: true
+
+any-pressure-plate: true
+
+materials:
+  - STONE_PRESSURE_PLATE
+  - OAK_PRESSURE_PLATE
+  - LIGHT_WEIGHTED_PRESSURE_PLATE
+  - HEAVY_WEIGHTED_PRESSURE_PLATE
+
+power: 1.5
+vertical-boost: 1.0
+cooldown-ticks: 10

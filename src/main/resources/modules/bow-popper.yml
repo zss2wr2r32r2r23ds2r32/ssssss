@@ -1,0 +1,14 @@
+# Bow Popper Module
+# Teleport wherever your arrow lands
+
+enabled: true
+
+cooldown-seconds: 5
+
+item:
+  material: BOW
+  name: "&d&lBOW POPPER"
+
+messages:
+  teleported: "&aTeleported to your arrow!"
+  cooldown: "&cWait %seconds%s before using Bow Popper again."

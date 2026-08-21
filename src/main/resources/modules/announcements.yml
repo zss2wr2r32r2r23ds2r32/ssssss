@@ -1,0 +1,12 @@
+# Announcements Module
+# Rotating server announcements
+
+enabled: true
+
+interval-seconds: 120
+prefix: "&8[&bAnnouncement&8] &r"
+
+messages:
+  - "&7Welcome to &bShardedMC&7! Use &f/server <name> &7to play."
+  - "&7Join our Discord at &bdiscord.gg/shardedmc"
+  - "&7Store: &bstore.shardedmc.com"

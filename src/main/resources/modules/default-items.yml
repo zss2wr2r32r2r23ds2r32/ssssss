@@ -1,0 +1,54 @@
+# Default Items Module
+# Items given to players on join - slot 4 is middle of hotbar (0-8)
+
+enabled: true
+give-on-join: true
+
+items:
+  server-selector:
+    slot: 4
+    material: COMPASS
+    amount: 1
+    name: "&b&lSERVER SELECTOR"
+    lore:
+      - "&7Right-click to open the"
+      - "&7server selection menu!"
+      - ""
+      - "&eClick to browse servers"
+    actions:
+      - "[MESSAGE] &b&lShardedMC Network"
+      - "[MESSAGE] &7Use command: &f/server <name>"
+      - "[COMMAND] server"
+
+  player-visibility:
+    slot: 8
+    material: LIME_DYE
+    amount: 1
+    name: "&aPLAYER VISIBILITY &7[ENABLED]"
+    lore:
+      - "&7Click to hide all players."
+
+  bow-popper:
+    slot: 1
+    material: BOW
+    amount: 1
+    name: "&d&lBOW POPPER"
+    lore:
+      - "&7Shoot an arrow and teleport"
+      - "&7wherever it lands!"
+      - ""
+      - "&75 second cooldown"
+    enchantments:
+      infinity: 1
+    unbreakable: true
+
+  pvp-sword:
+    slot: 0
+    material: DIAMOND_SWORD
+    amount: 1
+    name: "&c&lPVP SWORD"
+    lore:
+      - "&7Hold for &f5 seconds &7to enter PvP."
+      - ""
+      - "&cSharpness IV kit included!"
+    unbreakable: true

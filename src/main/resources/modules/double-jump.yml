@@ -1,0 +1,11 @@
+# Double Jump Module
+# Press jump again mid-air to launch in the direction you're looking
+
+enabled: true
+
+power: 1.2
+vertical-boost: 0.8
+play-sound: true
+
+messages:
+  used: ""

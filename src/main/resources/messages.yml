@@ -1,0 +1,6 @@
+# ShardedLobbyCore - Messages
+# Use & for color codes, %player% for player name
+
+no-permission: "&cYou do not have permission to do that."
+player-only: "&cThis command can only be used by players."
+reload-success: "&aAll configurations reloaded successfully."

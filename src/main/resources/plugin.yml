@@ -1,0 +1,45 @@
+name: ShardedLobbyCore
+version: '${project.version}'
+main: com.shardedmc.lobbycore.ShardedLobbyCore
+api-version: '1.20'
+authors: [ShardedMC]
+description: Modular, optimized lobby core plugin
+softdepend: [PlaceholderAPI]
+
+commands:
+  shardedlobbycore:
+    description: Main plugin command
+    aliases: [slc, shardedlobby]
+    permission: shardedlobbycore.admin
+  setspawn:
+    description: Set the lobby spawn point
+    permission: shardedlobbycore.setspawn
+  clearchat:
+    description: Clear the chat
+    permission: shardedlobbycore.clearchat
+  lockchat:
+    description: Lock or unlock the chat
+    permission: shardedlobbycore.lockchat
+
+permissions:
+  shardedlobbycore.admin:
+    description: Access to admin commands
+    default: op
+  shardedlobbycore.setspawn:
+    description: Set lobby spawn
+    default: op
+  shardedlobbycore.clearchat:
+    description: Clear chat
+    default: op
+  shardedlobbycore.lockchat:
+    description: Lock chat
+    default: op
+  shardedlobbycore.bypass.commandwhitelist:
+    description: Bypass command whitelist
+    default: op
+  shardedlobbycore.bypass.antiswear:
+    description: Bypass anti-swear
+    default: op
+  shardedlobbycore.chatprefix.*:
+    description: Chat prefix permissions
+    default: false
