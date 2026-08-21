@@ -1,4 +1,4 @@
-config-version: 6
+config-version: 7
 menu_title: Pets
 size: 27
 open_permission: sharded.pets.use
@@ -57,21 +57,21 @@ items:
     click_commands:
       - '[pet_equip_bee]'
 
-  happy_ghast:
-    material: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjRhY2U1YWI0YjlkN2U2OGVhMzNiMzYzNDE4NDljYjE1ZmI0OTY5NDVhMjExNGQ5ZDA4ZDY4M2E1Y2FmZDA4In19fQ=
+  bat:
+    material: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGNhNGExNjgyZWE1YWI3Y2NiZjE3ZjQ4NjU3YjJiY2Y5MzE5NzU2MzY5Y2Y4ODQ4M2E1N2E1YjE4In19fQ==
     slot: 16
-    permission: sharded.pets.happy_ghast
-    display_name: '&#FFB6C1&lHAPPY GHAST &#FFB6C1Pet'
+    permission: sharded.pets.bat
+    display_name: '&#8845EA&lBAT &#8845EA&lPet'
     lore:
       - '&8Description'
       - ''
-      - '&#FFB6C1Information:'
-      - '&#FFB6C1| &fClick to Apply'
-      - '&#FFB6C1| &#FFB6C1Happy Ghast &fPet'
+      - '&#8845EAInformation:'
+      - '&#8845EA| &fClick to Apply'
+      - '&#8845EA| &#8845EABat &fPet'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
     click_commands:
-      - '[pet_equip_happy_ghast]'
+      - '[pet_equip_bat]'
 
   allay:
     material: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWY1M2E4OWE5YjUxMTUzNTdiOTk4MzhlNWFiN2ZhYWQxODEzNzIyMWZjMjkzNDU2YWExNjJlY2EyZWMwMWVhYiJ9fX0=

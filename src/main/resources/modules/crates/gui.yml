@@ -20,6 +20,7 @@ items:
       - 7
       - 8
       - 9
+      - 10
       - 16
       - 17
       - 18
@@ -127,27 +128,3 @@ items:
       - '[player] excellentcrates preview VOTE_CRATE'
     right_click_commands:
       - '[player] excellentcrates open VOTE_CRATE'
-
-  store:
-    material: PINK_HARNESS
-    slot: 10
-    display_name: '&x&F&F&0&0&7&2&lHOW TO OBTAIN KEYS'
-    lore:
-      - '&8Description'
-      - ''
-      - '&x&F&F&0&0&7&2Information:'
-      - '&x&F&F&0&0&7&2| &fObtain Kill Keys Through &x&F&F&0&0&7&2Kill Streaks'
-      - '&x&F&F&0&0&7&2| &for either buying in &x&F&F&0&0&7&2/tokenshop'
-      - ''
-      - '&x&F&F&0&0&7&2| &fObtain Keyall Keys through &x&F&F&0&0&7&2Admins'
-      - '&x&F&F&0&0&7&2| &fHosting Events &x&F&F&0&0&7&2/discord &ffor notifications'
-      - ''
-      - '&x&F&F&0&0&7&2| &fObtain Shard Keys through different Crates'
-      - '&x&F&F&0&0&7&2| &fOr purchasing through &x&F&F&0&0&7&2/tokenshop'
-      - ''
-      - '&x&F&F&0&0&7&2| &fObtain Vote Keys through voting'
-      - '&x&F&F&0&0&7&2| &fOr purchasing through &x&F&F&0&0&7&2/tokenshop'
-      - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
-    left_click_commands:
-      - '[player] store'

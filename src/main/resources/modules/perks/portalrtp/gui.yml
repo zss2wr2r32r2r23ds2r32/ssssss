@@ -1,5 +1,5 @@
 menu_title: 'RTP'
-config-version: 3
+config-version: 4
 size: 27
 open_permission: sharded.rtp.use
 
@@ -9,12 +9,12 @@ open_commands:
 items:
   info_side:
     material: BLACK_STAINED_GLASS_PANE
-    slots: [0,1,2,3,4,5,6,7,8,9,10,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
+    slots: [0,1,2,3,4,5,6,7,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25]
     display_name: ' '
 
   overworld:
     material: GRASS_BLOCK
-    slot: 11
+    slot: 13
     display_name: '&#9FFF00&lOVERWORLD'
     lore:
       - '&8Description'

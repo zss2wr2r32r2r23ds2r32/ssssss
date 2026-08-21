@@ -8,7 +8,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-/** Apply LuckPerms role permission bundles (/role <rank> on yourself). */
+/** Sync ShardedCore role permission bundles to LuckPerms groups (/role <rank>). */
 public final class RolesModule extends Module implements CommandExecutor, TabCompleter {
 
     public RolesModule(ShardedCore plugin) {
@@ -31,16 +30,12 @@ public final class RolesModule extends Module implements CommandExecutor, TabCom
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player player)) {
-            send(sender, "players-only");
+        if (!sender.hasPermission("sharded.roles.admin")) {
+            send(sender, "no-permission");
             return true;
         }
         if (args.length < 1) {
             send(sender, "usage");
-            return true;
-        }
-        if (!player.hasPermission("sharded.role.use") && !player.hasPermission("sharded.roles.admin")) {
-            send(sender, "no-permission");
             return true;
         }
 
@@ -57,13 +52,11 @@ public final class RolesModule extends Module implements CommandExecutor, TabCom
 
         Set<String> perms = collectPermissions(roleId, role);
         String group = role.getString("luckperms-group", roleId);
-        plugin.luckPerms().runConsole("lp user " + player.getName() + " parent set " + group);
         for (String perm : perms) {
             if (perm == null || perm.isBlank()) continue;
-            plugin.luckPerms().runConsole("lp user " + player.getName() + " permission set " + perm + " true");
+            plugin.luckPerms().runConsole("lp group " + group + " permission set " + perm + " true");
         }
-        send(player, "applied", "%player%", player.getName(), "%role%", roleId, "%count%", String.valueOf(perms.size()));
-        send(player, "received-self", "%role%", roleId);
+        send(sender, "applied", "%role%", roleId, "%group%", group, "%count%", String.valueOf(perms.size()));
         return true;
     }
 
@@ -101,7 +94,7 @@ public final class RolesModule extends Module implements CommandExecutor, TabCom
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (!sender.hasPermission("sharded.role.use") && !sender.hasPermission("sharded.roles.admin")) {
+        if (!sender.hasPermission("sharded.roles.admin")) {
             return List.of();
         }
         ConfigurationSection section = config.getConfigurationSection("roles");

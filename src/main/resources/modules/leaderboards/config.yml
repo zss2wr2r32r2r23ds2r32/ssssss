@@ -1,4 +1,4 @@
-config-version: 1
+config-version: 2
 message-mode: chat
 fetch-limit: 5000
 
@@ -106,7 +106,7 @@ gui:
     - ''
     - '&x&F&F&0&0&6&7Information:'
     - '&x&F&F&0&0&6&7| &fRank: %prefix%'
-    - '&x&F&F&0&0&6&7| &fKills: &x&F&F&0&0&0&0%kills%'
+    - '&x&F&F&0&0&0&0| &fKills: &x&F&F&0&0&0&0%kills%'
     - '&x&0&0&B&7&F&F| &fDeaths: &x&0&0&B&7&F&F%deaths%'
     - '&x&F&F&0&0&5&D| &fBest Streak: &x&F&F&0&0&5&D%streak%'
     - '&x&5&C&9&4&F&C| &fTokens: &x&5&C&9&4&F&C%tokens%'

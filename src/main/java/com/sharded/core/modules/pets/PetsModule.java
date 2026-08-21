@@ -31,7 +31,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityMountEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.entity.HappyGhast;
+import org.bukkit.entity.Bat;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -97,6 +97,7 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         for (PetType type : PetType.values()) {
             plugin.gui().registerAction("pet_equip_" + type.id(), p -> equip(p, type, null));
         }
+        plugin.gui().registerAction("pet_equip_happy_ghast", p -> equip(p, PetType.BAT, null));
 
         registerCommand("pets", this);
         registerCommand("pet", this);
@@ -322,7 +323,8 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
     }
 
     private void equip(Player player, PetType type, String variant) {
-        if (!player.hasPermission(type.permission())) {
+        if (!player.hasPermission(type.permission())
+                && !(type == PetType.BAT && player.hasPermission("sharded.pets.happy_ghast"))) {
             send(player, "no-pet-permission", "%pet%", type.id());
             return;
         }
@@ -483,8 +485,8 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
             axolotl.setPlayingDead(false);
             axolotl.setVariant(PetType.parseAxolotlVariant(axolotlVariant));
         }
-        if (entity instanceof HappyGhast ghast) {
-            ghast.setAI(false);
+        if (entity instanceof Bat bat) {
+            bat.setAwake(true);
         }
     }
 

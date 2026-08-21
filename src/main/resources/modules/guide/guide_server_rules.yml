@@ -1,5 +1,5 @@
 menu_title: 'Server Rules'
-config-version: 2
+config-version: 3
 size: 27
 open_permission: sharded.guide.use
 
@@ -15,18 +15,35 @@ items:
   rules:
     material: BOOK
     slot: 13
-    display_name: 'Server Rules'
+    display_name: '&#FF69B4&lSERVER RULES'
     lore:
-      - '&7● &fNo Hacked Clients'
-      - '&7● &fNo Movement Mods'
-      - '&7● &fNo Inventory Mods'
-      - '&7● &fNo Health Indicators'
-      - '&7● &fNo Radar, ESP, or Freecam'
-      - '&7● &fNo Auto / Easy Place'
-      - '&7● &fNo Macros, Scripts, or Auto Clickers'
-      - '&7● &fNo Mouse Tweak Mods or Scrolling Exploits'
-      - '&7● &fNo Crafting Modifications'
+      - '&8Description'
       - ''
-      - '&fClick to go back'
+      - '&#FF69B4Information:'
+      - '&#FF69B4| &fNo Hacked Clients'
+      - '&#FF69B4| &fNo Movement Mods'
+      - '&#FF69B4| &fNo Inventory Mods'
+      - '&#FF69B4| &fNo Health Indicators'
+      - '&#FF69B4| &fNo Radar, ESP, or Freecam'
+      - '&#FF69B4| &fNo Auto / Easy Place'
+      - '&#FF69B4| &fNo Macros, Scripts, or Auto Clickers'
+      - '&#FF69B4| &fNo Mouse Tweak Mods or Scrolling Exploits'
+      - '&#FF69B4| &fNo Crafting Modifications'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Go Back'
+    click_commands:
+      - '[openguimenu] guide_rules'
+
+  back:
+    material: BARRIER
+    slot: 22
+    display_name: '&x&F&F&0&0&0&0&lBACK'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&0&0&0Information:'
+      - '&x&F&F&0&0&0&0| &fReturn to the rules menu.'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Go Back'
     click_commands:
       - '[openguimenu] guide_rules'

@@ -1,5 +1,5 @@
 menu_title: 'Chat Rules'
-config-version: 2
+config-version: 3
 size: 27
 open_permission: sharded.guide.use
 
@@ -15,18 +15,35 @@ items:
   rules:
     material: BOOK
     slot: 13
-    display_name: 'Chat Rules'
+    display_name: '&#55FFFF&lCHAT RULES'
     lore:
-      - '&7● &fNo Spamming'
-      - '&7● &fNo Harassment'
-      - '&7● &fNo Advertising'
-      - '&7● &fNo Discrimination or Hate Speech'
-      - '&7● &fNo Death Threats'
-      - '&7● &fNo Doxxing / Sharing Private Info'
-      - '&7● &fNo Impersonation'
-      - '&7● &fNo Ban Evasion'
-      - '&7● &fNo Lying to Staff'
+      - '&8Description'
       - ''
-      - '&fClick to go back'
+      - '&#55FFFFInformation:'
+      - '&#55FFFF| &fNo Spamming'
+      - '&#55FFFF| &fNo Harassment'
+      - '&#55FFFF| &fNo Advertising'
+      - '&#55FFFF| &fNo Discrimination or Hate Speech'
+      - '&#55FFFF| &fNo Death Threats'
+      - '&#55FFFF| &fNo Doxxing / Sharing Private Info'
+      - '&#55FFFF| &fNo Impersonation'
+      - '&#55FFFF| &fNo Ban Evasion'
+      - '&#55FFFF| &fNo Lying to Staff'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Go Back'
+    click_commands:
+      - '[openguimenu] guide_rules'
+
+  back:
+    material: BARRIER
+    slot: 22
+    display_name: '&x&F&F&0&0&0&0&lBACK'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&0&0&0Information:'
+      - '&x&F&F&0&0&0&0| &fReturn to the rules menu.'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Go Back'
     click_commands:
       - '[openguimenu] guide_rules'

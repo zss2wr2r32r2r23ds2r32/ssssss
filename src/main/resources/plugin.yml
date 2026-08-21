@@ -189,6 +189,7 @@ commands:
   rules:
     description: Open the server rules menu
     usage: /rules
+    permission: sharded.guide.use
   unmute:
     description: Unmute a player
     usage: /unmute <player>
@@ -300,14 +301,14 @@ commands:
     usage: /crate
     permission: sharded.crates.use
   roles:
-    description: Apply role permission bundle to yourself
+    description: Sync role permissions to a LuckPerms group
     usage: /role <rank>
     aliases: [roles]
-    permission: sharded.role.use
+    permission: sharded.roles.admin
   role:
-    description: Apply role permission bundle to yourself
+    description: Sync role permissions to a LuckPerms group
     usage: /role <rank>
-    permission: sharded.role.use
+    permission: sharded.roles.admin
   gtp:
     description: Teleport to a player
     usage: /gtp <player>
@@ -524,8 +525,11 @@ permissions:
     default: false
   sharded.pets.bee:
     default: false
+  sharded.pets.bat:
+    default: op
   sharded.pets.happy_ghast:
     default: op
+    description: Legacy alias for sharded.pets.bat
   sharded.pets.allay:
     default: op
   sharded.tempranks.use:
