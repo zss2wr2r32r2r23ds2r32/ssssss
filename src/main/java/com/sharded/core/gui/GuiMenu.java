@@ -52,9 +52,11 @@ public final class GuiMenu {
     private final boolean autoFill;
     private final Material fillerMaterial;
     private final String fillerName;
+    private final GuiNavigation navigation;
 
-    public GuiMenu(String id, YamlConfiguration yaml) {
+    public GuiMenu(String id, YamlConfiguration yaml, GuiNavigation navigation) {
         this.id = id;
+        this.navigation = navigation;
         this.title = yaml.getString("menu_title", id);
         this.size = Math.max(9, Math.min(54, yaml.getInt("size", 27)));
         this.openPermission = yaml.getString("open_permission", "");
@@ -77,7 +79,15 @@ public final class GuiMenu {
             ConfigurationSection item = section.getConfigurationSection(key);
             if (item == null) continue;
 
+            String navType = GuiNavigation.resolveNavType(key, item);
+            boolean navOverride = item.getBoolean("nav-override", false);
+
             String materialRaw = item.getString("material", "STONE");
+            if (navType != null && navigation != null && (navOverride || !item.contains("material"))) {
+                materialRaw = navigation.section(navType) != null
+                        ? navigation.section(navType).getString("material", materialRaw)
+                        : materialRaw;
+            }
             ItemStack stack = HeadUtil.parse(materialRaw);
             if (stack == null) stack = ItemsAdderHook.parseItem(materialRaw);
             if (stack == null) {
@@ -88,8 +98,19 @@ public final class GuiMenu {
             boolean viewerHead = HeadUtil.isViewerHeadMaterial(materialRaw);
 
             String name = item.getString("display_name", " ");
+            if (navType != null && navigation != null && navigation.section(navType) != null) {
+                if (navOverride || !item.contains("display_name") || name.isBlank()) {
+                    name = navigation.displayName(navType, null);
+                }
+            }
+
             List<String> lore = new ArrayList<>();
-            for (String line : item.getStringList("lore")) lore.add(line);
+            if (navType != null && navigation != null && navigation.section(navType) != null
+                    && (navOverride || item.getStringList("lore").isEmpty())) {
+                lore.addAll(navigation.lore(navType, null));
+            } else {
+                for (String line : item.getStringList("lore")) lore.add(line);
+            }
 
             if (!viewerHead) {
                 stack = new ItemBuilder(stack).name(name).lore(lore).hideAll().build();

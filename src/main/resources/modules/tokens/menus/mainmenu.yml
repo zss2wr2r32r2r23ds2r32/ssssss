@@ -321,12 +321,8 @@ items:
       - '[sound] UI_BUTTON_CLICK'
 
   close_menu:
-    material: BARRIER
+    nav-override: true
     slot: 31
-    display_name: '&x&F&F&0&0&0&0&lCLOSE'
-    lore:
-      - ''
-      - '&7Click to close the Token Shop.'
     click_commands:
       - '[sound] UI_BUTTON_CLICK'
       - '[close]'

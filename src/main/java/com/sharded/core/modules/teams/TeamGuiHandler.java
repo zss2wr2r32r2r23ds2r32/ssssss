@@ -1,5 +1,6 @@
 package com.sharded.core.modules.teams;
 
+import com.sharded.core.gui.GuiNavigation;
 import com.sharded.core.modules.leaderboards.LeaderboardsModule;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.OfflinePlayers;
@@ -150,7 +151,7 @@ final class TeamGuiHandler {
             inv.setItem(slot++, memberHead(member.uuid(), member.role(), false));
         }
 
-        inv.setItem(49, button(Material.ARROW, module.guiRaw("back-name"), List.of()));
+        inv.setItem(49, navButton("back"));
         player.openInventory(inv);
     }
 
@@ -175,12 +176,12 @@ final class TeamGuiHandler {
         }
 
         if (page > 0) {
-            inv.setItem(45, navItem(Material.ARROW, module.guiRaw("previous-name")));
+            inv.setItem(45, navButton("previous"));
         }
         if (page < maxPage) {
-            inv.setItem(52, navItem(Material.ARROW, module.guiRaw("next-name")));
+            inv.setItem(52, navButton("next"));
         }
-        inv.setItem(53, button(Material.ARROW, module.guiRaw("back-name"), List.of()));
+        inv.setItem(53, navButton("back"));
         player.openInventory(inv);
     }
 
@@ -208,7 +209,7 @@ final class TeamGuiHandler {
                         "%tokens%", String.valueOf(stats.tokens),
                         "%playtime%", module.formatPlaytime(stats.playtime),
                         "%score%", String.valueOf(score))));
-        inv.setItem(22, button(Material.ARROW, module.guiRaw("back-name"), List.of()));
+        inv.setItem(22, navButton("back"));
         player.openInventory(inv);
     }
 
@@ -315,10 +316,13 @@ final class TeamGuiHandler {
         return module.tagTeamId(head, team.id());
     }
 
-    private ItemStack navItem(Material mat, String name) {
-        return new ItemBuilder(mat).name(name)
-                .lore(List.of("", module.guiRaw("click-footer") + "To View"))
-                .build();
+    private ItemStack navButton(String type) {
+        GuiNavigation nav = module.plugin().guiNavigation();
+        if (nav == null) {
+            return new ItemBuilder(Material.BARRIER).name("&c" + type).build();
+        }
+        var override = module.teamConfig().getConfigurationSection("gui.navigation." + type);
+        return nav.build(type, override);
     }
 
     private int teamRank(int teamId) {

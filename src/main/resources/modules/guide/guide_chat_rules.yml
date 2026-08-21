@@ -35,15 +35,7 @@ items:
       - '[openguimenu] guide_rules'
 
   back:
-    material: BARRIER
+    nav-override: true
     slot: 22
-    display_name: '&x&F&F&0&0&0&0&lBACK'
-    lore:
-      - '&8Description'
-      - ''
-      - '&x&F&F&0&0&0&0Information:'
-      - '&x&F&F&0&0&0&0| &fReturn to the rules menu.'
-      - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Go Back'
     click_commands:
       - '[openguimenu] guide_rules'

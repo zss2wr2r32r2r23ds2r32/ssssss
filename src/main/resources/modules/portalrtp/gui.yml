@@ -32,8 +32,7 @@ items:
       - '[rtp_confirm]'
 
   cancel:
-    material: BARRIER
+    nav-override: true
     slot: 26
-    display_name: '&x&F&F&0&0&0&0&lCANCEL'
     click_commands:
       - '[close]'

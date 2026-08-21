@@ -192,10 +192,8 @@ public final class TagsModule extends Module implements CommandExecutor {
 
         if (limited || config.getBoolean("close-button.enabled", true)) {
             int closeSlot = limited ? config.getInt("limited-close-slot", 26) : config.getInt("close-button.slot", 26);
-            inventory.setItem(closeSlot, new ItemBuilder(Material.BARRIER)
-                    .name(config.getString("close-button.display-name", "&x&F&F&0&0&0&0&lCLOSE"))
-                    .hideAll()
-                    .build());
+            var navOverride = config.getConfigurationSection("close-button");
+            inventory.setItem(closeSlot, plugin.guiNavigation().build("close", navOverride));
         }
 
         player.openInventory(inventory);

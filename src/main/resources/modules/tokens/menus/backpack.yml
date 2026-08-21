@@ -7,9 +7,8 @@ open_permission: tokenshop.use
 items:
 
   back_button:
-    material: BARRIER
+    nav-override: true
     slot: 26
-    display_name: '&x&F&F&0&0&0&0&lBACK'
     left_click_commands:
       - '[openguimenu] mainmenu'
 

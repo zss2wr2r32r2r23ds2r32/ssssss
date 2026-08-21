@@ -158,15 +158,7 @@ items:
       - '[refresh] settings'
 
   close:
-    material: BARRIER
+    nav-override: true
     slot: 31
-    display_name: '&#FF0000&lCLOSE'
-    lore:
-      - '&8Description'
-      - ''
-      - '&#FF0000Information:'
-      - '&#FF0000| &fClick To Close Settings'
-      - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Close'
-    left_click_commands:
+    click_commands:
       - '[close]'

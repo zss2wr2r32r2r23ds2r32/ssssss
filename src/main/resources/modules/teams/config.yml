@@ -168,6 +168,9 @@ gui:
   previous-name: '&ePrevious Page'
   next-name: '&eNext Page'
 
+  navigation:
+    use-global: true
+
   members-title: '&8Members &f%team%'
   member-head-lore:
     - '&8Descriptions'

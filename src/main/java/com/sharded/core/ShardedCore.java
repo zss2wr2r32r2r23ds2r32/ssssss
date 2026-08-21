@@ -2,6 +2,7 @@ package com.sharded.core;
 
 import com.sharded.core.gui.GuiListener;
 import com.sharded.core.gui.GuiManager;
+import com.sharded.core.gui.GuiNavigation;
 import com.sharded.core.hook.LuckPermsHook;
 import com.sharded.core.hook.PlaceholderHook;
 import com.sharded.core.module.ModuleManager;
@@ -27,6 +28,7 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
     private PlaceholderHook placeholderHook;
     private PlayerStateStore stateStore;
     private GuiManager guiManager;
+    private GuiNavigation guiNavigation;
     private ModuleManager moduleManager;
     private CoreTabComplete coreTabComplete;
 
@@ -41,6 +43,7 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
         this.placeholderHook = new PlaceholderHook(this);
         getServer().getPluginManager().registerEvents(placeholderHook, this);
         this.stateStore = new PlayerStateStore(this);
+        this.guiNavigation = new GuiNavigation(this);
         this.guiManager = new GuiManager(this);
         this.coreTabComplete = new CoreTabComplete(this);
         getServer().getPluginManager().registerEvents(new GuiListener(guiManager), this);
@@ -75,6 +78,7 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
                 return true;
             }
             ConfigSync.syncMainConfig(this);
+            if (guiNavigation != null) guiNavigation.reload(this);
             moduleManager.reload();
             stateStore.saveNow();
             MessageUtil.deliver(sender, getConfig().getString("prefix", "&8[&bSharded&8] &r")
@@ -127,6 +131,10 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
 
     public GuiManager gui() {
         return guiManager;
+    }
+
+    public GuiNavigation guiNavigation() {
+        return guiNavigation;
     }
 
     public ModuleManager modules() {

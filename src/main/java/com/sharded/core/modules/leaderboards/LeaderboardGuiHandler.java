@@ -1,5 +1,6 @@
 package com.sharded.core.modules.leaderboards;
 
+import com.sharded.core.gui.GuiNavigation;
 import com.sharded.core.modules.teams.TeamsModule;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.OfflinePlayers;
@@ -95,12 +96,12 @@ final class LeaderboardGuiHandler {
         inv.setItem(31, selfHead(player, type, selfRank, service.entries(type)));
 
         if (page > 0) {
-            inv.setItem(30, navItem(Material.ARROW, cfg.getString("gui.previous-name", "&ePrevious Page")));
+            inv.setItem(30, navButton("previous"));
         }
         if (page < maxPage) {
-            inv.setItem(32, navItem(Material.ARROW, cfg.getString("gui.next-name", "&eNext Page")));
+            inv.setItem(32, navButton("next"));
         }
-        inv.setItem(35, backItem());
+        inv.setItem(35, navButton("back"));
         player.openInventory(inv);
     }
 
@@ -119,7 +120,7 @@ final class LeaderboardGuiHandler {
         inv.setItem(15, statItem("tokens", Material.SUNFLOWER, stats.tokens()));
         inv.setItem(16, statItem("playtime", Material.CLOCK, stats.playMinutes()));
         inv.setItem(13, teamItem(stats.team()));
-        inv.setItem(26, closeItem());
+        inv.setItem(26, navButton("close"));
         viewer.openInventory(inv);
     }
 
@@ -287,22 +288,13 @@ final class LeaderboardGuiHandler {
                 "", CLICK + "To View");
     }
 
-    private ItemStack navItem(Material mat, String name) {
-        return new ItemBuilder(mat).name(name).lore(List.of("", CLICK + "To View")).build();
-    }
-
-    private ItemStack backItem() {
-        return new ItemBuilder(Material.BARRIER)
-                .name(cfg.getString("gui.back-name", "&cBack"))
-                .lore(List.of("", CLICK + "To Go Back"))
-                .build();
-    }
-
-    private ItemStack closeItem() {
-        return new ItemBuilder(Material.BARRIER)
-                .name(cfg.getString("gui.close-name", "&cClose"))
-                .lore(List.of("", CLICK + "To Close"))
-                .build();
+    private ItemStack navButton(String type) {
+        GuiNavigation nav = module.plugin().guiNavigation();
+        if (nav == null) {
+            return new ItemBuilder(Material.BARRIER).name("&c" + type).build();
+        }
+        var override = cfg.getConfigurationSection("gui.navigation." + type);
+        return nav.build(type, override);
     }
 
     private List<String> lore(YamlConfiguration cfg, String path, LeaderboardService.StatsSnapshot stats) {

@@ -57,7 +57,7 @@ public final class GuiManager {
 
     public void loadMenu(File file, String id) {
         if (!file.exists()) return;
-        menus.put(id, new GuiMenu(id, YamlConfiguration.loadConfiguration(file)));
+        menus.put(id, new GuiMenu(id, YamlConfiguration.loadConfiguration(file), plugin.guiNavigation()));
     }
 
     public void loadFolder(File folder, String prefix) {
@@ -68,7 +68,7 @@ public final class GuiManager {
             YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
             if (!yaml.contains("menu_title")) continue;
             String id = prefix.isEmpty() ? file.getName().replace(".yml", "") : prefix + file.getName().replace(".yml", "");
-            menus.put(id, new GuiMenu(id, yaml));
+            menus.put(id, new GuiMenu(id, yaml, plugin.guiNavigation()));
         }
     }
 

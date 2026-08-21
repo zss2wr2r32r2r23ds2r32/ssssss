@@ -1,0 +1,52 @@
+config-version: 1
+
+# Global navigation button templates — used by Java GUIs and YAML menus (nav: back|previous|next|close).
+# Override per-menu with item lore/name, or set nav-override: true on a YAML item to force these defaults.
+
+back:
+  material: ARROW
+  display_name: '&#FF007B&lBACK'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#FF007BInformation:'
+    - '&#FF007B| &fClick here, to go'
+    - '&#FF007B| &fto the previous page.'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+
+previous:
+  material: ARROW
+  display_name: '&#FF007B&lPREVIOUS'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#FF007BInformation:'
+    - '&#FF007B| &fClick here, to go'
+    - '&#FF007B| &fto the previous page.'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+
+next:
+  material: ARROW
+  display_name: '&#45FF17&lNEXT'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#45FF17Information:'
+    - '&#45FF17| &fClick here, to go'
+    - '&#45FF17| &fto the next page.'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+
+close:
+  material: BARRIER
+  display_name: '&#45FF17&lCLOSE'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#45FF17Information:'
+    - '&#45FF17| &fClick here, to'
+    - '&#45FF17| &fclose this page.'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Close'

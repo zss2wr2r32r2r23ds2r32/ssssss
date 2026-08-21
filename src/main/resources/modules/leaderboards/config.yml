@@ -26,6 +26,8 @@ gui:
   next-name: '&eNext Page'
   back-name: '&cBack'
   close-name: '&cClose'
+  navigation:
+    use-global: true
   colors:
     tokens: '&x&5&C&9&4&F&C'
     kills: '&x&F&F&0&0&0&0'

@@ -7,9 +7,8 @@ open_permission: tokenshop.use
 items:
 
   back_button:
-    material: BARRIER
+    nav-override: true
     slot: 26
-    display_name: '&x&F&F&0&0&0&0&lBACK'
     left_click_commands:
       - '[openguimenu] mainmenu'
 
@@ -35,16 +34,15 @@ items:
   cosmetic_key:
     material: PURPLE_CANDLE
     slot: 11
-    display_name: '&x&7&5&0&0&F&F&lSHARD &x&7&5&0&0&F&FKey'
+    display_name: '&fShard Key'
     lore:
-      - '&8Descriptions'
+      - '&8Description'
       - ''
-      - '&x&7&5&0&0&F&FInformation:'
-      - '&x&7&5&0&0&F&F| &fPurchase a &x&7&5&0&0&F&FShard Key'
+      - '&7Purchase a Shard Key'
       - ''
-      - '&x&7&5&0&0&F&F⚓ &fCost: &x&7&5&0&0&F&F1000 Tokens'
+      - '&7Cost: &f1000 Tokens'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+      - '&eClick to purchase'
     left_click_commands:
       - '[tokens_take] 1000'
       - '[console] crate key give %player_name% shard 1'
