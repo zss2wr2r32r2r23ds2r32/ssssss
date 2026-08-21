@@ -29,6 +29,10 @@ public final class MessageUtil {
         plugin = pl;
     }
 
+    public static String getPrefix() {
+        return colorize(plugin.getConfig().getString("prefix", "&#00A2FF&lCORE &8▷ &r"));
+    }
+
     public static String colorize(String text) {
         if (text == null) {
             return "";
@@ -63,6 +67,25 @@ public final class MessageUtil {
         return buffer.toString();
     }
 
+    private static String applyPlaceholders(String text, Player player) {
+        if (text == null) {
+            return "";
+        }
+        String result = text.replace("%prefix%", getPrefix());
+        if (player != null) {
+            result = result.replace("%player%", player.getName());
+            if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                try {
+                    Class<?> papi = Class.forName("me.clip.placeholderapi.PlaceholderAPI");
+                    result = (String) papi.getMethod("setPlaceholders", Player.class, String.class).invoke(null, player, result);
+                } catch (ReflectiveOperationException ignored) {
+                    // PlaceholderAPI not present at runtime
+                }
+            }
+        }
+        return colorize(result);
+    }
+
     public static Component component(String text) {
         String colored = colorize(text);
         if (!colored.startsWith("§r")) {
@@ -80,13 +103,13 @@ public final class MessageUtil {
     }
 
     public static void sendActionBar(Player player, String message) {
-        player.sendActionBar(component(message));
+        player.sendActionBar(component(applyPlaceholders(message, player)));
     }
 
     public static void showTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
         player.showTitle(Title.title(
-                component(title),
-                component(subtitle == null ? "" : subtitle),
+                component(applyPlaceholders(title, player)),
+                component(applyPlaceholders(subtitle == null ? "" : subtitle, player)),
                 Title.Times.times(
                         Duration.ofMillis(fadeIn * 50L),
                         Duration.ofMillis(stay * 50L),
@@ -96,29 +119,16 @@ public final class MessageUtil {
     }
 
     public static String get(String path) {
-        String prefix = plugin.getConfig().getString("prefix", "&8[&bShardedLobbyCore&8] &r");
         String message = plugin.getConfigManager().getMessages().getString(path, path);
-        return colorize(prefix + message);
+        return applyPlaceholders(message, null);
     }
 
     public static String getRaw(String path) {
-        return colorize(plugin.getConfigManager().getMessages().getString(path, path));
+        return applyPlaceholders(plugin.getConfigManager().getMessages().getString(path, path), null);
     }
 
     public static String format(String text, Player player) {
-        if (text == null) {
-            return "";
-        }
-        String result = text.replace("%player%", player.getName());
-        if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            try {
-                Class<?> papi = Class.forName("me.clip.placeholderapi.PlaceholderAPI");
-                result = (String) papi.getMethod("setPlaceholders", Player.class, String.class).invoke(null, player, result);
-            } catch (ReflectiveOperationException ignored) {
-                // PlaceholderAPI not present at runtime
-            }
-        }
-        return colorize(result);
+        return applyPlaceholders(text, player);
     }
 
     public static List<String> formatLore(List<String> lore, Player player) {

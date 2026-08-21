@@ -1,6 +1,4 @@
 # Command Whitelist Module
-# Only whitelisted commands can be used in the lobby
-# Supports regex patterns
 
 enabled: true
 
@@ -17,4 +15,4 @@ whitelist:
   - "slc"
   - "ajparkour"
 
-message: "&cYou cannot use that command in the lobby."
+message: "%prefix% &cYou cannot use that command in the lobby."

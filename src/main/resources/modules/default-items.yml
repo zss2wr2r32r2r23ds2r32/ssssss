@@ -9,12 +9,11 @@ items:
     slot: 4
     material: COMPASS
     amount: 1
-    name: "&#AD4EFF&lSERVER SELECTOR"
+    name: "&#AD4EFF&lServer Selector &7[&7Right-click]"
     lore:
-      - "&7Right-click to open the"
-      - "&7server selection menu!"
+      - "&8Description"
       - ""
-      - "&#FFD900▷ &n&lCLICK&#FFD900 To Browse The Servers"
+      - "&7Server Selection menu!"
     actions:
       - "[OPEN_MENU] server-selector"
 
@@ -22,11 +21,11 @@ items:
     slot: 8
     material: LIME_DYE
     amount: 1
-    name: "&aPLAYER VISIBILITY &7[ENABLED]"
+    name: "&#94FF00Player Visability &7[ENABLED]"
     lore:
-      - "&7Right click me to hide players"
+      - "&8Description"
       - ""
-      - "&#FFD900▷ &n&lCLICK&#FFD900 To Hide Players"
+      - "&7Right click me to hide players"
 
   bow-popper:
     slot: 1
@@ -34,23 +33,18 @@ items:
     amount: 1
     name: "&d&lBOW POPPER"
     lore:
-      - "&7Shoot an arrow and teleport"
-      - "&7wherever it lands!"
+      - "&8Description"
       - ""
-      - "&75 second cooldown"
-      - "&#FFD900▷ &n&lHOLD&#FFD900 Right Click To Teleport"
+      - "&7Teleport where it lands"
     enchantments:
       infinity: 1
-    unbreakable: true
 
   pvp-sword:
     slot: 0
     material: DIAMOND_SWORD
     amount: 1
-    name: "&#FF0000&lPVP SWORD"
+    name: "&#FF0000&lPVP SWORD &7(Hold)"
     lore:
-      - "&7Hold for &f5 seconds &7to enter PvP."
+      - "&8Description"
       - ""
-      - "&cSharpness IV kit included!"
-      - "&#FFD900▷ &n&lHOLD&#FFD900 To Enter PvP Mode"
-    unbreakable: true
+      - "&7Hold To PVP"

@@ -31,7 +31,6 @@ public class ModuleManager {
         register(new DoubleJumpModule());
         register(new LaunchPadsModule());
         register(new JoinMessagesModule());
-        register(new AnnouncementsModule());
         register(new ChatPrefixModule());
         register(new VoidSpawnModule());
         register(new SpawnModule());

@@ -8,7 +8,7 @@ disable-vanilla-quit-message: true
 
 join-title:
   enabled: true
-  text: "&aWelcome %player%"
+  text: "&#AD4EFF&lWelcome &#AD4EFF%player%"
   subtitle: "&7Use command &f/server <name> &7to get started"
   admin-subtitle: "&7Use &f/fly &7to toggle flight"
   fade-in: 10
@@ -18,17 +18,10 @@ join-title:
 admin-fly:
   enabled: true
   permission: shardedlobbycore.fly
-  enable-on-join: true
+  enable-on-join: false
   messages:
-    enabled: "&aFlight enabled."
-    disabled: "&cFlight disabled."
-
-first-join:
-  enabled: true
-  title:
-    enabled: false
-    text: "Welcome to ShardedMC %player%"
-    subtitle: "&7Use command &f/server <name> &7to get started"
+    enabled: "%prefix% &aFlight enabled."
+    disabled: "%prefix% &cFlight disabled."
 
 chat-message:
   enabled: true

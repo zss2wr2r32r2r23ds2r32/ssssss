@@ -125,8 +125,20 @@ public class PvpModule implements Module, Listener {
             return false;
         }
         Material material = Material.matchMaterial(config.getString("enter-item.material", "DIAMOND_SWORD"));
-        return ItemBuilder.matchesMaterial(item, material) &&
-                ItemBuilder.matchesName(item, config.getString("enter-item.name", "&cPvP Sword"));
+        if (!ItemBuilder.matchesMaterial(item, material)) {
+            return false;
+        }
+        if (ItemBuilder.matchesName(item, config.getString("enter-item.name", "&cPvP Sword"))) {
+            return true;
+        }
+        DefaultItemsModule defaultItems = (DefaultItemsModule) plugin.getModuleManager().getModule("default-items");
+        if (defaultItems != null) {
+            var section = defaultItems.getItemSection("pvp-sword");
+            if (section != null && ItemBuilder.matchesName(item, section.getString("name"))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean isLeaveSword(ItemStack item) {

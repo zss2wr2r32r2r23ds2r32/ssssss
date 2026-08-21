@@ -1,9 +1,12 @@
 # Parkour Module
-# Right-click the configured block to start parkour
+# Click the configured block to start parkour (not an inventory item)
 
 enabled: true
 
 block:
   material: LIME_GLAZED_TERRACOTTA
+
+blocks:
+  - LIME_GLAZED_TERRACOTTA
 
 command: "ajparkour start"

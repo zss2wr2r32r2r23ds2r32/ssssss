@@ -12,6 +12,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.util.Vector;
 
 import java.util.HashSet;
@@ -45,6 +46,9 @@ public class DoubleJumpModule implements Module, Listener {
                 if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
                     continue;
                 }
+                if (isAdminFlying(player)) {
+                    continue;
+                }
                 if (player.isOnGround() || player.isInWater() || player.isClimbing()) {
                     hasJumped.remove(player.getUniqueId());
                     if (!player.getAllowFlight()) {
@@ -61,10 +65,18 @@ public class DoubleJumpModule implements Module, Listener {
         HandlerList.unregisterAll(this);
     }
 
+    private boolean isAdminFlying(Player player) {
+        JoinMessagesModule joinMessages = (JoinMessagesModule) plugin.getModuleManager().getModule("join-messages");
+        return joinMessages != null && joinMessages.isAdminFlying(player);
+    }
+
     @EventHandler
     public void onToggleFlight(PlayerToggleFlightEvent event) {
         Player player = event.getPlayer();
         if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+            return;
+        }
+        if (isAdminFlying(player)) {
             return;
         }
 
@@ -88,7 +100,9 @@ public class DoubleJumpModule implements Module, Listener {
             player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_BAT_TAKEOFF, 1f, 1.2f);
         }
 
-        MessageUtil.sendFormatted(player, config.getString("messages.used", "&aDouble jump!"));
+        if (!config.getString("messages.used", "").isEmpty()) {
+            MessageUtil.sendFormatted(player, config.getString("messages.used"));
+        }
     }
 
     public void performLaunch(Player player) {
@@ -112,5 +126,10 @@ public class DoubleJumpModule implements Module, Listener {
         if (player.isOnGround()) {
             hasJumped.remove(player.getUniqueId());
         }
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        hasJumped.remove(event.getPlayer().getUniqueId());
     }
 }

@@ -8,7 +8,11 @@ cooldown-seconds: 5
 item:
   material: BOW
   name: "&d&lBOW POPPER"
+  lore:
+    - "&8Description"
+    - ""
+    - "&7Teleport where it lands"
 
 messages:
-  teleported: "&aTeleported to your arrow!"
-  cooldown: "&cWait %seconds%s before using Bow Popper again."
+  teleported: "%prefix% &aTeleported to your arrow!"
+  cooldown: "%prefix% &cWait %seconds%s before using Bow Popper again."

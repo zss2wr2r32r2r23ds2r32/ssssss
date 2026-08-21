@@ -5,39 +5,59 @@ enabled: true
 
 gui:
   title: "&#AD4EFF&lSERVER SELECTOR"
-  rows: 3
+  rows: 4
 
 filler:
   material: GRAY_STAINED_GLASS_PANE
   name: " "
+  lore:
+    - "&7"
 
 servers:
-  lobby:
-    slot: 11
-    material: NETHER_STAR
-    name: "&#AD4EFF&lLOBBY"
+  shop:
+    slot: 10
+    material: EMERALD
+    name: "&#45FF17&lSHOP"
     lore:
-      - "&7You are already here!"
+      - "&8Description"
       - ""
-      - "&#FFD900▷ &n&lCLICK&#FFD900 To Stay"
-    command: "spawn"
+      - "&7Browse the network shop!"
+      - ""
+      - "&#FFD900▷ &n&lCLICK&#FFD900 To Open Shop"
+    command: "server shop"
 
   survival:
-    slot: 13
+    slot: 12
     material: GRASS_BLOCK
     name: "&#45FF17&lSURVIVAL"
     lore:
+      - "&8Description"
+      - ""
       - "&7Play survival with friends!"
       - ""
       - "&#FFD900▷ &n&lCLICK&#FFD900 To Join"
     command: "server survival"
 
-  skyblock:
-    slot: 15
-    material: GRASS_BLOCK
-    name: "&#4498DB&lSKYBLOCK"
+  events:
+    slot: 14
+    material: FIREWORK_ROCKET
+    name: "&#FFAA00&lEVENTS"
     lore:
-      - "&7Island skyblock gamemode!"
+      - "&8Description"
+      - ""
+      - "&7Join special network events!"
       - ""
       - "&#FFD900▷ &n&lCLICK&#FFD900 To Join"
-    command: "server skyblock"
+    command: "server events"
+
+  diamond-smp:
+    slot: 16
+    material: DIAMOND
+    name: "&#4498DB&lDIAMOND SMP"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Hardcore diamond SMP experience!"
+      - ""
+      - "&#FFD900▷ &n&lCLICK&#FFD900 To Join"
+    command: "server diasmp"

@@ -5,6 +5,7 @@ import com.shardedmc.lobbycore.module.Module;
 import com.shardedmc.lobbycore.util.ItemBuilder;
 import com.shardedmc.lobbycore.util.MessageUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -69,7 +70,7 @@ public class BowPopperModule implements Module, Listener {
         if (plugin.getCooldownManager().isOnCooldown(player.getUniqueId(), "bow-popper")) {
             event.setCancelled(true);
             long remaining = plugin.getCooldownManager().getRemainingSeconds(player.getUniqueId(), "bow-popper");
-            MessageUtil.sendFormatted(player, config.getString("messages.cooldown", "&cWait %seconds%s before using Bow Popper again.")
+            MessageUtil.sendFormatted(player, config.getString("messages.cooldown", "%prefix% &cWait %seconds%s before using Bow Popper again.")
                     .replace("%seconds%", String.valueOf(remaining)));
             return;
         }
@@ -93,18 +94,21 @@ public class BowPopperModule implements Module, Listener {
         long cooldown = config.getLong("cooldown-seconds", 5);
         plugin.getCooldownManager().setCooldown(player.getUniqueId(), "bow-popper", cooldown);
 
+        Location target = arrow.getLocation().clone();
+        target.setYaw(player.getLocation().getYaw());
+        target.setPitch(player.getLocation().getPitch());
+
         arrow.remove();
-        player.teleport(arrow.getLocation());
-        MessageUtil.sendFormatted(player, config.getString("messages.teleported", "&aTeleported to your arrow!"));
+        Bukkit.getScheduler().runTask(plugin, () -> player.teleport(target));
+
+        if (!config.getString("messages.teleported", "").isEmpty()) {
+            MessageUtil.sendFormatted(player, config.getString("messages.teleported"));
+        }
     }
 
     private boolean isBowPopperBow(Player player) {
-        ItemStack main = player.getInventory().getItemInMainHand();
-        ItemStack off = player.getInventory().getItemInOffHand();
-        if (isBowPopperItem(main)) {
-            return true;
-        }
-        return isBowPopperItem(off);
+        return isBowPopperItem(player.getInventory().getItemInMainHand()) ||
+                isBowPopperItem(player.getInventory().getItemInOffHand());
     }
 
     private boolean isBowPopperItem(ItemStack item) {
@@ -112,10 +116,12 @@ public class BowPopperModule implements Module, Listener {
             return false;
         }
 
-        Material configMaterial = Material.matchMaterial(config.getString("item.material", "BOW"));
-        if (ItemBuilder.matchesMaterial(item, configMaterial) &&
-                ItemBuilder.matchesName(item, config.getString("item.name", "&d&lBOW POPPER"))) {
-            return true;
+        if (config.isConfigurationSection("item")) {
+            Material material = Material.matchMaterial(config.getString("item.material", "BOW"));
+            if (ItemBuilder.matchesMaterial(item, material) &&
+                    ItemBuilder.matchesName(item, config.getString("item.name", "&d&lBOW POPPER"))) {
+                return true;
+            }
         }
 
         DefaultItemsModule defaultItems = (DefaultItemsModule) plugin.getModuleManager().getModule("default-items");

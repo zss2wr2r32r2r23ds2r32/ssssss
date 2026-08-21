@@ -2,25 +2,28 @@
 
 enabled: true
 
+cooldown-seconds: 3
+
 item:
   slot: 8
   material: LIME_DYE
   material-disabled: RED_DYE
-  name-enabled: "&aPLAYER VISIBILITY"
-  name-disabled: "&cPLAYER VISIBILITY"
+  name-enabled: "&#94FF00Player Visability"
+  name-disabled: "&#FF0000Player Visability"
   lore-enabled:
+    - "&8Description"
+    - ""
     - "&7Right click me to hide players"
-    - ""
-    - "&#FFD900▷ &n&lCLICK&#FFD900 To Hide Players"
   lore-disabled:
-    - "&7Right click me to show players"
+    - "&8Description"
     - ""
-    - "&#FFD900▷ &n&lCLICK&#FFD900 To Show Players"
+    - "&7Right click me to show players"
 
 status:
   enabled: "&7[ENABLED]"
   disabled: "&7[DISABLED]"
 
 messages:
-  hidden: "&cAll players are now hidden."
-  shown: "&aAll players are now visible."
+  hidden: "%prefix% &cAll players are now hidden."
+  shown: "%prefix% &aAll players are now visible."
+  cooldown: "%prefix% &cWait %seconds%s before toggling visibility again."

@@ -95,6 +95,10 @@ public class DefaultItemsModule implements Module, Listener {
             return;
         }
 
+        if (event.getClickedBlock() != null && isParkourBlock(event.getClickedBlock().getType())) {
+            return;
+        }
+
         Player player = event.getPlayer();
         ItemStack hand = event.getItem();
         if (hand == null) {
@@ -142,5 +146,10 @@ public class DefaultItemsModule implements Module, Listener {
                 }
             }
         }
+    }
+
+    private boolean isParkourBlock(org.bukkit.Material material) {
+        ParkourModule parkour = (ParkourModule) plugin.getModuleManager().getModule("parkour");
+        return parkour != null && parkour.isParkourBlock(material);
     }
 }

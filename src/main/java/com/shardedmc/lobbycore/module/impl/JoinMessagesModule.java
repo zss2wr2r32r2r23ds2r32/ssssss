@@ -17,12 +17,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class JoinMessagesModule implements Module, Listener, CommandExecutor {
 
     private ShardedLobbyCore plugin;
     private FileConfiguration config;
+    private final Set<UUID> adminFlying = new HashSet<>();
 
     @Override
     public String getId() {
@@ -47,10 +51,15 @@ public class JoinMessagesModule implements Module, Listener, CommandExecutor {
 
     @Override
     public void disable() {
+        adminFlying.clear();
         if (plugin.getCommand("fly") != null) {
             plugin.getCommand("fly").setExecutor(null);
         }
         HandlerList.unregisterAll(this);
+    }
+
+    public boolean isAdminFlying(Player player) {
+        return adminFlying.contains(player.getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -71,6 +80,8 @@ public class JoinMessagesModule implements Module, Listener, CommandExecutor {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onQuit(PlayerQuitEvent event) {
+        adminFlying.remove(event.getPlayer().getUniqueId());
+
         if (config.getBoolean("disable-vanilla-quit-message", true)) {
             event.quitMessage(null);
         }
@@ -83,26 +94,15 @@ public class JoinMessagesModule implements Module, Listener, CommandExecutor {
 
     private void sendJoinMessages(Player player, boolean firstJoin) {
         if (config.getBoolean("join-title.enabled", true)) {
-            String title = MessageUtil.format(config.getString("join-title.text", "&aWelcome %player%"), player);
+            String title = config.getString("join-title.text", "&#AD4EFF&lWelcome &#AD4EFF%player%");
             String subtitlePath = player.hasPermission(config.getString("admin-fly.permission", "shardedlobbycore.fly")) &&
                     config.getBoolean("admin-fly.enabled", true) ?
                     "join-title.admin-subtitle" : "join-title.subtitle";
-            String subtitle = MessageUtil.format(config.getString(subtitlePath, "&7Use &f/server <name> &7to get started"), player);
+            String subtitle = config.getString(subtitlePath, "&7Use &f/server <name> &7to get started");
             MessageUtil.showTitle(player, title, subtitle,
                     config.getInt("join-title.fade-in", 10),
                     config.getInt("join-title.stay", 60),
                     config.getInt("join-title.fade-out", 10));
-        } else if (firstJoin && config.getBoolean("first-join.enabled", true) &&
-                config.getBoolean("first-join.title.enabled", true)) {
-            String title = MessageUtil.format(config.getString("first-join.title.text", "&aWelcome %player%!"), player);
-            String subtitle = MessageUtil.format(config.getString("first-join.title.subtitle", "&7Use &f/server <name> &7to get started"), player);
-            MessageUtil.showTitle(player, title, subtitle, 10, 60, 10);
-        }
-
-        if (config.getBoolean("admin-fly.enabled", true) &&
-                player.hasPermission(config.getString("admin-fly.permission", "shardedlobbycore.fly")) &&
-                config.getBoolean("admin-fly.enable-on-join", true)) {
-            player.setAllowFlight(true);
         }
 
         if (config.getBoolean("chat-message.enabled", true)) {
@@ -140,12 +140,18 @@ public class JoinMessagesModule implements Module, Listener, CommandExecutor {
             return true;
         }
 
-        boolean flying = !player.isFlying();
-        player.setAllowFlight(true);
-        player.setFlying(flying);
-        MessageUtil.sendFormatted(player, flying ?
-                config.getString("admin-fly.messages.enabled", "&aFlight enabled.") :
-                config.getString("admin-fly.messages.disabled", "&cFlight disabled."));
+        UUID uuid = player.getUniqueId();
+        if (adminFlying.contains(uuid)) {
+            adminFlying.remove(uuid);
+            player.setFlying(false);
+            player.setAllowFlight(false);
+            MessageUtil.sendFormatted(player, config.getString("admin-fly.messages.disabled", "%prefix% &cFlight disabled."));
+        } else {
+            adminFlying.add(uuid);
+            player.setAllowFlight(true);
+            player.setFlying(true);
+            MessageUtil.sendFormatted(player, config.getString("admin-fly.messages.enabled", "%prefix% &aFlight enabled."));
+        }
         return true;
     }
 }

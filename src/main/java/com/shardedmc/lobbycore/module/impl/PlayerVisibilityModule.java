@@ -90,6 +90,18 @@ public class PlayerVisibilityModule implements Module, Listener {
 
         event.setCancelled(true);
         Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
+
+        if (plugin.getCooldownManager().isOnCooldown(uuid, "player-visibility")) {
+            long remaining = plugin.getCooldownManager().getRemainingSeconds(uuid, "player-visibility");
+            MessageUtil.sendFormatted(player, config.getString("messages.cooldown", "%prefix% &cWait %seconds%s before toggling visibility again.")
+                    .replace("%seconds%", String.valueOf(remaining)));
+            return;
+        }
+
+        long cooldownSeconds = config.getLong("cooldown-seconds", 3);
+        plugin.getCooldownManager().setCooldown(uuid, "player-visibility", cooldownSeconds);
+
         toggleVisibility(player);
         updateItem(player);
     }
@@ -102,11 +114,11 @@ public class PlayerVisibilityModule implements Module, Listener {
         if (hiddenPlayers.contains(player.getUniqueId())) {
             hiddenPlayers.remove(player.getUniqueId());
             showAllPlayers(player);
-            MessageUtil.sendFormatted(player, config.getString("messages.shown", "&aAll players are now visible."));
+            MessageUtil.sendFormatted(player, config.getString("messages.shown", "%prefix% &aAll players are now visible."));
         } else {
             hiddenPlayers.add(player.getUniqueId());
             hideAllPlayers(player);
-            MessageUtil.sendFormatted(player, config.getString("messages.hidden", "&cAll players are now hidden."));
+            MessageUtil.sendFormatted(player, config.getString("messages.hidden", "%prefix% &cAll players are now hidden."));
         }
     }
 
