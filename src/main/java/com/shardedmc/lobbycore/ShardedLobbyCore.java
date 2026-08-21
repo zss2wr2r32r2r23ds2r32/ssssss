@@ -30,7 +30,7 @@ public final class ShardedLobbyCore extends JavaPlugin {
         spawnManager.load();
         moduleManager.loadModules();
 
-        getLogger().info("ShardedLobbyCore enabled with " + moduleManager.getEnabledCount() + " modules.");
+        getLogger().info("ShardedLobbyCore v" + getDescription().getVersion() + " enabled with " + moduleManager.getEnabledCount() + " modules.");
     }
 
     @Override

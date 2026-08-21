@@ -26,7 +26,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length == 0) {
-            MessageUtil.sendRaw(sender, "&bShardedLobbyCore &7v" + plugin.getDescription().getVersion());
+            MessageUtil.sendRaw(sender, MessageUtil.getPrefix() + " &7ShardedLobbyCore &8v" + plugin.getDescription().getVersion());
             MessageUtil.sendRaw(sender, "&7/shardedlobbycore reload &8- &fReload all configs");
             return true;
         }

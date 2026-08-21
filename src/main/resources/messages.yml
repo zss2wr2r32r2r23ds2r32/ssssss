@@ -3,4 +3,4 @@
 
 no-permission: "%prefix% &cYou do not have permission to do that."
 player-only: "%prefix% &cThis command can only be used by players."
-reload-success: "%prefix% &aAll configurations reloaded successfully."
+reload-success: "%prefix% &aAll configurations reloaded successfully. &7(v%version%)"

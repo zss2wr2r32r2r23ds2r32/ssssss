@@ -72,6 +72,7 @@ public final class MessageUtil {
             return "";
         }
         String result = text.replace("%prefix%", getPrefix());
+        result = result.replace("%version%", plugin.getDescription().getVersion());
         if (player != null) {
             result = result.replace("%player%", player.getName());
             if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
