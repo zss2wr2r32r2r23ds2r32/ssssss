@@ -130,7 +130,7 @@ public final class WardrobeModule extends Module implements CommandExecutor {
     }
 
     public void openMenu(Player player) {
-        int rows = config.getInt("menu-rows", 4);
+        int rows = config.getInt("menu-rows", 3);
         Inventory inventory = plugin.getServer().createInventory(new MenuHolder(), rows * 9, Text.c(MENU_TITLE));
         Material fillerMat = Material.matchMaterial(config.getString("filler-material", "BLACK_STAINED_GLASS_PANE"));
         if (fillerMat == null) fillerMat = Material.BLACK_STAINED_GLASS_PANE;

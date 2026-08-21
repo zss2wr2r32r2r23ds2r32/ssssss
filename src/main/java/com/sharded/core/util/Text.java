@@ -44,6 +44,20 @@ public final class Text {
         return sb.toString().trim();
     }
 
+    /** Formats seconds as "2d 5h" or "3h 20m" — days first when >= 1 day. */
+    public static String timeDaysHours(long seconds) {
+        if (seconds <= 0) return "0m";
+        long d = seconds / 86400;
+        long h = (seconds % 86400) / 3600;
+        long m = (seconds % 3600) / 60;
+        StringBuilder sb = new StringBuilder();
+        if (d > 0) sb.append(d).append("d ");
+        if (h > 0) sb.append(h).append("h ");
+        if (m > 0 && d == 0) sb.append(m).append("m ");
+        if (sb.isEmpty()) sb.append("1m");
+        return sb.toString().trim();
+    }
+
     /** Pretty name for an enum-like key: "iron_ingot" -> "Iron Ingot". */
     public static String pretty(String key) {
         String[] parts = key.toLowerCase().replace('_', ' ').split(" ");

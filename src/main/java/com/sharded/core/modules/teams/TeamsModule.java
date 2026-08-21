@@ -2,14 +2,17 @@ package com.sharded.core.modules.teams;
 
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
-import com.sharded.core.util.ConfigSync;
 import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
 import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -23,8 +26,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
-import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -33,6 +36,8 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
 
     private TeamDatabase database;
     private TeamGuiHandler guiHandler;
+    private NamespacedKey teamItemKey;
+    private NamespacedKey pageItemKey;
     private final Set<UUID> teamChatMode = ConcurrentHashMap.newKeySet();
     private final Set<UUID> awaitingTeamName = ConcurrentHashMap.newKeySet();
     private final Map<UUID, Long> onlineSince = new ConcurrentHashMap<>();
@@ -84,9 +89,51 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
             throw new IllegalStateException("Could not open teams database", e);
         }
 
+        teamItemKey = new NamespacedKey(plugin, "team_id");
+        pageItemKey = new NamespacedKey(plugin, "team_page");
         guiHandler = new TeamGuiHandler(this);
         registerCommand("team", this);
         registerCommand("teams", this);
+    }
+
+    String guiRaw(String key, String... replacements) {
+        String click = config.getString("gui.click-footer",
+                "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0");
+        String msg = config.getString("gui." + key, "");
+        msg = msg.replace("%click%", click);
+        return Text.apply(msg, replacements);
+    }
+
+    List<String> guiRawList(String key, String... replacements) {
+        String click = config.getString("gui.click-footer",
+                "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0");
+        List<String> lines = new ArrayList<>(config.getStringList("gui." + key));
+        if (lines.isEmpty()) {
+            String single = config.getString("gui." + key);
+            if (single != null && !single.isEmpty()) lines.add(single);
+        }
+        List<String> out = new ArrayList<>(lines.size());
+        for (String line : lines) {
+            out.add(Text.apply(line.replace("%click%", click), replacements));
+        }
+        return out;
+    }
+
+    ItemStack tagTeamId(ItemStack item, int teamId) {
+        item.editMeta(meta -> meta.getPersistentDataContainer()
+                .set(teamItemKey, PersistentDataType.INTEGER, teamId));
+        return item;
+    }
+
+    Integer teamIdFromItem(ItemStack item) {
+        if (item == null || !item.hasItemMeta()) return null;
+        return item.getItemMeta().getPersistentDataContainer().get(teamItemKey, PersistentDataType.INTEGER);
+    }
+
+    ItemStack tagPage(ItemStack item, int page) {
+        item.editMeta(meta -> meta.getPersistentDataContainer()
+                .set(pageItemKey, PersistentDataType.INTEGER, page));
+        return item;
     }
 
     @Override
@@ -302,8 +349,8 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
     }
 
     private void handleCreate(Player player, String name) {
-        if (!validateTeamName(player, name)) return;
-        confirmCreate(player, name.trim());
+        if (!validateTeamName(player, name.trim())) return;
+        guiHandler.openCreateConfirm(player, name.trim());
     }
 
     private void handleInvite(Player player, String targetName) {
@@ -328,8 +375,16 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
         TeamDatabase.Team team = database.getTeamById(teamId);
         send(player, "invited", "%player%", name(target));
         if (target.isOnline() && target.getPlayer() != null) {
-            send(target.getPlayer(), "invite-received", "%team%", team.name(), "%player%", player.getName());
+            sendInviteMessage(target.getPlayer(), team.name(), player.getName());
         }
+    }
+
+    private void sendInviteMessage(Player target, String teamName, String inviterName) {
+        Component line = Text.c(raw("invite-received", "%team%", teamName, "%player%", inviterName));
+        Component click = Text.c(raw("invite-click"))
+                .clickEvent(ClickEvent.runCommand("/team accept"))
+                .hoverEvent(HoverEvent.showText(Text.c(raw("invite-hover"))));
+        target.sendMessage(Component.empty().append(line).append(Component.newline()).append(click));
     }
 
     private void handleAccept(Player player) {

@@ -3,7 +3,6 @@ package com.sharded.core.modules.abilities;
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.modules.tokens.TokenService;
-import com.sharded.core.util.ConfigSync;
 import com.sharded.core.util.Numbers;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
@@ -22,9 +21,8 @@ public final class AbilitiesShopModule extends Module implements CommandExecutor
 
     @Override
     protected void onEnable() {
-        File menuFile = new File(moduleFolder(), "shop.yml");
-        ConfigSync.sync(plugin, menuFile, "modules/abilities/shop.yml");
-        plugin.gui().loadMenu(menuFile, "abilities");
+        syncJarResource("shop.yml");
+        plugin.gui().loadMenu(new File(moduleFolder(), "shop.yml"), "abilities");
     }
 
     @Override

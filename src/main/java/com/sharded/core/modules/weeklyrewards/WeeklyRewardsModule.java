@@ -47,7 +47,7 @@ public final class WeeklyRewardsModule extends Module implements CommandExecutor
         long last = plugin.stateStore().getLong(player.getUniqueId(), LAST_CLAIM, 0L);
         if (last > 0 && now - last < cooldownMs) {
             long left = (cooldownMs - (now - last)) / 1000L;
-            send(player, "cooldown", "%time%", Text.time(left));
+            send(player, "cooldown", "%time%", Text.timeDaysHours(left));
             return true;
         }
         List<RewardOption> options = loadOptions();

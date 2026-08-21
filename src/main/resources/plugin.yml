@@ -264,8 +264,45 @@ commands:
     description: Claim your weekly reward
     usage: /weekly
   tokenmethods:
-    description: List ways to earn tokens
+    description: Open ways to earn tokens GUI
     usage: /tokenmethods
+  hourly:
+    description: Check hourly token reward timer
+    usage: /hourly
+  stats:
+    description: View player statistics
+    usage: /stats [player]
+    permission: sharded.stats.use
+  leaderboard:
+    description: Open leaderboards
+    usage: /leaderboard [type]
+    permission: sharded.leaderboards.use
+  leaderboards:
+    description: Open leaderboards
+    usage: /leaderboards [type]
+    permission: sharded.leaderboards.use
+  media:
+    description: Media requirements
+    usage: /media
+    permission: sharded.media.use
+  mediareq:
+    description: Media requirements
+    usage: /mediareq
+  mediarequirements:
+    description: Media requirements
+    usage: /mediarequirements
+  crates:
+    description: Open crate preview menu
+    usage: /crates
+    permission: sharded.crates.use
+  crate:
+    description: Open crate preview menu
+    usage: /crate
+    permission: sharded.crates.use
+  roles:
+    description: Apply role permission bundle
+    usage: /roles <player> <role>
+    permission: sharded.roles.admin
   module:
     description: Open the module manager
     usage: /module
@@ -279,6 +316,24 @@ commands:
     permission: sharded.staff.teleport
 
 permissions:
+  sharded.leaderboards.use:
+    description: Open leaderboards
+    default: true
+  sharded.stats.use:
+    description: View your own stats
+    default: true
+  sharded.stats.others:
+    description: View other players' stats
+    default: op
+  sharded.media.use:
+    description: Open media requirements menu
+    default: true
+  sharded.crates.use:
+    description: Open crate preview menu
+    default: true
+  sharded.roles.admin:
+    description: Apply role permission bundles
+    default: op
   sharded.admin:
     description: Access to /shardedcore reload
     default: op
@@ -377,7 +432,7 @@ permissions:
   sharded.rtp.use:
     default: true
   sharded.rtp.bypass:
-    default: op
+    default: false
   sharded.guide.use:
     description: Open the server guide and rules menus
     default: true

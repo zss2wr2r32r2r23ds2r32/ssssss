@@ -3,6 +3,7 @@ package com.sharded.core.modules.pets;
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.util.ColorUtil;
+import com.sharded.core.util.HeadUtil;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
@@ -21,7 +22,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Parrot;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Warden;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -398,7 +399,15 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
                 stand.setSmall(true);
                 stand.setBasePlate(false);
                 stand.setArms(false);
-                stand.getEquipment().setHelmet(new ItemBuilder(type.helmet()).build());
+                ItemStack helmet;
+                if (type.headTexture() != null) {
+                    helmet = HeadUtil.textureHead(type.headTexture());
+                } else if (type.helmet() != null) {
+                    helmet = new ItemBuilder(type.helmet()).build();
+                } else {
+                    helmet = new ItemStack(Material.PLAYER_HEAD);
+                }
+                stand.getEquipment().setHelmet(helmet);
                 configurePet(stand, owner.getUniqueId(), type, null);
             });
         } else {
@@ -477,9 +486,6 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
             axolotl.setPlayingDead(false);
             axolotl.setVariant(PetType.parseAxolotlVariant(axolotlVariant));
         }
-        if (entity instanceof Warden warden) {
-            warden.setAnger(null, 0);
-        }
     }
 
     private void applyName(UUID ownerId, ActivePet pet) {
@@ -533,8 +539,6 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
             target = flyOrbitLocation(owner, ownerId);
         } else if (pet.type.groundSnap()) {
             target = groundFollowLocation(owner);
-        } else if (pet.type == PetType.WARDEN) {
-            target = followLocation(owner).add(0, 0.35, 0);
         } else {
             target = followLocation(owner);
         }

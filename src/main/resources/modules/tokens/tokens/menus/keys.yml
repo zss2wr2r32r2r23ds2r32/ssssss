@@ -35,15 +35,16 @@ items:
   cosmetic_key:
     material: PURPLE_CANDLE
     slot: 11
-    display_name: '&fShard Key'
+    display_name: '&x&7&5&0&0&F&F&lSHARD &x&7&5&0&0&F&FKey'
     lore:
-      - '&8Description'
+      - '&8Descriptions'
       - ''
-      - '&7Purchase a Shard Key'
+      - '&x&7&5&0&0&F&FInformation:'
+      - '&x&7&5&0&0&F&F| &fPurchase a &x&7&5&0&0&F&FShard Key'
       - ''
-      - '&7Cost: &f1000 Tokens'
+      - '&x&7&5&0&0&F&F⚓ &fCost: &x&7&5&0&0&F&F1000 Tokens'
       - ''
-      - '&eClick to purchase'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
       - '[tokens_take] 1000'
       - '[console] crate key give %player_name% shard 1'

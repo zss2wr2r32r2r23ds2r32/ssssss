@@ -12,8 +12,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import com.sharded.core.util.Text;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import java.io.File;
@@ -29,6 +31,7 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
     private TokenService service;
     private BukkitTask playtimeTask;
     private final Map<UUID, Long> onlineSince = new ConcurrentHashMap<>();
+    private TokenMethodsGuiHandler tokenMethodsGui;
 
     private static final String PLAYTIME_LAST_GRANT = "tokens-hourly-last-grant";
 
@@ -42,6 +45,14 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
 
     public TokenDatabase database() {
         return database;
+    }
+
+    String configString(String path, String def) {
+        return config.getString(path, def);
+    }
+
+    org.bukkit.configuration.ConfigurationSection configSection(String path) {
+        return config.getConfigurationSection(path);
     }
 
     public String tokenPrefix() {
@@ -65,6 +76,8 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
         registerCommand("tokens", this);
         registerCommand("tokenshop", this);
         registerCommand("tokenmethods", this);
+        registerCommand("hourly", this);
+        tokenMethodsGui = new TokenMethodsGuiHandler(this);
 
         startPlaytimeRewards();
     }
@@ -157,9 +170,19 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
                 plugin.gui().open(player, config.getString("main-menu", "mainmenu"));
             }
             case "tokenmethods" -> {
-                for (String line : rawList("token-methods")) {
-                    sender.sendMessage(com.sharded.core.util.Text.c(line));
+                if (!(sender instanceof Player player)) {
+                    send(sender, "players-only");
+                    return true;
                 }
+                tokenMethodsGui.open(player);
+                return true;
+            }
+            case "hourly" -> {
+                if (!(sender instanceof Player player)) {
+                    send(sender, "players-only");
+                    return true;
+                }
+                handleHourly(player);
                 return true;
             }
             case "tokens" -> handleTokensAdmin(sender, args);
@@ -281,5 +304,31 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
             return TabCompleteHelper.filter(args[1], "1k", "10k", "100k", "1m", "10m");
         }
         return List.of();
+    }
+
+    private void handleHourly(Player player) {
+        if (!config.getBoolean("playtime-reward.enabled", true)) {
+            send(player, "hourly-disabled");
+            return;
+        }
+        long amount = config.getLong("playtime-reward.amount", 50L);
+        long intervalMs = config.getLong("playtime-reward.interval-minutes", 60L) * 60_000L;
+        long last = plugin.stateStore().getLong(player.getUniqueId(), PLAYTIME_LAST_GRANT, 0L);
+        long now = System.currentTimeMillis();
+        long remaining = (last + intervalMs) - now;
+        if (remaining <= 0) {
+            send(player, "hourly-ready", "%amount%", String.valueOf(amount));
+        } else {
+            send(player, "hourly-wait", "%time%", Text.time(remaining / 1000L), "%amount%", String.valueOf(amount));
+        }
+    }
+
+    @EventHandler
+    public void onTokenMethodsClick(InventoryClickEvent event) {
+        if (!(event.getWhoClicked() instanceof Player player)) return;
+        if (!(event.getView().getTopInventory().getHolder() instanceof TokenMethodsGuiHandler.Holder)) return;
+        event.setCancelled(true);
+        if (event.getClickedInventory() != event.getView().getTopInventory()) return;
+        tokenMethodsGui.handleClick(player, event.getSlot());
     }
 }

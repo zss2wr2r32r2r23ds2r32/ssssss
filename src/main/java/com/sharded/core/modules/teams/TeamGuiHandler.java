@@ -1,5 +1,7 @@
 package com.sharded.core.modules.teams;
 
+import com.sharded.core.modules.leaderboards.LeaderboardsModule;
+import com.sharded.core.util.HeadUtil;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.Text;
@@ -16,19 +18,23 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
-/** Dynamic team menus (create flow, members, leaderboard, stats). */
+/** Dynamic team menus (create flow, members, browse, profile). */
 final class TeamGuiHandler {
 
-    enum MenuType { CREATE_START, CREATE_CONFIRM, DISBAND_CONFIRM, MAIN, MEMBERS, STATS, LEADERBOARD }
+    enum MenuType { CREATE_START, CREATE_CONFIRM, DISBAND_CONFIRM, MAIN, MEMBERS, BROWSE, PROFILE }
 
     static final class TeamGuiHolder implements InventoryHolder {
         final MenuType type;
         final String pendingName;
+        final int teamId;
+        final int page;
         Inventory inventory;
 
-        TeamGuiHolder(MenuType type, String pendingName) {
+        TeamGuiHolder(MenuType type, String pendingName, int teamId, int page) {
             this.type = type;
             this.pendingName = pendingName;
+            this.teamId = teamId;
+            this.page = page;
         }
 
         @Override
@@ -50,51 +56,39 @@ final class TeamGuiHandler {
     }
 
     void openCreateStart(Player player) {
-        Inventory inv = Bukkit.createInventory(new TeamGuiHolder(MenuType.CREATE_START, null), 27,
-                Text.c(module.raw("gui-create-title")));
+        Inventory inv = Bukkit.createInventory(new TeamGuiHolder(MenuType.CREATE_START, null, 0, 0), 27,
+                Text.c(module.guiRaw("create-title")));
         fill(inv);
-        inv.setItem(13, new ItemBuilder(Material.ANVIL)
-                .name(module.raw("gui-create-anvil-name"))
-                .lore(module.rawList("gui-create-anvil-lore"))
-                .build());
+        inv.setItem(13, button(Material.ANVIL, module.guiRaw("create-anvil-name"),
+                module.guiRawList("create-anvil-lore")));
         player.openInventory(inv);
     }
 
     void openCreateConfirm(Player player, String name) {
-        Inventory inv = Bukkit.createInventory(new TeamGuiHolder(MenuType.CREATE_CONFIRM, name), 27,
-                Text.c(module.raw("gui-confirm-title", "%team%", name)));
+        Inventory inv = Bukkit.createInventory(new TeamGuiHolder(MenuType.CREATE_CONFIRM, name, 0, 0), 27,
+                Text.c(module.guiRaw("confirm-title", "%team%", name)));
         fill(inv);
-        inv.setItem(11, new ItemBuilder(Material.RED_STAINED_GLASS_PANE)
-                .name(module.raw("gui-cancel-name"))
-                .lore(module.rawList("gui-cancel-lore"))
-                .build());
+        inv.setItem(11, button(Material.RED_STAINED_GLASS_PANE, module.guiRaw("cancel-name"),
+                module.guiRawList("cancel-lore")));
         inv.setItem(13, new ItemBuilder(Material.NAME_TAG)
                 .name("&f" + name)
-                .lore(module.rawList("gui-confirm-lore"))
+                .lore(module.guiRawList("confirm-lore"))
                 .build());
-        inv.setItem(15, new ItemBuilder(Material.LIME_STAINED_GLASS_PANE)
-                .name(module.raw("gui-confirm-name"))
-                .lore(module.rawList("gui-confirm-lore"))
-                .build());
+        inv.setItem(15, button(Material.LIME_STAINED_GLASS_PANE, module.guiRaw("confirm-name"),
+                module.guiRawList("confirm-lore")));
         player.openInventory(inv);
     }
 
     void openDisbandConfirm(Player player, String teamName) {
-        Inventory inv = Bukkit.createInventory(new TeamGuiHolder(MenuType.DISBAND_CONFIRM, teamName), 27,
-                Text.c(module.raw("gui-disband-confirm-title", "%team%", teamName)));
+        Inventory inv = Bukkit.createInventory(new TeamGuiHolder(MenuType.DISBAND_CONFIRM, teamName, 0, 0), 27,
+                Text.c(module.guiRaw("disband-confirm-title", "%team%", teamName)));
         fill(inv);
-        inv.setItem(11, new ItemBuilder(Material.RED_STAINED_GLASS_PANE)
-                .name(module.raw("gui-cancel-name"))
-                .lore(module.rawList("gui-cancel-lore"))
-                .build());
-        inv.setItem(13, new ItemBuilder(Material.TNT)
-                .name(module.raw("gui-disband-name"))
-                .lore(module.rawList("gui-disband-lore"))
-                .build());
-        inv.setItem(15, new ItemBuilder(Material.LIME_STAINED_GLASS_PANE)
-                .name(module.raw("gui-disband-confirm-name"))
-                .lore(module.rawList("gui-disband-confirm-lore"))
-                .build());
+        inv.setItem(11, button(Material.RED_STAINED_GLASS_PANE, module.guiRaw("cancel-name"),
+                module.guiRawList("cancel-lore")));
+        inv.setItem(13, button(Material.TNT, module.guiRaw("disband-name"),
+                module.guiRawList("disband-lore")));
+        inv.setItem(15, button(Material.LIME_STAINED_GLASS_PANE, module.guiRaw("disband-confirm-name"),
+                module.guiRawList("disband-confirm-lore")));
         player.openInventory(inv);
     }
 
@@ -108,26 +102,27 @@ final class TeamGuiHandler {
         TeamDatabase.Member self = module.database().getMember(teamId, player.getUniqueId());
         boolean leader = team != null && team.leaderUuid().equals(player.getUniqueId());
 
-        Inventory inv = Bukkit.createInventory(new TeamGuiHolder(MenuType.MAIN, null), 27,
-                Text.c(module.raw("gui-main-title", "%team%", team == null ? "?" : team.name())));
+        Inventory inv = Bukkit.createInventory(new TeamGuiHolder(MenuType.MAIN, null, 0, 0), 27,
+                Text.c(module.guiRaw("main-title", "%team%", team == null ? "?" : team.name())));
         fill(inv);
 
         UUID ownerId = team == null ? player.getUniqueId() : team.leaderUuid();
-        inv.setItem(10, ownerHead(ownerId, module.raw("gui-members-name"),
-                module.rawList("gui-members-lore", "%count%", String.valueOf(module.database().getMembers(teamId).size()))));
-        inv.setItem(12, button(Material.BOOK, module.raw("gui-stats-name"), module.rawList("gui-stats-lore")));
-        inv.setItem(13, button(Material.MOJANG_BANNER_PATTERN, module.raw("gui-leaderboard-name"), module.rawList("gui-leaderboard-lore")));
-        inv.setItem(14, button(Material.BELL, module.raw("gui-emergency-name"), module.rawList("gui-emergency-lore")));
-        inv.setItem(16, button(Material.WRITABLE_BOOK, module.raw("gui-chat-name"),
-                module.rawList("gui-chat-lore", "%status%", module.isTeamChat(player.getUniqueId()) ? "&aON" : "&cOFF")));
-        inv.setItem(22, button(Material.WHITE_BANNER, module.raw("gui-allies-name"),
-                module.rawList("gui-allies-lore", "%count%", String.valueOf(module.database().allyCount(teamId)),
+        inv.setItem(11, ownerHead(ownerId, module.guiRaw("members-name"),
+                module.guiRawList("members-lore", "%count%", String.valueOf(module.database().getMembers(teamId).size()))));
+        inv.setItem(12, button(Material.BELL, module.guiRaw("emergency-name"), module.guiRawList("emergency-lore")));
+        inv.setItem(13, button(Material.ALLAY_SPAWN_EGG, module.guiRaw("browse-name"), module.guiRawList("browse-lore")));
+        inv.setItem(14, button(Material.WRITABLE_BOOK, module.guiRaw("chat-name"),
+                module.guiRawList("chat-lore", "%status%", module.isTeamChat(player.getUniqueId()) ? "&aON" : "&cOFF")));
+        inv.setItem(15, button(Material.WHITE_BANNER, module.guiRaw("allies-name"),
+                module.guiRawList("allies-lore", "%count%", String.valueOf(module.database().allyCount(teamId)),
                         "%max%", String.valueOf(module.teamConfig().getInt("ally.max-allies", 1)))));
+        inv.setItem(22, button(Material.GOLD_BLOCK, module.guiRaw("leaderboard-name"),
+                module.guiRawList("leaderboard-lore")));
 
         if (leader) {
-            inv.setItem(4, button(Material.DARK_OAK_DOOR, module.raw("gui-disband-name"), module.rawList("gui-disband-lore")));
+            inv.setItem(4, button(Material.DARK_OAK_DOOR, module.guiRaw("disband-name"), module.guiRawList("disband-lore")));
         } else if (self != null) {
-            inv.setItem(4, button(Material.OAK_DOOR, module.raw("gui-leave-name"), module.rawList("gui-leave-lore")));
+            inv.setItem(4, button(Material.OAK_DOOR, module.guiRaw("leave-name"), module.guiRawList("leave-lore")));
         }
         player.openInventory(inv);
     }
@@ -140,8 +135,8 @@ final class TeamGuiHandler {
         members.sort(Comparator.comparingInt(TeamDatabase.Member::role));
 
         int size = 54;
-        Inventory inv = Bukkit.createInventory(new TeamGuiHolder(MenuType.MEMBERS, null), size,
-                Text.c(module.raw("gui-members-title", "%team%", team == null ? "?" : team.name())));
+        Inventory inv = Bukkit.createInventory(new TeamGuiHolder(MenuType.MEMBERS, null, 0, 0), size,
+                Text.c(module.guiRaw("members-title", "%team%", team == null ? "?" : team.name())));
         fill(inv, size);
 
         if (team != null) {
@@ -156,74 +151,68 @@ final class TeamGuiHandler {
             inv.setItem(slot++, memberHead(member.uuid(), member.role(), false));
         }
 
-        inv.setItem(49, button(Material.ARROW, module.raw("gui-back-name"), List.of()));
+        inv.setItem(49, button(Material.ARROW, module.guiRaw("back-name"), List.of()));
         player.openInventory(inv);
     }
 
-    void openStats(Player player) {
-        Integer teamId = module.database().getTeamId(player.getUniqueId());
-        if (teamId == null) return;
-        TeamStats stats = computeStats(teamId);
+    void openBrowse(Player player, int page) {
+        List<TeamDatabase.Team> teams = new ArrayList<>(module.database().listTeams());
+        teams.sort(Comparator.comparing(TeamDatabase.Team::name, String.CASE_INSENSITIVE_ORDER));
+        int perPage = module.teamConfig().getInt("gui.browse-per-page", 21);
+        int maxPage = Math.max(0, (teams.size() + perPage - 1) / perPage - 1);
+        page = Math.max(0, Math.min(page, maxPage));
 
-        Inventory inv = Bukkit.createInventory(new TeamGuiHolder(MenuType.STATS, null), 27,
-                Text.c(module.raw("gui-stats-title")));
-        fill(inv);
-
-        inv.setItem(10, button(Material.DIAMOND_SWORD, module.raw("gui-stat-kills-name"),
-                module.rawList("gui-stat-kills-lore", "%kills%", String.valueOf(stats.kills))));
-        inv.setItem(12, button(Material.GOLD_INGOT, module.raw("gui-stat-tokens-name"),
-                module.rawList("gui-stat-tokens-lore", "%tokens%", String.valueOf(stats.tokens))));
-        inv.setItem(14, button(Material.CLOCK, module.raw("gui-stat-playtime-name"),
-                module.rawList("gui-stat-playtime-lore", "%playtime%", module.formatPlaytime(stats.playtime))));
-        inv.setItem(16, button(Material.EXPERIENCE_BOTTLE, module.raw("gui-stats-name"),
-                module.rawList("gui-stats-lore")));
-        inv.setItem(22, button(Material.ARROW, module.raw("gui-back-name"), List.of()));
-        player.openInventory(inv);
-    }
-
-    void openLeaderboard(Player player) {
-        Inventory inv = Bukkit.createInventory(new TeamGuiHolder(MenuType.LEADERBOARD, null), 54,
-                Text.c(module.raw("gui-leaderboard-title")));
+        Inventory inv = Bukkit.createInventory(new TeamGuiHolder(MenuType.BROWSE, null, 0, page), 54,
+                Text.c(module.guiRaw("browse-title")));
         fill(inv, 54);
 
-        List<TeamDatabase.Team> teams = module.database().listTeams();
-        var tokenService = module.plugin().modules().tokens();
-        long tokenWeight = module.teamConfig().getLong("leaderboard.token-weight", 1L);
-        long killWeight = module.teamConfig().getLong("leaderboard.kill-weight", 100L);
-        long hourWeight = module.teamConfig().getLong("leaderboard.playtime-hour-weight", 50L);
-
-        record Scored(TeamDatabase.Team team, long score, long tokens, int kills, long playtime) {}
-        List<Scored> scored = new ArrayList<>();
-        for (TeamDatabase.Team team : teams) {
-            long tokens = 0;
-            int kills = 0;
-            long playtime = 0;
-            for (TeamDatabase.Member member : module.database().getMembers(team.id())) {
-                kills += member.kills();
-                playtime += member.playtimeMs();
-                if (tokenService != null) tokens += tokenService.getBalance(member.uuid());
-            }
-            long hours = playtime / 3_600_000L;
-            long score = tokens * tokenWeight + kills * killWeight + hours * hourWeight;
-            scored.add(new Scored(team, score, tokens, kills, playtime));
-        }
-        scored.sort(Comparator.comparingLong(Scored::score).reversed());
-
+        int start = page * perPage;
         int slot = 10;
-        int limit = Math.min(10, scored.size());
-        for (int i = 0; i < limit; i++) {
+        for (int i = start; i < Math.min(start + perPage, teams.size()); i++) {
             while (slot < 44 && (slot % 9 == 0 || slot % 9 == 8)) slot++;
-            Scored entry = scored.get(i);
-            inv.setItem(slot++, new ItemBuilder(Material.PAPER)
-                    .name(module.raw("gui-leaderboard-line-name", "%rank%", String.valueOf(i + 1), "%team%", entry.team.name()))
-                    .lore(module.rawList("gui-leaderboard-line-lore",
-                            "%score%", String.valueOf(entry.score),
-                            "%tokens%", String.valueOf(entry.tokens),
-                            "%kills%", String.valueOf(entry.kills),
-                            "%playtime%", module.formatPlaytime(entry.playtime)))
-                    .build());
+            if (slot > 43) break;
+            TeamDatabase.Team team = teams.get(i);
+            inv.setItem(slot++, browseItem(team));
         }
-        inv.setItem(49, button(Material.ARROW, module.raw("gui-back-name"), List.of()));
+
+        if (page > 0) {
+            inv.setItem(45, navItem(Material.ARROW, module.guiRaw("previous-name"), page - 1));
+        }
+        if (page < maxPage) {
+            inv.setItem(53, navItem(Material.ARROW, module.guiRaw("next-name"), page + 1));
+        }
+        inv.setItem(49, button(Material.ARROW, module.guiRaw("back-name"), List.of()));
+        player.openInventory(inv);
+    }
+
+    void openProfile(Player player, int teamId) {
+        TeamDatabase.Team team = module.database().getTeamById(teamId);
+        if (team == null) {
+            openBrowse(player, 0);
+            return;
+        }
+        TeamStats stats = computeStats(teamId);
+        int rank = teamRank(teamId);
+        String rankText = rank > 0 ? String.valueOf(rank) : module.guiRaw("unranked");
+        long score = teamScore(teamId, stats);
+
+        Inventory inv = Bukkit.createInventory(new TeamGuiHolder(MenuType.PROFILE, null, teamId, 0), 27,
+                Text.c(module.guiRaw("profile-title", "%team%", team.name())));
+        fill(inv);
+
+        ItemStack icon = HeadUtil.textureHead(
+                "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjc2MWQxNjJmMmQ1ZjNkMjlkN2RiYzlkNDNmZTQ5NzlkMzEwM2M5ZmM2N2U5OGQ0MzU0NzVjNGQ3YzJiMzBlIn19fQ==");
+        inv.setItem(13, new ItemBuilder(icon)
+                .name(module.guiRaw("profile-item-name", "%team%", team.name()))
+                .lore(module.guiRawList("profile-item-lore",
+                        "%rank%", rankText,
+                        "%count%", String.valueOf(module.database().getMembers(teamId).size()),
+                        "%kills%", String.valueOf(stats.kills),
+                        "%tokens%", String.valueOf(stats.tokens),
+                        "%playtime%", module.formatPlaytime(stats.playtime),
+                        "%score%", String.valueOf(score)))
+                .build());
+        inv.setItem(22, button(Material.ARROW, module.guiRaw("back-name"), List.of()));
         player.openInventory(inv);
     }
 
@@ -248,9 +237,9 @@ final class TeamGuiHandler {
             }
             case MAIN -> handleMainClick(player, slot);
             case MEMBERS -> handleMembersClick(player, slot, current);
-            case STATS -> handleStatsClick(player, slot);
-            case LEADERBOARD -> {
-                if (slot == 49) openMain(player);
+            case BROWSE -> handleBrowseClick(player, holder, slot);
+            case PROFILE -> {
+                if (slot == 22) openBrowse(player, 0);
             }
         }
     }
@@ -268,31 +257,41 @@ final class TeamGuiHandler {
                     module.handleLeave(player);
                 }
             }
-            case 10 -> openMembers(player);
-            case 12 -> openStats(player);
-            case 13 -> openLeaderboard(player);
-            case 14 -> {
+            case 11 -> openMembers(player);
+            case 12 -> {
                 player.closeInventory();
                 module.handleEmergency(player);
             }
-            case 16 -> {
+            case 13 -> openBrowse(player, 0);
+            case 14 -> {
                 module.toggleTeamChat(player);
                 openMain(player);
             }
-            case 22 -> module.send(player, "gui-ally-hint");
+            case 15 -> module.send(player, "gui-ally-hint");
+            case 22 -> {
+                player.closeInventory();
+                player.performCommand("leaderboard teams");
+            }
         }
     }
 
-    private void handleStatsClick(Player player, int slot) {
-        Integer teamId = module.database().getTeamId(player.getUniqueId());
-        if (teamId == null) return;
-        TeamStats stats = computeStats(teamId);
-        switch (slot) {
-            case 10 -> module.send(player, "stats-kills", "%kills%", String.valueOf(stats.kills));
-            case 12 -> module.send(player, "stats-tokens", "%tokens%", String.valueOf(stats.tokens));
-            case 14 -> module.send(player, "stats-playtime", "%playtime%", module.formatPlaytime(stats.playtime));
-            case 22 -> openMain(player);
+    private void handleBrowseClick(Player player, TeamGuiHolder holder, int slot) {
+        if (slot == 49) {
+            openMain(player);
+            return;
         }
+        if (slot == 45 && holder.page > 0) {
+            openBrowse(player, holder.page - 1);
+            return;
+        }
+        if (slot == 53) {
+            openBrowse(player, holder.page + 1);
+            return;
+        }
+        ItemStack item = player.getOpenInventory().getTopInventory().getItem(slot);
+        if (item == null || !item.hasItemMeta()) return;
+        Integer teamId = module.teamIdFromItem(item);
+        if (teamId != null) openProfile(player, teamId);
     }
 
     private void handleMembersClick(Player player, int slot, ItemStack item) {
@@ -307,6 +306,39 @@ final class TeamGuiHandler {
         player.closeInventory();
         module.handleMemberHeadClick(player, targetId);
         Bukkit.getScheduler().runTaskLater(module.plugin(), () -> openMembers(player), 2L);
+    }
+
+    private ItemStack browseItem(TeamDatabase.Team team) {
+        int rank = teamRank(team.id());
+        String rankText = rank > 0 ? String.valueOf(rank) : module.guiRaw("unranked");
+        ItemStack item = new ItemBuilder(Material.ALLAY_SPAWN_EGG)
+                .name(module.guiRaw("browse-entry-name", "%team%", team.name()))
+                .lore(module.guiRawList("browse-entry-lore",
+                        "%count%", String.valueOf(module.database().getMembers(team.id()).size()),
+                        "%rank%", rankText))
+                .build();
+        return module.tagTeamId(item, team.id());
+    }
+
+    private ItemStack navItem(Material mat, String name, int targetPage) {
+        ItemStack item = new ItemBuilder(mat).name(name)
+                .lore(List.of("", module.guiRaw("click-footer") + "To View"))
+                .build();
+        return module.tagPage(item, targetPage);
+    }
+
+    private int teamRank(int teamId) {
+        LeaderboardsModule lb = module.plugin().modules().get(LeaderboardsModule.class);
+        if (lb == null) return -1;
+        return lb.teamRank(teamId);
+    }
+
+    private long teamScore(int teamId, TeamStats stats) {
+        long tokenWeight = module.teamConfig().getLong("leaderboard.token-weight", 1L);
+        long killWeight = module.teamConfig().getLong("leaderboard.kill-weight", 100L);
+        long hourWeight = module.teamConfig().getLong("leaderboard.playtime-hour-weight", 50L);
+        long hours = stats.playtime / 3_600_000L;
+        return stats.tokens * tokenWeight + stats.kills * killWeight + hours * hourWeight;
     }
 
     private TeamStats computeStats(int teamId) {
@@ -329,8 +361,8 @@ final class TeamGuiHandler {
         meta.displayName(Text.c("&f" + OfflinePlayers.name(uuid)));
         String status = Bukkit.getPlayer(uuid) != null ? module.raw("online") : module.raw("offline");
         List<String> lore = leader
-                ? module.rawList("gui-leader-head-lore", "%status%", status)
-                : module.rawList("gui-member-head-lore", "%role%", module.roleName(role), "%status%", status);
+                ? module.guiRawList("leader-head-lore", "%status%", status)
+                : module.guiRawList("member-head-lore", "%role%", module.roleName(role), "%status%", status);
         meta.lore(lore.stream().map(Text::c).toList());
         head.setItemMeta(meta);
         return head;

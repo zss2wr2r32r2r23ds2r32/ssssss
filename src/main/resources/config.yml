@@ -2,7 +2,7 @@
 #  ShardedCore - main configuration
 # ---------------------------------------------------------
 
-config-version: 11
+config-version: 12
 
 prefix: '&#00A2FF&lCORE &8▷ &r'
 # chat | actionbar | both — global default for all modules
@@ -54,4 +54,8 @@ modules:
   teams: true
   dailyrewards: true
   weeklyrewards: true
+  leaderboards: true
+  media: true
+  crates: true
+  roles: true
   modulesadmin: true

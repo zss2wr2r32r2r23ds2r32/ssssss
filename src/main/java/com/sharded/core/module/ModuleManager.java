@@ -46,6 +46,10 @@ import com.sharded.core.modules.collisions.CollisionsModule;
 import com.sharded.core.modules.commandwhitelist.CommandWhitelistModule;
 import com.sharded.core.modules.dailyrewards.DailyRewardsModule;
 import com.sharded.core.modules.weeklyrewards.WeeklyRewardsModule;
+import com.sharded.core.modules.leaderboards.LeaderboardsModule;
+import com.sharded.core.modules.media.MediaModule;
+import com.sharded.core.modules.crates.CratesModule;
+import com.sharded.core.modules.roles.RolesModule;
 import com.sharded.core.modules.teams.TeamsModule;
 import com.sharded.core.modules.modulesadmin.ModulesAdminModule;
 
@@ -107,6 +111,10 @@ public final class ModuleManager {
         register(new TeamsModule(plugin));
         register(new DailyRewardsModule(plugin));
         register(new WeeklyRewardsModule(plugin));
+        register(new LeaderboardsModule(plugin));
+        register(new MediaModule(plugin));
+        register(new CratesModule(plugin));
+        register(new RolesModule(plugin));
         register(new ModulesAdminModule(plugin));
     }
 

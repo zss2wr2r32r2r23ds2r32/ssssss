@@ -1,0 +1,193 @@
+config-version: 1
+message-mode: chat
+
+staff-permissions:
+  - sharded.staff
+  - sharded.staff.list
+  - sharded.staff.notify
+  - sharded.staff.freeze
+  - sharded.staff.mode
+  - sharded.staff.vanish
+  - sharded.staff.teleport
+  - sharded.staff.gamemode
+  - sharded.staffchat.use
+  - sharded.punishments.use
+  - sharded.punishments.ban
+  - sharded.punishments.mute
+  - sharded.punishments.kick
+  - sharded.invrollback.use
+  - sharded.screenshare.use
+  - sharded.chatmoderation.use
+  - sharded.commandwhitelist.bypass
+
+all-permissions: {}
+
+roles:
+  member:
+    luckperms-group: default
+    permissions:
+      - sharded.tokenshop.use
+      - sharded.eglow.use
+      - sharded.chatcolor.use
+      - sharded.tags.use
+      - sharded.wardrobe.use
+      - sharded.settings.use
+      - sharded.dailyrewards.use
+      - sharded.weeklyrewards.use
+      - sharded.graves.headtokens
+  ruby:
+    luckperms-group: ruby
+    permissions:
+      - sharded.toolname.use
+      - sharded.autosmelt.use
+      - sharded.graves.use
+      - sharded.trash.use
+      - sharded.backpack.slots.1
+      - sharded.tokenshop.use
+      - sharded.eglow.use
+      - sharded.chatcolor.use
+  sapphire:
+    luckperms-group: sapphire
+    permissions:
+      - sharded.toolname.use
+      - sharded.autosmelt.use
+      - sharded.graves.use
+      - sharded.graves.duration.vip
+      - sharded.pets.use
+      - sharded.trash.use
+      - sharded.craft.use
+      - sharded.backpack.slots.2
+      - sharded.tokenshop.use
+      - sharded.eglow.use
+      - sharded.chatcolor.use
+      - sharded.tags.use
+  onyx:
+    luckperms-group: onyx
+    permissions:
+      - sharded.toolname.use
+      - sharded.autosmelt.use
+      - sharded.graves.use
+      - sharded.graves.duration.mvp
+      - sharded.pets.use
+      - sharded.deathmessages.use
+      - sharded.fix.use
+      - sharded.trash.use
+      - sharded.craft.use
+      - sharded.hide.use
+      - sharded.backpack.slots.3
+      - sharded.tokenshop.use
+  aether:
+    luckperms-group: aether
+    permissions:
+      - sharded.toolname.use
+      - sharded.autosmelt.use
+      - sharded.graves.use
+      - sharded.graves.duration.ruby
+      - sharded.pets.use
+      - sharded.deathmessages.use
+      - sharded.fix.use
+      - sharded.pickupmobs.use
+      - sharded.spawners.pickup
+      - sharded.fly.use
+      - sharded.armortrims.use
+      - sharded.trash.use
+      - sharded.craft.use
+      - sharded.backpack.slots.4
+      - sharded.tokenshop.use
+  flawless:
+    luckperms-group: flawless
+    permissions:
+      - sharded.toolname.use
+      - sharded.autosmelt.use
+      - sharded.graves.use
+      - sharded.graves.duration.flawless
+      - sharded.pets.use
+      - sharded.deathmessages.use
+      - sharded.fix.use
+      - sharded.pickupmobs.use
+      - sharded.spawners.pickup
+      - sharded.joinmessages.custom
+      - sharded.fly.use
+      - sharded.armortrims.use
+      - sharded.trash.use
+      - sharded.craft.use
+      - sharded.backpack.slots.5
+      - sharded.tokenshop.use
+  booster:
+    luckperms-group: booster
+    permissions:
+      - sharded.toolname.use
+      - sharded.autosmelt.use
+      - sharded.graves.use
+      - sharded.trash.use
+      - sharded.backpack.slots.2
+      - sharded.tokenshop.use
+  media:
+    luckperms-group: media
+    permissions:
+      - sharded.toolname.use
+      - sharded.autosmelt.use
+      - sharded.graves.use
+      - sharded.trash.use
+      - sharded.tags.use
+      - sharded.joinmessages.custom
+      - sharded.backpack.slots.2
+      - sharded.tokenshop.use
+  helper:
+    luckperms-group: helper
+    include-staff: true
+    permissions:
+      - sharded.staff.list
+      - sharded.staffchat.use
+      - sharded.requeststaff.notify
+  srhelper:
+    luckperms-group: srhelper
+    include-staff: true
+    permissions:
+      - sharded.staff.freeze
+      - sharded.staff.teleport
+  mod:
+    luckperms-group: mod
+    include-staff: true
+    permissions:
+      - sharded.punishments.kick
+      - sharded.punishments.mute
+      - sharded.invrollback.use
+  srmod:
+    luckperms-group: srmod
+    include-staff: true
+    permissions:
+      - sharded.punishments.ban
+      - sharded.screenshare.use
+  admin:
+    luckperms-group: admin
+    include-staff: true
+    permissions:
+      - sharded.punishments.banip
+      - sharded.tokens.admin
+  sradmin:
+    luckperms-group: sradmin
+    include-staff: true
+    permissions:
+      - sharded.modules.admin
+      - sharded.roles.admin
+  manager:
+    luckperms-group: manager
+    include-staff: true
+    grant-all: false
+    permissions:
+      - sharded.announce.use
+      - sharded.commandwhitelist.admin
+  director:
+    luckperms-group: director
+    include-staff: true
+    permissions:
+      - sharded.roles.admin
+  dev:
+    luckperms-group: dev
+    include-staff: true
+    grant-all: true
+  owner:
+    luckperms-group: owner
+    include-staff: true
+    grant-all: true
