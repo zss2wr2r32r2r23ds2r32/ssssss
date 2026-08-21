@@ -1,7 +1,8 @@
-config-version: 3
+config-version: 4
 message-mode: chat
 cooldown-hours: 168
-spin-ticks: 40
+spin-ticks: 20
+spin-interval-ticks: 4
 spin-format: '&6Weekly spin... &f%reward% %rarity_color%[%rarity% &8(%percent%%)&r%rarity_color%&8]'
 
 sounds:

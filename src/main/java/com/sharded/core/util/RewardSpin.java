@@ -1,6 +1,7 @@
 package com.sharded.core.util;
 
 import com.sharded.core.ShardedCore;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
@@ -83,13 +84,16 @@ public final class RewardSpin {
         plugin.stateStore().setLong(uuid, lastClaimKey, System.currentTimeMillis());
 
         RewardOption winner = weightedPick(options);
-        int spins = config.getInt("spin-ticks", 40);
+        int frameCount = Math.max(8, Math.min(40, config.getInt("spin-ticks", 20)));
+        long intervalTicks = Math.max(2L, config.getLong("spin-interval-ticks", 4L));
         String format = config.getString("spin-format",
                 "&dSpinning... &f%reward% %rarity_color%[%rarity% &8(%percent%%)&r%rarity_color%&8]");
 
+        Component[] frames = buildFrames(format, options, winner, frameCount);
+
         BukkitTask[] holder = new BukkitTask[1];
         holder[0] = plugin.getServer().getScheduler().runTaskTimer(plugin, new Runnable() {
-            int tick = 0;
+            int frame = 0;
 
             @Override
             public void run() {
@@ -98,12 +102,9 @@ public final class RewardSpin {
                     ACTIVE.remove(uuid);
                     return;
                 }
-                RewardOption shown = tick >= spins - 1
-                        ? winner
-                        : options.get(ThreadLocalRandom.current().nextInt(options.size()));
-                player.sendActionBar(Text.c(applyFormat(format, shown)));
-                tick++;
-                if (tick >= spins) {
+                player.sendActionBar(frames[frame]);
+                frame++;
+                if (frame >= frameCount) {
                     holder[0].cancel();
                     grant(player, winner);
                     module.send(player, winMessageKey,
@@ -114,9 +115,22 @@ public final class RewardSpin {
                     ACTIVE.remove(uuid);
                 }
             }
-        }, 0L, 2L);
+        }, 0L, intervalTicks);
         playSound(player, config.getString("sounds.spin", "UI_BUTTON_CLICK"));
         return true;
+    }
+
+    private static Component[] buildFrames(String format, List<RewardOption> options,
+                                           RewardOption winner, int frameCount) {
+        Component[] frames = new Component[frameCount];
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        int optionCount = options.size();
+        for (int i = 0; i < frameCount - 1; i++) {
+            RewardOption shown = options.get(random.nextInt(optionCount));
+            frames[i] = Text.c(applyFormat(format, shown));
+        }
+        frames[frameCount - 1] = Text.c(applyFormat(format, winner));
+        return frames;
     }
 
     private static String applyFormat(String format, RewardOption option) {
@@ -138,7 +152,10 @@ public final class RewardSpin {
     }
 
     private static RewardOption weightedPick(List<RewardOption> options) {
-        double total = options.stream().mapToDouble(RewardOption::weight).sum();
+        double total = 0;
+        for (RewardOption option : options) {
+            total += option.weight();
+        }
         double roll = ThreadLocalRandom.current().nextDouble(total);
         double acc = 0;
         for (RewardOption option : options) {
