@@ -1,0 +1,18 @@
+# ShardedVelocityCore Configuration
+
+status-refresh-seconds = 5
+
+tracked-servers = ["survival", "events", "diamondsmp"]
+
+maintenance-servers = []
+
+[queue]
+  action-bar = "#%numberinqueue% in queue to &n&#8AFF00%server%&r &7(Wating: %numberofpeoplewaitinginqueue%)"
+  prefix = "&#4498DB&lQUEUE &8▷&r "
+  default-server = "survival"
+  action-bar-interval-ticks = 20
+
+  [queue.max-players]
+    survival = 100
+    events = 200
+    diamondsmp = 150

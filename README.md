@@ -1,50 +1,41 @@
 # ShardedVelocityCore
 
-Custom Velocity proxy plugin with server status placeholders, queue system, and hologram sync for Survival, Events, and DiamondSMP.
+A **Velocity proxy plugin** with server status placeholders, queue system, and hologram support for Survival, Events, and DiamondSMP.
 
-## Built JARs
+## Download
 
-| File | Install on |
-|------|------------|
-| `velocity/build/libs/ShardedVelocityCore-1.0.0.jar` | Velocity `plugins/` |
-| `placeholderapi/build/libs/ShardedVelocityCore-PlaceholderAPI-1.0.0.jar` | Paper/Spigot backend servers with holograms |
-
-Build:
+Build output: `build/libs/ShardedVelocityCore.jar`
 
 ```bash
 ./gradlew build
 ```
 
+Install by placing `ShardedVelocityCore.jar` in your Velocity `plugins/` folder.
+
 ## Status Placeholders
 
-Use on hologram line 9 (DecentHolograms, HolographicDisplays, etc.) via PlaceholderAPI:
+Automatically returns the correct coloured status for each server:
 
-| Placeholder | Output |
+| State | Output |
+|-------|--------|
+| Online | `&#8AFF00&lONLINE` |
+| Offline | `&#FF0000&lOFFLINE` |
+| Maintenance | `&#FF0000&lMAINTEANCE` |
+
+Use on hologram **line 9** (keep icon colours on other lines unchanged):
+
+| Placeholder | Server |
 |-------------|--------|
-| `%shardedvelocitycore_status_survival%` | `&#8AFF00&lONLINE` / `&#FF0000&lOFFLINE` / `&#FF0000&lMAINTEANCE` |
-| `%shardedvelocitycore_status_events%` | Same format |
-| `%shardedvelocitycore_status_diamondsmp%` | Same format |
+| `%shardedvelocitycore_status_survival%` | Survival |
+| `%shardedvelocitycore_status_events%` | Events |
+| `%shardedvelocitycore_status_diamondsmp%` | DiamondSMP |
 
-Status updates automatically every 5 seconds (configurable).
-
-### Hologram example (line 9)
-
-Keep your existing server icon/colour on other lines; only replace line 9 with the placeholder:
-
-```
-&r
-&#4498DB&lSURVIVAL
-&7Click to join
-...
-%shardedvelocitycore_status_survival%
-```
+> Requires [MiniPlaceholders](https://hangar.papermc.io/MiniPlaceholders/MiniPlaceholders) on Velocity and backend hologram servers.
 
 ## Queue
 
-- `/queue` — join the default server queue (no permission required)
-- `/queue survival` — join a specific server queue
-- `/queue events`
-- `/queue diamondsmp`
+- `/queue` — join default server queue (no permission required)
+- `/queue survival|events|diamondsmp` — join a specific server
 - `/queue leave` — leave the queue
 
 **Action bar:** `#%numberinqueue% in queue to &n&#8AFF00%server%&r &7(Wating: %numberofpeoplewaitinginqueue%)`
@@ -53,7 +44,7 @@ Keep your existing server icon/colour on other lines; only replace line 9 with t
 
 ## Configuration
 
-Edit `plugins/shardedvelocitycore/config.toml` on Velocity after first run.
+`plugins/shardedvelocitycore/config.toml`
 
 ```toml
 maintenance-servers = ["survival"]  # force MAINTEANCE status
@@ -62,5 +53,4 @@ maintenance-servers = ["survival"]  # force MAINTEANCE status
 ## Requirements
 
 - Velocity 3.3+
-- PlaceholderAPI (backend hologram servers)
 - Java 21+

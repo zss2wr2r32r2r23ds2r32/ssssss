@@ -1,3 +1,0 @@
-dependencies {
-    // No external dependencies
-}

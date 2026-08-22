@@ -1,5 +1,1 @@
-rootProject.name = "sharded-velocity-core"
-
-include("common")
-include("velocity")
-include("placeholderapi")
+rootProject.name = "ShardedVelocityCore"

@@ -1,0 +1,8 @@
+{
+  "id": "shardedvelocitycore",
+  "name": "ShardedVelocityCore",
+  "version": "1.0.0",
+  "description": "Server status placeholders, queue system, and hologram status sync for Velocity networks.",
+  "authors": ["Sharded"],
+  "main": "dev.sharded.velocitycore.ShardedVelocityCore"
+}

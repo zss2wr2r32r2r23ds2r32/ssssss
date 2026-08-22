@@ -1,7 +1,0 @@
-name: ShardedVelocityCore
-version: 1.0.0
-main: dev.sharded.velocitycore.placeholder.ShardedPlaceholderPlugin
-api-version: '1.21'
-author: Sharded
-description: PlaceholderAPI expansion for ShardedVelocityCore server status holograms.
-depend: [PlaceholderAPI]
