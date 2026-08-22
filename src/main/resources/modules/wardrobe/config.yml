@@ -1,8 +1,21 @@
-config-version: 4
+config-version: 5
 message-mode: chat
 menu-rows: 4
 filler-material: BLACK_STAINED_GLASS_PANE
 show-all-hats: true
+
+preview:
+  worlds:
+    - spawn
+    - world
+  x: 34
+  y: 80
+  z: 60
+  yaw: 180
+  pitch: 0
+  camera-distance: 4.0
+  camera-height: 1.65
+  actionbar: '&7Do &f/wardrobe leave &7to stop previewing'
 
 enchantments:
   protection: 4
@@ -33,8 +46,8 @@ hats:
   tophat:
     slot: 11
     permission: sharded.wardrobe.tophat
-    itemsadder-id: 'hats:tophat'
-    material: 'itemsadder-hats:tophat'
+    itemsadder-id: 'HATS:TOPHAT'
+    material: 'HATS:TOPHAT'
     display-name: '&x&F&F&0&0&5&3&lTOP &x&F&F&0&0&5&3Hat'
     lore:
       - '&8Description'
@@ -45,12 +58,13 @@ hats:
       - ''
       - '&x&F&F&0&0&5&3| ⚓ &fOwned: %wardrobe_owned_tophat%'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nLEFT-CLICK&r &x&F&F&B&A&0&0To Equip'
+      - '&x&0&0&8&D&F&F▷ &x&0&0&8&D&F&F&l&nRIGHT-CLICK&r &x&0&0&8&D&F&FTo Preview'
   crown:
     slot: 12
     permission: sharded.wardrobe.crown
-    itemsadder-id: 'hats:crown'
-    material: 'itemsadder-hats:crown'
+    itemsadder-id: 'HATS:CROWN'
+    material: 'HATS:CROWN'
     display-name: '&x&F&F&E&3&0&0&lCROWN'
     lore:
       - '&8Description'
@@ -61,12 +75,13 @@ hats:
       - ''
       - '&x&F&F&E&3&0&0| ⚓ &fOwned: %wardrobe_owned_crown%'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nLEFT-CLICK&r &x&F&F&B&A&0&0To Equip'
+      - '&x&0&0&8&D&F&F▷ &x&0&0&8&D&F&F&l&nRIGHT-CLICK&r &x&0&0&8&D&F&FTo Preview'
   propeller_hat:
     slot: 13
     permission: sharded.wardrobe.propeller_hat
-    itemsadder-id: 'hats:propeller_hat'
-    material: 'itemsadder-hats:propeller_hat'
+    itemsadder-id: 'HATS:PROPELLER_HAT'
+    material: 'HATS:PROPELLER_HAT'
     display-name: '&x&0&0&8&D&F&F&lPROPELLER &x&0&0&8&D&F&FHat'
     lore:
       - '&8Description'
@@ -77,12 +92,13 @@ hats:
       - ''
       - '&x&0&0&8&D&F&F| ⚓ &fOwned: %wardrobe_owned_propeller_hat%'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nLEFT-CLICK&r &x&F&F&B&A&0&0To Equip'
+      - '&x&0&0&8&D&F&F▷ &x&0&0&8&D&F&F&l&nRIGHT-CLICK&r &x&0&0&8&D&F&FTo Preview'
   clown_mask:
     slot: 14
     permission: sharded.wardrobe.clown_mask
-    itemsadder-id: 'hats:clown_mask'
-    material: 'itemsadder-hats:clown_mask'
+    itemsadder-id: 'HATS:CLOWN_MASK'
+    material: 'HATS:CLOWN_MASK'
     display-name: '&x&F&F&0&0&0&0&lCLOWN &x&F&F&0&0&0&0Mask'
     lore:
       - '&8Description'
@@ -93,12 +109,13 @@ hats:
       - ''
       - '&x&F&F&0&0&0&0| ⚓ &fOwned: %wardrobe_owned_clown_mask%'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nLEFT-CLICK&r &x&F&F&B&A&0&0To Equip'
+      - '&x&0&0&8&D&F&F▷ &x&0&0&8&D&F&F&l&nRIGHT-CLICK&r &x&0&0&8&D&F&FTo Preview'
   sstraw_hat:
     slot: 15
     permission: sharded.wardrobe.sstraw_hat
-    itemsadder-id: 'hats:sstraw_hat'
-    material: 'itemsadder-hats:sstraw_hat'
+    itemsadder-id: 'HATS:SSTRAW_HAT'
+    material: 'HATS:SSTRAW_HAT'
     display-name: '&x&B&3&F&F&0&0&lSTRAW &x&B&3&F&F&0&0Hat'
     lore:
       - '&8Description'
@@ -109,4 +126,5 @@ hats:
       - ''
       - '&x&B&3&F&F&0&0| ⚓ &fOwned: %wardrobe_owned_sstraw_hat%'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nLEFT-CLICK&r &x&F&F&B&A&0&0To Equip'
+      - '&x&0&0&8&D&F&F▷ &x&0&0&8&D&F&F&l&nRIGHT-CLICK&r &x&0&0&8&D&F&FTo Preview'

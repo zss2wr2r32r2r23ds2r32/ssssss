@@ -13,7 +13,7 @@ items:
       - '[openguimenu] mainmenu'
 
   top_hat:
-    material: 'itemsadder-hats:tophat'
+    material: 'HATS:TOPHAT'
     slot: 11
     display_name: '&x&F&F&0&0&5&3&lTOP &x&F&F&0&0&5&3Hat &7(/wardrobe)'
     lore:
@@ -35,7 +35,7 @@ items:
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   crown:
-    material: 'itemsadder-hats:crown'
+    material: 'HATS:CROWN'
     slot: 12
     display_name: '&x&F&F&E&3&0&0&lCROWN &7(/wardrobe)'
     lore:
@@ -57,7 +57,7 @@ items:
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   propellerhat:
-    material: 'itemsadder-hats:propeller_hat'
+    material: 'HATS:PROPELLER_HAT'
     slot: 13
     display_name: '&x&0&0&8&D&F&F&lPROPELLER &x&0&0&8&D&F&FHat &7(/wardrobe)'
     lore:
@@ -79,7 +79,7 @@ items:
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   clownmask:
-    material: 'itemsadder-hats:clown_mask'
+    material: 'HATS:CLOWN_MASK'
     slot: 14
     display_name: '&x&F&F&0&0&0&0&lCLOWN &x&F&F&0&0&0&0Mask &7(/wardrobe)'
     lore:
@@ -101,7 +101,7 @@ items:
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
   strawhat:
-    material: 'itemsadder-hats:sstraw_hat'
+    material: 'HATS:SSTRAW_HAT'
     slot: 15
     display_name: '&x&B&3&F&F&0&0&lSTRAW &x&B&3&F&F&0&0Hat &7(/wardrobe)'
     lore:

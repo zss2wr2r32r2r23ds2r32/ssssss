@@ -91,7 +91,7 @@ commands:
     aliases: [namecolors]
   wardrobe:
     description: Open your cosmetic hat wardrobe
-    usage: /wardrobe
+    usage: /wardrobe [leave]
   tags:
     description: Open the tag equip menu
     usage: /tags
@@ -447,9 +447,6 @@ permissions:
     default: true
   sharded.teams.admin:
     description: Team admin commands
-    default: op
-  sharded.commandwhitelist.bypass:
-    description: Bypass command whitelist restrictions
     default: op
   sharded.dailyrewards.use:
     description: Claim daily rewards

@@ -277,12 +277,26 @@ public final class GuiManager {
     public String applyLeaderboardPlaceholders(Player player, String input) {
         if (input == null) return "";
         String out = input;
-        for (int i = 1; i <= 10; i++) {
-            out = out.replace("%tokens_top_" + i + "_name%", topTokenName(i))
-                    .replace("%tokens_top_" + i + "_amount%", topTokenAmount(i))
-                    .replace("%tokens_top_" + i + "_formatted%", topTokenFormatted(i))
-                    .replace("%killstreak_top_" + i + "_name%", topKillstreakName(i))
-                    .replace("%killstreak_top_" + i + "_amount%", topKillstreakAmount(i));
+        boolean needsTokensTop = out.contains("%tokens_top_");
+        boolean needsKillstreakTop = out.contains("%killstreak_top_");
+        if (needsTokensTop) {
+            var tokens = plugin.modules().get(com.sharded.core.modules.tokens.TokensModule.class);
+            java.util.List<com.sharded.core.modules.tokens.TokenDatabase.LeaderEntry> top =
+                    tokens == null || tokens.database() == null ? java.util.List.of() : tokens.database().top(10);
+            for (int i = 1; i <= 10; i++) {
+                out = out.replace("%tokens_top_" + i + "_name%", tokenTopName(top, i))
+                        .replace("%tokens_top_" + i + "_amount%", tokenTopAmount(top, i))
+                        .replace("%tokens_top_" + i + "_formatted%", tokenTopFormatted(top, i));
+            }
+        }
+        if (needsKillstreakTop) {
+            var ks = plugin.modules().get(com.sharded.core.modules.killstreaks.KillstreaksModule.class);
+            java.util.List<com.sharded.core.modules.killstreaks.KillstreakDatabase.LeaderEntry> top =
+                    ks == null || ks.database() == null ? java.util.List.of() : ks.database().topBest(10);
+            for (int i = 1; i <= 10; i++) {
+                out = out.replace("%killstreak_top_" + i + "_name%", killstreakTopName(top, i))
+                        .replace("%killstreak_top_" + i + "_amount%", killstreakTopAmount(top, i));
+            }
         }
         if (player != null) {
             var ks = plugin.modules().get(com.sharded.core.modules.killstreaks.KillstreaksModule.class);
@@ -294,38 +308,26 @@ public final class GuiManager {
         return out;
     }
 
-    private String topTokenName(int rank) {
-        var tokens = plugin.modules().get(com.sharded.core.modules.tokens.TokensModule.class);
-        if (tokens == null || tokens.database() == null) return "---";
-        var top = tokens.database().top(10);
+    private String tokenTopName(java.util.List<com.sharded.core.modules.tokens.TokenDatabase.LeaderEntry> top, int rank) {
         if (rank > top.size()) return "---";
         return com.sharded.core.util.OfflinePlayers.name(top.get(rank - 1).uuid());
     }
 
-    private String topTokenAmount(int rank) {
-        var tokens = plugin.modules().get(com.sharded.core.modules.tokens.TokensModule.class);
-        if (tokens == null || tokens.database() == null) return "0";
-        var top = tokens.database().top(10);
+    private String tokenTopAmount(java.util.List<com.sharded.core.modules.tokens.TokenDatabase.LeaderEntry> top, int rank) {
         if (rank > top.size()) return "0";
         return String.valueOf(top.get(rank - 1).value());
     }
 
-    private String topTokenFormatted(int rank) {
-        return Numbers.format(Long.parseLong(topTokenAmount(rank)));
+    private String tokenTopFormatted(java.util.List<com.sharded.core.modules.tokens.TokenDatabase.LeaderEntry> top, int rank) {
+        return Numbers.format(Long.parseLong(tokenTopAmount(top, rank)));
     }
 
-    private String topKillstreakName(int rank) {
-        var ks = plugin.modules().get(com.sharded.core.modules.killstreaks.KillstreaksModule.class);
-        if (ks == null || ks.database() == null) return "---";
-        var top = ks.database().topBest(10);
+    private String killstreakTopName(java.util.List<com.sharded.core.modules.killstreaks.KillstreakDatabase.LeaderEntry> top, int rank) {
         if (rank > top.size()) return "---";
         return com.sharded.core.util.OfflinePlayers.name(top.get(rank - 1).uuid());
     }
 
-    private String topKillstreakAmount(int rank) {
-        var ks = plugin.modules().get(com.sharded.core.modules.killstreaks.KillstreaksModule.class);
-        if (ks == null || ks.database() == null) return "0";
-        var top = ks.database().topBest(10);
+    private String killstreakTopAmount(java.util.List<com.sharded.core.modules.killstreaks.KillstreakDatabase.LeaderEntry> top, int rank) {
         if (rank > top.size()) return "0";
         return String.valueOf(top.get(rank - 1).value());
     }

@@ -9,7 +9,7 @@ public final class ModuleCategories {
     private static final Map<String, String> MAP = new LinkedHashMap<>();
 
     static {
-        category("staff", "staff", "staffchat", "requeststaff", "punishments", "commandwhitelist",
+        category("staff", "staffchat", "requeststaff", "punishments",
                 "chatmoderation", "client", "invrollback", "screenshare", "modulesadmin");
         category("settings", "deathmessages", "nightvision", "privatemessages", "chat", "joinmessages", "settings");
         category("tokens", "tokens", "eglow", "chatcolor", "namecolor", "wardrobe");

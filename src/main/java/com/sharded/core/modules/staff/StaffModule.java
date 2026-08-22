@@ -50,7 +50,7 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
     private Set<String> auditPermissions;
 
     public StaffModule(ShardedCore plugin) {
-        super(plugin, "staff");
+        super(plugin, "core", "staff");
     }
 
     public YamlConfiguration config() {

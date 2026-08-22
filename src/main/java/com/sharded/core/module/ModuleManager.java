@@ -43,7 +43,6 @@ import com.sharded.core.modules.staffchat.StaffChatModule;
 import com.sharded.core.modules.guide.GuideModule;
 import com.sharded.core.modules.client.ClientModule;
 import com.sharded.core.modules.collisions.CollisionsModule;
-import com.sharded.core.modules.commandwhitelist.CommandWhitelistModule;
 import com.sharded.core.modules.dailyrewards.DailyRewardsModule;
 import com.sharded.core.modules.weeklyrewards.WeeklyRewardsModule;
 import com.sharded.core.modules.leaderboards.LeaderboardsModule;
@@ -106,7 +105,6 @@ public final class ModuleManager {
         register(new GuideModule(plugin));
         register(new ClientModule(plugin));
         register(new CollisionsModule(plugin));
-        register(new CommandWhitelistModule(plugin));
         register(new TeamsModule(plugin));
         register(new DailyRewardsModule(plugin));
         register(new WeeklyRewardsModule(plugin));

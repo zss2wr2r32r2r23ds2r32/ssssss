@@ -131,8 +131,11 @@ public abstract class Module implements Listener {
         if (!legacy.exists() || legacy.getAbsolutePath().equals(target.getAbsolutePath())) return;
         if (target.exists() && target.list() != null && target.list().length > 0) return;
         try {
+            java.nio.file.Path targetRoot = target.toPath().toAbsolutePath().normalize();
             java.nio.file.Files.walk(legacy.toPath()).forEach(path -> {
                 try {
+                    java.nio.file.Path normalized = path.toAbsolutePath().normalize();
+                    if (normalized.startsWith(targetRoot)) return;
                     java.nio.file.Path dest = target.toPath().resolve(legacy.toPath().relativize(path));
                     if (java.nio.file.Files.isDirectory(path)) {
                         java.nio.file.Files.createDirectories(dest);

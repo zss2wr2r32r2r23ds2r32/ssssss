@@ -18,7 +18,6 @@ staff-permissions:
   - sharded.invrollback.use
   - sharded.screenshare.use
   - sharded.chatmoderation.use
-  - sharded.commandwhitelist.bypass
 
 all-permissions: {}
 
@@ -177,7 +176,6 @@ roles:
     grant-all: false
     permissions:
       - sharded.announce.use
-      - sharded.commandwhitelist.admin
   director:
     luckperms-group: director
     include-staff: true

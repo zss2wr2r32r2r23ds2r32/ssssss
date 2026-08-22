@@ -2,7 +2,7 @@
 #  ShardedCore - main configuration
 # ---------------------------------------------------------
 
-config-version: 13
+config-version: 14
 
 # Edit plugins/ShardedCore/gui-navigation.yml for global back/previous/next/close button styles.
 
@@ -52,7 +52,6 @@ modules:
   guide: true
   client: true
   collisions: true
-  commandwhitelist: true
   teams: true
   dailyrewards: true
   weeklyrewards: true
