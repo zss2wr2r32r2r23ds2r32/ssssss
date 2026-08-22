@@ -1,0 +1,11 @@
+# Join Actions Module
+# Actions performed when a player joins
+
+enabled: true
+
+delay-ticks: 5
+teleport-to-spawn: true
+
+fireworks:
+  enabled: true
+  amount: 2

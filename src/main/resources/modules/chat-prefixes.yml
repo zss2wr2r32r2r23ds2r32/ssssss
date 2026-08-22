@@ -1,0 +1,28 @@
+# Chat Prefixes Module
+
+enabled: false
+
+default-prefix: "&7"
+format: "%prefix%%player%&8: &f%message%"
+
+prefixes:
+  owner:
+    permission: "shardedlobbycore.chatprefix.owner"
+    weight: 100
+    prefix: "&4&lOWNER &r"
+  admin:
+    permission: "shardedlobbycore.chatprefix.admin"
+    weight: 90
+    prefix: "&c&lADMIN &r"
+  moderator:
+    permission: "shardedlobbycore.chatprefix.mod"
+    weight: 80
+    prefix: "&9&lMOD &r"
+  vip:
+    permission: "shardedlobbycore.chatprefix.vip"
+    weight: 50
+    prefix: "&6&lVIP &r"
+  default:
+    permission: "shardedlobbycore.chatprefix.default"
+    weight: 0
+    prefix: "&7"

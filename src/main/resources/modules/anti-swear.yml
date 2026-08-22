@@ -1,0 +1,12 @@
+# Anti Swear Module
+
+enabled: true
+
+blocked-words:
+  - "badword1"
+  - "badword2"
+  - "badword3"
+
+message: "%prefix% &cPlease do not use inappropriate language."
+notify-staff: true
+staff-message: "%prefix% &#FF0000%player% &ftried to use a blocked word: &#FF0000%word%"
