@@ -47,51 +47,126 @@ public class CommandWhitelistModule implements Module, Listener {
         compileWhitelist();
         Bukkit.getPluginManager().registerEvents(this, plugin);
         registerPaperCommandSendListener();
+        registerAsyncTabCompleteListener();
+        registerBrigadierSuggestionsListener();
     }
 
     private void registerPaperCommandSendListener() {
         if (!config.getBoolean("filter-command-send", true)) {
             return;
         }
-        try {
-            Class<? extends Event> eventClass = Class.forName("com.destroystokyo.paper.event.brigadier.PlayerCommandSendEvent")
-                    .asSubclass(Event.class);
-            EventExecutor executor = (listener, event) -> {
-                try {
-                    Player player = (Player) eventClass.getMethod("getPlayer").invoke(event);
+        registerEventListener(
+                "com.destroystokyo.paper.event.brigadier.PlayerCommandSendEvent",
+                "io.papermc.paper.event.player.PlayerCommandSendEvent",
+                event -> {
+                    Player player = (Player) event.getClass().getMethod("getPlayer").invoke(event);
                     if (canBypass(player)) {
                         return;
                     }
                     @SuppressWarnings("unchecked")
-                    Collection<String> commands = (Collection<String>) eventClass.getMethod("getCommands").invoke(event);
-                    commands.removeIf(cmd -> !isWhitelisted(cmd));
+                    Collection<String> commands = (Collection<String>) event.getClass().getMethod("getCommands").invoke(event);
+                    List<String> allowed = commands.stream()
+                            .filter(this::isWhitelistedRoot)
+                            .collect(Collectors.toList());
+                    commands.clear();
+                    commands.addAll(allowed);
+                },
+                "PlayerCommandSendEvent"
+        );
+    }
+
+    private void registerAsyncTabCompleteListener() {
+        if (!config.getBoolean("filter-tab-complete", true)) {
+            return;
+        }
+        registerEventListener(
+                "com.destroystokyo.paper.event.server.AsyncTabCompleteEvent",
+                null,
+                event -> {
+                    if (!(event.getClass().getMethod("getSender").invoke(event) instanceof Player player)) {
+                        return;
+                    }
+                    if (canBypass(player)) {
+                        return;
+                    }
+                    boolean isCommand = (boolean) event.getClass().getMethod("isCommand").invoke(event);
+                    if (!isCommand) {
+                        return;
+                    }
+                    String buffer = (String) event.getClass().getMethod("getBuffer").invoke(event);
+                    if (buffer == null || !buffer.startsWith("/")) {
+                        return;
+                    }
+                    applyTabFilter(buffer, (List<String>) event.getClass().getMethod("getCompletions").invoke(event));
+                },
+                "AsyncTabCompleteEvent"
+        );
+    }
+
+    private void registerBrigadierSuggestionsListener() {
+        if (!config.getBoolean("filter-brigadier-suggestions", true)) {
+            return;
+        }
+        registerEventListener(
+                "com.destroystokyo.paper.event.brigadier.AsyncPlayerSendSuggestionsEvent",
+                null,
+                event -> {
+                    Player player = (Player) event.getClass().getMethod("getPlayer").invoke(event);
+                    if (canBypass(player)) {
+                        return;
+                    }
+                    Object suggestions = event.getClass().getMethod("getSuggestions").invoke(event);
+                    Class<?> suggestionsClass = suggestions.getClass();
+                    @SuppressWarnings("unchecked")
+                    List<Object> original = (List<Object>) suggestionsClass.getMethod("getList").invoke(suggestions);
+                    Object range = suggestionsClass.getMethod("getRange").invoke(suggestions);
+
+                    List<Object> filtered = new ArrayList<>();
+                    for (Object suggestion : original) {
+                        String text = (String) suggestion.getClass().getMethod("getText").invoke(suggestion);
+                        if (isWhitelistedRoot(text)) {
+                            filtered.add(suggestion);
+                        }
+                    }
+
+                    Object newSuggestions = suggestionsClass.getMethod("create", range.getClass(), List.class)
+                            .invoke(null, range, filtered);
+                    event.getClass().getMethod("setSuggestions", suggestionsClass).invoke(event, newSuggestions);
+                },
+                "AsyncPlayerSendSuggestionsEvent"
+        );
+    }
+
+    private void registerEventListener(String primaryClass, String fallbackClass, EventHandlerLogic logic, String label) {
+        if (tryRegisterEvent(primaryClass, logic)) {
+            plugin.getLogger().info("Hooked command whitelist into " + label);
+            return;
+        }
+        if (fallbackClass != null && tryRegisterEvent(fallbackClass, logic)) {
+            plugin.getLogger().info("Hooked command whitelist into " + label + " (fallback)");
+        }
+    }
+
+    private boolean tryRegisterEvent(String className, EventHandlerLogic logic) {
+        try {
+            Class<? extends Event> eventClass = Class.forName(className).asSubclass(Event.class);
+            EventExecutor executor = (listener, event) -> {
+                try {
+                    logic.handle(event);
                 } catch (ReflectiveOperationException ex) {
-                    plugin.getLogger().warning("Error filtering command send: " + ex.getMessage());
+                    plugin.getLogger().warning("Error in command whitelist (" + className + "): " + ex.getMessage());
                 }
             };
             Bukkit.getPluginManager().registerEvent(eventClass, this, EventPriority.HIGHEST, executor, plugin, false);
-        } catch (ReflectiveOperationException ex) {
-            try {
-                Class<? extends Event> eventClass = Class.forName("io.papermc.paper.event.player.PlayerCommandSendEvent")
-                        .asSubclass(Event.class);
-                EventExecutor executor = (listener, event) -> {
-                    try {
-                        Player player = (Player) eventClass.getMethod("getPlayer").invoke(event);
-                        if (canBypass(player)) {
-                            return;
-                        }
-                        @SuppressWarnings("unchecked")
-                        Collection<String> commands = (Collection<String>) eventClass.getMethod("getCommands").invoke(event);
-                        commands.removeIf(cmd -> !isWhitelisted(cmd));
-                    } catch (ReflectiveOperationException inner) {
-                        plugin.getLogger().warning("Error filtering command send: " + inner.getMessage());
-                    }
-                };
-                Bukkit.getPluginManager().registerEvent(eventClass, this, EventPriority.HIGHEST, executor, plugin, false);
-            } catch (ReflectiveOperationException ignored) {
-                plugin.getLogger().info("Paper command-send filtering unavailable on this server version.");
-            }
+            return true;
+        } catch (ReflectiveOperationException ignored) {
+            return false;
         }
+    }
+
+    @FunctionalInterface
+    private interface EventHandlerLogic {
+        void handle(Object event) throws ReflectiveOperationException;
     }
 
     @Override
@@ -120,25 +195,55 @@ public class CommandWhitelistModule implements Module, Listener {
         return command.split(" ")[0];
     }
 
-    private String extractBaseCommand(String fullCommand) {
-        return normalizeBaseCommand(fullCommand);
+    private boolean isWhitelistedRoot(String command) {
+        if (command == null || command.isEmpty()) {
+            return false;
+        }
+        String lower = command.toLowerCase(Locale.ROOT).trim();
+        if (lower.startsWith("/")) {
+            lower = lower.substring(1);
+        }
+
+        if (lower.contains(":")) {
+            String label = lower.substring(lower.indexOf(':') + 1).split(" ")[0];
+            return whitelistCommands.contains(label);
+        }
+
+        return whitelistCommands.contains(lower.split(" ")[0]);
     }
 
     private boolean isWhitelisted(String command) {
-        String base = extractBaseCommand(command);
-        if (whitelistCommands.contains(base)) {
-            return true;
-        }
-        for (String allowed : whitelistCommands) {
-            if (base.equals(allowed) || command.toLowerCase(Locale.ROOT).startsWith(allowed + " ")) {
-                return true;
-            }
-        }
-        return false;
+        return isWhitelistedRoot(command);
     }
 
     private boolean canBypass(Player player) {
         return player.hasPermission("shardedlobbycore.bypass.commandwhitelist");
+    }
+
+    private void applyTabFilter(String buffer, List<String> completions) {
+        String typed = buffer.substring(1).toLowerCase(Locale.ROOT);
+        boolean hasSpace = typed.contains(" ");
+        final String commandBase = normalizeBaseCommand(hasSpace ? typed.split(" ")[0] : typed);
+
+        completions.clear();
+        if (!hasSpace) {
+            for (String allowed : whitelistCommands) {
+                if (commandBase.isEmpty() || allowed.startsWith(commandBase)) {
+                    completions.add(allowed);
+                }
+            }
+            return;
+        }
+
+        if (!isWhitelisted(typed)) {
+            return;
+        }
+
+        for (String allowed : whitelistCommands) {
+            if (allowed.startsWith(commandBase)) {
+                completions.add(allowed);
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -178,43 +283,6 @@ public class CommandWhitelistModule implements Module, Listener {
             return;
         }
 
-        String typed = buffer.substring(1).toLowerCase(Locale.ROOT);
-        boolean hasSpace = typed.contains(" ");
-        final String commandBase = normalizeBaseCommand(hasSpace ? typed.split(" ")[0] : typed);
-
-        if (!hasSpace) {
-            if (!commandBase.isEmpty()) {
-                boolean anyMatch = whitelistCommands.stream().anyMatch(allowed -> allowed.startsWith(commandBase));
-                if (!anyMatch) {
-                    event.getCompletions().clear();
-                    return;
-                }
-            }
-            List<String> filtered = new ArrayList<>();
-            for (String allowed : whitelistCommands) {
-                if (commandBase.isEmpty() || allowed.startsWith(commandBase)) {
-                    filtered.add(allowed);
-                }
-            }
-            event.getCompletions().clear();
-            event.getCompletions().addAll(filtered);
-            return;
-        }
-
-        if (!isWhitelisted(typed)) {
-            event.getCompletions().clear();
-            return;
-        }
-
-        Iterator<String> iterator = event.getCompletions().iterator();
-        while (iterator.hasNext()) {
-            String completion = iterator.next();
-            if (completion.startsWith("/")) {
-                completion = completion.substring(1);
-            }
-            if (!isWhitelisted(commandBase + " " + completion.split(" ")[0])) {
-                iterator.remove();
-            }
-        }
+        applyTabFilter(buffer, event.getCompletions());
     }
 }

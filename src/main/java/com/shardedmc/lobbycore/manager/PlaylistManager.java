@@ -12,6 +12,7 @@ public class PlaylistManager {
 
     private final ShardedLobbyCore plugin;
     private FileConfiguration data;
+    private final Map<UUID, List<String>> drafts = new HashMap<>();
 
     public PlaylistManager(ShardedLobbyCore plugin) {
         this.plugin = plugin;
@@ -31,8 +32,7 @@ public class PlaylistManager {
     }
 
     public List<String> getQueue(UUID uuid) {
-        List<String> queue = data.getStringList("playlists." + uuid + ".queue");
-        return new ArrayList<>(queue);
+        return new ArrayList<>(data.getStringList("playlists." + uuid + ".queue"));
     }
 
     public void setQueue(UUID uuid, List<String> queue) {
@@ -40,18 +40,43 @@ public class PlaylistManager {
         save();
     }
 
-    public void toggleSong(UUID uuid, String songId) {
-        List<String> queue = getQueue(uuid);
-        if (queue.contains(songId)) {
-            queue.remove(songId);
-        } else {
-            queue.add(songId);
-        }
-        setQueue(uuid, queue);
+    public void startDraft(UUID uuid) {
+        drafts.put(uuid, new ArrayList<>());
     }
 
-    public boolean isSelected(UUID uuid, String songId) {
-        return getQueue(uuid).contains(songId);
+    public List<String> getDraft(UUID uuid) {
+        return drafts.computeIfAbsent(uuid, k -> new ArrayList<>());
+    }
+
+    public void clearDraft(UUID uuid) {
+        drafts.remove(uuid);
+    }
+
+    public void toggleDraftSong(UUID uuid, String songId) {
+        List<String> draft = getDraft(uuid);
+        if (draft.contains(songId)) {
+            draft.remove(songId);
+        } else {
+            draft.add(songId);
+        }
+    }
+
+    public boolean isInDraft(UUID uuid, String songId) {
+        return getDraft(uuid).contains(songId);
+    }
+
+    public int getDraftPosition(UUID uuid, String songId) {
+        int index = getDraft(uuid).indexOf(songId);
+        return index >= 0 ? index + 1 : -1;
+    }
+
+    public List<String> confirmDraft(UUID uuid) {
+        List<String> confirmed = new ArrayList<>(getDraft(uuid));
+        drafts.remove(uuid);
+        if (!confirmed.isEmpty()) {
+            setQueue(uuid, confirmed);
+        }
+        return confirmed;
     }
 
     public String peekNext(UUID uuid) {

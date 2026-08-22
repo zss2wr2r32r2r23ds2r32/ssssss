@@ -23,8 +23,9 @@ action-bar:
 playlist-gui:
   title: "&#FF0072Playlist"
   rows: 6
+  confirm-slot: 49
   selected-material: LIME_STAINED_GLASS_PANE
-  selected-name: "&#94FF00&lSELECTED"
+  selected-name: "&#94FF00Selected &7(#%number%)"
   selected-lore:
     - "&8Description"
     - ""
@@ -33,6 +34,15 @@ playlist-gui:
     - "&#94FF00| &fIs now added to your Playlist!"
     - ""
     - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Cancel"
+  confirm-name: "&#94FF00&lCONFIRM"
+  confirm-lore:
+    - "&8Description"
+    - ""
+    - "&#94FF00| &fClick to start playing"
+    - "&#94FF00| &fyour playlist in order"
+    - ""
+    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Confirm"
+  empty-message: "%prefix% &#FF2727Select at least one song for your playlist."
 
 playlist-queue:
   play-delay-ticks: 5

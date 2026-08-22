@@ -25,7 +25,7 @@ public class MusicModule implements Module, Listener {
     private ShardedLobbyCore plugin;
     private FileConfiguration config;
     private final Map<Integer, String> mainSlotActions = new HashMap<>();
-    private final Map<Integer, String> playlistSlotSongs = new HashMap<>();
+    private final Map<Integer, String> playlistSlotActions = new HashMap<>();
     private final Map<String, String> songDisplayNames = new HashMap<>();
     private final Map<String, ConfigurationSection> songSections = new LinkedHashMap<>();
 
@@ -50,7 +50,7 @@ public class MusicModule implements Module, Listener {
     @Override
     public void disable() {
         mainSlotActions.clear();
-        playlistSlotSongs.clear();
+        playlistSlotActions.clear();
         songDisplayNames.clear();
         songSections.clear();
         HandlerList.unregisterAll(this);
@@ -117,25 +117,41 @@ public class MusicModule implements Module, Listener {
     }
 
     private void openPlaylistMenu(Player player) {
+        plugin.getPlaylistManager().startDraft(player.getUniqueId());
+
         int rows = Math.min(6, Math.max(1, config.getInt("playlist-gui.rows", 6)));
         MenuHolder holder = new MenuHolder(MenuType.MUSIC_PLAYLIST);
         Inventory inventory = Bukkit.createInventory(holder, rows * 9,
                 MessageUtil.component(config.getString("playlist-gui.title", "&#FF0072Playlist")));
         holder.setInventory(inventory);
-        playlistSlotSongs.clear();
+        playlistSlotActions.clear();
 
-        UUID uuid = player.getUniqueId();
+        int confirmSlot = config.getInt("playlist-gui.confirm-slot", 49);
         int slot = 0;
         for (Map.Entry<String, ConfigurationSection> entry : songSections.entrySet()) {
-            ConfigurationSection song = entry.getValue();
-            String songId = song.getString("song", entry.getKey());
+            if (slot == confirmSlot) {
+                slot++;
+            }
             if (slot >= inventory.getSize()) {
                 break;
             }
+            ConfigurationSection song = entry.getValue();
+            String songId = song.getString("song", entry.getKey());
             inventory.setItem(slot, buildPlaylistItem(player, song, songId));
-            playlistSlotSongs.put(slot, songId);
+            playlistSlotActions.put(slot, songId);
             slot++;
         }
+
+        ConfigurationSection confirmSection = config.getConfigurationSection("playlist-gui.confirm");
+        if (confirmSection != null) {
+            inventory.setItem(confirmSlot, ItemBuilder.fromConfig(confirmSection, player));
+        } else {
+            inventory.setItem(confirmSlot, ItemBuilder.of(Material.LIME_CONCRETE)
+                    .name(MessageUtil.format(config.getString("playlist-gui.confirm-name", "&#94FF00&lCONFIRM"), player))
+                    .lore(MessageUtil.formatLore(config.getStringList("playlist-gui.confirm-lore"), player))
+                    .build());
+        }
+        playlistSlotActions.put(confirmSlot, "confirm");
 
         fillEmpty(inventory, player);
         player.openInventory(inventory);
@@ -143,20 +159,23 @@ public class MusicModule implements Module, Listener {
 
     private ItemStack buildPlaylistItem(Player player, ConfigurationSection song, String songId) {
         UUID uuid = player.getUniqueId();
-        boolean selected = plugin.getPlaylistManager().isSelected(uuid, songId);
-        if (selected) {
+        int position = plugin.getPlaylistManager().getDraftPosition(uuid, songId);
+        if (position > 0) {
             String displayName = MessageUtil.plainText(song.getString("name", songId));
-            List<String> lore = config.getStringList("playlist-gui.selected-lore");
-            lore = new ArrayList<>(lore);
+            List<String> lore = new ArrayList<>(config.getStringList("playlist-gui.selected-lore"));
             for (int i = 0; i < lore.size(); i++) {
-                lore.set(i, lore.get(i).replace("%song%", displayName).replace("%song-name%", displayName));
+                lore.set(i, lore.get(i)
+                        .replace("%song%", displayName)
+                        .replace("%song-name%", displayName)
+                        .replace("%number%", String.valueOf(position)));
             }
             Material material = Material.matchMaterial(config.getString("playlist-gui.selected-material", "LIME_STAINED_GLASS_PANE"));
             if (material == null) {
                 material = Material.LIME_STAINED_GLASS_PANE;
             }
+            String nameTemplate = config.getString("playlist-gui.selected-name", "&#94FF00Selected &7(#%number%)");
             return ItemBuilder.of(material)
-                    .name(MessageUtil.format(config.getString("playlist-gui.selected-name", "&#94FF00&lSELECTED"), player))
+                    .name(MessageUtil.format(nameTemplate.replace("%number%", String.valueOf(position)), player))
                     .lore(MessageUtil.formatLore(lore, player))
                     .build();
         }
@@ -188,7 +207,7 @@ public class MusicModule implements Module, Listener {
         if (holder.getType() == MenuType.MUSIC_MAIN) {
             handleMainClick(player, event.getRawSlot());
         } else if (holder.getType() == MenuType.MUSIC_PLAYLIST) {
-            handlePlaylistClick(player, event.getRawSlot(), holder);
+            handlePlaylistClick(player, event.getRawSlot());
         }
     }
 
@@ -207,15 +226,38 @@ public class MusicModule implements Module, Listener {
         Bukkit.getScheduler().runTask(plugin, () -> executeAction(player, action));
     }
 
-    private void handlePlaylistClick(Player player, int slot, MenuHolder holder) {
-        String songId = playlistSlotSongs.get(slot);
-        if (songId == null) {
+    private void handlePlaylistClick(Player player, int slot) {
+        String action = playlistSlotActions.get(slot);
+        if (action == null) {
             return;
         }
 
-        plugin.getPlaylistManager().toggleSong(player.getUniqueId(), songId);
-        updateUpNextActionBar(player);
+        if ("confirm".equals(action)) {
+            confirmPlaylist(player);
+            return;
+        }
+
+        plugin.getPlaylistManager().toggleDraftSong(player.getUniqueId(), action);
         openPlaylistMenu(player);
+    }
+
+    private void confirmPlaylist(Player player) {
+        List<String> playlist = plugin.getPlaylistManager().confirmDraft(player.getUniqueId());
+        if (playlist.isEmpty()) {
+            MessageUtil.sendFormatted(player, config.getString("playlist-gui.empty-message",
+                    "%prefix% &#FF2727Select at least one song for your playlist."));
+            return;
+        }
+
+        player.closeInventory();
+        String first = playlist.get(0);
+        List<String> remaining = playlist.size() > 1 ? new ArrayList<>(playlist.subList(1, playlist.size())) : new ArrayList<>();
+        plugin.getPlaylistManager().setQueue(player.getUniqueId(), remaining);
+
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            runCommand(player, config.getString("commands.play", "music play %song%").replace("%song%", first));
+            updateUpNextActionBar(player);
+        });
     }
 
     private void executeAction(Player player, String action) {
