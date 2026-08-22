@@ -6,6 +6,7 @@ import com.shardedmc.lobbycore.gui.MenuType;
 import com.shardedmc.lobbycore.module.Module;
 import com.shardedmc.lobbycore.util.ItemBuilder;
 import com.shardedmc.lobbycore.util.MessageUtil;
+import com.shardedmc.lobbycore.util.NbsDurationParser;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -26,6 +27,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.*;
 
 public class MusicModule implements Module, Listener {
@@ -55,6 +60,8 @@ public class MusicModule implements Module, Listener {
         this.plugin = plugin;
         this.config = config;
         reloadSongCache();
+        loadNbsDurations();
+        loadCalibratedDurations();
         Bukkit.getPluginManager().registerEvents(this, plugin);
         registerSongEndListener();
         startActionBarTask();
@@ -256,6 +263,84 @@ public class MusicModule implements Module, Listener {
             songSections.put(key, song);
             songDisplayNames.put(songId, MessageUtil.plainText(song.getString("name", key)));
             songDurations.put(songId, song.getInt("duration-seconds", defaultDuration));
+        }
+    }
+
+    private static final Map<String, String> NBS_SONG_ALIASES = Map.of(
+            "DJGOTUSFALLININLOVE", "DJGOTUSFALLIN'INLOVE",
+            "MAJORLAZER-COLDWATER", "MAJORLAZER-COLDWATER(FEAT.JUSTINBIEBER_M¥)EASY"
+    );
+
+    private void loadCalibratedDurations() {
+        File file = new File(plugin.getDataFolder(), "song-durations.yml");
+        if (!file.exists()) {
+            plugin.saveResource("song-durations.yml", false);
+        }
+        org.bukkit.configuration.file.YamlConfiguration durations =
+                org.bukkit.configuration.file.YamlConfiguration.loadConfiguration(file);
+        InputStream defaults = plugin.getResource("song-durations.yml");
+        if (defaults != null) {
+            durations.setDefaults(org.bukkit.configuration.file.YamlConfiguration.loadConfiguration(
+                    new java.io.InputStreamReader(defaults, java.nio.charset.StandardCharsets.UTF_8)));
+        }
+        for (String songId : durations.getKeys(false)) {
+            songDurations.put(songId, durations.getInt(songId));
+        }
+    }
+
+    private void loadNbsDurations() {
+        File songsFolder = new File(plugin.getDataFolder(), "songs");
+        if (!songsFolder.exists()) {
+            songsFolder.mkdirs();
+            extractBundledSongs(songsFolder);
+        }
+
+        File[] files = songsFolder.listFiles((dir, name) ->
+                name.endsWith(".nbs") || name.endsWith(".gnbs"));
+        if (files == null) {
+            return;
+        }
+
+        for (File file : files) {
+            String baseName = file.getName();
+            int dot = baseName.lastIndexOf('.');
+            String songId = dot > 0 ? baseName.substring(0, dot) : baseName;
+            songId = NBS_SONG_ALIASES.getOrDefault(songId, songId);
+            try {
+                int seconds = NbsDurationParser.parseDurationSeconds(file.toPath());
+                if (seconds > 0 && !songDurations.containsKey(songId)) {
+                    songDurations.put(songId, seconds);
+                    plugin.getLogger().info("Loaded NBS duration for " + songId + ": " + seconds + "s");
+                }
+            } catch (IOException ex) {
+                plugin.getLogger().warning("Could not parse NBS duration for " + file.getName() + ": " + ex.getMessage());
+            }
+        }
+    }
+
+    private void extractBundledSongs(File targetFolder) {
+        String[] bundled = {
+                "ALANWALKER-FADE.nbs", "BEATIT.nbs", "BILLIEJEAN.nbs", "CALLMEMAYBE.nbs",
+                "COUNTINGSTAS.nbs", "DJGOTUSFALLININLOVE.nbs", "MAJORLAZER-COLDWATER.nbs",
+                "TAKEONME.nbs", "WAITINGFORLOVE.nbs", "FEELGOODINC.nbs", "HIGHEST-IN-THE-ROOM.nbs",
+                "IGOTAFEELING.nbs", "LUCID-DREAMS.nbs", "RANSOM.nbs", "SHOOTINGSTARS.nbs",
+                "THRILLER.nbs", "WAKEMEUPINSIDE.nbs", "YMCA.nbs", "ITDOKAPILLINIBIZA.gnbs"
+        };
+        for (String name : bundled) {
+            if (plugin.getResource("songs/" + name) == null) {
+                continue;
+            }
+            File out = new File(targetFolder, name);
+            if (out.exists()) {
+                continue;
+            }
+            try (InputStream in = plugin.getResource("songs/" + name)) {
+                if (in != null) {
+                    Files.copy(in, out.toPath());
+                }
+            } catch (IOException ex) {
+                plugin.getLogger().warning("Could not extract bundled song " + name);
+            }
         }
     }
 

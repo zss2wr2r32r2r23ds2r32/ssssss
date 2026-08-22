@@ -6,7 +6,7 @@
 
     <groupId>com.shardedmc</groupId>
     <artifactId>ShardedLobbyCore</artifactId>
-    <version>1.5.7</version>
+    <version>1.5.8</version>
     <packaging>jar</packaging>
 
     <name>ShardedLobbyCore</name>
@@ -50,6 +50,16 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+                <excludes>
+                    <exclude>songs/**</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>songs/**</include>
+                </includes>
             </resource>
         </resources>
     </build>
