@@ -6,6 +6,7 @@ import dev.sharded.velocitycore.ServerState;
 import dev.sharded.velocitycore.config.PluginConfig;
 import dev.sharded.velocitycore.util.ServerResolver;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,6 +24,7 @@ public final class ServerStatusManager {
         thread.setDaemon(true);
         return thread;
     });
+    private volatile Runnable changeListener;
 
     public ServerStatusManager(ProxyServer server, PluginConfig config) {
         this.server = server;
@@ -30,6 +32,10 @@ public final class ServerStatusManager {
         for (String tracked : config.trackedServers()) {
             states.put(normalize(tracked), ServerState.OFFLINE);
         }
+    }
+
+    public void setChangeListener(Runnable changeListener) {
+        this.changeListener = changeListener;
     }
 
     public void start() {
@@ -46,11 +52,20 @@ public final class ServerStatusManager {
         executor.shutdownNow();
     }
 
-    public void refreshNow() {
+    public boolean refreshNow() {
+        Map<String, ServerState> previous = snapshot();
         for (String tracked : config.trackedServers()) {
             String key = normalize(tracked);
             states.put(key, resolveState(tracked));
         }
+        if (!previous.equals(states)) {
+            Runnable listener = changeListener;
+            if (listener != null) {
+                listener.run();
+            }
+            return true;
+        }
+        return false;
     }
 
     public ServerState getState(String serverName) {
@@ -62,7 +77,7 @@ public final class ServerStatusManager {
     }
 
     public Map<String, ServerState> snapshot() {
-        return Map.copyOf(states);
+        return new HashMap<>(states);
     }
 
     public boolean isJoinable(String serverName) {

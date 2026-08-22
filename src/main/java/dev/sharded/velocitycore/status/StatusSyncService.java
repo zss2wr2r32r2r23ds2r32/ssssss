@@ -8,6 +8,7 @@ import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import dev.sharded.velocitycore.ServerState;
 import dev.sharded.velocitycore.common.PluginChannels;
+import dev.sharded.velocitycore.config.PluginConfig;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -22,21 +23,28 @@ public final class StatusSyncService {
 
     private final ProxyServer server;
     private final ServerStatusManager statusManager;
+    private final PluginConfig config;
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(r -> {
         Thread thread = new Thread(r, "ShardedVelocityCore-status-sync");
         thread.setDaemon(true);
         return thread;
     });
 
-    public StatusSyncService(ProxyServer server, ServerStatusManager statusManager) {
+    public StatusSyncService(ProxyServer server, ServerStatusManager statusManager, PluginConfig config) {
         this.server = server;
         this.statusManager = statusManager;
+        this.config = config;
         server.getChannelRegistrar().register(CHANNEL);
     }
 
     public void start() {
-        broadcast();
-        executor.scheduleAtFixedRate(this::broadcast, 5, 5, TimeUnit.SECONDS);
+        broadcastNow();
+        executor.scheduleAtFixedRate(
+                this::broadcastNow,
+                config.statusSyncIntervalSeconds(),
+                config.statusSyncIntervalSeconds(),
+                TimeUnit.SECONDS
+        );
     }
 
     public void stop() {
@@ -48,7 +56,7 @@ public final class StatusSyncService {
         player.sendPluginMessage(CHANNEL, encode(statusManager.snapshot()));
     }
 
-    private void broadcast() {
+    public void broadcastNow() {
         statusManager.refreshNow();
         byte[] payload = encode(statusManager.snapshot());
         for (RegisteredServer registeredServer : server.getAllServers()) {

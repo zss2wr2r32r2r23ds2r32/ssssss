@@ -4,9 +4,11 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.scheduler.ScheduledTask;
 import dev.sharded.velocitycore.config.PluginConfig;
+import dev.sharded.velocitycore.config.QueueColors;
 import dev.sharded.velocitycore.status.ServerStatusManager;
 import dev.sharded.velocitycore.util.LegacyText;
 import dev.sharded.velocitycore.util.ServerResolver;
+import net.kyori.adventure.text.Component;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -138,10 +140,34 @@ public final class QueueManager {
         }
     }
 
+    public Component format(String message) {
+        return LegacyText.parse(config.queuePrefix() + message);
+    }
+
+    public String serverColor(String serverName) {
+        return config.queueColors().serverColor(serverName);
+    }
+
+    public String formatActionBar(String serverName, int position, int waiting) {
+        QueueColors colors = config.queueColors();
+        String template = config.queueActionBar()
+                .replace("%numberinqueue%", colors.position() + position)
+                .replace("%server%", serverColor(serverName) + "&n" + serverName + "&r")
+                .replace("%server_color%", serverColor(serverName))
+                .replace("%numberofpeoplewaitinginqueue%", colors.waiting() + waiting)
+                .replace("%position_color%", colors.position())
+                .replace("%waiting_color%", colors.waiting())
+                .replace("%accent_color%", colors.accent());
+        return template;
+    }
+
     private void connect(Player player, String serverName) {
         ServerResolver.find(server, serverName).ifPresentOrElse(
                 target -> player.createConnectionRequest(target).fireAndForget(),
-                () -> player.sendMessage(LegacyText.parse(config.queuePrefix() + "&#FF0000Server &n" + serverName + "&r &#FF0000is unavailable."))
+                () -> player.sendMessage(format(
+                        config.queueColors().error() + "Server &n" + serverName + "&r "
+                                + config.queueColors().error() + "is unavailable."
+                ))
         );
     }
 
@@ -158,15 +184,7 @@ public final class QueueManager {
     private void sendActionBar(Player player, String serverName) {
         int position = position(player.getUniqueId());
         int waiting = waitingCount(serverName);
-        String formatted = config.queueActionBar()
-                .replace("%numberinqueue%", String.valueOf(position))
-                .replace("%server%", serverName)
-                .replace("%numberofpeoplewaitinginqueue%", String.valueOf(waiting));
-        player.sendActionBar(LegacyText.parse(formatted));
-    }
-
-    public String formatQueueMessage(String message) {
-        return config.queuePrefix() + message;
+        player.sendActionBar(LegacyText.parse(formatActionBar(serverName, position, waiting)));
     }
 
     public ServerStatusManager statusManager() {

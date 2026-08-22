@@ -9,11 +9,11 @@ import dev.sharded.velocitycore.queue.ServerConnectService;
 
 import java.util.List;
 
-public final class QueueCommand implements SimpleCommand {
+public final class ServerCommand implements SimpleCommand {
 
     private final ServerConnectService connectService;
 
-    public QueueCommand(ProxyServer proxy, QueueManager queueManager, PluginConfig config) {
+    public ServerCommand(ProxyServer proxy, QueueManager queueManager, PluginConfig config) {
         this.connectService = new ServerConnectService(proxy, queueManager, config);
     }
 
@@ -25,13 +25,12 @@ public final class QueueCommand implements SimpleCommand {
         }
 
         String[] args = invocation.arguments();
-        if (args.length > 0 && args[0].equalsIgnoreCase("leave")) {
-            connectService.leave(player);
+        if (args.length == 0) {
+            player.sendMessage(connectService.usageMessage());
             return;
         }
 
-        String target = args.length > 0 ? args[0] : null;
-        connectService.connect(player, target).forEach(player::sendMessage);
+        connectService.connect(player, args[0]).forEach(player::sendMessage);
     }
 
     @Override
@@ -41,9 +40,6 @@ public final class QueueCommand implements SimpleCommand {
 
     @Override
     public List<String> suggest(Invocation invocation) {
-        if (invocation.arguments().length <= 1) {
-            return connectService.suggestions();
-        }
-        return List.of();
+        return connectService.suggestions();
     }
 }

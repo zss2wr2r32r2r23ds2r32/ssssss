@@ -8,6 +8,7 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import dev.sharded.velocitycore.command.QueueCommand;
+import dev.sharded.velocitycore.command.ServerCommand;
 import dev.sharded.velocitycore.config.PluginConfig;
 import dev.sharded.velocitycore.listener.PlayerListener;
 import dev.sharded.velocitycore.placeholder.PlaceholderHook;
@@ -22,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(
         id = "shardedvelocitycore",
         name = "ShardedVelocityCore",
-        version = "1.0.1",
+        version = "1.0.2",
         description = "Server status placeholders, queue system, and hologram status sync for Velocity networks.",
         authors = {"Sharded"}
 )
@@ -49,11 +50,17 @@ public final class ShardedVelocityCore {
         this.config = PluginConfig.load(dataDirectory, logger);
         this.statusManager = new ServerStatusManager(server, config);
         this.queueManager = new QueueManager(server, config, statusManager);
-        this.statusSyncService = new StatusSyncService(server, statusManager);
+        this.statusSyncService = new StatusSyncService(server, statusManager, config);
+
+        statusManager.setChangeListener(statusSyncService::broadcastNow);
 
         server.getCommandManager().register(
                 server.getCommandManager().metaBuilder("queue").aliases("q").plugin(this).build(),
                 new QueueCommand(server, queueManager, config)
+        );
+        server.getCommandManager().register(
+                server.getCommandManager().metaBuilder("server").plugin(this).build(),
+                new ServerCommand(server, queueManager, config)
         );
 
         server.getEventManager().register(this, new PlayerListener(queueManager, statusSyncService));
@@ -64,7 +71,7 @@ public final class ShardedVelocityCore {
 
         schedulePlaceholderRegistration();
 
-        logger.info("ShardedVelocityCore enabled. Use /queue to join a server queue.");
+        logger.info("ShardedVelocityCore enabled. Use /queue or /server <name> to join servers.");
         if (!PlaceholderHook.isMiniPlaceholdersLoaded(this)) {
             logger.warn("MiniPlaceholders was not found on Velocity. Install it for hologram placeholders.");
         }

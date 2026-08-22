@@ -22,6 +22,7 @@ import java.util.Set;
 public final class PluginConfig {
 
     private final int statusRefreshSeconds;
+    private final int statusSyncIntervalSeconds;
     private final List<String> trackedServers;
     private final Set<String> maintenanceServers;
     private final String queueActionBar;
@@ -29,18 +30,22 @@ public final class PluginConfig {
     private final String defaultQueueServer;
     private final int actionBarIntervalTicks;
     private final Map<String, Integer> maxPlayers;
+    private final QueueColors queueColors;
 
     private PluginConfig(
             int statusRefreshSeconds,
+            int statusSyncIntervalSeconds,
             List<String> trackedServers,
             Set<String> maintenanceServers,
             String queueActionBar,
             String queuePrefix,
             String defaultQueueServer,
             int actionBarIntervalTicks,
-            Map<String, Integer> maxPlayers
+            Map<String, Integer> maxPlayers,
+            QueueColors queueColors
     ) {
         this.statusRefreshSeconds = statusRefreshSeconds;
+        this.statusSyncIntervalSeconds = statusSyncIntervalSeconds;
         this.trackedServers = trackedServers;
         this.maintenanceServers = maintenanceServers;
         this.queueActionBar = queueActionBar;
@@ -48,6 +53,7 @@ public final class PluginConfig {
         this.defaultQueueServer = defaultQueueServer;
         this.actionBarIntervalTicks = actionBarIntervalTicks;
         this.maxPlayers = maxPlayers;
+        this.queueColors = queueColors;
     }
 
     public static PluginConfig load(Path dataDirectory, Logger logger) {
@@ -76,7 +82,10 @@ public final class PluginConfig {
 
             int refresh = parsed.getLong("status-refresh-seconds") != null
                     ? parsed.getLong("status-refresh-seconds").intValue()
-                    : 5;
+                    : 1;
+            int syncInterval = parsed.getLong("status-sync-interval-seconds") != null
+                    ? parsed.getLong("status-sync-interval-seconds").intValue()
+                    : 1;
             List<String> tracked = readStringList(parsed.getArray("tracked-servers"), List.of("survival", "events", "diamondsmp"));
             Set<String> maintenance = new HashSet<>();
             for (String server : readStringList(parsed.getArray("maintenance-servers"), List.of())) {
@@ -110,15 +119,19 @@ public final class PluginConfig {
                 }
             }
 
+            QueueColors queueColors = readQueueColors(queue);
+
             return new PluginConfig(
                     Math.max(1, refresh),
+                    Math.max(1, syncInterval),
                     tracked,
                     maintenance,
                     actionBar,
                     prefix,
                     defaultServer.toLowerCase(Locale.ROOT),
                     Math.max(1, interval),
-                    maxPlayers
+                    maxPlayers,
+                    queueColors
             );
         } catch (IOException exception) {
             logger.warn("Failed to read config.toml, using defaults", exception);
@@ -132,19 +145,67 @@ public final class PluginConfig {
         maxPlayers.put("events", 200);
         maxPlayers.put("diamondsmp", 150);
         return new PluginConfig(
-                5,
+                1,
+                1,
                 List.of("survival", "events", "diamondsmp"),
                 Set.of(),
                 defaultActionBar(),
                 defaultPrefix(),
                 "survival",
                 20,
-                maxPlayers
+                maxPlayers,
+                QueueColors.defaults()
         );
     }
 
+    private static QueueColors readQueueColors(TomlTable queue) {
+        if (queue == null) {
+            return QueueColors.defaults();
+        }
+        TomlTable colors = queue.getTable("colors");
+        TomlTable serverColorsTable = queue.getTable("server-colors");
+        QueueColors defaults = QueueColors.defaults();
+        Map<String, String> serverColors = new HashMap<>(defaults.serverColors());
+        if (serverColorsTable != null) {
+            serverColorsTable.keySet().forEach(key -> {
+                String value = serverColorsTable.getString(key);
+                if (value != null) {
+                    serverColors.put(key.toLowerCase(Locale.ROOT), value);
+                }
+            });
+        }
+        if (colors == null) {
+            return new QueueColors(
+                    defaults.position(),
+                    defaults.server(),
+                    defaults.waiting(),
+                    defaults.success(),
+                    defaults.error(),
+                    defaults.accent(),
+                    serverColors
+            );
+        }
+        return new QueueColors(
+                readColor(colors, "position", defaults.position()),
+                readColor(colors, "server", defaults.server()),
+                readColor(colors, "waiting", defaults.waiting()),
+                readColor(colors, "success", defaults.success()),
+                readColor(colors, "error", defaults.error()),
+                readColor(colors, "accent", defaults.accent()),
+                serverColors
+        );
+    }
+
+    private static String readColor(TomlTable colors, String key, String fallback) {
+        if (colors == null) {
+            return fallback;
+        }
+        String value = colors.getString(key);
+        return value != null ? value : fallback;
+    }
+
     private static String defaultActionBar() {
-        return "#%numberinqueue% in queue to &n&#8AFF00%server%&r &7(Wating: %numberofpeoplewaitinginqueue%)";
+        return "%accent_color%#%numberinqueue% &7in queue for %server%&r &7(Waiting: %numberofpeoplewaitinginqueue%)";
     }
 
     private static String defaultPrefix() {
@@ -162,6 +223,10 @@ public final class PluginConfig {
 
     public int statusRefreshSeconds() {
         return statusRefreshSeconds;
+    }
+
+    public int statusSyncIntervalSeconds() {
+        return statusSyncIntervalSeconds;
     }
 
     public List<String> trackedServers() {
@@ -194,5 +259,9 @@ public final class PluginConfig {
 
     public Map<String, Integer> maxPlayers() {
         return Collections.unmodifiableMap(maxPlayers);
+    }
+
+    public QueueColors queueColors() {
+        return queueColors;
     }
 }

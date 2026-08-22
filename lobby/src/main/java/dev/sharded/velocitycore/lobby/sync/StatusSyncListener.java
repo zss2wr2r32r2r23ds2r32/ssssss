@@ -1,5 +1,6 @@
 package dev.sharded.velocitycore.lobby.sync;
 
+import dev.sharded.velocitycore.lobby.hologram.HologramRefreshService;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
 import java.io.ByteArrayInputStream;
@@ -13,15 +14,19 @@ import java.util.Map;
 public final class StatusSyncListener implements PluginMessageListener {
 
     private final StatusCache cache;
+    private final HologramRefreshService hologramRefreshService;
 
-    public StatusSyncListener(StatusCache cache) {
+    public StatusSyncListener(StatusCache cache, HologramRefreshService hologramRefreshService) {
         this.cache = cache;
+        this.hologramRefreshService = hologramRefreshService;
     }
 
     @Override
     public void onPluginMessageReceived(String channel, org.bukkit.entity.Player player, byte[] message) {
         try {
-            cache.update(decode(message));
+            if (cache.update(decode(message))) {
+                hologramRefreshService.refreshAll();
+            }
         } catch (IOException ignored) {
         }
     }
