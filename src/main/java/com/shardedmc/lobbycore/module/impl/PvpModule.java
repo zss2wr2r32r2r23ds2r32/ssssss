@@ -8,6 +8,7 @@ import com.shardedmc.lobbycore.util.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -29,6 +30,8 @@ public class PvpModule implements Module, Listener {
     private BukkitTask tickTask;
     private final Map<UUID, HoldTracker> enterTrackers = new HashMap<>();
     private final Map<UUID, HoldTracker> leaveTrackers = new HashMap<>();
+    private final Map<UUID, Long> lastEnterSecond = new HashMap<>();
+    private final Map<UUID, Long> lastLeaveSecond = new HashMap<>();
     private final Set<UUID> inPvp = new HashSet<>();
     private final Map<UUID, ItemStack[]> savedInventories = new HashMap<>();
     private final Map<UUID, ItemStack[]> savedArmor = new HashMap<>();
@@ -76,6 +79,8 @@ public class PvpModule implements Module, Listener {
         }
         enterTrackers.clear();
         leaveTrackers.clear();
+        lastEnterSecond.clear();
+        lastLeaveSecond.clear();
         HandlerList.unregisterAll(this);
     }
 
@@ -83,15 +88,17 @@ public class PvpModule implements Module, Listener {
         ItemStack hand = player.getInventory().getItemInMainHand();
         if (!isEnterSword(hand)) {
             enterTrackers.remove(uuid);
+            lastEnterSecond.remove(uuid);
             return;
         }
 
         HoldTracker tracker = enterTrackers.computeIfAbsent(uuid, k -> new HoldTracker());
         tracker.update(player);
-        showActionBar(player, tracker, holdMillis, "action-bar.enter", "&#FF0000&lPVP &8▷ &fEntering PVP In &#FF0000%seconds%s");
+        showActionBar(player, tracker, holdMillis, "action-bar.enter", "&#FF0000&lPVP &8▷ &fEntering PVP In &#FF0000%seconds%s", lastEnterSecond);
 
         if (tracker.hasHeldFor(holdMillis)) {
             enterTrackers.remove(uuid);
+            lastEnterSecond.remove(uuid);
             enterPvp(player);
         }
     }
@@ -100,24 +107,55 @@ public class PvpModule implements Module, Listener {
         ItemStack hand = player.getInventory().getItemInMainHand();
         if (!isLeaveSword(hand)) {
             leaveTrackers.remove(uuid);
+            lastLeaveSecond.remove(uuid);
             return;
         }
 
         HoldTracker tracker = leaveTrackers.computeIfAbsent(uuid, k -> new HoldTracker());
         tracker.update(player);
-        showActionBar(player, tracker, holdMillis, "action-bar.leave", "&#FF0000&lPVP &8▷ &fLeaving PVP In &#FF0000%seconds%s");
+        showActionBar(player, tracker, holdMillis, "action-bar.leave", "&#FF0000&lPVP &8▷ &fLeaving PVP In &#FF0000%seconds%s", lastLeaveSecond);
 
         if (tracker.hasHeldFor(holdMillis)) {
             leaveTrackers.remove(uuid);
+            lastLeaveSecond.remove(uuid);
             exitPvp(player);
         }
     }
 
-    private void showActionBar(Player player, HoldTracker tracker, long holdMillis, String path, String fallback) {
+    private void showActionBar(Player player, HoldTracker tracker, long holdMillis, String path, String fallback, Map<UUID, Long> lastSecondMap) {
         long remainingMs = holdMillis - tracker.getHeldMillis();
         long seconds = Math.max(1, (remainingMs + 999) / 1000);
+
+        UUID uuid = player.getUniqueId();
+        Long lastSecond = lastSecondMap.get(uuid);
+        if (lastSecond == null || lastSecond != seconds) {
+            lastSecondMap.put(uuid, seconds);
+            playCountdownSound(player, seconds);
+        }
+
         String message = config.getString(path, fallback).replace("%seconds%", String.valueOf(seconds));
         MessageUtil.sendActionBar(player, MessageUtil.format(message, player));
+    }
+
+    private void playCountdownSound(Player player, long secondsRemaining) {
+        if (!config.getBoolean("countdown-sounds.enabled", true)) {
+            return;
+        }
+
+        String soundName = config.getString("countdown-sounds.sound", "BLOCK_NOTE_BLOCK_PLING");
+        Sound sound;
+        try {
+            sound = Sound.valueOf(soundName.toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException ex) {
+            sound = Sound.BLOCK_NOTE_BLOCK_PLING;
+        }
+
+        float volume = (float) config.getDouble("countdown-sounds.volume", 1.0);
+        float basePitch = (float) config.getDouble("countdown-sounds.pitch", 1.0);
+        float pitchStep = (float) config.getDouble("countdown-sounds.pitch-step", 0.15);
+        long holdSeconds = config.getLong("hold-seconds", 5);
+        float pitch = basePitch + (float) (holdSeconds - secondsRemaining) * pitchStep;
+        player.playSound(player.getLocation(), sound, volume, pitch);
     }
 
     private boolean isEnterSword(ItemStack item) {
@@ -242,7 +280,8 @@ public class PvpModule implements Module, Listener {
             for (String key : kit.getConfigurationSection("items").getKeys(false)) {
                 ConfigurationSection itemSection = kit.getConfigurationSection("items." + key);
                 int slot = itemSection.getInt("slot");
-                inv.setItem(slot, ItemBuilder.fromConfig(itemSection, player));
+                boolean plain = itemSection.getBoolean("plain", !"leave-sword".equals(key));
+                inv.setItem(slot, ItemBuilder.fromConfig(itemSection, player, plain));
             }
         }
 
@@ -265,6 +304,8 @@ public class PvpModule implements Module, Listener {
         UUID uuid = event.getPlayer().getUniqueId();
         enterTrackers.remove(uuid);
         leaveTrackers.remove(uuid);
+        lastEnterSecond.remove(uuid);
+        lastLeaveSecond.remove(uuid);
     }
 
     @EventHandler
@@ -273,6 +314,8 @@ public class PvpModule implements Module, Listener {
         UUID uuid = player.getUniqueId();
         enterTrackers.remove(uuid);
         leaveTrackers.remove(uuid);
+        lastEnterSecond.remove(uuid);
+        lastLeaveSecond.remove(uuid);
         if (inPvp.contains(uuid)) {
             restoreLobbyInventory(player, uuid, false);
         }

@@ -49,6 +49,12 @@ public class DoubleJumpModule implements Module, Listener {
                 if (isAdminFlying(player)) {
                     continue;
                 }
+                if (isInParkour(player)) {
+                    if (player.getAllowFlight()) {
+                        player.setAllowFlight(false);
+                    }
+                    continue;
+                }
                 if (player.isOnGround() || player.isInWater() || player.isClimbing()) {
                     hasJumped.remove(player.getUniqueId());
                     if (!player.getAllowFlight()) {
@@ -70,6 +76,11 @@ public class DoubleJumpModule implements Module, Listener {
         return joinMessages != null && joinMessages.isAdminFlying(player);
     }
 
+    private boolean isInParkour(Player player) {
+        ParkourModule parkour = (ParkourModule) plugin.getModuleManager().getModule("parkour");
+        return parkour != null && parkour.isInParkour(player.getUniqueId());
+    }
+
     @EventHandler
     public void onToggleFlight(PlayerToggleFlightEvent event) {
         Player player = event.getPlayer();
@@ -77,6 +88,11 @@ public class DoubleJumpModule implements Module, Listener {
             return;
         }
         if (isAdminFlying(player)) {
+            return;
+        }
+        if (isInParkour(player)) {
+            event.setCancelled(true);
+            player.setAllowFlight(false);
             return;
         }
 

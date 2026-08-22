@@ -23,6 +23,7 @@ public class ConfigManager {
             "server-selector",
             "player-visibility",
             "parkour",
+            "music",
             "pvp",
             "bow-popper",
             "double-jump",

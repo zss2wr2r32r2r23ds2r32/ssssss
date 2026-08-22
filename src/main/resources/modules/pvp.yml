@@ -8,6 +8,13 @@ action-bar:
   enter: "&#FF0000&lPVP &8▷ &fEntering PVP In &#FF0000%seconds%s"
   leave: "&#FF0000&lPVP &8▷ &fLeaving PVP In &#FF0000%seconds%s"
 
+countdown-sounds:
+  enabled: true
+  sound: BLOCK_NOTE_BLOCK_PLING
+  volume: 1.0
+  pitch: 1.0
+  pitch-step: 0.15
+
 enter-item:
   material: DIAMOND_SWORD
   name: "&#FF0000PVP Sword"
@@ -44,30 +51,18 @@ kit:
     sword:
       slot: 0
       material: DIAMOND_SWORD
-      name: "&#FF0000PVP Sword"
-      lore:
-        - "&8Description"
-        - ""
-        - "&7PvP Sword"
+      plain: true
       enchantments:
         sharpness: 4
     golden-apples:
-      slot: 2
+      slot: 1
       material: GOLDEN_APPLE
       amount: 8
-      name: "&6Golden Apples"
-      lore:
-        - "&8Description"
-        - ""
-        - "&7Golden Apples"
+      plain: true
     bow:
-      slot: 3
+      slot: 2
       material: BOW
-      name: "&#4498DBPvP Bow"
-      lore:
-        - "&8Description"
-        - ""
-        - "&7PvP Bow"
+      plain: true
       enchantments:
         infinity: 1
     leave-sword:

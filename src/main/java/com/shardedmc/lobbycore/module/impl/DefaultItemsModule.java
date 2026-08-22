@@ -63,6 +63,11 @@ public class DefaultItemsModule implements Module, Listener {
             return;
         }
 
+        ParkourModule parkour = (ParkourModule) plugin.getModuleManager().getModule("parkour");
+        if (parkour != null && parkour.isInParkour(player.getUniqueId())) {
+            return;
+        }
+
         for (Map.Entry<String, ConfigurationSection> entry : items.entrySet()) {
             if ("player-visibility".equals(entry.getKey())) {
                 continue;
@@ -108,6 +113,11 @@ public class DefaultItemsModule implements Module, Listener {
         }
 
         Player player = event.getPlayer();
+        ParkourModule parkour = (ParkourModule) plugin.getModuleManager().getModule("parkour");
+        if (parkour != null && parkour.isInParkour(player.getUniqueId())) {
+            return;
+        }
+
         ItemStack hand = event.getItem();
         if (hand == null) {
             return;
@@ -152,6 +162,16 @@ public class DefaultItemsModule implements Module, Listener {
                 if (selector != null) {
                     selector.openMenu(player);
                 }
+            } else if ("music".equals(menuId)) {
+                MusicModule music = (MusicModule) plugin.getModuleManager().getModule("music");
+                if (music != null) {
+                    music.openMenu(player);
+                }
+            }
+        } else if (action.startsWith("[PARKOUR]")) {
+            ParkourModule parkour = (ParkourModule) plugin.getModuleManager().getModule("parkour");
+            if (parkour != null) {
+                parkour.startParkour(player);
             }
         }
     }

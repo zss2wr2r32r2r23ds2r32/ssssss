@@ -26,6 +26,7 @@ public class ModuleManager {
         register(new ServerSelectorModule());
         register(new PlayerVisibilityModule());
         register(new ParkourModule());
+        register(new MusicModule());
         register(new PvpModule());
         register(new BowPopperModule());
         register(new DoubleJumpModule());

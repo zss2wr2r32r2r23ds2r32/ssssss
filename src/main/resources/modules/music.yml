@@ -1,0 +1,53 @@
+# Music Module
+# Opens a GUI to play songs via configurable commands
+
+enabled: true
+run-as-console: false
+
+gui:
+  title: "&#FF0072Music"
+  rows: 6
+
+commands:
+  play: "music play %song%"
+  stop: "music stop"
+  pause: "music pause"
+  random: "music random"
+  skip: "music skip"
+
+filler:
+  material: GRAY_STAINED_GLASS_PANE
+  name: " "
+
+# Add your songs below — each entry needs a slot, disc material, display name, and song id
+songs: {}
+
+controls:
+  stop:
+    slot: 45
+    material: BARRIER
+    name: "&#FF2727Stop"
+    lore:
+      - "&7Stop the current song"
+    action: "stop"
+  pause:
+    slot: 46
+    material: CLOCK
+    name: "&#FFE300Pause"
+    lore:
+      - "&7Pause the current song"
+    action: "pause"
+  random:
+    slot: 47
+    material: NOTE_BLOCK
+    name: "&#FF0072Random"
+    lore:
+      - "&7Play a random song"
+    action: "random"
+  skip:
+    slot: 48
+    material: PLAYER_HEAD
+    name: "&#9FFF00Skip"
+    lore:
+      - "&7Skip to the next song"
+    action: "skip"

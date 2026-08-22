@@ -1,5 +1,5 @@
 # Parkour Module
-# Click the configured block to start parkour (not an inventory item)
+# Click the configured block or hotbar item to start parkour
 
 enabled: true
 
@@ -10,3 +10,17 @@ blocks:
   - LIME_GLAZED_TERRACOTTA
 
 command: "ajparkour start"
+
+end-commands:
+  - "ajparkour leave"
+  - "ajparkour quit"
+  - "ajparkour stop"
+  - "ajparkour end"
+
+messages:
+  start:
+    enabled: false
+    text: "%prefix% &#9FFF00Parkour started!"
+  end:
+    enabled: false
+    text: "%prefix% &#9FFF00Parkour ended!"

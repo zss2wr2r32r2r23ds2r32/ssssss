@@ -12,5 +12,6 @@ whitelist:
   - "r"
   - "fly"
   - "ajparkour"
+  - "music"
 
 message: "%prefix% &#FF2727You cannot use that command in the lobby."

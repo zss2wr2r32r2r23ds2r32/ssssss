@@ -60,4 +60,16 @@ items:
       - ""
       - "&7Click to start parkour"
     actions:
-      - "[COMMAND] ajparkour start"
+      - "[PARKOUR]"
+
+  music:
+    slot: 3
+    material: JUKEBOX
+    amount: 1
+    name: "&#FF0072Music &7[Right-Click]"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Browse and play music!"
+    actions:
+      - "[OPEN_MENU] music"

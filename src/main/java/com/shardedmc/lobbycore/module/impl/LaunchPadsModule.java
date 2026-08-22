@@ -59,6 +59,10 @@ public class LaunchPadsModule implements Module, Listener {
         }
 
         Player player = event.getPlayer();
+        ParkourModule parkour = (ParkourModule) plugin.getModuleManager().getModule("parkour");
+        if (parkour != null && parkour.isInParkour(player.getUniqueId())) {
+            return;
+        }
         if (!isOnPressurePlate(player)) {
             return;
         }

@@ -1,6 +1,7 @@
 package com.shardedmc.lobbycore.util;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -102,16 +103,23 @@ public final class ItemBuilder {
         return item != null && material != null && item.getType() == material;
     }
 
-    public static ItemStack fromConfig(org.bukkit.configuration.ConfigurationSection section, Player player) {
+    public static ItemStack fromConfig(ConfigurationSection section, Player player) {
+        return fromConfig(section, player, false);
+    }
+
+    public static ItemStack fromConfig(ConfigurationSection section, Player player, boolean forcePlain) {
         Material material = Material.matchMaterial(section.getString("material", "STONE"));
         if (material == null) {
             material = Material.STONE;
         }
+
+        boolean plain = forcePlain || section.getBoolean("plain", false);
         ItemBuilder builder = ItemBuilder.of(material).amount(section.getInt("amount", 1));
-        if (section.contains("name")) {
+
+        if (!plain && section.contains("name")) {
             builder.name(MessageUtil.format(section.getString("name"), player));
         }
-        if (section.isList("lore")) {
+        if (!plain && section.isList("lore")) {
             builder.lore(MessageUtil.formatLore(section.getStringList("lore"), player));
         }
         if (section.isConfigurationSection("enchantments")) {
@@ -130,5 +138,9 @@ public final class ItemBuilder {
         }
         builder.flags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
         return builder.build();
+    }
+
+    public static ItemStack plain(Material material, int amount) {
+        return new ItemStack(material, amount);
     }
 }
