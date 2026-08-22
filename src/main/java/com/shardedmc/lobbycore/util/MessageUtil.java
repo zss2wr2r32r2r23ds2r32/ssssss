@@ -2,6 +2,8 @@ package com.shardedmc.lobbycore.util;
 
 import com.shardedmc.lobbycore.ShardedLobbyCore;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.title.Title;
@@ -11,6 +13,7 @@ import org.bukkit.entity.Player;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -20,6 +23,9 @@ public final class MessageUtil {
     private static ShardedLobbyCore plugin;
     private static final Pattern HEX_PATTERN = Pattern.compile("&#([A-Fa-f0-9]{6})");
     private static final Pattern STANDALONE_HEX_PATTERN = Pattern.compile("#([A-Fa-f0-9]{6})");
+    private static final Pattern SKRIPT_HEX_PATTERN = Pattern.compile("<#([A-Fa-f0-9]{6})>");
+    private static final Pattern LINK_PATTERN = Pattern.compile("<link:(https?://[^>]+)>(.*?)</link>", Pattern.CASE_INSENSITIVE);
+    private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\{@([^}]+)}");
     private static final LegacyComponentSerializer LEGACY = LegacyComponentSerializer.legacySection();
 
     private MessageUtil() {
@@ -37,6 +43,7 @@ public final class MessageUtil {
         if (text == null) {
             return "";
         }
+        text = convertSkriptHex(text);
         text = convertStandaloneHex(text);
         Matcher matcher = HEX_PATTERN.matcher(text);
         StringBuilder buffer = new StringBuilder();
@@ -65,6 +72,98 @@ public final class MessageUtil {
         }
         matcher.appendTail(buffer);
         return buffer.toString();
+    }
+
+    private static String convertSkriptHex(String text) {
+        Matcher matcher = SKRIPT_HEX_PATTERN.matcher(text);
+        StringBuilder buffer = new StringBuilder();
+        while (matcher.find()) {
+            matcher.appendReplacement(buffer, "&#" + matcher.group(1));
+        }
+        matcher.appendTail(buffer);
+        return buffer.toString();
+    }
+
+    private static String applyVariables(String text, Map<String, String> variables) {
+        if (text == null || variables == null || variables.isEmpty()) {
+            return text;
+        }
+        Matcher matcher = VARIABLE_PATTERN.matcher(text);
+        StringBuilder buffer = new StringBuilder();
+        while (matcher.find()) {
+            String value = variables.getOrDefault(matcher.group(1), matcher.group());
+            matcher.appendReplacement(buffer, Matcher.quoteReplacement(value));
+        }
+        matcher.appendTail(buffer);
+        return buffer.toString();
+    }
+
+    private static String applyRawPlaceholders(String text, Player player, int joinNumber) {
+        if (text == null) {
+            return "";
+        }
+        String result = text.replace("%prefix%", plugin.getConfig().getString("prefix", "&#00A2FF&lCORE &8▷ &r"));
+        result = result.replace("%version%", plugin.getDescription().getVersion());
+        if (joinNumber >= 0) {
+            result = result.replace("%number%", String.valueOf(joinNumber));
+        }
+        if (player != null) {
+            result = result.replace("%player%", player.getName());
+            if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                try {
+                    Class<?> papi = Class.forName("me.clip.placeholderapi.PlaceholderAPI");
+                    result = (String) papi.getMethod("setPlaceholders", Player.class, String.class).invoke(null, player, result);
+                } catch (ReflectiveOperationException ignored) {
+                    // PlaceholderAPI not present at runtime
+                }
+            }
+        }
+        return result;
+    }
+
+    public static Component parseRichLine(String line, Player player, Map<String, String> variables, int joinNumber) {
+        line = applyVariables(line, variables);
+        line = applyRawPlaceholders(line, player, joinNumber);
+
+        if (!line.contains("<link:")) {
+            return component(line);
+        }
+
+        Component result = Component.empty();
+        Matcher matcher = LINK_PATTERN.matcher(line);
+        int last = 0;
+        while (matcher.find()) {
+            if (matcher.start() > last) {
+                result = result.append(component(line.substring(last, matcher.start())));
+            }
+            String url = matcher.group(1);
+            String display = matcher.group(2);
+            result = result.append(
+                    component(display)
+                            .clickEvent(ClickEvent.openUrl(url))
+                            .hoverEvent(HoverEvent.showText(component("&7Click to open &f" + url)))
+                            .decoration(TextDecoration.UNDERLINED, true)
+            );
+            last = matcher.end();
+        }
+        if (last < line.length()) {
+            result = result.append(component(line.substring(last)));
+        }
+        return result.decoration(TextDecoration.ITALIC, false);
+    }
+
+    public static void sendRichLines(CommandSender sender, List<String> lines, Player player, Map<String, String> variables) {
+        sendRichLines(sender, lines, player, variables, -1);
+    }
+
+    public static void sendRichLines(CommandSender sender, List<String> lines, Player player, Map<String, String> variables, int joinNumber) {
+        for (String line : lines) {
+            if (line == null || line.isEmpty()) {
+                sender.sendMessage(Component.empty());
+                continue;
+            }
+            sender.sendMessage(parseRichLine(line, player, variables, joinNumber));
+        }
     }
 
     private static String applyPlaceholders(String text, Player player) {

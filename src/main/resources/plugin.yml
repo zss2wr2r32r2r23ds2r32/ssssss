@@ -23,6 +23,10 @@ commands:
   fly:
     description: Toggle flight
     permission: shardedlobbycore.fly
+  discord:
+    description: Show the Discord server link
+  store:
+    description: Show the webstore link
 
 permissions:
   shardedlobbycore.admin:

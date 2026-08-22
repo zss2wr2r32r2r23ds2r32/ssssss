@@ -11,6 +11,9 @@ blocks:
 
 command: "ajparkour start"
 
+restore-delay-ticks: 5
+restore-adventure-mode: true
+
 end-commands:
   - "ajparkour leave"
   - "ajparkour quit"
@@ -24,7 +27,3 @@ messages:
   end:
     enabled: false
     text: "%prefix% &#9FFF00Parkour ended!"
-
-auto-end:
-  on-teleport: true
-  teleport-grace-ms: 5000

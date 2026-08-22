@@ -1,7 +1,9 @@
 # Command Whitelist Module
+# Blocks ALL commands for members unless listed below
 
 enabled: true
 filter-tab-complete: true
+filter-command-send: true
 
 whitelist:
   - "server"
@@ -13,5 +15,7 @@ whitelist:
   - "fly"
   - "ajparkour"
   - "music"
+  - "discord"
+  - "store"
 
 message: "%prefix% &#FF2727You cannot use that command in the lobby."

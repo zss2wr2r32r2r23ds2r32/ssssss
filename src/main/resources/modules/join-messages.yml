@@ -6,6 +6,14 @@ set-adventure-mode: true
 disable-vanilla-join-message: true
 disable-vanilla-quit-message: true
 
+variables:
+  text-primary: "&f"
+  text-secondary-discord: "&#3091DB"
+  text-secondary-store: "&#FFB600"
+  discord-url: "discord.gg/shardedmc"
+  store-url: "store.shardedmc.net"
+  store-title-color: "&#FFB600"
+
 join-title:
   enabled: true
   text: "&#AD4EFF&lWelcome &#AD4EFF%player%"
@@ -31,6 +39,9 @@ first-join:
       - "&fWelcome &#AD4EFF%player%&f! We are glad to have you at our network!"
       - "&fUse command: &#AD4EFF/server <name> &fTo Get Started!"
       - ""
+      - "{@store-title-color}&lSTORE &8▷ {@text-primary}<link:https://{@store-url}>{@store-url}</link>"
+      - "<#3091DB>&lDISCORD &8▷ {@text-primary}<link:https://{@discord-url}>{@discord-url}</link>"
+      - ""
 
 admin-fly:
   enabled: true
@@ -49,6 +60,9 @@ chat-message:
     - "&fWelcome &#AD4EFF%player% Please do the following:"
     - "&fUse command: &#AD4EFF/server <name> &fTo Get Started!"
     - ""
+    - "{@store-title-color}&lSTORE &8▷ {@text-primary}<link:https://{@store-url}>{@store-url}</link>"
+    - "<#3091DB>&lDISCORD &8▷ {@text-primary}<link:https://{@discord-url}>{@discord-url}</link>"
+    - ""
   returning:
     - ""
     - "&#AD4EFF&lShardedMC &#AD4EFFNetwork"
@@ -56,15 +70,16 @@ chat-message:
     - "&#AD4EFF| &fWelcome Back &#AD4EFF%player%"
     - "&#AD4EFF| &fUse command: &#AD4EFF/server <name> &fTo Get Started"
     - ""
-    - "&#AD4EFF&lSTORE &8▷"
-    - "&#AD4EFF&lDISCORD &8▷"
+    - "{@store-title-color}&lSTORE &8▷ {@text-primary}<link:https://{@store-url}>{@store-url}</link>"
+    - "<#3091DB>&lDISCORD &8▷ {@text-primary}<link:https://{@discord-url}>{@discord-url}</link>"
+    - ""
 
 broadcast-first-join:
   enabled: false
   message: "#45FF17+ &f%player%"
 
 broadcast-join:
-  enabled: true
+  enabled: false
   message: "#45FF17+ &f%player%"
 
 broadcast-quit:

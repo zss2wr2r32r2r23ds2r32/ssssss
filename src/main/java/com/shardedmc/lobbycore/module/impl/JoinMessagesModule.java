@@ -17,8 +17,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -116,13 +118,9 @@ public class JoinMessagesModule implements Module, Listener, CommandExecutor {
         }
 
         if (config.getBoolean("first-join.chat.enabled", true)) {
-            for (String line : config.getStringList("first-join.chat.lines")) {
-                MessageUtil.sendFormatted(player, MessageUtil.format(line, player, joinNumber));
-            }
+            sendChatLines(player, config.getStringList("first-join.chat.lines"), joinNumber);
         } else if (config.getBoolean("chat-message.enabled", true)) {
-            for (String line : config.getStringList("chat-message.first-join")) {
-                MessageUtil.sendFormatted(player, MessageUtil.format(line, player, joinNumber));
-            }
+            sendChatLines(player, config.getStringList("chat-message.first-join"), joinNumber);
         }
 
         if (config.getBoolean("first-join.broadcast.enabled", true)) {
@@ -146,10 +144,7 @@ public class JoinMessagesModule implements Module, Listener, CommandExecutor {
         }
 
         if (config.getBoolean("chat-message.enabled", true)) {
-            List<String> lines = config.getStringList("chat-message.returning");
-            for (String line : lines) {
-                MessageUtil.sendFormatted(player, line);
-            }
+            sendChatLines(player, config.getStringList("chat-message.returning"), -1);
         }
 
         if (config.getBoolean("broadcast-join.enabled", false)) {
@@ -183,5 +178,19 @@ public class JoinMessagesModule implements Module, Listener, CommandExecutor {
             MessageUtil.sendFormatted(player, config.getString("admin-fly.messages.enabled", "%prefix% &#9FFF00Flight enabled."));
         }
         return true;
+    }
+
+    private Map<String, String> getMessageVariables() {
+        Map<String, String> variables = new HashMap<>();
+        if (config.isConfigurationSection("variables")) {
+            for (String key : config.getConfigurationSection("variables").getKeys(false)) {
+                variables.put(key, config.getString("variables." + key, ""));
+            }
+        }
+        return variables;
+    }
+
+    private void sendChatLines(Player player, List<String> lines, int joinNumber) {
+        MessageUtil.sendRichLines(player, lines, player, getMessageVariables(), joinNumber);
     }
 }

@@ -13,3 +13,4 @@ allow-inventory-move-in-pvp: true
 allow-drop-in-pvp: false
 disable-block-interact: true
 disable-fire-spread: true
+disable-portals: true

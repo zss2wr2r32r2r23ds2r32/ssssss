@@ -15,11 +15,15 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ServerSelectorModule implements Module, Listener {
 
     private ShardedLobbyCore plugin;
     private FileConfiguration config;
     private String guiTitle;
+    private final Map<Integer, ConfigurationSection> slotServers = new HashMap<>();
 
     @Override
     public String getId() {
@@ -36,11 +40,27 @@ public class ServerSelectorModule implements Module, Listener {
         this.plugin = plugin;
         this.config = config;
         this.guiTitle = MessageUtil.plainText(config.getString("gui.title", "&8Server Selector"));
+        reloadSlotMap();
         Bukkit.getPluginManager().registerEvents(this, plugin);
+    }
+
+    private void reloadSlotMap() {
+        slotServers.clear();
+        ConfigurationSection servers = config.getConfigurationSection("servers");
+        if (servers == null) {
+            return;
+        }
+        for (String key : servers.getKeys(false)) {
+            ConfigurationSection server = servers.getConfigurationSection(key);
+            if (server != null) {
+                slotServers.put(server.getInt("slot", -1), server);
+            }
+        }
     }
 
     @Override
     public void disable() {
+        slotServers.clear();
         HandlerList.unregisterAll(this);
     }
 
@@ -78,46 +98,36 @@ public class ServerSelectorModule implements Module, Listener {
             return;
         }
 
-        if (event.getView().getTitle() == null) {
-            return;
-        }
-
         String openTitle = MessageUtil.plainText(event.getView().title());
         if (!openTitle.equals(guiTitle)) {
             return;
         }
 
         event.setCancelled(true);
-        ItemStack clicked = event.getCurrentItem();
-        if (clicked == null || !clicked.hasItemMeta()) {
+        ConfigurationSection server = slotServers.get(event.getRawSlot());
+        if (server == null) {
             return;
         }
 
-        ConfigurationSection servers = config.getConfigurationSection("servers");
-        if (servers == null) {
-            return;
+        player.closeInventory();
+        Bukkit.getScheduler().runTask(plugin, () -> connectPlayer(player, server));
+    }
+
+    private void connectPlayer(Player player, ConfigurationSection server) {
+        if (server.contains("console-command")) {
+            String command = server.getString("console-command").replace("%player%", player.getName());
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+        } else if (server.contains("command")) {
+            String command = server.getString("command").replace("%player%", player.getName());
+            if (config.getBoolean("run-as-console", false) || server.getBoolean("run-as-console", false)) {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+            } else {
+                Bukkit.dispatchCommand(player, command);
+            }
         }
 
-        String clickedPlain = MessageUtil.plainText(clicked.getItemMeta().displayName());
-        for (String key : servers.getKeys(false)) {
-            ConfigurationSection server = servers.getConfigurationSection(key);
-            if (server == null) {
-                continue;
-            }
-            String serverPlain = MessageUtil.plainText(MessageUtil.format(server.getString("name", key), player));
-            if (!clickedPlain.equalsIgnoreCase(serverPlain)) {
-                continue;
-            }
-
-            player.closeInventory();
-            if (server.contains("command")) {
-                String command = server.getString("command").replace("%player%", player.getName());
-                Bukkit.getScheduler().runTask(plugin, () -> player.performCommand(command));
-            }
-            if (server.contains("message")) {
-                MessageUtil.sendFormatted(player, server.getString("message"));
-            }
-            return;
+        if (server.contains("message")) {
+            MessageUtil.sendFormatted(player, server.getString("message"));
         }
     }
 }

@@ -29,6 +29,7 @@ public class ConfigManager {
             "double-jump",
             "launch-pads",
             "join-messages",
+            "announcements",
             "chat-prefixes",
             "void-spawn",
             "spawn",

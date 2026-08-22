@@ -17,6 +17,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 
@@ -105,6 +106,13 @@ public class WorldProtectionModule implements Module, Listener {
     @EventHandler
     public void onPlace(org.bukkit.event.block.BlockPlaceEvent event) {
         if (config.getBoolean("disable-block-place", true) && !canBypassBuild(event.getPlayer())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPortal(PlayerPortalEvent event) {
+        if (config.getBoolean("disable-portals", true) && !canBypassBuild(event.getPlayer())) {
             event.setCancelled(true);
         }
     }
