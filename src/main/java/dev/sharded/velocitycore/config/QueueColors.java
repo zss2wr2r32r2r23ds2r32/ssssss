@@ -37,7 +37,7 @@ public final class QueueColors {
         Map<String, String> serverColors = new HashMap<>();
         serverColors.put("survival", "&#8AFF00");
         serverColors.put("events", "&#FFAA00");
-        serverColors.put("diamondsmp", "&#4498DB");
+        serverColors.put("diasmp", "&#4498DB");
         return new QueueColors(
                 "&#FFFFFF",
                 "&#8AFF00",
@@ -74,10 +74,11 @@ public final class QueueColors {
     }
 
     public String serverColor(String serverName) {
-        return serverColors.getOrDefault(
-                serverName.toLowerCase(Locale.ROOT),
-                server
-        );
+        String normalized = serverName.toLowerCase(Locale.ROOT);
+        if (normalized.equals("diamondsmp")) {
+            normalized = "diasmp";
+        }
+        return serverColors.getOrDefault(normalized, server);
     }
 
     public Map<String, String> serverColors() {

@@ -86,7 +86,7 @@ public final class PluginConfig {
             int syncInterval = parsed.getLong("status-sync-interval-seconds") != null
                     ? parsed.getLong("status-sync-interval-seconds").intValue()
                     : 1;
-            List<String> tracked = readStringList(parsed.getArray("tracked-servers"), List.of("survival", "events", "diamondsmp"));
+            List<String> tracked = readStringList(parsed.getArray("tracked-servers"), List.of("survival", "events", "diasmp"));
             Set<String> maintenance = new HashSet<>();
             for (String server : readStringList(parsed.getArray("maintenance-servers"), List.of())) {
                 maintenance.add(server.toLowerCase(Locale.ROOT));
@@ -143,11 +143,11 @@ public final class PluginConfig {
         Map<String, Integer> maxPlayers = new HashMap<>();
         maxPlayers.put("survival", 100);
         maxPlayers.put("events", 200);
-        maxPlayers.put("diamondsmp", 150);
+        maxPlayers.put("diasmp", 150);
         return new PluginConfig(
                 1,
                 1,
-                List.of("survival", "events", "diamondsmp"),
+                List.of("survival", "events", "diasmp"),
                 Set.of(),
                 defaultActionBar(),
                 defaultPrefix(),
@@ -205,7 +205,7 @@ public final class PluginConfig {
     }
 
     private static String defaultActionBar() {
-        return "%accent_color%#%numberinqueue% &7in queue for %server%&r &7(Waiting: %numberofpeoplewaitinginqueue%)";
+        return "&#4498DB#%numberinqueue% in queue to &n%server_color%%server%&r &7(Wating: %numberofpeoplewaitinginqueue%)";
     }
 
     private static String defaultPrefix() {

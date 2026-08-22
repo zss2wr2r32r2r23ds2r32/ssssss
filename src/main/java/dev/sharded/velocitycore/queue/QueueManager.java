@@ -4,7 +4,6 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.scheduler.ScheduledTask;
 import dev.sharded.velocitycore.config.PluginConfig;
-import dev.sharded.velocitycore.config.QueueColors;
 import dev.sharded.velocitycore.status.ServerStatusManager;
 import dev.sharded.velocitycore.util.LegacyText;
 import dev.sharded.velocitycore.util.ServerResolver;
@@ -149,16 +148,11 @@ public final class QueueManager {
     }
 
     public String formatActionBar(String serverName, int position, int waiting) {
-        QueueColors colors = config.queueColors();
-        String template = config.queueActionBar()
-                .replace("%numberinqueue%", colors.position() + position)
-                .replace("%server%", serverColor(serverName) + "&n" + serverName + "&r")
+        return config.queueActionBar()
+                .replace("%numberinqueue%", String.valueOf(position))
+                .replace("%server%", serverName)
                 .replace("%server_color%", serverColor(serverName))
-                .replace("%numberofpeoplewaitinginqueue%", colors.waiting() + waiting)
-                .replace("%position_color%", colors.position())
-                .replace("%waiting_color%", colors.waiting())
-                .replace("%accent_color%", colors.accent());
-        return template;
+                .replace("%numberofpeoplewaitinginqueue%", String.valueOf(waiting));
     }
 
     private void connect(Player player, String serverName) {

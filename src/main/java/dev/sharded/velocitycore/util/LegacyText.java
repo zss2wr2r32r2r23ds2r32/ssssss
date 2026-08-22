@@ -11,6 +11,7 @@ public final class LegacyText {
 
     private static final Pattern HEX_PATTERN = Pattern.compile("&#([A-Fa-f0-9]{6})");
     private static final LegacyComponentSerializer LEGACY = LegacyComponentSerializer.builder()
+            .character('&')
             .hexColors()
             .useUnusualXRepeatedCharacterHexFormat()
             .build();
@@ -31,12 +32,7 @@ public final class LegacyText {
         Matcher matcher = HEX_PATTERN.matcher(input);
         StringBuffer buffer = new StringBuffer();
         while (matcher.find()) {
-            matcher.appendReplacement(buffer, "§x§" + matcher.group(1).charAt(0)
-                    + "§" + matcher.group(1).charAt(1)
-                    + "§" + matcher.group(1).charAt(2)
-                    + "§" + matcher.group(1).charAt(3)
-                    + "§" + matcher.group(1).charAt(4)
-                    + "§" + matcher.group(1).charAt(5));
+            matcher.appendReplacement(buffer, "&#" + matcher.group(1));
         }
         matcher.appendTail(buffer);
         return buffer.toString();

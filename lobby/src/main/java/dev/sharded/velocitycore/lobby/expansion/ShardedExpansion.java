@@ -28,7 +28,7 @@ public final class ShardedExpansion extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "1.0.2";
+        return "1.0.3";
     }
 
     @Override
@@ -40,7 +40,11 @@ public final class ShardedExpansion extends PlaceholderExpansion {
     public @Nullable String onRequest(OfflinePlayer player, @NotNull String params) {
         String normalized = params.toLowerCase(Locale.ROOT);
         if (normalized.startsWith("status_")) {
-            return statusCache.display(normalized.substring("status_".length()));
+            String server = normalized.substring("status_".length());
+            if (server.equals("diamondsmp")) {
+                server = "diasmp";
+            }
+            return statusCache.display(server);
         }
         return null;
     }

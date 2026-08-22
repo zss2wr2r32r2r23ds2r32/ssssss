@@ -18,10 +18,11 @@ public final class HologramRefreshService {
     public void refreshAll() {
         refreshDecentHolograms();
         refreshHolographicDisplays();
+        refreshFancyHolograms();
     }
 
     public void start() {
-        Bukkit.getScheduler().runTaskTimer(plugin, this::refreshAll, 20L, 20L);
+        Bukkit.getScheduler().runTaskTimer(plugin, this::refreshAll, 10L, 10L);
     }
 
     private void refreshDecentHolograms() {
@@ -31,11 +32,22 @@ public final class HologramRefreshService {
             Object manager = api.getClass().getMethod("getHologramManager").invoke(api);
             Collection<?> holograms = (Collection<?>) manager.getClass().getMethod("getHolograms").invoke(manager);
             for (Object hologram : holograms) {
-                invokeFirst(hologram, "updateAll", "update", "realignLines");
+                refreshDecentHologram(hologram);
             }
         } catch (ClassNotFoundException ignored) {
         } catch (ReflectiveOperationException exception) {
             plugin.getLogger().log(Level.FINE, "DecentHolograms refresh skipped", exception);
+        }
+    }
+
+    private void refreshDecentHologram(Object hologram) throws ReflectiveOperationException {
+        invokeFirst(hologram, "updateAll", "update", "realignLines");
+        try {
+            Collection<?> pages = (Collection<?>) hologram.getClass().getMethod("getPages").invoke(hologram);
+            for (Object page : pages) {
+                invokeFirst(page, "updateAll", "update", "realignLines");
+            }
+        } catch (NoSuchMethodException ignored) {
         }
     }
 
@@ -50,6 +62,21 @@ public final class HologramRefreshService {
         } catch (ClassNotFoundException ignored) {
         } catch (ReflectiveOperationException exception) {
             plugin.getLogger().log(Level.FINE, "HolographicDisplays refresh skipped", exception);
+        }
+    }
+
+    private void refreshFancyHolograms() {
+        try {
+            Class<?> apiClass = Class.forName("de.oliver.fancyholograms.api.FancyHologramsPlugin");
+            Object pluginInstance = apiClass.getMethod("get").invoke(null);
+            Object manager = pluginInstance.getClass().getMethod("getHologramManager").invoke(pluginInstance);
+            Collection<?> holograms = (Collection<?>) manager.getClass().getMethod("getHolograms").invoke(manager);
+            for (Object hologram : holograms) {
+                invokeFirst(hologram, "updateHologram", "update", "forceUpdate");
+            }
+        } catch (ClassNotFoundException ignored) {
+        } catch (ReflectiveOperationException exception) {
+            plugin.getLogger().log(Level.FINE, "FancyHolograms refresh skipped", exception);
         }
     }
 

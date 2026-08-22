@@ -8,11 +8,12 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import dev.sharded.velocitycore.command.QueueCommand;
-import dev.sharded.velocitycore.command.ServerCommand;
 import dev.sharded.velocitycore.config.PluginConfig;
 import dev.sharded.velocitycore.listener.PlayerListener;
+import dev.sharded.velocitycore.listener.ServerCommandListener;
 import dev.sharded.velocitycore.placeholder.PlaceholderHook;
 import dev.sharded.velocitycore.queue.QueueManager;
+import dev.sharded.velocitycore.queue.ServerConnectService;
 import dev.sharded.velocitycore.status.ServerStatusManager;
 import dev.sharded.velocitycore.status.StatusSyncService;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(
         id = "shardedvelocitycore",
         name = "ShardedVelocityCore",
-        version = "1.0.2",
+        version = "1.0.3",
         description = "Server status placeholders, queue system, and hologram status sync for Velocity networks.",
         authors = {"Sharded"}
 )
@@ -37,6 +38,7 @@ public final class ShardedVelocityCore {
     private ServerStatusManager statusManager;
     private QueueManager queueManager;
     private StatusSyncService statusSyncService;
+    private ServerConnectService connectService;
 
     @Inject
     public ShardedVelocityCore(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory) {
@@ -51,23 +53,21 @@ public final class ShardedVelocityCore {
         this.statusManager = new ServerStatusManager(server, config);
         this.queueManager = new QueueManager(server, config, statusManager);
         this.statusSyncService = new StatusSyncService(server, statusManager, config);
+        this.connectService = new ServerConnectService(server, queueManager, config);
 
         statusManager.setChangeListener(statusSyncService::broadcastNow);
 
         server.getCommandManager().register(
                 server.getCommandManager().metaBuilder("queue").aliases("q").plugin(this).build(),
-                new QueueCommand(server, queueManager, config)
-        );
-        server.getCommandManager().register(
-                server.getCommandManager().metaBuilder("server").plugin(this).build(),
-                new ServerCommand(server, queueManager, config)
+                new QueueCommand(connectService)
         );
 
+        server.getEventManager().register(this, new ServerCommandListener(connectService));
         server.getEventManager().register(this, new PlayerListener(queueManager, statusSyncService));
 
         statusManager.start();
         queueManager.start(this);
-        statusSyncService.start();
+        statusSyncService.start(this);
 
         schedulePlaceholderRegistration();
 

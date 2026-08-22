@@ -6,15 +6,13 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
+import com.velocitypowered.api.scheduler.ScheduledTask;
 import dev.sharded.velocitycore.ServerState;
 import dev.sharded.velocitycore.common.PluginChannels;
 import dev.sharded.velocitycore.config.PluginConfig;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public final class StatusSyncService {
 
@@ -24,11 +22,7 @@ public final class StatusSyncService {
     private final ProxyServer server;
     private final ServerStatusManager statusManager;
     private final PluginConfig config;
-    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(r -> {
-        Thread thread = new Thread(r, "ShardedVelocityCore-status-sync");
-        thread.setDaemon(true);
-        return thread;
-    });
+    private ScheduledTask syncTask;
 
     public StatusSyncService(ProxyServer server, ServerStatusManager statusManager, PluginConfig config) {
         this.server = server;
@@ -37,18 +31,19 @@ public final class StatusSyncService {
         server.getChannelRegistrar().register(CHANNEL);
     }
 
-    public void start() {
+    public void start(Object plugin) {
         broadcastNow();
-        executor.scheduleAtFixedRate(
-                this::broadcastNow,
-                config.statusSyncIntervalSeconds(),
-                config.statusSyncIntervalSeconds(),
-                TimeUnit.SECONDS
-        );
+        long intervalMs = config.statusSyncIntervalSeconds() * 1000L;
+        syncTask = server.getScheduler()
+                .buildTask(plugin, this::broadcastNow)
+                .repeat(intervalMs, java.util.concurrent.TimeUnit.MILLISECONDS)
+                .schedule();
     }
 
     public void stop() {
-        executor.shutdownNow();
+        if (syncTask != null) {
+            syncTask.cancel();
+        }
     }
 
     public void sendToPlayer(Player player) {

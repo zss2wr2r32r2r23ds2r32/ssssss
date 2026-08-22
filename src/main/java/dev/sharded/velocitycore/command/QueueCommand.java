@@ -2,9 +2,6 @@ package dev.sharded.velocitycore.command;
 
 import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
-import com.velocitypowered.api.proxy.ProxyServer;
-import dev.sharded.velocitycore.config.PluginConfig;
-import dev.sharded.velocitycore.queue.QueueManager;
 import dev.sharded.velocitycore.queue.ServerConnectService;
 
 import java.util.List;
@@ -13,8 +10,8 @@ public final class QueueCommand implements SimpleCommand {
 
     private final ServerConnectService connectService;
 
-    public QueueCommand(ProxyServer proxy, QueueManager queueManager, PluginConfig config) {
-        this.connectService = new ServerConnectService(proxy, queueManager, config);
+    public QueueCommand(ServerConnectService connectService) {
+        this.connectService = connectService;
     }
 
     @Override

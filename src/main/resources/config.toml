@@ -1,17 +1,14 @@
 # ShardedVelocityCore Configuration
 
-# How often server status is checked (seconds)
 status-refresh-seconds = 1
-
-# How often status is pushed to lobby holograms (seconds)
 status-sync-interval-seconds = 1
 
-tracked-servers = ["survival", "events", "diamondsmp"]
+tracked-servers = ["survival", "events", "diasmp"]
 
 maintenance-servers = []
 
 [queue]
-  action-bar = "%accent_color%#%numberinqueue% &7in queue for %server%&r &7(Waiting: %numberofpeoplewaitinginqueue%)"
+  action-bar = "&#4498DB#%numberinqueue% in queue to &n%server_color%%server%&r &7(Wating: %numberofpeoplewaitinginqueue%)"
   prefix = "&#4498DB&lQUEUE &8▷&r "
   default-server = "survival"
   action-bar-interval-ticks = 10
@@ -27,9 +24,9 @@ maintenance-servers = []
   [queue.server-colors]
     survival = "&#8AFF00"
     events = "&#FFAA00"
-    diamondsmp = "&#4498DB"
+    diasmp = "&#4498DB"
 
   [queue.max-players]
     survival = 100
     events = 200
-    diamondsmp = 150
+    diasmp = 150

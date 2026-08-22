@@ -2,61 +2,61 @@
 
 Velocity proxy plugin with server status placeholders, queue system, and hologram support.
 
-## JARs
+## JARs (v1.0.2)
 
 | File | Install on |
 |------|------------|
 | `build/libs/ShardedVelocityCore.jar` | Velocity `plugins/` |
-| `lobby/build/libs/ShardedVelocityCore-Lobby.jar` | Lobby server `plugins/` (for `%` hologram placeholders) |
+| `lobby/build/libs/ShardedVelocityCore-Lobby.jar` | Lobby `plugins/` (+ PlaceholderAPI) |
 
 Build: `./gradlew build`
 
-## Install
+## Commands
 
-1. Put **ShardedVelocityCore.jar** on Velocity
-2. Put **ShardedVelocityCore-Lobby.jar** on your lobby (requires PlaceholderAPI)
-3. Restart Velocity and lobby
-4. Make sure server names in `config.toml` match your `velocity.toml` registrations
+| Command | Description |
+|---------|-------------|
+| `/queue [server]` | Join queue (defaults to survival) |
+| `/queue leave` | Leave the queue |
+| `/server <server>` | Connect via queue system |
 
-## /queue
-
-- `/queue` — join default server queue (no permission required)
-- `/queue survival|events|diamondsmp`
-- `/queue leave`
+Both `/queue` and `/server` use the same queue logic — if the server is full or offline, you are queued automatically.
 
 ## Hologram placeholders (line 9)
 
-**DecentHolograms / PlaceholderAPI (lobby):**
 ```
 %shardedvelocitycore_status_survival%
 %shardedvelocitycore_status_events%
 %shardedvelocitycore_status_diamondsmp%
 ```
 
-**MiniPlaceholders format (proxy + lobby):**
-```
-<shardedvelocitycore_status_survival>
-<shardedvelocitycore_status_events>
-<shardedvelocitycore_status_diamondsmp>
-```
+Status updates every **1 second** live — no need to leave and rejoin.
 
-Status values:
-- Online: `&#8AFF00&lONLINE`
-- Offline: `&#FF0000&lOFFLINE`
-- Maintenance: `&#FF0000&lMAINTEANCE`
+## Queue colors
 
-## Configuration
-
-`plugins/shardedvelocitycore/config.toml`
+Configure in `plugins/shardedvelocitycore/config.toml`:
 
 ```toml
-tracked-servers = ["survival", "events", "diamondsmp"]
-maintenance-servers = []
+[queue.colors]
+  position = "&#FFFFFF"
+  server = "&#8AFF00"
+  waiting = "&#AAAAAA"
+  success = "&#8AFF00"
+  error = "&#FF0000"
+  accent = "&#4498DB"
+
+[queue.server-colors]
+  survival = "&#8AFF00"
+  events = "&#FFAA00"
+  diamondsmp = "&#4498DB"
 ```
 
-## Requirements
+Action bar supports: `%numberinqueue%`, `%server%`, `%server_color%`, `%numberofpeoplewaitinginqueue%`, `%accent_color%`, `%position_color%`, `%waiting_color%`
 
-- Velocity 3.3+
-- Java 21+
-- PlaceholderAPI on lobby (for `%` holograms)
-- MiniPlaceholders on Velocity + lobby (optional, for `<>` format)
+## Faster status updates
+
+```toml
+status-refresh-seconds = 1
+status-sync-interval-seconds = 1
+```
+
+Status changes broadcast to lobby immediately and holograms refresh automatically.
