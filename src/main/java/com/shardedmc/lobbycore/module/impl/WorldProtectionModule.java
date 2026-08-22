@@ -1,6 +1,7 @@
 package com.shardedmc.lobbycore.module.impl;
 
 import com.shardedmc.lobbycore.ShardedLobbyCore;
+import com.shardedmc.lobbycore.gui.MenuHolder;
 import com.shardedmc.lobbycore.module.Module;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -135,6 +136,10 @@ public class WorldProtectionModule implements Module, Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryClick(InventoryClickEvent event) {
         if (!config.getBoolean("disable-inventory-move", true) || !(event.getWhoClicked() instanceof Player player)) {
+            return;
+        }
+        if (event.getView().getTopInventory().getHolder() instanceof MenuHolder) {
+            event.setCancelled(true);
             return;
         }
         if (canBypassInventory(player)) {

@@ -38,6 +38,8 @@ public final class ShardedLobbyCore extends JavaPlugin {
         playlistManager.load();
         moduleManager.loadModules();
 
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+
         getLogger().info("ShardedLobbyCore v" + getDescription().getVersion() + " enabled with " + moduleManager.getEnabledCount() + " modules.");
     }
 

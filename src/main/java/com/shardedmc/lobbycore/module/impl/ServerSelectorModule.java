@@ -7,26 +7,36 @@ import com.shardedmc.lobbycore.module.Module;
 import com.shardedmc.lobbycore.util.ItemBuilder;
 import com.shardedmc.lobbycore.util.MessageUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 public class ServerSelectorModule implements Module, Listener {
 
     private ShardedLobbyCore plugin;
     private FileConfiguration config;
-    private final Map<Integer, ConfigurationSection> slotServers = new HashMap<>();
+    private NamespacedKey serverKey;
+    private final Map<Integer, String> slotServerKeys = new HashMap<>();
+    private final Map<String, ConfigurationSection> serversByKey = new HashMap<>();
 
     @Override
     public String getId() {
@@ -42,12 +52,14 @@ public class ServerSelectorModule implements Module, Listener {
     public void enable(ShardedLobbyCore plugin, FileConfiguration config) {
         this.plugin = plugin;
         this.config = config;
+        this.serverKey = new NamespacedKey(plugin, "server-selector-id");
         reloadSlotMap();
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     private void reloadSlotMap() {
-        slotServers.clear();
+        slotServerKeys.clear();
+        serversByKey.clear();
         ConfigurationSection servers = config.getConfigurationSection("servers");
         if (servers == null) {
             return;
@@ -59,10 +71,13 @@ public class ServerSelectorModule implements Module, Listener {
         int centerSlot = centerRow + 4;
 
         for (int i = 0; i < keys.size(); i++) {
-            ConfigurationSection server = servers.getConfigurationSection(keys.get(i));
+            String key = keys.get(i);
+            ConfigurationSection server = servers.getConfigurationSection(key);
             if (server == null) {
                 continue;
             }
+            serversByKey.put(key, server);
+
             int slot;
             if (config.getBoolean("center-servers", true) && !server.contains("slot")) {
                 int startSlot = centerSlot - (keys.size() - 1);
@@ -70,13 +85,14 @@ public class ServerSelectorModule implements Module, Listener {
             } else {
                 slot = server.getInt("slot", centerSlot);
             }
-            slotServers.put(slot, server);
+            slotServerKeys.put(slot, key);
         }
     }
 
     @Override
     public void disable() {
-        slotServers.clear();
+        slotServerKeys.clear();
+        serversByKey.clear();
         HandlerList.unregisterAll(this);
     }
 
@@ -87,8 +103,12 @@ public class ServerSelectorModule implements Module, Listener {
                 MessageUtil.component(config.getString("gui.title", "Server Selector")));
         holder.setInventory(inventory);
 
-        for (Map.Entry<Integer, ConfigurationSection> entry : slotServers.entrySet()) {
-            inventory.setItem(entry.getKey(), ItemBuilder.fromConfig(entry.getValue(), player));
+        for (Map.Entry<Integer, String> entry : slotServerKeys.entrySet()) {
+            ConfigurationSection server = serversByKey.get(entry.getValue());
+            if (server == null) {
+                continue;
+            }
+            inventory.setItem(entry.getKey(), tagServerItem(ItemBuilder.fromConfig(server, player), entry.getValue()));
         }
 
         if (config.isConfigurationSection("filler")) {
@@ -103,36 +123,151 @@ public class ServerSelectorModule implements Module, Listener {
         player.openInventory(inventory);
     }
 
-    @EventHandler
+    private ItemStack tagServerItem(ItemStack item, String key) {
+        ItemStack tagged = item.clone();
+        ItemMeta meta = tagged.getItemMeta();
+        if (meta != null) {
+            meta.getPersistentDataContainer().set(serverKey, PersistentDataType.STRING, key);
+            tagged.setItemMeta(meta);
+        }
+        return tagged;
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        if (!(event.getInventory().getHolder() instanceof MenuHolder holder) || holder.getType() != MenuType.SERVER_SELECTOR) {
+
+        Inventory top = event.getView().getTopInventory();
+        if (!(top.getHolder() instanceof MenuHolder holder) || holder.getType() != MenuType.SERVER_SELECTOR) {
             return;
         }
 
         event.setCancelled(true);
-        ConfigurationSection server = slotServers.get(event.getRawSlot());
+
+        if (event.getClickedInventory() != top) {
+            return;
+        }
+
+        ItemStack clicked = event.getCurrentItem();
+        if (clicked == null || clicked.getType().isAir()) {
+            return;
+        }
+
+        String serverId = resolveServerKey(clicked, event.getSlot());
+        ConfigurationSection server = serversByKey.get(serverId);
         if (server == null) {
             return;
         }
 
         player.closeInventory();
-        Bukkit.getScheduler().runTask(plugin, () -> connectPlayer(player, server));
+        Bukkit.getScheduler().runTask(plugin, () -> connectPlayer(player, serverId, server));
     }
 
-    private void connectPlayer(Player player, ConfigurationSection server) {
-        if (server.contains("console-command")) {
-            String command = server.getString("console-command").replace("%player%", player.getName());
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-        } else if (server.contains("command")) {
-            String command = server.getString("command").replace("%player%", player.getName());
-            player.performCommand(command);
+    private String resolveServerKey(ItemStack item, int slot) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            String key = meta.getPersistentDataContainer().get(serverKey, PersistentDataType.STRING);
+            if (key != null) {
+                return key;
+            }
+        }
+        return slotServerKeys.get(slot);
+    }
+
+    private void connectPlayer(Player player, String serverId, ConfigurationSection server) {
+        String target = resolveTargetName(server);
+        String method = config.getString("connect-method", "auto").toLowerCase();
+
+        if (config.getBoolean("debug", false)) {
+            plugin.getLogger().info("Connecting " + player.getName() + " to " + target + " via " + method);
+        }
+
+        boolean connected = switch (method) {
+            case "bungee" -> connectBungee(player, target);
+            case "chat" -> connectChat(player, server, target);
+            case "command" -> connectCommand(player, server);
+            case "console" -> connectConsole(player, server);
+            case "auto" -> connectBungee(player, target) || connectChat(player, server, target) || connectCommand(player, server);
+            default -> connectChat(player, server, target) || connectCommand(player, server);
+        };
+
+        if (!connected && config.getBoolean("debug", false)) {
+            plugin.getLogger().warning("Failed to connect " + player.getName() + " to " + target);
         }
 
         if (server.contains("message")) {
             MessageUtil.sendFormatted(player, server.getString("message"));
         }
+    }
+
+    private String resolveTargetName(ConfigurationSection server) {
+        if (server.contains("bungee-name")) {
+            return server.getString("bungee-name");
+        }
+        if (server.contains("command")) {
+            String command = server.getString("command").trim();
+            String[] parts = command.split(" ");
+            if (parts.length >= 2) {
+                return parts[parts.length - 1];
+            }
+        }
+        return server.getName();
+    }
+
+    private boolean connectBungee(Player player, String serverName) {
+        if (serverName == null || serverName.isEmpty()) {
+            return false;
+        }
+        try {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            DataOutputStream out = new DataOutputStream(stream);
+            out.writeUTF("Connect");
+            out.writeUTF(serverName);
+            player.sendPluginMessage(plugin, "BungeeCord", stream.toByteArray());
+            return true;
+        } catch (IOException ex) {
+            plugin.getLogger().log(Level.WARNING, "BungeeCord connect failed for " + player.getName(), ex);
+            return false;
+        }
+    }
+
+    private boolean connectChat(Player player, ConfigurationSection server, String target) {
+        String command = resolveCommand(server, target);
+        if (command == null || command.isEmpty()) {
+            return false;
+        }
+        player.chat("/" + command);
+        return true;
+    }
+
+    private boolean connectCommand(Player player, ConfigurationSection server) {
+        String command = resolveCommand(server, resolveTargetName(server));
+        if (command == null || command.isEmpty()) {
+            return false;
+        }
+        return player.performCommand(command.replace("%player%", player.getName()));
+    }
+
+    private boolean connectConsole(Player player, ConfigurationSection server) {
+        if (server.contains("console-command")) {
+            String command = server.getString("console-command").replace("%player%", player.getName());
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+            return true;
+        }
+        String command = resolveCommand(server, resolveTargetName(server));
+        if (command == null || command.isEmpty()) {
+            return false;
+        }
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", player.getName()));
+        return true;
+    }
+
+    private String resolveCommand(ConfigurationSection server, String target) {
+        if (server.contains("command")) {
+            return server.getString("command");
+        }
+        return "server " + target;
     }
 }
