@@ -9,18 +9,20 @@ import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import dev.sharded.velocitycore.command.QueueCommand;
 import dev.sharded.velocitycore.config.PluginConfig;
-import dev.sharded.velocitycore.listener.PlayerDisconnectListener;
+import dev.sharded.velocitycore.listener.PlayerListener;
 import dev.sharded.velocitycore.placeholder.PlaceholderHook;
 import dev.sharded.velocitycore.queue.QueueManager;
 import dev.sharded.velocitycore.status.ServerStatusManager;
+import dev.sharded.velocitycore.status.StatusSyncService;
 import org.slf4j.Logger;
 
 import java.nio.file.Path;
+import java.util.concurrent.TimeUnit;
 
 @Plugin(
         id = "shardedvelocitycore",
         name = "ShardedVelocityCore",
-        version = "1.0.0",
+        version = "1.0.1",
         description = "Server status placeholders, queue system, and hologram status sync for Velocity networks.",
         authors = {"Sharded"}
 )
@@ -33,6 +35,7 @@ public final class ShardedVelocityCore {
     private PluginConfig config;
     private ServerStatusManager statusManager;
     private QueueManager queueManager;
+    private StatusSyncService statusSyncService;
 
     @Inject
     public ShardedVelocityCore(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory) {
@@ -46,23 +49,46 @@ public final class ShardedVelocityCore {
         this.config = PluginConfig.load(dataDirectory, logger);
         this.statusManager = new ServerStatusManager(server, config);
         this.queueManager = new QueueManager(server, config, statusManager);
+        this.statusSyncService = new StatusSyncService(server, statusManager);
 
-        statusManager.start();
-        queueManager.start();
-
-        server.getEventManager().register(this, new PlayerDisconnectListener(queueManager));
         server.getCommandManager().register(
-                server.getCommandManager().metaBuilder("queue").build(),
-                new QueueCommand(queueManager, config)
+                server.getCommandManager().metaBuilder("queue").aliases("q").plugin(this).build(),
+                new QueueCommand(server, queueManager, config)
         );
 
+        server.getEventManager().register(this, new PlayerListener(queueManager, statusSyncService));
+
+        statusManager.start();
+        queueManager.start(this);
+        statusSyncService.start();
+
+        schedulePlaceholderRegistration();
+
+        logger.info("ShardedVelocityCore enabled. Use /queue to join a server queue.");
+        if (!PlaceholderHook.isMiniPlaceholdersLoaded(this)) {
+            logger.warn("MiniPlaceholders was not found on Velocity. Install it for hologram placeholders.");
+        }
+    }
+
+    private void schedulePlaceholderRegistration() {
         PlaceholderHook.register(this);
 
-        logger.info("ShardedVelocityCore enabled.");
+        server.getScheduler()
+                .buildTask(this, () -> PlaceholderHook.register(this))
+                .delay(2, TimeUnit.SECONDS)
+                .schedule();
+
+        server.getScheduler()
+                .buildTask(this, () -> PlaceholderHook.register(this))
+                .delay(5, TimeUnit.SECONDS)
+                .schedule();
     }
 
     @Subscribe
     public void onProxyShutdown(ProxyShutdownEvent event) {
+        if (statusSyncService != null) {
+            statusSyncService.stop();
+        }
         if (queueManager != null) {
             queueManager.stop();
         }

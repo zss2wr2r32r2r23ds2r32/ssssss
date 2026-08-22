@@ -1,56 +1,62 @@
 # ShardedVelocityCore
 
-A **Velocity proxy plugin** with server status placeholders, queue system, and hologram support for Survival, Events, and DiamondSMP.
+Velocity proxy plugin with server status placeholders, queue system, and hologram support.
 
-## Download
+## JARs
 
-Build output: `build/libs/ShardedVelocityCore.jar`
+| File | Install on |
+|------|------------|
+| `build/libs/ShardedVelocityCore.jar` | Velocity `plugins/` |
+| `lobby/build/libs/ShardedVelocityCore-Lobby.jar` | Lobby server `plugins/` (for `%` hologram placeholders) |
 
-```bash
-./gradlew build
-```
+Build: `./gradlew build`
 
-Install by placing `ShardedVelocityCore.jar` in your Velocity `plugins/` folder.
+## Install
 
-## Status Placeholders
+1. Put **ShardedVelocityCore.jar** on Velocity
+2. Put **ShardedVelocityCore-Lobby.jar** on your lobby (requires PlaceholderAPI)
+3. Restart Velocity and lobby
+4. Make sure server names in `config.toml` match your `velocity.toml` registrations
 
-Automatically returns the correct coloured status for each server:
-
-| State | Output |
-|-------|--------|
-| Online | `&#8AFF00&lONLINE` |
-| Offline | `&#FF0000&lOFFLINE` |
-| Maintenance | `&#FF0000&lMAINTEANCE` |
-
-Use on hologram **line 9** (keep icon colours on other lines unchanged):
-
-| Placeholder | Server |
-|-------------|--------|
-| `%shardedvelocitycore_status_survival%` | Survival |
-| `%shardedvelocitycore_status_events%` | Events |
-| `%shardedvelocitycore_status_diamondsmp%` | DiamondSMP |
-
-> Requires [MiniPlaceholders](https://hangar.papermc.io/MiniPlaceholders/MiniPlaceholders) on Velocity and backend hologram servers.
-
-## Queue
+## /queue
 
 - `/queue` — join default server queue (no permission required)
-- `/queue survival|events|diamondsmp` — join a specific server
-- `/queue leave` — leave the queue
+- `/queue survival|events|diamondsmp`
+- `/queue leave`
 
-**Action bar:** `#%numberinqueue% in queue to &n&#8AFF00%server%&r &7(Wating: %numberofpeoplewaitinginqueue%)`
+## Hologram placeholders (line 9)
 
-**Prefix:** `&#4498DB&lQUEUE &8▷&r`
+**DecentHolograms / PlaceholderAPI (lobby):**
+```
+%shardedvelocitycore_status_survival%
+%shardedvelocitycore_status_events%
+%shardedvelocitycore_status_diamondsmp%
+```
+
+**MiniPlaceholders format (proxy + lobby):**
+```
+<shardedvelocitycore_status_survival>
+<shardedvelocitycore_status_events>
+<shardedvelocitycore_status_diamondsmp>
+```
+
+Status values:
+- Online: `&#8AFF00&lONLINE`
+- Offline: `&#FF0000&lOFFLINE`
+- Maintenance: `&#FF0000&lMAINTEANCE`
 
 ## Configuration
 
 `plugins/shardedvelocitycore/config.toml`
 
 ```toml
-maintenance-servers = ["survival"]  # force MAINTEANCE status
+tracked-servers = ["survival", "events", "diamondsmp"]
+maintenance-servers = []
 ```
 
 ## Requirements
 
 - Velocity 3.3+
 - Java 21+
+- PlaceholderAPI on lobby (for `%` holograms)
+- MiniPlaceholders on Velocity + lobby (optional, for `<>` format)

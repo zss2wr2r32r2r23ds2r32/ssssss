@@ -4,6 +4,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import dev.sharded.velocitycore.ServerState;
 import dev.sharded.velocitycore.config.PluginConfig;
+import dev.sharded.velocitycore.util.ServerResolver;
 
 import java.util.Locale;
 import java.util.Map;
@@ -60,12 +61,16 @@ public final class ServerStatusManager {
         return getState(serverName).display();
     }
 
+    public Map<String, ServerState> snapshot() {
+        return Map.copyOf(states);
+    }
+
     public boolean isJoinable(String serverName) {
         return getState(serverName) == ServerState.ONLINE && !isFull(serverName);
     }
 
     public boolean isFull(String serverName) {
-        RegisteredServer registeredServer = server.getServer(serverName).orElse(null);
+        RegisteredServer registeredServer = ServerResolver.find(server, serverName).orElse(null);
         if (registeredServer == null) {
             return true;
         }
@@ -78,7 +83,7 @@ public final class ServerStatusManager {
             return ServerState.MAINTENANCE;
         }
 
-        RegisteredServer registeredServer = server.getServer(serverName).orElse(null);
+        RegisteredServer registeredServer = ServerResolver.find(server, serverName).orElse(null);
         if (registeredServer == null) {
             return ServerState.OFFLINE;
         }

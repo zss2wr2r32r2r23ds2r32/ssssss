@@ -1,0 +1,7 @@
+name: ShardedVelocityCore-Lobby
+version: 1.0.1
+main: dev.sharded.velocitycore.lobby.LobbyPlugin
+api-version: '1.21'
+author: Sharded
+description: Lobby PlaceholderAPI bridge for ShardedVelocityCore hologram status placeholders.
+depend: [PlaceholderAPI]

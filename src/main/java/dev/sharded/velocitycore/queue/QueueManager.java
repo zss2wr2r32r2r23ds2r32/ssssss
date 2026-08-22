@@ -6,6 +6,7 @@ import com.velocitypowered.api.scheduler.ScheduledTask;
 import dev.sharded.velocitycore.config.PluginConfig;
 import dev.sharded.velocitycore.status.ServerStatusManager;
 import dev.sharded.velocitycore.util.LegacyText;
+import dev.sharded.velocitycore.util.ServerResolver;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -34,9 +35,9 @@ public final class QueueManager {
         }
     }
 
-    public void start() {
+    public void start(Object plugin) {
         actionBarTask = server.getScheduler()
-                .buildTask(this, this::refreshActionBars)
+                .buildTask(plugin, this::refreshActionBars)
                 .repeat(config.actionBarIntervalTicks() * 50L, java.util.concurrent.TimeUnit.MILLISECONDS)
                 .schedule();
     }
@@ -48,23 +49,31 @@ public final class QueueManager {
     }
 
     public boolean joinQueue(Player player, String serverName) {
-        String normalized = ServerStatusManager.normalize(serverName);
-        if (!queues.containsKey(normalized)) {
+        Optional<com.velocitypowered.api.proxy.server.RegisteredServer> registered = ServerResolver.find(server, serverName);
+        if (registered.isEmpty()) {
             return false;
         }
 
+        String canonical = registered.get().getServerInfo().getName();
+        String normalized = ServerStatusManager.normalize(canonical);
+        queues.computeIfAbsent(normalized, ignored -> new ArrayDeque<>());
+
         leaveQueue(player);
 
-        if (statusManager.isJoinable(normalized)) {
-            connect(player, normalized);
+        if (statusManager.isJoinable(canonical)) {
+            connect(player, canonical);
             return true;
         }
 
-        Deque<UUID> queue = queues.computeIfAbsent(normalized, ignored -> new ArrayDeque<>());
+        Deque<UUID> queue = queues.get(normalized);
         queue.addLast(player.getUniqueId());
         playerQueues.put(player.getUniqueId(), normalized);
-        sendActionBar(player, normalized);
+        sendActionBar(player, canonical);
         return true;
+    }
+
+    public boolean isQueued(UUID playerId) {
+        return playerQueues.containsKey(playerId);
     }
 
     public void leaveQueue(Player player) {
@@ -102,13 +111,15 @@ public final class QueueManager {
     }
 
     public int waitingCount(String serverName) {
-        Deque<UUID> queue = queues.get(ServerStatusManager.normalize(serverName));
+        String normalized = ServerStatusManager.normalize(ServerResolver.canonicalName(server, serverName));
+        Deque<UUID> queue = queues.get(normalized);
         return queue == null ? 0 : queue.size();
     }
 
     public void processQueues() {
         for (String serverName : new ArrayList<>(queues.keySet())) {
-            if (!statusManager.isJoinable(serverName)) {
+            String canonical = ServerResolver.canonicalName(server, serverName);
+            if (!statusManager.isJoinable(canonical)) {
                 continue;
             }
             Deque<UUID> queue = queues.get(serverName);
@@ -122,13 +133,13 @@ public final class QueueManager {
             server.getPlayer(next).ifPresent(player -> {
                 queue.pollFirst();
                 playerQueues.remove(next);
-                connect(player, serverName);
+                connect(player, canonical);
             });
         }
     }
 
     private void connect(Player player, String serverName) {
-        server.getServer(serverName).ifPresentOrElse(
+        ServerResolver.find(server, serverName).ifPresentOrElse(
                 target -> player.createConnectionRequest(target).fireAndForget(),
                 () -> player.sendMessage(LegacyText.parse(config.queuePrefix() + "&#FF0000Server &n" + serverName + "&r &#FF0000is unavailable."))
         );
@@ -137,7 +148,10 @@ public final class QueueManager {
     private void refreshActionBars() {
         processQueues();
         for (Map.Entry<UUID, String> entry : new HashMap<>(playerQueues).entrySet()) {
-            server.getPlayer(entry.getKey()).ifPresent(player -> sendActionBar(player, entry.getValue()));
+            server.getPlayer(entry.getKey()).ifPresent(player -> {
+                String canonical = ServerResolver.canonicalName(server, entry.getValue());
+                sendActionBar(player, canonical);
+            });
         }
     }
 
