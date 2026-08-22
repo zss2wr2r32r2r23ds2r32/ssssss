@@ -180,13 +180,19 @@ public class CommandWhitelistModule implements Module, Listener {
 
         String typed = buffer.substring(1).toLowerCase(Locale.ROOT);
         boolean hasSpace = typed.contains(" ");
-        String base = hasSpace ? typed.split(" ")[0] : typed;
-        base = normalizeBaseCommand(base);
+        final String commandBase = normalizeBaseCommand(hasSpace ? typed.split(" ")[0] : typed);
 
         if (!hasSpace) {
+            if (!commandBase.isEmpty()) {
+                boolean anyMatch = whitelistCommands.stream().anyMatch(allowed -> allowed.startsWith(commandBase));
+                if (!anyMatch) {
+                    event.getCompletions().clear();
+                    return;
+                }
+            }
             List<String> filtered = new ArrayList<>();
             for (String allowed : whitelistCommands) {
-                if (allowed.startsWith(base)) {
+                if (commandBase.isEmpty() || allowed.startsWith(commandBase)) {
                     filtered.add(allowed);
                 }
             }
@@ -197,16 +203,17 @@ public class CommandWhitelistModule implements Module, Listener {
 
         if (!isWhitelisted(typed)) {
             event.getCompletions().clear();
-        } else {
-            Iterator<String> iterator = event.getCompletions().iterator();
-            while (iterator.hasNext()) {
-                String completion = iterator.next();
-                if (completion.startsWith("/")) {
-                    completion = completion.substring(1);
-                }
-                if (!isWhitelisted(base + " " + completion.split(" ")[0])) {
-                    iterator.remove();
-                }
+            return;
+        }
+
+        Iterator<String> iterator = event.getCompletions().iterator();
+        while (iterator.hasNext()) {
+            String completion = iterator.next();
+            if (completion.startsWith("/")) {
+                completion = completion.substring(1);
+            }
+            if (!isWhitelisted(commandBase + " " + completion.split(" ")[0])) {
+                iterator.remove();
             }
         }
     }

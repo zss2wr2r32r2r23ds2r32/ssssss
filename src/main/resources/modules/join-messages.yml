@@ -1,23 +1,30 @@
 # Join Messages Module
 
 enabled: true
+link-hover: false
 
 set-adventure-mode: true
 disable-vanilla-join-message: true
 disable-vanilla-quit-message: true
 
+join-sound:
+  enabled: true
+  sound: ENTITY_PLAYER_LEVELUP
+  volume: 1.0
+  pitch: 1.0
+
 variables:
   text-primary: "&f"
   text-secondary-discord: "&#3091DB"
-  text-secondary-store: "&#FFB600"
+  text-secondary-store: "&#94FF00"
   discord-url: "discord.gg/shardedmc"
   store-url: "store.shardedmc.net"
-  store-title-color: "&#FFB600"
+  store-title-color: "&#94FF00"
 
 join-title:
   enabled: true
   text: "&#AD4EFF&lWelcome &#AD4EFF%player%"
-  subtitle: "&fUse command &#AD4EFF/server <name> &fto get started"
+  subtitle: "&fEnjoy your stay at shardedmc.net"
   fade-in: 10
   stay: 60
   fade-out: 10
@@ -26,7 +33,7 @@ first-join:
   title:
     enabled: true
     text: "&#AD4EFF&lWelcome &#AD4EFF%player%"
-    subtitle: "&fWe are glad to have you at our network!"
+    subtitle: "&fEnjoy your stay at shardedmc.net"
   broadcast:
     enabled: true
     message: "&#FF005D&lNEW &8▷ &7Welcome %player% to ShardedMC you are &8[#%number%]!"
@@ -39,7 +46,7 @@ first-join:
       - "&fWelcome &#AD4EFF%player%&f! We are glad to have you at our network!"
       - "&fUse command: &#AD4EFF/server <name> &fTo Get Started!"
       - ""
-      - "{@store-title-color}&lSTORE &8▷ {@text-primary}<link:https://{@store-url}>{@store-url}</link>"
+      - "&#94FF00&lSTORE &8▷ {@text-primary}<link:https://{@store-url}>{@store-url}</link>"
       - "<#3091DB>&lDISCORD &8▷ {@text-primary}<link:https://{@discord-url}>{@discord-url}</link>"
       - ""
 
@@ -60,7 +67,7 @@ chat-message:
     - "&fWelcome &#AD4EFF%player% Please do the following:"
     - "&fUse command: &#AD4EFF/server <name> &fTo Get Started!"
     - ""
-    - "{@store-title-color}&lSTORE &8▷ {@text-primary}<link:https://{@store-url}>{@store-url}</link>"
+    - "&#94FF00&lSTORE &8▷ {@text-primary}<link:https://{@store-url}>{@store-url}</link>"
     - "<#3091DB>&lDISCORD &8▷ {@text-primary}<link:https://{@discord-url}>{@discord-url}</link>"
     - ""
   returning:
@@ -70,7 +77,7 @@ chat-message:
     - "&#AD4EFF| &fWelcome Back &#AD4EFF%player%"
     - "&#AD4EFF| &fUse command: &#AD4EFF/server <name> &fTo Get Started"
     - ""
-    - "{@store-title-color}&lSTORE &8▷ {@text-primary}<link:https://{@store-url}>{@store-url}</link>"
+    - "&#94FF00&lSTORE &8▷ {@text-primary}<link:https://{@store-url}>{@store-url}</link>"
     - "<#3091DB>&lDISCORD &8▷ {@text-primary}<link:https://{@discord-url}>{@discord-url}</link>"
     - ""
 
@@ -79,8 +86,8 @@ broadcast-first-join:
   message: "#45FF17+ &f%player%"
 
 broadcast-join:
-  enabled: false
-  message: "#45FF17+ &f%player%"
+  enabled: true
+  message: "&#45FF17+ &f%player%"
 
 broadcast-quit:
   enabled: true

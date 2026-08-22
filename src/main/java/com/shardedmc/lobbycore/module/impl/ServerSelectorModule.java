@@ -1,6 +1,8 @@
 package com.shardedmc.lobbycore.module.impl;
 
 import com.shardedmc.lobbycore.ShardedLobbyCore;
+import com.shardedmc.lobbycore.gui.MenuHolder;
+import com.shardedmc.lobbycore.gui.MenuType;
 import com.shardedmc.lobbycore.module.Module;
 import com.shardedmc.lobbycore.util.ItemBuilder;
 import com.shardedmc.lobbycore.util.MessageUtil;
@@ -15,14 +17,15 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ServerSelectorModule implements Module, Listener {
 
     private ShardedLobbyCore plugin;
     private FileConfiguration config;
-    private String guiTitle;
     private final Map<Integer, ConfigurationSection> slotServers = new HashMap<>();
 
     @Override
@@ -39,7 +42,6 @@ public class ServerSelectorModule implements Module, Listener {
     public void enable(ShardedLobbyCore plugin, FileConfiguration config) {
         this.plugin = plugin;
         this.config = config;
-        this.guiTitle = MessageUtil.plainText(config.getString("gui.title", "&8Server Selector"));
         reloadSlotMap();
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
@@ -50,11 +52,25 @@ public class ServerSelectorModule implements Module, Listener {
         if (servers == null) {
             return;
         }
-        for (String key : servers.getKeys(false)) {
-            ConfigurationSection server = servers.getConfigurationSection(key);
-            if (server != null) {
-                slotServers.put(server.getInt("slot", -1), server);
+
+        List<String> keys = new ArrayList<>(servers.getKeys(false));
+        int rows = Math.min(6, Math.max(1, config.getInt("gui.rows", 3)));
+        int centerRow = (rows / 2) * 9;
+        int centerSlot = centerRow + 4;
+
+        for (int i = 0; i < keys.size(); i++) {
+            ConfigurationSection server = servers.getConfigurationSection(keys.get(i));
+            if (server == null) {
+                continue;
             }
+            int slot;
+            if (config.getBoolean("center-servers", true) && !server.contains("slot")) {
+                int startSlot = centerSlot - (keys.size() - 1);
+                slot = startSlot + (i * 2);
+            } else {
+                slot = server.getInt("slot", centerSlot);
+            }
+            slotServers.put(slot, server);
         }
     }
 
@@ -66,18 +82,13 @@ public class ServerSelectorModule implements Module, Listener {
 
     public void openMenu(Player player) {
         int rows = Math.min(6, Math.max(1, config.getInt("gui.rows", 3)));
-        Inventory inventory = Bukkit.createInventory(null, rows * 9, MessageUtil.component(config.getString("gui.title", "&8Server Selector")));
+        MenuHolder holder = new MenuHolder(MenuType.SERVER_SELECTOR);
+        Inventory inventory = Bukkit.createInventory(holder, rows * 9,
+                MessageUtil.component(config.getString("gui.title", "Server Selector")));
+        holder.setInventory(inventory);
 
-        ConfigurationSection servers = config.getConfigurationSection("servers");
-        if (servers != null) {
-            for (String key : servers.getKeys(false)) {
-                ConfigurationSection server = servers.getConfigurationSection(key);
-                if (server == null) {
-                    continue;
-                }
-                int slot = server.getInt("slot", 0);
-                inventory.setItem(slot, ItemBuilder.fromConfig(server, player));
-            }
+        for (Map.Entry<Integer, ConfigurationSection> entry : slotServers.entrySet()) {
+            inventory.setItem(entry.getKey(), ItemBuilder.fromConfig(entry.getValue(), player));
         }
 
         if (config.isConfigurationSection("filler")) {
@@ -97,9 +108,7 @@ public class ServerSelectorModule implements Module, Listener {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-
-        String openTitle = MessageUtil.plainText(event.getView().title());
-        if (!openTitle.equals(guiTitle)) {
+        if (!(event.getInventory().getHolder() instanceof MenuHolder holder) || holder.getType() != MenuType.SERVER_SELECTOR) {
             return;
         }
 
@@ -119,11 +128,7 @@ public class ServerSelectorModule implements Module, Listener {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
         } else if (server.contains("command")) {
             String command = server.getString("command").replace("%player%", player.getName());
-            if (config.getBoolean("run-as-console", false) || server.getBoolean("run-as-console", false)) {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-            } else {
-                Bukkit.dispatchCommand(player, command);
-            }
+            player.performCommand(command);
         }
 
         if (server.contains("message")) {

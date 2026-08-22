@@ -122,6 +122,10 @@ public final class MessageUtil {
     }
 
     public static Component parseRichLine(String line, Player player, Map<String, String> variables, int joinNumber) {
+        return parseRichLine(line, player, variables, joinNumber, true);
+    }
+
+    public static Component parseRichLine(String line, Player player, Map<String, String> variables, int joinNumber, boolean linkHover) {
         line = applyVariables(line, variables);
         line = applyRawPlaceholders(line, player, joinNumber);
 
@@ -138,12 +142,13 @@ public final class MessageUtil {
             }
             String url = matcher.group(1);
             String display = matcher.group(2);
-            result = result.append(
-                    component(display)
-                            .clickEvent(ClickEvent.openUrl(url))
-                            .hoverEvent(HoverEvent.showText(component("&7Click to open &f" + url)))
-                            .decoration(TextDecoration.UNDERLINED, true)
-            );
+            Component link = component(display)
+                    .clickEvent(ClickEvent.openUrl(url))
+                    .decoration(TextDecoration.UNDERLINED, true);
+            if (linkHover) {
+                link = link.hoverEvent(HoverEvent.showText(component("&7Click to open &f" + url)));
+            }
+            result = result.append(link);
             last = matcher.end();
         }
         if (last < line.length()) {
@@ -153,16 +158,20 @@ public final class MessageUtil {
     }
 
     public static void sendRichLines(CommandSender sender, List<String> lines, Player player, Map<String, String> variables) {
-        sendRichLines(sender, lines, player, variables, -1);
+        sendRichLines(sender, lines, player, variables, -1, true);
     }
 
     public static void sendRichLines(CommandSender sender, List<String> lines, Player player, Map<String, String> variables, int joinNumber) {
+        sendRichLines(sender, lines, player, variables, joinNumber, true);
+    }
+
+    public static void sendRichLines(CommandSender sender, List<String> lines, Player player, Map<String, String> variables, int joinNumber, boolean linkHover) {
         for (String line : lines) {
             if (line == null || line.isEmpty()) {
                 sender.sendMessage(Component.empty());
                 continue;
             }
-            sender.sendMessage(parseRichLine(line, player, variables, joinNumber));
+            sender.sendMessage(parseRichLine(line, player, variables, joinNumber, linkHover));
         }
     }
 

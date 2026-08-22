@@ -1,10 +1,11 @@
 # Server Selector Module
 
 enabled: true
+center-servers: true
 
 gui:
-  title: "Server Selector"
-  rows: 4
+  title: "SERVER SELECTOR"
+  rows: 3
 
 filler:
   material: BLACK_STAINED_GLASS_PANE
@@ -14,7 +15,6 @@ filler:
 
 servers:
   survival:
-    slot: 12
     material: END_CRYSTAL
     name: "&#8AFF00Shop &#8AFF00Survival"
     lore:
@@ -31,7 +31,6 @@ servers:
     command: "server survival"
 
   events:
-    slot: 14
     material: FIREWORK_ROCKET
     name: "&#FF007CEvents"
     lore:
@@ -48,7 +47,6 @@ servers:
     command: "server events"
 
   diamond-smp:
-    slot: 16
     material: DIAMOND
     name: "&#FF0000Diamond SMP"
     lore:

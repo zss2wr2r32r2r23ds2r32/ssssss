@@ -15,8 +15,30 @@ commands:
   random: "music random"
   skip: "music skip"
 
+action-bar:
+  enabled: true
+  format: "&#FF0072&lMUSIC &8▷ &fUp Next is: &#FF0072%song%"
+  empty: "None"
+
+playlist-gui:
+  title: "&#FF0072Playlist"
+  rows: 6
+  selected-material: LIME_STAINED_GLASS_PANE
+  selected-name: "&#94FF00&lSELECTED"
+  selected-lore:
+    - "&8Description"
+    - ""
+    - "&#94FF00Information:"
+    - "&#94FF00| &fThe Song %song%"
+    - "&#94FF00| &fIs now added to your Playlist!"
+    - ""
+    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Cancel"
+
+playlist-queue:
+  play-delay-ticks: 5
+
 filler:
-  material: GRAY_STAINED_GLASS_PANE
+  material: BLACK_STAINED_GLASS_PANE
   name: " "
 
 songs:
@@ -241,3 +263,15 @@ controls:
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Skip"
     action: "skip"
+  playlist:
+    slot: 52
+    material: BOOK
+    name: "&#FF0072&lPLAYLIST"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0072| &fClick here to"
+      - "&#FF0072| &fManage your playlist"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
+    action: "playlist"

@@ -5,6 +5,7 @@ import com.shardedmc.lobbycore.module.Module;
 import com.shardedmc.lobbycore.util.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -89,6 +90,7 @@ public class JoinMessagesModule implements Module, Listener, CommandExecutor {
             } else {
                 sendReturningJoinMessages(player);
             }
+            playJoinSound(player);
         }, 5L);
     }
 
@@ -191,6 +193,23 @@ public class JoinMessagesModule implements Module, Listener, CommandExecutor {
     }
 
     private void sendChatLines(Player player, List<String> lines, int joinNumber) {
-        MessageUtil.sendRichLines(player, lines, player, getMessageVariables(), joinNumber);
+        boolean linkHover = config.getBoolean("link-hover", false);
+        MessageUtil.sendRichLines(player, lines, player, getMessageVariables(), joinNumber, linkHover);
+    }
+
+    private void playJoinSound(Player player) {
+        if (!config.getBoolean("join-sound.enabled", true)) {
+            return;
+        }
+        String soundName = config.getString("join-sound.sound", "ENTITY_PLAYER_LEVELUP");
+        Sound sound;
+        try {
+            sound = Sound.valueOf(soundName.toUpperCase());
+        } catch (IllegalArgumentException ex) {
+            sound = Sound.ENTITY_PLAYER_LEVELUP;
+        }
+        float volume = (float) config.getDouble("join-sound.volume", 1.0);
+        float pitch = (float) config.getDouble("join-sound.pitch", 1.0);
+        player.playSound(player.getLocation(), sound, volume, pitch);
     }
 }

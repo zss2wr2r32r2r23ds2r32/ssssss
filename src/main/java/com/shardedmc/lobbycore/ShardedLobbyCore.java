@@ -4,6 +4,7 @@ import com.shardedmc.lobbycore.manager.ConfigManager;
 import com.shardedmc.lobbycore.manager.CooldownManager;
 import com.shardedmc.lobbycore.manager.JoinCounterManager;
 import com.shardedmc.lobbycore.manager.ModuleManager;
+import com.shardedmc.lobbycore.manager.PlaylistManager;
 import com.shardedmc.lobbycore.manager.SpawnManager;
 import com.shardedmc.lobbycore.util.MessageUtil;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,6 +17,7 @@ public final class ShardedLobbyCore extends JavaPlugin {
     private SpawnManager spawnManager;
     private CooldownManager cooldownManager;
     private JoinCounterManager joinCounterManager;
+    private PlaylistManager playlistManager;
 
     @Override
     public void onEnable() {
@@ -26,12 +28,14 @@ public final class ShardedLobbyCore extends JavaPlugin {
         this.spawnManager = new SpawnManager(this);
         this.cooldownManager = new CooldownManager();
         this.joinCounterManager = new JoinCounterManager(this);
+        this.playlistManager = new PlaylistManager(this);
         this.moduleManager = new ModuleManager(this);
 
         MessageUtil.init(this);
         configManager.loadAll();
         spawnManager.load();
         joinCounterManager.load();
+        playlistManager.load();
         moduleManager.loadModules();
 
         getLogger().info("ShardedLobbyCore v" + getDescription().getVersion() + " enabled with " + moduleManager.getEnabledCount() + " modules.");
@@ -50,6 +54,7 @@ public final class ShardedLobbyCore extends JavaPlugin {
         configManager.loadAll();
         spawnManager.load();
         joinCounterManager.load();
+        playlistManager.load();
         moduleManager.reloadModules();
     }
 
@@ -75,5 +80,9 @@ public final class ShardedLobbyCore extends JavaPlugin {
 
     public JoinCounterManager getJoinCounterManager() {
         return joinCounterManager;
+    }
+
+    public PlaylistManager getPlaylistManager() {
+        return playlistManager;
     }
 }
