@@ -19,7 +19,7 @@ items:
       - "[OPEN_MENU] server-selector"
 
   player-visibility:
-    slot: 8
+    slot: 7
     material: LIME_DYE
     amount: 1
     name: "&#94FF00Player Visability &7[Enabled]"
@@ -37,6 +37,7 @@ items:
       - "&8Description"
       - ""
       - "&7Teleport where it lands"
+    unbreakable: true
     enchantments:
       infinity: 1
 
@@ -49,6 +50,7 @@ items:
       - "&8Description"
       - ""
       - "&7Hold to enter PvP"
+    unbreakable: true
 
   parkour:
     slot: 2
@@ -63,7 +65,7 @@ items:
       - "[PARKOUR]"
 
   music:
-    slot: 3
+    slot: 8
     material: JUKEBOX
     amount: 1
     name: "&#FF0072Music &7[Right-Click]"

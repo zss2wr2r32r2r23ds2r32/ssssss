@@ -52,6 +52,7 @@ kit:
       slot: 0
       material: DIAMOND_SWORD
       plain: true
+      unbreakable: true
       enchantments:
         sharpness: 4
     golden-apples:
@@ -63,6 +64,7 @@ kit:
       slot: 2
       material: BOW
       plain: true
+      unbreakable: true
       enchantments:
         infinity: 1
     leave-sword:

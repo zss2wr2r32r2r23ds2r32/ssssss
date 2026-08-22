@@ -24,3 +24,7 @@ messages:
   end:
     enabled: false
     text: "%prefix% &#9FFF00Parkour ended!"
+
+auto-end:
+  on-teleport: true
+  teleport-grace-ms: 5000

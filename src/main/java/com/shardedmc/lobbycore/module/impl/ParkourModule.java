@@ -8,15 +8,18 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.EventExecutor;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,6 +34,7 @@ public class ParkourModule implements Module, Listener {
     private final Map<UUID, ItemStack[]> savedInventories = new HashMap<>();
     private final Map<UUID, ItemStack[]> savedArmor = new HashMap<>();
     private final Map<UUID, GameMode> savedGameModes = new HashMap<>();
+    private final Map<UUID, Long> startTimes = new HashMap<>();
 
     @Override
     public String getId() {
@@ -54,6 +58,29 @@ public class ParkourModule implements Module, Listener {
             endCommands = List.of("ajparkour leave", "ajparkour quit", "ajparkour stop", "ajparkour end");
         }
         Bukkit.getPluginManager().registerEvents(this, plugin);
+        registerAjParkourListener();
+    }
+
+    private void registerAjParkourListener() {
+        if (Bukkit.getPluginManager().getPlugin("ajParkour") == null) {
+            return;
+        }
+        try {
+            Class<? extends Event> eventClass = Class.forName("us.ajg0702.parkour.api.events.PlayerEndParkourEvent")
+                    .asSubclass(Event.class);
+            EventExecutor executor = (listener, event) -> {
+                try {
+                    Player player = (Player) eventClass.getMethod("getPlayer").invoke(event);
+                    Bukkit.getScheduler().runTask(plugin, () -> endParkour(player, true));
+                } catch (ReflectiveOperationException ex) {
+                    plugin.getLogger().warning("Error handling ajParkour end event: " + ex.getMessage());
+                }
+            };
+            Bukkit.getPluginManager().registerEvent(eventClass, this, EventPriority.NORMAL, executor, plugin, false);
+            plugin.getLogger().info("Hooked into ajParkour PlayerEndParkourEvent");
+        } catch (ReflectiveOperationException ex) {
+            plugin.getLogger().warning("Could not hook ajParkour events: " + ex.getMessage());
+        }
     }
 
     private void reloadMaterials() {
@@ -109,6 +136,7 @@ public class ParkourModule implements Module, Listener {
         player.setAllowFlight(false);
         player.setFlying(false);
         inParkour.add(uuid);
+        startTimes.put(uuid, System.currentTimeMillis());
 
         String command = config.getString("command", "ajparkour start").replace("%player%", player.getName());
         Bukkit.getScheduler().runTask(plugin, () -> player.performCommand(command));
@@ -125,6 +153,7 @@ public class ParkourModule implements Module, Listener {
         }
 
         inParkour.remove(uuid);
+        startTimes.remove(uuid);
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
 
@@ -133,29 +162,46 @@ public class ParkourModule implements Module, Listener {
         GameMode mode = savedGameModes.remove(uuid);
 
         if (restoreItems) {
-            if (inv != null) {
-                player.getInventory().setContents(inv);
-            }
-            if (armor != null) {
-                player.getInventory().setArmorContents(armor);
-            }
-            if (mode != null) {
-                player.setGameMode(mode);
-            }
-
-            DefaultItemsModule defaultItems = (DefaultItemsModule) plugin.getModuleManager().getModule("default-items");
-            if (defaultItems != null) {
-                defaultItems.giveItems(player);
-            }
-            PlayerVisibilityModule visibility = (PlayerVisibilityModule) plugin.getModuleManager().getModule("player-visibility");
-            if (visibility != null) {
-                visibility.updateItem(player);
-            }
+            restoreLobbyState(player, inv, armor, mode);
         }
 
         if (config.getBoolean("messages.end.enabled", false)) {
             MessageUtil.sendFormatted(player, config.getString("messages.end.text", "%prefix% &#9FFF00Parkour ended!"));
         }
+    }
+
+    private void restoreLobbyState(Player player, ItemStack[] inv, ItemStack[] armor, GameMode mode) {
+        if (inv != null) {
+            player.getInventory().setContents(inv);
+        }
+        if (armor != null) {
+            player.getInventory().setArmorContents(armor);
+        }
+        if (mode != null) {
+            player.setGameMode(mode);
+        }
+
+        DefaultItemsModule defaultItems = (DefaultItemsModule) plugin.getModuleManager().getModule("default-items");
+        if (defaultItems != null) {
+            defaultItems.giveItems(player);
+        }
+        PlayerVisibilityModule visibility = (PlayerVisibilityModule) plugin.getModuleManager().getModule("player-visibility");
+        if (visibility != null) {
+            visibility.updateItem(player);
+        }
+
+        DoubleJumpModule doubleJump = (DoubleJumpModule) plugin.getModuleManager().getModule("double-jump");
+        if (doubleJump != null) {
+            doubleJump.resetPlayer(player);
+        } else if (player.getGameMode() != GameMode.CREATIVE && player.getGameMode() != GameMode.SPECTATOR) {
+            player.setAllowFlight(true);
+            player.setFlying(false);
+        }
+    }
+
+    /** Ends parkour when the player falls into the void (called from VoidSpawnModule). */
+    public void endParkourFromVoid(Player player) {
+        endParkour(player, true);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
@@ -169,6 +215,23 @@ public class ParkourModule implements Module, Listener {
 
         event.setCancelled(true);
         startParkour(event.getPlayer());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onTeleport(PlayerTeleportEvent event) {
+        if (!config.getBoolean("auto-end.on-teleport", true)) {
+            return;
+        }
+        if (!inParkour.contains(event.getPlayer().getUniqueId())) {
+            return;
+        }
+        UUID uuid = event.getPlayer().getUniqueId();
+        Long startedAt = startTimes.get(uuid);
+        long graceMs = config.getLong("auto-end.teleport-grace-ms", 5000);
+        if (startedAt != null && System.currentTimeMillis() - startedAt < graceMs) {
+            return;
+        }
+        Bukkit.getScheduler().runTaskLater(plugin, () -> endParkour(event.getPlayer(), true), 1L);
     }
 
     @EventHandler
@@ -190,6 +253,7 @@ public class ParkourModule implements Module, Listener {
     public void onQuit(PlayerQuitEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
         inParkour.remove(uuid);
+        startTimes.remove(uuid);
         savedInventories.remove(uuid);
         savedArmor.remove(uuid);
         savedGameModes.remove(uuid);

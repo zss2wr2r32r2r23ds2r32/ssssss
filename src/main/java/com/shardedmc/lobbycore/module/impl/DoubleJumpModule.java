@@ -133,6 +133,18 @@ public class DoubleJumpModule implements Module, Listener {
         }
     }
 
+    public void resetPlayer(Player player) {
+        hasJumped.remove(player.getUniqueId());
+        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+            return;
+        }
+        if (isAdminFlying(player) || isInParkour(player)) {
+            return;
+        }
+        player.setAllowFlight(true);
+        player.setFlying(false);
+    }
+
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         if (event.getTo() == null) {

@@ -5,7 +5,7 @@ enabled: true
 run-as-console: false
 
 gui:
-  title: "&#FF0072Music"
+  title: "Music Player"
   rows: 6
 
 commands:
@@ -19,35 +19,225 @@ filler:
   material: GRAY_STAINED_GLASS_PANE
   name: " "
 
-# Add your songs below — each entry needs a slot, disc material, display name, and song id
-songs: {}
+songs:
+  alanwalker-fade:
+    slot: 10
+    material: MUSIC_DISC_CAT
+    name: "&#FF0072Alan Walker - Fade"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Click to play"
+    song: "ALANWALKER-FADE"
+  beatit:
+    slot: 11
+    material: MUSIC_DISC_13
+    name: "&#FF0072Beat It"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Click to play"
+    song: "BEATIT"
+  billiejean:
+    slot: 12
+    material: MUSIC_DISC_BLOCKS
+    name: "&#FF0072Billie Jean"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Click to play"
+    song: "BILLIEJEAN"
+  callmemaybe:
+    slot: 13
+    material: MUSIC_DISC_CHIRP
+    name: "&#FF0072Call Me Maybe"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Click to play"
+    song: "CALLMEMAYBE"
+  countingstars:
+    slot: 14
+    material: MUSIC_DISC_FAR
+    name: "&#FF0072Counting Stars"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Click to play"
+    song: "COUNTINGSTAS"
+  djgotusfallin:
+    slot: 15
+    material: MUSIC_DISC_MALL
+    name: "&#FF0072DJ Got Us Fallin' In Love"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Click to play"
+    song: "DJGOTUSFALLIN'INLOVE"
+  feelgoodinc:
+    slot: 16
+    material: MUSIC_DISC_MELLOHI
+    name: "&#FF0072Feel Good Inc"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Click to play"
+    song: "FEELGOODINC"
+  highestintheroom:
+    slot: 19
+    material: MUSIC_DISC_STAL
+    name: "&#FF0072Highest In The Room"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Click to play"
+    song: "HIGHEST-IN-THE-ROOM"
+  igotafeeling:
+    slot: 20
+    material: MUSIC_DISC_STRAD
+    name: "&#FF0072I Gotta Feeling"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Click to play"
+    song: "IGOTAFEELING"
+  itookapill:
+    slot: 21
+    material: MUSIC_DISC_WARD
+    name: "&#FF0072I Took A Pill In Ibiza"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Click to play"
+    song: "ITDOKAPILLINIBIZA"
+  luciddreams:
+    slot: 22
+    material: MUSIC_DISC_11
+    name: "&#FF0072Lucid Dreams"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Click to play"
+    song: "LUCID-DREAMS"
+  majorlazer:
+    slot: 23
+    material: MUSIC_DISC_WAIT
+    name: "&#FF0072Major Lazer - Cold Water"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Click to play"
+    song: "MAJORLAZER-COLDWATER(FEAT.JUSTINBIEBER_M¥)EASY"
+  ransom:
+    slot: 24
+    material: MUSIC_DISC_PIGSTEP
+    name: "&#FF0072Ransom"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Click to play"
+    song: "RANSOM"
+  shootingstars:
+    slot: 25
+    material: MUSIC_DISC_OTHERSIDE
+    name: "&#FF0072Shooting Stars"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Click to play"
+    song: "SHOOTINGSTARS"
+  takeonme:
+    slot: 28
+    material: MUSIC_DISC_5
+    name: "&#FF0072Take On Me"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Click to play"
+    song: "TAKEONME"
+  thriller:
+    slot: 29
+    material: MUSIC_DISC_RELIC
+    name: "&#FF0072Thriller"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Click to play"
+    song: "THRILLER"
+  waitingforlove:
+    slot: 30
+    material: MUSIC_DISC_CAT
+    name: "&#FF0072Waiting For Love"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Click to play"
+    song: "WAITINGFORLOVE"
+  wakemeupinside:
+    slot: 31
+    material: MUSIC_DISC_13
+    name: "&#FF0072Wake Me Up Inside"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Click to play"
+    song: "WAKEMEUPINSIDE"
+  ymca:
+    slot: 32
+    material: MUSIC_DISC_BLOCKS
+    name: "&#FF0072YMCA"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Click to play"
+    song: "YMCA"
 
 controls:
   stop:
-    slot: 45
+    slot: 49
     material: BARRIER
-    name: "&#FF2727Stop"
+    name: "&#FF2727&lSTOP"
     lore:
-      - "&7Stop the current song"
+      - "&8Description"
+      - ""
+      - "&#FF2727| &fClick here to stop"
+      - "&#FF2727| &fThe music the current song"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Stop"
     action: "stop"
   pause:
     slot: 46
     material: CLOCK
-    name: "&#FFE300Pause"
+    name: "&#FFE300&lPAUSE"
     lore:
-      - "&7Pause the current song"
+      - "&8Description"
+      - ""
+      - "&#FFE300| &fClick here to"
+      - "&#FFE300| &fPause the music current song"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Pause"
     action: "pause"
   random:
-    slot: 47
+    slot: 45
     material: NOTE_BLOCK
-    name: "&#FF0072Random"
+    name: "&#FF0072&lRANDOM"
     lore:
-      - "&7Play a random song"
+      - "&8Description"
+      - ""
+      - "&#FF0072| &fClick, here to"
+      - "&#FF0072| &fPlay a random song"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Play"
     action: "random"
   skip:
-    slot: 48
+    slot: 53
     material: PLAYER_HEAD
-    name: "&#9FFF00Skip"
+    name: "&#9FFF00&lSKIP"
     lore:
-      - "&7Skip to the next song"
+      - "&8Description"
+      - ""
+      - "&#9FFF00| &fClick here to"
+      - "&#9FFF00| &fSkip the current song"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Skip"
     action: "skip"

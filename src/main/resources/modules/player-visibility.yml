@@ -4,7 +4,7 @@ enabled: true
 cooldown-seconds: 3
 
 item:
-  slot: 8
+  slot: 7
   material: LIME_DYE
   material-disabled: RED_DYE
   name-enabled: "&#94FF00Player Visability"
