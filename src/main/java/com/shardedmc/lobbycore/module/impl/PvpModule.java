@@ -71,7 +71,7 @@ public class PvpModule implements Module, Listener {
         for (UUID uuid : new HashSet<>(inPvp)) {
             Player player = Bukkit.getPlayer(uuid);
             if (player != null) {
-                exitPvp(player);
+                restoreLobbyInventory(player, uuid, false);
             }
         }
         enterTrackers.clear();
@@ -88,7 +88,7 @@ public class PvpModule implements Module, Listener {
 
         HoldTracker tracker = enterTrackers.computeIfAbsent(uuid, k -> new HoldTracker());
         tracker.update(player);
-        showActionBar(player, tracker, holdMillis, "action-bar.enter", "&cEntering PvP in &f%seconds%s");
+        showActionBar(player, tracker, holdMillis, "action-bar.enter", "&#FF0000&lPVP &8▷ &fEntering PVP In &#FF0000%seconds%s");
 
         if (tracker.hasHeldFor(holdMillis)) {
             enterTrackers.remove(uuid);
@@ -105,7 +105,7 @@ public class PvpModule implements Module, Listener {
 
         HoldTracker tracker = leaveTrackers.computeIfAbsent(uuid, k -> new HoldTracker());
         tracker.update(player);
-        showActionBar(player, tracker, holdMillis, "action-bar.leave", "&aLeaving PvP in &f%seconds%s");
+        showActionBar(player, tracker, holdMillis, "action-bar.leave", "&#FF0000&lPVP &8▷ &fLeaving PVP In &#FF0000%seconds%s");
 
         if (tracker.hasHeldFor(holdMillis)) {
             leaveTrackers.remove(uuid);
@@ -133,7 +133,7 @@ public class PvpModule implements Module, Listener {
         }
         DefaultItemsModule defaultItems = (DefaultItemsModule) plugin.getModuleManager().getModule("default-items");
         if (defaultItems != null) {
-            var section = defaultItems.getItemSection("pvp-sword");
+            ConfigurationSection section = defaultItems.getItemSection("pvp-sword");
             if (section != null && ItemBuilder.matchesName(item, section.getString("name"))) {
                 return true;
             }
@@ -145,9 +145,22 @@ public class PvpModule implements Module, Listener {
         if (item == null) {
             return false;
         }
-        Material material = Material.matchMaterial(config.getString("leave-item.material", "WOODEN_SWORD"));
-        return ItemBuilder.matchesMaterial(item, material) &&
-                ItemBuilder.matchesName(item, config.getString("leave-item.name", "&aLeave PvP"));
+
+        Material leaveMaterial = Material.matchMaterial(config.getString("leave-item.material", "NETHERITE_SWORD"));
+        if (ItemBuilder.matchesMaterial(item, leaveMaterial) &&
+                ItemBuilder.matchesName(item, config.getString("leave-item.name", "&aLeave PvP"))) {
+            return true;
+        }
+
+        ConfigurationSection kitLeave = config.getConfigurationSection("kit.items.leave-sword");
+        if (kitLeave != null) {
+            Material kitMaterial = Material.matchMaterial(kitLeave.getString("material", "NETHERITE_SWORD"));
+            if (ItemBuilder.matchesMaterial(item, kitMaterial) &&
+                    ItemBuilder.matchesName(item, kitLeave.getString("name"))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void enterPvp(Player player) {
@@ -165,7 +178,7 @@ public class PvpModule implements Module, Listener {
 
         giveKit(player);
         inPvp.add(uuid);
-        MessageUtil.sendFormatted(player, config.getString("messages.entered", "&cYou entered PvP mode!"));
+        MessageUtil.sendFormatted(player, config.getString("messages.entered", "%prefix% &#9FFF00You have entered PvP mode, you may fight!"));
     }
 
     private void exitPvp(Player player) {
@@ -173,14 +186,16 @@ public class PvpModule implements Module, Listener {
         if (!inPvp.contains(uuid)) {
             return;
         }
+        restoreLobbyInventory(player, uuid, true);
+    }
 
+    private void restoreLobbyInventory(Player player, UUID uuid, boolean sendMessage) {
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
 
         ItemStack[] inv = savedInventories.remove(uuid);
         ItemStack[] armor = savedArmor.remove(uuid);
         GameMode mode = savedGameModes.remove(uuid);
-
         inPvp.remove(uuid);
 
         if (inv != null) {
@@ -201,7 +216,10 @@ public class PvpModule implements Module, Listener {
         if (visibility != null) {
             visibility.updateItem(player);
         }
-        MessageUtil.sendFormatted(player, config.getString("messages.left", "&aYou left PvP mode!"));
+
+        if (sendMessage) {
+            MessageUtil.sendFormatted(player, config.getString("messages.left", "%prefix% &#9FFF00You have left PvP mode, PvP is now disabled."));
+        }
     }
 
     private void giveKit(Player player) {
@@ -227,6 +245,10 @@ public class PvpModule implements Module, Listener {
                 inv.setItem(slot, ItemBuilder.fromConfig(itemSection, player));
             }
         }
+
+        int arrowSlot = config.getInt("kit.arrow-slot", 9);
+        int arrowAmount = config.getInt("kit.arrow-amount", 16);
+        inv.setItem(arrowSlot, new ItemStack(Material.ARROW, arrowAmount));
     }
 
     private ItemStack buildArmor(ConfigurationSection armor, String piece, Material fallback) {
@@ -247,14 +269,12 @@ public class PvpModule implements Module, Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        UUID uuid = event.getPlayer().getUniqueId();
+        Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
         enterTrackers.remove(uuid);
         leaveTrackers.remove(uuid);
         if (inPvp.contains(uuid)) {
-            inPvp.remove(uuid);
-            savedInventories.remove(uuid);
-            savedArmor.remove(uuid);
-            savedGameModes.remove(uuid);
+            restoreLobbyInventory(player, uuid, false);
         }
     }
 

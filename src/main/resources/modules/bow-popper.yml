@@ -1,18 +1,19 @@
 # Bow Popper Module
-# Teleport wherever your arrow lands
 
 enabled: true
 
 cooldown-seconds: 5
+max-range: 100
 
 item:
   material: BOW
-  name: "&d&lBOW POPPER"
+  name: "&#FFE300Bow Popper"
   lore:
     - "&8Description"
     - ""
     - "&7Teleport where it lands"
 
 messages:
-  teleported: "%prefix% &aTeleported to your arrow!"
-  cooldown: "%prefix% &cWait %seconds%s before using Bow Popper again."
+  teleported: "%prefix% &#9FFF00Teleported to your arrow!"
+  cooldown: "%prefix% &#FF2727Wait %seconds%s before using Bow Popper again."
+  out-of-range: "%prefix% &#FF2727Your arrow went too far! Max range is %range% blocks."

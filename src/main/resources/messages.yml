@@ -1,6 +1,5 @@
 # ShardedLobbyCore - Messages
-# Use & for color codes, %player% for player name, %prefix% for the main prefix
 
-no-permission: "%prefix% &cYou do not have permission to do that."
-player-only: "%prefix% &cThis command can only be used by players."
-reload-success: "%prefix% &aAll configurations reloaded successfully. &7(v%version%)"
+no-permission: "%prefix% &#FF2727You do not have permission to do that."
+player-only: "%prefix% &#FF2727This command can only be used by players."
+reload-success: "%prefix% &#9FFF00All configurations reloaded successfully. &7(v%version%)"

@@ -68,11 +68,22 @@ public final class MessageUtil {
     }
 
     private static String applyPlaceholders(String text, Player player) {
+        return applyPlaceholders(text, player, -1);
+    }
+
+    public static String format(String text, Player player, int joinNumber) {
+        return applyPlaceholders(text, player, joinNumber);
+    }
+
+    private static String applyPlaceholders(String text, Player player, int joinNumber) {
         if (text == null) {
             return "";
         }
         String result = text.replace("%prefix%", getPrefix());
         result = result.replace("%version%", plugin.getDescription().getVersion());
+        if (joinNumber >= 0) {
+            result = result.replace("%number%", String.valueOf(joinNumber));
+        }
         if (player != null) {
             result = result.replace("%player%", player.getName());
             if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
@@ -108,9 +119,13 @@ public final class MessageUtil {
     }
 
     public static void showTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+        showTitle(player, title, subtitle, fadeIn, stay, fadeOut, -1);
+    }
+
+    public static void showTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut, int joinNumber) {
         player.showTitle(Title.title(
-                component(applyPlaceholders(title, player)),
-                component(applyPlaceholders(subtitle == null ? "" : subtitle, player)),
+                component(applyPlaceholders(title, player, joinNumber)),
+                component(applyPlaceholders(subtitle == null ? "" : subtitle, player, joinNumber)),
                 Title.Times.times(
                         Duration.ofMillis(fadeIn * 50L),
                         Duration.ofMillis(stay * 50L),

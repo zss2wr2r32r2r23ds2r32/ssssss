@@ -12,4 +12,4 @@ spawn:
   pitch: -0.9323191
 
 messages:
-  set: '&aSpawn point set to your current location!'
+  set: '%prefix% &aSpawn point set to your current location!'

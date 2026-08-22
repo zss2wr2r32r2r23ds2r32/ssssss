@@ -1,7 +1,6 @@
 # Player Visibility Module
 
 enabled: true
-
 cooldown-seconds: 3
 
 item:
@@ -20,10 +19,10 @@ item:
     - "&7Right click me to show players"
 
 status:
-  enabled: "&7[ENABLED]"
-  disabled: "&7[DISABLED]"
+  enabled: "&7[Enabled]"
+  disabled: "&7[Disabled]"
 
 messages:
-  hidden: "%prefix% &cAll players are now hidden."
-  shown: "%prefix% &aAll players are now visible."
-  cooldown: "%prefix% &cWait %seconds%s before toggling visibility again."
+  hidden: "%prefix% &#FF2727All players are now hidden."
+  shown: "%prefix% &#9FFF00All players are now visible."
+  cooldown: "%prefix% &#FF2727Wait %seconds%s before toggling visibility again."

@@ -2,6 +2,7 @@ package com.shardedmc.lobbycore;
 
 import com.shardedmc.lobbycore.manager.ConfigManager;
 import com.shardedmc.lobbycore.manager.CooldownManager;
+import com.shardedmc.lobbycore.manager.JoinCounterManager;
 import com.shardedmc.lobbycore.manager.ModuleManager;
 import com.shardedmc.lobbycore.manager.SpawnManager;
 import com.shardedmc.lobbycore.util.MessageUtil;
@@ -14,6 +15,7 @@ public final class ShardedLobbyCore extends JavaPlugin {
     private ModuleManager moduleManager;
     private SpawnManager spawnManager;
     private CooldownManager cooldownManager;
+    private JoinCounterManager joinCounterManager;
 
     @Override
     public void onEnable() {
@@ -23,11 +25,13 @@ public final class ShardedLobbyCore extends JavaPlugin {
         this.configManager = new ConfigManager(this);
         this.spawnManager = new SpawnManager(this);
         this.cooldownManager = new CooldownManager();
+        this.joinCounterManager = new JoinCounterManager(this);
         this.moduleManager = new ModuleManager(this);
 
         MessageUtil.init(this);
         configManager.loadAll();
         spawnManager.load();
+        joinCounterManager.load();
         moduleManager.loadModules();
 
         getLogger().info("ShardedLobbyCore v" + getDescription().getVersion() + " enabled with " + moduleManager.getEnabledCount() + " modules.");
@@ -45,6 +49,7 @@ public final class ShardedLobbyCore extends JavaPlugin {
         reloadConfig();
         configManager.loadAll();
         spawnManager.load();
+        joinCounterManager.load();
         moduleManager.reloadModules();
     }
 
@@ -66,5 +71,9 @@ public final class ShardedLobbyCore extends JavaPlugin {
 
     public CooldownManager getCooldownManager() {
         return cooldownManager;
+    }
+
+    public JoinCounterManager getJoinCounterManager() {
+        return joinCounterManager;
     }
 }

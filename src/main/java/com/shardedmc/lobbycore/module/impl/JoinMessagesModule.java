@@ -62,6 +62,11 @@ public class JoinMessagesModule implements Module, Listener, CommandExecutor {
         return adminFlying.contains(player.getUniqueId());
     }
 
+    public void testFirstJoin(Player player) {
+        int number = plugin.getJoinCounterManager().peekJoinNumber();
+        sendFirstJoinExperience(player, number, true);
+    }
+
     @EventHandler(priority = EventPriority.HIGH)
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
@@ -75,7 +80,14 @@ public class JoinMessagesModule implements Module, Listener, CommandExecutor {
             event.joinMessage(null);
         }
 
-        Bukkit.getScheduler().runTaskLater(plugin, () -> sendJoinMessages(player, firstJoin), 5L);
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (firstJoin) {
+                int number = plugin.getJoinCounterManager().nextJoinNumber();
+                sendFirstJoinExperience(player, number, false);
+            } else {
+                sendReturningJoinMessages(player);
+            }
+        }, 5L);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -92,13 +104,41 @@ public class JoinMessagesModule implements Module, Listener, CommandExecutor {
         }
     }
 
-    private void sendJoinMessages(Player player, boolean firstJoin) {
+    private void sendFirstJoinExperience(Player player, int joinNumber, boolean testMode) {
+        if (config.getBoolean("first-join.title.enabled", true)) {
+            String title = config.getString("first-join.title.text", config.getString("join-title.text", "&#AD4EFF&lWelcome &#AD4EFF%player%"));
+            String subtitle = config.getString("first-join.title.subtitle", "&fWe are glad to have you at our network!");
+            MessageUtil.showTitle(player, title, subtitle,
+                    config.getInt("join-title.fade-in", 10),
+                    config.getInt("join-title.stay", 60),
+                    config.getInt("join-title.fade-out", 10),
+                    joinNumber);
+        }
+
+        if (config.getBoolean("first-join.chat.enabled", true)) {
+            for (String line : config.getStringList("first-join.chat.lines")) {
+                MessageUtil.sendFormatted(player, MessageUtil.format(line, player, joinNumber));
+            }
+        } else if (config.getBoolean("chat-message.enabled", true)) {
+            for (String line : config.getStringList("chat-message.first-join")) {
+                MessageUtil.sendFormatted(player, MessageUtil.format(line, player, joinNumber));
+            }
+        }
+
+        if (config.getBoolean("first-join.broadcast.enabled", true)) {
+            String broadcast = config.getString("first-join.broadcast.message",
+                    "&#FF005D&lNEW &8▷ &7Welcome %player% to ShardedMC you are &8[#%number%]!");
+            Bukkit.broadcast(MessageUtil.component(MessageUtil.format(broadcast, player, joinNumber)));
+        } else if (!testMode && config.getBoolean("broadcast-first-join.enabled", false)) {
+            String broadcast = config.getString("broadcast-first-join.message", "#45FF17+ &f%player%");
+            Bukkit.broadcast(MessageUtil.component(MessageUtil.format(broadcast, player, joinNumber)));
+        }
+    }
+
+    private void sendReturningJoinMessages(Player player) {
         if (config.getBoolean("join-title.enabled", true)) {
             String title = config.getString("join-title.text", "&#AD4EFF&lWelcome &#AD4EFF%player%");
-            String subtitlePath = player.hasPermission(config.getString("admin-fly.permission", "shardedlobbycore.fly")) &&
-                    config.getBoolean("admin-fly.enabled", true) ?
-                    "join-title.admin-subtitle" : "join-title.subtitle";
-            String subtitle = config.getString(subtitlePath, "&7Use &f/server <name> &7to get started");
+            String subtitle = config.getString("join-title.subtitle", "&fUse command &#AD4EFF/server <name> &fto get started");
             MessageUtil.showTitle(player, title, subtitle,
                     config.getInt("join-title.fade-in", 10),
                     config.getInt("join-title.stay", 60),
@@ -106,24 +146,14 @@ public class JoinMessagesModule implements Module, Listener, CommandExecutor {
         }
 
         if (config.getBoolean("chat-message.enabled", true)) {
-            List<String> lines = firstJoin ?
-                    config.getStringList("chat-message.first-join") :
-                    config.getStringList("chat-message.returning");
-
-            if (lines.isEmpty()) {
-                lines = config.getStringList("chat-message.lines");
-            }
-
+            List<String> lines = config.getStringList("chat-message.returning");
             for (String line : lines) {
                 MessageUtil.sendFormatted(player, line);
             }
         }
 
-        if (!firstJoin && config.getBoolean("broadcast-join.enabled", false)) {
+        if (config.getBoolean("broadcast-join.enabled", false)) {
             String broadcast = config.getString("broadcast-join.message", "&a+ &7%player%");
-            Bukkit.broadcast(MessageUtil.component(MessageUtil.format(broadcast, player)));
-        } else if (firstJoin && config.getBoolean("broadcast-first-join.enabled", true)) {
-            String broadcast = config.getString("broadcast-first-join.message", "&a+ &7%player% &8(First Join)");
             Bukkit.broadcast(MessageUtil.component(MessageUtil.format(broadcast, player)));
         }
     }
@@ -145,12 +175,12 @@ public class JoinMessagesModule implements Module, Listener, CommandExecutor {
             adminFlying.remove(uuid);
             player.setFlying(false);
             player.setAllowFlight(false);
-            MessageUtil.sendFormatted(player, config.getString("admin-fly.messages.disabled", "%prefix% &cFlight disabled."));
+            MessageUtil.sendFormatted(player, config.getString("admin-fly.messages.disabled", "%prefix% &#FF2727Flight disabled."));
         } else {
             adminFlying.add(uuid);
             player.setAllowFlight(true);
             player.setFlying(true);
-            MessageUtil.sendFormatted(player, config.getString("admin-fly.messages.enabled", "%prefix% &aFlight enabled."));
+            MessageUtil.sendFormatted(player, config.getString("admin-fly.messages.enabled", "%prefix% &#9FFF00Flight enabled."));
         }
         return true;
     }

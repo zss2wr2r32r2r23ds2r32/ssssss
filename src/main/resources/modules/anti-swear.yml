@@ -7,6 +7,6 @@ blocked-words:
   - "badword2"
   - "badword3"
 
-message: "&cPlease do not use inappropriate language."
+message: "%prefix% &cPlease do not use inappropriate language."
 notify-staff: true
-staff-message: "&c%player% &7tried to use a blocked word: &f%word%"
+staff-message: "%prefix% &#FF0000%player% &ftried to use a blocked word: &#FF0000%word%"

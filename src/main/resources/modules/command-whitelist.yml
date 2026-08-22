@@ -1,6 +1,7 @@
 # Command Whitelist Module
 
 enabled: true
+filter-tab-complete: true
 
 whitelist:
   - "server"
@@ -9,10 +10,7 @@ whitelist:
   - "msg"
   - "tell"
   - "r"
-  - "help"
   - "fly"
-  - "shardedlobbycore"
-  - "slc"
   - "ajparkour"
 
-message: "%prefix% &cYou cannot use that command in the lobby."
+message: "%prefix% &#FF2727You cannot use that command in the lobby."

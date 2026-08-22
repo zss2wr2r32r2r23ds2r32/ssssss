@@ -72,6 +72,14 @@ public class DefaultItemsModule implements Module, Listener {
             ItemStack item = ItemBuilder.fromConfig(itemSection, player);
             player.getInventory().setItem(slot, item);
         }
+
+        giveLobbyArrows(player);
+    }
+
+    private void giveLobbyArrows(Player player) {
+        int slot = config.getInt("lobby-arrow-slot", 9);
+        int amount = config.getInt("lobby-arrow-amount", 1);
+        player.getInventory().setItem(slot, new ItemStack(Material.ARROW, amount));
     }
 
     public ConfigurationSection getItemSection(String key) {

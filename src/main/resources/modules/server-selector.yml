@@ -1,63 +1,65 @@
 # Server Selector Module
-# GUI opened when right-clicking the server selector compass
 
 enabled: true
 
 gui:
-  title: "&#AD4EFF&lSERVER SELECTOR"
+  title: "Server Selector"
   rows: 4
 
 filler:
-  material: GRAY_STAINED_GLASS_PANE
+  material: BLACK_STAINED_GLASS_PANE
   name: " "
   lore:
     - "&7"
 
 servers:
-  shop:
-    slot: 10
-    material: EMERALD
-    name: "&#45FF17&lSHOP"
-    lore:
-      - "&8Description"
-      - ""
-      - "&7Browse the network shop!"
-      - ""
-      - "&#FFD900▷ &n&lCLICK&#FFD900 To Open Shop"
-    command: "server shop"
-
   survival:
     slot: 12
-    material: GRASS_BLOCK
-    name: "&#45FF17&lSURVIVAL"
+    material: END_CRYSTAL
+    name: "&#8AFF00Shop &#8AFF00Survival"
     lore:
       - "&8Description"
       - ""
-      - "&7Play survival with friends!"
+      - "&#8AFF00| &fClick me to Connect"
+      - "&#8AFF00| &fTo &#8AFF00Shop Survival"
       - ""
-      - "&#FFD900▷ &n&lCLICK&#FFD900 To Join"
+      - "&#8AFF00⚓ &fPlayers: &#8AFF00%bungee_survival%"
+      - "&#FF005D🌊 &fSeason: &#FF005D#1"
+      - "&#008DFF⛨ &fStatus: &#008DFF"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Join"
     command: "server survival"
 
   events:
     slot: 14
     material: FIREWORK_ROCKET
-    name: "&#FFAA00&lEVENTS"
+    name: "&#FF007CEvents"
     lore:
       - "&8Description"
       - ""
-      - "&7Join special network events!"
+      - "&#FF007C| &fClick me to Connect"
+      - "&#FF007C| &fTo &#FF007CEvents"
       - ""
-      - "&#FFD900▷ &n&lCLICK&#FFD900 To Join"
+      - "&#8AFF00⚓ &fPlayers: &#8AFF00%bungee_events%"
+      - "&#FF005D🌊 &fSeason: &#FF005D#1"
+      - "&#008DFF⛨ &fStatus: &#008DFF"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Join"
     command: "server events"
 
   diamond-smp:
     slot: 16
     material: DIAMOND
-    name: "&#4498DB&lDIAMOND SMP"
+    name: "&#FF0000Diamond SMP"
     lore:
       - "&8Description"
       - ""
-      - "&7Hardcore diamond SMP experience!"
+      - "&#FF0000| &fClick me to Connect"
+      - "&#FF0000| &fTo &#FF0000Diamond SMP"
       - ""
-      - "&#FFD900▷ &n&lCLICK&#FFD900 To Join"
+      - "&#8AFF00⚓ &fPlayers: &#8AFF00%bungee_diasmp%"
+      - "&#FF005D🌊 &fSeason: &#FF005D#1"
+      - "&#008DFF⛨ &fStatus: &#008DFF"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Join"
     command: "server diasmp"

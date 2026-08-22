@@ -14,6 +14,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
@@ -51,7 +52,11 @@ public class WorldProtectionModule implements Module, Listener {
         return pvp != null && pvp.isInPvp(player.getUniqueId());
     }
 
-    private boolean bypassProtection(Player player) {
+    private boolean canBypassInventory(Player player) {
+        return player.getGameMode() == GameMode.CREATIVE;
+    }
+
+    private boolean canBypassBuild(Player player) {
         return player.hasPermission("shardedlobbycore.admin") || player.getGameMode() == GameMode.CREATIVE;
     }
 
@@ -92,25 +97,25 @@ public class WorldProtectionModule implements Module, Listener {
 
     @EventHandler
     public void onBreak(org.bukkit.event.block.BlockBreakEvent event) {
-        if (config.getBoolean("disable-block-break", true) && !bypassProtection(event.getPlayer())) {
+        if (config.getBoolean("disable-block-break", true) && !canBypassBuild(event.getPlayer())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onPlace(org.bukkit.event.block.BlockPlaceEvent event) {
-        if (config.getBoolean("disable-block-place", true) && !bypassProtection(event.getPlayer())) {
+        if (config.getBoolean("disable-block-place", true) && !canBypassBuild(event.getPlayer())) {
             event.setCancelled(true);
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onDrop(PlayerDropItemEvent event) {
         if (!config.getBoolean("disable-item-drop", true)) {
             return;
         }
         Player player = event.getPlayer();
-        if (player.getGameMode() == GameMode.CREATIVE || bypassProtection(player)) {
+        if (canBypassInventory(player)) {
             return;
         }
         if (isInPvp(player) && config.getBoolean("allow-drop-in-pvp", false)) {
@@ -119,12 +124,12 @@ public class WorldProtectionModule implements Module, Listener {
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryClick(InventoryClickEvent event) {
         if (!config.getBoolean("disable-inventory-move", true) || !(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        if (player.getGameMode() == GameMode.CREATIVE || bypassProtection(player)) {
+        if (canBypassInventory(player)) {
             return;
         }
         if (isInPvp(player) && config.getBoolean("allow-inventory-move-in-pvp", true)) {
@@ -133,13 +138,27 @@ public class WorldProtectionModule implements Module, Listener {
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onInventoryDrag(InventoryDragEvent event) {
+        if (!config.getBoolean("disable-inventory-move", true) || !(event.getWhoClicked() instanceof Player player)) {
+            return;
+        }
+        if (canBypassInventory(player)) {
+            return;
+        }
+        if (isInPvp(player) && config.getBoolean("allow-inventory-move-in-pvp", true)) {
+            return;
+        }
+        event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onSwapHands(PlayerSwapHandItemsEvent event) {
         if (!config.getBoolean("disable-inventory-move", true)) {
             return;
         }
         Player player = event.getPlayer();
-        if (player.getGameMode() == GameMode.CREATIVE || bypassProtection(player)) {
+        if (canBypassInventory(player)) {
             return;
         }
         if (isInPvp(player) && config.getBoolean("allow-inventory-move-in-pvp", true)) {
@@ -159,7 +178,7 @@ public class WorldProtectionModule implements Module, Listener {
     public void onInteract(PlayerInteractEvent event) {
         if (config.getBoolean("disable-block-interact", true) &&
                 event.getClickedBlock() != null &&
-                !event.getPlayer().hasPermission("shardedlobbycore.admin")) {
+                !canBypassBuild(event.getPlayer())) {
             switch (event.getClickedBlock().getType()) {
                 case CHEST, TRAPPED_CHEST, FURNACE, BLAST_FURNACE, SMOKER, BARREL, HOPPER, DROPPER, DISPENSER, LEVER, STONE_BUTTON, OAK_BUTTON -> event.setCancelled(true);
                 default -> {

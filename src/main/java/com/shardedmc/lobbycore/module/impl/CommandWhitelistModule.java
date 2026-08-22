@@ -11,7 +11,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.server.TabCompleteEvent;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -22,6 +25,7 @@ public class CommandWhitelistModule implements Module, Listener {
     private ShardedLobbyCore plugin;
     private FileConfiguration config;
     private List<Pattern> whitelistPatterns;
+    private List<String> whitelistCommands;
 
     @Override
     public String getId() {
@@ -47,9 +51,22 @@ public class CommandWhitelistModule implements Module, Listener {
     }
 
     private void compilePatterns() {
-        whitelistPatterns = config.getStringList("whitelist").stream()
-                .map(pattern -> Pattern.compile("^" + pattern.toLowerCase(Locale.ROOT) + ".*"))
+        whitelistCommands = config.getStringList("whitelist").stream()
+                .map(s -> s.toLowerCase(Locale.ROOT))
                 .collect(Collectors.toList());
+        whitelistPatterns = whitelistCommands.stream()
+                .map(pattern -> Pattern.compile("^" + pattern + "($|:).*"))
+                .collect(Collectors.toList());
+    }
+
+    private boolean isWhitelisted(String command) {
+        String base = command.toLowerCase(Locale.ROOT).split(" ")[0];
+        for (Pattern pattern : whitelistPatterns) {
+            if (pattern.matcher(base).matches()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -63,15 +80,61 @@ public class CommandWhitelistModule implements Module, Listener {
             return;
         }
 
-        String command = event.getMessage().substring(1).toLowerCase(Locale.ROOT).split(" ")[0];
-
-        for (Pattern pattern : whitelistPatterns) {
-            if (pattern.matcher(command).matches()) {
-                return;
-            }
+        String command = event.getMessage().substring(1);
+        if (isWhitelisted(command)) {
+            return;
         }
 
         event.setCancelled(true);
-        MessageUtil.sendFormatted(player, config.getString("message", "&cYou cannot use that command in the lobby."));
+        MessageUtil.sendFormatted(player, config.getString("message", "%prefix% &#FF2727You cannot use that command in the lobby."));
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onTabComplete(TabCompleteEvent event) {
+        if (!config.getBoolean("enabled", true) || !config.getBoolean("filter-tab-complete", true)) {
+            return;
+        }
+        if (!(event.getSender() instanceof Player player)) {
+            return;
+        }
+        if (player.hasPermission("shardedlobbycore.bypass.commandwhitelist")) {
+            return;
+        }
+
+        String buffer = event.getBuffer();
+        if (!buffer.startsWith("/")) {
+            return;
+        }
+
+        String typed = buffer.substring(1).toLowerCase(Locale.ROOT);
+        boolean hasSpace = typed.contains(" ");
+        String base = hasSpace ? typed.split(" ")[0] : typed;
+
+        if (!hasSpace) {
+            List<String> filtered = new ArrayList<>();
+            for (String allowed : whitelistCommands) {
+                if (allowed.startsWith(base)) {
+                    filtered.add(allowed);
+                }
+            }
+            event.getCompletions().clear();
+            event.getCompletions().addAll(filtered);
+            return;
+        }
+
+        if (!isWhitelisted(typed)) {
+            event.getCompletions().clear();
+        } else {
+            Iterator<String> iterator = event.getCompletions().iterator();
+            while (iterator.hasNext()) {
+                String completion = iterator.next();
+                if (completion.startsWith("/")) {
+                    completion = completion.substring(1);
+                }
+                if (!isWhitelisted(base + " " + completion.split(" ")[0])) {
+                    iterator.remove();
+                }
+            }
+        }
     }
 }

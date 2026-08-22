@@ -1,5 +1,4 @@
 # Double Jump Module
-# Press jump again mid-air to launch in the direction you're looking
 
 enabled: true
 
@@ -8,4 +7,4 @@ vertical-boost: 0.8
 play-sound: true
 
 messages:
-  used: "&7You have used Double jump."
+  used: ""
