@@ -1,0 +1,32 @@
+# ShardedVelocityCore Configuration
+
+# How often (in seconds) to refresh server status for placeholders/holograms
+status-refresh-seconds = 5
+
+# Servers whose status is tracked for holograms (line 9 placeholders)
+# These names must match your Velocity server registrations
+tracked-servers = ["survival", "events", "diamondsmp"]
+
+# Servers forced into maintenance mode (shows MAINTEANCE status)
+maintenance-servers = []
+
+# Queue settings
+[queue]
+  # Action bar format while queued
+  # Placeholders: %numberinqueue%, %server%, %numberofpeoplewaitinginqueue%
+  action-bar = "#%numberinqueue% in queue to &n&#8AFF00%server%&r &7(Wating: %numberofpeoplewaitinginqueue%)"
+
+  # Prefix shown in queue-related messages
+  prefix = "&#4498DB&lQUEUE &8▷&r "
+
+  # Default server when /queue is run without arguments
+  default-server = "survival"
+
+  # How often (in ticks, 20 = 1 second) to refresh the action bar for queued players
+  action-bar-interval-ticks = 20
+
+  # Maximum players allowed on a server before queueing kicks in
+  [queue.max-players]
+    survival = 100
+    events = 200
+    diamondsmp = 150
