@@ -40,8 +40,22 @@ public class PlaylistManager {
         save();
     }
 
+    public List<String> getSavedPlaylist(UUID uuid) {
+        return new ArrayList<>(data.getStringList("playlists." + uuid + ".songs"));
+    }
+
+    public void savePlaylist(UUID uuid, List<String> songs) {
+        data.set("playlists." + uuid + ".songs", new ArrayList<>(songs));
+        save();
+    }
+
+    public boolean hasPlaylist(UUID uuid) {
+        return !getSavedPlaylist(uuid).isEmpty() || !getQueue(uuid).isEmpty();
+    }
+
     public void startDraft(UUID uuid) {
-        drafts.put(uuid, new ArrayList<>());
+        List<String> saved = getSavedPlaylist(uuid);
+        drafts.put(uuid, saved.isEmpty() ? new ArrayList<>() : new ArrayList<>(saved));
     }
 
     public List<String> getDraft(UUID uuid) {
@@ -74,14 +88,18 @@ public class PlaylistManager {
         List<String> confirmed = new ArrayList<>(getDraft(uuid));
         drafts.remove(uuid);
         if (!confirmed.isEmpty()) {
-            setQueue(uuid, confirmed);
+            savePlaylist(uuid, confirmed);
         }
         return confirmed;
     }
 
     public String peekNext(UUID uuid) {
         List<String> queue = getQueue(uuid);
-        return queue.isEmpty() ? null : queue.get(0);
+        if (!queue.isEmpty()) {
+            return queue.get(0);
+        }
+        List<String> saved = getSavedPlaylist(uuid);
+        return saved.isEmpty() ? null : saved.get(0);
     }
 
     public String pollNext(UUID uuid) {

@@ -17,6 +17,7 @@ commands:
 
 action-bar:
   enabled: true
+  update-interval-ticks: 40
   format: "&#FF0072&lMUSIC &8▷ &fUp Next is: &#FF0072%song%"
   empty: "None"
 
@@ -24,6 +25,8 @@ playlist-gui:
   title: "&#FF0072Playlist"
   rows: 6
   confirm-slot: 49
+  play-slot: 48
+  summary-start-slot: 50
   selected-material: LIME_STAINED_GLASS_PANE
   selected-name: "&#94FF00Selected &7(#%number%)"
   selected-lore:
@@ -38,11 +41,27 @@ playlist-gui:
   confirm-lore:
     - "&8Description"
     - ""
-    - "&#94FF00| &fClick to start playing"
+    - "&#94FF00| &fClick to save and start"
     - "&#94FF00| &fyour playlist in order"
     - ""
     - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Confirm"
+  play-name: "&#FF0072&lPLAY PLAYLIST"
+  play-lore:
+    - "&8Description"
+    - ""
+    - "&#FF0072| &fPlay your saved playlist"
+    - "&#FF0072| &ffrom the beginning"
+    - ""
+    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Play"
+  summary-material: PAPER
+  summary-item-name: "&#FF0072#%number% &f%song%"
+  summary-item-lore:
+    - "&7In your playlist"
+  summary-empty-name: "&7No songs selected"
+  summary-empty-lore:
+    - "&7Select songs on the left"
   empty-message: "%prefix% &#FF2727Select at least one song for your playlist."
+  no-saved-message: "%prefix% &#FF2727You don't have a saved playlist. Select songs and confirm first."
 
 playlist-queue:
   play-delay-ticks: 5

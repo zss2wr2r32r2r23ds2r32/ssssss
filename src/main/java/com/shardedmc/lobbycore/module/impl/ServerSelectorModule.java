@@ -189,18 +189,16 @@ public class ServerSelectorModule implements Module, Listener {
             case "chat" -> connectChat(player, server, target);
             case "command" -> connectCommand(player, server);
             case "console" -> connectConsole(player, server);
-            case "auto" -> connectChat(player, server, target)
-                    || connectCommand(player, server)
-                    || connectBungee(player, target);
-            default -> connectChat(player, server, target) || connectCommand(player, server);
+            case "auto" -> connectBungee(player, target);
+            default -> connectBungee(player, target);
         };
 
-        if (!connected) {
+        if (connected) {
+            plugin.getLogger().info("Server selector sent " + player.getName() + " to " + target + " via BungeeCord");
+        } else {
             plugin.getLogger().info("Server selector could not connect " + player.getName() + " to " + target);
             MessageUtil.sendFormatted(player, config.getString("connect-failed-message",
                     "%prefix% &#FF2727Could not connect to that server. Please try again or contact staff."));
-        } else if (config.getBoolean("debug", false)) {
-            plugin.getLogger().info("Server selector dispatched " + player.getName() + " to " + target + " via " + method);
         }
 
         if (server.contains("message")) {

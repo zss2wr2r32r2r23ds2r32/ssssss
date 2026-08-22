@@ -41,9 +41,6 @@ permissions:
   shardedlobbycore.lockchat:
     description: Lock chat
     default: op
-  shardedlobbycore.bypass.commandwhitelist:
-    description: Bypass command whitelist
-    default: op
   shardedlobbycore.bypass.antiswear:
     description: Bypass anti-swear
     default: op

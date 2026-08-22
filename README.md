@@ -63,7 +63,6 @@ plugins/ShardedLobbyCore/
     ├── void-spawn.yml
     ├── spawn.yml
     ├── join-actions.yml
-    ├── command-whitelist.yml
     ├── anti-swear.yml
     ├── moderation.yml
     └── world-protection.yml

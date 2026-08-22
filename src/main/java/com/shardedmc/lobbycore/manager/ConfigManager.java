@@ -34,7 +34,6 @@ public class ConfigManager {
             "void-spawn",
             "spawn",
             "join-actions",
-            "command-whitelist",
             "anti-swear",
             "moderation",
             "world-protection"

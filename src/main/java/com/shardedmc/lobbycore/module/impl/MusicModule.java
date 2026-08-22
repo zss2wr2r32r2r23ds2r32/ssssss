@@ -16,9 +16,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
@@ -26,6 +28,7 @@ public class MusicModule implements Module, Listener {
 
     private ShardedLobbyCore plugin;
     private FileConfiguration config;
+    private BukkitTask actionBarTask;
     private final Map<Integer, String> mainSlotActions = new HashMap<>();
     private final Map<Integer, String> playlistSlotActions = new HashMap<>();
     private final Map<String, String> songDisplayNames = new HashMap<>();
@@ -47,15 +50,34 @@ public class MusicModule implements Module, Listener {
         this.config = config;
         reloadSongCache();
         Bukkit.getPluginManager().registerEvents(this, plugin);
+        startActionBarTask();
     }
 
     @Override
     public void disable() {
+        if (actionBarTask != null) {
+            actionBarTask.cancel();
+            actionBarTask = null;
+        }
         mainSlotActions.clear();
         playlistSlotActions.clear();
         songDisplayNames.clear();
         songSections.clear();
         HandlerList.unregisterAll(this);
+    }
+
+    private void startActionBarTask() {
+        if (!config.getBoolean("action-bar.enabled", true)) {
+            return;
+        }
+        long interval = config.getLong("action-bar.update-interval-ticks", 40L);
+        actionBarTask = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                if (plugin.getPlaylistManager().hasPlaylist(player.getUniqueId())) {
+                    updateUpNextActionBar(player);
+                }
+            }
+        }, interval, interval);
     }
 
     private void reloadSongCache() {
@@ -135,9 +157,16 @@ public class MusicModule implements Module, Listener {
         playlistSlotActions.clear();
 
         int confirmSlot = config.getInt("playlist-gui.confirm-slot", 49);
+        int playSlot = config.getInt("playlist-gui.play-slot", 48);
+        int summaryStartSlot = config.getInt("playlist-gui.summary-start-slot", 50);
+        Set<Integer> reserved = new HashSet<>(Set.of(confirmSlot, playSlot));
+        for (int i = summaryStartSlot; i < summaryStartSlot + 4 && i < inventory.getSize(); i++) {
+            reserved.add(i);
+        }
+
         int slot = 0;
         for (Map.Entry<String, ConfigurationSection> entry : songSections.entrySet()) {
-            if (slot == confirmSlot) {
+            while (reserved.contains(slot)) {
                 slot++;
             }
             if (slot >= inventory.getSize()) {
@@ -150,6 +179,9 @@ public class MusicModule implements Module, Listener {
             slot++;
         }
 
+        inventory.setItem(playSlot, buildPlayPlaylistItem(player));
+        playlistSlotActions.put(playSlot, "play-playlist");
+
         ConfigurationSection confirmSection = config.getConfigurationSection("playlist-gui.confirm");
         if (confirmSection != null) {
             inventory.setItem(confirmSlot, ItemBuilder.fromConfig(confirmSection, player));
@@ -161,8 +193,57 @@ public class MusicModule implements Module, Listener {
         }
         playlistSlotActions.put(confirmSlot, "confirm");
 
+        populateSummarySlots(player, inventory, summaryStartSlot);
+
         fillEmpty(inventory, player);
         player.openInventory(inventory);
+    }
+
+    private ItemStack buildPlayPlaylistItem(Player player) {
+        ConfigurationSection section = config.getConfigurationSection("playlist-gui.play");
+        if (section != null) {
+            return ItemBuilder.fromConfig(section, player);
+        }
+        return ItemBuilder.of(Material.NOTE_BLOCK)
+                .name(MessageUtil.format(config.getString("playlist-gui.play-name", "&#FF0072&lPLAY PLAYLIST"), player))
+                .lore(MessageUtil.formatLore(config.getStringList("playlist-gui.play-lore"), player))
+                .build();
+    }
+
+    private void populateSummarySlots(Player player, Inventory inventory, int summaryStartSlot) {
+        List<String> draft = plugin.getPlaylistManager().getDraft(player.getUniqueId());
+        if (draft.isEmpty()) {
+            int slot = summaryStartSlot;
+            if (slot < inventory.getSize()) {
+                inventory.setItem(slot, ItemBuilder.of(Material.GRAY_STAINED_GLASS_PANE)
+                        .name(MessageUtil.format(config.getString("playlist-gui.summary-empty-name", "&7No songs selected"), player))
+                        .lore(MessageUtil.formatLore(config.getStringList("playlist-gui.summary-empty-lore"), player))
+                        .build());
+            }
+            return;
+        }
+
+        Material summaryMaterial = Material.matchMaterial(config.getString("playlist-gui.summary-material", "PAPER"));
+        if (summaryMaterial == null) {
+            summaryMaterial = Material.PAPER;
+        }
+
+        for (int i = 0; i < draft.size() && i < 4; i++) {
+            int slot = summaryStartSlot + i;
+            if (slot >= inventory.getSize()) {
+                break;
+            }
+            String songId = draft.get(i);
+            String display = songDisplayNames.getOrDefault(songId, songId);
+            int number = i + 1;
+            String nameTemplate = config.getString("playlist-gui.summary-item-name", "&#FF0072#%number% &f%song%");
+            inventory.setItem(slot, ItemBuilder.of(summaryMaterial)
+                    .name(MessageUtil.format(nameTemplate
+                            .replace("%number%", String.valueOf(number))
+                            .replace("%song%", display), player))
+                    .lore(MessageUtil.formatLore(config.getStringList("playlist-gui.summary-item-lore"), player))
+                    .build());
+        }
     }
 
     private ItemStack buildPlaylistItem(Player player, ConfigurationSection song, String songId) {
@@ -199,6 +280,20 @@ public class MusicModule implements Module, Listener {
                 }
             }
         }
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (plugin.getPlaylistManager().hasPlaylist(event.getPlayer().getUniqueId())) {
+                updateUpNextActionBar(event.getPlayer());
+            }
+        }, 20L);
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        plugin.getPlaylistManager().clearDraft(event.getPlayer().getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -255,6 +350,11 @@ public class MusicModule implements Module, Listener {
             return;
         }
 
+        if ("play-playlist".equals(action)) {
+            playSavedPlaylist(player);
+            return;
+        }
+
         plugin.getPlaylistManager().toggleDraftSong(player.getUniqueId(), action);
         openPlaylistMenu(player, false);
     }
@@ -268,8 +368,27 @@ public class MusicModule implements Module, Listener {
         }
 
         player.closeInventory();
+        startPlaylist(player, playlist);
+    }
+
+    private void playSavedPlaylist(Player player) {
+        List<String> playlist = plugin.getPlaylistManager().getSavedPlaylist(player.getUniqueId());
+        if (playlist.isEmpty()) {
+            MessageUtil.sendFormatted(player, config.getString("playlist-gui.no-saved-message",
+                    "%prefix% &#FF2727You don't have a saved playlist. Select songs and confirm first."));
+            return;
+        }
+
+        player.closeInventory();
+        startPlaylist(player, new ArrayList<>(playlist));
+    }
+
+    private void startPlaylist(Player player, List<String> playlist) {
         String first = playlist.get(0);
-        List<String> remaining = playlist.size() > 1 ? new ArrayList<>(playlist.subList(1, playlist.size())) : new ArrayList<>();
+        List<String> remaining = playlist.size() > 1
+                ? new ArrayList<>(playlist.subList(1, playlist.size()))
+                : new ArrayList<>();
+        plugin.getPlaylistManager().savePlaylist(player.getUniqueId(), playlist);
         plugin.getPlaylistManager().setQueue(player.getUniqueId(), remaining);
 
         Bukkit.getScheduler().runTask(plugin, () -> {
