@@ -158,11 +158,8 @@ public class MusicModule implements Module, Listener {
 
         int confirmSlot = config.getInt("playlist-gui.confirm-slot", 49);
         int playSlot = config.getInt("playlist-gui.play-slot", 48);
-        int summaryStartSlot = config.getInt("playlist-gui.summary-start-slot", 50);
-        Set<Integer> reserved = new HashSet<>(Set.of(confirmSlot, playSlot));
-        for (int i = summaryStartSlot; i < summaryStartSlot + 4 && i < inventory.getSize(); i++) {
-            reserved.add(i);
-        }
+        int summarySlot = config.getInt("playlist-gui.summary-slot", 50);
+        Set<Integer> reserved = new HashSet<>(Set.of(confirmSlot, playSlot, summarySlot));
 
         int slot = 0;
         for (Map.Entry<String, ConfigurationSection> entry : songSections.entrySet()) {
@@ -193,7 +190,7 @@ public class MusicModule implements Module, Listener {
         }
         playlistSlotActions.put(confirmSlot, "confirm");
 
-        populateSummarySlots(player, inventory, summaryStartSlot);
+        populateSummaryBook(player, inventory, summarySlot);
 
         fillEmpty(inventory, player);
         player.openInventory(inventory);
@@ -210,40 +207,41 @@ public class MusicModule implements Module, Listener {
                 .build();
     }
 
-    private void populateSummarySlots(Player player, Inventory inventory, int summaryStartSlot) {
-        List<String> draft = plugin.getPlaylistManager().getDraft(player.getUniqueId());
-        if (draft.isEmpty()) {
-            int slot = summaryStartSlot;
-            if (slot < inventory.getSize()) {
-                inventory.setItem(slot, ItemBuilder.of(Material.GRAY_STAINED_GLASS_PANE)
-                        .name(MessageUtil.format(config.getString("playlist-gui.summary-empty-name", "&7No songs selected"), player))
-                        .lore(MessageUtil.formatLore(config.getStringList("playlist-gui.summary-empty-lore"), player))
-                        .build());
-            }
+    private void populateSummaryBook(Player player, Inventory inventory, int summarySlot) {
+        if (summarySlot >= inventory.getSize()) {
             return;
         }
 
-        Material summaryMaterial = Material.matchMaterial(config.getString("playlist-gui.summary-material", "PAPER"));
-        if (summaryMaterial == null) {
-            summaryMaterial = Material.PAPER;
+        List<String> draft = plugin.getPlaylistManager().getDraft(player.getUniqueId());
+        if (draft.isEmpty()) {
+            inventory.setItem(summarySlot, ItemBuilder.of(Material.BOOK)
+                    .name(MessageUtil.format(config.getString("playlist-gui.summary-empty-name", "&7No songs selected"), player))
+                    .lore(MessageUtil.formatLore(config.getStringList("playlist-gui.summary-empty-lore"), player))
+                    .build());
+            return;
         }
 
-        for (int i = 0; i < draft.size() && i < 4; i++) {
-            int slot = summaryStartSlot + i;
-            if (slot >= inventory.getSize()) {
-                break;
-            }
+        Material material = Material.matchMaterial(config.getString("playlist-gui.summary-material", "BOOK"));
+        if (material == null) {
+            material = Material.BOOK;
+        }
+
+        String lineFormat = config.getString("playlist-gui.summary-line-format", "&#FF0072#%number% &f%song%");
+        List<String> lore = new ArrayList<>();
+        lore.add("");
+        for (int i = 0; i < draft.size(); i++) {
             String songId = draft.get(i);
             String display = songDisplayNames.getOrDefault(songId, songId);
-            int number = i + 1;
-            String nameTemplate = config.getString("playlist-gui.summary-item-name", "&#FF0072#%number% &f%song%");
-            inventory.setItem(slot, ItemBuilder.of(summaryMaterial)
-                    .name(MessageUtil.format(nameTemplate
-                            .replace("%number%", String.valueOf(number))
-                            .replace("%song%", display), player))
-                    .lore(MessageUtil.formatLore(config.getStringList("playlist-gui.summary-item-lore"), player))
-                    .build());
+            lore.add(lineFormat
+                    .replace("%number%", String.valueOf(i + 1))
+                    .replace("%song%", display));
         }
+        lore.add("");
+
+        inventory.setItem(summarySlot, ItemBuilder.of(material)
+                .name(MessageUtil.format(config.getString("playlist-gui.summary-name", "&#FF0072&lYOUR PLAYLIST"), player))
+                .lore(MessageUtil.formatLore(lore, player))
+                .build());
     }
 
     private ItemStack buildPlaylistItem(Player player, ConfigurationSection song, String songId) {
@@ -360,15 +358,18 @@ public class MusicModule implements Module, Listener {
     }
 
     private void confirmPlaylist(Player player) {
-        List<String> playlist = plugin.getPlaylistManager().confirmDraft(player.getUniqueId());
-        if (playlist.isEmpty()) {
+        List<String> draft = new ArrayList<>(plugin.getPlaylistManager().getDraft(player.getUniqueId()));
+        if (draft.isEmpty()) {
             MessageUtil.sendFormatted(player, config.getString("playlist-gui.empty-message",
                     "%prefix% &#FF2727Select at least one song for your playlist."));
             return;
         }
 
-        player.closeInventory();
-        startPlaylist(player, playlist);
+        plugin.getPlaylistManager().savePlaylist(player.getUniqueId(), draft);
+        plugin.getPlaylistManager().clearDraft(player.getUniqueId());
+        MessageUtil.sendFormatted(player, config.getString("playlist-gui.saved-message",
+                "%prefix% &#94FF00Your playlist has been saved!"));
+        openPlaylistMenu(player, true);
     }
 
     private void playSavedPlaylist(Player player) {

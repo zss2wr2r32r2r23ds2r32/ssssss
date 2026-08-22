@@ -26,8 +26,14 @@ playlist-gui:
   rows: 6
   confirm-slot: 49
   play-slot: 48
-  summary-start-slot: 50
-  selected-material: LIME_STAINED_GLASS_PANE
+  summary-slot: 50
+  summary-material: BOOK
+  summary-name: "&#FF0072&lYOUR PLAYLIST"
+  summary-line-format: "&#FF0072#%number% &f%song%"
+  summary-empty-name: "&7No songs selected"
+  summary-empty-lore:
+    - "&7Select songs on the left"
+  saved-message: "%prefix% &#94FF00Your playlist has been saved!"
   selected-name: "&#94FF00Selected &7(#%number%)"
   selected-lore:
     - "&8Description"
@@ -41,10 +47,10 @@ playlist-gui:
   confirm-lore:
     - "&8Description"
     - ""
-    - "&#94FF00| &fClick to save and start"
-    - "&#94FF00| &fyour playlist in order"
+    - "&#94FF00| &fClick to save your"
+    - "&#94FF00| &fplaylist in order"
     - ""
-    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Confirm"
+    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
   play-name: "&#FF0072&lPLAY PLAYLIST"
   play-lore:
     - "&8Description"
@@ -53,11 +59,7 @@ playlist-gui:
     - "&#FF0072| &ffrom the beginning"
     - ""
     - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Play"
-  summary-material: PAPER
-  summary-item-name: "&#FF0072#%number% &f%song%"
-  summary-item-lore:
-    - "&7In your playlist"
-  summary-empty-name: "&7No songs selected"
+  selected-material: LIME_STAINED_GLASS_PANE
   summary-empty-lore:
     - "&7Select songs on the left"
   empty-message: "%prefix% &#FF2727Select at least one song for your playlist."

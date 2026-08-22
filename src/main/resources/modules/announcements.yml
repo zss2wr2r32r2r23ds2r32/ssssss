@@ -5,10 +5,10 @@ enabled: true
 variables:
   text-primary: "&f"
   text-secondary-discord: "&#3091DB"
-  text-secondary-store: "&#FFB600"
+  text-secondary-store: "&#94FF00"
   discord-url: "discord.gg/shardedmc"
   store-url: "store.shardedmc.net"
-  store-title-color: "&#FFB600"
+  store-title-color: "&#94FF00"
 
 commands:
   discord:

@@ -5,11 +5,11 @@ enabled: true
 
 spawn:
   world: world
-  x: 17.43926004200134
-  y: 64.0
-  z: 102.41467848665218
-  yaw: 0.8398235
-  pitch: -0.9323191
+  x: 125.50152489211689
+  y: 171.0
+  z: 229.44505137380676
+  yaw: 0.679917
+  pitch: 0.3732399
 
 messages:
   set: '%prefix% &aSpawn point set to your current location!'
