@@ -5,39 +5,29 @@ import com.sharded.core.module.Module;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.ItemsAdderHook;
 import com.sharded.core.util.Text;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
-import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
@@ -46,45 +36,34 @@ import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /** Cosmetic hat wardrobe — equip ItemsAdder hats as helmets with enchants. */
-public final class WardrobeModule extends Module implements CommandExecutor, TabCompleter {
+public final class WardrobeModule extends Module implements CommandExecutor {
 
     private static final String MENU_TITLE = "Wardrobe";
-    private final Map<String, HatOption> hats = new LinkedHashMap<>();
-    private final Map<UUID, PreviewState> previews = new HashMap<>();
-    private WardrobeDatabase database;
-    private NamespacedKey hatKey;
 
-    private static final class MenuHolder implements InventoryHolder {
+    public static final class MenuHolder implements InventoryHolder {
         @Override
         public Inventory getInventory() {
             return null;
         }
     }
 
-    private record PreviewState(
-            Location returnLocation,
-            GameMode gameMode,
-            ItemStack savedHelmet,
-            float walkSpeed,
-            float flySpeed,
-            boolean allowFlight,
-            boolean flying,
-            int actionBarTaskId,
-            UUID cameraId,
-            HatOption hat
-    ) {
-    }
+    private final Map<String, HatOption> hats = new LinkedHashMap<>();
+    private final Set<UUID> hatWearers = new HashSet<>();
+    private WardrobeDatabase database;
+    private NamespacedKey hatKey;
+    private HatGuard hatGuard;
+    private LifecycleListener lifecycleListener;
 
     public WardrobeModule(ShardedCore plugin) {
         super(plugin, "wardrobe");
@@ -99,16 +78,19 @@ public final class WardrobeModule extends Module implements CommandExecutor, Tab
             throw new IllegalStateException("Could not open wardrobe database", e);
         }
         loadHats();
+        hatGuard = new HatGuard();
+        lifecycleListener = new LifecycleListener();
+        registerListener(lifecycleListener);
         registerCommand("wardrobe", this);
+        for (Player player : plugin.getServer().getOnlinePlayers()) {
+            syncWearerState(player);
+        }
     }
 
     @Override
     protected void onDisable() {
-        for (UUID uuid : new ArrayList<>(previews.keySet())) {
-            Player player = plugin.getServer().getPlayer(uuid);
-            if (player != null) endPreview(player, false);
-        }
-        previews.clear();
+        if (hatGuard != null) HandlerList.unregisterAll(hatGuard);
+        hatWearers.clear();
         if (database != null) database.close();
         database = null;
     }
@@ -130,10 +112,6 @@ public final class WardrobeModule extends Module implements CommandExecutor, Tab
                     hat.getStringList("lore")
             ));
         }
-    }
-
-    public boolean isPreviewing(Player player) {
-        return previews.containsKey(player.getUniqueId());
     }
 
     public boolean isWardrobeHat(ItemStack stack) {
@@ -161,39 +139,12 @@ public final class WardrobeModule extends Module implements CommandExecutor, Tab
             send(sender, "players-only");
             return true;
         }
-        if (args.length > 0 && args[0].equalsIgnoreCase("leave")) {
-            if (!isPreviewing(player)) {
-                send(player, "preview-not-active");
-                return true;
-            }
-            endPreview(player, true);
-            return true;
-        }
-        if (isPreviewing(player)) {
-            send(player, "preview-active");
-            return true;
-        }
         if (!player.hasPermission("sharded.wardrobe.use")) {
             send(player, "no-permission");
             return true;
         }
         openMenu(player);
         return true;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (args.length == 1 && sender instanceof Player player && isPreviewing(player)) {
-            return List.of("leave").stream()
-                    .filter(s -> s.startsWith(args[0].toLowerCase(Locale.ROOT)))
-                    .toList();
-        }
-        if (args.length == 1) {
-            return List.of("leave").stream()
-                    .filter(s -> s.startsWith(args[0].toLowerCase(Locale.ROOT)))
-                    .toList();
-        }
-        return List.of();
     }
 
     public void openMenu(Player player) {
@@ -224,6 +175,28 @@ public final class WardrobeModule extends Module implements CommandExecutor, Tab
         player.openInventory(inventory);
     }
 
+    public void handleMenuClick(Player player, int slot) {
+        if (slot == config.getInt("remove.slot", 4)) {
+            player.closeInventory();
+            unequip(player);
+            send(player, "removed");
+            return;
+        }
+
+        for (HatOption hat : hats.values()) {
+            if (hat.slot() != slot) continue;
+            if (!owns(player, hat)) {
+                player.closeInventory();
+                send(player, "not-owned", "%hat%", hat.displayName());
+                return;
+            }
+            player.closeInventory();
+            equip(player, hat);
+            send(player, "equipped", "%hat%", hat.displayName());
+            return;
+        }
+    }
+
     public Map<String, String> equipPlaceholders(Player player) {
         Map<String, String> map = new LinkedHashMap<>();
         String yes = config.getString("placeholders.owned-yes", "&#9FFF00&nYes");
@@ -237,331 +210,44 @@ public final class WardrobeModule extends Module implements CommandExecutor, Tab
         return map;
     }
 
-    @EventHandler
-    public void onMenuClick(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player player)) return;
-        if (!(event.getView().getTopInventory().getHolder() instanceof MenuHolder)) return;
-        event.setCancelled(true);
-        if (event.getClickedInventory() != event.getView().getTopInventory()) return;
+    private void trackWearer(UUID uuid) {
+        if (!hatWearers.add(uuid)) return;
+        if (hatWearers.size() == 1) registerListener(hatGuard);
+    }
 
-        if (event.getSlot() == config.getInt("remove.slot", 4)) {
-            player.closeInventory();
-            unequip(player);
-            send(player, "removed");
+    private void untrackWearer(UUID uuid) {
+        if (!hatWearers.remove(uuid)) return;
+        if (hatWearers.isEmpty()) HandlerList.unregisterAll(hatGuard);
+    }
+
+    private void syncWearerState(Player player) {
+        if (isWardrobeHat(player.getInventory().getHelmet())) {
+            trackWearer(player.getUniqueId());
             return;
         }
-
-        for (HatOption hat : hats.values()) {
-            if (hat.slot() != event.getSlot()) continue;
-            if (!owns(player, hat)) {
-                player.closeInventory();
-                send(player, "not-owned", "%hat%", hat.displayName());
-                return;
-            }
-            player.closeInventory();
-            if (event.getClick().isRightClick()) {
-                plugin.getServer().getScheduler().runTask(plugin, () -> startPreview(player, hat));
-            } else {
-                HatOption chosen = hat;
-                plugin.getServer().getScheduler().runTask(plugin, () -> {
-                    equip(player, chosen);
-                    send(player, "equipped", "%hat%", chosen.displayName());
-                });
-            }
-            return;
+        if (database == null) return;
+        String equipped = database.getEquipped(player.getUniqueId());
+        if (equipped != null && !equipped.isBlank()) {
+            scheduleReequip(player);
         }
-    }
-
-    @EventHandler
-    public void onMenuDrag(InventoryDragEvent event) {
-        if (event.getView().getTopInventory().getHolder() instanceof MenuHolder) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onDrop(PlayerDropItemEvent event) {
-        if (isPreviewing(event.getPlayer()) || isWardrobeHat(event.getItemDrop().getItemStack())) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onHatMove(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player player)) return;
-        if (event.getView().getTopInventory().getHolder() instanceof MenuHolder) return;
-        if (isPreviewing(player)) {
-            event.setCancelled(true);
-            return;
-        }
-        if (isWardrobeHat(event.getCurrentItem()) || isWardrobeHat(event.getCursor())) {
-            event.setCancelled(true);
-            return;
-        }
-        if (event.getClick() == ClickType.NUMBER_KEY) {
-            ItemStack hotbar = player.getInventory().getItem(event.getHotbarButton());
-            if (isWardrobeHat(hotbar)) {
-                event.setCancelled(true);
-            }
-            return;
-        }
-        if (event.getSlotType() == InventoryType.SlotType.ARMOR && event.getRawSlot() == 39) {
-            if (isWardrobeHat(player.getInventory().getHelmet())) {
-                event.setCancelled(true);
-            }
-            return;
-        }
-        if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
-            ItemStack clicked = event.getCurrentItem();
-            if (isWardrobeHat(clicked)) event.setCancelled(true);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onHatDrag(InventoryDragEvent event) {
-        if (event.getView().getTopInventory().getHolder() instanceof MenuHolder) return;
-        if (event.getWhoClicked() instanceof Player player && isPreviewing(player)) {
-            event.setCancelled(true);
-            return;
-        }
-        for (ItemStack stack : event.getNewItems().values()) {
-            if (isWardrobeHat(stack)) {
-                event.setCancelled(true);
-                return;
-            }
-        }
-        if (isWardrobeHat(event.getOldCursor())) event.setCancelled(true);
-    }
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onPreviewMove(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-        PreviewState state = previews.get(player.getUniqueId());
-        if (state == null) return;
-        Location from = event.getFrom();
-        Location to = event.getTo();
-        if (to == null) {
-            event.setCancelled(true);
-            return;
-        }
-        if (from.getX() != to.getX() || from.getY() != to.getY() || from.getZ() != to.getZ()) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onPreviewInteract(PlayerInteractEvent event) {
-        if (isPreviewing(event.getPlayer())) event.setCancelled(true);
-    }
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onPreviewSwap(PlayerSwapHandItemsEvent event) {
-        if (isPreviewing(event.getPlayer())) event.setCancelled(true);
-    }
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onPreviewFlight(PlayerToggleFlightEvent event) {
-        if (isPreviewing(event.getPlayer())) event.setCancelled(true);
-    }
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onPreviewDamage(EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player player && isPreviewing(player)) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onPreviewCommand(PlayerCommandPreprocessEvent event) {
-        Player player = event.getPlayer();
-        if (!isPreviewing(player)) return;
-        String msg = event.getMessage().trim().toLowerCase(Locale.ROOT);
-        if (msg.equals("/wardrobe leave") || msg.startsWith("/wardrobe leave ")) return;
-        event.setCancelled(true);
-        send(player, "preview-active");
-    }
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
-        endPreview(event.getPlayer(), false);
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onDeath(PlayerDeathEvent event) {
-        endPreview(event.getEntity(), false);
-        event.getDrops().removeIf(this::isWardrobeHat);
-        PlayerInventory inv = event.getEntity().getInventory();
-        for (int i = 0; i < inv.getSize(); i++) {
-            if (isWardrobeHat(inv.getItem(i))) inv.setItem(i, null);
-        }
-        if (isWardrobeHat(inv.getHelmet())) inv.setHelmet(null);
-        ItemStack off = inv.getItemInOffHand();
-        if (isWardrobeHat(off)) inv.setItemInOffHand(null);
-    }
-
-    @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        scheduleReequip(event.getPlayer());
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onRespawn(PlayerRespawnEvent event) {
-        scheduleReequip(event.getPlayer());
-    }
-
-    private void startPreview(Player player, HatOption hat) {
-        if (isPreviewing(player)) {
-            send(player, "preview-active");
-            return;
-        }
-        if (!isPreviewWorld(player.getWorld())) {
-            send(player, "preview-spawn-only");
-            return;
-        }
-        if (!owns(player, hat)) {
-            send(player, "not-owned", "%hat%", hat.displayName());
-            return;
-        }
-
-        Location previewLoc = previewLocation(player.getWorld());
-        if (previewLoc == null) {
-            send(player, "preview-world-missing");
-            return;
-        }
-
-        ItemStack previewHat = buildHatItem(hat);
-        if (previewHat == null) {
-            send(player, "item-missing", "%hat%", hat.displayName());
-            return;
-        }
-
-        Location returnLoc = player.getLocation().clone();
-        GameMode gm = player.getGameMode();
-        float walkSpeed = player.getWalkSpeed();
-        float flySpeed = player.getFlySpeed();
-        boolean allowFlight = player.getAllowFlight();
-        boolean flying = player.isFlying();
-
-        ItemStack savedHelmet = player.getInventory().getHelmet();
-        if (savedHelmet != null) savedHelmet = savedHelmet.clone();
-
-        player.getInventory().setHelmet(previewHat);
-        player.teleport(previewLoc);
-
-        double distance = config.getDouble("preview.camera-distance", 4.0);
-        double height = config.getDouble("preview.camera-height", 1.65);
-        Vector back = previewLoc.getDirection().clone().multiply(-distance);
-        Location camLoc = previewLoc.clone().add(back).add(0, height, 0);
-
-        ArmorStand camera = player.getWorld().spawn(camLoc, ArmorStand.class, stand -> {
-            stand.setVisible(false);
-            stand.setGravity(false);
-            stand.setInvulnerable(true);
-            stand.setMarker(false);
-            stand.setSilent(true);
-            stand.setCollidable(false);
-            stand.setBasePlate(false);
-            stand.setArms(false);
-            stand.setSmall(false);
-            stand.setPersistent(false);
-        });
-        Vector toPlayer = player.getEyeLocation().toVector().subtract(camera.getLocation().toVector());
-        if (toPlayer.lengthSquared() > 0) {
-            Location look = camera.getLocation().clone();
-            look.setDirection(toPlayer);
-            camera.teleport(look);
-        }
-
-        player.setGameMode(GameMode.SPECTATOR);
-        player.setSpectatorTarget(camera);
-
-        String actionBar = config.getString("preview.actionbar", "&7Do &f/wardrobe leave &7to stop previewing");
-        int taskId = plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
-            if (!player.isOnline() || !previews.containsKey(player.getUniqueId())) return;
-            player.sendActionBar(Text.c(actionBar));
-        }, 0L, 20L).getTaskId();
-
-        previews.put(player.getUniqueId(), new PreviewState(
-                returnLoc, gm, savedHelmet, walkSpeed, flySpeed, allowFlight, flying, taskId, camera.getUniqueId(), hat));
-        send(player, "preview-started", "%hat%", hat.displayName());
-    }
-
-    private void endPreview(Player player, boolean notify) {
-        PreviewState state = previews.remove(player.getUniqueId());
-        if (state == null) return;
-
-        plugin.getServer().getScheduler().cancelTask(state.actionBarTaskId);
-        removeCamera(state.cameraId());
-
-        player.setSpectatorTarget(null);
-        player.setGameMode(state.gameMode());
-        player.setWalkSpeed(state.walkSpeed());
-        player.setFlySpeed(state.flySpeed());
-        player.setAllowFlight(state.allowFlight());
-        player.setFlying(state.flying());
-
-        player.getInventory().setHelmet(state.savedHelmet());
-        player.teleport(state.returnLocation());
-
-        if (notify) send(player, "preview-ended");
-        scheduleReequip(player);
-    }
-
-    private void removeCamera(UUID cameraId) {
-        if (cameraId == null) return;
-        for (World world : plugin.getServer().getWorlds()) {
-            Entity entity = world.getEntity(cameraId);
-            if (entity != null) {
-                entity.remove();
-                return;
-            }
-        }
-    }
-
-    private boolean isPreviewWorld(World world) {
-        List<String> allowed = config.getStringList("preview.worlds");
-        if (allowed.isEmpty()) {
-            allowed = List.of("spawn", "world");
-        }
-        String name = world.getName().toLowerCase(Locale.ROOT);
-        for (String entry : allowed) {
-            if (name.equals(entry.toLowerCase(Locale.ROOT))) return true;
-        }
-        var spawnSelect = plugin.modules().get(com.sharded.core.modules.spawnselect.SpawnSelectModule.class);
-        if (spawnSelect != null && spawnSelect.isEnabled()) {
-            Location main = spawnSelect.mainSpawn();
-            if (main != null && main.getWorld() != null
-                    && name.equals(main.getWorld().getName().toLowerCase(Locale.ROOT))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private Location previewLocation(World world) {
-        double x = config.getDouble("preview.x", 34);
-        double y = config.getDouble("preview.y", 80);
-        double z = config.getDouble("preview.z", 60);
-        float yaw = (float) config.getDouble("preview.yaw", 180);
-        float pitch = (float) config.getDouble("preview.pitch", 0);
-        return new Location(world, x, y, z, yaw, pitch);
     }
 
     private void scheduleReequip(Player player) {
         if (database == null) return;
-        for (long delay : new long[] {1L, 10L, 40L}) {
-            plugin.getServer().getScheduler().runTaskLater(plugin, () -> reequipIfNeeded(player), delay);
-        }
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> reequipIfNeeded(player), 5L);
     }
 
     private void reequipIfNeeded(Player player) {
-        if (!player.isOnline() || isPreviewing(player)) return;
+        if (!player.isOnline()) return;
         String equipped = database.getEquipped(player.getUniqueId());
         if (equipped == null || equipped.isBlank()) return;
         HatOption hat = hats.get(equipped);
         if (hat == null || !owns(player, hat)) return;
         ItemStack current = player.getInventory().getHelmet();
-        if (isWardrobeHat(current)) return;
+        if (isWardrobeHat(current)) {
+            trackWearer(player.getUniqueId());
+            return;
+        }
         equipSilent(player, hat);
     }
 
@@ -585,6 +271,7 @@ public final class WardrobeModule extends Module implements CommandExecutor, Tab
             leftover.values().forEach(item -> player.getWorld().dropItemNaturally(player.getLocation(), item));
         }
         inv.setHelmet(hatItem);
+        trackWearer(player.getUniqueId());
     }
 
     private void unequip(Player player) {
@@ -593,6 +280,7 @@ public final class WardrobeModule extends Module implements CommandExecutor, Tab
             inv.setHelmet(null);
         }
         removeWardrobeHatsFromInventory(player);
+        untrackWearer(player.getUniqueId());
         if (database != null) database.setEquipped(player.getUniqueId(), "");
     }
 
@@ -658,5 +346,85 @@ public final class WardrobeModule extends Module implements CommandExecutor, Tab
 
     private record HatOption(String id, int slot, String permission, String itemsadderId,
                              String material, String displayName, List<String> lore) {
+    }
+
+    /** Only registered while at least one player wears a wardrobe hat. */
+    private final class HatGuard implements Listener {
+
+        @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+        public void onDrop(PlayerDropItemEvent event) {
+            if (isWardrobeHat(event.getItemDrop().getItemStack())) {
+                event.setCancelled(true);
+            }
+        }
+
+        @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+        public void onHatMove(InventoryClickEvent event) {
+            if (!(event.getWhoClicked() instanceof Player player)) return;
+            if (!hatWearers.contains(player.getUniqueId())) return;
+            if (isWardrobeHat(event.getCurrentItem()) || isWardrobeHat(event.getCursor())) {
+                event.setCancelled(true);
+                return;
+            }
+            if (event.getClick() == ClickType.NUMBER_KEY) {
+                ItemStack hotbar = player.getInventory().getItem(event.getHotbarButton());
+                if (isWardrobeHat(hotbar)) event.setCancelled(true);
+                return;
+            }
+            if (event.getSlotType() == InventoryType.SlotType.ARMOR && event.getRawSlot() == 39) {
+                if (isWardrobeHat(player.getInventory().getHelmet())) event.setCancelled(true);
+                return;
+            }
+            if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
+                if (isWardrobeHat(event.getCurrentItem())) event.setCancelled(true);
+            }
+        }
+
+        @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+        public void onHatDrag(InventoryDragEvent event) {
+            if (!(event.getWhoClicked() instanceof Player player)) return;
+            if (!hatWearers.contains(player.getUniqueId())) return;
+            for (ItemStack stack : event.getNewItems().values()) {
+                if (isWardrobeHat(stack)) {
+                    event.setCancelled(true);
+                    return;
+                }
+            }
+            if (isWardrobeHat(event.getOldCursor())) event.setCancelled(true);
+        }
+
+        @EventHandler(priority = EventPriority.HIGHEST)
+        public void onDeath(PlayerDeathEvent event) {
+            Player player = event.getEntity();
+            if (!hatWearers.contains(player.getUniqueId())) return;
+            event.getDrops().removeIf(WardrobeModule.this::isWardrobeHat);
+            PlayerInventory inv = player.getInventory();
+            for (int i = 0; i < inv.getSize(); i++) {
+                if (isWardrobeHat(inv.getItem(i))) inv.setItem(i, null);
+            }
+            if (isWardrobeHat(inv.getHelmet())) inv.setHelmet(null);
+            ItemStack off = inv.getItemInOffHand();
+            if (isWardrobeHat(off)) inv.setItemInOffHand(null);
+            untrackWearer(player.getUniqueId());
+        }
+    }
+
+    /** Join/respawn only — not on hot inventory paths. */
+    private final class LifecycleListener implements Listener {
+
+        @EventHandler
+        public void onJoin(PlayerJoinEvent event) {
+            syncWearerState(event.getPlayer());
+        }
+
+        @EventHandler(priority = EventPriority.MONITOR)
+        public void onRespawn(PlayerRespawnEvent event) {
+            scheduleReequip(event.getPlayer());
+        }
+
+        @EventHandler
+        public void onQuit(PlayerQuitEvent event) {
+            untrackWearer(event.getPlayer().getUniqueId());
+        }
     }
 }

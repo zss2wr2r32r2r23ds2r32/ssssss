@@ -91,7 +91,7 @@ commands:
     aliases: [namecolors]
   wardrobe:
     description: Open your cosmetic hat wardrobe
-    usage: /wardrobe [leave]
+    usage: /wardrobe
   tags:
     description: Open the tag equip menu
     usage: /tags

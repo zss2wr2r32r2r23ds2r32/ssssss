@@ -1,21 +1,8 @@
-config-version: 5
+config-version: 6
 message-mode: chat
 menu-rows: 4
 filler-material: BLACK_STAINED_GLASS_PANE
 show-all-hats: true
-
-preview:
-  worlds:
-    - spawn
-    - world
-  x: 34
-  y: 80
-  z: 60
-  yaw: 180
-  pitch: 0
-  camera-distance: 4.0
-  camera-height: 1.65
-  actionbar: '&7Do &f/wardrobe leave &7to stop previewing'
 
 enchantments:
   protection: 4
@@ -58,8 +45,7 @@ hats:
       - ''
       - '&x&F&F&0&0&5&3| ⚓ &fOwned: %wardrobe_owned_tophat%'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nLEFT-CLICK&r &x&F&F&B&A&0&0To Equip'
-      - '&x&0&0&8&D&F&F▷ &x&0&0&8&D&F&F&l&nRIGHT-CLICK&r &x&0&0&8&D&F&FTo Preview'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip'
   crown:
     slot: 12
     permission: sharded.wardrobe.crown
@@ -75,8 +61,7 @@ hats:
       - ''
       - '&x&F&F&E&3&0&0| ⚓ &fOwned: %wardrobe_owned_crown%'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nLEFT-CLICK&r &x&F&F&B&A&0&0To Equip'
-      - '&x&0&0&8&D&F&F▷ &x&0&0&8&D&F&F&l&nRIGHT-CLICK&r &x&0&0&8&D&F&FTo Preview'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip'
   propeller_hat:
     slot: 13
     permission: sharded.wardrobe.propeller_hat
@@ -92,8 +77,7 @@ hats:
       - ''
       - '&x&0&0&8&D&F&F| ⚓ &fOwned: %wardrobe_owned_propeller_hat%'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nLEFT-CLICK&r &x&F&F&B&A&0&0To Equip'
-      - '&x&0&0&8&D&F&F▷ &x&0&0&8&D&F&F&l&nRIGHT-CLICK&r &x&0&0&8&D&F&FTo Preview'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip'
   clown_mask:
     slot: 14
     permission: sharded.wardrobe.clown_mask
@@ -109,8 +93,7 @@ hats:
       - ''
       - '&x&F&F&0&0&0&0| ⚓ &fOwned: %wardrobe_owned_clown_mask%'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nLEFT-CLICK&r &x&F&F&B&A&0&0To Equip'
-      - '&x&0&0&8&D&F&F▷ &x&0&0&8&D&F&F&l&nRIGHT-CLICK&r &x&0&0&8&D&F&FTo Preview'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip'
   sstraw_hat:
     slot: 15
     permission: sharded.wardrobe.sstraw_hat
@@ -126,5 +109,4 @@ hats:
       - ''
       - '&x&B&3&F&F&0&0| ⚓ &fOwned: %wardrobe_owned_sstraw_hat%'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nLEFT-CLICK&r &x&F&F&B&A&0&0To Equip'
-      - '&x&0&0&8&D&F&F▷ &x&0&0&8&D&F&F&l&nRIGHT-CLICK&r &x&0&0&8&D&F&FTo Preview'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip'
