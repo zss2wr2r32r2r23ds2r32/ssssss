@@ -7,12 +7,15 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PlaylistManager {
 
     private final ShardedLobbyCore plugin;
     private FileConfiguration data;
     private final Map<UUID, List<String>> drafts = new HashMap<>();
+    private final Set<UUID> playlistPlayback = ConcurrentHashMap.newKeySet();
+    private final Map<UUID, Long> manualSkipUntil = new ConcurrentHashMap<>();
 
     public PlaylistManager(ShardedLobbyCore plugin) {
         this.plugin = plugin;
@@ -51,6 +54,35 @@ public class PlaylistManager {
 
     public boolean hasPlaylist(UUID uuid) {
         return !getSavedPlaylist(uuid).isEmpty() || !getQueue(uuid).isEmpty();
+    }
+
+    public void beginPlaylistPlayback(UUID uuid) {
+        playlistPlayback.add(uuid);
+    }
+
+    public void endPlaylistPlayback(UUID uuid) {
+        playlistPlayback.remove(uuid);
+        manualSkipUntil.remove(uuid);
+    }
+
+    public boolean isPlaylistPlayback(UUID uuid) {
+        return playlistPlayback.contains(uuid);
+    }
+
+    public void markManualSkip(UUID uuid) {
+        manualSkipUntil.put(uuid, System.currentTimeMillis() + 2000L);
+    }
+
+    public boolean isManualSkipCooldown(UUID uuid) {
+        Long until = manualSkipUntil.get(uuid);
+        if (until == null) {
+            return false;
+        }
+        if (System.currentTimeMillis() >= until) {
+            manualSkipUntil.remove(uuid);
+            return false;
+        }
+        return true;
     }
 
     public void startDraft(UUID uuid) {
@@ -97,6 +129,9 @@ public class PlaylistManager {
         List<String> queue = getQueue(uuid);
         if (!queue.isEmpty()) {
             return queue.get(0);
+        }
+        if (isPlaylistPlayback(uuid)) {
+            return null;
         }
         List<String> saved = getSavedPlaylist(uuid);
         return saved.isEmpty() ? null : saved.get(0);

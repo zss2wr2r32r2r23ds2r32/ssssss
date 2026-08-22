@@ -16,8 +16,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.EventExecutor;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
@@ -50,7 +54,104 @@ public class MusicModule implements Module, Listener {
         this.config = config;
         reloadSongCache();
         Bukkit.getPluginManager().registerEvents(this, plugin);
+        registerSongEndListener();
         startActionBarTask();
+    }
+
+    private void registerSongEndListener() {
+        if (!config.getBoolean("playlist-queue.auto-advance", true)) {
+            return;
+        }
+
+        String[] eventClasses = {
+                "io.papermc.paper.event.player.PlayerReceiveMessageEvent",
+                "com.destroystokyo.paper.event.player.PlayerReceiveMessageEvent"
+        };
+        for (String className : eventClasses) {
+            if (registerMessageEvent(className)) {
+                plugin.getLogger().info("Playlist auto-advance hooked into " + className);
+                return;
+            }
+        }
+
+        if (registerMessageEvent("io.papermc.paper.event.player.AsyncChatEvent")) {
+            plugin.getLogger().info("Playlist auto-advance hooked into AsyncChatEvent (fallback)");
+            return;
+        }
+
+        plugin.getLogger().warning("Playlist auto-advance could not hook message events - update Paper or check music.yml triggers");
+    }
+
+    private boolean registerMessageEvent(String className) {
+        try {
+            Class<? extends Event> eventClass = Class.forName(className).asSubclass(Event.class);
+            EventExecutor executor = (listener, event) -> {
+                try {
+                    Player player = (Player) event.getClass().getMethod("getPlayer").invoke(event);
+                    Component message = extractMessageComponent(event);
+                    if (message == null) {
+                        return;
+                    }
+                    String plain = PlainTextComponentSerializer.plainText().serialize(message);
+                    tryHandleSongEnd(player, plain);
+                } catch (ReflectiveOperationException ex) {
+                    plugin.getLogger().warning("Playlist auto-advance error: " + ex.getMessage());
+                }
+            };
+            Bukkit.getPluginManager().registerEvent(eventClass, this, EventPriority.MONITOR, executor, plugin, true);
+            return true;
+        } catch (ReflectiveOperationException ignored) {
+            return false;
+        }
+    }
+
+    private Component extractMessageComponent(Object event) throws ReflectiveOperationException {
+        try {
+            return (Component) event.getClass().getMethod("message").invoke(event);
+        } catch (NoSuchMethodException ignored) {
+            return (Component) event.getClass().getMethod("getMessage").invoke(event);
+        }
+    }
+
+    private void tryHandleSongEnd(Player player, String plain) {
+        UUID uuid = player.getUniqueId();
+        if (!plugin.getPlaylistManager().isPlaylistPlayback(uuid)) {
+            return;
+        }
+        if (plugin.getPlaylistManager().getQueue(uuid).isEmpty()) {
+            return;
+        }
+        if (plugin.getPlaylistManager().isManualSkipCooldown(uuid)) {
+            return;
+        }
+
+        String upper = plain.toUpperCase(Locale.ROOT);
+        List<String> triggers = config.getStringList("playlist-queue.end-triggers");
+        if (triggers.isEmpty()) {
+            triggers = List.of("SONG STOPPED", "SONG ENDED", "STOPPED.");
+        }
+
+        boolean matched = false;
+        for (String trigger : triggers) {
+            if (upper.contains(trigger.toUpperCase(Locale.ROOT))) {
+                matched = true;
+                break;
+            }
+        }
+        if (!matched) {
+            return;
+        }
+
+        long delay = config.getLong("playlist-queue.play-delay-ticks", 10L);
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (!player.isOnline()) {
+                return;
+            }
+            if (!plugin.getPlaylistManager().isPlaylistPlayback(uuid)) {
+                return;
+            }
+            playNextFromQueue(player);
+        }, delay);
     }
 
     @Override
@@ -291,7 +392,9 @@ public class MusicModule implements Module, Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        plugin.getPlaylistManager().clearDraft(event.getPlayer().getUniqueId());
+        UUID uuid = event.getPlayer().getUniqueId();
+        plugin.getPlaylistManager().clearDraft(uuid);
+        plugin.getPlaylistManager().endPlaylistPlayback(uuid);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -391,6 +494,7 @@ public class MusicModule implements Module, Listener {
                 : new ArrayList<>();
         plugin.getPlaylistManager().savePlaylist(player.getUniqueId(), playlist);
         plugin.getPlaylistManager().setQueue(player.getUniqueId(), remaining);
+        plugin.getPlaylistManager().beginPlaylistPlayback(player.getUniqueId());
 
         Bukkit.getScheduler().runTask(plugin, () -> {
             runCommand(player, config.getString("commands.play", "music play %song%").replace("%song%", first));
@@ -407,6 +511,7 @@ public class MusicModule implements Module, Listener {
         }
 
         if ("skip".equalsIgnoreCase(action)) {
+            plugin.getPlaylistManager().markManualSkip(player.getUniqueId());
             runCommand(player, config.getString("commands.skip", "music skip"));
             playNextFromQueue(player);
             return;
@@ -422,8 +527,10 @@ public class MusicModule implements Module, Listener {
     }
 
     private void playNextFromQueue(Player player) {
-        String next = plugin.getPlaylistManager().pollNext(player.getUniqueId());
+        UUID uuid = player.getUniqueId();
+        String next = plugin.getPlaylistManager().pollNext(uuid);
         if (next == null) {
+            plugin.getPlaylistManager().endPlaylistPlayback(uuid);
             updateUpNextActionBar(player);
             return;
         }

@@ -60,13 +60,17 @@ playlist-gui:
     - ""
     - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Play"
   selected-material: LIME_STAINED_GLASS_PANE
-  summary-empty-lore:
-    - "&7Select songs on the left"
   empty-message: "%prefix% &#FF2727Select at least one song for your playlist."
   no-saved-message: "%prefix% &#FF2727You don't have a saved playlist. Select songs and confirm first."
 
 playlist-queue:
-  play-delay-ticks: 5
+  play-delay-ticks: 10
+  auto-advance: true
+  end-triggers:
+    - "SONG STOPPED"
+    - "SONG ENDED"
+    - "STOPPED."
+    - "FINISHED"
 
 filler:
   material: BLACK_STAINED_GLASS_PANE
