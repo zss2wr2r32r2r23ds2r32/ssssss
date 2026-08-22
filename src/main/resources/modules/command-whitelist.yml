@@ -5,6 +5,7 @@ enabled: true
 filter-tab-complete: true
 filter-command-send: true
 filter-brigadier-suggestions: true
+bypass-for-op: true
 
 whitelist:
   - "server"

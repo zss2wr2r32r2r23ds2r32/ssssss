@@ -12,9 +12,11 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -117,7 +119,13 @@ public class MusicModule implements Module, Listener {
     }
 
     private void openPlaylistMenu(Player player) {
-        plugin.getPlaylistManager().startDraft(player.getUniqueId());
+        openPlaylistMenu(player, true);
+    }
+
+    private void openPlaylistMenu(Player player, boolean fresh) {
+        if (fresh) {
+            plugin.getPlaylistManager().startDraft(player.getUniqueId());
+        }
 
         int rows = Math.min(6, Math.max(1, config.getInt("playlist-gui.rows", 6)));
         MenuHolder holder = new MenuHolder(MenuType.MUSIC_PLAYLIST);
@@ -193,21 +201,31 @@ public class MusicModule implements Module, Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        if (!(event.getInventory().getHolder() instanceof MenuHolder holder)) {
+
+        Inventory top = event.getView().getTopInventory();
+        if (!(top.getHolder() instanceof MenuHolder holder)) {
+            return;
+        }
+        if (holder.getType() != MenuType.MUSIC_MAIN && holder.getType() != MenuType.MUSIC_PLAYLIST) {
             return;
         }
 
         event.setCancelled(true);
 
+        if (event.getClickedInventory() != top) {
+            return;
+        }
+
+        int slot = event.getSlot();
         if (holder.getType() == MenuType.MUSIC_MAIN) {
-            handleMainClick(player, event.getRawSlot());
-        } else if (holder.getType() == MenuType.MUSIC_PLAYLIST) {
-            handlePlaylistClick(player, event.getRawSlot());
+            handleMainClick(player, slot);
+        } else {
+            handlePlaylistClick(player, slot);
         }
     }
 
@@ -238,7 +256,7 @@ public class MusicModule implements Module, Listener {
         }
 
         plugin.getPlaylistManager().toggleDraftSong(player.getUniqueId(), action);
-        openPlaylistMenu(player);
+        openPlaylistMenu(player, false);
     }
 
     private void confirmPlaylist(Player player) {

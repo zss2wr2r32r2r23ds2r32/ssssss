@@ -189,12 +189,18 @@ public class ServerSelectorModule implements Module, Listener {
             case "chat" -> connectChat(player, server, target);
             case "command" -> connectCommand(player, server);
             case "console" -> connectConsole(player, server);
-            case "auto" -> connectBungee(player, target) || connectChat(player, server, target) || connectCommand(player, server);
+            case "auto" -> connectChat(player, server, target)
+                    || connectCommand(player, server)
+                    || connectBungee(player, target);
             default -> connectChat(player, server, target) || connectCommand(player, server);
         };
 
-        if (!connected && config.getBoolean("debug", false)) {
-            plugin.getLogger().warning("Failed to connect " + player.getName() + " to " + target);
+        if (!connected) {
+            plugin.getLogger().info("Server selector could not connect " + player.getName() + " to " + target);
+            MessageUtil.sendFormatted(player, config.getString("connect-failed-message",
+                    "%prefix% &#FF2727Could not connect to that server. Please try again or contact staff."));
+        } else if (config.getBoolean("debug", false)) {
+            plugin.getLogger().info("Server selector dispatched " + player.getName() + " to " + target + " via " + method);
         }
 
         if (server.contains("message")) {
@@ -216,6 +222,13 @@ public class ServerSelectorModule implements Module, Listener {
         return server.getName();
     }
 
+    private String resolveCommand(ConfigurationSection server, String target) {
+        if (server.contains("command")) {
+            return server.getString("command");
+        }
+        return "server " + target;
+    }
+
     private boolean connectBungee(Player player, String serverName) {
         if (serverName == null || serverName.isEmpty()) {
             return false;
@@ -225,7 +238,9 @@ public class ServerSelectorModule implements Module, Listener {
             DataOutputStream out = new DataOutputStream(stream);
             out.writeUTF("Connect");
             out.writeUTF(serverName);
-            player.sendPluginMessage(plugin, "BungeeCord", stream.toByteArray());
+            byte[] payload = stream.toByteArray();
+            player.sendPluginMessage(plugin, "BungeeCord", payload);
+            player.sendPluginMessage(plugin, "bungeecord:main", payload);
             return true;
         } catch (IOException ex) {
             plugin.getLogger().log(Level.WARNING, "BungeeCord connect failed for " + player.getName(), ex);
@@ -262,12 +277,5 @@ public class ServerSelectorModule implements Module, Listener {
         }
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", player.getName()));
         return true;
-    }
-
-    private String resolveCommand(ConfigurationSection server, String target) {
-        if (server.contains("command")) {
-            return server.getString("command");
-        }
-        return "server " + target;
     }
 }

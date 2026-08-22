@@ -4,6 +4,7 @@ enabled: true
 center-servers: true
 connect-method: auto
 debug: false
+connect-failed-message: "%prefix% &#FF2727Could not connect to that server. Please try again or contact staff."
 
 gui:
   title: "SERVER SELECTOR"
@@ -19,7 +20,7 @@ servers:
   survival:
     material: END_CRYSTAL
     name: "&#8AFF00Shop &#8AFF00Survival"
-    bungee-name: survival
+    bungee-name: SURVIVAL
     lore:
       - "&8Description"
       - ""
@@ -31,12 +32,12 @@ servers:
       - "&#008DFF⛨ &fStatus: &#008DFF"
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Join"
-    command: "server survival"
+    command: "server SURVIVAL"
 
   events:
     material: FIREWORK_ROCKET
     name: "&#FF007CEvents"
-    bungee-name: events
+    bungee-name: EVENTS
     lore:
       - "&8Description"
       - ""
@@ -48,12 +49,12 @@ servers:
       - "&#008DFF⛨ &fStatus: &#008DFF"
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Join"
-    command: "server events"
+    command: "server EVENTS"
 
   diamond-smp:
     material: DIAMOND
     name: "&#FF0000Diamond SMP"
-    bungee-name: diasmp
+    bungee-name: DIASMP
     lore:
       - "&8Description"
       - ""
@@ -65,4 +66,4 @@ servers:
       - "&#008DFF⛨ &fStatus: &#008DFF"
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0To Join"
-    command: "server diasmp"
+    command: "server DIASMP"

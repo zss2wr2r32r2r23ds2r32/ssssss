@@ -122,11 +122,15 @@ public class CommandWhitelistModule implements Module, Listener {
                     Object range = suggestionsClass.getMethod("getRange").invoke(suggestions);
 
                     List<Object> filtered = new ArrayList<>();
-                    for (Object suggestion : original) {
-                        String text = (String) suggestion.getClass().getMethod("getText").invoke(suggestion);
-                        if (isWhitelistedRoot(text)) {
-                            filtered.add(suggestion);
+                    if (shouldFilterBrigadierSuggestions(event, original)) {
+                        for (Object suggestion : original) {
+                            String text = (String) suggestion.getClass().getMethod("getText").invoke(suggestion);
+                            if (isWhitelistedRoot(text)) {
+                                filtered.add(suggestion);
+                            }
                         }
+                    } else {
+                        filtered.addAll(original);
                     }
 
                     Object newSuggestions = suggestionsClass.getMethod("create", range.getClass(), List.class)
@@ -217,7 +221,10 @@ public class CommandWhitelistModule implements Module, Listener {
     }
 
     private boolean canBypass(Player player) {
-        return player.hasPermission("shardedlobbycore.bypass.commandwhitelist");
+        if (player.hasPermission("shardedlobbycore.bypass.commandwhitelist")) {
+            return true;
+        }
+        return config.getBoolean("bypass-for-op", true) && player.isOp();
     }
 
     private void applyTabFilter(String buffer, List<String> completions) {
@@ -225,25 +232,51 @@ public class CommandWhitelistModule implements Module, Listener {
         boolean hasSpace = typed.contains(" ");
         final String commandBase = normalizeBaseCommand(hasSpace ? typed.split(" ")[0] : typed);
 
-        completions.clear();
-        if (!hasSpace) {
-            for (String allowed : whitelistCommands) {
-                if (commandBase.isEmpty() || allowed.startsWith(commandBase)) {
-                    completions.add(allowed);
-                }
+        if (hasSpace) {
+            if (!whitelistCommands.contains(commandBase)) {
+                completions.clear();
             }
             return;
         }
 
-        if (!isWhitelisted(typed)) {
-            return;
-        }
-
+        completions.clear();
         for (String allowed : whitelistCommands) {
-            if (allowed.startsWith(commandBase)) {
+            if (commandBase.isEmpty() || allowed.startsWith(commandBase)) {
                 completions.add(allowed);
             }
         }
+    }
+
+    private boolean shouldFilterBrigadierSuggestions(Object event, List<Object> suggestions) throws ReflectiveOperationException {
+        for (String methodName : new String[]{"getBuffer", "getInput", "getMessage"}) {
+            try {
+                String buffer = (String) event.getClass().getMethod(methodName).invoke(event);
+                if (buffer != null && buffer.startsWith("/")) {
+                    String typed = buffer.substring(1).toLowerCase(Locale.ROOT);
+                    String commandBase = normalizeBaseCommand(typed.split(" ")[0]);
+                    if (whitelistCommands.contains(commandBase)) {
+                        return false;
+                    }
+                    if (typed.contains(" ")) {
+                        return true;
+                    }
+                }
+            } catch (NoSuchMethodException ignored) {
+            }
+        }
+
+        if (suggestions.isEmpty()) {
+            return false;
+        }
+
+        String first = (String) suggestions.get(0).getClass().getMethod("getText").invoke(suggestions.get(0));
+        if (first == null || first.isEmpty()) {
+            return false;
+        }
+        if (first.contains(" ") || first.contains(":")) {
+            return false;
+        }
+        return !isWhitelistedRoot(first);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
