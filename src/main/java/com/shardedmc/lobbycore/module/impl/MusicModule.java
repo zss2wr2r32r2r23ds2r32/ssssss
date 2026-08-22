@@ -33,9 +33,11 @@ public class MusicModule implements Module, Listener {
     private ShardedLobbyCore plugin;
     private FileConfiguration config;
     private BukkitTask actionBarTask;
+    private final Map<UUID, BukkitTask> advanceTasks = new HashMap<>();
     private final Map<Integer, String> mainSlotActions = new HashMap<>();
     private final Map<Integer, String> playlistSlotActions = new HashMap<>();
     private final Map<String, String> songDisplayNames = new HashMap<>();
+    private final Map<String, Integer> songDurations = new HashMap<>();
     private final Map<String, ConfigurationSection> songSections = new LinkedHashMap<>();
 
     @Override
@@ -79,7 +81,7 @@ public class MusicModule implements Module, Listener {
             return;
         }
 
-        plugin.getLogger().warning("Playlist auto-advance could not hook message events - update Paper or check music.yml triggers");
+        plugin.getLogger().info("Playlist auto-advance using song duration timer (message hook unavailable)");
     }
 
     private boolean registerMessageEvent(String className) {
@@ -143,6 +145,7 @@ public class MusicModule implements Module, Listener {
         }
 
         long delay = config.getLong("playlist-queue.play-delay-ticks", 10L);
+        cancelAdvanceTask(uuid);
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (!player.isOnline()) {
                 return;
@@ -154,15 +157,69 @@ public class MusicModule implements Module, Listener {
         }, delay);
     }
 
+    private void cancelAdvanceTask(UUID uuid) {
+        BukkitTask task = advanceTasks.remove(uuid);
+        if (task != null) {
+            task.cancel();
+        }
+    }
+
+    private void scheduleAdvanceAfterSong(Player player, String songId) {
+        if (!config.getBoolean("playlist-queue.auto-advance", true)) {
+            return;
+        }
+        String mode = config.getString("playlist-queue.advance-mode", "both").toLowerCase(Locale.ROOT);
+        if ("message".equals(mode)) {
+            return;
+        }
+
+        UUID uuid = player.getUniqueId();
+        if (!plugin.getPlaylistManager().isPlaylistPlayback(uuid)) {
+            return;
+        }
+        if (plugin.getPlaylistManager().getQueue(uuid).isEmpty()) {
+            return;
+        }
+
+        cancelAdvanceTask(uuid);
+        int duration = getSongDurationSeconds(songId);
+        int buffer = config.getInt("playlist-queue.duration-buffer-seconds", 2);
+        long ticks = (duration + buffer) * 20L;
+
+        BukkitTask task = Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (!player.isOnline()) {
+                return;
+            }
+            if (!plugin.getPlaylistManager().isPlaylistPlayback(uuid)) {
+                return;
+            }
+            if (plugin.getPlaylistManager().getQueue(uuid).isEmpty()) {
+                return;
+            }
+            playNextFromQueue(player);
+        }, ticks);
+        advanceTasks.put(uuid, task);
+    }
+
+    private int getSongDurationSeconds(String songId) {
+        return songDurations.getOrDefault(songId,
+                config.getInt("playlist-queue.default-duration-seconds", 200));
+    }
+
     @Override
     public void disable() {
         if (actionBarTask != null) {
             actionBarTask.cancel();
             actionBarTask = null;
         }
+        for (BukkitTask task : advanceTasks.values()) {
+            task.cancel();
+        }
+        advanceTasks.clear();
         mainSlotActions.clear();
         playlistSlotActions.clear();
         songDisplayNames.clear();
+        songDurations.clear();
         songSections.clear();
         HandlerList.unregisterAll(this);
     }
@@ -183,7 +240,9 @@ public class MusicModule implements Module, Listener {
 
     private void reloadSongCache() {
         songDisplayNames.clear();
+        songDurations.clear();
         songSections.clear();
+        int defaultDuration = config.getInt("playlist-queue.default-duration-seconds", 200);
         ConfigurationSection songs = config.getConfigurationSection("songs");
         if (songs == null) {
             return;
@@ -196,6 +255,7 @@ public class MusicModule implements Module, Listener {
             String songId = song.getString("song", key);
             songSections.put(key, song);
             songDisplayNames.put(songId, MessageUtil.plainText(song.getString("name", key)));
+            songDurations.put(songId, song.getInt("duration-seconds", defaultDuration));
         }
     }
 
@@ -393,6 +453,7 @@ public class MusicModule implements Module, Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
+        cancelAdvanceTask(uuid);
         plugin.getPlaylistManager().clearDraft(uuid);
         plugin.getPlaylistManager().endPlaylistPlayback(uuid);
     }
@@ -496,10 +557,13 @@ public class MusicModule implements Module, Listener {
         plugin.getPlaylistManager().setQueue(player.getUniqueId(), remaining);
         plugin.getPlaylistManager().beginPlaylistPlayback(player.getUniqueId());
 
-        Bukkit.getScheduler().runTask(plugin, () -> {
-            runCommand(player, config.getString("commands.play", "music play %song%").replace("%song%", first));
-            updateUpNextActionBar(player);
-        });
+        Bukkit.getScheduler().runTask(plugin, () -> playQueuedSong(player, first));
+    }
+
+    private void playQueuedSong(Player player, String songId) {
+        runCommand(player, config.getString("commands.play", "music play %song%").replace("%song%", songId));
+        updateUpNextActionBar(player);
+        scheduleAdvanceAfterSong(player, songId);
     }
 
     private void executeAction(Player player, String action) {
@@ -511,7 +575,9 @@ public class MusicModule implements Module, Listener {
         }
 
         if ("skip".equalsIgnoreCase(action)) {
-            plugin.getPlaylistManager().markManualSkip(player.getUniqueId());
+            UUID uuid = player.getUniqueId();
+            cancelAdvanceTask(uuid);
+            plugin.getPlaylistManager().markManualSkip(uuid);
             runCommand(player, config.getString("commands.skip", "music skip"));
             playNextFromQueue(player);
             return;
@@ -528,16 +594,20 @@ public class MusicModule implements Module, Listener {
 
     private void playNextFromQueue(Player player) {
         UUID uuid = player.getUniqueId();
+        cancelAdvanceTask(uuid);
         String next = plugin.getPlaylistManager().pollNext(uuid);
         if (next == null) {
             plugin.getPlaylistManager().endPlaylistPlayback(uuid);
             updateUpNextActionBar(player);
             return;
         }
+        long delay = config.getLong("playlist-queue.play-delay-ticks", 10L);
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            runCommand(player, config.getString("commands.play", "music play %song%").replace("%song%", next));
-            updateUpNextActionBar(player);
-        }, config.getLong("playlist-queue.play-delay-ticks", 5L));
+            if (!player.isOnline()) {
+                return;
+            }
+            playQueuedSong(player, next);
+        }, delay);
     }
 
     public void updateUpNextActionBar(Player player) {

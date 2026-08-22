@@ -66,6 +66,9 @@ playlist-gui:
 playlist-queue:
   play-delay-ticks: 10
   auto-advance: true
+  advance-mode: both
+  default-duration-seconds: 200
+  duration-buffer-seconds: 2
   end-triggers:
     - "SONG STOPPED"
     - "SONG ENDED"
