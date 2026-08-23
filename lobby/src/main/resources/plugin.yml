@@ -1,7 +1,18 @@
 name: ShardedVelocityCore-Lobby
-version: 1.0.6
+version: 1.0.7
 main: dev.sharded.velocitycore.lobby.LobbyPlugin
 api-version: '1.21'
 author: Sharded
-description: Lobby PlaceholderAPI bridge for ShardedVelocityCore hologram status placeholders.
+description: Lobby PlaceholderAPI bridge and maintenance mode for ShardedVelocityCore.
 depend: [PlaceholderAPI]
+
+commands:
+  maintenance:
+    description: Toggle lobby maintenance or manage bypass list
+    usage: /maintenance [add|remove|wipe] [player]
+    permission: shardedvelocitycore.maintenance
+
+permissions:
+  shardedvelocitycore.maintenance:
+    description: Allows use of /maintenance commands
+    default: op

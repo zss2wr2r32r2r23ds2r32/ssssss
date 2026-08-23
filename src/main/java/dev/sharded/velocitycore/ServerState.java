@@ -3,7 +3,7 @@ package dev.sharded.velocitycore;
 public enum ServerState {
     ONLINE("&#8AFF00&lONLINE"),
     OFFLINE("&#FF0000&lOFFLINE"),
-    MAINTENANCE("&#FF0000&lMAINTEANCE");
+    MAINTENANCE("&#FF0000&lMAINTENANCE");
 
     private final String display;
 

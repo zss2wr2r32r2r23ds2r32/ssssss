@@ -2,48 +2,33 @@
 
 Velocity proxy plugin with server status placeholders, queue system, and hologram support.
 
-## JARs (v1.0.6)
+## JARs (v1.0.7)
 
 | File | Install on |
 |------|------------|
-| `ShardedVelocityCore-1.0.6.jar` | Velocity `plugins/` |
-| `ShardedVelocityCore-Backend-1.0.6.jar` | **Every backend server** (survival, events, diasmp, etc.) |
-| `ShardedVelocityCore-Lobby-1.0.6.jar` | Lobby `plugins/` (+ PlaceholderAPI) |
+| `ShardedVelocityCore-1.0.7.jar` | Velocity `plugins/` |
+| `ShardedVelocityCore-Backend-1.0.7.jar` | Every backend server (survival, events, diasmp) |
+| `ShardedVelocityCore-Lobby-1.0.7.jar` | Lobby `plugins/` (+ PlaceholderAPI) |
 
-## Whitelist = Maintenance
-
-When whitelist is **on** on a backend server (e.g. survival), hologram status shows **MAINTEANCE**.
-
-Install `ShardedVelocityCore-Backend` on each backend server and set `server-name` in its config to match `velocity.toml`:
-
-```yaml
-# plugins/ShardedVelocityCore-Backend/config.yml
-server-name: survival
-```
-
-The backend plugin reports `Bukkit.hasWhitelist()` to Velocity every second. When whitelist is toggled, status updates instantly.
-
-```toml
-whitelist-as-maintenance = true
-```
-
-## Commands
+## Lobby maintenance
 
 | Command | Description |
 |---------|-------------|
-| `/queue [server]` | Join queue — includes `lobby` |
-| `/queue lobby` | Return to lobby |
-| `/server lobby` | Connect to lobby |
-| `/server <server>` | Connect via queue system |
-| `/leave` | Leave the queue |
+| `/maintenance` | Toggle maintenance — kicks non-bypass players with maintenance screen |
+| `/maintenance add <player>` | Add player to bypass list (tab complete) |
+| `/maintenance remove <player>` | Remove player from bypass list |
+| `/maintenance wipe` | Clear entire bypass list |
 
-## Config
+Permission: `shardedvelocitycore.maintenance` (default: op)
 
-```toml
-lobby-server = "lobby"
-queue-servers = ["lobby", "survival", "events", "diasmp"]
-tracked-servers = ["survival", "events", "diasmp"]
-whitelist-as-maintenance = true
-```
+## Whitelist = Maintenance
 
-Make sure your Velocity `velocity.toml` has a server named `lobby`.
+When whitelist is **on** on a backend server, hologram status shows **MAINTENANCE**.
+
+Install `ShardedVelocityCore-Backend` on each backend and set `server-name` in config.
+
+## Queue server colors
+
+- survival: `&#8AFF00`
+- events: `&#FF0700`
+- diasmp: `&#FF0000`

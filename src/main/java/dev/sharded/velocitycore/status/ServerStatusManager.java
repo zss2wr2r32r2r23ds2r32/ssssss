@@ -69,10 +69,6 @@ public final class ServerStatusManager {
         return false;
     }
 
-    public boolean markWhitelisted(String serverName) {
-        return updateWhitelistReport(serverName, true);
-    }
-
     public boolean updateWhitelistReport(String serverName, boolean whitelisted) {
         boolean wasWhitelisted = whitelistTracker.isWhitelisted(serverName);
         whitelistTracker.setWhitelisted(serverName, whitelisted);
@@ -144,20 +140,19 @@ public final class ServerStatusManager {
 
         RegisteredServer registeredServer = ServerResolver.find(server, serverName).orElse(null);
         if (registeredServer == null) {
-            whitelistTracker.clear(serverName);
             return ServerState.OFFLINE;
+        }
+
+        if (config.whitelistAsMaintenance()
+                && whitelistTracker.hasRecentReport(serverName)
+                && whitelistTracker.isWhitelisted(serverName)) {
+            return ServerState.MAINTENANCE;
         }
 
         try {
             registeredServer.ping().join();
-            if (config.whitelistAsMaintenance() && whitelistTracker.isWhitelisted(serverName)) {
-                return ServerState.MAINTENANCE;
-            }
             return ServerState.ONLINE;
         } catch (Exception ignored) {
-            if (config.whitelistAsMaintenance() && whitelistTracker.isWhitelisted(serverName)) {
-                return ServerState.MAINTENANCE;
-            }
             return ServerState.OFFLINE;
         }
     }

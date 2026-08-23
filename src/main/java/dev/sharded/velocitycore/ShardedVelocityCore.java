@@ -14,7 +14,6 @@ import dev.sharded.velocitycore.command.ServerCommand;
 import dev.sharded.velocitycore.common.PluginChannels;
 import dev.sharded.velocitycore.config.PluginConfig;
 import dev.sharded.velocitycore.listener.PlayerListener;
-import dev.sharded.velocitycore.listener.WhitelistListener;
 import dev.sharded.velocitycore.listener.WhitelistReportListener;
 import dev.sharded.velocitycore.listener.ServerCommandListener;
 import dev.sharded.velocitycore.placeholder.PlaceholderHook;
@@ -30,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(
         id = "shardedvelocitycore",
         name = "ShardedVelocityCore",
-        version = "1.0.6",
+        version = "1.0.7",
         description = "Server status placeholders, queue system, and hologram status sync for Velocity networks.",
         authors = {"Sharded"}
 )
@@ -82,7 +81,6 @@ public final class ShardedVelocityCore {
 
         server.getEventManager().register(this, new ServerCommandListener(connectService));
         server.getEventManager().register(this, new PlayerListener(queueManager, statusSyncService));
-        server.getEventManager().register(this, new WhitelistListener(statusManager, statusSyncService));
         server.getEventManager().register(this, new WhitelistReportListener(statusManager, statusSyncService));
 
         statusManager.start();
