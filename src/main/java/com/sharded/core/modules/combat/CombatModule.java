@@ -127,39 +127,46 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
     public void onMove(PlayerMoveEvent event) {
         if (!isTagged(event.getPlayer())) return;
         ProtectModule protect = plugin.modules().get(ProtectModule.class);
-        if (protect == null || region == null) return;
-        if (!region.contains(event.getTo())) return;
-        if (protect.inSpawn(event.getTo())) {
-            pushBack(event.getPlayer(), event.getFrom());
-        }
+        if (protect == null) return;
+        Location to = event.getTo();
+        Location from = event.getFrom();
+        if (to == null || protect.inSpawn(from)) return;
+        if (!protect.inSpawn(to)) return;
+        pushBack(event.getPlayer(), from, protect);
     }
 
-    private void pushBack(Player player, Location from) {
+    private void pushBack(Player player, Location from, ProtectModule protect) {
         player.teleport(from);
         Vector push = from.toVector().subtract(player.getLocation().toVector()).normalize().multiply(0.8);
         push.setY(0.35);
         player.setVelocity(push);
         send(player, "pushback");
-        showWalls(player);
+        showSpawnWalls(player, protect);
     }
 
-    private void showWalls(Player player) {
-        if (region == null || !config.getBoolean("red-glass-walls", true)) return;
+    private void showSpawnWalls(Player player, ProtectModule protect) {
+        if (!config.getBoolean("red-glass-walls", true)) return;
+        CuboidRegion spawn = protect.region("spawn");
+        if (spawn == null || !spawn.world().equals(player.getWorld().getName())) return;
         org.bukkit.block.data.BlockData pane = Material.RED_STAINED_GLASS_PANE.createBlockData();
-        int y = player.getLocation().getBlockY();
-        for (int x = region.minX(); x <= region.maxX(); x++) {
-            player.sendBlockChange(new Location(player.getWorld(), x, y, region.minZ()), pane);
-            player.sendBlockChange(new Location(player.getWorld(), x, y, region.maxZ()), pane);
-        }
-        for (int z = region.minZ(); z <= region.maxZ(); z++) {
-            player.sendBlockChange(new Location(player.getWorld(), region.minX(), y, z), pane);
-            player.sendBlockChange(new Location(player.getWorld(), region.maxX(), y, z), pane);
+        int baseY = player.getLocation().getBlockY();
+        for (int yOff = 0; yOff <= 1; yOff++) {
+            int y = baseY + yOff;
+            for (int x = spawn.minX(); x <= spawn.maxX(); x++) {
+                player.sendBlockChange(new Location(player.getWorld(), x, y, spawn.minZ()), pane);
+                player.sendBlockChange(new Location(player.getWorld(), x, y, spawn.maxZ()), pane);
+            }
+            for (int z = spawn.minZ(); z <= spawn.maxZ(); z++) {
+                player.sendBlockChange(new Location(player.getWorld(), spawn.minX(), y, z), pane);
+                player.sendBlockChange(new Location(player.getWorld(), spawn.maxX(), y, z), pane);
+            }
         }
     }
 
     private void tick() {
         long now = System.currentTimeMillis();
         taggedUntil.entrySet().removeIf(e -> e.getValue() <= now);
+        ProtectModule protect = plugin.modules().get(ProtectModule.class);
         for (Player player : Bukkit.getOnlinePlayers()) {
             Long until = taggedUntil.get(player.getUniqueId());
             if (until == null || until <= now) continue;
@@ -167,7 +174,21 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
             String msg = config.getString("actionbar", "&cCombat &7| &f%seconds%s")
                     .replace("%seconds%", String.valueOf(left));
             player.sendActionBar(Text.c(msg));
+            if (protect != null && config.getBoolean("red-glass-walls", true)) {
+                CuboidRegion spawn = protect.region("spawn");
+                if (spawn != null && spawn.world().equals(player.getWorld().getName())
+                        && nearSpawnBorder(player.getLocation(), spawn, 6)) {
+                    showSpawnWalls(player, protect);
+                }
+            }
         }
+    }
+
+    private boolean nearSpawnBorder(Location loc, CuboidRegion spawn, int margin) {
+        int x = loc.getBlockX();
+        int z = loc.getBlockZ();
+        return x >= spawn.minX() - margin && x <= spawn.maxX() + margin
+                && z >= spawn.minZ() - margin && z <= spawn.maxZ() + margin;
     }
 
     private void saveConfig() {

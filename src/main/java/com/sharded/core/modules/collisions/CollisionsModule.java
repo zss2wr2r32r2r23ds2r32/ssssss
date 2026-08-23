@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.NamespacedKey;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
 import org.bukkit.scheduler.BukkitTask;
@@ -31,12 +32,13 @@ public final class CollisionsModule extends Module {
     @Override
     protected void onEnable() {
         petKey = new NamespacedKey(plugin, "pet_owner");
-        setupTeam();
+        setupTeamDeferred();
         for (Player player : Bukkit.getOnlinePlayers()) {
             applyPlayerCollision(player);
         }
         long interval = Math.max(10L, config.getLong("refresh-interval-ticks", 20L));
         refreshTask = plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
+            if (noCollideTeam == null) setupTeamDeferred();
             for (Player player : Bukkit.getOnlinePlayers()) {
                 applyPlayerCollision(player);
             }
@@ -49,8 +51,10 @@ public final class CollisionsModule extends Module {
         refreshTask = null;
     }
 
-    private void setupTeam() {
-        Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
+    private void setupTeamDeferred() {
+        ScoreboardManager manager = Bukkit.getScoreboardManager();
+        if (manager == null) return;
+        Scoreboard board = manager.getMainScoreboard();
         Team team = board.getTeam(TEAM_NAME);
         if (team == null) team = board.registerNewTeam(TEAM_NAME);
         team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
@@ -60,6 +64,7 @@ public final class CollisionsModule extends Module {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+        if (noCollideTeam == null) setupTeamDeferred();
         applyPlayerCollision(event.getPlayer());
     }
 
@@ -76,7 +81,6 @@ public final class CollisionsModule extends Module {
             if (!noCollideTeam.hasEntry(entry)) {
                 noCollideTeam.addEntry(entry);
             }
-            // Legacy name entry for clients that require it
             if (!noCollideTeam.hasEntry(player.getName())) {
                 noCollideTeam.addEntry(player.getName());
             }

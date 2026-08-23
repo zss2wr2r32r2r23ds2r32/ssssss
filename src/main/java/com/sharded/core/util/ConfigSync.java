@@ -64,6 +64,10 @@ public final class ConfigSync {
             return;
         }
 
+        if (resourcePath.endsWith("modules/arena/config.yml") && file.length() > 5_000_000L) {
+            stripArenaBlocksFromFile(file, plugin);
+        }
+
         YamlConfiguration disk;
         try {
             disk = YamlConfiguration.loadConfiguration(file);
@@ -83,10 +87,83 @@ public final class ConfigSync {
 
         disk.setDefaults(defaults);
         disk.options().copyDefaults(true);
+        if (resourcePath.endsWith("modules/arena/config.yml")) {
+            stripArenaBlocks(disk, plugin);
+        }
         try {
             disk.save(file);
         } catch (IOException e) {
             plugin.getLogger().warning("Could not merge defaults into " + file.getPath() + ": " + e.getMessage());
+        }
+    }
+
+    /** Legacy arena snapshots stored millions of blocks in YAML and froze reloads. */
+    private static void stripArenaBlocks(YamlConfiguration disk, ShardedCore plugin) {
+        var arenas = disk.getConfigurationSection("arenas");
+        if (arenas == null) return;
+        boolean changed = false;
+        for (String id : arenas.getKeys(false)) {
+            if (arenas.isList(id + ".blocks") || arenas.isString(id + ".blocks")) {
+                arenas.set(id + ".blocks", null);
+                changed = true;
+            }
+        }
+        if (changed) {
+            plugin.getLogger().info("Stripped legacy arena block data from config.yml (use /arena snapshot to rebuild .snap files)");
+        }
+    }
+
+    /** Strip huge block lists without parsing the full YAML tree. */
+    private static void stripArenaBlocksFromFile(File file, ShardedCore plugin) {
+        File temp = new File(file.getParentFile(), file.getName() + ".tmp");
+        boolean inBlocks = false;
+        int blocksIndent = -1;
+        boolean changed = false;
+        try (var reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8);
+             var writer = Files.newBufferedWriter(temp.toPath(), StandardCharsets.UTF_8)) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String trimmed = line.stripLeading();
+                int indent = line.length() - trimmed.length();
+                if (trimmed.startsWith("blocks:")) {
+                    inBlocks = true;
+                    blocksIndent = indent;
+                    changed = true;
+                    continue;
+                }
+                if (inBlocks) {
+                    if (trimmed.isEmpty()) {
+                        writer.newLine();
+                        continue;
+                    }
+                    if (indent <= blocksIndent && !trimmed.startsWith("- ")) {
+                        inBlocks = false;
+                        blocksIndent = -1;
+                    } else if (trimmed.startsWith("- ")) {
+                        continue;
+                    } else if (indent > blocksIndent) {
+                        continue;
+                    }
+                }
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            plugin.getLogger().warning("Could not strip arena blocks from " + file.getPath() + ": " + e.getMessage());
+            temp.delete();
+            return;
+        }
+        if (!changed) {
+            temp.delete();
+            return;
+        }
+        backup(file);
+        try {
+            Files.move(temp.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            plugin.getLogger().info("Stripped legacy arena block data from oversized config.yml");
+        } catch (IOException e) {
+            plugin.getLogger().warning("Could not replace arena config after strip: " + e.getMessage());
+            temp.delete();
         }
     }
 

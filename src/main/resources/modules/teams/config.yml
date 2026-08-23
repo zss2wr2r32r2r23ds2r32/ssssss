@@ -1,4 +1,4 @@
-config-version: 3
+config-version: 4
 message-mode: chat
 prefix: '&#FF3399&lTEAMS &8▷ '
 
@@ -49,15 +49,15 @@ gui:
     - '%click%To Create'
 
   confirm-title: '&8Confirm &f%team%'
-  cancel-name: '&#FF2727&lCancel'
+  cancel-name: '&#FF2727&lCANCEL'
   cancel-lore:
-    - '&8Descriptions'
+    - '&8DESCRIPTIONS'
     - ''
-    - '&#FF2727Information:'
-    - '&#FF2727| &fGo back and cancel'
-    - '&#FF2727| &fteam creation.'
+    - '&#FF2727INFORMATION:'
+    - '&#FF2727| &fGO BACK AND CANCEL'
+    - '&#FF2727| &fTEAM CREATION.'
     - ''
-    - '%click%To Cancel'
+    - '%click%TO CANCEL'
   confirm-name: '&#9FFF00&lConfirm'
   confirm-lore:
     - '&8Descriptions'
@@ -134,15 +134,15 @@ gui:
     - ''
     - '%click%To View'
 
-  disband-name: '&#FF2727&lDisband Team'
+  disband-name: '&#FF2727&lDISBAND TEAM'
   disband-lore:
-    - '&8Descriptions'
+    - '&8DESCRIPTIONS'
     - ''
-    - '&#FF2727Information:'
-    - '&#FF2727| &fPermanently disband'
-    - '&#FF2727| &fyour team.'
+    - '&#FF2727INFORMATION:'
+    - '&#FF2727| &fPERMANENTLY DISBAND'
+    - '&#FF2727| &fYOUR TEAM.'
     - ''
-    - '%click%To Disband'
+    - '%click%TO DISBAND'
 
   leave-name: '&#FF2727&lLeave Team'
   leave-lore:
@@ -154,15 +154,15 @@ gui:
     - '%click%To Leave'
 
   disband-confirm-title: '&8Disband &f%team%?'
-  disband-confirm-name: '&#FF2727&lConfirm Disband'
+  disband-confirm-name: '&#FF2727&lCONFIRM DISBAND'
   disband-confirm-lore:
-    - '&8Descriptions'
+    - '&8DESCRIPTIONS'
     - ''
-    - '&#FF2727Information:'
-    - '&#FF2727| &fThis cannot be undone!'
-    - '&#FF2727| &fAll members will be removed.'
+    - '&#FF2727INFORMATION:'
+    - '&#FF2727| &fTHIS CANNOT BE UNDONE!'
+    - '&#FF2727| &fALL MEMBERS WILL BE REMOVED.'
     - ''
-    - '%click%To Confirm'
+    - '%click%TO CONFIRM'
 
   back-name: '&#FFD700&lBack'
   previous-name: '&ePrevious Page'

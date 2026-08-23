@@ -1,4 +1,4 @@
-config-version: 3
+config-version: 4
 message-mode: chat
 fetch-limit: 5000
 
@@ -44,6 +44,7 @@ gui:
     killstreaks: 'Best Streak'
     playtime: 'Playtime'
     teams: 'Score'
+    team: 'Team'
   hub-items:
     tokens:
       name: '&x&5&C&9&4&F&C&lTokens'
@@ -106,7 +107,8 @@ gui:
   stats-head-lore:
     - '&8Statistics'
     - ''
-    - '&#AD4EFF| &fRank: %prefix%'
+    - '&x&F&F&0&0&6&7Information:'
+    - '&x&F&F&0&0&6&7| &fRank: %prefix%'
   stats-items:
     kills:
       name: '&x&F&F&0&0&0&0&lKills'

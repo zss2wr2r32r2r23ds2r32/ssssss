@@ -21,7 +21,10 @@ import java.util.UUID;
 final class LeaderboardGuiHandler {
 
     static final String CLICK = "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0";
-    static final String BAR = "&#AD4EFF|";
+
+    private static String bar(String color) {
+        return color + "|";
+    }
 
     enum View { HUB, BOARD, STATS }
 
@@ -222,16 +225,14 @@ final class LeaderboardGuiHandler {
 
     private List<String> loreLine(String type, int rank, String value) {
         String color = cfg.getString("gui.colors." + type.toLowerCase(), "&f");
-        String label = cfg.getString("gui.labels." + type.toLowerCase(), type).toUpperCase(java.util.Locale.ROOT);
+        String label = cfg.getString("gui.labels." + type.toLowerCase(), type);
+        String rankText = rank > 0 ? "#" + rank : cfg.getString("gui.unranked", "Unranked");
         return List.of(
                 "&8Leaderboard",
                 "",
-                color + label,
-                "&8Statistics",
-                "",
                 color + "Information:",
-                BAR + " &fRank: " + color + (rank > 0 ? "#" + rank : cfg.getString("gui.unranked", "Unranked")),
-                BAR + " &f" + label + ": " + color + value
+                bar(color) + " &fRank: " + color + rankText,
+                bar(color) + " &f" + label + ": " + color + value
         );
     }
 
@@ -253,17 +254,17 @@ final class LeaderboardGuiHandler {
 
     private ItemStack statItem(String key, Material mat, long value) {
         String color = cfg.getString("gui.colors." + key, "&f");
-        String label = cfg.getString("gui.labels." + key, key).toUpperCase(java.util.Locale.ROOT);
+        String label = cfg.getString("gui.labels." + key, key);
         String formatted = "playtime".equals(key) ? service.formatValue("playtime", value) : String.valueOf(value);
         String name = cfg.getString("gui.stats-items." + key + ".name", color + "&l" + label);
         if (!name.contains("&l")) name = color + "&l" + label;
         List<String> lore = cfg.getStringList("gui.stats-items." + key + ".lore");
         if (lore.isEmpty()) {
             lore = List.of("&8Statistics", "", color + "Information:",
-                    BAR + " &f" + label + ": " + color + formatted);
+                    bar(color) + " &f" + label + ": " + color + formatted);
         } else {
             lore = lore.stream()
-                    .map(l -> l.replace("%value%", formatted).replace("%color%", color).replace("|", BAR))
+                    .map(l -> l.replace("%value%", formatted).replace("%color%", color).replace("|", bar(color)))
                     .toList();
         }
         return new ItemBuilder(mat).name(name).lore(lore).build();
@@ -271,9 +272,10 @@ final class LeaderboardGuiHandler {
 
     private ItemStack teamItem(String team) {
         String color = cfg.getString("gui.colors.team", "&d");
+        String label = cfg.getString("gui.labels.team", "Team");
         return new ItemBuilder(Material.PINK_BANNER)
-                .name(color + "&lTEAM")
-                .lore(List.of("&8Statistics", "", color + "Information:", BAR + " &fTeam: " + color + team))
+                .name(color + "&l" + label)
+                .lore(List.of("&8Statistics", "", color + "Information:", bar(color) + " &f" + label + ": " + color + team))
                 .build();
     }
 
@@ -303,12 +305,13 @@ final class LeaderboardGuiHandler {
     }
 
     private List<String> lore(YamlConfiguration cfg, String path, LeaderboardService.StatsSnapshot stats) {
+        String color = cfg.getString("gui.colors.stats", "&x&F&F&0&0&6&7");
         List<String> lines = cfg.getStringList(path);
         if (lines.isEmpty()) {
-            lines = List.of("&8Statistics", "", BAR + " &fRank: " + stats.prefix());
+            lines = List.of("&8Statistics", "", color + "Information:", bar(color) + " &fRank: %prefix%");
         }
         return lines.stream()
-                .map(l -> l.replace("|", BAR)
+                .map(l -> l.replace("|", bar(color))
                         .replace("%name%", stats.name())
                         .replace("%prefix%", stats.prefix())
                         .replace("%kills%", String.valueOf(stats.kills()))

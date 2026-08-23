@@ -81,6 +81,24 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
             send(player, "info", "%time%", TimeFormat.hms(millisUntilStart()));
             return true;
         }
+        String sub = args[0].toLowerCase(Locale.ROOT);
+        if (sub.equals("start")) {
+            if (!sender.hasPermission("sharded.outpost.admin")) {
+                send(sender, "no-permission");
+                return true;
+            }
+            if (active) {
+                send(sender, "already-active");
+                return true;
+            }
+            if (region == null) {
+                send(sender, "no-region");
+                return true;
+            }
+            startEvent();
+            send(sender, "started");
+            return true;
+        }
         if (!(sender instanceof Player player)) {
             send(sender, "players-only");
             return true;
@@ -89,7 +107,6 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
             send(sender, "no-permission");
             return true;
         }
-        String sub = args[0].toLowerCase(Locale.ROOT);
         if (sub.equals("pos1")) {
             setup.setPos1(player, player.getLocation());
             send(player, "pos1-set");
@@ -219,7 +236,7 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (!sender.hasPermission("sharded.outpost.admin")) return List.of();
-        if (args.length == 1) return TabCompleteHelper.filter(args[0], "pos1", "pos2", "setregion");
+        if (args.length == 1) return TabCompleteHelper.filter(args[0], "pos1", "pos2", "setregion", "start");
         return List.of();
     }
 }

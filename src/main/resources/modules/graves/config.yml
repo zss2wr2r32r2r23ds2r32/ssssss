@@ -1,6 +1,6 @@
 # sharded.graves.use = use graves on death (default true)
 
-config-version: 5
+config-version: 6
 message-mode: chat
 enabled-worlds: []
 expire-seconds: 300
@@ -15,8 +15,6 @@ head-drop:
   chance-percent: 10
   display-name: '&#FF2727&l%player%''s Head'
   lore:
-    - '&7[GRAVES]'
-    - ''
     - '&#FF2727&lDESCRIPTION:'
     - '&#FF2727| &fDropped on PvP kill.'
     - '&#FF2727| &fTrade with &f/headtokens'
