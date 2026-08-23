@@ -1,26 +1,25 @@
-config-schema: "10800"
+config-schema: "10801"
 
-# Default MOTD (shown when maintenance is OFF)
 motd:
   lines:
-    - "      §x§a§d§4§e§f§f§lSHARDEDMC <reset><gray>[1.21+] §8▶ §7.gg/shardedmc"
-    - "                 §x§8§A§F§F§0§0§lWELCOME"
+    - "&#8AFF00&lSHARDEDMC &8▷ &7[1.21+]"
+    - "&#FFE300⚓ &#FFE300&lSEASON 1 SOON &#FFE300⚓"
+  center-width: 48
 
-# Server icon (64x64 PNG in icons/ folder)
 server-icon:
   enabled: false
   image: "default-server-icon.png"
 
-# Multiple MOTDs (optional — overrides motd.lines when enabled)
-multi-motd:
-  enabled: false
-  order: "random"
-  motds:
-    - line1: "§x§a§d§4§e§f§f§lSHARDEDMC"
-      line2: "§7Welcome to the network!"
-      icon: ""
+hover:
+  enabled: true
+  messages:
+    - "&d&lSHARDEDMC NETWORK &8| &7 1.21.11"
+    - ""
+    - "&#A183CD🔥 ɪɴꜰᴏʀᴍᴀᴛɪᴏɴ:"
+    - "&7▶ &fDiscord: &dᴅɪsᴄᴏʀᴅ.ɢɢ/shardedmc"
+    - "&7▶ &fStore: &dᴄᴏᴍɪɴɢ sᴏᴏɴ"
+    - "&fplay with {online_players} other players"
 
-# Maintenance (/maintenance command — highest priority when active)
 maintenance-motd:
   kick-message:
     - "&#FF0000&lMAINTENANCE"
@@ -28,11 +27,6 @@ maintenance-motd:
     - ""
     - "&fIf you believe the is an error contact staff via"
     - "&#FFD900▷ &n&ldiscord.gg/shardedmc&f &#FFD900◁"
-  order: "list"
   protocol-text: true
-  text: "&cMAINTENANCE"
+  text: "Maintenance"
   protocol-version: -1
-  motds:
-    - line1: "      §x§a§d§4§e§f§f§lSHARDEDMC <reset><gray>[1.21+] §8▶ §7.gg/shardedmc"
-      line2: "                 §x§F§F§0§0§0§0§lMAINTENANCE"
-      icon: "maintenance.png"

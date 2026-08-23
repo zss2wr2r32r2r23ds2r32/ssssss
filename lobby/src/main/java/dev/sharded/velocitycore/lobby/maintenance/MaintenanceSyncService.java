@@ -12,7 +12,7 @@ import java.util.List;
 public final class MaintenanceSyncService {
 
     public static final String CHANNEL = "shardedvelocitycore:maintenance";
-    private static final byte PROTOCOL_VERSION = 2;
+    private static final byte PROTOCOL_VERSION = 3;
 
     private final JavaPlugin plugin;
     private final MotdService motdService;
@@ -31,22 +31,20 @@ public final class MaintenanceSyncService {
             return;
         }
 
-        MotdService.ResolvedMotd normal = motdService.resolveDefault();
-        MotdService.ResolvedMotd maintenance = motdService.resolveMaintenance();
-        byte[] payload = encode(maintenanceEnabled, normal, maintenance);
+        byte[] payload = encode(maintenanceEnabled, motdService.resolveDefault());
         Bukkit.getServer().sendPluginMessage(plugin, CHANNEL, payload);
     }
 
-    static byte[] encode(boolean maintenanceEnabled, MotdService.ResolvedMotd normal, MotdService.ResolvedMotd maintenance) {
+    private byte[] encode(boolean maintenanceEnabled, MotdService.ResolvedMotd normal) {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
         output.writeByte(PROTOCOL_VERSION);
         output.writeBoolean(maintenanceEnabled);
         writeLines(output, normal.rawLines());
         writeString(output, normal.icon());
-        writeLines(output, maintenance.rawLines());
-        writeString(output, maintenance.icon());
-        writeString(output, maintenance.versionText());
-        output.writeInt(maintenance.protocolVersion());
+        writeString(output, motdService.config().protocolTextValue());
+        output.writeInt(motdService.config().protocolVersion());
+        output.writeBoolean(motdService.config().hoverEnabled());
+        writeLines(output, motdService.config().hoverMessages());
         return output.toByteArray();
     }
 

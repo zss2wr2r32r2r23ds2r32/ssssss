@@ -7,6 +7,7 @@ import dev.sharded.velocitycore.lobby.maintenance.MaintenanceCommand;
 import dev.sharded.velocitycore.lobby.maintenance.MaintenanceJoinListener;
 import dev.sharded.velocitycore.lobby.maintenance.MaintenanceManager;
 import dev.sharded.velocitycore.lobby.maintenance.MaintenanceSyncService;
+import dev.sharded.velocitycore.lobby.motd.HoverService;
 import dev.sharded.velocitycore.lobby.motd.MotdPingListener;
 import dev.sharded.velocitycore.lobby.motd.MotdService;
 import dev.sharded.velocitycore.lobby.motd.ServerIconService;
@@ -26,6 +27,7 @@ public final class LobbyPlugin extends JavaPlugin {
         MotdConfig motdConfig = new MotdConfig(this);
         MotdService motdService = new MotdService(motdConfig);
         ServerIconService iconService = new ServerIconService(this);
+        HoverService hoverService = new HoverService();
         MaintenanceSyncService maintenanceSyncService = new MaintenanceSyncService(this, motdService);
         MaintenanceManager maintenanceManager = new MaintenanceManager(this, motdService, maintenanceSyncService);
 
@@ -45,11 +47,18 @@ public final class LobbyPlugin extends JavaPlugin {
         getCommand("maintenance").setTabCompleter(maintenanceCommand);
         getServer().getPluginManager().registerEvents(new MaintenanceJoinListener(maintenanceManager), this);
         getServer().getPluginManager().registerEvents(
-                new MotdPingListener(maintenanceManager, motdService, iconService),
+                new MotdPingListener(maintenanceManager, motdService, iconService, hoverService),
                 this
         );
 
         maintenanceSyncService.syncNow(maintenanceManager.isEnabled());
+
+        Bukkit.getScheduler().runTaskTimer(
+                this,
+                () -> maintenanceSyncService.syncNow(maintenanceManager.isEnabled()),
+                40L,
+                40L
+        );
 
         if (maintenanceManager.isEnabled()) {
             Bukkit.getScheduler().runTask(this, () -> {
@@ -68,6 +77,6 @@ public final class LobbyPlugin extends JavaPlugin {
             getLogger().warning("PlaceholderAPI not found.");
         }
 
-        getLogger().info("Lobby MOTD, icons, and maintenance mode enabled.");
+        getLogger().info("Lobby MOTD, hover, and maintenance mode enabled.");
     }
 }

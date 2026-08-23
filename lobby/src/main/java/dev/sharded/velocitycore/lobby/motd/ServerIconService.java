@@ -1,9 +1,6 @@
 package dev.sharded.velocitycore.lobby.motd;
 
 import dev.sharded.velocitycore.lobby.config.MotdConfig;
-import dev.sharded.velocitycore.lobby.config.MotdSelector;
-import dev.sharded.velocitycore.lobby.util.TextParser;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.CachedServerIcon;
@@ -12,7 +9,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 

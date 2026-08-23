@@ -1,38 +1,40 @@
 # ShardedVelocityCore
 
-Velocity proxy plugin with server status placeholders, queue system, and hologram support.
-
-## JARs (v1.0.8)
+## JARs (v1.0.9)
 
 | File | Install on |
 |------|------------|
-| `ShardedVelocityCore-1.0.8.jar` | Velocity `plugins/` |
-| `ShardedVelocityCore-Backend-1.0.8.jar` | Every backend server |
-| `ShardedVelocityCore-Lobby-1.0.8.jar` | Lobby `plugins/` (+ PlaceholderAPI) |
+| `ShardedVelocityCore-1.0.9.jar` | Velocity `plugins/` |
+| `ShardedVelocityCore-Backend-1.0.9.jar` | Backend servers |
+| `ShardedVelocityCore-Lobby-1.0.9.jar` | Lobby (+ PlaceholderAPI) |
 
-## Lobby config (`plugins/ShardedVelocityCore-Lobby/config.yml`)
+## Lobby MOTD config
+
+Edit `plugins/ShardedVelocityCore-Lobby/config.yml` (mdMOTD-style):
 
 ```yaml
-motd: "&#8AFF00&lSHARDEDMC"
+motd:
+  lines:
+    - "§x§a§d§4§e§f§f§lSHARDEDMC ..."
+    - "§x§8§A§F§F§0§0§lWELCOME"
 
-maintenance:
+server-icon:
+  enabled: true
+  image: "default-server-icon.png"
+
+maintenance-motd:
   kick-message:
     - "&#FF0000&lMAINTENANCE"
     - "&fThis server is currently in downtime"
-  maintenance-motd: "&#FF0000&lMAINTENANCE"
-  server-list:
-    version-text: "Maintenance"
-    protocol-version: -1
+  text: "&cMAINTENANCE"
+  protocol-version: -1
+  motds:
+    - line1: "..."
+      line2: "§x§F§F§0§0§0§0§lMAINTENANCE"
+      icon: "maintenance.png"
 ```
 
-When `/maintenance` is on, the server list shows an **X** and "Maintenance". Syncs to Velocity ping too.
+**Icons:** Put 64x64 PNG files in `plugins/ShardedVelocityCore-Lobby/icons/`  
+Also copy the same icons to `plugins/ShardedVelocityCore/icons/` on Velocity for proxy ping.
 
-## Queue server colors
-
-- survival: `&#8AFF00`
-- events: `&#FFEE00`
-- diasmp: `&#FF0000`
-
-## Whitelist = Maintenance
-
-Install Backend plugin on each server with matching `server-name`. Whitelist state is cached on Velocity and polled every second.
+Kick screen no longer shows "You were kicked from lobby" — uses a direct disconnect.

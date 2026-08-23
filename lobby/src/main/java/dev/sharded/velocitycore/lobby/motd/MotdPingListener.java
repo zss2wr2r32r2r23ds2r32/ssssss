@@ -13,40 +13,47 @@ public final class MotdPingListener implements Listener {
     private final MaintenanceManager maintenanceManager;
     private final MotdService motdService;
     private final ServerIconService iconService;
+    private final HoverService hoverService;
 
     public MotdPingListener(
             MaintenanceManager maintenanceManager,
             MotdService motdService,
-            ServerIconService iconService
+            ServerIconService iconService,
+            HoverService hoverService
     ) {
         this.maintenanceManager = maintenanceManager;
         this.motdService = motdService;
         this.iconService = iconService;
+        this.hoverService = hoverService;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onServerListPing(PaperServerListPingEvent event) {
-        MotdService.ResolvedMotd resolved = maintenanceManager.isEnabled()
+        boolean maintenance = maintenanceManager.isEnabled();
+        MotdService.ResolvedMotd resolved = maintenance
                 ? motdService.resolveMaintenance()
                 : motdService.resolveDefault();
 
         event.motd(resolved.motd());
 
-        if (resolved.maintenance()) {
-            event.setVersion(TextParser.convertSectionHex(resolved.versionText()).replace('&', '§'));
-            event.setProtocolVersion(resolved.protocolVersion());
+        if (maintenance) {
+            event.setVersion(TextParser.convertSectionHex(motdService.config().protocolTextValue()).replace('&', '§'));
+            event.setProtocolVersion(motdService.config().protocolVersion());
             event.setHidePlayers(true);
             event.setNumPlayers(0);
             event.setMaxPlayers(0);
+            event.getListedPlayers().clear();
+        } else {
+            hoverService.apply(event, motdService.config());
+            applyDefaultIcon(event);
         }
-
-        applyIcon(event, resolved.icon());
     }
 
-    private void applyIcon(PaperServerListPingEvent event, String iconName) {
-        CachedServerIcon icon = iconName == null || iconName.isBlank()
-                ? iconService.resolveDefault(motdService.config())
-                : iconService.resolve(iconName);
+    private void applyDefaultIcon(PaperServerListPingEvent event) {
+        if (!motdService.config().serverIconEnabled()) {
+            return;
+        }
+        CachedServerIcon icon = iconService.resolve(motdService.config().serverIconImage());
         if (icon != null) {
             event.setServerIcon(icon);
         }

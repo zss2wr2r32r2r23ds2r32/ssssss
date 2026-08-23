@@ -1,5 +1,5 @@
 name: ShardedVelocityCore-Backend
-version: 1.0.9
+version: 1.0.10
 main: dev.sharded.velocitycore.backend.BackendPlugin
 api-version: '1.21'
 author: Sharded

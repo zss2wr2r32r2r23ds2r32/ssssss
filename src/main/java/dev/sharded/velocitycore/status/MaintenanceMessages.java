@@ -1,7 +1,6 @@
 package dev.sharded.velocitycore.status;
 
 import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import dev.sharded.velocitycore.util.LegacyText;
 import net.kyori.adventure.text.Component;
@@ -15,15 +14,6 @@ public final class MaintenanceMessages {
     private MaintenanceMessages() {
     }
 
-    public static byte[] encodeLegacy(boolean enabled, String maintenanceMotd, String versionText, int protocolVersion) {
-        ByteArrayDataOutput output = ByteStreams.newDataOutput();
-        output.writeBoolean(enabled);
-        writeString(output, maintenanceMotd);
-        writeString(output, versionText);
-        output.writeInt(protocolVersion);
-        return output.toByteArray();
-    }
-
     public static Sync decode(byte[] data) {
         if (data == null || data.length == 0) {
             throw new IllegalArgumentException("empty");
@@ -31,39 +21,60 @@ public final class MaintenanceMessages {
         if (data[0] == 0x01) {
             throw new IllegalArgumentException("whitelist request");
         }
+
         ByteArrayDataInput input = ByteStreams.newDataInput(data);
-        if (data.length > 1 && (data[0] == 2 || data[0] == (byte) 2)) {
-            input.readByte();
+        byte first = input.readByte();
+
+        if (first == 3) {
+            boolean enabled = input.readBoolean();
+            List<String> motdLines = readLines(input);
+            String icon = readString(input);
+            String versionText = readString(input);
+            int protocolVersion = input.readInt();
+            boolean hoverEnabled = input.readBoolean();
+            List<String> hoverMessages = readLines(input);
+            return new Sync(
+                    enabled,
+                    toComponent(motdLines),
+                    icon,
+                    versionText,
+                    protocolVersion,
+                    hoverEnabled,
+                    hoverMessages
+            );
+        }
+
+        if (first == 2) {
             boolean enabled = input.readBoolean();
             List<String> normalLines = readLines(input);
-            String normalIcon = readString(input);
-            List<String> maintenanceLines = readLines(input);
-            String maintenanceIcon = readString(input);
+            readString(input);
+            readLines(input);
+            readString(input);
             String versionText = readString(input);
             int protocolVersion = input.readInt();
             return new Sync(
                     enabled,
                     toComponent(normalLines),
-                    normalIcon,
-                    toComponent(maintenanceLines),
-                    maintenanceIcon,
+                    "",
                     versionText,
-                    protocolVersion
+                    protocolVersion,
+                    false,
+                    List.of()
             );
         }
 
-        boolean enabled = input.readBoolean();
+        boolean enabled = first != 0;
         String maintenanceMotd = readString(input);
         String versionText = readString(input);
         int protocolVersion = input.readInt();
         return new Sync(
                 enabled,
-                Component.empty(),
-                "",
                 LegacyText.parse(maintenanceMotd),
                 "",
                 versionText,
-                protocolVersion
+                protocolVersion,
+                false,
+                List.of()
         );
     }
 
@@ -87,12 +98,6 @@ public final class MaintenanceMessages {
         return lines;
     }
 
-    private static void writeString(ByteArrayDataOutput output, String value) {
-        byte[] bytes = value.getBytes(StandardCharsets.UTF_8);
-        output.writeInt(bytes.length);
-        output.write(bytes);
-    }
-
     private static String readString(ByteArrayDataInput input) {
         int length = input.readInt();
         byte[] bytes = new byte[length];
@@ -102,12 +107,12 @@ public final class MaintenanceMessages {
 
     public record Sync(
             boolean maintenanceEnabled,
-            Component normalMotd,
-            String normalIcon,
-            Component maintenanceMotd,
-            String maintenanceIcon,
+            Component motd,
+            String icon,
             String versionText,
-            int protocolVersion
+            int protocolVersion,
+            boolean hoverEnabled,
+            List<String> hoverMessages
     ) {
     }
 }

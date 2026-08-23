@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 public final class TextParser {
 
     private static final Pattern SECTION_HEX = Pattern.compile("§x(§[0-9a-fA-F]){6}");
+    private static final Pattern MINIMESSAGE_HEX = Pattern.compile("<#([A-Fa-f0-9]{6})>(.*?)</#\\1>", Pattern.DOTALL);
     private static final LegacyComponentSerializer LEGACY = LegacyComponentSerializer.builder()
             .character('&')
             .hexColors()
@@ -26,7 +27,7 @@ public final class TextParser {
         if (input == null || input.isEmpty()) {
             return Component.empty();
         }
-        Component component = LEGACY.deserialize(convertSectionHex(input));
+        Component component = LEGACY.deserialize(convertMiniMessageHex(convertSectionHex(input)));
         return stripItalic(component);
     }
 
@@ -57,6 +58,16 @@ public final class TextParser {
                 .replace("<reset>", "&r")
                 .replace("<gray>", "&7")
                 .replace("<bold>", "&l");
+    }
+
+    private static String convertMiniMessageHex(String input) {
+        Matcher matcher = MINIMESSAGE_HEX.matcher(input);
+        StringBuffer buffer = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(buffer, "&#" + matcher.group(1) + matcher.group(2));
+        }
+        matcher.appendTail(buffer);
+        return buffer.toString().replaceAll("<#([A-Fa-f0-9]{6})>", "&#$1");
     }
 
     private static Component stripItalic(Component component) {

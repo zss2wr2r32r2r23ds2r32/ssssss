@@ -6,6 +6,11 @@ import com.velocitypowered.api.proxy.server.ServerPing;
 import dev.sharded.velocitycore.motd.ServerIconService;
 import dev.sharded.velocitycore.status.NetworkMotdState;
 import dev.sharded.velocitycore.util.LegacyText;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public final class NetworkMotdPingListener {
 
@@ -21,7 +26,7 @@ public final class NetworkMotdPingListener {
     public void onProxyPing(ProxyPingEvent event) {
         ServerPing original = event.getPing();
         ServerPing.Builder builder = original.asBuilder()
-                .description(networkMotdState.activeMotd());
+                .description(networkMotdState.motd());
 
         if (networkMotdState.isMaintenanceEnabled()) {
             builder.onlinePlayers(0)
@@ -31,11 +36,39 @@ public final class NetworkMotdPingListener {
                             networkMotdState.protocolVersion(),
                             LegacyText.convertSectionHex(networkMotdState.versionText()).replace('&', '§')
                     ));
-        }
+        } else {
+            int online = original.getPlayers().map(ServerPing.Players::getOnline).orElse(0);
+            int max = original.getPlayers().map(ServerPing.Players::getMax).orElse(0);
+            builder.onlinePlayers(online).maximumPlayers(max);
 
-        var favicon = iconService.resolve(networkMotdState.activeIcon());
-        if (favicon != null) {
-            builder.favicon(favicon);
+            if (networkMotdState.hoverEnabled() && !networkMotdState.hoverMessages().isEmpty()) {
+                builder.clearSamplePlayers();
+                List<ServerPing.SamplePlayer> samples = new ArrayList<>();
+                int onlinePlayers = online;
+                int maxPlayers = max;
+                for (String raw : networkMotdState.hoverMessages()) {
+                    if (raw == null || raw.isBlank()) {
+                        continue;
+                    }
+                    String replaced = raw
+                            .replace("{online_players}", String.valueOf(onlinePlayers))
+                            .replace("{max_players}", String.valueOf(maxPlayers));
+                    String plain = PlainTextComponentSerializer.plainText()
+                            .serialize(LegacyText.parse(replaced));
+                    if (plain.length() > 40) {
+                        plain = plain.substring(0, 40);
+                    }
+                    samples.add(new ServerPing.SamplePlayer(plain, UUID.randomUUID()));
+                }
+                if (!samples.isEmpty()) {
+                    builder.samplePlayers(samples.toArray(new ServerPing.SamplePlayer[0]));
+                }
+            }
+
+            var favicon = iconService.resolve(networkMotdState.icon());
+            if (favicon != null) {
+                builder.favicon(favicon);
+            }
         }
 
         event.setPing(builder.build());
