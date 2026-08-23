@@ -1,0 +1,5 @@
+# Must match the server name in velocity.toml (e.g. survival, events, diasmp)
+server-name: survival
+
+# How often to report whitelist status to the proxy (in ticks, 20 = 1 second)
+report-interval-ticks: 20

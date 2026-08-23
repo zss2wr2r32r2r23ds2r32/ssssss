@@ -7,12 +7,15 @@ import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import dev.sharded.velocitycore.command.LeaveCommand;
 import dev.sharded.velocitycore.command.QueueCommand;
 import dev.sharded.velocitycore.command.ServerCommand;
+import dev.sharded.velocitycore.common.PluginChannels;
 import dev.sharded.velocitycore.config.PluginConfig;
 import dev.sharded.velocitycore.listener.PlayerListener;
 import dev.sharded.velocitycore.listener.WhitelistListener;
+import dev.sharded.velocitycore.listener.WhitelistReportListener;
 import dev.sharded.velocitycore.listener.ServerCommandListener;
 import dev.sharded.velocitycore.placeholder.PlaceholderHook;
 import dev.sharded.velocitycore.queue.QueueManager;
@@ -27,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(
         id = "shardedvelocitycore",
         name = "ShardedVelocityCore",
-        version = "1.0.5",
+        version = "1.0.6",
         description = "Server status placeholders, queue system, and hologram status sync for Velocity networks.",
         authors = {"Sharded"}
 )
@@ -73,9 +76,14 @@ public final class ShardedVelocityCore {
                 new ServerCommand(connectService)
         );
 
+        server.getChannelRegistrar().register(
+                MinecraftChannelIdentifier.from(PluginChannels.WHITELIST_CHANNEL)
+        );
+
         server.getEventManager().register(this, new ServerCommandListener(connectService));
         server.getEventManager().register(this, new PlayerListener(queueManager, statusSyncService));
         server.getEventManager().register(this, new WhitelistListener(statusManager, statusSyncService));
+        server.getEventManager().register(this, new WhitelistReportListener(statusManager, statusSyncService));
 
         statusManager.start();
         queueManager.start(this);

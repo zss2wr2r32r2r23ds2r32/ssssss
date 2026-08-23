@@ -2,11 +2,9 @@ package dev.sharded.velocitycore.status;
 
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
-import com.velocitypowered.api.proxy.server.ServerPing;
 import dev.sharded.velocitycore.ServerState;
 import dev.sharded.velocitycore.config.PluginConfig;
 import dev.sharded.velocitycore.util.ServerResolver;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -72,11 +70,26 @@ public final class ServerStatusManager {
     }
 
     public boolean markWhitelisted(String serverName) {
-        whitelistTracker.mark(serverName);
+        return updateWhitelistReport(serverName, true);
+    }
+
+    public boolean updateWhitelistReport(String serverName, boolean whitelisted) {
+        boolean wasWhitelisted = whitelistTracker.isWhitelisted(serverName);
+        whitelistTracker.setWhitelisted(serverName, whitelisted);
+
         String key = normalize(ServerResolver.canonicalName(server, serverName));
+        ServerState newState = resolveState(serverName);
         ServerState previous = states.get(key);
-        states.put(key, ServerState.MAINTENANCE);
-        return previous != ServerState.MAINTENANCE;
+        states.put(key, newState);
+
+        boolean changed = previous != newState || wasWhitelisted != whitelisted;
+        if (changed) {
+            Runnable listener = changeListener;
+            if (listener != null) {
+                listener.run();
+            }
+        }
+        return changed;
     }
 
     public ServerState getState(String serverName) {
@@ -136,12 +149,10 @@ public final class ServerStatusManager {
         }
 
         try {
-            ServerPing ping = registeredServer.ping().join();
-            if (config.whitelistAsMaintenance() && isWhitelistPing(ping)) {
-                whitelistTracker.mark(serverName);
+            registeredServer.ping().join();
+            if (config.whitelistAsMaintenance() && whitelistTracker.isWhitelisted(serverName)) {
                 return ServerState.MAINTENANCE;
             }
-            whitelistTracker.clear(serverName);
             return ServerState.ONLINE;
         } catch (Exception ignored) {
             if (config.whitelistAsMaintenance() && whitelistTracker.isWhitelisted(serverName)) {
@@ -149,19 +160,6 @@ public final class ServerStatusManager {
             }
             return ServerState.OFFLINE;
         }
-    }
-
-    private boolean isWhitelistPing(ServerPing ping) {
-        if (ping.getDescriptionComponent() == null) {
-            return false;
-        }
-        String description = PlainTextComponentSerializer.plainText()
-                .serialize(ping.getDescriptionComponent())
-                .toLowerCase(Locale.ROOT);
-        return description.contains("whitelist")
-                || description.contains("white-list")
-                || description.contains("maintenance")
-                || description.contains("mainteance");
     }
 
     public static String normalize(String serverName) {

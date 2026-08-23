@@ -2,12 +2,30 @@
 
 Velocity proxy plugin with server status placeholders, queue system, and hologram support.
 
-## JARs (v1.0.5)
+## JARs (v1.0.6)
 
 | File | Install on |
 |------|------------|
-| `ShardedVelocityCore-1.0.5.jar` | Velocity `plugins/` |
-| `ShardedVelocityCore-Lobby-1.0.5.jar` | Lobby `plugins/` (+ PlaceholderAPI) |
+| `ShardedVelocityCore-1.0.6.jar` | Velocity `plugins/` |
+| `ShardedVelocityCore-Backend-1.0.6.jar` | **Every backend server** (survival, events, diasmp, etc.) |
+| `ShardedVelocityCore-Lobby-1.0.6.jar` | Lobby `plugins/` (+ PlaceholderAPI) |
+
+## Whitelist = Maintenance
+
+When whitelist is **on** on a backend server (e.g. survival), hologram status shows **MAINTEANCE**.
+
+Install `ShardedVelocityCore-Backend` on each backend server and set `server-name` in its config to match `velocity.toml`:
+
+```yaml
+# plugins/ShardedVelocityCore-Backend/config.yml
+server-name: survival
+```
+
+The backend plugin reports `Bukkit.hasWhitelist()` to Velocity every second. When whitelist is toggled, status updates instantly.
+
+```toml
+whitelist-as-maintenance = true
+```
 
 ## Commands
 
@@ -19,22 +37,13 @@ Velocity proxy plugin with server status placeholders, queue system, and hologra
 | `/server <server>` | Connect via queue system |
 | `/leave` | Leave the queue |
 
-## Whitelist = Maintenance
-
-When a server has whitelist enabled, its hologram status automatically shows **MAINTEANCE**.
-
-Detects whitelist via server MOTD and kick messages.
-
-```toml
-whitelist-as-maintenance = true
-```
-
 ## Config
 
 ```toml
 lobby-server = "lobby"
 queue-servers = ["lobby", "survival", "events", "diasmp"]
 tracked-servers = ["survival", "events", "diasmp"]
+whitelist-as-maintenance = true
 ```
 
 Make sure your Velocity `velocity.toml` has a server named `lobby`.
