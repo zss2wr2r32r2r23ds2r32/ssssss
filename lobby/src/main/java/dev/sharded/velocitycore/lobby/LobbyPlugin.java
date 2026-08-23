@@ -34,7 +34,7 @@ public final class LobbyPlugin extends JavaPlugin {
         getServer().getMessenger().registerIncomingPluginChannel(
                 this,
                 "shardedvelocitycore:status",
-                new StatusSyncListener(statusCache, hologramRefreshService)
+                new StatusSyncListener(this, statusCache, hologramRefreshService)
         );
         getServer().getMessenger().registerOutgoingPluginChannel(this, "shardedvelocitycore:status");
         maintenanceSyncService.register();

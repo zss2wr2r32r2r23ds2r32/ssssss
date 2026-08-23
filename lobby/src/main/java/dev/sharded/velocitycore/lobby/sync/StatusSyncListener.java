@@ -1,33 +1,53 @@
 package dev.sharded.velocitycore.lobby.sync;
 
 import dev.sharded.velocitycore.lobby.hologram.HologramRefreshService;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 public final class StatusSyncListener implements PluginMessageListener {
 
+    private final JavaPlugin plugin;
     private final StatusCache cache;
     private final HologramRefreshService hologramRefreshService;
+    private volatile int lastPayloadHash;
 
-    public StatusSyncListener(StatusCache cache, HologramRefreshService hologramRefreshService) {
+    public StatusSyncListener(
+            JavaPlugin plugin,
+            StatusCache cache,
+            HologramRefreshService hologramRefreshService
+    ) {
+        this.plugin = plugin;
         this.cache = cache;
         this.hologramRefreshService = hologramRefreshService;
     }
 
     @Override
     public void onPluginMessageReceived(String channel, org.bukkit.entity.Player player, byte[] message) {
+        int hash = Arrays.hashCode(message);
+        if (hash == lastPayloadHash) {
+            return;
+        }
+
         try {
-            if (cache.update(decode(message))) {
-                hologramRefreshService.refreshAll();
+            StatusCache.Snapshot snapshot = decode(message);
+            if (!cache.update(snapshot)) {
+                lastPayloadHash = hash;
+                return;
             }
+            lastPayloadHash = hash;
+            Bukkit.getScheduler().runTask(plugin, hologramRefreshService::refreshAll);
         } catch (IOException ignored) {
+            // Ignore malformed status sync payloads.
         }
     }
 

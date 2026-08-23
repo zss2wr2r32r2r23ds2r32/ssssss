@@ -3,6 +3,7 @@ package dev.sharded.velocitycore.listener;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 import com.velocitypowered.api.proxy.server.ServerPing;
+import dev.sharded.velocitycore.motd.HoverLines;
 import dev.sharded.velocitycore.motd.ServerIconService;
 import dev.sharded.velocitycore.status.NetworkMotdState;
 import dev.sharded.velocitycore.util.LegacyText;
@@ -46,17 +47,13 @@ public final class NetworkMotdPingListener {
                 int onlinePlayers = online;
                 int maxPlayers = max;
                 for (String raw : networkMotdState.hoverMessages()) {
-                    if (raw == null || raw.isBlank()) {
+                    if (raw == null) {
                         continue;
                     }
-                    String replaced = raw
-                            .replace("{online_players}", String.valueOf(onlinePlayers))
-                            .replace("{max_players}", String.valueOf(maxPlayers));
-                    String legacy = LegacyText.toLegacySection(replaced);
-                    if (legacy.length() > 40) {
-                        legacy = legacy.substring(0, 40);
-                    }
-                    samples.add(new ServerPing.SamplePlayer(legacy, UUID.randomUUID()));
+                    samples.add(new ServerPing.SamplePlayer(
+                            HoverLines.format(raw, onlinePlayers, maxPlayers),
+                            UUID.randomUUID()
+                    ));
                 }
                 if (!samples.isEmpty()) {
                     builder.samplePlayers(samples.toArray(new ServerPing.SamplePlayer[0]));

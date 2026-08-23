@@ -38,12 +38,14 @@ public final class ProxyMotdConfig {
                 "&#FFE300⚓ &#FFE300&lSEASON 1 SOON &#FFE300⚓"
         ));
         List<String> defaultHover = List.of(
-                "&d&lSHARDEDMC NETWORK &8| &7 1.21.11",
                 "",
-                "&#A183CD🔥 ɪɴꜰᴏʀᴍᴀᴛɪᴏɴ:",
-                "&7▶ &fDiscord: &dᴅɪsᴄᴏʀᴅ.ɢɢ/shardedmc",
-                "&7▶ &fStore: &dᴄᴏᴍɪɴɢ sᴏᴏɴ",
-                "&fplay with {online_players} other players"
+                "&#AD4EFF&lSHARDEDMC &#AD4EFF&lNetwork &8| &7[1.21+]",
+                "",
+                "&#AD4EFFɪɴꜰᴏʀᴍᴀᴛɪᴏɴ:",
+                "&#FF005D⚓ &fDiscord &8▷ &#FF005Dᴅɪsᴄᴏʀᴅ.ɢɢ/shardedmc",
+                "&#9FFF00⛨ &fStore &8▷ &#9FFF00ᴄᴏᴍɪɴɢ sᴏᴏɴ",
+                "",
+                "&#AD4EFF☀ &fPlay with &#AD4EFF&n{online_players}&f other players"
         );
 
         if (!configPath.toFile().exists()) {
@@ -52,6 +54,10 @@ public final class ProxyMotdConfig {
 
         try {
             TomlParseResult parsed = Toml.parse(configPath);
+            if (parsed.hasErrors()) {
+                parsed.errors().forEach(error -> logger.error("Config error: {}", error.toString()));
+                return defaults(defaultMotd, defaultHover);
+            }
             TomlTable motd = parsed.getTable("motd");
             TomlTable hover = parsed.getTable("hover");
             TomlTable maintenance = parsed.getTable("maintenance-motd");
