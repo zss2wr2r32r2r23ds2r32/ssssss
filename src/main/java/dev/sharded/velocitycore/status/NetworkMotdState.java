@@ -13,8 +13,10 @@ public final class NetworkMotdState {
     private volatile boolean maintenanceEnabled;
     private volatile Component motd = defaultMotd();
     private volatile String icon = "";
-    private volatile String versionText = "MAINTENANCE";
+    private volatile String versionText = "Maintenance";
     private volatile int protocolVersion = -1;
+    private volatile String onlineVersionText = "1.21";
+    private volatile int onlineProtocolVersion = 767;
     private volatile boolean hoverEnabled = false;
     private volatile List<String> hoverMessages = defaultHover();
 
@@ -24,6 +26,8 @@ public final class NetworkMotdState {
         this.hoverMessages = new ArrayList<>(config.hoverMessages());
         this.versionText = config.maintenanceVersionText();
         this.protocolVersion = config.maintenanceProtocolVersion();
+        this.onlineVersionText = config.onlineVersionText();
+        this.onlineProtocolVersion = config.onlineProtocolVersion();
         this.maintenanceEnabled = false;
     }
 
@@ -45,6 +49,14 @@ public final class NetworkMotdState {
 
     public int protocolVersion() {
         return protocolVersion;
+    }
+
+    public String onlineVersionText() {
+        return onlineVersionText;
+    }
+
+    public int onlineProtocolVersion() {
+        return onlineProtocolVersion;
     }
 
     public boolean hoverEnabled() {

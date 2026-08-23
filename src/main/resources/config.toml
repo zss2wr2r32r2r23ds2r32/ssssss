@@ -34,14 +34,16 @@ messages = [
 kick-message = [
   "",
   "&#FF0000&lMAINTENANCE",
-  "&fTHIS SERVER IS CURRENTLY IN DOWNTIME",
+  "&fThis Server is currently in Maintenance",
   "",
-  "&fIF YOU BELIEVE THERE IS AN ERROR CONTACT STAFF VIA",
-  "&#FFD900▷ &n&lDISCORD.GG/SHARDEDMC&f &#FFD900◁"
+  "&fPlease Be patient, Join the discord for more updates:",
+  "&#FFD900▷ &#FFD900&ndiscord.gg/shardedmc&f &#FFD900◁"
 ]
 protocol-text = true
-text = "MAINTENANCE"
+text = "Maintenance"
 protocol-version = -1
+online-text = "1.21"
+online-protocol-version = 767
 
 [queue]
   action-bar = "&#4498DB#%numberinqueue% in queue to &n%server_color%%server%&r &7(Wating: %numberofpeoplewaitinginqueue%)"

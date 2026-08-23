@@ -4,26 +4,32 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import dev.sharded.velocitycore.lobby.motd.MotdService;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.PluginMessageListener;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-public final class MaintenanceSyncService {
+public final class MaintenanceSyncService implements PluginMessageListener {
 
     public static final String CHANNEL = "shardedvelocitycore:maintenance";
     private static final byte PROTOCOL_VERSION = 3;
+    private static final byte REQUEST = 0x01;
 
     private final JavaPlugin plugin;
     private final MotdService motdService;
+    private MaintenanceManager maintenanceManager;
 
     public MaintenanceSyncService(JavaPlugin plugin, MotdService motdService) {
         this.plugin = plugin;
         this.motdService = motdService;
     }
 
-    public void register() {
+    public void register(MaintenanceManager maintenanceManager) {
+        this.maintenanceManager = maintenanceManager;
         Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(plugin, CHANNEL);
+        Bukkit.getServer().getMessenger().registerIncomingPluginChannel(plugin, CHANNEL, this);
     }
 
     public void syncNow(boolean maintenanceEnabled) {
@@ -33,6 +39,16 @@ public final class MaintenanceSyncService {
 
         byte[] payload = encode(maintenanceEnabled, motdService.resolveDefault());
         Bukkit.getServer().sendPluginMessage(plugin, CHANNEL, payload);
+    }
+
+    @Override
+    public void onPluginMessageReceived(String channel, Player player, byte[] message) {
+        if (!CHANNEL.equals(channel) || maintenanceManager == null) {
+            return;
+        }
+        if (message != null && message.length == 1 && message[0] == REQUEST) {
+            syncNow(maintenanceManager.isEnabled());
+        }
     }
 
     private byte[] encode(boolean maintenanceEnabled, MotdService.ResolvedMotd normal) {

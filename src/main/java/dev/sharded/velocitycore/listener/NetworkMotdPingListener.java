@@ -10,6 +10,7 @@ import dev.sharded.velocitycore.util.LegacyText;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 public final class NetworkMotdPingListener {
@@ -40,6 +41,7 @@ public final class NetworkMotdPingListener {
             int online = original.getPlayers().map(ServerPing.Players::getOnline).orElse(0);
             int max = original.getPlayers().map(ServerPing.Players::getMax).orElse(0);
             builder.onlinePlayers(online).maximumPlayers(max);
+            builder.version(resolveOnlineVersion(original.getVersion()));
 
             if (networkMotdState.hoverEnabled() && !networkMotdState.hoverMessages().isEmpty()) {
                 builder.clearSamplePlayers();
@@ -67,5 +69,27 @@ public final class NetworkMotdPingListener {
         }
 
         event.setPing(builder.build());
+    }
+
+    private ServerPing.Version resolveOnlineVersion(ServerPing.Version original) {
+        if (original.getProtocol() >= 0 && !isMaintenanceVersionText(original.getName())) {
+            return original;
+        }
+        return new ServerPing.Version(
+                networkMotdState.onlineProtocolVersion(),
+                LegacyText.convertSectionHex(networkMotdState.onlineVersionText()).replace('&', '§')
+        );
+    }
+
+    private boolean isMaintenanceVersionText(String name) {
+        if (name == null || name.isBlank()) {
+            return false;
+        }
+        String normalized = LegacyText.convertSectionHex(networkMotdState.versionText())
+                .replace('&', '§')
+                .toLowerCase(Locale.ROOT);
+        return name.replace('§', '&').toLowerCase(Locale.ROOT).equals(normalized.replace('§', '&'))
+                || name.equalsIgnoreCase("Maintenance")
+                || name.equalsIgnoreCase("MAINTENANCE");
     }
 }

@@ -26,6 +26,7 @@ import dev.sharded.velocitycore.queue.ServerConnectService;
 import dev.sharded.velocitycore.status.ServerStatusManager;
 import dev.sharded.velocitycore.status.StatusSyncService;
 import dev.sharded.velocitycore.status.WhitelistPersistence;
+import dev.sharded.velocitycore.status.MaintenanceRequestService;
 import dev.sharded.velocitycore.status.WhitelistRequestService;
 import dev.sharded.velocitycore.status.NetworkMotdState;
 import org.slf4j.Logger;
@@ -36,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(
         id = "shardedvelocitycore",
         name = "ShardedVelocityCore",
-        version = "1.0.13",
+        version = "1.0.14",
         description = "Server status placeholders, queue system, and hologram status sync for Velocity networks.",
         authors = {"Sharded"}
 )
@@ -52,6 +53,7 @@ public final class ShardedVelocityCore {
     private StatusSyncService statusSyncService;
     private ServerConnectService connectService;
     private WhitelistRequestService whitelistRequestService;
+    private MaintenanceRequestService maintenanceRequestService;
     private WhitelistPersistence whitelistPersistence;
     private NetworkMotdState networkMotdState;
     private ServerIconService serverIconService;
@@ -75,6 +77,7 @@ public final class ShardedVelocityCore {
         this.statusSyncService = new StatusSyncService(server, statusManager, config);
         this.connectService = new ServerConnectService(server, queueManager, config);
         this.whitelistRequestService = new WhitelistRequestService(server, config);
+        this.maintenanceRequestService = new MaintenanceRequestService(server, config);
 
         statusManager.setChangeListener(statusSyncService::broadcastNow);
 
@@ -99,13 +102,19 @@ public final class ShardedVelocityCore {
         );
 
         server.getEventManager().register(this, new ServerCommandListener(connectService));
-        server.getEventManager().register(this, new PlayerListener(queueManager, statusSyncService, whitelistRequestService));
+        server.getEventManager().register(this, new PlayerListener(
+                queueManager,
+                statusSyncService,
+                whitelistRequestService,
+                maintenanceRequestService
+        ));
         server.getEventManager().register(this, new WhitelistReportListener(statusManager, statusSyncService));
         server.getEventManager().register(this, new MaintenanceSyncListener(networkMotdState));
         server.getEventManager().register(this, new NetworkMotdPingListener(networkMotdState, serverIconService));
 
         statusManager.start();
         whitelistRequestService.start();
+        maintenanceRequestService.start();
         queueManager.start(this);
         statusSyncService.start(this);
 
@@ -141,6 +150,9 @@ public final class ShardedVelocityCore {
         }
         if (whitelistRequestService != null) {
             whitelistRequestService.stop();
+        }
+        if (maintenanceRequestService != null) {
+            maintenanceRequestService.stop();
         }
         if (statusManager != null) {
             statusManager.stop();

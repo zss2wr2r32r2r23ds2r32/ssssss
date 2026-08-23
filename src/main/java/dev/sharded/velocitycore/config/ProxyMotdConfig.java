@@ -17,19 +17,25 @@ public final class ProxyMotdConfig {
     private final List<String> hoverMessages;
     private final String maintenanceVersionText;
     private final int maintenanceProtocolVersion;
+    private final String onlineVersionText;
+    private final int onlineProtocolVersion;
 
     private ProxyMotdConfig(
             List<String> motdLines,
             boolean hoverEnabled,
             List<String> hoverMessages,
             String maintenanceVersionText,
-            int maintenanceProtocolVersion
+            int maintenanceProtocolVersion,
+            String onlineVersionText,
+            int onlineProtocolVersion
     ) {
         this.motdLines = motdLines;
         this.hoverEnabled = hoverEnabled;
         this.hoverMessages = hoverMessages;
         this.maintenanceVersionText = maintenanceVersionText;
         this.maintenanceProtocolVersion = maintenanceProtocolVersion;
+        this.onlineVersionText = onlineVersionText;
+        this.onlineProtocolVersion = onlineProtocolVersion;
     }
 
     public static ProxyMotdConfig load(Path configPath, Logger logger) {
@@ -76,12 +82,26 @@ public final class ProxyMotdConfig {
 
             String versionText = maintenance != null && maintenance.getString("text") != null
                     ? maintenance.getString("text")
-                    : "MAINTENANCE";
+                    : "Maintenance";
             int protocolVersion = maintenance != null && maintenance.getLong("protocol-version") != null
                     ? maintenance.getLong("protocol-version").intValue()
                     : -1;
+            String onlineVersionText = maintenance != null && maintenance.getString("online-text") != null
+                    ? maintenance.getString("online-text")
+                    : "1.21";
+            int onlineProtocolVersion = maintenance != null && maintenance.getLong("online-protocol-version") != null
+                    ? maintenance.getLong("online-protocol-version").intValue()
+                    : 767;
 
-            return new ProxyMotdConfig(centered, hoverEnabled, hoverMessages, versionText, protocolVersion);
+            return new ProxyMotdConfig(
+                    centered,
+                    hoverEnabled,
+                    hoverMessages,
+                    versionText,
+                    protocolVersion,
+                    onlineVersionText,
+                    onlineProtocolVersion
+            );
         } catch (IOException exception) {
             logger.warn("Failed to read proxy MOTD config, using defaults", exception);
             return defaults(defaultMotd, defaultHover);
@@ -89,7 +109,7 @@ public final class ProxyMotdConfig {
     }
 
     private static ProxyMotdConfig defaults(List<String> motdLines, List<String> hoverMessages) {
-        return new ProxyMotdConfig(motdLines, false, hoverMessages, "MAINTENANCE", -1);
+        return new ProxyMotdConfig(motdLines, false, hoverMessages, "Maintenance", -1, "1.21", 767);
     }
 
     private static List<String> centerDefaults(List<String> lines) {
@@ -127,5 +147,13 @@ public final class ProxyMotdConfig {
 
     public int maintenanceProtocolVersion() {
         return maintenanceProtocolVersion;
+    }
+
+    public String onlineVersionText() {
+        return onlineVersionText;
+    }
+
+    public int onlineProtocolVersion() {
+        return onlineProtocolVersion;
     }
 }

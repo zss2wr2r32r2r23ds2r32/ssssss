@@ -37,12 +37,12 @@ public final class LobbyPlugin extends JavaPlugin {
                 new StatusSyncListener(this, statusCache, hologramRefreshService)
         );
         getServer().getMessenger().registerOutgoingPluginChannel(this, "shardedvelocitycore:status");
-        maintenanceSyncService.register();
+        maintenanceSyncService.register(maintenanceManager);
 
         MaintenanceCommand maintenanceCommand = new MaintenanceCommand(maintenanceManager);
         getCommand("maintenance").setExecutor(maintenanceCommand);
         getCommand("maintenance").setTabCompleter(maintenanceCommand);
-        getServer().getPluginManager().registerEvents(new MaintenanceJoinListener(maintenanceManager), this);
+        getServer().getPluginManager().registerEvents(new MaintenanceJoinListener(maintenanceManager, maintenanceSyncService), this);
         getServer().getPluginManager().registerEvents(
                 new MotdPingListener(maintenanceManager, motdService, iconService, hoverService),
                 this

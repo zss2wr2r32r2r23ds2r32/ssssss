@@ -25,6 +25,9 @@ public final class MaintenanceSyncListener {
         }
 
         try {
+            if (MaintenanceMessages.isRequest(event.getData())) {
+                return;
+            }
             MaintenanceMessages.Sync sync = MaintenanceMessages.decode(event.getData());
             networkMotdState.update(sync);
         } catch (Exception ignored) {

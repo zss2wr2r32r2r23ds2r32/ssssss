@@ -48,13 +48,13 @@ public final class MotdConfig {
         kickMessageLines = readLines(config, "maintenance-motd.kick-message", List.of(
                 "",
                 "&#FF0000&lMAINTENANCE",
-                "&fTHIS SERVER IS CURRENTLY IN DOWNTIME",
+                "&fThis Server is currently in Maintenance",
                 "",
-                "&fIF YOU BELIEVE THERE IS AN ERROR CONTACT STAFF VIA",
-                "&#FFD900▷ &n&lDISCORD.GG/SHARDEDMC&f &#FFD900◁"
+                "&fPlease Be patient, Join the discord for more updates:",
+                "&#FFD900▷ &#FFD900&ndiscord.gg/shardedmc&f &#FFD900◁"
         ));
         protocolText = config.getBoolean("maintenance-motd.protocol-text", true);
-        protocolTextValue = config.getString("maintenance-motd.text", "MAINTENANCE");
+        protocolTextValue = config.getString("maintenance-motd.text", "Maintenance");
         protocolVersion = config.getInt("maintenance-motd.protocol-version", -1);
     }
 

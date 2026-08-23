@@ -11,15 +11,21 @@ import java.util.List;
 
 public final class MaintenanceMessages {
 
+    public static final byte REQUEST = 0x01;
+
     private MaintenanceMessages() {
+    }
+
+    public static boolean isRequest(byte[] data) {
+        return data != null && data.length == 1 && data[0] == REQUEST;
     }
 
     public static Sync decode(byte[] data) {
         if (data == null || data.length == 0) {
             throw new IllegalArgumentException("empty");
         }
-        if (data[0] == 0x01) {
-            throw new IllegalArgumentException("whitelist request");
+        if (isRequest(data)) {
+            throw new IllegalArgumentException("maintenance request");
         }
 
         ByteArrayDataInput input = ByteStreams.newDataInput(data);

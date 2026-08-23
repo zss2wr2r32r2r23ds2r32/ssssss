@@ -10,9 +10,11 @@ import org.bukkit.event.player.PlayerLoginEvent;
 public final class MaintenanceJoinListener implements Listener {
 
     private final MaintenanceManager maintenanceManager;
+    private final MaintenanceSyncService syncService;
 
-    public MaintenanceJoinListener(MaintenanceManager maintenanceManager) {
+    public MaintenanceJoinListener(MaintenanceManager maintenanceManager, MaintenanceSyncService syncService) {
         this.maintenanceManager = maintenanceManager;
+        this.syncService = syncService;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -28,6 +30,7 @@ public final class MaintenanceJoinListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event) {
+        syncService.syncNow(maintenanceManager.isEnabled());
         if (maintenanceManager.canJoin(event.getPlayer())) {
             return;
         }
