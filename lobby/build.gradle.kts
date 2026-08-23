@@ -4,5 +4,15 @@ dependencies {
 }
 
 tasks.jar {
-    archiveFileName.set("ShardedVelocityCore-Lobby.jar")
+    archiveFileName.set("ShardedVelocityCore-Lobby-${project.version}.jar")
+}
+
+tasks.register<Copy>("copyArtifacts") {
+    dependsOn(tasks.jar)
+    from(tasks.jar)
+    into("/opt/cursor/artifacts")
+}
+
+tasks.build {
+    finalizedBy("copyArtifacts")
 }

@@ -28,7 +28,7 @@ public final class ShardedExpansion extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "1.0.3";
+        return "1.0.4";
     }
 
     @Override

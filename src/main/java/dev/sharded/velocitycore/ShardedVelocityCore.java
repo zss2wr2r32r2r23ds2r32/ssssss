@@ -7,6 +7,7 @@ import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
+import dev.sharded.velocitycore.command.LeaveCommand;
 import dev.sharded.velocitycore.command.QueueCommand;
 import dev.sharded.velocitycore.config.PluginConfig;
 import dev.sharded.velocitycore.listener.PlayerListener;
@@ -24,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(
         id = "shardedvelocitycore",
         name = "ShardedVelocityCore",
-        version = "1.0.3",
+        version = "1.0.4",
         description = "Server status placeholders, queue system, and hologram status sync for Velocity networks.",
         authors = {"Sharded"}
 )
@@ -60,6 +61,10 @@ public final class ShardedVelocityCore {
         server.getCommandManager().register(
                 server.getCommandManager().metaBuilder("queue").aliases("q").plugin(this).build(),
                 new QueueCommand(connectService)
+        );
+        server.getCommandManager().register(
+                server.getCommandManager().metaBuilder("leave").plugin(this).build(),
+                new LeaveCommand(connectService)
         );
 
         server.getEventManager().register(this, new ServerCommandListener(connectService));

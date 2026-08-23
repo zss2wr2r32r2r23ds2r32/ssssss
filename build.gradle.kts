@@ -3,7 +3,12 @@ plugins {
 }
 
 group = "dev.sharded"
-version = "1.0.1"
+version = "1.0.4"
+
+allprojects {
+    group = "dev.sharded"
+    version = rootProject.version
+}
 
 repositories {
     mavenCentral()
@@ -50,7 +55,7 @@ tasks.withType<JavaCompile> {
 }
 
 tasks.jar {
-    archiveFileName.set("ShardedVelocityCore.jar")
+    archiveFileName.set("ShardedVelocityCore-${project.version}.jar")
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     from({
@@ -58,4 +63,14 @@ tasks.jar {
             .filter { it.name.endsWith("jar") }
             .map { zipTree(it) }
     })
+}
+
+tasks.register<Copy>("copyArtifacts") {
+    dependsOn(tasks.jar)
+    from(tasks.jar)
+    into("/opt/cursor/artifacts")
+}
+
+tasks.build {
+    finalizedBy("copyArtifacts")
 }
