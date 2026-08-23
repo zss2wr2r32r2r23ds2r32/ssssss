@@ -21,10 +21,6 @@ public final class HologramRefreshService {
         refreshFancyHolograms();
     }
 
-    public void start() {
-        Bukkit.getScheduler().runTaskTimer(plugin, this::refreshAll, 10L, 10L);
-    }
-
     private void refreshDecentHolograms() {
         try {
             Class<?> apiClass = Class.forName("eu.decentsoftware.holograms.api.DecentHologramsAPI");

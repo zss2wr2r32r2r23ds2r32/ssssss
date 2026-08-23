@@ -26,7 +26,7 @@ public final class MotdConfig {
 
         centerWidth = config.getInt("motd.center-width", 48);
         defaultLines = centerLines(readLines(config, "motd.lines", List.of(
-                "&#8AFF00&lSHARDEDMC &8▷ &7[1.21+]",
+                "&#AD4EFF&lSHARDEDMC &8▷ &7[1.21+]",
                 "&#FFE300⚓ &#FFE300&lSEASON 1 SOON &#FFE300⚓"
         )));
 
@@ -44,7 +44,8 @@ public final class MotdConfig {
         ));
 
         kickMessageLines = readLines(config, "maintenance-motd.kick-message", List.of(
-                "&#FF0000&lMAINTENANCE",
+                "",
+                "&#FF0000&lMaintenance",
                 "&fThis server is currently in downtime"
         ));
         protocolText = config.getBoolean("maintenance-motd.protocol-text", true);

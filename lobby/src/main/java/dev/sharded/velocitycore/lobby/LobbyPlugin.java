@@ -39,9 +39,6 @@ public final class LobbyPlugin extends JavaPlugin {
         getServer().getMessenger().registerOutgoingPluginChannel(this, "shardedvelocitycore:status");
         maintenanceSyncService.register();
 
-        statusCache.addListener(hologramRefreshService::refreshAll);
-        hologramRefreshService.start();
-
         MaintenanceCommand maintenanceCommand = new MaintenanceCommand(maintenanceManager);
         getCommand("maintenance").setExecutor(maintenanceCommand);
         getCommand("maintenance").setTabCompleter(maintenanceCommand);
@@ -52,13 +49,6 @@ public final class LobbyPlugin extends JavaPlugin {
         );
 
         maintenanceSyncService.syncNow(maintenanceManager.isEnabled());
-
-        Bukkit.getScheduler().runTaskTimer(
-                this,
-                () -> maintenanceSyncService.syncNow(maintenanceManager.isEnabled()),
-                40L,
-                40L
-        );
 
         if (maintenanceManager.isEnabled()) {
             Bukkit.getScheduler().runTask(this, () -> {

@@ -13,6 +13,7 @@ import dev.sharded.velocitycore.command.QueueCommand;
 import dev.sharded.velocitycore.command.ServerCommand;
 import dev.sharded.velocitycore.common.PluginChannels;
 import dev.sharded.velocitycore.config.PluginConfig;
+import dev.sharded.velocitycore.config.ProxyMotdConfig;
 import dev.sharded.velocitycore.listener.MaintenanceSyncListener;
 import dev.sharded.velocitycore.listener.NetworkMotdPingListener;
 import dev.sharded.velocitycore.listener.PlayerListener;
@@ -35,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(
         id = "shardedvelocitycore",
         name = "ShardedVelocityCore",
-        version = "1.0.10",
+        version = "1.0.11",
         description = "Server status placeholders, queue system, and hologram status sync for Velocity networks.",
         authors = {"Sharded"}
 )
@@ -67,6 +68,7 @@ public final class ShardedVelocityCore {
         this.config = PluginConfig.load(dataDirectory, logger);
         this.whitelistPersistence = new WhitelistPersistence(dataDirectory, logger);
         this.networkMotdState = new NetworkMotdState();
+        networkMotdState.applyDefaults(ProxyMotdConfig.load(dataDirectory.resolve("config.toml"), logger));
         this.serverIconService = new ServerIconService(dataDirectory, logger);
         this.statusManager = new ServerStatusManager(server, config, whitelistPersistence);
         this.queueManager = new QueueManager(server, config, statusManager);

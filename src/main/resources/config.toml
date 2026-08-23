@@ -10,6 +10,28 @@ queue-servers = ["lobby", "survival", "events", "diasmp"]
 
 maintenance-servers = []
 
+[motd]
+center-width = 48
+lines = [
+  "&#AD4EFF&lSHARDEDMC &8▷ &7[1.21+]",
+  "&#FFE300⚓ &#FFE300&lSEASON 1 SOON &#FFE300⚓"
+]
+
+[hover]
+enabled = true
+messages = [
+  "&d&lSHARDEDMC NETWORK &8| &7 1.21.11",
+  "",
+  "&#A183CD🔥 ɪɴꜰᴏʀᴍᴀᴛɪᴏɴ:",
+  "&7▶ &fDiscord: &dᴅɪsᴄᴏʀᴅ.ɢɢ/shardedmc",
+  "&7▶ &fStore: &dᴄᴏᴍɪɴɢ sᴏᴏɴ",
+  "&fplay with {online_players} other players"
+]
+
+[maintenance-motd]
+text = "Maintenance"
+protocol-version = -1
+
 [queue]
   action-bar = "&#4498DB#%numberinqueue% in queue to &n%server_color%%server%&r &7(Wating: %numberofpeoplewaitinginqueue%)"
   prefix = "&#4498DB&lQUEUE &8▷&r "

@@ -6,7 +6,6 @@ import com.velocitypowered.api.proxy.server.ServerPing;
 import dev.sharded.velocitycore.motd.ServerIconService;
 import dev.sharded.velocitycore.status.NetworkMotdState;
 import dev.sharded.velocitycore.util.LegacyText;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,12 +52,11 @@ public final class NetworkMotdPingListener {
                     String replaced = raw
                             .replace("{online_players}", String.valueOf(onlinePlayers))
                             .replace("{max_players}", String.valueOf(maxPlayers));
-                    String plain = PlainTextComponentSerializer.plainText()
-                            .serialize(LegacyText.parse(replaced));
-                    if (plain.length() > 40) {
-                        plain = plain.substring(0, 40);
+                    String legacy = LegacyText.toLegacySection(replaced);
+                    if (legacy.length() > 40) {
+                        legacy = legacy.substring(0, 40);
                     }
-                    samples.add(new ServerPing.SamplePlayer(plain, UUID.randomUUID()));
+                    samples.add(new ServerPing.SamplePlayer(legacy, UUID.randomUUID()));
                 }
                 if (!samples.isEmpty()) {
                     builder.samplePlayers(samples.toArray(new ServerPing.SamplePlayer[0]));

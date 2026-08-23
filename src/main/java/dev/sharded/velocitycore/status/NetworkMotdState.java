@@ -1,5 +1,7 @@
 package dev.sharded.velocitycore.status;
 
+import dev.sharded.velocitycore.config.MotdCenter;
+import dev.sharded.velocitycore.config.ProxyMotdConfig;
 import dev.sharded.velocitycore.util.LegacyText;
 import net.kyori.adventure.text.Component;
 
@@ -9,12 +11,21 @@ import java.util.List;
 public final class NetworkMotdState {
 
     private volatile boolean maintenanceEnabled;
-    private volatile Component motd = LegacyText.parse("&#8AFF00&lSHARDEDMC");
+    private volatile Component motd = defaultMotd();
     private volatile String icon = "";
     private volatile String versionText = "Maintenance";
     private volatile int protocolVersion = -1;
     private volatile boolean hoverEnabled = true;
-    private volatile List<String> hoverMessages = List.of();
+    private volatile List<String> hoverMessages = defaultHover();
+
+    public void applyDefaults(ProxyMotdConfig config) {
+        this.motd = LegacyText.parseLines(config.motdLines());
+        this.hoverEnabled = config.hoverEnabled();
+        this.hoverMessages = new ArrayList<>(config.hoverMessages());
+        this.versionText = config.maintenanceVersionText();
+        this.protocolVersion = config.maintenanceProtocolVersion();
+        this.maintenanceEnabled = false;
+    }
 
     public boolean isMaintenanceEnabled() {
         return maintenanceEnabled;
@@ -58,5 +69,23 @@ public final class NetworkMotdState {
         this.hoverMessages = sync.hoverMessages() == null
                 ? List.of()
                 : new ArrayList<>(sync.hoverMessages());
+    }
+
+    private static Component defaultMotd() {
+        return LegacyText.parseLines(List.of(
+                MotdCenter.center("&#AD4EFF&lSHARDEDMC &8▷ &7[1.21+]", 48),
+                MotdCenter.center("&#FFE300⚓ &#FFE300&lSEASON 1 SOON &#FFE300⚓", 48)
+        ));
+    }
+
+    private static List<String> defaultHover() {
+        return List.of(
+                "&d&lSHARDEDMC NETWORK &8| &7 1.21.11",
+                "",
+                "&#A183CD🔥 ɪɴꜰᴏʀᴍᴀᴛɪᴏɴ:",
+                "&7▶ &fDiscord: &dᴅɪsᴄᴏʀᴅ.ɢɢ/shardedmc",
+                "&7▶ &fStore: &dᴄᴏᴍɪɴɢ sᴏᴏɴ",
+                "&fplay with {online_players} other players"
+        );
     }
 }

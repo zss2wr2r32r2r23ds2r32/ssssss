@@ -79,14 +79,7 @@ public final class MaintenanceMessages {
     }
 
     private static Component toComponent(List<String> lines) {
-        if (lines.isEmpty()) {
-            return Component.empty();
-        }
-        Component result = LegacyText.parse(lines.getFirst());
-        for (int i = 1; i < lines.size(); i++) {
-            result = result.append(Component.newline()).append(LegacyText.parse(lines.get(i)));
-        }
-        return result;
+        return LegacyText.parseLines(lines);
     }
 
     private static List<String> readLines(ByteArrayDataInput input) {

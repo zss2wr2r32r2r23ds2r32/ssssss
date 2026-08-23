@@ -1,9 +1,12 @@
 package dev.sharded.velocitycore.util;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,6 +19,7 @@ public final class LegacyText {
             .hexColors()
             .useUnusualXRepeatedCharacterHexFormat()
             .build();
+    private static final LegacyComponentSerializer LEGACY_SECTION = LegacyComponentSerializer.legacySection();
 
     private LegacyText() {
     }
@@ -27,6 +31,24 @@ public final class LegacyText {
         String converted = convertSectionHex(convertLegacyHex(input));
         Component component = LEGACY.deserialize(converted);
         return stripImplicitDecoration(component);
+    }
+
+    public static Component parseLines(List<String> lines) {
+        if (lines == null || lines.isEmpty()) {
+            return Component.empty();
+        }
+        List<Component> components = new ArrayList<>();
+        for (String line : lines) {
+            components.add(parse(line));
+        }
+        return Component.join(JoinConfiguration.newlines(), components);
+    }
+
+    public static String toLegacySection(String input) {
+        if (input == null || input.isEmpty()) {
+            return "";
+        }
+        return LEGACY_SECTION.serialize(parse(input));
     }
 
     public static String convertSectionHex(String input) {
