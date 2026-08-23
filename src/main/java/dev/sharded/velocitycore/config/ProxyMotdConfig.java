@@ -71,12 +71,12 @@ public final class ProxyMotdConfig {
                 centered.add(MotdCenter.center(line, centerWidth));
             }
 
-            boolean hoverEnabled = hover == null || hover.getBoolean("enabled") == null || hover.getBoolean("enabled");
+            boolean hoverEnabled = hover != null && hover.getBoolean("enabled") != null && hover.getBoolean("enabled");
             List<String> hoverMessages = readLines(hover, "messages", defaultHover);
 
             String versionText = maintenance != null && maintenance.getString("text") != null
                     ? maintenance.getString("text")
-                    : "Maintenance";
+                    : "MAINTENANCE";
             int protocolVersion = maintenance != null && maintenance.getLong("protocol-version") != null
                     ? maintenance.getLong("protocol-version").intValue()
                     : -1;
@@ -89,7 +89,7 @@ public final class ProxyMotdConfig {
     }
 
     private static ProxyMotdConfig defaults(List<String> motdLines, List<String> hoverMessages) {
-        return new ProxyMotdConfig(motdLines, true, hoverMessages, "Maintenance", -1);
+        return new ProxyMotdConfig(motdLines, false, hoverMessages, "MAINTENANCE", -1);
     }
 
     private static List<String> centerDefaults(List<String> lines) {

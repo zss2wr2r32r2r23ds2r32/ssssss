@@ -11,7 +11,7 @@ server-icon:
   image: "default-server-icon.png"
 
 hover:
-  enabled: true
+  enabled: false
   messages:
     - ""
     - "&#AD4EFF&lSHARDEDMC &#AD4EFF&lNetwork &8| &7[1.21+]"
@@ -25,11 +25,11 @@ hover:
 maintenance-motd:
   kick-message:
     - ""
-    - "&#FF0000&lMaintenance"
-    - "&fThis server is currently in downtime"
+    - "&#FF0000&lMAINTENANCE"
+    - "&fTHIS SERVER IS CURRENTLY IN DOWNTIME"
     - ""
-    - "&fIf you believe there is an error contact staff via"
-    - "&#FFD900▷ &n&ldiscord.gg/shardedmc&f &#FFD900◁"
+    - "&fIF YOU BELIEVE THERE IS AN ERROR CONTACT STAFF VIA"
+    - "&#FFD900▷ &n&lDISCORD.GG/SHARDEDMC&f &#FFD900◁"
   protocol-text: true
-  text: "Maintenance"
+  text: "MAINTENANCE"
   protocol-version: -1

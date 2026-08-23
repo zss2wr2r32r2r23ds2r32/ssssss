@@ -18,7 +18,7 @@ lines = [
 ]
 
 [hover]
-enabled = true
+enabled = false
 messages = [
   "",
   "&#AD4EFF&lSHARDEDMC &#AD4EFF&lNetwork &8| &7[1.21+]",
@@ -31,7 +31,16 @@ messages = [
 ]
 
 [maintenance-motd]
-text = "Maintenance"
+kick-message = [
+  "",
+  "&#FF0000&lMAINTENANCE",
+  "&fTHIS SERVER IS CURRENTLY IN DOWNTIME",
+  "",
+  "&fIF YOU BELIEVE THERE IS AN ERROR CONTACT STAFF VIA",
+  "&#FFD900▷ &n&lDISCORD.GG/SHARDEDMC&f &#FFD900◁"
+]
+protocol-text = true
+text = "MAINTENANCE"
 protocol-version = -1
 
 [queue]

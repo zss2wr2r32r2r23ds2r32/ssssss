@@ -33,7 +33,7 @@ public final class MotdConfig {
         serverIconEnabled = config.getBoolean("server-icon.enabled", false);
         serverIconImage = config.getString("server-icon.image", "default-server-icon.png");
 
-        hoverEnabled = config.getBoolean("hover.enabled", true);
+        hoverEnabled = config.getBoolean("hover.enabled", false);
         hoverMessages = readLines(config, "hover.messages", List.of(
                 "",
                 "&#AD4EFF&lSHARDEDMC &#AD4EFF&lNetwork &8| &7[1.21+]",
@@ -47,11 +47,14 @@ public final class MotdConfig {
 
         kickMessageLines = readLines(config, "maintenance-motd.kick-message", List.of(
                 "",
-                "&#FF0000&lMaintenance",
-                "&fThis server is currently in downtime"
+                "&#FF0000&lMAINTENANCE",
+                "&fTHIS SERVER IS CURRENTLY IN DOWNTIME",
+                "",
+                "&fIF YOU BELIEVE THERE IS AN ERROR CONTACT STAFF VIA",
+                "&#FFD900▷ &n&lDISCORD.GG/SHARDEDMC&f &#FFD900◁"
         ));
         protocolText = config.getBoolean("maintenance-motd.protocol-text", true);
-        protocolTextValue = config.getString("maintenance-motd.text", "Maintenance");
+        protocolTextValue = config.getString("maintenance-motd.text", "MAINTENANCE");
         protocolVersion = config.getInt("maintenance-motd.protocol-version", -1);
     }
 

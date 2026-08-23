@@ -13,9 +13,9 @@ public final class NetworkMotdState {
     private volatile boolean maintenanceEnabled;
     private volatile Component motd = defaultMotd();
     private volatile String icon = "";
-    private volatile String versionText = "Maintenance";
+    private volatile String versionText = "MAINTENANCE";
     private volatile int protocolVersion = -1;
-    private volatile boolean hoverEnabled = true;
+    private volatile boolean hoverEnabled = false;
     private volatile List<String> hoverMessages = defaultHover();
 
     public void applyDefaults(ProxyMotdConfig config) {

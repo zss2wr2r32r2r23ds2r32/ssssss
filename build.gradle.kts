@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "dev.sharded"
-version = "1.0.12"
+version = "1.0.13"
 
 allprojects {
     group = "dev.sharded"
