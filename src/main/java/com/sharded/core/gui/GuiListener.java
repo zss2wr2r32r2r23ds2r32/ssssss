@@ -24,6 +24,7 @@ public final class GuiListener implements Listener {
             if (event.getClickedInventory() != event.getView().getTopInventory()) return;
             ShardedCore core = ShardedCore.get();
             if (core == null) return;
+            if (core.guiSounds() != null) core.guiSounds().play(player, "click");
             WardrobeModule wardrobe = core.modules().get(WardrobeModule.class);
             if (wardrobe != null) wardrobe.handleMenuClick(player, event.getSlot());
             return;
@@ -32,6 +33,8 @@ public final class GuiListener implements Listener {
         event.setCancelled(true);
         if (!(event.getWhoClicked() instanceof Player player)) return;
         if (event.getClickedInventory() != event.getView().getTopInventory()) return;
+        ShardedCore core = ShardedCore.get();
+        if (core != null && core.guiSounds() != null) core.guiSounds().play(player, "click");
         manager.handleClick(player, holder.menuId, event.getSlot());
     }
 

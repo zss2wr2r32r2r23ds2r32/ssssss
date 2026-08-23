@@ -110,10 +110,10 @@ items:
     right_click_commands:
       - '[player] excellentcrates open SUMMER'
 
-  votecrate:
+  astralcrate:
     material: BLUE_SHULKER_BOX
     slot: 15
-    display_name: '&x&0&0&8&D&F&F&lVOTE &x&0&0&8&D&F&FCrate'
+    display_name: '&x&0&0&8&D&F&F&lASTRAL &x&0&0&8&D&F&FCrate'
     lore:
       - '&8Description'
       - ''

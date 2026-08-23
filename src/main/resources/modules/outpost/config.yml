@@ -1,0 +1,9 @@
+config-version: 1
+message-mode: chat
+allowed-worlds:
+  - spawn
+capture-percent-per-second: 1.0
+token-reward: 500
+actionbar: '&7Outpost: &f%percent%%'
+actionbar-contested: '&cOutpost contested — solo capture required!'
+region: {}

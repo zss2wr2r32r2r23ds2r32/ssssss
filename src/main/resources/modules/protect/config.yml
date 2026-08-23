@@ -1,0 +1,9 @@
+config-version: 1
+message-mode: chat
+regions:
+  spawn: {}
+  pvp: {}
+  side1: {}
+  side2: {}
+  side3: {}
+  side4: {}

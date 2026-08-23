@@ -21,6 +21,7 @@ import java.util.UUID;
 final class LeaderboardGuiHandler {
 
     static final String CLICK = "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0";
+    static final String BAR = "&#AD4EFF|";
 
     enum View { HUB, BOARD, STATS }
 
@@ -221,13 +222,16 @@ final class LeaderboardGuiHandler {
 
     private List<String> loreLine(String type, int rank, String value) {
         String color = cfg.getString("gui.colors." + type.toLowerCase(), "&f");
-        String label = cfg.getString("gui.labels." + type.toLowerCase(), type);
+        String label = cfg.getString("gui.labels." + type.toLowerCase(), type).toUpperCase(java.util.Locale.ROOT);
         return List.of(
                 "&8Leaderboard",
                 "",
+                color + label,
+                "&8Statistics",
+                "",
                 color + "Information:",
-                color + "| &fRank: " + color + (rank > 0 ? "#" + rank : cfg.getString("gui.unranked", "Unranked")),
-                color + "| &f" + label + ": " + color + value
+                BAR + " &fRank: " + color + (rank > 0 ? "#" + rank : cfg.getString("gui.unranked", "Unranked")),
+                BAR + " &f" + label + ": " + color + value
         );
     }
 
@@ -249,16 +253,17 @@ final class LeaderboardGuiHandler {
 
     private ItemStack statItem(String key, Material mat, long value) {
         String color = cfg.getString("gui.colors." + key, "&f");
-        String label = cfg.getString("gui.labels." + key, key);
+        String label = cfg.getString("gui.labels." + key, key).toUpperCase(java.util.Locale.ROOT);
         String formatted = "playtime".equals(key) ? service.formatValue("playtime", value) : String.valueOf(value);
         String name = cfg.getString("gui.stats-items." + key + ".name", color + "&l" + label);
+        if (!name.contains("&l")) name = color + "&l" + label;
         List<String> lore = cfg.getStringList("gui.stats-items." + key + ".lore");
         if (lore.isEmpty()) {
             lore = List.of("&8Statistics", "", color + "Information:",
-                    color + "| &f" + label + ": " + color + formatted);
+                    BAR + " &f" + label + ": " + color + formatted);
         } else {
             lore = lore.stream()
-                    .map(l -> l.replace("%value%", formatted).replace("%color%", color))
+                    .map(l -> l.replace("%value%", formatted).replace("%color%", color).replace("|", BAR))
                     .toList();
         }
         return new ItemBuilder(mat).name(name).lore(lore).build();
@@ -267,8 +272,8 @@ final class LeaderboardGuiHandler {
     private ItemStack teamItem(String team) {
         String color = cfg.getString("gui.colors.team", "&d");
         return new ItemBuilder(Material.PINK_BANNER)
-                .name(color + "&lTeam")
-                .lore(List.of("&8Statistics", "", color + "Information:", color + "| &fTeam: " + color + team))
+                .name(color + "&lTEAM")
+                .lore(List.of("&8Statistics", "", color + "Information:", BAR + " &fTeam: " + color + team))
                 .build();
     }
 
@@ -300,10 +305,11 @@ final class LeaderboardGuiHandler {
     private List<String> lore(YamlConfiguration cfg, String path, LeaderboardService.StatsSnapshot stats) {
         List<String> lines = cfg.getStringList(path);
         if (lines.isEmpty()) {
-            lines = List.of(color("stats") + "| &fRank: " + stats.prefix());
+            lines = List.of("&8Statistics", "", BAR + " &fRank: " + stats.prefix());
         }
         return lines.stream()
-                .map(l -> l.replace("%name%", stats.name())
+                .map(l -> l.replace("|", BAR)
+                        .replace("%name%", stats.name())
                         .replace("%prefix%", stats.prefix())
                         .replace("%kills%", String.valueOf(stats.kills()))
                         .replace("%deaths%", String.valueOf(stats.deaths()))

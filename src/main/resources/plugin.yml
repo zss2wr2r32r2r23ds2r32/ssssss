@@ -68,8 +68,8 @@ commands:
     usage: /randomtp
     permission: sharded.staff.randomtp
   spawn:
-    description: Open the spawn selector or choose a spawn type
-    usage: /spawn [main/vanilla]
+    description: Teleport to spawn or select spawn type
+    usage: /spawn [select <main|vanilla>]
   spawnselect:
     description: Open the spawn selector menu
     usage: /spawnselect
@@ -295,6 +295,21 @@ commands:
   crates:
     description: Open crate preview menu
     usage: /crates
+  outpost:
+    description: Outpost event info and admin setup
+    usage: /outpost [pos1|pos2|setregion]
+  koth:
+    description: KOTH event info and admin setup
+    usage: /koth [pos1|pos2|setregion]
+  protect:
+    description: Region protection setup
+    usage: /protect [pos1|pos2|setregion <spawn|pvp|side1-4>]
+  combat:
+    description: Combat region setup
+    usage: /combat [pos1|pos2|setregion]
+  arena:
+    description: Arena reset tools
+    usage: /arena <reset|remove|snapshot> <region> [speed]
     permission: sharded.crates.use
   crate:
     description: Open crate preview menu
@@ -652,4 +667,19 @@ permissions:
   sharded.requeststaff.use:
     default: true
   sharded.killstreak.farm.bypass:
+    default: op
+  sharded.outpost.admin:
+    description: Setup outpost region
+    default: op
+  sharded.koth.admin:
+    description: Setup KOTH region
+    default: op
+  sharded.protect.admin:
+    description: Setup protect regions
+    default: op
+  sharded.combat.admin:
+    description: Setup combat region
+    default: op
+  sharded.arena.admin:
+    description: Manage arena resets
     default: op

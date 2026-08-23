@@ -31,7 +31,7 @@ final class TokenMethodsGuiHandler {
 
     void open(Player player) {
         String title = module.configString("gui.title", "&8Token Methods");
-        Inventory inv = Bukkit.createInventory(new Holder(), 27, Text.c(title));
+        Inventory inv = Bukkit.createInventory(new Holder(), 36, Text.c(title));
         ((Holder) inv.getHolder()).inventory = inv;
         fill(inv);
 

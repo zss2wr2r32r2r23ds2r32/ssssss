@@ -106,13 +106,7 @@ gui:
   stats-head-lore:
     - '&8Statistics'
     - ''
-    - '&x&F&F&0&0&6&7| &fRank: %prefix%'
-    - '&x&F&F&0&0&0&0| &fKills: &x&F&F&0&0&0&0%kills%'
-    - '&x&0&0&B&7&F&F| &fDeaths: &x&0&0&B&7&F&F%deaths%'
-    - '&x&F&F&0&0&5&D| &fBest Streak: &x&F&F&0&0&5&D%streak%'
-    - '&x&5&C&9&4&F&C| &fTokens: &x&5&C&9&4&F&C%tokens%'
-    - '&x&F&F&E&E&0&0| &fPlaytime: &x&F&F&E&E&0&0%playtime%'
-    - '&x&F&F&0&0&6&7| &fTeam: &x&F&F&0&0&6&7%team%'
+    - '&#AD4EFF| &fRank: %prefix%'
   stats-items:
     kills:
       name: '&x&F&F&0&0&0&0&lKills'

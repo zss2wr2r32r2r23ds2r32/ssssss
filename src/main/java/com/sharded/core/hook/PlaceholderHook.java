@@ -137,6 +137,26 @@ public final class PlaceholderHook implements Listener {
             if (p.startsWith("killstreak_top_")) {
                 return leaderboardValue(p.substring("killstreak_top_".length()), false);
             }
+            if (p.equals("outpost_time") || p.equals("outpost_countdown")) {
+                var outpost = plugin.modules().get(com.sharded.core.modules.outpost.OutpostModule.class);
+                if (outpost == null) return "0h 0m 0s";
+                return com.sharded.core.util.TimeFormat.hms(outpost.millisUntilStart());
+            }
+            if (p.equals("koth_time") || p.equals("koth_countdown")) {
+                var koth = plugin.modules().get(com.sharded.core.modules.koth.KothModule.class);
+                if (koth == null) return "0h 0m 0s";
+                return com.sharded.core.util.TimeFormat.hms(koth.millisUntilStart());
+            }
+            if (p.equals("outpost_hours") || p.equals("outpost_minutes") || p.equals("outpost_seconds")) {
+                var outpost = plugin.modules().get(com.sharded.core.modules.outpost.OutpostModule.class);
+                long ms = outpost == null ? 0 : outpost.millisUntilStart();
+                return com.sharded.core.util.TimeFormat.replacePlaceholders("%" + p.substring("outpost_".length()) + "%", ms);
+            }
+            if (p.equals("koth_hours") || p.equals("koth_minutes") || p.equals("koth_seconds")) {
+                var koth = plugin.modules().get(com.sharded.core.modules.koth.KothModule.class);
+                long ms = koth == null ? 0 : koth.millisUntilStart();
+                return com.sharded.core.util.TimeFormat.replacePlaceholders("%" + p.substring("koth_".length()) + "%", ms);
+            }
             return null;
         }
     }

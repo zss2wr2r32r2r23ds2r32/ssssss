@@ -12,13 +12,13 @@ gui:
       name: '&x&F&F&E&E&0&0&lHourly Playtime &7(#%rank%)'
       color: '&x&F&F&E&E&0&0'
       lore:
-        - '&8Descriptions'
-        - ''
-        - '&x&F&F&E&E&0&0Information:'
-        - '&x&F&F&E&E&0&0| &fEarn &x&F&F&E&E&0&0%amount% tokens &fevery hour'
-        - '&x&F&F&E&E&0&0| &fjust for playing on the server.'
-        - ''
-        - '%click%'
+      - '&8Descriptions'
+      - ''
+      - '&x&F&F&E&E&0&0Information:'
+      - '&x&F&F&E&E&0&0| &fEarn &x&F&F&E&E&0&0%amount% tokens &fevery hour'
+      - '&x&F&F&E&E&0&0| &fjust for playing on the server.'
+      - ''
+      - '%click%'
       amount: 50
     daily:
       slot: 12
@@ -26,56 +26,86 @@ gui:
       name: '&x&9&F&F&F&0&0&lDaily Rewards'
       color: '&x&9&F&F&F&0&0'
       lore:
-        - '&8Descriptions'
-        - ''
-        - '&x&9&F&F&F&0&0Information:'
-        - '&x&9&F&F&F&0&0| &fSpin the daily reward wheel'
-        - '&x&9&F&F&F&0&0| &fevery 24 hours for tokens and keys.'
-        - ''
-        - '%click%'
-      command: '/daily'
+      - '&8Descriptions'
+      - ''
+      - '&x&9&F&F&F&0&0Information:'
+      - '&x&9&F&F&F&0&0| &fSpin the daily reward wheel'
+      - '&x&9&F&F&F&0&0| &fevery 24 hours for tokens and keys.'
+      - ''
+      - '%click%'
+      command: /daily
     weekly:
       slot: 13
       material: ENDER_CHEST
       name: '&x&F&F&D&7&0&0&lWeekly Rewards'
       color: '&x&F&F&D&7&0&0'
       lore:
-        - '&8Descriptions'
-        - ''
-        - '&x&F&F&D&7&0&0Information:'
-        - '&x&F&F&D&7&0&0| &fSpin the weekly reward wheel'
-        - '&x&F&F&D&7&0&0| &fevery 7 days for bigger prizes.'
-        - ''
-        - '%click%'
-      command: '/weekly'
+      - '&8Descriptions'
+      - ''
+      - '&x&F&F&D&7&0&0Information:'
+      - '&x&F&F&D&7&0&0| &fSpin the weekly reward wheel'
+      - '&x&F&F&D&7&0&0| &fevery 7 days for bigger prizes.'
+      - ''
+      - '%click%'
+      command: /weekly
     killstreaks:
       slot: 14
       material: NETHERITE_SWORD
       name: '&x&F&F&0&0&0&0&lKillstreaks'
       color: '&x&F&F&0&0&0&0'
       lore:
-        - '&8Descriptions'
-        - ''
-        - '&x&F&F&0&0&0&0Information:'
-        - '&x&F&F&0&0&0&0| &fGet kill streak milestones'
-        - '&x&F&F&0&0&0&0| &ffor tokens and crate keys.'
-        - ''
-        - '%click%'
-      command: '/killstreak'
+      - '&8Descriptions'
+      - ''
+      - '&x&F&F&0&0&0&0Information:'
+      - '&x&F&F&0&0&0&0| &fGet kill streak milestones'
+      - '&x&F&F&0&0&0&0| &ffor tokens and crate keys.'
+      - ''
+      - '%click%'
+      command: /killstreak
     pvp_heads:
       slot: 15
       material: PLAYER_HEAD
-      name: '&x&F&F&2&7&2&7&lPvP Head Drops'
+      name: '&x&F&F&2&7&2&7&lPVP HEAD DROPS'
       color: '&x&F&F&2&7&2&7'
       lore:
-        - '&8Descriptions'
-        - ''
-        - '&x&F&F&2&7&2&7Information:'
-        - '&x&F&F&2&7&2&7| &fPlayer heads drop on kills.'
-        - '&x&F&F&2&7&2&7| &fTrade them with &f/headtokens'
-        - ''
-        - '%click%'
-      command: '/headtokens'
+      - '&8DESCRIPTIONS'
+      - ''
+      - '&x&F&F&2&7&2&7INFORMATION:'
+      - '&x&F&F&2&7&2&7| &fPlayer heads drop on kills.'
+      - '&x&F&F&2&7&2&7| &fTrade them with &f/headtokens'
+      - ''
+      - '%click%'
+      command: /headtokens
+    outpost:
+      slot: 20
+      material: BEACON
+      name: '&x&9&4&F&F&0&0&lOUTPOST'
+      color: '&x&9&4&F&F&0&0'
+      lore:
+      - '&8DESCRIPTIONS'
+      - ''
+      - '&x&9&4&F&F&0&0INFORMATION:'
+      - '&x&9&4&F&F&0&0| &fCapture the outpost solo'
+      - '&x&9&4&F&F&0&0| &ffor token rewards.'
+      - '&x&9&4&F&F&0&0| &fNext: &f%shardedcore_outpost_time%'
+      - ''
+      - '%click%'
+      command: /outpost
+    koth:
+      slot: 24
+      material: NETHERITE_SWORD
+      name: '&x&F&F&0&0&5&D&lKOTH'
+      color: '&x&F&F&0&0&5&D'
+      lore:
+      - '&8DESCRIPTIONS'
+      - ''
+      - '&x&F&F&0&0&5&DINFORMATION:'
+      - '&x&F&F&0&0&5&D| &fFight in the hill for points.'
+      - '&x&F&F&0&0&5&D| &fTop 3 win tokens.'
+      - '&x&F&F&0&0&5&D| &fNext: &f%shardedcore_koth_time%'
+      - ''
+      - '%click%'
+      command: /koth
 
 playtime-reward:
   enabled: true

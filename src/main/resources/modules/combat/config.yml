@@ -1,0 +1,7 @@
+config-version: 1
+message-mode: chat
+tag-seconds: 15
+kill-on-logout: true
+red-glass-walls: true
+actionbar: '&cCombat &7| &f%seconds%s'
+region: {}

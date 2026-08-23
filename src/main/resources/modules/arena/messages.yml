@@ -1,0 +1,6 @@
+prefix: '%prefix%'
+no-permission: '%prefix%&#FF2727You do not have permission.'
+usage: '%prefix%&#FF2727Usage: &f/arena reset <region> [speed] &7| &f/arena remove <region> &7| &f/arena snapshot <region>'
+reset-started: '%prefix%&#9FFF00Resetting region &f%region%&#9FFF00...'
+removed: '%prefix%&#9FFF00Removed arena &f%region%&#9FFF00.'
+snapshot-saved: '%prefix%&#9FFF00Snapshot saved for &f%region%&#9FFF00.'

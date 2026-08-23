@@ -7,6 +7,7 @@ import com.sharded.core.util.ConfigSync;
 import com.sharded.core.util.LocationUtil;
 import com.sharded.core.util.SafeLocationFinder;
 import com.sharded.core.util.TabCompleteHelper;
+import com.sharded.core.util.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -19,16 +20,24 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /** Spawn selector — main spawn vs vanilla RTP, linked to portal RTP radius on death. */
 public final class SpawnSelectModule extends Module implements CommandExecutor, TabCompleter {
 
     private static final String STATE_KEY = "spawn-selection";
+    private final Map<UUID, PendingTeleport> pending = new HashMap<>();
+
+    private record PendingTeleport(Location target, int taskId, int secondsLeft) {
+    }
 
     public SpawnSelectModule(ShardedCore plugin) {
         super(plugin, "spawnselect");
@@ -40,13 +49,21 @@ public final class SpawnSelectModule extends Module implements CommandExecutor, 
         ConfigSync.sync(plugin, guiFile, "modules/spawnselect/gui.yml");
         plugin.gui().loadMenu(guiFile, "spawnselect");
 
-        plugin.gui().registerAction("spawn_select_main", p -> select(p, "main"));
-        plugin.gui().registerAction("spawn_select_vanilla", p -> select(p, "vanilla"));
+        plugin.gui().registerAction("spawn_select_main", p -> selectMain(p));
+        plugin.gui().registerAction("spawn_select_vanilla", p -> selectVanilla(p));
 
         registerCommand("spawn", this);
         registerCommand("spawnselect", this);
         registerCommand("spawnselector", this);
         registerCommand("setspawn", this);
+    }
+
+    @Override
+    protected void onDisable() {
+        for (PendingTeleport tp : pending.values()) {
+            Bukkit.getScheduler().cancelTask(tp.taskId());
+        }
+        pending.clear();
     }
 
     @Override
@@ -65,16 +82,94 @@ public final class SpawnSelectModule extends Module implements CommandExecutor, 
 
     private boolean handleSpawn(Player player, String[] args) {
         if (args.length == 0) {
-            openSelector(player);
+            startMainTeleport(player);
             return true;
         }
-        String choice = args[0].toLowerCase();
-        if (choice.equals("main") || choice.equals("vanilla")) {
-            select(player, choice);
-            return true;
+        if (args[0].equalsIgnoreCase("select") && args.length >= 2) {
+            String choice = args[1].toLowerCase();
+            if (choice.equals("main")) {
+                selectMain(player);
+                return true;
+            }
+            if (choice.equals("vanilla")) {
+                selectVanilla(player);
+                return true;
+            }
         }
         send(player, "usage");
         return true;
+    }
+
+    private void startMainTeleport(Player player) {
+        Location main = mainSpawn();
+        if (main == null) {
+            send(player, "main-not-set");
+            return;
+        }
+        beginCountdown(player, main);
+    }
+
+    private void selectMain(Player player) {
+        if (mainSpawn() == null) {
+            send(player, "main-not-set");
+            return;
+        }
+        setSelection(player, "main");
+        send(player, "selected-main");
+        beginCountdown(player, mainSpawn());
+    }
+
+    private void selectVanilla(Player player) {
+        if (vanillaWorld() == null || vanillaWorld().isBlank()) {
+            send(player, "vanilla-not-set");
+            return;
+        }
+        setSelection(player, "vanilla");
+        send(player, "selected-vanilla");
+    }
+
+    private void beginCountdown(Player player, Location target) {
+        cancelPending(player);
+        int seconds = config.getInt("main-teleport-seconds", 10);
+        int taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+            int left = seconds;
+
+            @Override
+            public void run() {
+                if (!player.isOnline()) {
+                    cancelPending(player);
+                    return;
+                }
+                if (left <= 0) {
+                    cancelPending(player);
+                    player.teleportAsync(target);
+                    player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 0.8f, 1f);
+                    send(player, "teleported-main");
+                    return;
+                }
+                String bar = config.getString("main-teleport-actionbar",
+                        "&7Teleporting in &f%seconds%s &7— do not move!");
+                player.sendActionBar(Text.c(bar.replace("%seconds%", String.valueOf(left))));
+                left--;
+            }
+        }, 0L, 20L);
+        pending.put(player.getUniqueId(), new PendingTeleport(target, taskId, seconds));
+    }
+
+    private void cancelPending(Player player) {
+        PendingTeleport tp = pending.remove(player.getUniqueId());
+        if (tp != null) Bukkit.getScheduler().cancelTask(tp.taskId());
+    }
+
+    @EventHandler
+    public void onMoveCancel(PlayerMoveEvent event) {
+        if (pending.containsKey(event.getPlayer().getUniqueId())
+                && (event.getFrom().getBlockX() != event.getTo().getBlockX()
+                || event.getFrom().getBlockY() != event.getTo().getBlockY()
+                || event.getFrom().getBlockZ() != event.getTo().getBlockZ())) {
+            cancelPending(event.getPlayer());
+            send(event.getPlayer(), "teleport-cancelled");
+        }
     }
 
     private boolean handleSetSpawn(CommandSender sender, String[] args) {
@@ -115,26 +210,8 @@ public final class SpawnSelectModule extends Module implements CommandExecutor, 
         return true;
     }
 
-    private void openSelector(Player player) {
+    public void openSelector(Player player) {
         plugin.gui().open(player, "spawnselect");
-    }
-
-    private void select(Player player, String choice) {
-        if (choice.equals("main")) {
-            if (mainSpawn() == null) {
-                send(player, "main-not-set");
-                return;
-            }
-            setSelection(player, "main");
-            send(player, "selected-main");
-            return;
-        }
-        if (vanillaWorld() == null) {
-            send(player, "vanilla-not-set");
-            return;
-        }
-        setSelection(player, "vanilla");
-        send(player, "selected-vanilla");
     }
 
     private void setSelection(Player player, String choice) {
@@ -249,6 +326,12 @@ public final class SpawnSelectModule extends Module implements CommandExecutor, 
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (command.getName().equalsIgnoreCase("spawn") && args.length == 1) {
+            return TabCompleteHelper.filter(args[0], "select");
+        }
+        if (command.getName().equalsIgnoreCase("spawn") && args.length == 2 && args[0].equalsIgnoreCase("select")) {
+            return TabCompleteHelper.filter(args[1], "main", "vanilla");
+        }
         if (!command.getName().equalsIgnoreCase("setspawn")) return List.of();
         if (args.length == 1) return TabCompleteHelper.filter(args[0], "main", "vanilla");
         if (args.length == 2 && args[0].equalsIgnoreCase("vanilla")) {

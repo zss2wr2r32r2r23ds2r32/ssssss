@@ -1,0 +1,13 @@
+config-version: 1
+message-mode: chat
+allowed-worlds:
+  - spawn
+duration-seconds: 300
+points-per-hit: 5
+points-per-second-standing: 1
+actionbar: '&dKOTH &7| &f%points% pts &7| &f%time%'
+rewards:
+  rank-1: 1000
+  rank-2: 750
+  rank-3: 500
+region: {}

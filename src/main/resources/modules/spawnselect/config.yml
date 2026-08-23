@@ -3,6 +3,8 @@ message-mode: chat
 
 # World used when portal RTP module is disabled
 fallback-world: world
+main-teleport-seconds: 10
+main-teleport-actionbar: '&7Teleporting in &f%seconds%s &7— do not move!'
 
 # Open spawn selector on first join (optional — closing without picking defaults to vanilla)
 prompt-on-join: false
