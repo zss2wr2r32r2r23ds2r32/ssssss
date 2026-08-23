@@ -2,28 +2,39 @@
 
 Velocity proxy plugin with server status placeholders, queue system, and hologram support.
 
-## JARs (v1.0.4)
+## JARs (v1.0.5)
 
 | File | Install on |
 |------|------------|
-| `build/libs/ShardedVelocityCore-1.0.4.jar` | Velocity `plugins/` |
-| `lobby/build/libs/ShardedVelocityCore-Lobby-1.0.4.jar` | Lobby `plugins/` (+ PlaceholderAPI) |
-
-Build: `./gradlew build`
+| `ShardedVelocityCore-1.0.5.jar` | Velocity `plugins/` |
+| `ShardedVelocityCore-Lobby-1.0.5.jar` | Lobby `plugins/` (+ PlaceholderAPI) |
 
 ## Commands
 
 | Command | Description |
 |---------|-------------|
-| `/queue [server]` | Join queue (defaults to survival) |
-| `/queue leave` | Leave the queue |
-| `/leave` | Leave the queue |
+| `/queue [server]` | Join queue — includes `lobby` |
+| `/queue lobby` | Return to lobby |
+| `/server lobby` | Connect to lobby |
 | `/server <server>` | Connect via queue system |
+| `/leave` | Leave the queue |
 
-## Hologram placeholders (line 9)
+## Whitelist = Maintenance
 
+When a server has whitelist enabled, its hologram status automatically shows **MAINTEANCE**.
+
+Detects whitelist via server MOTD and kick messages.
+
+```toml
+whitelist-as-maintenance = true
 ```
-%shardedvelocitycore_status_survival%
-%shardedvelocitycore_status_events%
-%shardedvelocitycore_status_diasmp%
+
+## Config
+
+```toml
+lobby-server = "lobby"
+queue-servers = ["lobby", "survival", "events", "diasmp"]
+tracked-servers = ["survival", "events", "diasmp"]
 ```
+
+Make sure your Velocity `velocity.toml` has a server named `lobby`.

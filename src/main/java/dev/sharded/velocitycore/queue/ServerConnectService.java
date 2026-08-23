@@ -26,7 +26,7 @@ public final class ServerConnectService {
     public List<Component> connect(Player player, String target) {
         String resolvedTarget = target == null || target.isBlank()
                 ? config.defaultQueueServer()
-                : target;
+                : resolveTarget(target);
 
         if (ServerResolver.find(proxy, resolvedTarget).isEmpty()) {
             return List.of(queueManager.format(
@@ -96,5 +96,12 @@ public final class ServerConnectService {
                         + config.queueColors().error() + " — Available: "
                         + config.queueColors().accent() + String.join(", ", config.queueServers())
         );
+    }
+
+    private String resolveTarget(String target) {
+        if (target.equalsIgnoreCase("lobby") || target.equalsIgnoreCase("hub")) {
+            return config.lobbyServer();
+        }
+        return target;
     }
 }

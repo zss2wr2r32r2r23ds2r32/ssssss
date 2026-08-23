@@ -9,6 +9,7 @@ import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import dev.sharded.velocitycore.command.LeaveCommand;
 import dev.sharded.velocitycore.command.QueueCommand;
+import dev.sharded.velocitycore.command.ServerCommand;
 import dev.sharded.velocitycore.config.PluginConfig;
 import dev.sharded.velocitycore.listener.PlayerListener;
 import dev.sharded.velocitycore.listener.WhitelistListener;
@@ -66,6 +67,10 @@ public final class ShardedVelocityCore {
         server.getCommandManager().register(
                 server.getCommandManager().metaBuilder("leave").plugin(this).build(),
                 new LeaveCommand(connectService)
+        );
+        server.getCommandManager().register(
+                server.getCommandManager().metaBuilder("server").plugin(this).build(),
+                new ServerCommand(connectService)
         );
 
         server.getEventManager().register(this, new ServerCommandListener(connectService));
