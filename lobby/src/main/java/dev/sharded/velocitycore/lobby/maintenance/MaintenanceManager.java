@@ -1,7 +1,7 @@
 package dev.sharded.velocitycore.lobby.maintenance;
 
-import dev.sharded.velocitycore.lobby.config.LobbySettings;
-import dev.sharded.velocitycore.lobby.util.LegacyText;
+import dev.sharded.velocitycore.lobby.motd.MotdService;
+import dev.sharded.velocitycore.lobby.util.DisconnectUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -23,15 +23,15 @@ import java.util.stream.Collectors;
 public final class MaintenanceManager {
 
     private final JavaPlugin plugin;
-    private final LobbySettings settings;
+    private final MotdService motdService;
     private final MaintenanceSyncService syncService;
     private final File file;
     private final Set<UUID> bypassPlayers = new LinkedHashSet<>();
     private boolean enabled;
 
-    public MaintenanceManager(JavaPlugin plugin, LobbySettings settings, MaintenanceSyncService syncService) {
+    public MaintenanceManager(JavaPlugin plugin, MotdService motdService, MaintenanceSyncService syncService) {
         this.plugin = plugin;
-        this.settings = settings;
+        this.motdService = motdService;
         this.syncService = syncService;
         this.file = new File(plugin.getDataFolder(), "maintenance.yml");
         load();
@@ -42,11 +42,7 @@ public final class MaintenanceManager {
     }
 
     public Component kickComponent() {
-        return LegacyText.parse(settings.kickMessage());
-    }
-
-    public String maintenanceMotdRaw() {
-        return settings.maintenanceMotd();
+        return motdService.kickComponent();
     }
 
     public boolean canJoin(Player player) {
@@ -69,7 +65,7 @@ public final class MaintenanceManager {
         Component kickMessage = kickComponent();
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (!canJoin(player)) {
-                player.kick(kickMessage);
+                DisconnectUtil.disconnect(player, kickMessage);
             }
         }
         return true;
@@ -113,7 +109,7 @@ public final class MaintenanceManager {
         if (enabled) {
             Player online = Bukkit.getPlayer(uuid);
             if (online != null && online.isOnline()) {
-                online.kick(kickComponent());
+                DisconnectUtil.disconnect(online, kickComponent());
             }
         }
         return true;
@@ -130,7 +126,7 @@ public final class MaintenanceManager {
         if (enabled) {
             Component kickMessage = kickComponent();
             for (Player player : Bukkit.getOnlinePlayers()) {
-                player.kick(kickMessage);
+                DisconnectUtil.disconnect(player, kickMessage);
             }
         }
     }

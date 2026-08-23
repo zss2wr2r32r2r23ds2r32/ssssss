@@ -14,8 +14,9 @@ import dev.sharded.velocitycore.command.ServerCommand;
 import dev.sharded.velocitycore.common.PluginChannels;
 import dev.sharded.velocitycore.config.PluginConfig;
 import dev.sharded.velocitycore.listener.MaintenanceSyncListener;
-import dev.sharded.velocitycore.listener.NetworkMaintenancePingListener;
+import dev.sharded.velocitycore.listener.NetworkMotdPingListener;
 import dev.sharded.velocitycore.listener.PlayerListener;
+import dev.sharded.velocitycore.motd.ServerIconService;
 import dev.sharded.velocitycore.listener.WhitelistReportListener;
 import dev.sharded.velocitycore.listener.ServerCommandListener;
 import dev.sharded.velocitycore.placeholder.PlaceholderHook;
@@ -25,7 +26,7 @@ import dev.sharded.velocitycore.status.ServerStatusManager;
 import dev.sharded.velocitycore.status.StatusSyncService;
 import dev.sharded.velocitycore.status.WhitelistPersistence;
 import dev.sharded.velocitycore.status.WhitelistRequestService;
-import dev.sharded.velocitycore.status.NetworkMaintenanceState;
+import dev.sharded.velocitycore.status.NetworkMotdState;
 import org.slf4j.Logger;
 
 import java.nio.file.Path;
@@ -34,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(
         id = "shardedvelocitycore",
         name = "ShardedVelocityCore",
-        version = "1.0.8",
+        version = "1.0.9",
         description = "Server status placeholders, queue system, and hologram status sync for Velocity networks.",
         authors = {"Sharded"}
 )
@@ -51,7 +52,8 @@ public final class ShardedVelocityCore {
     private ServerConnectService connectService;
     private WhitelistRequestService whitelistRequestService;
     private WhitelistPersistence whitelistPersistence;
-    private NetworkMaintenanceState networkMaintenanceState;
+    private NetworkMotdState networkMotdState;
+    private ServerIconService serverIconService;
 
     @Inject
     public ShardedVelocityCore(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory) {
@@ -64,7 +66,8 @@ public final class ShardedVelocityCore {
     public void onProxyInitialization(ProxyInitializeEvent event) {
         this.config = PluginConfig.load(dataDirectory, logger);
         this.whitelistPersistence = new WhitelistPersistence(dataDirectory, logger);
-        this.networkMaintenanceState = new NetworkMaintenanceState();
+        this.networkMotdState = new NetworkMotdState();
+        this.serverIconService = new ServerIconService(dataDirectory, logger);
         this.statusManager = new ServerStatusManager(server, config, whitelistPersistence);
         this.queueManager = new QueueManager(server, config, statusManager);
         this.statusSyncService = new StatusSyncService(server, statusManager, config);
@@ -96,8 +99,8 @@ public final class ShardedVelocityCore {
         server.getEventManager().register(this, new ServerCommandListener(connectService));
         server.getEventManager().register(this, new PlayerListener(queueManager, statusSyncService, whitelistRequestService));
         server.getEventManager().register(this, new WhitelistReportListener(statusManager, statusSyncService));
-        server.getEventManager().register(this, new MaintenanceSyncListener(networkMaintenanceState));
-        server.getEventManager().register(this, new NetworkMaintenancePingListener(networkMaintenanceState));
+        server.getEventManager().register(this, new MaintenanceSyncListener(networkMotdState));
+        server.getEventManager().register(this, new NetworkMotdPingListener(networkMotdState, serverIconService));
 
         statusManager.start();
         whitelistRequestService.start();

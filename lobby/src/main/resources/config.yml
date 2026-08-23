@@ -1,15 +1,38 @@
-# ShardedVelocityCore-Lobby settings
+config-schema: "10800"
 
-motd: "&#8AFF00&lSHARDEDMC"
+# Default MOTD (shown when maintenance is OFF)
+motd:
+  lines:
+    - "      §x§a§d§4§e§f§f§lSHARDEDMC <reset><gray>[1.21+] §8▶ §7.gg/shardedmc"
+    - "                 §x§8§A§F§F§0§0§lWELCOME"
 
-maintenance:
+# Server icon (64x64 PNG in icons/ folder)
+server-icon:
+  enabled: false
+  image: "default-server-icon.png"
+
+# Multiple MOTDs (optional — overrides motd.lines when enabled)
+multi-motd:
+  enabled: false
+  order: "random"
+  motds:
+    - line1: "§x§a§d§4§e§f§f§lSHARDEDMC"
+      line2: "§7Welcome to the network!"
+      icon: ""
+
+# Maintenance (/maintenance command — highest priority when active)
+maintenance-motd:
   kick-message:
     - "&#FF0000&lMAINTENANCE"
     - "&fThis server is currently in downtime"
     - ""
     - "&fIf you believe the is an error contact staff via"
     - "&#FFD900▷ &n&ldiscord.gg/shardedmc&f &#FFD900◁"
-  maintenance-motd: "&#FF0000&lMAINTENANCE"
-  server-list:
-    version-text: "Maintenance"
-    protocol-version: -1
+  order: "list"
+  protocol-text: true
+  text: "&cMAINTENANCE"
+  protocol-version: -1
+  motds:
+    - line1: "      §x§a§d§4§e§f§f§lSHARDEDMC <reset><gray>[1.21+] §8▶ §7.gg/shardedmc"
+      line2: "                 §x§F§F§0§0§0§0§lMAINTENANCE"
+      icon: "maintenance.png"

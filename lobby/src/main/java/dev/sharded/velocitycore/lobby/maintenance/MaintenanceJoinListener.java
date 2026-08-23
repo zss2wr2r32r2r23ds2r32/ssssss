@@ -1,5 +1,6 @@
 package dev.sharded.velocitycore.lobby.maintenance;
 
+import dev.sharded.velocitycore.lobby.util.DisconnectUtil;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -30,6 +31,6 @@ public final class MaintenanceJoinListener implements Listener {
         if (maintenanceManager.canJoin(event.getPlayer())) {
             return;
         }
-        event.getPlayer().kick(maintenanceManager.kickComponent());
+        DisconnectUtil.disconnect(event.getPlayer(), maintenanceManager.kickComponent());
     }
 }

@@ -5,18 +5,17 @@ import com.velocitypowered.api.event.connection.PluginMessageEvent;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import dev.sharded.velocitycore.common.PluginChannels;
 import dev.sharded.velocitycore.status.MaintenanceMessages;
-import dev.sharded.velocitycore.status.NetworkMaintenanceState;
-import dev.sharded.velocitycore.util.LegacyText;
+import dev.sharded.velocitycore.status.NetworkMotdState;
 
 public final class MaintenanceSyncListener {
 
     private static final MinecraftChannelIdentifier CHANNEL =
             MinecraftChannelIdentifier.from(PluginChannels.MAINTENANCE_CHANNEL);
 
-    private final NetworkMaintenanceState networkMaintenanceState;
+    private final NetworkMotdState networkMotdState;
 
-    public MaintenanceSyncListener(NetworkMaintenanceState networkMaintenanceState) {
-        this.networkMaintenanceState = networkMaintenanceState;
+    public MaintenanceSyncListener(NetworkMotdState networkMotdState) {
+        this.networkMotdState = networkMotdState;
     }
 
     @Subscribe
@@ -27,12 +26,7 @@ public final class MaintenanceSyncListener {
 
         try {
             MaintenanceMessages.Sync sync = MaintenanceMessages.decode(event.getData());
-            networkMaintenanceState.update(
-                    sync.enabled(),
-                    LegacyText.parse(sync.maintenanceMotd()),
-                    sync.versionText(),
-                    sync.protocolVersion()
-            );
+            networkMotdState.update(sync);
         } catch (Exception ignored) {
             // Ignore malformed maintenance sync payloads.
         }
