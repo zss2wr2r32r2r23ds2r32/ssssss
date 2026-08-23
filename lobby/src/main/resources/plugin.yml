@@ -1,5 +1,5 @@
 name: ShardedVelocityCore-Lobby
-version: 1.0.7
+version: 1.0.8
 main: dev.sharded.velocitycore.lobby.LobbyPlugin
 api-version: '1.21'
 author: Sharded

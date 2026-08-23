@@ -36,7 +36,7 @@ public final class QueueColors {
     public static QueueColors defaults() {
         Map<String, String> serverColors = new HashMap<>();
         serverColors.put("survival", "&#8AFF00");
-        serverColors.put("events", "&#FF0700");
+        serverColors.put("events", "&#FFEE00");
         serverColors.put("diasmp", "&#FF0000");
         serverColors.put("diamondsmp", "&#FF0000");
         serverColors.put("lobby", "&#4498DB");

@@ -1,10 +1,13 @@
 package dev.sharded.velocitycore.lobby;
 
+import dev.sharded.velocitycore.lobby.config.LobbySettings;
 import dev.sharded.velocitycore.lobby.expansion.ShardedExpansion;
 import dev.sharded.velocitycore.lobby.hologram.HologramRefreshService;
 import dev.sharded.velocitycore.lobby.maintenance.MaintenanceCommand;
 import dev.sharded.velocitycore.lobby.maintenance.MaintenanceJoinListener;
 import dev.sharded.velocitycore.lobby.maintenance.MaintenanceManager;
+import dev.sharded.velocitycore.lobby.maintenance.MaintenancePingListener;
+import dev.sharded.velocitycore.lobby.maintenance.MaintenanceSyncService;
 import dev.sharded.velocitycore.lobby.sync.StatusCache;
 import dev.sharded.velocitycore.lobby.sync.StatusSyncListener;
 import org.bukkit.Bukkit;
@@ -15,13 +18,17 @@ public final class LobbyPlugin extends JavaPlugin {
 
     private StatusCache statusCache;
     private HologramRefreshService hologramRefreshService;
+    private LobbySettings lobbySettings;
+    private MaintenanceSyncService maintenanceSyncService;
     private MaintenanceManager maintenanceManager;
 
     @Override
     public void onEnable() {
         this.statusCache = new StatusCache();
         this.hologramRefreshService = new HologramRefreshService(this);
-        this.maintenanceManager = new MaintenanceManager(this);
+        this.lobbySettings = new LobbySettings(this);
+        this.maintenanceSyncService = new MaintenanceSyncService(this, lobbySettings);
+        this.maintenanceManager = new MaintenanceManager(this, lobbySettings, maintenanceSyncService);
 
         getServer().getMessenger().registerIncomingPluginChannel(
                 this,
@@ -29,6 +36,7 @@ public final class LobbyPlugin extends JavaPlugin {
                 new StatusSyncListener(statusCache, hologramRefreshService)
         );
         getServer().getMessenger().registerOutgoingPluginChannel(this, "shardedvelocitycore:status");
+        maintenanceSyncService.register();
 
         statusCache.addListener(hologramRefreshService::refreshAll);
         hologramRefreshService.start();
@@ -37,6 +45,9 @@ public final class LobbyPlugin extends JavaPlugin {
         getCommand("maintenance").setExecutor(maintenanceCommand);
         getCommand("maintenance").setTabCompleter(maintenanceCommand);
         getServer().getPluginManager().registerEvents(new MaintenanceJoinListener(maintenanceManager), this);
+        getServer().getPluginManager().registerEvents(new MaintenancePingListener(maintenanceManager, lobbySettings), this);
+
+        maintenanceSyncService.syncNow(maintenanceManager.isEnabled());
 
         if (maintenanceManager.isEnabled()) {
             Bukkit.getScheduler().runTask(this, () -> {

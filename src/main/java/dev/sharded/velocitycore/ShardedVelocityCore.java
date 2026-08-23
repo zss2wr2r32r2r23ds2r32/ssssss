@@ -13,6 +13,8 @@ import dev.sharded.velocitycore.command.QueueCommand;
 import dev.sharded.velocitycore.command.ServerCommand;
 import dev.sharded.velocitycore.common.PluginChannels;
 import dev.sharded.velocitycore.config.PluginConfig;
+import dev.sharded.velocitycore.listener.MaintenanceSyncListener;
+import dev.sharded.velocitycore.listener.NetworkMaintenancePingListener;
 import dev.sharded.velocitycore.listener.PlayerListener;
 import dev.sharded.velocitycore.listener.WhitelistReportListener;
 import dev.sharded.velocitycore.listener.ServerCommandListener;
@@ -21,6 +23,9 @@ import dev.sharded.velocitycore.queue.QueueManager;
 import dev.sharded.velocitycore.queue.ServerConnectService;
 import dev.sharded.velocitycore.status.ServerStatusManager;
 import dev.sharded.velocitycore.status.StatusSyncService;
+import dev.sharded.velocitycore.status.WhitelistPersistence;
+import dev.sharded.velocitycore.status.WhitelistRequestService;
+import dev.sharded.velocitycore.status.NetworkMaintenanceState;
 import org.slf4j.Logger;
 
 import java.nio.file.Path;
@@ -29,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(
         id = "shardedvelocitycore",
         name = "ShardedVelocityCore",
-        version = "1.0.7",
+        version = "1.0.8",
         description = "Server status placeholders, queue system, and hologram status sync for Velocity networks.",
         authors = {"Sharded"}
 )
@@ -44,6 +49,9 @@ public final class ShardedVelocityCore {
     private QueueManager queueManager;
     private StatusSyncService statusSyncService;
     private ServerConnectService connectService;
+    private WhitelistRequestService whitelistRequestService;
+    private WhitelistPersistence whitelistPersistence;
+    private NetworkMaintenanceState networkMaintenanceState;
 
     @Inject
     public ShardedVelocityCore(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory) {
@@ -55,10 +63,13 @@ public final class ShardedVelocityCore {
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
         this.config = PluginConfig.load(dataDirectory, logger);
-        this.statusManager = new ServerStatusManager(server, config);
+        this.whitelistPersistence = new WhitelistPersistence(dataDirectory, logger);
+        this.networkMaintenanceState = new NetworkMaintenanceState();
+        this.statusManager = new ServerStatusManager(server, config, whitelistPersistence);
         this.queueManager = new QueueManager(server, config, statusManager);
         this.statusSyncService = new StatusSyncService(server, statusManager, config);
         this.connectService = new ServerConnectService(server, queueManager, config);
+        this.whitelistRequestService = new WhitelistRequestService(server, config);
 
         statusManager.setChangeListener(statusSyncService::broadcastNow);
 
@@ -78,12 +89,18 @@ public final class ShardedVelocityCore {
         server.getChannelRegistrar().register(
                 MinecraftChannelIdentifier.from(PluginChannels.WHITELIST_CHANNEL)
         );
+        server.getChannelRegistrar().register(
+                MinecraftChannelIdentifier.from(PluginChannels.MAINTENANCE_CHANNEL)
+        );
 
         server.getEventManager().register(this, new ServerCommandListener(connectService));
-        server.getEventManager().register(this, new PlayerListener(queueManager, statusSyncService));
+        server.getEventManager().register(this, new PlayerListener(queueManager, statusSyncService, whitelistRequestService));
         server.getEventManager().register(this, new WhitelistReportListener(statusManager, statusSyncService));
+        server.getEventManager().register(this, new MaintenanceSyncListener(networkMaintenanceState));
+        server.getEventManager().register(this, new NetworkMaintenancePingListener(networkMaintenanceState));
 
         statusManager.start();
+        whitelistRequestService.start();
         queueManager.start(this);
         statusSyncService.start(this);
 
@@ -116,6 +133,9 @@ public final class ShardedVelocityCore {
         }
         if (queueManager != null) {
             queueManager.stop();
+        }
+        if (whitelistRequestService != null) {
+            whitelistRequestService.stop();
         }
         if (statusManager != null) {
             statusManager.stop();

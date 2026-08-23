@@ -5,15 +5,22 @@ import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import dev.sharded.velocitycore.queue.QueueManager;
 import dev.sharded.velocitycore.status.StatusSyncService;
+import dev.sharded.velocitycore.status.WhitelistRequestService;
 
 public final class PlayerListener {
 
     private final QueueManager queueManager;
     private final StatusSyncService statusSyncService;
+    private final WhitelistRequestService whitelistRequestService;
 
-    public PlayerListener(QueueManager queueManager, StatusSyncService statusSyncService) {
+    public PlayerListener(
+            QueueManager queueManager,
+            StatusSyncService statusSyncService,
+            WhitelistRequestService whitelistRequestService
+    ) {
         this.queueManager = queueManager;
         this.statusSyncService = statusSyncService;
+        this.whitelistRequestService = whitelistRequestService;
     }
 
     @Subscribe
@@ -23,6 +30,7 @@ public final class PlayerListener {
 
     @Subscribe
     public void onServerConnected(ServerConnectedEvent event) {
+        whitelistRequestService.requestAll();
         statusSyncService.sendToPlayer(event.getPlayer());
     }
 }

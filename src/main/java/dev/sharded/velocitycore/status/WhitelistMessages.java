@@ -3,13 +3,18 @@ package dev.sharded.velocitycore.status;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import dev.sharded.velocitycore.common.PluginChannels;
 
 import java.nio.charset.StandardCharsets;
 
 public final class WhitelistMessages {
 
+    public static final byte REQUEST = 0x01;
+
     private WhitelistMessages() {
+    }
+
+    public static boolean isRequest(byte[] data) {
+        return data != null && data.length == 1 && data[0] == REQUEST;
     }
 
     public static Report decode(byte[] data) {

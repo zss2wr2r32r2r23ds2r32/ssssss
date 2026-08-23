@@ -27,7 +27,7 @@ maintenance-servers = []
   [queue.server-colors]
     lobby = "&#4498DB"
     survival = "&#8AFF00"
-    events = "&#FF0700"
+    events = "&#FFEE00"
     diasmp = "&#FF0000"
     diamondsmp = "&#FF0000"
 

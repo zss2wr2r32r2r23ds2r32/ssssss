@@ -9,8 +9,13 @@ import java.nio.charset.StandardCharsets;
 public final class WhitelistMessages {
 
     public static final String CHANNEL = "shardedvelocitycore:whitelist";
+    public static final byte REQUEST = 0x01;
 
     private WhitelistMessages() {
+    }
+
+    public static boolean isRequest(byte[] data) {
+        return data != null && data.length == 1 && data[0] == REQUEST;
     }
 
     public static byte[] encode(String serverName, boolean whitelisted) {

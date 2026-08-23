@@ -28,6 +28,9 @@ public final class WhitelistReportListener {
         }
 
         try {
+            if (WhitelistMessages.isRequest(event.getData())) {
+                return;
+            }
             WhitelistMessages.Report report = WhitelistMessages.decode(event.getData());
             if (statusManager.updateWhitelistReport(report.serverName(), report.whitelisted())) {
                 statusSyncService.broadcastNow();

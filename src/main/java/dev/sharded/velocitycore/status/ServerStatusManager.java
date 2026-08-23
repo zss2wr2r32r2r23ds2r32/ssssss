@@ -27,11 +27,13 @@ public final class ServerStatusManager {
     });
     private volatile Runnable changeListener;
 
-    public ServerStatusManager(ProxyServer server, PluginConfig config) {
+    public ServerStatusManager(ProxyServer server, PluginConfig config, WhitelistPersistence persistence) {
         this.server = server;
         this.config = config;
+        whitelistTracker.load(persistence.load());
+        whitelistTracker.setSaveListener(persistence::save);
         for (String tracked : config.trackedServers()) {
-            states.put(normalize(tracked), ServerState.OFFLINE);
+            states.put(normalize(tracked), resolveState(tracked));
         }
     }
 
@@ -143,9 +145,7 @@ public final class ServerStatusManager {
             return ServerState.OFFLINE;
         }
 
-        if (config.whitelistAsMaintenance()
-                && whitelistTracker.hasRecentReport(serverName)
-                && whitelistTracker.isWhitelisted(serverName)) {
+        if (config.whitelistAsMaintenance() && whitelistTracker.isWhitelisted(serverName)) {
             return ServerState.MAINTENANCE;
         }
 

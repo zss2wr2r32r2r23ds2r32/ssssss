@@ -1,5 +1,7 @@
 package dev.sharded.velocitycore.lobby.maintenance;
 
+import dev.sharded.velocitycore.lobby.config.LobbySettings;
+import dev.sharded.velocitycore.lobby.util.LegacyText;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -14,28 +16,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 public final class MaintenanceManager {
 
-    public static final String KICK_MESSAGE = String.join("\n",
-            "&#FF0000&lMAINTENANCE",
-            "&fThis server is currently in downtime",
-            "",
-            "&fIf you believe the is an error contact staff via",
-            "&#FFD900▷ &n&ldiscord.gg/shardedmc&f &#FFD900◁"
-    );
-
     private final JavaPlugin plugin;
+    private final LobbySettings settings;
+    private final MaintenanceSyncService syncService;
     private final File file;
     private final Set<UUID> bypassPlayers = new LinkedHashSet<>();
     private boolean enabled;
 
-    public MaintenanceManager(JavaPlugin plugin) {
+    public MaintenanceManager(JavaPlugin plugin, LobbySettings settings, MaintenanceSyncService syncService) {
         this.plugin = plugin;
+        this.settings = settings;
+        this.syncService = syncService;
         this.file = new File(plugin.getDataFolder(), "maintenance.yml");
         load();
     }
@@ -45,7 +42,11 @@ public final class MaintenanceManager {
     }
 
     public Component kickComponent() {
-        return dev.sharded.velocitycore.lobby.util.LegacyText.parse(KICK_MESSAGE);
+        return LegacyText.parse(settings.kickMessage());
+    }
+
+    public String maintenanceMotdRaw() {
+        return settings.maintenanceMotd();
     }
 
     public boolean canJoin(Player player) {
@@ -63,6 +64,7 @@ public final class MaintenanceManager {
     public boolean enableAndKick() {
         enabled = true;
         save();
+        syncService.syncNow(true);
 
         Component kickMessage = kickComponent();
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -76,6 +78,7 @@ public final class MaintenanceManager {
     public boolean disable() {
         enabled = false;
         save();
+        syncService.syncNow(false);
         return true;
     }
 

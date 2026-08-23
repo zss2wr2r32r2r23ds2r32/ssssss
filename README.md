@@ -2,33 +2,37 @@
 
 Velocity proxy plugin with server status placeholders, queue system, and hologram support.
 
-## JARs (v1.0.7)
+## JARs (v1.0.8)
 
 | File | Install on |
 |------|------------|
-| `ShardedVelocityCore-1.0.7.jar` | Velocity `plugins/` |
-| `ShardedVelocityCore-Backend-1.0.7.jar` | Every backend server (survival, events, diasmp) |
-| `ShardedVelocityCore-Lobby-1.0.7.jar` | Lobby `plugins/` (+ PlaceholderAPI) |
+| `ShardedVelocityCore-1.0.8.jar` | Velocity `plugins/` |
+| `ShardedVelocityCore-Backend-1.0.8.jar` | Every backend server |
+| `ShardedVelocityCore-Lobby-1.0.8.jar` | Lobby `plugins/` (+ PlaceholderAPI) |
 
-## Lobby maintenance
+## Lobby config (`plugins/ShardedVelocityCore-Lobby/config.yml`)
 
-| Command | Description |
-|---------|-------------|
-| `/maintenance` | Toggle maintenance — kicks non-bypass players with maintenance screen |
-| `/maintenance add <player>` | Add player to bypass list (tab complete) |
-| `/maintenance remove <player>` | Remove player from bypass list |
-| `/maintenance wipe` | Clear entire bypass list |
+```yaml
+motd: "&#8AFF00&lSHARDEDMC"
 
-Permission: `shardedvelocitycore.maintenance` (default: op)
+maintenance:
+  kick-message:
+    - "&#FF0000&lMAINTENANCE"
+    - "&fThis server is currently in downtime"
+  maintenance-motd: "&#FF0000&lMAINTENANCE"
+  server-list:
+    version-text: "Maintenance"
+    protocol-version: -1
+```
 
-## Whitelist = Maintenance
-
-When whitelist is **on** on a backend server, hologram status shows **MAINTENANCE**.
-
-Install `ShardedVelocityCore-Backend` on each backend and set `server-name` in config.
+When `/maintenance` is on, the server list shows an **X** and "Maintenance". Syncs to Velocity ping too.
 
 ## Queue server colors
 
 - survival: `&#8AFF00`
-- events: `&#FF0700`
+- events: `&#FFEE00`
 - diasmp: `&#FF0000`
+
+## Whitelist = Maintenance
+
+Install Backend plugin on each server with matching `server-name`. Whitelist state is cached on Velocity and polled every second.
