@@ -31,8 +31,8 @@ public final class QueueManager {
         this.server = server;
         this.config = config;
         this.statusManager = statusManager;
-        for (String tracked : config.trackedServers()) {
-            queues.put(ServerStatusManager.normalize(tracked), new ArrayDeque<>());
+        for (String queueServer : config.queueServers()) {
+            queues.put(ServerStatusManager.normalize(queueServer), new ArrayDeque<>());
         }
     }
 
@@ -60,6 +60,14 @@ public final class QueueManager {
         queues.computeIfAbsent(normalized, ignored -> new ArrayDeque<>());
 
         leaveQueue(player);
+
+        if (config.isLobby(canonical)) {
+            if (statusManager.isReachable(canonical)) {
+                connect(player, canonical);
+                return true;
+            }
+            return false;
+        }
 
         if (statusManager.isJoinable(canonical)) {
             connect(player, canonical);

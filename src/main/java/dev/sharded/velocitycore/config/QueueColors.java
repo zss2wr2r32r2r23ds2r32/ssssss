@@ -38,6 +38,7 @@ public final class QueueColors {
         serverColors.put("survival", "&#8AFF00");
         serverColors.put("events", "&#FFAA00");
         serverColors.put("diasmp", "&#4498DB");
+        serverColors.put("lobby", "&#4498DB");
         return new QueueColors(
                 "&#FFFFFF",
                 "&#8AFF00",

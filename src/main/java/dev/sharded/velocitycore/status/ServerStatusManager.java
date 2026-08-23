@@ -2,9 +2,11 @@ package dev.sharded.velocitycore.status;
 
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
+import com.velocitypowered.api.proxy.server.ServerPing;
 import dev.sharded.velocitycore.ServerState;
 import dev.sharded.velocitycore.config.PluginConfig;
 import dev.sharded.velocitycore.util.ServerResolver;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -18,6 +20,7 @@ public final class ServerStatusManager {
 
     private final ProxyServer server;
     private final PluginConfig config;
+    private final WhitelistTracker whitelistTracker = new WhitelistTracker();
     private final Map<String, ServerState> states = new ConcurrentHashMap<>();
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(r -> {
         Thread thread = new Thread(r, "ShardedVelocityCore-status");
@@ -68,6 +71,14 @@ public final class ServerStatusManager {
         return false;
     }
 
+    public boolean markWhitelisted(String serverName) {
+        whitelistTracker.mark(serverName);
+        String key = normalize(ServerResolver.canonicalName(server, serverName));
+        ServerState previous = states.get(key);
+        states.put(key, ServerState.MAINTENANCE);
+        return previous != ServerState.MAINTENANCE;
+    }
+
     public ServerState getState(String serverName) {
         return states.getOrDefault(normalize(serverName), ServerState.OFFLINE);
     }
@@ -80,7 +91,27 @@ public final class ServerStatusManager {
         return new HashMap<>(states);
     }
 
+    public boolean whitelistAsMaintenance() {
+        return config.whitelistAsMaintenance();
+    }
+
+    public boolean isReachable(String serverName) {
+        RegisteredServer registeredServer = ServerResolver.find(server, serverName).orElse(null);
+        if (registeredServer == null) {
+            return false;
+        }
+        try {
+            registeredServer.ping().join();
+            return true;
+        } catch (Exception ignored) {
+            return false;
+        }
+    }
+
     public boolean isJoinable(String serverName) {
+        if (config.isLobby(serverName)) {
+            return isReachable(serverName);
+        }
         return getState(serverName) == ServerState.ONLINE && !isFull(serverName);
     }
 
@@ -100,15 +131,37 @@ public final class ServerStatusManager {
 
         RegisteredServer registeredServer = ServerResolver.find(server, serverName).orElse(null);
         if (registeredServer == null) {
+            whitelistTracker.clear(serverName);
             return ServerState.OFFLINE;
         }
 
         try {
-            registeredServer.ping().join();
+            ServerPing ping = registeredServer.ping().join();
+            if (config.whitelistAsMaintenance() && isWhitelistPing(ping)) {
+                whitelistTracker.mark(serverName);
+                return ServerState.MAINTENANCE;
+            }
+            whitelistTracker.clear(serverName);
             return ServerState.ONLINE;
         } catch (Exception ignored) {
+            if (config.whitelistAsMaintenance() && whitelistTracker.isWhitelisted(serverName)) {
+                return ServerState.MAINTENANCE;
+            }
             return ServerState.OFFLINE;
         }
+    }
+
+    private boolean isWhitelistPing(ServerPing ping) {
+        if (ping.getDescriptionComponent() == null) {
+            return false;
+        }
+        String description = PlainTextComponentSerializer.plainText()
+                .serialize(ping.getDescriptionComponent())
+                .toLowerCase(Locale.ROOT);
+        return description.contains("whitelist")
+                || description.contains("white-list")
+                || description.contains("maintenance")
+                || description.contains("mainteance");
     }
 
     public static String normalize(String serverName) {

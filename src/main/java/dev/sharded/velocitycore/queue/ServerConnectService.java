@@ -33,15 +33,22 @@ public final class ServerConnectService {
                     config.queueColors().error() + "Unknown server "
                             + config.queueColors().accent() + resolvedTarget
                             + config.queueColors().error() + ". Available: "
-                            + config.queueColors().accent() + ServerResolver.availableServers(proxy)
+                            + config.queueColors().accent() + String.join(", ", config.queueServers())
             ));
         }
 
         String canonical = ServerResolver.canonicalName(proxy, resolvedTarget);
 
-        if (queueManager.statusManager().getState(canonical) == ServerState.MAINTENANCE) {
+        if (!config.isLobby(canonical)
+                && queueManager.statusManager().getState(canonical) == ServerState.MAINTENANCE) {
             return List.of(queueManager.format(
                     config.queueColors().error() + canonical + " is currently in maintenance."
+            ));
+        }
+
+        if (config.isLobby(canonical) && !queueManager.statusManager().isReachable(canonical)) {
+            return List.of(queueManager.format(
+                    config.queueColors().error() + "Lobby is currently offline."
             ));
         }
 
@@ -80,14 +87,14 @@ public final class ServerConnectService {
     }
 
     public List<String> suggestions() {
-        return config.trackedServers();
+        return config.queueServers();
     }
 
     public Component usageMessage() {
         return queueManager.format(
                 config.queueColors().accent() + "Usage: /server <server>"
                         + config.queueColors().error() + " — Available: "
-                        + config.queueColors().accent() + String.join(", ", config.trackedServers())
+                        + config.queueColors().accent() + String.join(", ", config.queueServers())
         );
     }
 }

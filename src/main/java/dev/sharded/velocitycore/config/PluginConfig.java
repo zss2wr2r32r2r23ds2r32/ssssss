@@ -24,6 +24,9 @@ public final class PluginConfig {
     private final int statusRefreshSeconds;
     private final int statusSyncIntervalSeconds;
     private final List<String> trackedServers;
+    private final List<String> queueServers;
+    private final String lobbyServer;
+    private final boolean whitelistAsMaintenance;
     private final Set<String> maintenanceServers;
     private final String queueActionBar;
     private final String queuePrefix;
@@ -36,6 +39,9 @@ public final class PluginConfig {
             int statusRefreshSeconds,
             int statusSyncIntervalSeconds,
             List<String> trackedServers,
+            List<String> queueServers,
+            String lobbyServer,
+            boolean whitelistAsMaintenance,
             Set<String> maintenanceServers,
             String queueActionBar,
             String queuePrefix,
@@ -47,6 +53,9 @@ public final class PluginConfig {
         this.statusRefreshSeconds = statusRefreshSeconds;
         this.statusSyncIntervalSeconds = statusSyncIntervalSeconds;
         this.trackedServers = trackedServers;
+        this.queueServers = queueServers;
+        this.lobbyServer = lobbyServer;
+        this.whitelistAsMaintenance = whitelistAsMaintenance;
         this.maintenanceServers = maintenanceServers;
         this.queueActionBar = queueActionBar;
         this.queuePrefix = queuePrefix;
@@ -87,6 +96,15 @@ public final class PluginConfig {
                     ? parsed.getLong("status-sync-interval-seconds").intValue()
                     : 1;
             List<String> tracked = readStringList(parsed.getArray("tracked-servers"), List.of("survival", "events", "diasmp"));
+            List<String> queueServers = readStringList(
+                    parsed.getArray("queue-servers"),
+                    List.of("lobby", "survival", "events", "diasmp")
+            );
+            String lobbyServer = parsed.getString("lobby-server") != null
+                    ? parsed.getString("lobby-server").toLowerCase(Locale.ROOT)
+                    : "lobby";
+            Boolean whitelistSetting = parsed.getBoolean("whitelist-as-maintenance");
+            boolean whitelistAsMaintenance = whitelistSetting != null ? whitelistSetting : true;
             Set<String> maintenance = new HashSet<>();
             for (String server : readStringList(parsed.getArray("maintenance-servers"), List.of())) {
                 maintenance.add(server.toLowerCase(Locale.ROOT));
@@ -125,6 +143,9 @@ public final class PluginConfig {
                     Math.max(1, refresh),
                     Math.max(1, syncInterval),
                     tracked,
+                    queueServers,
+                    lobbyServer,
+                    whitelistAsMaintenance,
                     maintenance,
                     actionBar,
                     prefix,
@@ -144,10 +165,14 @@ public final class PluginConfig {
         maxPlayers.put("survival", 100);
         maxPlayers.put("events", 200);
         maxPlayers.put("diasmp", 150);
+        maxPlayers.put("lobby", 500);
         return new PluginConfig(
                 1,
                 1,
                 List.of("survival", "events", "diasmp"),
+                List.of("lobby", "survival", "events", "diasmp"),
+                "lobby",
+                true,
                 Set.of(),
                 defaultActionBar(),
                 defaultPrefix(),
@@ -231,6 +256,27 @@ public final class PluginConfig {
 
     public List<String> trackedServers() {
         return trackedServers;
+    }
+
+    public List<String> queueServers() {
+        return queueServers;
+    }
+
+    public String lobbyServer() {
+        return lobbyServer;
+    }
+
+    public boolean whitelistAsMaintenance() {
+        return whitelistAsMaintenance;
+    }
+
+    public boolean isLobby(String serverName) {
+        return lobbyServer.equalsIgnoreCase(serverName);
+    }
+
+    public boolean isQueueServer(String serverName) {
+        String normalized = serverName.toLowerCase(Locale.ROOT);
+        return queueServers.stream().anyMatch(server -> server.equalsIgnoreCase(normalized));
     }
 
     public Set<String> maintenanceServers() {

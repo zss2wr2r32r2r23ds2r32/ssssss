@@ -2,8 +2,11 @@
 
 status-refresh-seconds = 1
 status-sync-interval-seconds = 1
+whitelist-as-maintenance = true
+lobby-server = "lobby"
 
 tracked-servers = ["survival", "events", "diasmp"]
+queue-servers = ["lobby", "survival", "events", "diasmp"]
 
 maintenance-servers = []
 
@@ -22,11 +25,13 @@ maintenance-servers = []
     accent = "&#4498DB"
 
   [queue.server-colors]
+    lobby = "&#4498DB"
     survival = "&#8AFF00"
     events = "&#FFAA00"
     diasmp = "&#4498DB"
 
   [queue.max-players]
+    lobby = 500
     survival = 100
     events = 200
     diasmp = 150
