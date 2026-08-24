@@ -32,7 +32,9 @@ public final class CosmeticService implements Listener {
         try {
             database = new CosmeticDatabase(plugin, new File(plugin.getDataFolder(), "cosmetics"));
         } catch (Exception e) {
-            throw new IllegalStateException("Could not open cosmetics database", e);
+            plugin.getLogger().severe("Could not open cosmetics database — tag/name/chat display disabled: " + e.getMessage());
+            e.printStackTrace();
+            database = null;
         }
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }

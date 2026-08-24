@@ -95,7 +95,9 @@ commands:
   tags:
     description: Open the tag equip menu
     usage: /tags
-    aliases: [tag]
+  tag:
+    description: Tag admin and equip commands
+    usage: /tag <create|set|remove|limited|delete|custom> [args]
   deathtoggle:
     description: Toggle seeing death messages
     usage: /deathtoggle [toggle]
@@ -481,12 +483,21 @@ permissions:
   sharded.tags.use:
     description: Open the tag equip menu
     default: true
+  sharded.tags.admin:
+    description: Create and delete tags
+    default: op
   sharded.chatcolor.use:
     description: Open the chat colour equip menu
     default: true
+  sharded.chatcolor.admin:
+    description: Create and delete chat colours
+    default: op
   sharded.namecolor.use:
     description: Open the name colour equip menu
     default: true
+  sharded.namecolor.admin:
+    description: Create and delete name colours
+    default: op
   sharded.wardrobe.use:
     description: Open the wardrobe menu
     default: true

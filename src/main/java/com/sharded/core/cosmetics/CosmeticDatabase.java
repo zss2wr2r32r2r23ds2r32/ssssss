@@ -18,6 +18,9 @@ public final class CosmeticDatabase {
 
     public CosmeticDatabase(ShardedCore plugin, File folder) throws SQLException {
         this.plugin = plugin;
+        if (!folder.exists() && !folder.mkdirs()) {
+            throw new SQLException("Could not create cosmetics folder: " + folder.getAbsolutePath());
+        }
         File dbFile = new File(folder, "cosmetics.db");
         connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
         try (Statement statement = connection.createStatement()) {
