@@ -2,6 +2,7 @@ package com.sharded.core.modules.tags;
 
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
+import com.sharded.core.util.ColorConfigUtil;
 import com.sharded.core.util.ColorUtil;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.Text;
@@ -49,6 +50,20 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
             "^((?:&x(?:&[0-9A-Fa-f]){6})|(?:&#[0-9A-Fa-f]{3,8})|(?:&[0-9a-fk-or]))(.+)$",
             Pattern.CASE_INSENSITIVE);
 
+    private static final int[] TAG_CONTENT_SLOTS = {
+            10, 11, 12, 13, 14, 15, 16,
+            19, 20, 21, 22, 23, 24, 25,
+            28, 29, 30, 31, 32, 33, 34,
+            37, 38, 39, 41, 42, 43
+    };
+    private static final int REMOVE_SLOT = 40;
+    private static final int PREV_SLOT = 45;
+    private static final int LIMITED_SLOT = 46;
+    private static final int NEXT_SLOT = 47;
+    private static final int BACK_SLOT = 53;
+
+    private final List<TagOption> tagPageCache = new ArrayList<>();
+    private final List<TagOption> limitedPageCache = new ArrayList<>();
     private final Map<String, TagOption> tags = new LinkedHashMap<>();
     private final Map<String, TagOption> limitedTags = new LinkedHashMap<>();
     private final Map<UUID, Boolean> awaitingCustomTag = new ConcurrentHashMap<>();
@@ -86,6 +101,10 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         loadTagSection(config.getConfigurationSection("tags"), tags);
         loadTagSection(config.getConfigurationSection("limited-tags"), limitedTags);
         buildLimitedBlocklist();
+        tagPageCache.clear();
+        tagPageCache.addAll(tags.values());
+        limitedPageCache.clear();
+        limitedPageCache.addAll(limitedTags.values());
     }
 
     private void buildLimitedBlocklist() {
@@ -108,7 +127,7 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
             target.put(id, new TagOption(
                     id,
                     tag.getInt("slot", 0),
-                    tag.getString("permission", "sharded.tag." + id),
+                    ColorConfigUtil.resolvePermission(id, tag, "sharded.tag."),
                     tag.getString("material", "PAPER"),
                     tag.getString("display-name", id),
                     tag.getString("tag-display", tag.getString("display-name", id)),
@@ -245,8 +264,15 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         config.set(path + ".display-name", display);
         config.set(path + ".tag-display", display);
         config.set(path + ".lore", List.of(
-                "&8Descriptions", "", "&#FF3399Information:",
-                "&#FF3399| &fEquip this tag.", "", "%click%to apply"));
+                "&8Description",
+                "",
+                "&#FF3399Information:",
+                "&#FF3399| &fEquip this tag.",
+                "&#FF3399| &fAnd stand out on tab!",
+                "",
+                "&#FF3399⚓ &fOwned: %tag_owned_" + id + "%",
+                "",
+                "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nClick&r &x&F&F&B&A&0&0To Apply"));
         saveTagsConfig();
         reloadTags();
         send(sender, "tag-created", "%tag%", id);
@@ -302,63 +328,86 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
     }
 
     public void openMainMenu(Player player) {
-        openMenu(player, tags, config.getString("menu-title", "Tags"), false);
+        openMenu(player, tagPageCache, config.getString("menu-title", "Tags"), false, 0);
     }
 
     public void openLimitedMenu(Player player) {
-        openMenu(player, limitedTags, config.getString("limited-menu-title", "Limited Time Tags"), true);
+        openMenu(player, limitedPageCache, config.getString("limited-menu-title", "Limited time tags"), true, 0);
     }
 
-    private void openMenu(Player player, Map<String, TagOption> options, String title, boolean limited) {
+    private void openMenu(Player player, List<TagOption> options, String title, boolean limited, int page) {
         int size = config.getInt(limited ? "limited-menu-size" : "menu-size", 54);
-        TagMenuHolder holder = new TagMenuHolder(limited);
+        TagMenuHolder holder = new TagMenuHolder(limited, page);
         Inventory inventory = plugin.getServer().createInventory(holder, size, Text.c(title));
 
-        ItemStack filler = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").hideAll().build();
+        Material borderMat = Material.matchMaterial(config.getString("border-material", "GRAY_STAINED_GLASS_PANE"));
+        if (borderMat == null) borderMat = Material.GRAY_STAINED_GLASS_PANE;
+        ItemStack border = new ItemBuilder(borderMat).name(" ").hideAll().build();
         for (int slot = 0; slot < size; slot++) {
-            inventory.setItem(slot, filler.clone());
+            inventory.setItem(slot, border.clone());
         }
 
         Map<String, String> placeholders = equipPlaceholders(player);
-        for (TagOption tag : options.values()) {
+        int perPage = TAG_CONTENT_SLOTS.length;
+        int maxPage = Math.max(0, (options.size() + perPage - 1) / perPage - 1);
+        page = Math.max(0, Math.min(page, maxPage));
+        holder.page = page;
+
+        int start = page * perPage;
+        for (int i = 0; i < perPage && start + i < options.size(); i++) {
+            TagOption tag = options.get(start + i);
             List<String> lore = applyPlaceholders(buildLore(tag, placeholders), placeholders);
             Material material = Material.matchMaterial(tag.material());
             if (material == null) material = Material.PAPER;
             String name = applyPlaceholders(tag.displayName(), placeholders);
-            inventory.setItem(tag.slot(), new ItemBuilder(material).name(name).lore(lore).hideAll().build());
-        }
-
-        if (!limited && config.getBoolean("limited-button.enabled", true)) {
-            List<String> limitedLore = applyPlaceholders(config.getStringList("limited-button.lore"), placeholders);
-            Material mat = Material.matchMaterial(config.getString("limited-button.material", "CLOCK"));
-            if (mat == null) mat = Material.CLOCK;
-            inventory.setItem(config.getInt("limited-button.slot", 22),
-                    new ItemBuilder(mat)
-                            .name(config.getString("limited-button.display-name", "&x&F&F&0&0&0&0&lLIMITED TIME"))
-                            .lore(limitedLore)
-                            .hideAll()
-                            .build());
+            inventory.setItem(TAG_CONTENT_SLOTS[i],
+                    new ItemBuilder(material).name(name).lore(lore).hideAll().build());
         }
 
         if (!limited && config.getBoolean("remove-button.enabled", true)) {
+            Material removeMat = Material.matchMaterial(config.getString("remove-button.material", "FLOWER_CHARGE_BANNER_PATTERN"));
+            if (removeMat == null) removeMat = Material.FLOWER_BANNER_PATTERN;
             List<String> removeLore = applyPlaceholders(config.getStringList("remove-button.lore"), placeholders);
-            Material mat = Material.matchMaterial(config.getString("remove-button.material", "REDSTONE"));
-            if (mat == null) mat = Material.REDSTONE;
-            inventory.setItem(config.getInt("remove-button.slot", 15),
-                    new ItemBuilder(mat)
-                            .name(config.getString("remove-button.display-name", "&x&F&F&0&0&0&0&lREMOVE TAG"))
-                            .lore(removeLore)
-                            .hideAll()
-                            .build());
+            inventory.setItem(REMOVE_SLOT, new ItemBuilder(removeMat)
+                    .name(config.getString("remove-button.display-name", "&x&F&F&0&0&0&0&lRemove Tag"))
+                    .lore(removeLore)
+                    .hideAll()
+                    .build());
         }
 
-        if (limited || config.getBoolean("close-button.enabled", true)) {
-            int closeSlot = limited ? config.getInt("limited-close-slot", 26) : config.getInt("close-button.slot", 26);
-            var navOverride = config.getConfigurationSection("close-button");
-            inventory.setItem(closeSlot, plugin.guiNavigation().build("close", navOverride));
+        if (!limited && config.getBoolean("limited-button.enabled", true)) {
+            Material mat = Material.matchMaterial(config.getString("limited-button.material", "CLOCK"));
+            if (mat == null) mat = Material.CLOCK;
+            List<String> limitedLore = applyPlaceholders(config.getStringList("limited-button.lore"), placeholders);
+            inventory.setItem(LIMITED_SLOT, new ItemBuilder(mat)
+                    .name(config.getString("limited-button.display-name", "&x&F&F&0&0&0&0&lLimited Time"))
+                    .lore(limitedLore)
+                    .hideAll()
+                    .build());
+        }
+
+        if (page > 0) {
+            inventory.setItem(PREV_SLOT, navItem(config.getString("previous-page.name", "&ePrevious Page"),
+                    config.getStringList("previous-page.lore")));
+        }
+        if (page < maxPage) {
+            inventory.setItem(NEXT_SLOT, navItem(config.getString("next-page.name", "&eNext Page"),
+                    config.getStringList("next-page.lore")));
+        }
+
+        if (limited) {
+            inventory.setItem(BACK_SLOT, plugin.guiNavigation().build("back", config.getConfigurationSection("back-button")));
+        } else {
+            inventory.setItem(BACK_SLOT, plugin.guiNavigation().build("close", config.getConfigurationSection("close-button")));
         }
 
         player.openInventory(inventory);
+    }
+
+    private ItemStack navItem(String name, List<String> lore) {
+        ItemBuilder builder = new ItemBuilder(Material.ARROW).name(name).hideAll();
+        if (lore != null && !lore.isEmpty()) builder.lore(lore);
+        return builder.build();
     }
 
     private List<String> buildLore(TagOption tag, Map<String, String> placeholders) {
@@ -413,31 +462,51 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         if (event.getClickedInventory() != event.getView().getTopInventory()) return;
 
         int slot = event.getSlot();
-        if (!holder.limited() && slot == config.getInt("remove-button.slot", 15)
-                && config.getBoolean("remove-button.enabled", true)) {
+        if (!holder.limited() && slot == REMOVE_SLOT && config.getBoolean("remove-button.enabled", true)) {
             player.closeInventory();
             removeTag(player);
             return;
         }
 
-        if (slot == config.getInt("close-button.slot", 26)
-                || (holder.limited() && slot == config.getInt("limited-close-slot", 26))) {
+        if (slot == BACK_SLOT) {
             player.closeInventory();
+            if (holder.limited()) openMainMenu(player);
             return;
         }
 
-        if (!holder.limited() && slot == config.getInt("limited-button.slot", 22)
-                && config.getBoolean("limited-button.enabled", true)) {
+        if (slot == PREV_SLOT && holder.page() > 0) {
+            player.closeInventory();
+            if (holder.limited()) {
+                openMenu(player, limitedPageCache, config.getString("limited-menu-title", "Limited time tags"), true, holder.page() - 1);
+            } else {
+                openMenu(player, tagPageCache, config.getString("menu-title", "Tags"), false, holder.page() - 1);
+            }
+            return;
+        }
+
+        if (slot == NEXT_SLOT) {
+            player.closeInventory();
+            if (holder.limited()) {
+                openMenu(player, limitedPageCache, config.getString("limited-menu-title", "Limited time tags"), true, holder.page() + 1);
+            } else {
+                openMenu(player, tagPageCache, config.getString("menu-title", "Tags"), false, holder.page() + 1);
+            }
+            return;
+        }
+
+        if (!holder.limited() && slot == LIMITED_SLOT && config.getBoolean("limited-button.enabled", true)) {
             player.closeInventory();
             openLimitedMenu(player);
             return;
         }
 
-        Map<String, TagOption> options = holder.limited() ? limitedTags : tags;
-        for (TagOption tag : options.values()) {
-            if (tag.slot() != slot) continue;
+        List<TagOption> options = holder.limited() ? limitedPageCache : tagPageCache;
+        int perPage = TAG_CONTENT_SLOTS.length;
+        int index = holder.page() * perPage;
+        for (int i = 0; i < perPage && index + i < options.size(); i++) {
+            if (TAG_CONTENT_SLOTS[i] != slot) continue;
             player.closeInventory();
-            applyTag(player, tag);
+            applyTag(player, options.get(index + i));
             return;
         }
     }
@@ -565,9 +634,6 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
             if (plugin.cosmetics() != null) {
                 plugin.cosmetics().setTag(player, "custom", finalInput);
             }
-            dispatchCommand(player, buildLpCommand(player, config.getString("custom-apply-command",
-                    "[console] lp user %player_name% meta setsuffix %priority% \"%custom%\""), finalInput));
-
             if (database != null) database.saveLastCustomTag(player.getUniqueId(), finalInput, chatCreation);
             send(player, chatCreation ? "custom-set" : "custom-reapplied", "%tag%", finalInput);
         }, delay);
@@ -583,33 +649,10 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         for (String line : config.getStringList("clear-equipped-commands")) {
             if (line == null || line.isBlank()) continue;
             String lower = line.toLowerCase(java.util.Locale.ROOT);
-            if (lower.contains("clearsuffix") || lower.contains("removesuffix") || lower.contains("setsuffix")) {
-                continue;
-            }
+            if (lower.contains("luckperms") || lower.contains(" lp ") || lower.contains("eternaltags")) continue;
             String cmd = line.replace("%player%", player.getName()).replace("%player_name%", player.getName());
             dispatchCommand(player, cmd);
         }
-        removeCustomSuffix(player);
-    }
-
-    /** LuckPerms removesuffix uses priority (e.g. 1), not the suffix text. */
-    private void removeCustomSuffix(Player player) {
-        if (!plugin.luckPerms().isAvailable()) return;
-        dispatchCommand(player, buildLpCommand(player, config.getString("custom-remove-command",
-                "[console] lp user %player_name% meta removesuffix %priority%"), null));
-    }
-
-    private String buildLpCommand(Player player, String template, String custom) {
-        if (template == null || template.isBlank()) return "";
-        return template
-                .replace("%player%", player.getName())
-                .replace("%player_name%", player.getName())
-                .replace("%custom%", custom == null ? "" : custom)
-                .replace("%priority%", String.valueOf(suffixPriority()));
-    }
-
-    private int suffixPriority() {
-        return config.getInt("custom-suffix-priority", 1);
     }
 
     private boolean matchesLimitedTag(String input) {
@@ -696,13 +739,19 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
 
     private static final class TagMenuHolder implements InventoryHolder {
         private final boolean limited;
+        private int page;
 
-        TagMenuHolder(boolean limited) {
+        TagMenuHolder(boolean limited, int page) {
             this.limited = limited;
+            this.page = page;
         }
 
         boolean limited() {
             return limited;
+        }
+
+        int page() {
+            return page;
         }
 
         @Override

@@ -1,5 +1,6 @@
 package com.sharded.core.util;
 
+import com.sharded.core.util.PlayerToggles;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.MusicInstrument;
@@ -32,6 +33,7 @@ public final class EventSounds {
     }
 
     public static void playInstrument(Player player, MusicInstrument instrument) {
+        if (!PlayerToggles.eventSounds(player)) return;
         Location loc = player.getLocation();
         player.playSound(loc, instrument.getSound(), SoundCategory.RECORDS, 1f, 1f);
     }

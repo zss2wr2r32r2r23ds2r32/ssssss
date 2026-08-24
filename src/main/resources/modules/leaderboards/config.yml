@@ -19,6 +19,7 @@ gui:
     killstreaks: '&8Killstreak Leaderboard'
     playtime: '&8Playtime Leaderboard'
     teams: '&8Team Leaderboard'
+    duels: '&8Duels Wins Leaderboard'
   stats-title: '&8Stats'
   entries-per-page: 10
   unranked: 'Unranked'
@@ -35,6 +36,7 @@ gui:
     killstreaks: '&x&F&F&0&0&5&D'
     playtime: '&x&F&F&E&E&0&0'
     teams: '&x&F&F&0&0&6&7'
+    duels: '&x&F&F&8&8&0&0'
     stats: '&x&F&F&0&0&6&7'
     team: '&x&F&F&0&0&6&7'
   labels:
@@ -44,6 +46,7 @@ gui:
     killstreaks: 'Best Streak'
     playtime: 'Playtime'
     teams: 'Score'
+    duels: 'Wins'
     team: 'Team'
   hub-items:
     tokens:
@@ -101,6 +104,15 @@ gui:
         - ''
         - '&x&F&F&0&0&6&7Information:'
         - '&x&F&F&0&0&6&7| &fView the top teams.'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+    duels:
+      name: '&x&F&F&8&8&0&0&lDuels Wins'
+      lore:
+        - '&8Leaderboard'
+        - ''
+        - '&x&F&F&8&8&0&0Information:'
+        - '&x&F&F&8&8&0&0| &fView the top duel wins.'
         - ''
         - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
   stats-head-name: '&x&F&F&0&0&6&7%name%'

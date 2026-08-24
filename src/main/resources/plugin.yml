@@ -110,6 +110,10 @@ commands:
     description: Toggle natural mob spawning near you
     usage: /mobtoggle
     aliases: [mobspawn, mtoggle]
+  eventsoundstoggle:
+    description: Toggle KOTH and outpost event horn sounds
+    usage: /eventsoundstoggle
+    aliases: [eventsounds]
   settings:
     description: Open your personal settings menu
     usage: /settings
@@ -520,6 +524,8 @@ permissions:
   sharded.settings.joinmessages:
     default: true
   sharded.settings.mobspawn:
+    default: true
+  sharded.settings.eventsounds:
     default: true
   sharded.killstreak.use:
     description: View your own killstreak

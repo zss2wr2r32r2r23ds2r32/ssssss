@@ -36,6 +36,7 @@ public final class SettingsModule extends Module implements CommandExecutor {
         registerCommand("deathtoggle", this);
         registerCommand("jointoggle", this);
         registerCommand("mobtoggle", this);
+        registerCommand("eventsoundstoggle", this);
     }
 
     public void openSettings(Player player) {
@@ -57,6 +58,7 @@ public final class SettingsModule extends Module implements CommandExecutor {
         map.put("status_mob_toggle", formatStatus(PlayerToggles.mobSpawn(player)));
         map.put("status_public_chat", formatStatus(isChatEnabled(player)));
         map.put("status_private_messages", formatStatus(isMsgEnabled(player)));
+        map.put("status_event_sounds", formatStatus(PlayerToggles.eventSounds(player)));
         return map;
     }
 
@@ -93,6 +95,7 @@ public final class SettingsModule extends Module implements CommandExecutor {
             case "deathtoggle", "deathmessages", "dtoggle" -> toggleDeath(player);
             case "jointoggle", "joinmessages", "joinleave", "jtoggle" -> toggleJoin(player);
             case "mobtoggle", "mobspawn", "mtoggle" -> toggleMobSpawn(player);
+            case "eventsoundstoggle", "eventsounds" -> toggleEventSounds(player);
         }
         return true;
     }
@@ -135,6 +138,12 @@ public final class SettingsModule extends Module implements CommandExecutor {
         if (!check(player, "sharded.settings.mobspawn")) return;
         PlayerToggles.setMobSpawn(player, !PlayerToggles.mobSpawn(player));
         send(player, PlayerToggles.mobSpawn(player) ? "mobspawn-on" : "mobspawn-off");
+    }
+
+    private void toggleEventSounds(Player player) {
+        if (!check(player, "sharded.settings.eventsounds")) return;
+        PlayerToggles.setEventSounds(player, !PlayerToggles.eventSounds(player));
+        send(player, PlayerToggles.eventSounds(player) ? "eventsounds-on" : "eventsounds-off");
     }
 
     private boolean check(Player player, String permission) {

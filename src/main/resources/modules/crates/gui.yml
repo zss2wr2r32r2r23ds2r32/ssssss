@@ -1,5 +1,5 @@
 menu_title: 'Crates'
-size: 36
+size: 27
 
 open_command:
   - crates
@@ -9,7 +9,7 @@ items:
 
   filler:
     material: BLACK_STAINED_GLASS_PANE
-    slots: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35]
+    slots: [0,1,2,3,4,5,6,7,8,9,17,18,19,20,21,22,23,24,25,26]
     display_name: ' '
 
   keyallcrate:
@@ -68,7 +68,7 @@ items:
       - '[player] excellentcrates open VOTE_CRATE'
 
   kothcrate:
-    material: NETHERITE_SWORD
+    material: MAGENTA_SHULKER_BOX
     slot: 15
     display_name: '&x&F&F&0&0&5&D&lKoth &x&F&F&0&0&5&Dcrate'
     lore:
@@ -86,7 +86,7 @@ items:
       - '[player] excellentcrates open KOTH'
 
   outpostcrate:
-    material: BEACON
+    material: ORANGE_SHULKER_BOX
     slot: 16
     display_name: '&x&F&F&2&7&2&7&lOutpost &x&F&F&2&7&2&7crate'
     lore:

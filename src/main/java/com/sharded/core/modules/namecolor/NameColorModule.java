@@ -3,6 +3,7 @@ package com.sharded.core.modules.namecolor;
 import com.sharded.core.ShardedCore;
 import com.sharded.core.cosmetics.CosmeticService;
 import com.sharded.core.module.Module;
+import com.sharded.core.util.ColorConfigUtil;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
@@ -89,8 +90,8 @@ public final class NameColorModule extends Module implements CommandExecutor, Ta
             colors.put(id, new ColorOption(
                     id,
                     color.getInt("slot", 0),
-                    color.getString("permission", "sharded.namecolor." + id),
-                    color.getString("value", color.getString("command", "&f")),
+                    ColorConfigUtil.resolvePermission(id, color, "sharded.namecolor."),
+                    ColorConfigUtil.resolveValue(color, "&f"),
                     color.getString("material", "RED_DYE"),
                     color.getString("display-name", id),
                     color.getStringList("lore"),

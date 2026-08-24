@@ -20,6 +20,8 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.io.File;
@@ -199,6 +201,18 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
         if (!(event.getEntity() instanceof Player player)) return;
         if (inSide(player.getLocation())) return;
         if (inSpawn(player.getLocation())) event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onHornUse(PlayerInteractEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND) return;
+        ItemStack item = event.getItem();
+        if (item == null || item.getType() != Material.GOAT_HORN) return;
+        Player player = event.getPlayer();
+        if (bypass(player) || inSide(player.getLocation())) return;
+        if (inSpawn(player.getLocation())) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)

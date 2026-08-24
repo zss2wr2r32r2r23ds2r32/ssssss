@@ -1,10 +1,12 @@
-config-version: 4
+config-version: 5
 message-mode: chat
 
 spawn-command-enabled: true
 main-teleport-seconds: 10
 main-teleport-actionbar: '&#FF005D&lSPAWN &8▷ &fTeleporting you to spawn in &#FF005D&n%seconds%&r&#FF005Ds'
-countdown-sound: UI_BUTTON_CLICK
+teleport-cancelled-actionbar: '&#FF005D&lSPAWN &8▷ &#FF0000&lTeleport Cancelled &8— &fYou Moved.'
+countdown-sound: BLOCK_NOTE_BLOCK_PLING
+cancel-sound: BLOCK_NOTE_BLOCK_BASS
 
 fallback-world: world
 prompt-on-join: false

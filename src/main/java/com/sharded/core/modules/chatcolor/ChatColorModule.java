@@ -3,6 +3,7 @@ package com.sharded.core.modules.chatcolor;
 import com.sharded.core.ShardedCore;
 import com.sharded.core.cosmetics.CosmeticService;
 import com.sharded.core.module.Module;
+import com.sharded.core.util.ColorConfigUtil;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
@@ -63,8 +64,8 @@ public final class ChatColorModule extends Module implements CommandExecutor, Ta
             colors.put(id, new ColorOption(
                     id,
                     color.getInt("slot", 0),
-                    color.getString("permission", "sharded.chatcolor." + id),
-                    color.getString("value", "&f"),
+                    ColorConfigUtil.resolvePermission(id, color, "sharded.chatcolor."),
+                    ColorConfigUtil.resolveValue(color, "&f"),
                     color.getString("material", "RED_DYE"),
                     color.getString("display-name", id),
                     color.getStringList("lore")

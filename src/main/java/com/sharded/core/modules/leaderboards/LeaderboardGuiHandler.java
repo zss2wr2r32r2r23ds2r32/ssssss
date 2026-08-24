@@ -70,6 +70,7 @@ final class LeaderboardGuiHandler {
         putHubItem(inv, "killstreaks", Material.NETHERITE_SWORD, 14);
         putHubItem(inv, "playtime", Material.CLOCK, 15);
         putHubItem(inv, "teams", Material.PINK_BANNER, 16);
+        putHubItem(inv, "duels", Material.IRON_SWORD, 17);
         player.openInventory(inv);
     }
 
@@ -153,15 +154,22 @@ final class LeaderboardGuiHandler {
             case 14 -> "killstreaks";
             case 15 -> "playtime";
             case 16 -> "teams";
+            case 17 -> "duels";
             default -> null;
         };
     }
 
     private ItemStack entryHead(LeaderboardService.Entry entry, String type, int rank) {
+        String color = cfg.getString("gui.colors." + type.toLowerCase(), "&f");
+        if (entry.uuid() == null) {
+            return new ItemBuilder(Material.PLAYER_HEAD)
+                    .name(color + "#" + rank + " &f" + entry.displayName())
+                    .lore(loreLine(type, rank, service.formatValue(type, entry.value())))
+                    .build();
+        }
         ItemStack head = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) head.getItemMeta();
-        if (entry.uuid() != null) meta.setOwningPlayer(Bukkit.getOfflinePlayer(entry.uuid()));
-        String color = cfg.getString("gui.colors." + type.toLowerCase(), "&f");
+        meta.setOwningPlayer(Bukkit.getOfflinePlayer(entry.uuid()));
         meta.displayName(Text.c(color + "#" + rank + " &f" + entry.displayName()));
         meta.lore(loreLine(type, rank, service.formatValue(type, entry.value())).stream().map(Text::c).toList());
         head.setItemMeta(meta);

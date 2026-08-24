@@ -23,6 +23,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -195,8 +196,10 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
                 finishTeleport(player, cooldownSeconds);
                 return;
             }
-            String msg = raw("countdown", "%seconds%", String.valueOf(remaining[0]));
-            MessageUtil.deliver(player, msg, resolveDelivery("countdown"));
+            String bar = config.getString("countdown-actionbar",
+                    "&#9FFF00&lRTP &8▷ &fTeleporting in &#9FFF00&n%seconds%&r&#9FFF00s");
+            player.sendActionBar(Text.c(bar.replace("%seconds%", String.valueOf(remaining[0]))));
+            playSound(player, config.getString("countdown-sound", "BLOCK_NOTE_BLOCK_PLING"));
             remaining[0]--;
         }, 0L, 20L);
         pending.put(player.getUniqueId(), new PendingTeleport(start, task));
@@ -207,7 +210,22 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
         if (pt != null) pt.task().cancel();
         if (notify) {
             Player player = Bukkit.getPlayer(uuid);
-            if (player != null) send(player, "countdown-cancelled");
+            if (player != null) notifyTeleportCancelled(player);
+        }
+    }
+
+    private void notifyTeleportCancelled(Player player) {
+        String bar = config.getString("teleport-cancelled-actionbar",
+                "&#9FFF00&lRTP &8▷ &#FF0000&lTeleport Cancelled &8— &fYou Moved.");
+        player.sendActionBar(Text.c(bar));
+        playSound(player, config.getString("cancel-sound", "BLOCK_NOTE_BLOCK_BASS"));
+    }
+
+    private void playSound(Player player, String raw) {
+        if (raw == null || raw.isBlank()) return;
+        try {
+            player.playSound(player.getLocation(), Sound.valueOf(raw.toUpperCase(Locale.ROOT)), 0.8f, 0.8f);
+        } catch (IllegalArgumentException ignored) {
         }
     }
 

@@ -3,6 +3,7 @@ package com.sharded.core.cosmetics;
 import com.sharded.core.ShardedCore;
 import com.sharded.core.util.ColorUtil;
 import com.sharded.core.util.GradientUtil;
+import com.sharded.core.util.RainbowUtil;
 import com.sharded.core.util.Text;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
@@ -118,6 +119,7 @@ public final class CosmeticService implements Listener {
     public static String colorizeName(String name, String spec) {
         if (spec == null || spec.isBlank()) return name;
         spec = ColorUtil.normalize(spec.trim());
+        if (isRainbow(spec)) return RainbowUtil.apply(name);
         if (GradientUtil.isGradient(spec)) {
             String[] hex = GradientUtil.splitGradient(spec);
             if (hex != null) return GradientUtil.apply(name, hex[0], hex[1]);
@@ -130,6 +132,7 @@ public final class CosmeticService implements Listener {
     public static String normalizeColorSpec(String raw) {
         if (raw == null || raw.isBlank()) return raw;
         String s = raw.trim();
+        if (isRainbow(s)) return "rainbow";
         if (GradientUtil.isGradient(s)) {
             String[] hex = GradientUtil.splitGradient(s);
             return hex == null ? s : hex[0] + " " + hex[1];
@@ -156,6 +159,10 @@ public final class CosmeticService implements Listener {
         String spec = database.get(event.getPlayer().getUniqueId()).chatColor();
         if (spec == null || spec.isBlank()) return;
         String message = PlainTextComponentSerializer.plainText().serialize(event.message());
+        if (isRainbow(spec)) {
+            event.message(Text.c(RainbowUtil.apply(message)));
+            return;
+        }
         if (GradientUtil.isGradient(spec)) {
             String[] hex = GradientUtil.splitGradient(spec);
             if (hex != null) {
@@ -164,5 +171,9 @@ public final class CosmeticService implements Listener {
             }
         }
         event.message(Text.c(ColorUtil.normalize(spec) + message));
+    }
+
+    private static boolean isRainbow(String spec) {
+        return spec != null && spec.equalsIgnoreCase("rainbow");
     }
 }

@@ -155,11 +155,8 @@ public final class SpawnSelectModule extends Module implements CommandExecutor, 
                 String bar = config.getString("main-teleport-actionbar",
                         "&#FF005D&lSPAWN &8▷ &fTeleporting you to spawn in &#FF005D&n%seconds%&r&#FF005Ds");
                 player.sendActionBar(Text.c(bar.replace("%seconds%", String.valueOf(left))));
-                String tickSound = config.getString("countdown-sound", "UI_BUTTON_CLICK");
-                try {
-                    player.playSound(player.getLocation(), Sound.valueOf(tickSound.toUpperCase(Locale.ROOT)), 0.6f, 1.2f);
-                } catch (IllegalArgumentException ignored) {
-                }
+                String tickSound = config.getString("countdown-sound", "BLOCK_NOTE_BLOCK_PLING");
+                playSound(player, tickSound);
                 left--;
             }
         }, 0L, 20L);
@@ -178,7 +175,22 @@ public final class SpawnSelectModule extends Module implements CommandExecutor, 
                 || event.getFrom().getBlockY() != event.getTo().getBlockY()
                 || event.getFrom().getBlockZ() != event.getTo().getBlockZ())) {
             cancelPending(event.getPlayer());
-            send(event.getPlayer(), "teleport-cancelled");
+            notifyTeleportCancelled(event.getPlayer());
+        }
+    }
+
+    private void notifyTeleportCancelled(Player player) {
+        String bar = config.getString("teleport-cancelled-actionbar",
+                "&#FF005D&lSPAWN &8▷ &#FF0000&lTeleport Cancelled &8— &fYou Moved.");
+        player.sendActionBar(Text.c(bar));
+        playSound(player, config.getString("cancel-sound", "BLOCK_NOTE_BLOCK_BASS"));
+    }
+
+    private void playSound(Player player, String raw) {
+        if (raw == null || raw.isBlank()) return;
+        try {
+            player.playSound(player.getLocation(), Sound.valueOf(raw.toUpperCase(Locale.ROOT)), 0.8f, 0.8f);
+        } catch (IllegalArgumentException ignored) {
         }
     }
 

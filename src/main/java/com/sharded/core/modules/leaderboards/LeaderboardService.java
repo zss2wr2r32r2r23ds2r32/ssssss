@@ -18,6 +18,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 /** Builds sorted leaderboard rows from plugin data sources. */
@@ -42,11 +43,17 @@ final class LeaderboardService {
             case "playtime", "time" -> statEntries(Statistic.PLAY_ONE_MINUTE);
             case "killstreaks", "killstreak", "streak" -> killstreakEntries();
             case "teams", "team" -> teamEntries();
+            case "duels", "duels_wins", "wins" -> duelsEntries("wins");
             default -> List.of();
         };
     }
 
     int rankOf(String type, UUID uuid) {
+        if (isDuelsType(type)) {
+            Player online = Bukkit.getPlayer(uuid);
+            if (online == null) return -1;
+            return parseDuelsRank(online, duelsCategory(type));
+        }
         List<Entry> list = entries(type);
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).uuid() != null && list.get(i).uuid().equals(uuid)) return i + 1;
@@ -140,6 +147,58 @@ final class LeaderboardService {
         }
         long hours = playtime / 3_600_000L;
         return tokens * tokenWeight + kills * killWeight + hours * hourWeight;
+    }
+
+    private List<Entry> duelsEntries(String category) {
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") == null) return List.of();
+        List<Entry> out = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            String name = resolveGlobalPlaceholder("%duels-lb_top_" + category + "name" + i + "%");
+            String valueRaw = resolveGlobalPlaceholder("%duels-lb_top_" + category + "value" + i + "%");
+            if (name.isBlank() || name.contains("%") || name.equalsIgnoreCase("none")) continue;
+            long value = parseLong(valueRaw);
+            out.add(new Entry(String.valueOf(i), name, value, null));
+        }
+        return out;
+    }
+
+    private static boolean isDuelsType(String type) {
+        String t = type.toLowerCase(Locale.ROOT);
+        return t.equals("duels") || t.equals("duels_wins") || t.equals("wins");
+    }
+
+    private static String duelsCategory(String type) {
+        return "wins";
+    }
+
+    private static int parseDuelsRank(Player player, String category) {
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") == null) return -1;
+        String raw = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player,
+                "%duels-lb_rank_" + category + "%");
+        return parseInt(raw);
+    }
+
+    private static String resolveGlobalPlaceholder(String placeholder) {
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") == null) return "";
+        return me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(null, placeholder);
+    }
+
+    private static long parseLong(String raw) {
+        if (raw == null || raw.isBlank()) return 0;
+        try {
+            return Long.parseLong(raw.replaceAll("[^0-9]", ""));
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    private static int parseInt(String raw) {
+        if (raw == null || raw.isBlank() || raw.contains("%")) return -1;
+        try {
+            return Integer.parseInt(raw.replaceAll("[^0-9]", ""));
+        } catch (NumberFormatException e) {
+            return -1;
+        }
     }
 
     String formatValue(String type, long value) {

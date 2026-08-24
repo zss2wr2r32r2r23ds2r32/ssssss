@@ -148,13 +148,32 @@ items:
       - '&8Description'
       - ''
       - '&#FF0000Information:'
-      - '&#FF0000| &fToggle Private Messages'
+      - '&#FF0000| &fToggle private messages'
       - ''
       - '&#FF0000⛨ &fStatus: %status_private_messages%'
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
     left_click_commands:
       - '[player] msgtoggle'
+      - '[refresh] settings'
+
+  event_sounds:
+    material: GOAT_HORN
+    slot: 23
+    permission: sharded.settings.eventsounds
+    display_name: '&#FF8800&lEVENT SOUNDS'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF8800Information:'
+      - '&#FF8800| &fToggle KOTH and outpost'
+      - '&#FF8800| &fhorn sounds for you'
+      - ''
+      - '&#FF8800⛨ &fStatus: %status_event_sounds%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    left_click_commands:
+      - '[player] eventsoundstoggle'
       - '[refresh] settings'
 
   close:

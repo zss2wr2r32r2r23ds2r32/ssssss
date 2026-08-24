@@ -103,7 +103,8 @@ public final class LeaderboardsModule extends Module implements CommandExecutor,
 
     private boolean isKnownType(String type) {
         return List.of("tokens", "token", "kills", "kill", "deaths", "death",
-                "killstreaks", "killstreak", "streak", "playtime", "time", "teams", "team").contains(type);
+                "killstreaks", "killstreak", "streak", "playtime", "time", "teams", "team",
+                "duels", "duels_wins", "wins").contains(type);
     }
 
     @EventHandler
@@ -122,7 +123,7 @@ public final class LeaderboardsModule extends Module implements CommandExecutor,
             return TabCompleteHelper.knownPlayers(args[0]);
         }
         if ((cmd.equals("leaderboard") || cmd.equals("leaderboards")) && args.length == 1) {
-            return TabCompleteHelper.filter(args[0], "tokens", "kills", "deaths", "killstreaks", "playtime", "teams");
+            return TabCompleteHelper.filter(args[0], "tokens", "kills", "deaths", "killstreaks", "playtime", "teams", "duels", "wins");
         }
         return List.of();
     }

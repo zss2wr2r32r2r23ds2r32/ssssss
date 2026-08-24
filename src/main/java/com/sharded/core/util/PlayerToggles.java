@@ -12,6 +12,7 @@ public final class PlayerToggles {
     public static final String DEATH_MSG = "toggle-death-messages";
     public static final String JOIN_MSG = "toggle-join-messages";
     public static final String MOB_SPAWN = "toggle-mob-spawn";
+    public static final String EVENT_SOUNDS = "toggle-event-sounds";
 
     private PlayerToggles() {
     }
@@ -65,6 +66,14 @@ public final class PlayerToggles {
 
     public static void setMobSpawn(Player player, boolean enabled) {
         plugin().stateStore().setBool(player.getUniqueId(), MOB_SPAWN, enabled);
+    }
+
+    public static boolean eventSounds(Player player) {
+        return plugin().stateStore().getBool(player.getUniqueId(), EVENT_SOUNDS, true);
+    }
+
+    public static void setEventSounds(Player player, boolean enabled) {
+        plugin().stateStore().setBool(player.getUniqueId(), EVENT_SOUNDS, enabled);
     }
 
     public static void noPermissionActionBar(Player player, String message) {
