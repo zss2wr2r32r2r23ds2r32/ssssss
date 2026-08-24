@@ -1,4 +1,4 @@
-prefix: '&#9FFF00&lOUTPOST &8▷ &r'
+prefix: '&#FF2727&lOUTPOST &8▷ &r'
 players-only: '%prefix%&#FF2727Only players can use this command.'
 no-permission: '%prefix%&#FF2727You do not have permission.'
 usage: '%prefix%&#FF2727Usage: &f/outpost &7| &f/outpost pos1 pos2 setregion &7| &f/outpost start'
