@@ -4,6 +4,7 @@ import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.modules.tokens.TokenService;
 import com.sharded.core.util.CuboidRegion;
+import com.sharded.core.util.EventSounds;
 import com.sharded.core.util.GameEventCoordinator;
 import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.RegionSetup;
@@ -11,6 +12,7 @@ import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
 import com.sharded.core.util.TimeFormat;
 import org.bukkit.Bukkit;
+import org.bukkit.MusicInstrument;
 import org.bukkit.boss.BarColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -43,6 +45,8 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
     private final Set<UUID> inside = new HashSet<>();
     private int tickTask = -1;
     private long eventStartedAt;
+    private long lastSoundAt;
+    private boolean contested;
 
     public OutpostModule(ShardedCore plugin) {
         super(plugin, "outpost");
@@ -85,8 +89,14 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
     }
 
     public String capturerName() {
+        if (contested) return "Contested";
         if (capturingPlayer == null) return "N/A";
         return OfflinePlayers.name(capturingPlayer);
+    }
+
+    public long emptyTimeRemainingMs() {
+        long maxUnclaimedMs = config.getLong("max-unclaimed-seconds", 600) * 1000L;
+        return Math.max(0, maxUnclaimedMs - (System.currentTimeMillis() - eventStartedAt));
     }
 
     public String modulePrefix() {
@@ -208,6 +218,7 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
         }
         refreshInside();
         List<UUID> players = new ArrayList<>(inside);
+        contested = players.size() > 1;
         if (players.size() == 1) {
             UUID uuid = players.getFirst();
             capturingPlayer = uuid;
@@ -225,13 +236,16 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
             }
         } else {
             capturingPlayer = null;
-            for (UUID uuid : players) {
-                Player p = Bukkit.getPlayer(uuid);
-                if (p == null) continue;
-                p.sendActionBar(Text.c(modulePrefix() + config.getString("actionbar-contested",
-                        "&cOutpost contested — solo capture required!")));
+            if (contested) {
+                for (UUID uuid : players) {
+                    Player p = Bukkit.getPlayer(uuid);
+                    if (p == null) continue;
+                    p.sendActionBar(Text.c(modulePrefix() + config.getString("actionbar-contested",
+                            "&cContested — solo capture required!")));
+                }
             }
         }
+        maybePlayActiveSound();
         updateBossBar();
         long maxUnclaimedMs = config.getLong("max-unclaimed-seconds", 600) * 1000L;
         if (System.currentTimeMillis() - eventStartedAt >= maxUnclaimedMs && capturePercent < 100.0) {
@@ -242,14 +256,38 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
 
     private void updateBossBar() {
         if (coordinator == null) return;
+        long maxUnclaimedMs = config.getLong("max-unclaimed-seconds", 600) * 1000L;
+        long emptyRemaining = emptyTimeRemainingMs();
         String capturer = capturerName();
-        String title = config.getString("bossbar-active",
-                        "%prefix%&f%capturer% &8| &f%percent%%")
-                .replace("%prefix%", modulePrefix())
-                .replace("%capturer%", capturer)
-                .replace("%percent%", String.format(Locale.US, "%.0f", capturePercent));
-        coordinator.bossBar().show("outpost", title, BarColor.RED, capturePercent / 100.0);
+        String title;
+        double progress;
+        if (inside.isEmpty()) {
+            title = config.getString("bossbar-empty",
+                            "%prefix%&fN/A &8| &fEnds in &f%empty_time%")
+                    .replace("%prefix%", modulePrefix())
+                    .replace("%empty_time%", TimeFormat.hms(emptyRemaining));
+            progress = maxUnclaimedMs <= 0 ? 0.0 : (double) emptyRemaining / maxUnclaimedMs;
+        } else {
+            title = config.getString("bossbar-active",
+                            "%prefix%&f%capturer% &8| &f%percent%%")
+                    .replace("%prefix%", modulePrefix())
+                    .replace("%capturer%", capturer)
+                    .replace("%percent%", String.format(Locale.US, "%.0f", capturePercent));
+            progress = capturePercent / 100.0;
+        }
+        coordinator.bossBar().show("outpost", title, BarColor.RED, progress);
         coordinator.bossBar().syncPlayers();
+    }
+
+    private void maybePlayActiveSound() {
+        long interval = config.getLong("active-sound-interval-seconds", 90) * 1000L;
+        long now = System.currentTimeMillis();
+        if (interval > 0 && now - lastSoundAt < interval) return;
+        lastSoundAt = now;
+        MusicInstrument instrument = EventSounds.parseInstrument(
+                config.getString("active-sound-instrument", "PONDER_GOAT_HORN"),
+                MusicInstrument.PONDER_GOAT_HORN);
+        EventSounds.playInstrumentToWorlds(instrument, config.getStringList("allowed-worlds"));
     }
 
     private void refreshInside() {
@@ -263,9 +301,12 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
         active = true;
         capturePercent = 0;
         capturingPlayer = null;
+        contested = false;
         eventStartedAt = System.currentTimeMillis();
+        lastSoundAt = 0;
         coordinator.setOutpostActive(true);
         Bukkit.broadcast(Text.c(modulePrefix() + raw("broadcast-start")));
+        maybePlayActiveSound();
     }
 
     private void completeCapture(UUID uuid) {
@@ -283,6 +324,7 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
         active = false;
         capturePercent = 0;
         capturingPlayer = null;
+        contested = false;
         inside.clear();
         if (coordinator != null) coordinator.bossBar().hide("outpost");
         coordinator.setOutpostActive(false);

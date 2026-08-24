@@ -1,10 +1,12 @@
-config-version: 3
+config-version: 4
 prefix: '&#FF005D&lKOTH &8▷ &r'
 message-mode: chat
 allowed-worlds:
   - spawn
 duration-seconds: 300
 max-unclaimed-seconds: 600
+active-sound-instrument: SING_GOAT_HORN
+active-sound-interval-seconds: 90
 points-per-hit: 5
 points-per-second-standing: 1
 actionbar: '&f%points% pts &7| &f%time%'

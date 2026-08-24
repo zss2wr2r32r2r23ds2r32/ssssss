@@ -220,7 +220,7 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPearl(PlayerTeleportEvent event) {
         if (event.getCause() != PlayerTeleportEvent.TeleportCause.ENDER_PEARL) return;
         if (!(event.getPlayer() instanceof Player player)) return;

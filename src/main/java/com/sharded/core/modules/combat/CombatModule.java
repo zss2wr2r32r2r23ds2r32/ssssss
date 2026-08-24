@@ -22,6 +22,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.Vector;
 
 import java.io.File;
@@ -139,6 +140,21 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onPearl(PlayerTeleportEvent event) {
+        if (event.getCause() != PlayerTeleportEvent.TeleportCause.ENDER_PEARL) return;
+        if (!(event.getPlayer() instanceof Player player)) return;
+        if (!isTagged(player)) return;
+        ProtectModule protect = plugin.modules().get(ProtectModule.class);
+        CuboidRegion spawn = spawnRegion(protect);
+        Location to = event.getTo();
+        if (spawn == null || to == null) return;
+        if (spawn.contains(to)) {
+            event.setCancelled(true);
+            send(player, "no-pearl-spawn");
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onMove(PlayerMoveEvent event) {
         if (!isTagged(event.getPlayer())) return;
         ProtectModule protect = plugin.modules().get(ProtectModule.class);
@@ -231,7 +247,8 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
                 }
                 if (eventActionBarActive(player, koth, outpost)) continue;
                 long left = (until - now) / 1000L;
-                String msg = config.getString("actionbar", "&cCombat &7| &f%seconds%s")
+                String msg = config.getString("actionbar",
+                                "&#FF0000&lCOMBAT &8▷ &rYou are in combat for &#FF0000&n%seconds%&r&#FF0000s")
                         .replace("%seconds%", String.valueOf(left));
                 player.sendActionBar(Text.c(msg));
                 if (config.getBoolean("red-glass-walls", true) && spawn != null

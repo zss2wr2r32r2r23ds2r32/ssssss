@@ -4,6 +4,7 @@ import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.modules.tokens.TokenService;
 import com.sharded.core.util.CuboidRegion;
+import com.sharded.core.util.EventSounds;
 import com.sharded.core.util.GameEventCoordinator;
 import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.RegionSetup;
@@ -11,6 +12,7 @@ import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
 import com.sharded.core.util.TimeFormat;
 import org.bukkit.Bukkit;
+import org.bukkit.MusicInstrument;
 import org.bukkit.boss.BarColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -47,6 +49,7 @@ public final class KothModule extends Module implements CommandExecutor, TabComp
     private final Set<UUID> inside = new HashSet<>();
     private int tickTask = -1;
     private long eventStartedAt;
+    private long lastSoundAt;
 
     public KothModule(ShardedCore plugin) {
         super(plugin, "koth");
@@ -241,6 +244,18 @@ public final class KothModule extends Module implements CommandExecutor, TabComp
             }
         }
         updateBossBar(now);
+        maybePlayActiveSound();
+    }
+
+    private void maybePlayActiveSound() {
+        long interval = config.getLong("active-sound-interval-seconds", 90) * 1000L;
+        long now = System.currentTimeMillis();
+        if (interval > 0 && now - lastSoundAt < interval) return;
+        lastSoundAt = now;
+        MusicInstrument instrument = EventSounds.parseInstrument(
+                config.getString("active-sound-instrument", "SING_GOAT_HORN"),
+                MusicInstrument.SING_GOAT_HORN);
+        EventSounds.playInstrumentToWorlds(instrument, config.getStringList("allowed-worlds"));
     }
 
     private void updateBossBar(long now) {
@@ -268,10 +283,12 @@ public final class KothModule extends Module implements CommandExecutor, TabComp
         points.clear();
         inside.clear();
         eventStartedAt = System.currentTimeMillis();
+        lastSoundAt = 0;
         eventDurationMs = config.getLong("duration-seconds", 300) * 1000L;
         eventEndsAt = eventStartedAt + eventDurationMs;
         coordinator.setKothActive(true);
         Bukkit.broadcast(Text.c(modulePrefix() + raw("broadcast-start")));
+        maybePlayActiveSound();
     }
 
     private void finishEvent() {

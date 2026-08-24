@@ -53,7 +53,8 @@ public final class PlaceholderUtil {
             out = out.replace("%shardedcore_outpost_active%", outpost.isActive() ? "true" : "false")
                     .replace("%shardedcore_outpost_capturer%", outpost.capturerName())
                     .replace("%shardedcore_outpost_percent%",
-                            String.format(Locale.US, "%.0f", outpost.capturePercent()));
+                            String.format(Locale.US, "%.0f", outpost.capturePercent()))
+                    .replace("%shardedcore_outpost_empty_time%", TimeFormat.hms(outpost.emptyTimeRemainingMs()));
         }
         if (koth != null) {
             out = out.replace("%shardedcore_koth_active%", koth.isActive() ? "true" : "false")
