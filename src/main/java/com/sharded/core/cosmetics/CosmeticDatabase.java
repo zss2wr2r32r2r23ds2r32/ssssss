@@ -10,11 +10,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class CosmeticDatabase {
 
     private final ShardedCore plugin;
     private Connection connection;
+    private final ConcurrentHashMap<UUID, PlayerCosmetics> cache = new ConcurrentHashMap<>();
 
     public CosmeticDatabase(ShardedCore plugin, File folder) throws SQLException {
         this.plugin = plugin;
@@ -24,6 +26,7 @@ public final class CosmeticDatabase {
         File dbFile = new File(folder, "cosmetics.db");
         connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
         try (Statement statement = connection.createStatement()) {
+            statement.execute("PRAGMA journal_mode=WAL");
             statement.execute("""
                     CREATE TABLE IF NOT EXISTS player_cosmetics (
                         uuid TEXT PRIMARY KEY,
@@ -36,7 +39,15 @@ public final class CosmeticDatabase {
         }
     }
 
-    public synchronized PlayerCosmetics get(UUID uuid) {
+    public PlayerCosmetics get(UUID uuid) {
+        PlayerCosmetics cached = cache.get(uuid);
+        if (cached != null) return cached;
+        PlayerCosmetics loaded = load(uuid);
+        cache.put(uuid, loaded);
+        return loaded;
+    }
+
+    private synchronized PlayerCosmetics load(UUID uuid) {
         try (PreparedStatement ps = connection.prepareStatement(
                 "SELECT tag_id, tag_display, name_color, chat_color FROM player_cosmetics WHERE uuid = ?")) {
             ps.setString(1, uuid.toString());
@@ -55,6 +66,7 @@ public final class CosmeticDatabase {
     }
 
     public synchronized void save(UUID uuid, PlayerCosmetics data) {
+        cache.put(uuid, data);
         try (PreparedStatement ps = connection.prepareStatement("""
                 INSERT INTO player_cosmetics (uuid, tag_id, tag_display, name_color, chat_color)
                 VALUES (?, ?, ?, ?, ?)
@@ -76,6 +88,7 @@ public final class CosmeticDatabase {
     }
 
     public synchronized void close() {
+        cache.clear();
         try {
             if (connection != null && !connection.isClosed()) connection.close();
         } catch (SQLException ignored) {

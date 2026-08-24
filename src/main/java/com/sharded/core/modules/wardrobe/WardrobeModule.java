@@ -417,7 +417,8 @@ public final class WardrobeModule extends Module implements CommandExecutor {
 
         @EventHandler
         public void onJoin(PlayerJoinEvent event) {
-            syncWearerState(event.getPlayer());
+            plugin.getServer().getScheduler().runTaskLater(plugin,
+                    () -> syncWearerState(event.getPlayer()), 1L);
         }
 
         @EventHandler(priority = EventPriority.MONITOR)

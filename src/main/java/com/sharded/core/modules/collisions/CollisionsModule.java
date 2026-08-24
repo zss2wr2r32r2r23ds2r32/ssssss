@@ -36,10 +36,11 @@ public final class CollisionsModule extends Module {
         for (Player player : Bukkit.getOnlinePlayers()) {
             applyPlayerCollision(player);
         }
-        long interval = Math.max(10L, config.getLong("refresh-interval-ticks", 20L));
+        long interval = Math.max(40L, config.getLong("refresh-interval-ticks", 100L));
         refreshTask = plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
             if (noCollideTeam == null) setupTeamDeferred();
             for (Player player : Bukkit.getOnlinePlayers()) {
+                if (noCollideTeam != null && noCollideTeam.hasEntry(player.getUniqueId().toString())) continue;
                 applyPlayerCollision(player);
             }
         }, interval, interval);
@@ -75,7 +76,7 @@ public final class CollisionsModule extends Module {
 
     public void applyPlayerCollision(Player player) {
         if (!config.getBoolean("disable-player-collisions", true)) return;
-        player.setCollidable(false);
+        if (player.isCollidable()) player.setCollidable(false);
         if (noCollideTeam != null) {
             String entry = player.getUniqueId().toString();
             if (!noCollideTeam.hasEntry(entry)) {

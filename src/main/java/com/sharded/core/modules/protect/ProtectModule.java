@@ -37,7 +37,7 @@ import java.util.Set;
 public final class ProtectModule extends Module implements CommandExecutor, TabCompleter {
 
     private static final List<String> SIDE_KEYS = List.of("side1", "side2", "side3", "side4");
-    private static final List<Material> BLOCKED_USE = List.of(
+    private static final Set<Material> SPAWN_BLOCKED_USE = Set.of(
             Material.ANVIL, Material.CHIPPED_ANVIL, Material.DAMAGED_ANVIL,
             Material.BEACON, Material.OAK_TRAPDOOR, Material.SPRUCE_TRAPDOOR,
             Material.BIRCH_TRAPDOOR, Material.JUNGLE_TRAPDOOR, Material.ACACIA_TRAPDOOR,
@@ -278,6 +278,8 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
     public void onSideInteract(PlayerInteractEvent event) {
         Block block = event.getClickedBlock();
         if (block == null) return;
+        if (sideWorlds.isEmpty()) return;
+        if (!sideWorlds.contains(block.getWorld().getName().toLowerCase(Locale.ROOT))) return;
         Player player = event.getPlayer();
         if (bypass(player)) return;
         Location loc = block.getLocation();
@@ -286,31 +288,17 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
         if (event.getAction().isRightClick() && event.getItem() != null && allowsSidePlacement(event.getItem().getType())) {
             return;
         }
-        if (!isSideUseBlocked(block.getType())) return;
+        if (!SideBlockedMaterials.isBlocked(block.getType())) return;
 
         event.setCancelled(true);
         event.setUseInteractedBlock(Result.DENY);
         send(player, "no-use");
     }
 
-    /** Block placement / planting in side regions — still capped by {@link #onPlace}. */
     private static boolean allowsSidePlacement(Material item) {
         if (item.isBlock()) return true;
         String name = item.name();
         return name.endsWith("_SEEDS") || item == Material.BONE_MEAL || item == Material.NETHER_WART;
-    }
-
-    private static boolean isSideUseBlocked(Material type) {
-        if (BLOCKED_USE.contains(type)) return true;
-        if (!type.isInteractable()) return false;
-        String name = type.name();
-        return name.endsWith("_TRAPDOOR") || name.endsWith("_DOOR")
-                || name.endsWith("_FENCE_GATE") || name.endsWith("_BUTTON")
-                || name.equals("LEVER") || name.endsWith("_CHEST") || name.equals("BARREL")
-                || name.endsWith("FURNACE") || name.equals("HOPPER") || name.equals("DROPPER")
-                || name.equals("DISPENSER") || name.equals("CRAFTING_TABLE")
-                || name.equals("ENCHANTING_TABLE") || name.equals("ANVIL")
-                || name.equals("CHIPPED_ANVIL") || name.equals("DAMAGED_ANVIL");
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -318,11 +306,14 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
         Block block = event.getClickedBlock();
         if (block == null) return;
         Player player = event.getPlayer();
+        if (bypass(player)) return;
         Location loc = block.getLocation();
-        if (inSide(loc) || bypass(player)) return;
+        if (!sideWorlds.isEmpty() && sideWorlds.contains(loc.getWorld().getName().toLowerCase(Locale.ROOT))) {
+            if (inSide(loc)) return;
+        }
         if (!inSpawn(loc) && !inPvp(loc)) return;
         Material type = block.getType();
-        if (BLOCKED_USE.contains(type) || type.name().endsWith("_TRAPDOOR")) {
+        if (SPAWN_BLOCKED_USE.contains(type) || type.name().endsWith("_TRAPDOOR")) {
             event.setCancelled(true);
             send(player, "no-use");
         }

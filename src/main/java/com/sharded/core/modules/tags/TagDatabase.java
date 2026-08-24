@@ -5,11 +5,16 @@ import com.sharded.core.ShardedCore;
 import java.io.File;
 import java.sql.*;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class TagDatabase {
 
     private final ShardedCore plugin;
     private Connection connection;
+    private final ConcurrentHashMap<UUID, CustomTagState> cache = new ConcurrentHashMap<>();
+
+    private record CustomTagState(String tag, long createdAt) {
+    }
 
     public TagDatabase(ShardedCore plugin, File folder) throws SQLException {
         this.plugin = plugin;
@@ -31,13 +36,29 @@ public final class TagDatabase {
         }
     }
 
-    public synchronized String getLastCustomTag(UUID uuid) {
+    public String getLastCustomTag(UUID uuid) {
+        CustomTagState state = cache.get(uuid);
+        if (state != null) return state.tag();
+        state = loadState(uuid);
+        if (state != null) cache.put(uuid, state);
+        return state == null ? null : state.tag();
+    }
+
+    public long getLastCustomCreatedAt(UUID uuid) {
+        CustomTagState state = cache.get(uuid);
+        if (state != null) return state.createdAt();
+        state = loadState(uuid);
+        if (state != null) cache.put(uuid, state);
+        return state == null ? 0L : state.createdAt();
+    }
+
+    private synchronized CustomTagState loadState(UUID uuid) {
         try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT last_custom_tag FROM player_tags WHERE uuid = ?")) {
+                "SELECT last_custom_tag, last_custom_created_at FROM player_tags WHERE uuid = ?")) {
             ps.setString(1, uuid.toString());
             try (ResultSet rs = ps.executeQuery()) {
-                if (!rs.next()) return null;
-                return rs.getString("last_custom_tag");
+                if (!rs.next()) return new CustomTagState(null, 0L);
+                return new CustomTagState(rs.getString("last_custom_tag"), rs.getLong("last_custom_created_at"));
             }
         } catch (SQLException e) {
             plugin.getLogger().warning("Failed to read custom tag: " + e.getMessage());
@@ -45,21 +66,14 @@ public final class TagDatabase {
         }
     }
 
-    public synchronized long getLastCustomCreatedAt(UUID uuid) {
-        try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT last_custom_created_at FROM player_tags WHERE uuid = ?")) {
-            ps.setString(1, uuid.toString());
-            try (ResultSet rs = ps.executeQuery()) {
-                if (!rs.next()) return 0L;
-                return rs.getLong("last_custom_created_at");
-            }
-        } catch (SQLException e) {
-            plugin.getLogger().warning("Failed to read custom tag cooldown: " + e.getMessage());
-            return 0L;
-        }
-    }
-
     public void saveLastCustomTag(UUID uuid, String tag, boolean updateCreatedAt) {
+        CustomTagState existing = cache.get(uuid);
+        if (existing == null) {
+            existing = loadState(uuid);
+            if (existing == null) existing = new CustomTagState(null, 0L);
+        }
+        long createdAt = updateCreatedAt ? System.currentTimeMillis() : existing.createdAt();
+        cache.put(uuid, new CustomTagState(tag, createdAt));
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () ->
                 saveLastCustomTagSync(uuid, tag, updateCreatedAt));
     }
@@ -84,6 +98,7 @@ public final class TagDatabase {
     }
 
     public synchronized void close() {
+        cache.clear();
         try {
             if (connection != null && !connection.isClosed()) connection.close();
         } catch (SQLException ignored) {

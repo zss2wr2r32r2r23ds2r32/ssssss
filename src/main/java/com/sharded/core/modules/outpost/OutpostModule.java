@@ -207,6 +207,11 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
         if (event.getFrom().getBlockX() == event.getTo().getBlockX()
                 && event.getFrom().getBlockY() == event.getTo().getBlockY()
                 && event.getFrom().getBlockZ() == event.getTo().getBlockZ()) return;
+        if (event.getTo() == null || event.getTo().getWorld() == null) return;
+        if (!region.world().equalsIgnoreCase(event.getTo().getWorld().getName())) {
+            inside.remove(event.getPlayer().getUniqueId());
+            return;
+        }
         Player player = event.getPlayer();
         if (region.contains(event.getTo())) inside.add(player.getUniqueId());
         else inside.remove(player.getUniqueId());

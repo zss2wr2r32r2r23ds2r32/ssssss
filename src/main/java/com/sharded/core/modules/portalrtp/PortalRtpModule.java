@@ -34,6 +34,7 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
     private final Map<UUID, Long> portalGuiCooldown = new ConcurrentHashMap<>();
     private final Map<UUID, Long> rtpCooldown = new ConcurrentHashMap<>();
     private final Map<UUID, PendingTeleport> pending = new ConcurrentHashMap<>();
+    private String portalWorldName = "spawn";
 
     private record PendingTeleport(Location start, BukkitTask task) {
     }
@@ -46,6 +47,7 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
     protected void onEnable() {
         registerCommand("rtp", this);
         triggers = new PortalTriggerStore(plugin, moduleFolder());
+        portalWorldName = config.getString("portal-world", "spawn");
 
         File guiFile = syncJarResource("gui.yml");
         plugin.gui().loadMenu(guiFile, "portalrtp");
@@ -61,7 +63,7 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
     }
 
     private String portalWorld() {
-        return config.getString("portal-world", "spawn");
+        return portalWorldName;
     }
 
     private String targetWorld() {
@@ -79,16 +81,21 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
     @EventHandler(ignoreCancelled = true)
     public void onMove(PlayerMoveEvent event) {
         if (!event.hasChangedBlock()) return;
-        Location to = event.getTo();
-        if (to == null) return;
-        PendingTeleport pt = pending.get(event.getPlayer().getUniqueId());
-        if (pt != null && moved(pt.start(), to)) {
-            cancelPending(event.getPlayer().getUniqueId(), true);
+        Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
+        PendingTeleport pt = pending.get(uuid);
+        if (pt != null) {
+            Location to = event.getTo();
+            if (to != null && moved(pt.start(), to)) {
+                cancelPending(uuid, true);
+            }
             return;
         }
-        if (!event.getPlayer().getWorld().getName().equalsIgnoreCase(portalWorld())) return;
+        if (!player.getWorld().getName().equalsIgnoreCase(portalWorldName)) return;
+        Location to = event.getTo();
+        if (to == null) return;
         if (onTriggerBlock(to)) {
-            tryOpen(event.getPlayer(), to.getBlock().getLocation());
+            tryOpen(player, to.getBlock().getLocation());
         }
     }
 
@@ -108,7 +115,8 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
     }
 
     private boolean onTriggerBlock(Location location) {
-        if (location == null || location.getWorld() == null) return false;
+        if (location == null || location.getWorld() == null || triggers == null) return false;
+        if (!location.getWorld().getName().equalsIgnoreCase(portalWorldName)) return false;
         Location block = location.getBlock().getLocation();
         if (triggers.isTrigger(block)) return true;
         return triggers.isTrigger(block.clone().subtract(0, 1, 0));

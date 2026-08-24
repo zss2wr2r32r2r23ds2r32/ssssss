@@ -52,6 +52,12 @@ public final class PlaceholderHook implements Listener {
 
     private final ShardedCore plugin;
     private final List<PlaceholderExpansion> expansions = new ArrayList<>();
+    private volatile TokensModule cachedTokens;
+    private volatile TeamsModule cachedTeams;
+    private volatile KillstreaksModule cachedKillstreaks;
+    private volatile OutpostModule cachedOutpost;
+    private volatile KothModule cachedKoth;
+    private volatile LeaderboardsModule cachedLeaderboards;
 
     public PlaceholderHook(ShardedCore plugin) {
         this.plugin = plugin;
@@ -82,6 +88,32 @@ public final class PlaceholderHook implements Listener {
                 plugin.getLogger().info("Registered PlaceholderAPI expansion: %" + expansion.getIdentifier() + "_%");
             }
         }
+        refreshModuleCache();
+    }
+
+    private void refreshModuleCache() {
+        cachedTokens = plugin.modules().get(TokensModule.class);
+        cachedTeams = plugin.modules().get(TeamsModule.class);
+        cachedKillstreaks = plugin.modules().get(KillstreaksModule.class);
+        cachedOutpost = plugin.modules().get(OutpostModule.class);
+        cachedKoth = plugin.modules().get(KothModule.class);
+        cachedLeaderboards = plugin.modules().get(LeaderboardsModule.class);
+    }
+
+    private TokensModule tokensModule() {
+        TokensModule module = cachedTokens;
+        return module != null ? module : plugin.modules().get(TokensModule.class);
+    }
+
+    private TeamsModule teamsModule() {
+        TeamsModule module = cachedTeams;
+        return module != null ? module : plugin.modules().get(TeamsModule.class);
+    }
+
+    private KillstreakDatabase killstreakDb() {
+        KillstreaksModule module = cachedKillstreaks;
+        if (module == null) module = plugin.modules().get(KillstreaksModule.class);
+        return module == null ? null : module.database();
     }
 
     @EventHandler
@@ -117,7 +149,7 @@ public final class PlaceholderHook implements Listener {
             String p = params.toLowerCase(Locale.ROOT);
 
             if (player != null) {
-                TokensModule tokens = plugin.modules().get(TokensModule.class);
+                TokensModule tokens = tokensModule();
                 if (tokens != null && tokens.service() != null) {
                     if (p.equals("tokens") || p.equals("tokens_amount")) {
                         return String.valueOf(tokens.service().getBalance(player.getUniqueId()));
@@ -137,13 +169,12 @@ public final class PlaceholderHook implements Listener {
                     }
                 }
 
-                TeamsModule teams = plugin.modules().get(TeamsModule.class);
+                TeamsModule teams = teamsModule();
                 if (teams != null && teams.database() != null) {
                     if (p.equals("team") || p.equals("team_name") || p.equals("teamname")) {
                         Integer id = teams.database().getTeamId(player.getUniqueId());
                         if (id == null) {
-                            var tm = plugin.modules().get(TeamsModule.class);
-                            return tm == null ? "N/A" : tm.notInTeamPlaceholder();
+                            return teams.notInTeamPlaceholder();
                         }
                         TeamDatabase.Team team = teams.database().getTeamById(id);
                         return team == null ? teams.notInTeamPlaceholder() : team.name();
@@ -175,27 +206,27 @@ public final class PlaceholderHook implements Listener {
                 return kothTime();
             }
             if (p.equals("outpost_active")) {
-                OutpostModule outpost = plugin.modules().get(OutpostModule.class);
+                OutpostModule outpost = cachedOutpost != null ? cachedOutpost : plugin.modules().get(OutpostModule.class);
                 return outpost != null && outpost.isActive() ? "true" : "false";
             }
             if (p.equals("koth_active")) {
-                KothModule koth = plugin.modules().get(KothModule.class);
+                KothModule koth = cachedKoth != null ? cachedKoth : plugin.modules().get(KothModule.class);
                 return koth != null && koth.isActive() ? "true" : "false";
             }
             if (p.equals("outpost_capturer")) {
-                OutpostModule outpost = plugin.modules().get(OutpostModule.class);
+                OutpostModule outpost = cachedOutpost != null ? cachedOutpost : plugin.modules().get(OutpostModule.class);
                 return outpost == null ? "None" : outpost.capturerName();
             }
             if (p.equals("outpost_percent")) {
-                OutpostModule outpost = plugin.modules().get(OutpostModule.class);
+                OutpostModule outpost = cachedOutpost != null ? cachedOutpost : plugin.modules().get(OutpostModule.class);
                 return outpost == null ? "0" : String.format(Locale.US, "%.0f", outpost.capturePercent());
             }
             if (p.equals("koth_leader")) {
-                KothModule koth = plugin.modules().get(KothModule.class);
+                KothModule koth = cachedKoth != null ? cachedKoth : plugin.modules().get(KothModule.class);
                 return koth == null ? "None" : koth.leaderName();
             }
             if (p.equals("koth_leader_points")) {
-                KothModule koth = plugin.modules().get(KothModule.class);
+                KothModule koth = cachedKoth != null ? cachedKoth : plugin.modules().get(KothModule.class);
                 return koth == null ? "0" : String.format(Locale.US, "%.0f", koth.leaderPoints());
             }
             if (p.equals("outpost_hours") || p.equals("outpost_minutes") || p.equals("outpost_seconds")) {
@@ -308,7 +339,7 @@ public final class PlaceholderHook implements Listener {
         public @Nullable String onRequest(OfflinePlayer player, @NotNull String params) {
             String p = params.toLowerCase(Locale.ROOT);
             if (player != null) {
-                TokensModule tokens = plugin.modules().get(TokensModule.class);
+                TokensModule tokens = tokensModule();
                 if (tokens != null && tokens.service() != null) {
                     if (p.equals("amount") || p.equals("balance") || p.equals("tokens")) {
                         return String.valueOf(tokens.service().getBalance(player.getUniqueId()));
@@ -386,7 +417,7 @@ public final class PlaceholderHook implements Listener {
         @Override
         public @Nullable String onRequest(OfflinePlayer player, @NotNull String params) {
             if (player == null) return "0";
-            TokensModule tokens = plugin.modules().get(TokensModule.class);
+            TokensModule tokens = tokensModule();
             if (tokens == null || tokens.service() == null) return "0";
             long balance = tokens.service().getBalance(player.getUniqueId());
             return switch (params.toLowerCase(Locale.ROOT)) {
@@ -398,10 +429,6 @@ public final class PlaceholderHook implements Listener {
         }
     }
 
-    private KillstreakDatabase killstreakDb() {
-        KillstreaksModule module = plugin.modules().get(KillstreaksModule.class);
-        return module == null ? null : module.database();
-    }
 
     private String leaderboardValue(String spec, boolean tokens) {
         String[] parts = spec.split("_", 2);
@@ -420,7 +447,7 @@ public final class PlaceholderHook implements Listener {
         }
 
         if (tokens) {
-            TokensModule module = plugin.modules().get(TokensModule.class);
+            TokensModule module = tokensModule();
             if (module == null || module.database() == null) return "---";
             List<TokenDatabase.LeaderEntry> top = module.database().top(10);
             if (rank > top.size()) return field.equals("amount") || field.equals("value") ? "0" : "---";
@@ -452,23 +479,24 @@ public final class PlaceholderHook implements Listener {
     }
 
     private long outpostMillis() {
-        OutpostModule outpost = plugin.modules().get(OutpostModule.class);
+        OutpostModule outpost = cachedOutpost != null ? cachedOutpost : plugin.modules().get(OutpostModule.class);
         return outpost == null ? 0 : outpost.millisUntilStart();
     }
 
     private long kothMillis() {
-        KothModule koth = plugin.modules().get(KothModule.class);
+        KothModule koth = cachedKoth != null ? cachedKoth : plugin.modules().get(KothModule.class);
         return koth == null ? 0 : koth.millisUntilStart();
     }
 
     private String topLine(int rank, boolean tokens) {
-        LeaderboardsModule lb = plugin.modules().get(LeaderboardsModule.class);
+        LeaderboardsModule lb = cachedLeaderboards != null
+                ? cachedLeaderboards : plugin.modules().get(LeaderboardsModule.class);
         String template = lb == null
                 ? "&a#%rank% &f%name% &7— &f%value% %label%"
                 : lb.hologramLineTemplate(tokens ? "token" : "killstreak");
         String label = tokens ? "Tokens" : "Streak";
         if (tokens) {
-            TokensModule module = plugin.modules().get(TokensModule.class);
+            TokensModule module = tokensModule();
             if (module == null || module.database() == null) return "---";
             List<TokenDatabase.LeaderEntry> top = module.database().top(10);
             if (rank > top.size()) return "---";

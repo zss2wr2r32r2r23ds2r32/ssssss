@@ -69,6 +69,7 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
     private final Map<String, TagOption> limitedTags = new LinkedHashMap<>();
     private final Map<UUID, Boolean> awaitingCustomTag = new ConcurrentHashMap<>();
     private final Set<String> limitedBlockedText = new HashSet<>();
+    private final Set<String> limitedBoldLetters = new HashSet<>();
 
     private TagDatabase database;
 
@@ -99,6 +100,7 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         tags.clear();
         limitedTags.clear();
         limitedBlockedText.clear();
+        limitedBoldLetters.clear();
         loadTagSection(config.getConfigurationSection("tags"), tags);
         loadTagSection(config.getConfigurationSection("limited-tags"), limitedTags);
         buildLimitedBlocklist();
@@ -118,14 +120,41 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
 
     private void buildLimitedBlocklist() {
         for (TagOption tag : limitedTags.values()) {
-            limitedBlockedText.add(normalizeCompare(tag.id()));
-            limitedBlockedText.add(normalizeCompare(stripColors(tag.displayName())));
+            indexLimitedVariant(tag.id());
+            indexLimitedVariant(tag.displayName());
+            indexLimitedVariant(tag.tagDisplay());
             for (String blocked : tag.blockedText()) {
-                if (!blocked.isBlank()) limitedBlockedText.add(normalizeCompare(blocked));
+                indexLimitedVariant(blocked);
             }
-            String inner = extractInnerTagText(stripColors(tag.displayName()));
-            if (inner != null && !inner.isBlank()) limitedBlockedText.add(normalizeCompare(inner));
         }
+    }
+
+    private void indexLimitedVariant(String raw) {
+        if (raw == null || raw.isBlank()) return;
+        String normalized = ColorUtil.normalize(raw);
+        limitedBlockedText.add(normalizeCompare(stripFormatCodes(normalized)));
+        String inner = extractInnerTagText(normalized);
+        if (inner != null) {
+            limitedBlockedText.add(normalizeCompare(stripFormatCodes(inner)));
+            addLimitedBoldLetters(inner);
+        }
+        addLimitedBoldLetters(normalized);
+    }
+
+    private void addLimitedBoldLetters(String raw) {
+        String bold = extractBoldTagText(raw.contains("&8[") ? raw : wrapBracketTag(raw));
+        if (bold == null || bold.isBlank()) {
+            bold = stripFormatCodes(raw);
+        }
+        String letters = normalizeCompare(bold);
+        if (!letters.isBlank()) limitedBoldLetters.add(letters);
+    }
+
+    private String wrapBracketTag(String raw) {
+        if (raw == null || raw.isBlank()) return raw;
+        String norm = ColorUtil.normalize(raw.trim());
+        if (norm.contains("&8[")) return norm;
+        return "&8[" + norm + "&8]";
     }
 
     private void loadTagSection(ConfigurationSection section, Map<String, TagOption> target) {
@@ -375,32 +404,21 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
     private void openMenu(Player player, List<TagOption> options, String title, boolean limited, int page) {
         int size = config.getInt(limited ? "limited-menu-size" : "menu-size", 54);
         TagMenuHolder holder = new TagMenuHolder(limited, page);
+        Map<String, String> placeholders = equipPlaceholders(player);
+        holder.setPlaceholders(placeholders);
         Inventory inventory = plugin.getServer().createInventory(holder, size, Text.c(title));
         TrackedInventories.track(inventory, holder);
 
-        Material borderMat = Material.matchMaterial(config.getString("border-material", "BLACK_STAINED_GLASS_PANE"));
-        if (borderMat == null) borderMat = Material.BLACK_STAINED_GLASS_PANE;
-        ItemStack border = new ItemBuilder(borderMat).name(" ").hideAll().build();
+        ItemStack border = cachedBorderItem();
         for (int slot = 0; slot < size; slot++) {
             inventory.setItem(slot, border.clone());
         }
 
-        Map<String, String> placeholders = equipPlaceholders(player);
         int perPage = TAG_CONTENT_SLOTS.length;
         int maxPage = Math.max(0, (options.size() + perPage - 1) / perPage - 1);
         page = Math.max(0, Math.min(page, maxPage));
         holder.page = page;
-
-        int start = page * perPage;
-        for (int i = 0; i < perPage && start + i < options.size(); i++) {
-            TagOption tag = options.get(start + i);
-            List<String> lore = applyPlaceholders(buildLore(tag, placeholders), placeholders);
-            Material material = Material.matchMaterial(tag.material());
-            if (material == null) material = Material.PAPER;
-            String name = applyPlaceholders(tag.displayName(), placeholders);
-            inventory.setItem(TAG_CONTENT_SLOTS[i],
-                    new ItemBuilder(material).name(name).lore(lore).hideAll().build());
-        }
+        populateTagSlots(inventory, options, placeholders, page, maxPage);
 
         if (!limited && config.getBoolean("remove-button.enabled", true)) {
             Material removeMat = Material.matchMaterial(config.getString("remove-button.material", "FLOWER_CHARGE_BANNER_PATTERN"));
@@ -424,17 +442,6 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
                     .build());
         }
 
-        if (page > 0) {
-            inventory.setItem(PREV_SLOT, navItem(Material.RED_DYE,
-                    config.getString("previous-page.name", "&cPrevious Page"),
-                    config.getStringList("previous-page.lore")));
-        }
-        if (page < maxPage) {
-            inventory.setItem(NEXT_SLOT, navItem(Material.LIME_DYE,
-                    config.getString("next-page.name", "&aNext Page"),
-                    config.getStringList("next-page.lore")));
-        }
-
         if (!limited && config.getBoolean("custom-button.enabled", true)) {
             TagOption custom = tags.get("custom");
             if (custom != null) {
@@ -452,6 +459,57 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         }
 
         player.openInventory(inventory);
+    }
+
+    private void populateTagSlots(Inventory inventory, List<TagOption> options,
+                                  Map<String, String> placeholders, int page, int maxPage) {
+        ItemStack border = cachedBorderItem();
+        int start = page * TAG_CONTENT_SLOTS.length;
+        for (int i = 0; i < TAG_CONTENT_SLOTS.length; i++) {
+            int slot = TAG_CONTENT_SLOTS[i];
+            if (start + i < options.size()) {
+                TagOption tag = options.get(start + i);
+                List<String> lore = applyPlaceholders(buildLore(tag, placeholders), placeholders);
+                Material material = Material.matchMaterial(tag.material());
+                if (material == null) material = Material.PAPER;
+                String name = applyPlaceholders(tag.displayName(), placeholders);
+                inventory.setItem(slot, new ItemBuilder(material).name(name).lore(lore).hideAll().build());
+            } else {
+                inventory.setItem(slot, border.clone());
+            }
+        }
+
+        inventory.setItem(PREV_SLOT, page > 0
+                ? navItem(Material.RED_DYE,
+                config.getString("previous-page.name", "&cPrevious Page"),
+                config.getStringList("previous-page.lore"))
+                : border.clone());
+        inventory.setItem(NEXT_SLOT, page < maxPage
+                ? navItem(Material.LIME_DYE,
+                config.getString("next-page.name", "&aNext Page"),
+                config.getStringList("next-page.lore"))
+                : border.clone());
+    }
+
+    private void flipPage(Player player, TagMenuHolder holder, int delta) {
+        Inventory inventory = player.getOpenInventory().getTopInventory();
+        List<TagOption> options = holder.limited() ? limitedPageCache : tagPageCache;
+        int perPage = TAG_CONTENT_SLOTS.length;
+        int maxPage = Math.max(0, (options.size() + perPage - 1) / perPage - 1);
+        int page = Math.max(0, Math.min(holder.page() + delta, maxPage));
+        holder.page = page;
+        Map<String, String> placeholders = holder.placeholders();
+        if (placeholders == null) {
+            placeholders = equipPlaceholders(player);
+            holder.setPlaceholders(placeholders);
+        }
+        populateTagSlots(inventory, options, placeholders, page, maxPage);
+    }
+
+    private ItemStack cachedBorderItem() {
+        Material borderMat = Material.matchMaterial(config.getString("border-material", "BLACK_STAINED_GLASS_PANE"));
+        if (borderMat == null) borderMat = Material.BLACK_STAINED_GLASS_PANE;
+        return new ItemBuilder(borderMat).name(" ").hideAll().build();
     }
 
     private ItemStack navItem(Material material, String name, List<String> lore) {
@@ -555,21 +613,15 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         }
 
         if (slot == PREV_SLOT && holder.page() > 0) {
-            player.closeInventory();
-            if (holder.limited()) {
-                openMenu(player, limitedPageCache, config.getString("limited-menu-title", "Limited time tags"), true, holder.page() - 1);
-            } else {
-                openMenu(player, tagPageCache, config.getString("menu-title", "Tags"), false, holder.page() - 1);
-            }
+            flipPage(player, holder, -1);
             return;
         }
 
         if (slot == NEXT_SLOT) {
-            player.closeInventory();
-            if (holder.limited()) {
-                openMenu(player, limitedPageCache, config.getString("limited-menu-title", "Limited time tags"), true, holder.page() + 1);
-            } else {
-                openMenu(player, tagPageCache, config.getString("menu-title", "Tags"), false, holder.page() + 1);
+            List<TagOption> options = holder.limited() ? limitedPageCache : tagPageCache;
+            int maxPage = Math.max(0, (options.size() + TAG_CONTENT_SLOTS.length - 1) / TAG_CONTENT_SLOTS.length - 1);
+            if (holder.page() < maxPage) {
+                flipPage(player, holder, 1);
             }
             return;
         }
@@ -742,11 +794,25 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
 
     private boolean matchesLimitedTag(String input) {
         if (!config.getBoolean("block-limited-tag-copy", true)) return false;
+
+        String boldText = extractBoldTagText(input);
+        if (boldText != null) {
+            String boldKey = normalizeCompare(boldText);
+            if (!boldKey.isBlank()) {
+                if (limitedBoldLetters.contains(boldKey)) return true;
+                for (String blocked : limitedBoldLetters) {
+                    if (!blocked.isBlank() && (boldKey.contains(blocked) || blocked.contains(boldKey))) {
+                        return true;
+                    }
+                }
+            }
+        }
+
         String normalizedInput = normalizeCompare(stripColors(input));
         if (limitedBlockedText.contains(normalizedInput)) return true;
 
-        String inner = extractInnerTagText(stripColors(input));
-        if (inner != null && limitedBlockedText.contains(normalizeCompare(inner))) return true;
+        String inner = extractInnerTagText(input);
+        if (inner != null && limitedBlockedText.contains(normalizeCompare(stripFormatCodes(inner)))) return true;
 
         for (String blocked : limitedBlockedText) {
             if (!blocked.isBlank() && (normalizedInput.contains(blocked) || blocked.contains(normalizedInput))) {
@@ -868,6 +934,7 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
     private static final class TagMenuHolder implements InventoryHolder {
         private final boolean limited;
         private int page;
+        private Map<String, String> placeholders;
 
         TagMenuHolder(boolean limited, int page) {
             this.limited = limited;
@@ -880,6 +947,14 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
 
         int page() {
             return page;
+        }
+
+        Map<String, String> placeholders() {
+            return placeholders;
+        }
+
+        void setPlaceholders(Map<String, String> placeholders) {
+            this.placeholders = placeholders;
         }
 
         @Override
