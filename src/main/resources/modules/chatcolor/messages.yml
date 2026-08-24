@@ -1,10 +1,11 @@
-config-version: 2
+config-version: 3
 prefix: '%prefix%'
 players-only: '%prefix%&#FF2727Only players can use this command.'
 no-permission: '%prefix%&#FF2727You don''t have permission.'
 not-owned: '%prefix%&#FF2727You don''t own %color%&#FF2727!'
 applied: '%prefix%&#9FFF00Chat colour applied!'
 removed: '%prefix%&#9FFF00Chat colour removed!'
+gradient-invalid: '%prefix%&#FF2727Invalid gradient. Use two hex colours: &f#RRGGBB #RRGGBB'
 
 message-modes:
   applied: actionbar

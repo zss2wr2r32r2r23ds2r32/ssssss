@@ -1,4 +1,4 @@
-config-version: 11
+config-version: 12
 message-mode: chat
 
 menu-title: 'Tags'
@@ -29,35 +29,35 @@ placeholders:
 remove-button:
   enabled: true
   material: FLOWER_CHARGE_BANNER_PATTERN
-  display-name: '&x&F&F&0&0&0&0&lRemove Tag'
+  display-name: '&x&F&F&B&A&0&0&lRemove Tag'
   lore:
     - '&8Description'
     - ''
-    - '&x&F&F&0&0&0&0Information:'
-    - '&x&F&F&0&0&0&0| &fClick to remove your current tag'
+    - '&x&F&F&B&A&0&0Information:'
+    - '&x&F&F&B&A&0&0| &fClick to remove your current tag'
     - ''
-    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nClick&r &x&F&F&B&A&0&0To Remove'
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&nClick&r &x&F&F&B&A&0&0To Remove'
 
 close-button:
   enabled: true
   nav-override: true
-  display-name: '&x&F&F&0&0&0&0&lClose'
+  display-name: '&x&F&F&B&A&0&0&lClose'
 
 back-button:
   nav-override: true
-  display-name: '&x&F&F&0&0&0&0&lBack'
+  display-name: '&x&F&F&B&A&0&0&lBack'
 
 limited-button:
   enabled: true
   material: CLOCK
-  display-name: '&x&F&F&0&0&0&0&lLimited Time'
+  display-name: '&x&F&F&B&A&0&0&lLimited Time'
   lore:
     - '&8Limited Tags'
     - ''
-    - '&x&F&F&0&0&0&0Information:'
-    - '&x&F&F&0&0&0&0| &fView limited-time tags'
+    - '&x&F&F&B&A&0&0Information:'
+    - '&x&F&F&B&A&0&0| &fView limited-time tags'
     - ''
-    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nClick&r &x&F&F&B&A&0&0To Open'
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&nClick&r &x&F&F&B&A&0&0To Open'
 
 previous-page:
   name: '&ePrevious Page'
@@ -69,93 +69,99 @@ tags:
     slot: 10
     permission: sharded.tag.mvp
     material: PAPER
-    display-name: '&8[&x&F&F&C&F&0&0&lMVP&8] &x&F&F&C&F&0&0Tag'
+    display-name: '&8[&x&F&F&C&F&0&0&lMVP&8]'
+    tag-display: '&8[&x&F&F&C&F&0&0&lMVP&8]'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&F&C&F&0&0Information:'
-      - '&x&F&F&C&F&0&0| &fEquip the &x&F&F&C&F&0&0MVP Tag'
-      - '&x&F&F&C&F&0&0| &fAnd stand out on tab!'
+      - '%accent%Information:'
+      - '%accent%| &fEquip this tag.'
+      - '%accent%| &fAnd stand out on tab!'
       - ''
-      - '&x&F&F&C&F&0&0⚓ &fOwned: %tag_owned_mvp%'
+      - '%accent%⚓ &fOwned: %tag_owned_mvp%'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nClick&r &x&F&F&B&A&0&0To Apply'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&nClick&r &x&F&F&B&A&0&0To Apply'
   diamond:
     slot: 11
     permission: sharded.tag.diamond
     material: PAPER
-    display-name: '&8[&x&0&0&8&3&F&F&lDIAMOND&8] &x&0&0&8&3&F&FTag'
+    display-name: '&8[&x&0&0&8&3&F&F&lDIAMOND&8]'
+    tag-display: '&8[&x&0&0&8&3&F&F&lDIAMOND&8]'
     lore:
       - '&8Description'
       - ''
-      - '&x&0&0&8&3&F&FInformation:'
-      - '&x&0&0&8&3&F&F| &fEquip the &x&0&0&8&3&F&FDiamond Tag'
-      - '&x&0&0&8&3&F&F| &fAnd stand out on tab!'
+      - '%accent%Information:'
+      - '%accent%| &fEquip this tag.'
+      - '%accent%| &fAnd stand out on tab!'
       - ''
-      - '&x&0&0&8&3&F&F⚓ &fOwned: %tag_owned_diamond%'
+      - '%accent%⚓ &fOwned: %tag_owned_diamond%'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nClick&r &x&F&F&B&A&0&0To Apply'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&nClick&r &x&F&F&B&A&0&0To Apply'
   elite:
     slot: 12
     permission: sharded.tag.elite
     material: PAPER
-    display-name: '&8[&x&F&F&0&0&0&0&lELITE&8] &x&F&F&0&0&0&0Tag'
+    display-name: '&8[&x&F&F&0&0&0&0&lELITE&8]'
+    tag-display: '&8[&x&F&F&0&0&0&0&lELITE&8]'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&F&0&0&0&0Information:'
-      - '&x&F&F&0&0&0&0| &fEquip the &x&F&F&0&0&0&0Elite Tag'
-      - '&x&F&F&0&0&0&0| &fAnd stand out on tab!'
+      - '%accent%Information:'
+      - '%accent%| &fEquip this tag.'
+      - '%accent%| &fAnd stand out on tab!'
       - ''
-      - '&x&F&F&0&0&0&0⚓ &fOwned: %tag_owned_elite%'
+      - '%accent%⚓ &fOwned: %tag_owned_elite%'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nClick&r &x&F&F&B&A&0&0To Apply'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&nClick&r &x&F&F&B&A&0&0To Apply'
   sweat:
     slot: 13
     permission: sharded.tag.sweat
     material: PAPER
-    display-name: '&8[&x&B&3&F&F&0&0&lSWEAT&8] &x&B&3&F&F&0&0Tag'
+    display-name: '&8[&x&B&3&F&F&0&0&lSWEAT&8]'
+    tag-display: '&8[&x&B&3&F&F&0&0&lSWEAT&8]'
     lore:
       - '&8Description'
       - ''
-      - '&x&B&3&F&F&0&0Information:'
-      - '&x&B&3&F&F&0&0| &fEquip the &x&B&3&F&F&0&0Sweat Tag'
-      - '&x&B&3&F&F&0&0| &fAnd stand out on tab!'
+      - '%accent%Information:'
+      - '%accent%| &fEquip this tag.'
+      - '%accent%| &fAnd stand out on tab!'
       - ''
-      - '&x&B&3&F&F&0&0⚓ &fOwned: %tag_owned_sweat%'
+      - '%accent%⚓ &fOwned: %tag_owned_sweat%'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nClick&r &x&F&F&B&A&0&0To Apply'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&nClick&r &x&F&F&B&A&0&0To Apply'
   goat:
     slot: 14
     permission: sharded.tag.goat
     material: PAPER
-    display-name: '&8[&x&F&F&0&0&7&C&lGOAT&8] &x&F&F&0&0&7&CTag'
+    display-name: '&8[&x&F&F&0&0&7&C&lGOAT&8]'
+    tag-display: '&8[&x&F&F&0&0&7&C&lGOAT&8]'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&F&0&0&7&CInformation:'
-      - '&x&F&F&0&0&7&C| &fEquip the &x&F&F&0&0&7&CGoat Tag'
-      - '&x&F&F&0&0&7&C| &fAnd stand out on tab!'
+      - '%accent%Information:'
+      - '%accent%| &fEquip this tag.'
+      - '%accent%| &fAnd stand out on tab!'
       - ''
-      - '&x&F&F&0&0&7&C⚓ &fOwned: %tag_owned_goat%'
+      - '%accent%⚓ &fOwned: %tag_owned_goat%'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nClick&r &x&F&F&B&A&0&0To Apply'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&nClick&r &x&F&F&B&A&0&0To Apply'
   custom:
     slot: 16
     permission: sharded.tag.custom
     material: NAME_TAG
     custom-input: true
-    display-name: '&x&F&F&0&A&0&0&lCustom &x&F&F&0&A&0&0Tag'
+    display-name: '&x&F&F&0&A&0&0&lCustom Tag'
+    tag-display: '%last_custom_tag%'
     lore:
       - '&8Description'
       - ''
-      - '&x&F&F&0&A&0&0Information:'
-      - '&x&F&F&0&A&0&0| &fClick to equip your saved tag'
-      - '&x&F&F&0&A&0&0| &fUse &f/tag custom &7to set a new one'
+      - '%accent%Information:'
+      - '%accent%| &fClick to equip your saved tag'
+      - '%accent%| &fUse &f/tag custom &7to set a new one'
       - ''
-      - '&x&F&F&0&A&0&0⚓ &fOwned: %tag_owned_custom%'
-      - '&x&F&F&0&A&0&0⚓ &fSaved: %last_custom_tag%'
+      - '%accent%⚓ &fOwned: %tag_owned_custom%'
+      - '%accent%⚓ &fSaved: %last_custom_tag%'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nClick&r &x&F&F&B&A&0&0To Apply'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&nClick&r &x&F&F&B&A&0&0To Apply'
 
 limited-tags: {}

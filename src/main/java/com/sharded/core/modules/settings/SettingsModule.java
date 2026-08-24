@@ -45,9 +45,6 @@ public final class SettingsModule extends Module implements CommandExecutor {
             return;
         }
         plugin.gui().open(player, "settings", placeholders(player));
-        if (plugin.gui().menu("settings") != null) {
-            send(player, "opened");
-        }
     }
 
     public Map<String, String> placeholders(Player player) {

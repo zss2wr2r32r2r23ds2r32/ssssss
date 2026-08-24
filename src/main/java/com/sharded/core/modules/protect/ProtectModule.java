@@ -15,22 +15,25 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
-/** Spawn / PVP / side region protection. Side regions allow PvP, building, pearls, and damage. */
+/** Spawn / PVP / side region protection. Side regions allow PvP but not break/use above build cap. */
 public final class ProtectModule extends Module implements CommandExecutor, TabCompleter {
 
     private static final List<String> SIDE_KEYS = List.of("side1", "side2", "side3", "side4");
@@ -44,6 +47,7 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
 
     private final RegionSetup setup = new RegionSetup();
     private final Map<String, CuboidRegion> regions = new HashMap<>();
+    private Set<String> hornBlockWorlds = Set.of("spawn");
 
     public ProtectModule(ShardedCore plugin) {
         super(plugin, "protect");
@@ -61,6 +65,8 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
             CuboidRegion r = CuboidRegion.fromSection(config.getConfigurationSection("regions." + key));
             if (r != null) regions.put(key, r);
         }
+        List<String> worlds = config.getStringList("horn-block-worlds");
+        hornBlockWorlds = worlds.isEmpty() ? Set.of("spawn") : new HashSet<>(worlds);
     }
 
     public CuboidRegion region(String id) {
@@ -89,8 +95,18 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
         return player.hasPermission("sharded.protect.bypass");
     }
 
-    /** Side regions override spawn/pvp restrictions. */
-    private boolean restrict(Player player, Location loc) {
+    private boolean hornBlocked(Player player) {
+        if (bypass(player)) return false;
+        if (inSpawn(player.getLocation())) return true;
+        String world = player.getWorld().getName();
+        for (String blocked : hornBlockWorlds) {
+            if (blocked.equalsIgnoreCase(world)) return true;
+        }
+        return false;
+    }
+
+    /** Side regions override spawn/pvp for PvP/pearls/damage only. */
+    private boolean restrictSpawnPvp(Player player, Location loc) {
         if (bypass(player)) return false;
         if (inSide(loc)) return false;
         return inSpawn(loc) || inPvp(loc);
@@ -100,6 +116,11 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
         if (bypass(player)) return false;
         if (inSide(loc)) return false;
         return inSpawn(loc);
+    }
+
+    private boolean restrictSideBreakUse(Player player, Location loc) {
+        if (bypass(player)) return false;
+        return inSide(loc);
     }
 
     @Override
@@ -154,9 +175,10 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
     public void onBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         Location loc = event.getBlock().getLocation();
-        if (!restrict(player, loc)) return;
-        event.setCancelled(true);
-        send(player, "no-break");
+        if (restrictSpawnPvp(player, loc) || restrictSideBreakUse(player, loc)) {
+            event.setCancelled(true);
+            send(player, "no-break");
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -167,22 +189,21 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onSideBuildLimit(BlockPlaceEvent event) {
-        Player player = event.getPlayer();
-        if (bypass(player)) return;
-        Location loc = event.getBlock().getLocation();
-        if (!inSide(loc)) return;
-        int maxY = config.getInt("side-max-build-y", 111);
-        if (loc.getBlockY() > maxY) {
-            event.setCancelled(true);
-            send(player, "side-build-limit", "%y%", String.valueOf(maxY));
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        if (!restrictSpawnOnly(player, event.getBlock().getLocation())) return;
+        Location loc = event.getBlock().getLocation();
+        if (restrictSideBreakUse(player, loc)) {
+            int maxY = config.getInt("side-max-build-y", 111);
+            if (loc.getBlockY() > maxY) {
+                event.setCancelled(true);
+                send(player, "side-build-limit", "%y%", String.valueOf(maxY));
+                return;
+            }
+            event.setCancelled(true);
+            send(player, "no-place");
+            return;
+        }
+        if (!restrictSpawnOnly(player, loc)) return;
         event.setCancelled(true);
         send(player, "no-place");
     }
@@ -203,15 +224,52 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
         if (inSpawn(player.getLocation())) event.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
     public void onHornUse(PlayerInteractEvent event) {
-        if (event.getHand() != EquipmentSlot.HAND) return;
-        ItemStack item = event.getItem();
-        if (item == null || item.getType() != Material.GOAT_HORN) return;
+        if (!isHornInteraction(event)) return;
         Player player = event.getPlayer();
-        if (bypass(player) || inSide(player.getLocation())) return;
-        if (inSpawn(player.getLocation())) {
+        if (!hornBlocked(player)) return;
+        denyHorn(event, player);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+    public void onHornUseGuard(PlayerInteractEvent event) {
+        if (!isHornInteraction(event)) return;
+        Player player = event.getPlayer();
+        if (!hornBlocked(player)) return;
+        denyHorn(event, player);
+    }
+
+    private boolean isHornInteraction(PlayerInteractEvent event) {
+        ItemStack item = event.getItem();
+        if (item == null || item.getType() != Material.GOAT_HORN) return false;
+        return event.getAction().isRightClick();
+    }
+
+    private void denyHorn(PlayerInteractEvent event, Player player) {
+        event.setCancelled(true);
+        event.setUseItemInHand(Result.DENY);
+        event.setUseInteractedBlock(Result.DENY);
+        player.setCooldown(Material.GOAT_HORN, 20);
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
+    public void onHornConsume(PlayerItemConsumeEvent event) {
+        if (event.getItem().getType() != Material.GOAT_HORN) return;
+        if (hornBlocked(event.getPlayer())) event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onSideInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        Location loc = event.getClickedBlock() != null
+                ? event.getClickedBlock().getLocation()
+                : player.getLocation();
+        if (!restrictSideBreakUse(player, loc)) return;
+        if (event.getItem() != null && event.getItem().getType() == Material.GOAT_HORN) return;
+        if (event.getClickedBlock() != null) {
             event.setCancelled(true);
+            send(player, "no-use");
         }
     }
 

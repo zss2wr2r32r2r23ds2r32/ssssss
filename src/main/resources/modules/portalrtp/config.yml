@@ -1,5 +1,5 @@
 # Portal RTP
-config-version: 9
+config-version: 10
 message-mode: chat
 portal-world: spawn
 # /rtp only works while standing in portal-world (unless sharded.rtp.bypass)
@@ -11,7 +11,7 @@ gui-cooldown-ms: 2000
 countdown-seconds: 5
 cooldown-seconds: 30
 countdown-actionbar: '&#9FFF00&lRTP &8▷ &fTeleporting in &#9FFF00&n%seconds%&r&#9FFF00s'
-teleport-cancelled-actionbar: '&#9FFF00&lRTP &8▷ &#FF0000&lTeleport Cancelled &8— &fYou Moved.'
+teleport-cancelled-actionbar: '&#9FFF00RTP &8▷ &fYou moved &8— &7teleport cancelled.'
 countdown-sound: BLOCK_NOTE_BLOCK_PLING
 cancel-sound: BLOCK_NOTE_BLOCK_BASS
 

@@ -161,6 +161,23 @@ public final class NameColorModule extends Module implements CommandExecutor, Ta
             send(player, "custom-prompt");
             return true;
         }
+        if (sub.equals("gradient")) {
+            if (args.length >= 4 && sender.hasPermission("sharded.namecolor.admin")) {
+                createColor(sender, args[1].toLowerCase(Locale.ROOT), args[2] + " " + args[3]);
+                return true;
+            }
+            if (args.length >= 3 && sender instanceof Player player) {
+                String gradient = normalizeGradientInput(args[1] + " " + args[2]);
+                if (gradient == null) {
+                    send(player, "custom-invalid");
+                    return true;
+                }
+                applyGradient(player, gradient, false);
+                return true;
+            }
+            send(sender, "gradient-usage");
+            return true;
+        }
 
         if (!(sender instanceof Player player)) {
             send(sender, "players-only");
@@ -376,10 +393,16 @@ public final class NameColorModule extends Module implements CommandExecutor, Ta
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            List<String> subs = new ArrayList<>(List.of("set", "reset"));
+            List<String> subs = new ArrayList<>(List.of("set", "reset", "gradient", "custom"));
             if (sender.hasPermission("sharded.namecolor.admin")) subs.addAll(List.of("create", "delete"));
             subs.addAll(colors.keySet());
             return TabCompleteHelper.filter(args[0], subs);
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("gradient")) {
+            if (sender.hasPermission("sharded.namecolor.admin")) {
+                return TabCompleteHelper.filter(args[1], colors.keySet());
+            }
+            return List.of();
         }
         if (args.length == 2 && (args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("delete"))) {
             return TabCompleteHelper.filter(args[1], colors.keySet());

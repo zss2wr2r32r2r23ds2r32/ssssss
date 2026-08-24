@@ -216,7 +216,7 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
 
     private void notifyTeleportCancelled(Player player) {
         String bar = config.getString("teleport-cancelled-actionbar",
-                "&#9FFF00&lRTP &8▷ &#FF0000&lTeleport Cancelled &8— &fYou Moved.");
+                "&#9FFF00&lRTP &8▷ &fYou moved &8— &7teleport cancelled.");
         player.sendActionBar(Text.c(bar));
         playSound(player, config.getString("cancel-sound", "BLOCK_NOTE_BLOCK_BASS"));
     }

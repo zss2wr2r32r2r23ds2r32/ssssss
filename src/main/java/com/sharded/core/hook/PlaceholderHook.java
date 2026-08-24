@@ -11,6 +11,7 @@ import com.sharded.core.modules.tokens.TokenDatabase;
 import com.sharded.core.modules.tokens.TokensModule;
 import com.sharded.core.modules.killstreaks.KillstreakDatabase;
 import com.sharded.core.util.ColorUtil;
+import com.sharded.core.util.TagDisplayUtil;
 import com.sharded.core.util.Numbers;
 import com.sharded.core.util.Text;
 import com.sharded.core.util.TimeFormat;
@@ -153,7 +154,7 @@ public final class PlaceholderHook implements Listener {
                     var cosmetics = plugin.cosmetics().database().get(player.getUniqueId());
                     if (p.equals("tag") || p.equals("tag_display")
                             || p.equals("eternaltags_tag") || p.equals("eternaltags_tag_display")) {
-                        return cosmetics.tagDisplay() == null ? "" : ColorUtil.normalize(cosmetics.tagDisplay());
+                        return cosmetics.tagDisplay() == null ? "" : TagDisplayUtil.tabTag(cosmetics.tagDisplay());
                     }
                 }
             }

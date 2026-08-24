@@ -4,6 +4,7 @@ import com.sharded.core.ShardedCore;
 import com.sharded.core.util.ColorUtil;
 import com.sharded.core.util.GradientUtil;
 import com.sharded.core.util.RainbowUtil;
+import com.sharded.core.util.TagDisplayUtil;
 import com.sharded.core.util.Text;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
@@ -87,7 +88,7 @@ public final class CosmeticService implements Listener {
     public String tagDisplay(UUID uuid) {
         if (database == null) return "";
         CosmeticDatabase.PlayerCosmetics c = database.get(uuid);
-        return c.tagDisplay() == null ? "" : c.tagDisplay();
+        return c.tagDisplay() == null ? "" : TagDisplayUtil.tabTag(c.tagDisplay());
     }
 
     public String formattedName(Player player) {
@@ -106,14 +107,19 @@ public final class CosmeticService implements Listener {
     public void applyDisplay(Player player) {
         if (database == null) return;
         CosmeticDatabase.PlayerCosmetics c = database.get(player.getUniqueId());
-        String tag = c.tagDisplay() == null ? "" : c.tagDisplay();
+        String tag = c.tagDisplay() == null ? "" : TagDisplayUtil.tabTag(c.tagDisplay());
         String name = colorizeName(player.getName(), c.nameColor());
-        String legacy = (tag.isBlank() ? "" : tag + " ") + name;
-        Component component = Text.c(legacy);
-        player.playerListName(component);
-        player.displayName(component);
-        player.customName(component);
-        player.setCustomNameVisible(true);
+        String withTag = tag.isBlank() ? name : tag + " " + name;
+        // Tab list name is name-only so TAB/other plugins can place %shardedcore_tag% once.
+        player.playerListName(Text.c(name));
+        player.displayName(Text.c(name));
+        if (tag.isBlank()) {
+            player.customName(null);
+            player.setCustomNameVisible(false);
+        } else {
+            player.customName(Text.c(withTag));
+            player.setCustomNameVisible(true);
+        }
     }
 
     public static String colorizeName(String name, String spec) {

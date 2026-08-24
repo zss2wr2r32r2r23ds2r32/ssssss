@@ -28,10 +28,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /** Chat colour equip — sharded.chatcolor.* permissions. */
 public final class ChatColorModule extends Module implements CommandExecutor, TabCompleter {
+
+    private static final Pattern GRADIENT_INPUT = Pattern.compile(
+            "^#?[0-9A-Fa-f]{6}\\s+#?[0-9A-Fa-f]{6}$");
 
     private static final String MENU_TITLE = "Chat Colours";
     private final Map<String, ColorOption> colors = new LinkedHashMap<>();
@@ -112,6 +116,25 @@ public final class ChatColorModule extends Module implements CommandExecutor, Ta
                 return true;
             }
             resetColor(player);
+            return true;
+        }
+        if (sub.equals("gradient") && args.length >= 3) {
+            if (!(sender instanceof Player player)) {
+                send(sender, "players-only");
+                return true;
+            }
+            if (args.length >= 4 && sender.hasPermission("sharded.chatcolor.admin")) {
+                createColor(sender, args[1].toLowerCase(Locale.ROOT), args[2] + " " + args[3]);
+                return true;
+            }
+            String gradient = normalizeGradient(args[1] + " " + args[2]);
+            if (gradient == null) {
+                send(player, "gradient-invalid");
+                return true;
+            }
+            CosmeticService cosmetics = plugin.cosmetics();
+            if (cosmetics != null) cosmetics.setChatColor(player, gradient);
+            send(player, "applied", "%color%", "Gradient");
             return true;
         }
         if (sub.equals("set") && args.length >= 2) {
@@ -274,15 +297,29 @@ public final class ChatColorModule extends Module implements CommandExecutor, Ta
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            List<String> subs = new ArrayList<>(List.of("set", "reset"));
+            List<String> subs = new ArrayList<>(List.of("set", "reset", "gradient"));
             if (sender.hasPermission("sharded.chatcolor.admin")) subs.addAll(List.of("create", "delete"));
             subs.addAll(colors.keySet());
             return TabCompleteHelper.filter(args[0], subs);
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("gradient")
+                && sender.hasPermission("sharded.chatcolor.admin")) {
+            return TabCompleteHelper.filter(args[1], colors.keySet());
         }
         if (args.length == 2 && (args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("delete"))) {
             return TabCompleteHelper.filter(args[1], colors.keySet());
         }
         return List.of();
+    }
+
+    private String normalizeGradient(String raw) {
+        if (raw == null || !GRADIENT_INPUT.matcher(raw.trim()).matches()) return null;
+        String[] parts = raw.trim().split("\\s+");
+        return ensureHash(parts[0]) + " " + ensureHash(parts[1]);
+    }
+
+    private String ensureHash(String hex) {
+        return hex.startsWith("#") ? hex.toUpperCase(Locale.ROOT) : "#" + hex.toUpperCase(Locale.ROOT);
     }
 
     private List<String> apply(List<String> lines, Map<String, String> ph) {

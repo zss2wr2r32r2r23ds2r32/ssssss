@@ -1,6 +1,6 @@
-config-version: 5
+config-version: 6
+prefix: '&x&F&F&B&A&0&0&lTEAMS &8▷ '
 message-mode: chat
-prefix: '&#FF3399&lTEAMS &8▷ '
 
 creation:
   min-name-length: 3
@@ -27,26 +27,26 @@ leaderboard:
   playtime-hour-weight: 50
 
 chat:
-  team-format: '&#FF3399[TEAM] &f%player% &8» &7%message%'
+  team-format: '&x&F&F&B&A&0&0[TEAM] &f%player% &8» &7%message%'
   ally-format: '&#ffb300[ALLY] &f%player% &8» &7%message%'
 
 placeholders:
   not-in-team: 'N/A'
 
 gui:
-  click-footer: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nClick&r &x&F&F&B&A&0&0'
-  click-footer-confirm: '&x&9&F&F&0&0▷ &x&9&F&F&0&0&l&nClick&r &x&9&F&F&0&0'
-  click-footer-cancel: '&x&F&F&2&7&2&7▷ &x&F&F&2&7&2&7&l&nClick&r &x&F&F&2&7&2&7'
-  color: '&#FF3399'
+  click-footer: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&nClick&r &x&F&F&B&A&0&0'
+  click-footer-confirm: '&x&9&F&F&0&0&0▷ &x&9&F&F&0&0&0&nClick&r &x&9&F&F&0&0&0To Confirm'
+  click-footer-cancel: '&x&F&F&2&7&2&7▷ &x&F&F&2&7&2&7&nClick&r &x&F&F&2&7&2&7To Cancel'
+  color: '&x&F&F&B&A&0&0'
 
   create-title: '&8Create Team'
-  create-anvil-name: '&#FF3399&lCreate Team'
+  create-anvil-name: '&x&F&F&B&A&0&0&lCreate Team'
   create-anvil-lore:
     - '&8Descriptions'
     - ''
-    - '&#FF3399Information:'
-    - '&#FF3399| &fClick here to type'
-    - '&#FF3399| &fyour team name in chat.'
+    - '&x&F&F&B&A&0&0Information:'
+    - '&x&F&F&B&A&0&0| &fClick here to type'
+    - '&x&F&F&B&A&0&0| &fyour team name in chat.'
     - ''
     - '%click%to create'
 
@@ -103,14 +103,14 @@ gui:
     - ''
     - '%click%to alert'
 
-  chat-name: '&#FF3399&lTeam Chat'
+  chat-name: '&x&F&F&B&A&0&0&lTeam Chat'
   chat-lore:
     - '&8Descriptions'
     - ''
-    - '&#FF3399Information:'
-    - '&#FF3399| &fToggle team chat mode.'
+    - '&x&F&F&B&A&0&0Information:'
+    - '&x&F&F&B&A&0&0| &fToggle team chat mode.'
     - ''
-    - '&#FF3399⚓ &fStatus: %status%'
+    - '&x&F&F&B&A&0&0⚓ &fStatus: %status%'
     - ''
     - '%click%to toggle'
 
@@ -191,28 +191,28 @@ gui:
     - '&7This is your team owner.'
 
   browse-title: '&8Browse Teams'
-  browse-entry-name: '&#FF3399&l%team%'
+  browse-entry-name: '&x&F&F&B&A&0&0&l%team%'
   browse-entry-lore:
     - '&8Descriptions'
     - ''
-    - '&#FF3399Information:'
-    - '&#FF3399| &fMembers: &f%count%'
-    - '&#FF3399| &fLeaderboard: &f#%rank%'
+    - '&x&F&F&B&A&0&0Information:'
+    - '&x&F&F&B&A&0&0| &fMembers: &f%count%'
+    - '&x&F&F&B&A&0&0| &fLeaderboard: &f#%rank%'
     - ''
     - '%click%to view profile'
 
   profile-title: '&8Team &f%team%'
-  profile-item-name: '&#FF3399&l%team%'
+  profile-item-name: '&x&F&F&B&A&0&0&l%team%'
   profile-item-lore:
     - '&8Descriptions'
     - ''
-    - '&#FF3399Information:'
-    - '&#FF3399| &fLeaderboard: &f#%rank%'
-    - '&#FF3399| &fMembers: &f%count%'
-    - '&#FF3399| &fKills: &f%kills%'
-    - '&#FF3399| &fTokens: &f%tokens%'
-    - '&#FF3399| &fPlaytime: &f%playtime%'
-    - '&#FF3399| &fScore: &f%score%'
+    - '&x&F&F&B&A&0&0Information:'
+    - '&x&F&F&B&A&0&0| &fLeaderboard: &f#%rank%'
+    - '&x&F&F&B&A&0&0| &fMembers: &f%count%'
+    - '&x&F&F&B&A&0&0| &fKills: &f%kills%'
+    - '&x&F&F&B&A&0&0| &fTokens: &f%tokens%'
+    - '&x&F&F&B&A&0&0| &fPlaytime: &f%playtime%'
+    - '&x&F&F&B&A&0&0| &fScore: &f%score%'
     - ''
     - '%click%to go back'
 

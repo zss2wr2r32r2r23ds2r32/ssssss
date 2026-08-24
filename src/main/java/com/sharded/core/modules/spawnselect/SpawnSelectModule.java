@@ -181,7 +181,7 @@ public final class SpawnSelectModule extends Module implements CommandExecutor, 
 
     private void notifyTeleportCancelled(Player player) {
         String bar = config.getString("teleport-cancelled-actionbar",
-                "&#FF005D&lSPAWN &8▷ &#FF0000&lTeleport Cancelled &8— &fYou Moved.");
+                "&#FF005D&lSPAWN &8▷ &fYou moved &8— &7teleport cancelled.");
         player.sendActionBar(Text.c(bar));
         playSound(player, config.getString("cancel-sound", "BLOCK_NOTE_BLOCK_BASS"));
     }

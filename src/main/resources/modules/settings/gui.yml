@@ -1,4 +1,4 @@
-config-version: 6
+config-version: 7
 menu_title: 'Settings'
 size: 36
 open_permission: sharded.settings.use
@@ -24,13 +24,11 @@ items:
       - 8
       - 9
       - 10
-      - 16
       - 17
       - 18
       - 19
       - 20
       - 21
-      - 23
       - 24
       - 25
       - 26
@@ -159,7 +157,7 @@ items:
 
   event_sounds:
     material: GOAT_HORN
-    slot: 23
+    slot: 16
     permission: sharded.settings.eventsounds
     display_name: '&#FF8800&lEVENT SOUNDS'
     lore:

@@ -20,6 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -137,6 +138,15 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
         if (!tagged) return;
         if (!config.getBoolean("kill-on-logout", true)) return;
         player.setHealth(0);
+    }
+
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onCommand(PlayerCommandPreprocessEvent event) {
+        Player player = event.getPlayer();
+        if (!isTagged(player)) return;
+        if (player.hasPermission("sharded.combat.commandbypass")) return;
+        event.setCancelled(true);
+        send(player, "no-commands");
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

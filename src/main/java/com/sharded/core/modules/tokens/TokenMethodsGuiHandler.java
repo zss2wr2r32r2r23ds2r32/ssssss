@@ -19,6 +19,8 @@ import java.util.Map;
 /** /tokenmethods GUI — best to worst ways to earn tokens. */
 final class TokenMethodsGuiHandler {
 
+    private static final int[] RANK_SLOTS = {11, 12, 13, 14, 15, 20, 21, 22, 23, 24};
+
     static final class Holder implements InventoryHolder {
         Inventory inventory;
         @Override public Inventory getInventory() { return inventory; }
@@ -38,12 +40,14 @@ final class TokenMethodsGuiHandler {
 
         List<Map.Entry<String, ConfigurationSection>> methods = sortedMethods();
         String click = module.configString("gui.click-footer",
-                "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View");
+                "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nClick&r &x&F&F&B&A&0&0To View");
 
         int rank = 1;
+        int slotIndex = 0;
         for (Map.Entry<String, ConfigurationSection> entry : methods) {
+            if (slotIndex >= RANK_SLOTS.length) break;
             ConfigurationSection m = entry.getValue();
-            int slot = m.getInt("slot", 13);
+            int slot = RANK_SLOTS[slotIndex++];
             Material mat = Material.matchMaterial(m.getString("material", "PAPER"));
             if (mat == null) mat = Material.PAPER;
             List<String> lore = new ArrayList<>();
@@ -54,9 +58,6 @@ final class TokenMethodsGuiHandler {
             }
             String name = PlaceholderUtil.apply(player, m.getString("name", entry.getKey())
                     .replace("%rank%", String.valueOf(rank)));
-            if (!name.contains("#")) {
-                name = name + " &7(#" + rank + ")";
-            }
             inv.setItem(slot, new ItemBuilder(mat)
                     .name(name)
                     .lore(lore)
@@ -69,12 +70,16 @@ final class TokenMethodsGuiHandler {
     void handleClick(Player player, int slot) {
         ConfigurationSection section = module.configSection("gui.methods");
         if (section == null) return;
-        for (String key : section.getKeys(false)) {
-            ConfigurationSection m = section.getConfigurationSection(key);
-            if (m == null || m.getInt("slot") != slot) continue;
+        List<Map.Entry<String, ConfigurationSection>> methods = sortedMethods();
+        for (int i = 0; i < methods.size() && i < RANK_SLOTS.length; i++) {
+            if (RANK_SLOTS[i] != slot) continue;
+            ConfigurationSection m = methods.get(i).getValue();
             String cmd = m.getString("command", "");
-            if (!cmd.isBlank()) player.performCommand(cmd.startsWith("/") ? cmd.substring(1) : cmd);
-            else if (key.equals("playtime")) player.performCommand("hourly");
+            if (!cmd.isBlank()) {
+                player.performCommand(cmd.startsWith("/") ? cmd.substring(1) : cmd);
+            } else if (methods.get(i).getKey().equals("playtime")) {
+                player.performCommand("hourly");
+            }
             return;
         }
     }
@@ -87,7 +92,7 @@ final class TokenMethodsGuiHandler {
             ConfigurationSection m = section.getConfigurationSection(key);
             if (m != null) list.add(Map.entry(key, m));
         }
-        list.sort(Comparator.comparingInt(e -> e.getValue().getInt("order", e.getValue().getInt("slot", 99))));
+        list.sort(Comparator.comparingInt(e -> e.getValue().getInt("order", 99)));
         return list;
     }
 

@@ -5,6 +5,7 @@ import com.sharded.core.module.Module;
 import com.sharded.core.util.ColorConfigUtil;
 import com.sharded.core.util.ColorUtil;
 import com.sharded.core.util.ItemBuilder;
+import com.sharded.core.util.TagDisplayUtil;
 import com.sharded.core.util.Text;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.WordBlacklist;
@@ -411,7 +412,27 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
     }
 
     private List<String> buildLore(TagOption tag, Map<String, String> placeholders) {
-        return new ArrayList<>(tag.lore());
+        if (!tag.lore().isEmpty()) {
+            String accent = TagDisplayUtil.accentColor(tag.effectiveDisplay());
+            List<String> out = new ArrayList<>();
+            for (String line : tag.lore()) {
+                out.add(applyPlaceholders(line.replace("%accent%", accent), placeholders));
+            }
+            return out;
+        }
+        String accent = TagDisplayUtil.accentColor(tag.effectiveDisplay());
+        String owned = placeholders.getOrDefault("tag_owned_" + tag.id(),
+                config.getString("placeholders.owned-no", "&#FF2727&nNo"));
+        return List.of(
+                "&8Description",
+                "",
+                TagDisplayUtil.loreLine(accent, "Information:"),
+                TagDisplayUtil.loreLine(accent, "| &fEquip this tag."),
+                TagDisplayUtil.loreLine(accent, "| &fAnd stand out on tab!"),
+                "",
+                TagDisplayUtil.loreLine(accent, "⚓ &fOwned: ") + owned,
+                "",
+                "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&nClick&r &x&F&F&B&A&0&0To Apply");
     }
 
     private String applyPlaceholders(String line, Map<String, String> placeholders) {
@@ -764,7 +785,10 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
                              String displayName, String tagDisplay, List<String> lore,
                              String applyCommand, boolean customInput, List<String> blockedText) {
         String effectiveDisplay() {
-            return tagDisplay == null || tagDisplay.isBlank() ? displayName : tagDisplay;
+            if (tagDisplay != null && !tagDisplay.isBlank()) {
+                return TagDisplayUtil.tabTag(tagDisplay);
+            }
+            return TagDisplayUtil.tabTag(displayName == null || displayName.isBlank() ? id : displayName);
         }
     }
 }

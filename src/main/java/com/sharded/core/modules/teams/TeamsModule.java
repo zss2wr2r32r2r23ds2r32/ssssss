@@ -11,6 +11,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.Sound;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -180,6 +181,7 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
             return;
         }
         send(player, "created", "%team%", team.name());
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.8f, 1.2f);
     }
 
     boolean validateTeamName(Player player, String name) {
@@ -494,6 +496,7 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
         }
         database.deleteTeam(teamId);
         send(player, "disbanded", "%team%", team.name());
+        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 0.7f, 0.9f);
     }
 
     private void handlePromote(Player player, String targetName) {
