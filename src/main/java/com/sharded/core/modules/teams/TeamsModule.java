@@ -101,10 +101,12 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
         String click = config.getString("gui.click-footer", GuiFooters.view());
         String clickConfirm = config.getString("gui.click-footer-confirm", GuiFooters.confirm());
         String clickCancel = config.getString("gui.click-footer-cancel", GuiFooters.cancel());
+        String clickCreate = config.getString("gui.click-footer-create", GuiFooters.create());
         String msg = config.getString("gui." + key, "");
         msg = msg.replace("%click%", click)
                 .replace("%click_confirm%", clickConfirm)
-                .replace("%click_cancel%", clickCancel);
+                .replace("%click_cancel%", clickCancel)
+                .replace("%click_create%", clickCreate);
         return Text.apply(msg, replacements);
     }
 
@@ -112,6 +114,7 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
         String click = config.getString("gui.click-footer", GuiFooters.view());
         String clickConfirm = config.getString("gui.click-footer-confirm", GuiFooters.confirm());
         String clickCancel = config.getString("gui.click-footer-cancel", GuiFooters.cancel());
+        String clickCreate = config.getString("gui.click-footer-create", GuiFooters.create());
         List<String> lines = new ArrayList<>(config.getStringList("gui." + key));
         if (lines.isEmpty()) {
             String single = config.getString("gui." + key);
@@ -121,7 +124,8 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
         for (String line : lines) {
             out.add(Text.apply(line.replace("%click%", click)
                     .replace("%click_confirm%", clickConfirm)
-                    .replace("%click_cancel%", clickCancel), replacements));
+                    .replace("%click_cancel%", clickCancel)
+                    .replace("%click_create%", clickCreate), replacements));
         }
         return out;
     }

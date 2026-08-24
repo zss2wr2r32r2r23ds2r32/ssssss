@@ -1,4 +1,4 @@
-config-version: 7
+config-version: 8
 prefix: '&x&F&F&B&A&0&0&lTEAMS &8▷ '
 message-mode: chat
 
@@ -35,8 +35,9 @@ placeholders:
 
 gui:
   click-footer: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+  click-footer-create: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Create'
   click-footer-confirm: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Confirm'
-  click-footer-cancel: '&x&F&F&2&7&2&7▷ &x&F&F&2&7&2&7&l&nCLICK&r &x&F&F&2&7&2&7To Cancel'
+  click-footer-cancel: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Cancel'
   color: '&x&F&F&B&A&0&0'
 
   create-title: '&8Create Team'
@@ -48,7 +49,7 @@ gui:
     - '&x&F&F&B&A&0&0| &fClick here to type'
     - '&x&F&F&B&A&0&0| &fyour team name in chat.'
     - ''
-    - '%click%'
+    - '%click_create%'
 
   confirm-title: '&8Confirm &f%team%'
   cancel-name: '&#FF2727&lCancel'
@@ -160,11 +161,19 @@ gui:
   disband-confirm-lore:
     - '&8Descriptions'
     - ''
-    - '&#FF2727Information:'
-    - '&#FF2727| &fThis cannot be undone!'
-    - '&#FF2727| &fAll members will be removed.'
+    - '&#9FFF00Information:'
+    - '&#9FFF00| &fThis cannot be undone!'
+    - '&#9FFF00| &fAll members will be removed.'
     - ''
     - '%click_confirm%'
+  disband-cancel-lore:
+    - '&8Descriptions'
+    - ''
+    - '&#FF2727Information:'
+    - '&#FF2727| &fGo back and cancel'
+    - '&#FF2727| &fthe disband.'
+    - ''
+    - '%click_cancel%'
 
   back-name: '&#FFD700&lBack'
   previous-name: '&ePrevious page'

@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public final class TagDisplayUtil {
 
     private static final Pattern HEX_COLOR = Pattern.compile(
-            "(&x(?:&[0-9A-Fa-f]){6}|&#[0-9A-Fa-f]{6}|&[0-9a-fk-or])",
+            "(&x(?:&[0-9A-Fa-f]){6}|&#[0-9A-Fa-f]{6}|&[0-9a-f])",
             Pattern.CASE_INSENSITIVE);
     private static final Pattern TRAILING_TAG_WORD = Pattern.compile("\\s+tag\\s*$", Pattern.CASE_INSENSITIVE);
 
@@ -22,11 +22,19 @@ public final class TagDisplayUtil {
         return tag.trim();
     }
 
-    /** First colour code in a tag string for lore accents. */
+    /** First hex or bright colour in a tag string for lore accents (skips &7/&8 brackets). */
     public static String accentColor(String raw) {
         if (raw == null || raw.isBlank()) return "&x&F&F&B&A&0&0";
-        Matcher matcher = HEX_COLOR.matcher(ColorUtil.normalize(raw));
-        if (matcher.find()) return matcher.group(1);
+        String normalized = ColorUtil.normalize(raw);
+        Matcher matcher = HEX_COLOR.matcher(normalized);
+        while (matcher.find()) {
+            String code = matcher.group(1);
+            if (code.equalsIgnoreCase("&8") || code.equalsIgnoreCase("&7")) continue;
+            if (code.startsWith("&x") || code.startsWith("&#")) return code;
+            if (code.length() == 2 && "0123456789abcdef".indexOf(Character.toLowerCase(code.charAt(1))) >= 0) {
+                return code;
+            }
+        }
         return "&x&F&F&B&A&0&0";
     }
 

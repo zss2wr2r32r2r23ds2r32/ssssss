@@ -193,25 +193,36 @@ public final class NameColorModule extends Module implements CommandExecutor, Ta
 
     private void applyColorById(Player player, String id) {
         ColorOption color = colors.get(id);
-        if (color == null) {
-            send(player, "color-not-found", "%color%", id);
-            return;
-        }
-        if (!player.hasPermission(color.permission())) {
-            send(player, "not-owned", "%color%", color.displayName());
-            return;
-        }
-        if (color.customInput()) {
-            String last = database == null ? null : database.getLastGradient(player.getUniqueId());
-            if (last != null && !last.isBlank()) {
-                applyGradient(player, last, false);
+        if (color != null) {
+            if (!player.hasPermission(color.permission())) {
+                send(player, "not-owned", "%color%", color.displayName());
                 return;
             }
-            awaitingGradient.put(player.getUniqueId(), true);
-            send(player, "custom-prompt");
+            if (color.customInput()) {
+                String last = database == null ? null : database.getLastGradient(player.getUniqueId());
+                if (last != null && !last.isBlank()) {
+                    applyGradient(player, last, false);
+                    return;
+                }
+                awaitingGradient.put(player.getUniqueId(), true);
+                send(player, "custom-prompt");
+                return;
+            }
+            applyColorValue(player, color.value(), color.displayName());
             return;
         }
-        applyColorValue(player, color.value(), color.displayName());
+        ConfigurationSection section = config.getConfigurationSection("colors." + id);
+        if (section != null) {
+            String perm = section.getString("permission", "sharded.namecolor." + id);
+            if (!player.hasPermission(perm)) {
+                send(player, "not-owned", "%color%", id);
+                return;
+            }
+            String value = section.getString("value", "&f");
+            applyColorValue(player, value, section.getString("display-name", id));
+            return;
+        }
+        send(player, "color-not-found", "%color%", id);
     }
 
     private void applyColorValue(Player player, String value, String label) {

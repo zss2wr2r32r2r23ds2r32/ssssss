@@ -1,4 +1,4 @@
-config-version: 3
+config-version: 4
 prefix: '%prefix%'
 players-only: '%prefix%&#FF2727Only players can use this command.'
 no-permission: '%prefix%&#FF2727You don''t have permission.'
@@ -6,6 +6,10 @@ not-owned: '%prefix%&#FF2727You don''t own %color%&#FF2727!'
 applied: '%prefix%&#9FFF00Chat colour applied!'
 removed: '%prefix%&#9FFF00Chat colour removed!'
 gradient-invalid: '%prefix%&#FF2727Invalid gradient. Use two hex colours: &f#RRGGBB #RRGGBB'
+color-not-found: '%prefix%&#FF2727Colour &f%color% &#FF2727was not found.'
+color-created: '%prefix%&#9FFF00Colour &f%color% &#9FFF00created.'
+color-deleted: '%prefix%&#9FFF00Colour &f%color% &#9FFF00removed.'
+menu-full: '%prefix%&#FF2727The colour menu is full.'
 
 message-modes:
   applied: actionbar

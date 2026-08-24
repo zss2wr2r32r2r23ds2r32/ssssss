@@ -52,12 +52,12 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
             "^((?:&x(?:&[0-9A-Fa-f]){6})|(?:&#[0-9A-Fa-f]{3,8})|(?:&[0-9a-fk-or]))(.+)$",
             Pattern.CASE_INSENSITIVE);
 
-    private static final int[] TAG_CONTENT_SLOTS = {19, 20, 21, 22, 23, 24, 25};
+    private static final int[] TAG_CONTENT_SLOTS = {10, 11, 12, 13, 14, 15, 16};
     private static final int REMOVE_SLOT = 45;
     private static final int PREV_SLOT = 48;
     private static final int LIMITED_SLOT = 49;
     private static final int NEXT_SLOT = 50;
-    private static final int BACK_SLOT = 53;
+    private static final int CUSTOM_SLOT = 53;
 
     private final List<TagOption> tagPageCache = new ArrayList<>();
     private final List<TagOption> limitedPageCache = new ArrayList<>();
@@ -99,7 +99,7 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         loadTagSection(config.getConfigurationSection("limited-tags"), limitedTags);
         buildLimitedBlocklist();
         tagPageCache.clear();
-        tagPageCache.addAll(tags.values());
+        tags.values().stream().filter(t -> !t.customInput()).forEach(tagPageCache::add);
         limitedPageCache.clear();
         limitedPageCache.addAll(limitedTags.values());
     }
@@ -337,8 +337,8 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         TagMenuHolder holder = new TagMenuHolder(limited, page);
         Inventory inventory = plugin.getServer().createInventory(holder, size, Text.c(title));
 
-        Material borderMat = Material.matchMaterial(config.getString("border-material", "GRAY_STAINED_GLASS_PANE"));
-        if (borderMat == null) borderMat = Material.GRAY_STAINED_GLASS_PANE;
+        Material borderMat = Material.matchMaterial(config.getString("border-material", "BLACK_STAINED_GLASS_PANE"));
+        if (borderMat == null) borderMat = Material.BLACK_STAINED_GLASS_PANE;
         ItemStack border = new ItemBuilder(borderMat).name(" ").hideAll().build();
         for (int slot = 0; slot < size; slot++) {
             inventory.setItem(slot, border.clone());
@@ -384,8 +384,8 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         }
 
         if (page > 0) {
-            inventory.setItem(PREV_SLOT, navItem(Material.PEONY,
-                    config.getString("previous-page.name", "&dPrevious Page"),
+            inventory.setItem(PREV_SLOT, navItem(Material.RED_DYE,
+                    config.getString("previous-page.name", "&cPrevious Page"),
                     config.getStringList("previous-page.lore")));
         }
         if (page < maxPage) {
@@ -394,15 +394,20 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
                     config.getStringList("next-page.lore")));
         }
 
+        if (!limited && config.getBoolean("custom-button.enabled", true)) {
+            TagOption custom = tags.get("custom");
+            if (custom != null) {
+                List<String> customLore = applyPlaceholders(buildLore(custom, placeholders), placeholders);
+                inventory.setItem(CUSTOM_SLOT, new ItemBuilder(Material.NAME_TAG)
+                        .name(config.getString("custom-button.display-name", custom.displayName()))
+                        .lore(customLore)
+                        .hideAll()
+                        .build());
+            }
+        }
+
         if (limited) {
-            inventory.setItem(BACK_SLOT, plugin.guiNavigation().build("back", config.getConfigurationSection("back-button")));
-        } else {
-            ItemStack back = new ItemBuilder(Material.NAME_TAG)
-                    .name(config.getString("close-button.display-name", GuiFooters.yellow("Back")))
-                    .lore(applyPlaceholders(config.getStringList("close-button.lore"), placeholders))
-                    .hideAll()
-                    .build();
-            inventory.setItem(BACK_SLOT, back);
+            inventory.setItem(CUSTOM_SLOT, plugin.guiNavigation().build("back", config.getConfigurationSection("back-button")));
         }
 
         player.openInventory(inventory);
@@ -492,9 +497,14 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
             return;
         }
 
-        if (slot == BACK_SLOT) {
+        if (slot == CUSTOM_SLOT) {
             player.closeInventory();
-            if (holder.limited()) openMainMenu(player);
+            if (holder.limited()) {
+                openMainMenu(player);
+                return;
+            }
+            TagOption custom = tags.get("custom");
+            if (custom != null) applyTag(player, custom);
             return;
         }
 

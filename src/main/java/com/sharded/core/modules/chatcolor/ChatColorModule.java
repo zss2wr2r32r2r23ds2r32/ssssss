@@ -160,19 +160,34 @@ public final class ChatColorModule extends Module implements CommandExecutor, Ta
 
     private void applyColorById(Player player, String id) {
         ColorOption color = colors.get(id);
-        if (color == null) {
-            send(player, "color-not-found", "%color%", id);
+        if (color != null) {
+            if (!player.hasPermission(color.permission())) {
+                send(player, "not-owned", "%color%", color.displayName());
+                return;
+            }
+            CosmeticService cosmetics = plugin.cosmetics();
+            if (cosmetics != null) {
+                cosmetics.setChatColor(player, CosmeticService.normalizeColorSpec(color.value()));
+            }
+            send(player, "applied", "%color%", color.displayName());
             return;
         }
-        if (!player.hasPermission(color.permission())) {
-            send(player, "not-owned", "%color%", color.displayName());
+        ConfigurationSection section = config.getConfigurationSection("colors." + id);
+        if (section != null) {
+            String perm = section.getString("permission", "sharded.chatcolor." + id);
+            if (!player.hasPermission(perm)) {
+                send(player, "not-owned", "%color%", id);
+                return;
+            }
+            String value = section.getString("value", "&f");
+            CosmeticService cosmetics = plugin.cosmetics();
+            if (cosmetics != null) {
+                cosmetics.setChatColor(player, CosmeticService.normalizeColorSpec(value));
+            }
+            send(player, "applied", "%color%", section.getString("display-name", id));
             return;
         }
-        CosmeticService cosmetics = plugin.cosmetics();
-        if (cosmetics != null) {
-            cosmetics.setChatColor(player, CosmeticService.normalizeColorSpec(color.value()));
-        }
-        send(player, "applied", "%color%", color.displayName());
+        send(player, "color-not-found", "%color%", id);
     }
 
     private void resetColor(Player player) {

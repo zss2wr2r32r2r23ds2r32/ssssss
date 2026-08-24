@@ -97,8 +97,8 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
 
     private boolean hornBlocked(Player player) {
         if (bypass(player)) return false;
-        if (inSpawn(player.getLocation())) return true;
         String world = player.getWorld().getName();
+        if (inSpawn(player.getLocation())) return true;
         for (String blocked : hornBlockWorlds) {
             if (blocked.equalsIgnoreCase(world)) return true;
         }

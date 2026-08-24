@@ -64,13 +64,13 @@ final class LeaderboardGuiHandler {
         Holder holder = (Holder) inv.getHolder();
         holder.inventory = inv;
         fill(inv, 27);
+        putHubItem(inv, "teams", Material.PINK_BANNER, 10);
         putHubItem(inv, "tokens", Material.SUNFLOWER, 11);
         putHubItem(inv, "duels", Material.IRON_SWORD, 12);
         putHubItem(inv, "kills", Material.DIAMOND_SWORD, 13);
         putHubItem(inv, "deaths", Material.SKELETON_SKULL, 14);
         putHubItem(inv, "killstreaks", Material.NETHERITE_SWORD, 15);
         putHubItem(inv, "playtime", Material.CLOCK, 16);
-        putHubItem(inv, "teams", Material.PINK_BANNER, 17);
         player.openInventory(inv);
     }
 

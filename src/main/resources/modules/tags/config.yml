@@ -1,9 +1,9 @@
-config-version: 13
+config-version: 14
 message-mode: chat
 
 menu-title: 'Tags'
 menu-size: 54
-border-material: GRAY_STAINED_GLASS_PANE
+border-material: BLACK_STAINED_GLASS_PANE
 limited-menu-title: 'Limited time tags'
 limited-menu-size: 54
 
@@ -38,20 +38,9 @@ remove-button:
     - ''
     - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Remove'
 
-close-button:
+custom-button:
   enabled: true
-  display-name: '&x&F&F&B&A&0&0&lBack'
-  lore:
-    - '&8Description'
-    - ''
-    - '&x&F&F&B&A&0&0Information:'
-    - '&x&F&F&B&A&0&0| &fReturn to the previous menu'
-    - ''
-    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Close'
-
-back-button:
-  nav-override: true
-  display-name: '&x&F&F&B&A&0&0&lBack'
+  display-name: '&x&F&F&0&A&0&0&lCustom Tag'
 
 limited-button:
   enabled: true
@@ -66,7 +55,7 @@ limited-button:
     - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open'
 
 previous-page:
-  name: '&dPrevious Page'
+  name: '&cPrevious Page'
   lore:
     - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
 next-page:
@@ -74,9 +63,13 @@ next-page:
   lore:
     - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
 
+back-button:
+  nav-override: true
+  display-name: '&x&F&F&B&A&0&0&lBack'
+
 tags:
   mvp:
-    slot: 19
+    slot: 10
     permission: sharded.tag.mvp
     material: PAPER
     display-name: '&8[&x&F&F&C&F&0&0&lMVP&8]'
@@ -92,7 +85,7 @@ tags:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
   diamond:
-    slot: 20
+    slot: 11
     permission: sharded.tag.diamond
     material: PAPER
     display-name: '&8[&x&0&0&8&3&F&F&lDIAMOND&8]'
@@ -108,7 +101,7 @@ tags:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
   elite:
-    slot: 21
+    slot: 12
     permission: sharded.tag.elite
     material: PAPER
     display-name: '&8[&x&F&F&0&0&0&0&lELITE&8]'
@@ -124,7 +117,7 @@ tags:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
   sweat:
-    slot: 22
+    slot: 13
     permission: sharded.tag.sweat
     material: PAPER
     display-name: '&8[&x&B&3&F&F&0&0&lSWEAT&8]'
@@ -140,7 +133,7 @@ tags:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
   goat:
-    slot: 23
+    slot: 14
     permission: sharded.tag.goat
     material: PAPER
     display-name: '&8[&x&F&F&0&0&7&C&lGOAT&8]'
@@ -156,7 +149,7 @@ tags:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
   custom:
-    slot: 25
+    slot: 16
     permission: sharded.tag.custom
     material: NAME_TAG
     custom-input: true

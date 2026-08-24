@@ -23,11 +23,15 @@ public final class GuiFooters {
     }
 
     public static String cancel() {
-        return click(RED, "To Cancel");
+        return yellow("To Cancel");
     }
 
     public static String apply() {
         return yellow("To Apply");
+    }
+
+    public static String create() {
+        return yellow("To Create");
     }
 
     public static String view() {

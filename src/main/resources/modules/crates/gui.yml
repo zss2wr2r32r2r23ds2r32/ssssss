@@ -35,6 +35,16 @@ items:
     material: RED_SHULKER_BOX
     slot: 11
     display_name: '&x&F&F&0&0&0&0&lKill &x&F&F&0&0&0&0crate'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&0&0&0Information:'
+      - '&x&F&F&0&0&0&0| &fLeft-click to preview'
+      - '&x&F&F&0&0&0&0| &fRight-click to open'
+      - ''
+      - '&x&F&F&0&0&0&0⚓ &fKeys: &x&F&F&0&0&0&0&n%excellentcrates_keys_KILL_CRATE%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open'
     left_click_commands:
       - '[player] excellentcrates preview KILL_CRATE'
     right_click_commands:
@@ -44,6 +54,16 @@ items:
     material: PURPLE_SHULKER_BOX
     slot: 12
     display_name: '&x&7&5&0&0&F&F&lShard &x&7&5&0&0&F&Fcrate'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&7&5&0&0&F&FInformation:'
+      - '&x&7&5&0&0&F&F| &fLeft-click to preview'
+      - '&x&7&5&0&0&F&F| &fRight-click to open'
+      - ''
+      - '&x&7&5&0&0&F&F⚓ &fKeys: &x&7&5&0&0&F&F&n%excellentcrates_keys_SHARD%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open'
     left_click_commands:
       - '[player] excellentcrates preview SHARD'
     right_click_commands:
@@ -53,6 +73,16 @@ items:
     material: YELLOW_SHULKER_BOX
     slot: 13
     display_name: '&x&F&F&D&7&0&0&lSummer &x&F&F&D&7&0&0crate'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&D&7&0&0Information:'
+      - '&x&F&F&D&7&0&0| &fLeft-click to preview'
+      - '&x&F&F&D&7&0&0| &fRight-click to open'
+      - ''
+      - '&x&F&F&D&7&0&0⚓ &fKeys: &x&F&F&D&7&0&0&n%excellentcrates_keys_SUMMER%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open'
     left_click_commands:
       - '[player] excellentcrates preview SUMMER'
     right_click_commands:
@@ -62,6 +92,16 @@ items:
     material: BLUE_SHULKER_BOX
     slot: 14
     display_name: '&x&0&0&8&D&F&F&lAstral &x&0&0&8&D&F&Fcrate'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&0&0&8&D&F&FInformation:'
+      - '&x&0&0&8&D&F&F| &fLeft-click to preview'
+      - '&x&0&0&8&D&F&F| &fRight-click to open'
+      - ''
+      - '&x&0&0&8&D&F&F⚓ &fKeys: &x&0&0&8&D&F&F&n%excellentcrates_keys_VOTE_CRATE%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open'
     left_click_commands:
       - '[player] excellentcrates preview VOTE_CRATE'
     right_click_commands:

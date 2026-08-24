@@ -1,10 +1,10 @@
-config-version: 6
+config-version: 7
 prefix: '&x&5&C&9&4&F&C&lTOKENS &8▷ &r'
 message-mode: chat
 
 gui:
   title: '&8Token Methods'
-  click-footer: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&nClick&r &x&F&F&B&A&0&0To View'
+  click-footer: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
   methods:
     koth:
       order: 1

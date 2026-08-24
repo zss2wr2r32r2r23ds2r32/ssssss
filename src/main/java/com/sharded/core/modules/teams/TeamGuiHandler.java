@@ -84,7 +84,7 @@ final class TeamGuiHandler {
                 Text.c(module.guiRaw("disband-confirm-title", "%team%", teamName)));
         fill(inv);
         inv.setItem(11, button(Material.RED_STAINED_GLASS_PANE, module.guiRaw("cancel-name"),
-                module.guiRawList("cancel-lore")));
+                module.guiRawList("disband-cancel-lore")));
         inv.setItem(13, button(Material.TNT, module.guiRaw("disband-name"),
                 module.guiRawList("disband-lore")));
         inv.setItem(15, button(Material.LIME_STAINED_GLASS_PANE, module.guiRaw("disband-confirm-name"),
