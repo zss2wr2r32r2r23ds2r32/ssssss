@@ -2,7 +2,7 @@
 #  ShardedCore - main configuration
 # ---------------------------------------------------------
 
-config-version: 16
+config-version: 17
 
 # Edit plugins/ShardedCore/gui-navigation.yml for global back/previous/next/close button styles.
 

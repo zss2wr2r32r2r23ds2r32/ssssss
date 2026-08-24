@@ -1,4 +1,4 @@
-config-version: 2
+config-version: 3
 prefix: '%prefix%'
 
 players-only: '%prefix%&#FF2727Only players can use this command.'
@@ -16,6 +16,7 @@ custom-limited-blocked: '%prefix%&#FF2727That tag matches a limited-time tag and
 custom-too-long: '%prefix%&#FF2727Custom tags can be at most &f5 &#FF2727letters (colors don''t count).'
 custom-cooldown: '%prefix%&#FF2727You can create a new custom tag in &f%time%&#FF2727.'
 tag-created: '%prefix%&#9FFF00Created tag &f%tag%&#9FFF00.'
+tag-permission-hint: '%prefix%&#9FFF00Grant &f%permission% &#9FFF00for players to own this tag.'
 tag-deleted: '%prefix%&#9FFF00Deleted tag &f%tag%&#9FFF00.'
 tag-not-found: '%prefix%&#FF2727Tag &f%tag% &#FF2727not found.'
 menu-full: '%prefix%&#FF2727The tag menu is full.'

@@ -14,8 +14,8 @@ import java.nio.file.StandardCopyOption;
 /** Keeps disk configs in sync with jar defaults when {@code config-version} increases. */
 public final class ConfigSync {
 
-    /** Bump when bundled defaults change and should overwrite older server files. */
-    public static final int VERSION = 6;
+    /** Bump when bundled defaults change and should merge into older server files. */
+    public static final int VERSION = 7;
 
     private ConfigSync() {
     }
@@ -56,7 +56,9 @@ public final class ConfigSync {
             plugin.getLogger().severe("Invalid default config in jar: " + resourcePath + " — " + e.getMessage());
             return;
         }
-        int jarVersion = defaults.getInt("config-version", VERSION);
+        int jarVersion = defaults.contains("config-version")
+                ? defaults.getInt("config-version")
+                : 0;
 
         if (!file.exists()) {
             plugin.saveResource(resourcePath, false);
@@ -77,10 +79,30 @@ public final class ConfigSync {
             plugin.saveResource(resourcePath, true);
             return;
         }
+
+        if (jarVersion <= 0) {
+            disk.setDefaults(defaults);
+            disk.options().copyDefaults(true);
+            try {
+                disk.save(file);
+            } catch (IOException e) {
+                plugin.getLogger().warning("Could not merge defaults into " + file.getPath() + ": " + e.getMessage());
+            }
+            return;
+        }
+
         int diskVersion = disk.getInt("config-version", 0);
         if (diskVersion < jarVersion) {
             backup(file);
-            plugin.saveResource(resourcePath, true);
+            disk.setDefaults(defaults);
+            disk.options().copyDefaults(true);
+            disk.set("config-version", jarVersion);
+            try {
+                disk.save(file);
+            } catch (IOException e) {
+                plugin.getLogger().warning("Could not upgrade " + file.getPath() + ": " + e.getMessage());
+                return;
+            }
             plugin.getLogger().info("Updated " + file.getName() + " (v" + diskVersion + " -> v" + jarVersion + ")");
             return;
         }

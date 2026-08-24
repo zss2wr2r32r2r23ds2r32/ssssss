@@ -52,7 +52,6 @@ public final class TrashModule extends Module implements CommandExecutor {
         holder.inventory = inventory;
         TrackedInventories.track(inventory, holder);
         player.openInventory(inventory);
-        send(player, "opened");
         return true;
     }
 
@@ -65,7 +64,6 @@ public final class TrashModule extends Module implements CommandExecutor {
             if (config.getBoolean("play-sound", true)) {
                 player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 0.8f, 0.8f);
             }
-            send(player, "emptied");
         }
     }
 }

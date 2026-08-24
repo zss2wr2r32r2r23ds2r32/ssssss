@@ -226,7 +226,6 @@ public final class BackpackModule extends Module implements CommandExecutor, Tab
         }
         if (adminView) send(viewer, "admin-view", "%player%", ownerName);
         else if (readOnly) send(viewer, "viewing-other", "%player%", ownerName);
-        else send(viewer, "opened");
     }
 
     @EventHandler

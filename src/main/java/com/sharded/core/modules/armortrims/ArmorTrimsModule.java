@@ -179,7 +179,6 @@ public final class ArmorTrimsModule extends Module implements CommandExecutor {
                 parseSound("sounds.open", Sound.BLOCK_SMITHING_TABLE_USE),
                 soundFloat("sounds.open-volume", 0.6f),
                 soundFloat("sounds.open-pitch", 1.2f));
-        send(player, "opened");
     }
 
     private void loadOptions(TrimHolder holder) {

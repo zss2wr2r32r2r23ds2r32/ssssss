@@ -1,4 +1,4 @@
-config-version: 14
+config-version: 15
 message-mode: chat
 
 menu-title: 'Tags'
@@ -40,7 +40,7 @@ remove-button:
 
 custom-button:
   enabled: true
-  display-name: '&x&F&F&0&A&0&0&lCustom Tag'
+  display-name: '&x&F&F&0&0&0&0&lCustom Tag'
 
 limited-button:
   enabled: true
@@ -153,7 +153,7 @@ tags:
     permission: sharded.tag.custom
     material: NAME_TAG
     custom-input: true
-    display-name: '&x&F&F&0&A&0&0&lCustom Tag'
+    display-name: '&x&F&F&0&0&0&0&lCustom Tag'
     tag-display: '%last_custom_tag%'
     lore:
       - '&8Description'

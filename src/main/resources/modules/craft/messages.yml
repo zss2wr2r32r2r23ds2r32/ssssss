@@ -1,5 +1,5 @@
-config-version: 3
+config-version: 4
 prefix: '%prefix%'
 players-only: '%prefix%&#FF2727Only players can use this command.'
 no-permission: '%prefix%&#FF2727You don''t have permission to use /craft.'
-opened: '%prefix%&fYou opened a portable crafting table.'
+opened: ''

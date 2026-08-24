@@ -1,8 +1,8 @@
-config-version: 4
+config-version: 5
 prefix: '&#00A2FF&lCORE &8▷ &r'
 players-only: '%prefix%&#FF2727Only players can use this command.'
 no-permission: '%prefix%&#FF2727You don''t have permission.'
-opened: '%prefix%&7Place armor in the &fmiddle&7. Use the buttons to cycle trims.'
+opened: ''
 not-armor: '%prefix%&#FF2727Only armor goes in the middle slot.'
 trim-applied: '%prefix%&#9FFF00Trim applied!'
 

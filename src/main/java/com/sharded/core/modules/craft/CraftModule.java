@@ -33,7 +33,6 @@ public final class CraftModule extends Module implements CommandExecutor {
         if (config.getBoolean("play-sound", true)) {
             player.playSound(player.getLocation(), Sound.BLOCK_WOOD_PLACE, 0.6f, 1.2f);
         }
-        send(player, "opened");
         return true;
     }
 }

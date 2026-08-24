@@ -1,5 +1,6 @@
 menu_title: 'Crates'
 size: 27
+config-version: 1
 
 open_command:
   - crates
@@ -115,7 +116,8 @@ items:
       - '&8Description'
       - ''
       - '&x&F&F&0&0&5&DInformation:'
-      - '&x&F&F&0&0&5&D| &fEarned from KOTH events'
+      - '&x&F&F&0&0&5&D| &fLeft-click to preview'
+      - '&x&F&F&0&0&5&D| &fRight-click to open'
       - ''
       - '&x&F&F&0&0&5&D⚓ &fKeys: &x&F&F&0&0&5&D&n%excellentcrates_keys_KOTH%'
       - ''
@@ -133,7 +135,8 @@ items:
       - '&8Description'
       - ''
       - '&x&F&F&2&7&2&7Information:'
-      - '&x&F&F&2&7&2&7| &fEarned from outpost captures'
+      - '&x&F&F&2&7&2&7| &fLeft-click to preview'
+      - '&x&F&F&2&7&2&7| &fRight-click to open'
       - ''
       - '&x&F&F&2&7&2&7⚓ &fKeys: &x&F&F&2&7&2&7&n%excellentcrates_keys_OUTPOST%'
       - ''

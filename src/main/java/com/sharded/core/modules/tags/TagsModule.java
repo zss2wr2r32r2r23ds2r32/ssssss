@@ -249,31 +249,43 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
 
     private void createTag(CommandSender sender, String id, String display, boolean limited) {
         String sectionKey = limited ? "limited-tags" : "tags";
-        int size = config.getInt(limited ? "limited-menu-size" : "menu-size", 54);
-        int slot = nextFreeSlot(limited ? limitedTags : tags, size);
+        int slot = nextFreeSlot(limited ? limitedTags : tags);
         if (slot < 0) {
             send(sender, "menu-full");
             return;
         }
+        String accent = TagDisplayUtil.accentColor(display);
         String path = sectionKey + "." + id;
         config.set(path + ".slot", slot);
         config.set(path + ".permission", "sharded.tag." + id);
         config.set(path + ".material", "NAME_TAG");
         config.set(path + ".display-name", display);
         config.set(path + ".tag-display", display);
-        config.set(path + ".lore", List.of(
-                "&8Description",
-                "",
-                "&#FF3399Information:",
-                "&#FF3399| &fEquip this tag.",
-                "&#FF3399| &fAnd stand out on tab!",
-                "",
-                "&#FF3399⚓ &fOwned: %tag_owned_" + id + "%",
-                "",
-                "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nClick&r &x&F&F&B&A&0&0To Apply"));
+        config.set(path + ".lore", defaultTagLore(id, accent));
+        if (limited) {
+            List<String> blocked = new ArrayList<>();
+            blocked.add(stripColors(display));
+            String inner = extractInnerTagText(stripColors(display));
+            if (inner != null && !inner.isBlank()) blocked.add(inner);
+            config.set(path + ".blocked-text", blocked);
+        }
         saveTagsConfig();
         reloadTags();
         send(sender, "tag-created", "%tag%", id);
+        send(sender, "tag-permission-hint", "%permission%", "sharded.tag." + id);
+    }
+
+    private List<String> defaultTagLore(String id, String accent) {
+        return List.of(
+                "&8Description",
+                "",
+                accent + "Information:",
+                accent + "| &fEquip this tag.",
+                accent + "| &fAnd stand out on tab!",
+                "",
+                accent + "⚓ &fOwned: %tag_owned_" + id + "%",
+                "",
+                "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nClick&r &x&F&F&B&A&0&0To Apply");
     }
 
     private void deleteTag(CommandSender sender, String id) {
@@ -290,10 +302,10 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         send(sender, "tag-deleted", "%tag%", id);
     }
 
-    private int nextFreeSlot(Map<String, TagOption> existing, int size) {
+    private int nextFreeSlot(Map<String, TagOption> existing) {
         Set<Integer> used = existing.values().stream().map(TagOption::slot).collect(java.util.stream.Collectors.toSet());
-        for (int i = 0; i < size; i++) {
-            if (!used.contains(i)) return i;
+        for (int slot : TAG_CONTENT_SLOTS) {
+            if (!used.contains(slot)) return slot;
         }
         return -1;
     }
@@ -321,6 +333,9 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
             List<String> ids = new ArrayList<>(tags.keySet());
             ids.addAll(limitedTags.keySet());
             return TabCompleteHelper.filter(args[1], ids);
+        }
+        if (args.length == 2 && (args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("limited"))) {
+            return List.of("<id>");
         }
         return List.of();
     }
@@ -422,15 +437,14 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
     }
 
     private List<String> buildLore(TagOption tag, Map<String, String> placeholders) {
+        String accent = loreAccent(tag);
         if (!tag.lore().isEmpty()) {
-            String accent = TagDisplayUtil.accentColor(tag.effectiveDisplay());
             List<String> out = new ArrayList<>();
             for (String line : tag.lore()) {
                 out.add(applyPlaceholders(line.replace("%accent%", accent), placeholders));
             }
             return out;
         }
-        String accent = TagDisplayUtil.accentColor(tag.effectiveDisplay());
         String owned = placeholders.getOrDefault("tag_owned_" + tag.id(),
                 config.getString("placeholders.owned-no", "&#FF2727&nNo"));
         return List.of(
@@ -443,6 +457,13 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
                 TagDisplayUtil.loreLine(accent, "⚓ &fOwned: ") + owned,
                 "",
                 GuiFooters.apply());
+    }
+
+    private String loreAccent(TagOption tag) {
+        if (tag.customInput()) {
+            return TagDisplayUtil.accentColor(tag.displayName());
+        }
+        return TagDisplayUtil.accentColor(tag.effectiveDisplay());
     }
 
     private String applyPlaceholders(String line, Map<String, String> placeholders) {
