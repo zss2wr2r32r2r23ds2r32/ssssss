@@ -16,6 +16,7 @@ public final class TagDatabase {
         File dbFile = new File(folder, "tags.db");
         connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
         try (Statement statement = connection.createStatement()) {
+            statement.execute("PRAGMA journal_mode=WAL");
             statement.execute("""
                     CREATE TABLE IF NOT EXISTS player_tags (
                         uuid TEXT PRIMARY KEY,
@@ -58,7 +59,12 @@ public final class TagDatabase {
         }
     }
 
-    public synchronized void saveLastCustomTag(UUID uuid, String tag, boolean updateCreatedAt) {
+    public void saveLastCustomTag(UUID uuid, String tag, boolean updateCreatedAt) {
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () ->
+                saveLastCustomTagSync(uuid, tag, updateCreatedAt));
+    }
+
+    private synchronized void saveLastCustomTagSync(UUID uuid, String tag, boolean updateCreatedAt) {
         try (PreparedStatement ps = connection.prepareStatement("""
                 INSERT INTO player_tags (uuid, last_custom_tag, last_custom_created_at) VALUES (?, ?, ?)
                 ON CONFLICT(uuid) DO UPDATE SET

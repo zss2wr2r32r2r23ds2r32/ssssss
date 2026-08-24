@@ -80,6 +80,7 @@ public final class InvRollbackModule extends Module implements CommandExecutor, 
                             offhand BLOB
                         )
                         """);
+                st.execute("PRAGMA journal_mode=WAL");
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Could not open invrollback database", e);
@@ -129,17 +130,23 @@ public final class InvRollbackModule extends Module implements CommandExecutor, 
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        if (config.getBoolean("snapshot-on.join", true)) save(event.getPlayer(), SnapshotReason.JOIN);
+        if (config.getBoolean("snapshot-on.join", true)) {
+            scheduleSnapshot(event.getPlayer(), SnapshotReason.JOIN);
+        }
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        if (config.getBoolean("snapshot-on.quit", true)) save(event.getPlayer(), SnapshotReason.QUIT);
+        if (config.getBoolean("snapshot-on.quit", true)) {
+            scheduleSnapshot(event.getPlayer(), SnapshotReason.QUIT);
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDeath(PlayerDeathEvent event) {
-        if (config.getBoolean("snapshot-on.death", true)) save(event.getEntity(), SnapshotReason.DEATH);
+        if (config.getBoolean("snapshot-on.death", true)) {
+            scheduleSnapshot(event.getEntity(), SnapshotReason.DEATH);
+        }
     }
 
     private void snapshotOnline() {
@@ -147,24 +154,34 @@ public final class InvRollbackModule extends Module implements CommandExecutor, 
         int i = 0;
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (i++ >= perTick) break;
-            save(player, SnapshotReason.AUTO);
+            scheduleSnapshot(player, SnapshotReason.AUTO);
         }
     }
 
-    private void save(Player player, SnapshotReason reason) {
+    private void scheduleSnapshot(Player player, SnapshotReason reason) {
+        UUID uuid = player.getUniqueId();
+        ItemStack[] contents = clone(player.getInventory().getContents());
+        ItemStack[] armor = clone(player.getInventory().getArmorContents());
+        ItemStack[] offhand = clone(new ItemStack[]{player.getInventory().getItemInOffHand()});
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin,
+                () -> persistSnapshot(uuid, reason, contents, armor, offhand));
+    }
+
+    private void persistSnapshot(UUID uuid, SnapshotReason reason, ItemStack[] contents,
+                                 ItemStack[] armor, ItemStack[] offhand) {
         try (PreparedStatement ps = connection.prepareStatement(
                 "INSERT INTO snapshots (uuid, reason, created_at, contents, armor, offhand) VALUES (?, ?, ?, ?, ?, ?)")) {
-            ps.setString(1, player.getUniqueId().toString());
+            ps.setString(1, uuid.toString());
             ps.setString(2, reason.name());
             ps.setLong(3, System.currentTimeMillis());
-            ps.setBytes(4, serialize(player.getInventory().getContents()));
-            ps.setBytes(5, serialize(player.getInventory().getArmorContents()));
-            ps.setBytes(6, serialize(new ItemStack[]{player.getInventory().getItemInOffHand()}));
+            ps.setBytes(4, serialize(contents));
+            ps.setBytes(5, serialize(armor));
+            ps.setBytes(6, serialize(offhand));
             ps.executeUpdate();
         } catch (SQLException e) {
             plugin.getLogger().warning("[invrollback] save failed: " + e.getMessage());
         }
-        trim(player.getUniqueId());
+        trim(uuid);
     }
 
     private void trim(UUID uuid) {

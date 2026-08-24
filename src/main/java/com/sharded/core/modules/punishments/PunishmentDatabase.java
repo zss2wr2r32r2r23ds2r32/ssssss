@@ -48,6 +48,7 @@ public final class PunishmentDatabase {
         File dbFile = new File(folder, "punishments.db");
         connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
         try (Statement statement = connection.createStatement()) {
+            statement.execute("PRAGMA journal_mode=WAL");
             statement.execute("""
                     CREATE TABLE IF NOT EXISTS punishments (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,

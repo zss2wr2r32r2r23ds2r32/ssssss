@@ -4,6 +4,7 @@ import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.util.ColorConfigUtil;
 import com.sharded.core.util.ColorUtil;
+import com.sharded.core.util.EnglishInputUtil;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.GuiFooters;
 import com.sharded.core.util.TagDisplayUtil;
@@ -63,6 +64,7 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
 
     private final List<TagOption> tagPageCache = new ArrayList<>();
     private final List<TagOption> limitedPageCache = new ArrayList<>();
+    private final List<String> tabTagIds = new ArrayList<>();
     private final Map<String, TagOption> tags = new LinkedHashMap<>();
     private final Map<String, TagOption> limitedTags = new LinkedHashMap<>();
     private final Map<UUID, Boolean> awaitingCustomTag = new ConcurrentHashMap<>();
@@ -109,6 +111,9 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         limitedTags.values().stream()
                 .sorted(Comparator.comparingInt(TagOption::slot))
                 .forEach(limitedPageCache::add);
+        tabTagIds.clear();
+        tabTagIds.addAll(tags.keySet());
+        tabTagIds.addAll(limitedTags.keySet());
     }
 
     private void buildLimitedBlocklist() {
@@ -167,7 +172,7 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
             case "limited" -> handleCreate(sender, args, true);
             case "delete" -> handleDelete(sender, args);
             case "set" -> handleSet(sender, args);
-            case "remove" -> handleRemove(sender);
+            case "remove" -> handleRemove(sender, args);
             case "custom" -> handleCustom(sender);
             default -> handleEquipByName(sender, sub);
         };
@@ -207,7 +212,15 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         return true;
     }
 
-    private boolean handleRemove(CommandSender sender) {
+    private boolean handleRemove(CommandSender sender, String[] args) {
+        if (args.length >= 2) {
+            if (!sender.hasPermission("sharded.tags.admin")) {
+                send(sender, "no-permission");
+                return true;
+            }
+            deleteTag(sender, args[1].toLowerCase(Locale.ROOT));
+            return true;
+        }
         if (!(sender instanceof Player player)) {
             send(sender, "players-only");
             return true;
@@ -252,6 +265,10 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
     }
 
     private void createTag(CommandSender sender, String id, String display, boolean limited) {
+        if (!isEnglishTagContent(display)) {
+            send(sender, "custom-non-english");
+            return;
+        }
         String sectionKey = limited ? "limited-tags" : "tags";
         int slot = nextFreeSlot(limited ? limitedTags : tags);
         if (slot < 0) {
@@ -331,22 +348,18 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
             if (sender.hasPermission("sharded.tags.admin")) {
                 subs.addAll(List.of("create", "limited", "delete"));
             }
-            subs.addAll(tags.keySet());
-            subs.addAll(limitedTags.keySet());
+            subs.addAll(tabTagIds);
             return TabCompleteHelper.filter(args[0], subs);
         }
-        if (args.length == 2 && (args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("delete"))) {
-            List<String> ids = new ArrayList<>(tags.keySet());
-            ids.addAll(limitedTags.keySet());
-            return TabCompleteHelper.filter(args[1], ids);
-        }
-        if (args.length == 2 && (args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("limited"))) {
-            return TabCompleteHelper.filter(args[1], "<id>");
-        }
-        if (args.length == 2 && args[0].equalsIgnoreCase("delete")) {
-            List<String> ids = new ArrayList<>(tags.keySet());
-            ids.addAll(limitedTags.keySet());
-            return TabCompleteHelper.filter(args[1], ids);
+        if (args.length == 2) {
+            String sub = args[0].toLowerCase(Locale.ROOT);
+            if (sub.equals("set") || sub.equals("delete")
+                    || (sub.equals("remove") && sender.hasPermission("sharded.tags.admin"))) {
+                return TabCompleteHelper.filter(args[1], tabTagIds);
+            }
+            if (sub.equals("create") || sub.equals("limited")) {
+                return TabCompleteHelper.filter(args[1], "<id>");
+            }
         }
         return List.of();
     }
@@ -658,8 +671,18 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         }
         input = formatted;
 
+        String boldText = extractBoldTagText(input);
+        if (boldText == null || boldText.isBlank()) {
+            send(player, "custom-bold-required");
+            return;
+        }
+        if (!EnglishInputUtil.isEnglishLettersOnly(boldText)) {
+            send(player, "custom-non-english");
+            return;
+        }
+
         int maxLetters = config.getInt("custom-max-letters", 5);
-        if (countLetters(input) > maxLetters) {
+        if (EnglishInputUtil.countEnglishLetters(boldText) > maxLetters) {
             send(player, "custom-too-long");
             return;
         }
@@ -733,7 +756,7 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         return false;
     }
 
-    /** Accepts full &8[colorTEXT&8] or short color+text; returns normalized bracket form without spaces. */
+    /** Accepts full &8[color&lTEXT&8] or short color+&l+text; returns normalized bracket form without spaces. */
     private String formatCustomTag(String input) {
         if (input == null || input.isBlank()) return null;
         String raw = input.trim().replace(" ", "");
@@ -741,27 +764,74 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
 
         Matcher full = FULL_TAG.matcher(normalized);
         if (full.matches()) {
-            return "&8[" + full.group(1) + full.group(2) + "&8]";
+            String color = full.group(1);
+            String inner = full.group(2);
+            if (!containsBoldMarker(inner)) return null;
+            return "&8[" + color + normalizeBoldInner(inner) + "&8]";
         }
 
         Matcher shortTag = SHORT_COLOR_TAG.matcher(normalized);
         if (shortTag.matches()) {
             String color = shortTag.group(1);
             String text = shortTag.group(2);
-            if (text.isBlank()) return null;
-            return "&8[" + color + text + "&8]";
+            if (text.isBlank() || !containsBoldMarker(text)) return null;
+            String inner = normalizeBoldInner(text);
+            if (inner.isBlank() || !containsBoldMarker(inner)) return null;
+            return "&8[" + color + inner + "&8]";
         }
         return null;
     }
 
-    private int countLetters(String formattedTag) {
+    private boolean containsBoldMarker(String inner) {
+        return inner != null && inner.toLowerCase(Locale.ROOT).contains("&l");
+    }
+
+    /** Keeps color codes and a single &l prefix before the visible letters. */
+    private String normalizeBoldInner(String inner) {
+        String stripped = stripFormatCodesExceptBold(inner);
+        int boldIdx = stripped.toLowerCase(Locale.ROOT).indexOf("&l");
+        if (boldIdx < 0) return inner;
+        String beforeBold = stripped.substring(0, boldIdx);
+        String afterBold = stripped.substring(boldIdx + 2).replaceAll("(?i)&l", "");
+        afterBold = stripFormatCodes(afterBold);
+        if (afterBold.isBlank()) return beforeBold + "&l";
+        return beforeBold + "&l" + afterBold;
+    }
+
+    private String stripFormatCodesExceptBold(String input) {
+        if (input == null) return "";
+        return ColorUtil.normalize(input)
+                .replaceAll("(?i)&#[0-9a-f]{6}", "§HEX")
+                .replaceAll("(?i)&x(&[0-9a-f]){6}", "§HEX")
+                .replaceAll("(?i)&[0-9a-f]", "§C")
+                .replaceAll("(?i)&[k-o]", "")
+                .replaceAll("(?i)&r", "");
+    }
+
+    /** Letters shown after the bold marker inside a formatted custom tag. */
+    private String extractBoldTagText(String formattedTag) {
         String inner = extractInnerTagText(formattedTag);
-        String text = inner != null ? stripColors(inner) : stripColors(formattedTag);
-        int count = 0;
-        for (int i = 0; i < text.length(); i++) {
-            if (Character.isLetter(text.charAt(i))) count++;
-        }
-        return count;
+        if (inner == null) return null;
+        String normalized = ColorUtil.normalize(inner);
+        int boldIdx = normalized.toLowerCase(Locale.ROOT).lastIndexOf("&l");
+        if (boldIdx < 0) return null;
+        return stripFormatCodes(normalized.substring(boldIdx + 2));
+    }
+
+    private boolean isEnglishTagContent(String display) {
+        if (display == null) return true;
+        String inner = extractInnerTagText(display);
+        String text = inner != null ? stripFormatCodes(inner) : stripFormatCodes(display);
+        return EnglishInputUtil.isEnglishLettersOnly(text);
+    }
+
+    private String stripFormatCodes(String input) {
+        if (input == null) return "";
+        return ColorUtil.normalize(input)
+                .replaceAll("(?i)&#[0-9a-f]{6}", "")
+                .replaceAll("(?i)&x(&[0-9a-f]){6}", "")
+                .replaceAll("(?i)&[0-9a-fk-or]", "")
+                .replace("§", "");
     }
 
     private boolean containsBlockedEmoji(String input) {
@@ -782,11 +852,7 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
     }
 
     private String stripColors(String input) {
-        if (input == null) return "";
-        return ColorUtil.normalize(input)
-                .replaceAll("(?i)&#[0-9a-f]{6}", "")
-                .replaceAll("(?i)&[0-9a-fk-or]", "")
-                .replace("§", "");
+        return stripFormatCodes(input);
     }
 
     private String normalizeCompare(String input) {

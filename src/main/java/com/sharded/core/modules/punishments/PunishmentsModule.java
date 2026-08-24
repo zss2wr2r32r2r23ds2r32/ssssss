@@ -1076,10 +1076,12 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        if (player.getAddress() != null) {
-            database.recordIp(player.getUniqueId(), player.getName(),
-                    player.getAddress().getAddress().getHostAddress());
-        }
+        if (player.getAddress() == null) return;
+        UUID uuid = player.getUniqueId();
+        String name = player.getName();
+        String ip = player.getAddress().getAddress().getHostAddress();
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin,
+                () -> database.recordIp(uuid, name, ip));
     }
 
     private PunishmentDatabase.PunishmentRecord getActiveMute(UUID uuid) {

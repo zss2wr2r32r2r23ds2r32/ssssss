@@ -2,6 +2,7 @@ package com.sharded.core.modules.teams;
 
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
+import com.sharded.core.util.EnglishInputUtil;
 import com.sharded.core.util.GuiFooters;
 import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.TabCompleteHelper;
@@ -200,7 +201,7 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
             send(player, "create-length", "%min%", String.valueOf(min), "%max%", String.valueOf(max));
             return false;
         }
-        if (!name.matches("[a-zA-Z0-9_]+")) {
+        if (!name.matches("[a-zA-Z0-9_]+") || !EnglishInputUtil.isEnglishLettersOnly(name.replace("_", "").replaceAll("[0-9]", ""))) {
             send(player, "create-invalid");
             return false;
         }
