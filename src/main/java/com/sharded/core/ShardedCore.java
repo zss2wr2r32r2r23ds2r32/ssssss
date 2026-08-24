@@ -84,6 +84,7 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
             if (guiNavigation != null) guiNavigation.reload(this);
             if (guiSounds != null) guiSounds.reload();
             moduleManager.reload();
+            placeholderHook.tryRegister();
             stateStore.saveNow();
             MessageUtil.deliver(sender, getConfig().getString("prefix", "&8[&bSharded&8] &r")
                             + "&aConfiguration reloaded. &7(" + moduleManager.enabledCount() + " modules enabled)",
@@ -99,6 +100,7 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
             int count = ConfigSync.resetAll(this);
             reloadConfig();
             moduleManager.reload();
+            placeholderHook.tryRegister();
             MessageUtil.deliver(sender, getConfig().getString("prefix", "&8[&bSharded&8] &r")
                             + "&aReset &f" + count + " &aconfig files from plugin defaults.",
                     globalDelivery());

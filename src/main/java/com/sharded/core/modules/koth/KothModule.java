@@ -11,6 +11,7 @@ import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
 import com.sharded.core.util.TimeFormat;
 import org.bukkit.Bukkit;
+import org.bukkit.boss.BarColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,7 +19,9 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.io.File;
@@ -39,6 +42,7 @@ public final class KothModule extends Module implements CommandExecutor, TabComp
     private GameEventCoordinator coordinator;
     private boolean active;
     private long eventEndsAt;
+    private long eventDurationMs;
     private final Map<UUID, Double> points = new HashMap<>();
     private final Set<UUID> inside = new HashSet<>();
     private int tickTask = -1;
@@ -61,6 +65,7 @@ public final class KothModule extends Module implements CommandExecutor, TabComp
         if (tickTask >= 0) Bukkit.getScheduler().cancelTask(tickTask);
         active = false;
         points.clear();
+        if (coordinator != null) coordinator.bossBar().hide("koth");
     }
 
     private void reloadRegion() {
@@ -68,11 +73,31 @@ public final class KothModule extends Module implements CommandExecutor, TabComp
     }
 
     public long millisUntilStart() {
+        if (active) return Math.max(0, eventEndsAt - System.currentTimeMillis());
         return coordinator == null ? 0 : coordinator.millisUntilKoth();
     }
 
     public boolean isActive() {
         return active;
+    }
+
+    public boolean isInside(Player player) {
+        return region != null && region.contains(player);
+    }
+
+    public String leaderName() {
+        return points.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(e -> OfflinePlayers.name(e.getKey()))
+                .orElse("None");
+    }
+
+    public double leaderPoints() {
+        return points.values().stream().max(Double::compare).orElse(0.0);
+    }
+
+    public String modulePrefix() {
+        return config.getString("prefix", "&#FF005D&lKOTH &8▷ &r");
     }
 
     @Override
@@ -141,6 +166,19 @@ public final class KothModule extends Module implements CommandExecutor, TabComp
         return true;
     }
 
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onPlace(BlockPlaceEvent event) {
+        if (region == null) return;
+        if (!region.contains(event.getBlock().getLocation())) return;
+        event.setCancelled(true);
+        send(event.getPlayer(), "no-place");
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        if (active && coordinator != null) coordinator.bossBar().syncPlayers();
+    }
+
     private boolean isSpawnWorld(String world) {
         List<String> allowed = config.getStringList("allowed-worlds");
         if (allowed.isEmpty()) allowed = List.of("spawn");
@@ -176,10 +214,11 @@ public final class KothModule extends Module implements CommandExecutor, TabComp
     private void tick() {
         if (region == null) return;
         if (!active) {
-            if (coordinator.canStartKoth()) startEvent();
+            if (coordinator != null && coordinator.canStartKoth()) startEvent();
             return;
         }
-        if (System.currentTimeMillis() >= eventEndsAt) {
+        long now = System.currentTimeMillis();
+        if (now >= eventEndsAt) {
             finishEvent();
             return;
         }
@@ -190,10 +229,27 @@ public final class KothModule extends Module implements CommandExecutor, TabComp
             if (p != null) {
                 String bar = config.getString("actionbar", "&dKOTH &7| &f%points% pts &7| &f%time%")
                         .replace("%points%", String.format(Locale.US, "%.0f", points.getOrDefault(uuid, 0.0)))
-                        .replace("%time%", TimeFormat.hms(eventEndsAt - System.currentTimeMillis()));
-                p.sendActionBar(Text.c(bar));
+                        .replace("%time%", TimeFormat.hms(eventEndsAt - now));
+                p.sendActionBar(Text.c(modulePrefix() + bar));
             }
         }
+        updateBossBar(now);
+    }
+
+    private void updateBossBar(long now) {
+        if (coordinator == null) return;
+        long remaining = eventEndsAt - now;
+        String leader = leaderName();
+        double pts = leaderPoints();
+        String title = config.getString("bossbar-active",
+                        "%prefix%&f%leader% &7(%points% pts) &8| &f%time%")
+                .replace("%prefix%", modulePrefix())
+                .replace("%leader%", leader)
+                .replace("%points%", String.format(Locale.US, "%.0f", pts))
+                .replace("%time%", TimeFormat.hms(remaining));
+        double progress = eventDurationMs <= 0 ? 1.0 : (double) remaining / eventDurationMs;
+        coordinator.bossBar().show("koth", title, BarColor.PINK, progress);
+        coordinator.bossBar().syncPlayers();
     }
 
     private void addPoints(UUID uuid, double amount) {
@@ -204,13 +260,15 @@ public final class KothModule extends Module implements CommandExecutor, TabComp
         active = true;
         points.clear();
         inside.clear();
-        eventEndsAt = System.currentTimeMillis() + config.getLong("duration-seconds", 300) * 1000L;
+        eventDurationMs = config.getLong("duration-seconds", 300) * 1000L;
+        eventEndsAt = System.currentTimeMillis() + eventDurationMs;
         coordinator.setKothActive(true);
-        Bukkit.broadcast(Text.c(raw("broadcast-start")));
+        Bukkit.broadcast(Text.c(modulePrefix() + raw("broadcast-start")));
     }
 
     private void finishEvent() {
         active = false;
+        if (coordinator != null) coordinator.bossBar().hide("koth");
         List<Map.Entry<UUID, Double>> top = points.entrySet().stream()
                 .sorted(Map.Entry.<UUID, Double>comparingByValue(Comparator.reverseOrder()))
                 .limit(3)
@@ -220,7 +278,7 @@ public final class KothModule extends Module implements CommandExecutor, TabComp
             long reward = config.getLong("rewards.rank-" + (i + 1), 1000L - i * 200L);
             UUID uuid = top.get(i).getKey();
             if (tokens != null) tokens.give(uuid, reward);
-            Bukkit.broadcast(Text.c(raw("reward-line",
+            Bukkit.broadcast(Text.c(modulePrefix() + raw("reward-line",
                     "%rank%", String.valueOf(i + 1),
                     "%player%", OfflinePlayers.name(uuid),
                     "%amount%", String.valueOf(reward))));

@@ -1,9 +1,11 @@
-config-version: 1
+config-version: 2
+prefix: '&#9FFF00&lOUTPOST &8▷ &r'
 message-mode: chat
 allowed-worlds:
   - spawn
 capture-percent-per-second: 1.0
 token-reward: 500
-actionbar: '&7Outpost: &f%percent%%'
-actionbar-contested: '&cOutpost contested — solo capture required!'
+actionbar: '&f%percent%% captured'
+actionbar-contested: '&cContested — solo capture required!'
+bossbar-active: '%prefix%&f%capturer% &8| &f%percent%%'
 region: {}

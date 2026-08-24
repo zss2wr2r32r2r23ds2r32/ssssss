@@ -1,11 +1,13 @@
-config-version: 1
+config-version: 2
+prefix: '&#FF005D&lKOTH &8▷ &r'
 message-mode: chat
 allowed-worlds:
   - spawn
 duration-seconds: 300
 points-per-hit: 5
 points-per-second-standing: 1
-actionbar: '&dKOTH &7| &f%points% pts &7| &f%time%'
+actionbar: '&f%points% pts &7| &f%time%'
+bossbar-active: '%prefix%&f%leader% &7(%points% pts) &8| &f%time%'
 rewards:
   rank-1: 1000
   rank-2: 750

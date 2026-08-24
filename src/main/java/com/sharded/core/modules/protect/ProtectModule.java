@@ -27,9 +27,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-/** Spawn / PVP / side region protection. */
+/** Spawn / PVP / side region protection. Side regions allow PvP, building, pearls, and damage. */
 public final class ProtectModule extends Module implements CommandExecutor, TabCompleter {
 
+    private static final List<String> SIDE_KEYS = List.of("side1", "side2", "side3", "side4");
     private static final List<Material> BLOCKED_USE = List.of(
             Material.ANVIL, Material.CHIPPED_ANVIL, Material.DAMAGED_ANVIL,
             Material.BEACON, Material.OAK_TRAPDOOR, Material.SPRUCE_TRAPDOOR,
@@ -71,6 +72,31 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
     public boolean inPvp(Location loc) {
         CuboidRegion pvp = regions.get("pvp");
         return pvp != null && pvp.contains(loc);
+    }
+
+    public boolean inSide(Location loc) {
+        for (String key : SIDE_KEYS) {
+            CuboidRegion side = regions.get(key);
+            if (side != null && side.contains(loc)) return true;
+        }
+        return false;
+    }
+
+    public boolean bypass(Player player) {
+        return player.hasPermission("sharded.protect.bypass");
+    }
+
+    /** Side regions override spawn/pvp restrictions. */
+    private boolean restrict(Player player, Location loc) {
+        if (bypass(player)) return false;
+        if (inSide(loc)) return false;
+        return inSpawn(loc) || inPvp(loc);
+    }
+
+    private boolean restrictSpawnOnly(Player player, Location loc) {
+        if (bypass(player)) return false;
+        if (inSide(loc)) return false;
+        return inSpawn(loc);
     }
 
     @Override
@@ -127,30 +153,32 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBreak(BlockBreakEvent event) {
+        Player player = event.getPlayer();
         Location loc = event.getBlock().getLocation();
-        if (inSpawn(loc) || inPvp(loc)) {
-            event.setCancelled(true);
-            send(event.getPlayer(), "no-break");
-        }
+        if (!restrict(player, loc)) return;
+        event.setCancelled(true);
+        send(player, "no-break");
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPvp(org.bukkit.event.entity.EntityDamageByEntityEvent event) {
         if (!(event.getEntity() instanceof Player victim)) return;
+        if (inSide(victim.getLocation())) return;
         if (inSpawn(victim.getLocation())) event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPlace(BlockPlaceEvent event) {
-        if (inSpawn(event.getBlock().getLocation())) {
-            event.setCancelled(true);
-            send(event.getPlayer(), "no-place");
-        }
+        Player player = event.getPlayer();
+        if (!restrictSpawnOnly(player, event.getBlock().getLocation())) return;
+        event.setCancelled(true);
+        send(player, "no-place");
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
+        if (inSide(player.getLocation())) return;
         if (inSpawn(player.getLocation())) event.setCancelled(true);
     }
 
@@ -160,6 +188,7 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
         if (block == null) return;
         Player player = event.getPlayer();
         Location loc = block.getLocation();
+        if (inSide(loc) || bypass(player)) return;
         if (!inSpawn(loc) && !inPvp(loc)) return;
         Material type = block.getType();
         if (BLOCKED_USE.contains(type) || type.name().endsWith("_TRAPDOOR")) {
@@ -173,7 +202,7 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
         if (event.getCause() != PlayerTeleportEvent.TeleportCause.ENDER_PEARL) return;
         if (!(event.getPlayer() instanceof Player player)) return;
         Location to = event.getTo();
-        if (to == null) return;
+        if (to == null || bypass(player) || inSide(to)) return;
         if (inSpawn(to)) {
             event.setCancelled(true);
             send(player, "no-pearl-spawn");

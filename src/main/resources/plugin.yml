@@ -264,6 +264,10 @@ commands:
   weekly:
     description: Claim your weekly reward
     usage: /weekly
+  rewards:
+    description: Open daily and weekly rewards menu
+    usage: /rewards
+    permission: sharded.rewards.use
   tokenmethods:
     description: Open ways to earn tokens GUI
     usage: /tokenmethods
@@ -677,6 +681,12 @@ permissions:
   sharded.protect.admin:
     description: Setup protect regions
     default: op
+  sharded.protect.bypass:
+    description: Bypass spawn/pvp protect restrictions
+    default: op
+  sharded.rewards.use:
+    description: Open /rewards menu
+    default: true
   sharded.combat.admin:
     description: Setup combat region
     default: op

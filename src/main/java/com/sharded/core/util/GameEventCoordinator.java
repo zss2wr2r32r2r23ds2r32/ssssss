@@ -19,10 +19,12 @@ public final class GameEventCoordinator {
     private long nextKothMs;
     private boolean outpostActive;
     private boolean kothActive;
+    private final EventBossBar bossBar;
 
     public GameEventCoordinator(ShardedCore plugin) {
         this.plugin = plugin;
         this.file = new File(plugin.getDataFolder(), "game-events.yml");
+        this.bossBar = new EventBossBar(plugin);
         reload();
         instance = this;
     }
@@ -104,6 +106,14 @@ public final class GameEventCoordinator {
 
     public long millisUntilKoth() {
         return kothActive ? 0 : Math.max(0, nextKothMs - System.currentTimeMillis());
+    }
+
+    public EventBossBar bossBar() {
+        return bossBar;
+    }
+
+    public void shutdown() {
+        bossBar.shutdown();
     }
 
     public void save() {

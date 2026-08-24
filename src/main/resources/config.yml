@@ -55,6 +55,7 @@ modules:
   teams: true
   dailyrewards: true
   weeklyrewards: true
+  rewards: true
   leaderboards: true
   media: true
   crates: true

@@ -2,14 +2,16 @@ package com.sharded.core.modules.combat;
 
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
+import com.sharded.core.modules.koth.KothModule;
+import com.sharded.core.modules.outpost.OutpostModule;
 import com.sharded.core.modules.protect.ProtectModule;
+import com.sharded.core.util.CombatWallTracker;
 import com.sharded.core.util.CuboidRegion;
 import com.sharded.core.util.RegionSetup;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -24,9 +26,12 @@ import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /** Combat tagging with spawn pushback and logout punishment. */
@@ -35,6 +40,8 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
     private final RegionSetup setup = new RegionSetup();
     private CuboidRegion region;
     private final Map<UUID, Long> taggedUntil = new HashMap<>();
+    private final CombatWallTracker wallTracker = new CombatWallTracker();
+    private final Set<UUID> wasTagged = new HashSet<>();
     private int tickTask = -1;
 
     public CombatModule(ShardedCore plugin) {
@@ -51,6 +58,9 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
     @Override
     protected void onDisable() {
         if (tickTask >= 0) Bukkit.getScheduler().cancelTask(tickTask);
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            wallTracker.clear(player);
+        }
     }
 
     public boolean isTagged(Player player) {
@@ -118,9 +128,14 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onQuit(PlayerQuitEvent event) {
-        if (!isTagged(event.getPlayer())) return;
+        Player player = event.getPlayer();
+        wallTracker.clear(player);
+        boolean tagged = isTagged(player);
+        taggedUntil.remove(player.getUniqueId());
+        wasTagged.remove(player.getUniqueId());
+        if (!tagged) return;
         if (!config.getBoolean("kill-on-logout", true)) return;
-        event.getPlayer().setHealth(0);
+        player.setHealth(0);
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -137,51 +152,66 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
 
     private void pushBack(Player player, Location from, ProtectModule protect) {
         player.teleport(from);
-        Vector push = from.toVector().subtract(player.getLocation().toVector()).normalize().multiply(0.8);
+        Vector push = from.toVector().subtract(player.getLocation().toVector());
+        if (push.lengthSquared() > 0.0001) {
+            push.normalize().multiply(0.8);
+        } else {
+            push = new Vector(0, 0, 1);
+        }
         push.setY(0.35);
         player.setVelocity(push);
         send(player, "pushback");
-        showSpawnWalls(player, protect);
-    }
-
-    private void showSpawnWalls(Player player, ProtectModule protect) {
-        if (!config.getBoolean("red-glass-walls", true)) return;
         CuboidRegion spawn = protect.region("spawn");
-        if (spawn == null || !spawn.world().equals(player.getWorld().getName())) return;
-        org.bukkit.block.data.BlockData pane = Material.RED_STAINED_GLASS_PANE.createBlockData();
-        int baseY = player.getLocation().getBlockY();
-        for (int yOff = 0; yOff <= 1; yOff++) {
-            int y = baseY + yOff;
-            for (int x = spawn.minX(); x <= spawn.maxX(); x++) {
-                player.sendBlockChange(new Location(player.getWorld(), x, y, spawn.minZ()), pane);
-                player.sendBlockChange(new Location(player.getWorld(), x, y, spawn.maxZ()), pane);
-            }
-            for (int z = spawn.minZ(); z <= spawn.maxZ(); z++) {
-                player.sendBlockChange(new Location(player.getWorld(), spawn.minX(), y, z), pane);
-                player.sendBlockChange(new Location(player.getWorld(), spawn.maxX(), y, z), pane);
-            }
+        if (spawn != null) {
+            wallTracker.showLocalSpawnWall(player, spawn, from);
         }
     }
 
     private void tick() {
         long now = System.currentTimeMillis();
-        taggedUntil.entrySet().removeIf(e -> e.getValue() <= now);
-        ProtectModule protect = plugin.modules().get(ProtectModule.class);
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            Long until = taggedUntil.get(player.getUniqueId());
-            if (until == null || until <= now) continue;
-            long left = (until - now) / 1000L;
-            String msg = config.getString("actionbar", "&cCombat &7| &f%seconds%s")
-                    .replace("%seconds%", String.valueOf(left));
-            player.sendActionBar(Text.c(msg));
-            if (protect != null && config.getBoolean("red-glass-walls", true)) {
-                CuboidRegion spawn = protect.region("spawn");
-                if (spawn != null && spawn.world().equals(player.getWorld().getName())
-                        && nearSpawnBorder(player.getLocation(), spawn, 6)) {
-                    showSpawnWalls(player, protect);
-                }
+        Iterator<Map.Entry<UUID, Long>> it = taggedUntil.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<UUID, Long> entry = it.next();
+            if (entry.getValue() <= now) {
+                Player expired = Bukkit.getPlayer(entry.getKey());
+                if (expired != null) wallTracker.clear(expired);
+                it.remove();
             }
         }
+
+        KothModule koth = plugin.modules().get(KothModule.class);
+        OutpostModule outpost = plugin.modules().get(OutpostModule.class);
+        ProtectModule protect = plugin.modules().get(ProtectModule.class);
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            UUID id = player.getUniqueId();
+            Long until = taggedUntil.get(id);
+            boolean tagged = until != null && until > now;
+
+            if (tagged) {
+                wasTagged.add(id);
+                if (eventActionBarActive(player, koth, outpost)) continue;
+                long left = (until - now) / 1000L;
+                String msg = config.getString("actionbar", "&cCombat &7| &f%seconds%s")
+                        .replace("%seconds%", String.valueOf(left));
+                player.sendActionBar(Text.c(msg));
+                if (protect != null && config.getBoolean("red-glass-walls", true)) {
+                    CuboidRegion spawn = protect.region("spawn");
+                    if (spawn != null && spawn.world().equals(player.getWorld().getName())
+                            && nearSpawnBorder(player.getLocation(), spawn, 8)) {
+                        wallTracker.showLocalSpawnWall(player, spawn, player.getLocation());
+                    }
+                }
+            } else if (wasTagged.remove(id)) {
+                wallTracker.clear(player);
+            }
+        }
+    }
+
+    private boolean eventActionBarActive(Player player, KothModule koth, OutpostModule outpost) {
+        if (koth != null && koth.isActive() && koth.isInside(player)) return true;
+        if (outpost != null && outpost.isActive() && outpost.isInside(player)) return true;
+        return false;
     }
 
     private boolean nearSpawnBorder(Location loc, CuboidRegion spawn, int margin) {

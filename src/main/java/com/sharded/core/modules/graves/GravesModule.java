@@ -126,14 +126,24 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
 
         ItemStack wardrobeHat = extractWardrobeHat(player, items);
 
-        if (config.getBoolean("head-drop.enabled", true) && event.getEntity().getKiller() != null) {
+        Player killer = event.getEntity().getKiller();
+        boolean pvpKill = killer != null;
+        if (config.getBoolean("head-drop.enabled", true) && pvpKill) {
             double chance = config.getDouble("head-drop.chance-percent", 10.0);
             if (ThreadLocalRandom.current().nextDouble(100.0) < chance) {
-                items.add(createPlayerHead(player));
+                ItemStack head = createPlayerHead(player);
+                if (config.getBoolean("head-drop.drop-on-ground", true)) {
+                    player.getWorld().dropItemNaturally(player.getLocation(), head);
+                } else {
+                    items.add(head);
+                }
             }
         }
 
         int xp = config.getBoolean("store-xp", true) ? event.getDroppedExp() : 0;
+        if (config.getBoolean("head-drop.skip-grave-on-pvp", true) && pvpKill && items.isEmpty() && xp <= 0) {
+            return;
+        }
         if (items.isEmpty() && xp <= 0) return;
 
         Location location = findGraveLocation(player.getLocation());

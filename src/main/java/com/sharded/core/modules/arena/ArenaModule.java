@@ -85,8 +85,13 @@ public final class ArenaModule extends Module implements CommandExecutor, TabCom
         }
         String sub = args[0].toLowerCase(Locale.ROOT);
         if (sub.equals("reset") && args.length >= 2) {
-            int speed = args.length >= 3 ? parseInt(args[2], 500) : config.getInt("reset-blocks-per-tick", 500);
-            resetRegion(args[1].toLowerCase(Locale.ROOT), speed);
+            String id = args[1].toLowerCase(Locale.ROOT);
+            if (!snapshots.containsKey(id) || snapshots.get(id).isEmpty()) {
+                send(sender, "no-snapshot", "%region%", args[1]);
+                return true;
+            }
+            int speed = args.length >= 3 ? resolveSpeed(args[2]) : config.getInt("reset-blocks-per-tick", 500);
+            resetRegion(id, speed);
             send(sender, "reset-started", "%region%", args[1]);
             return true;
         }
@@ -177,6 +182,16 @@ public final class ArenaModule extends Module implements CommandExecutor, TabCom
         }
     }
 
+    private int resolveSpeed(String raw) {
+        return switch (raw.toLowerCase(Locale.ROOT)) {
+            case "slow" -> 100;
+            case "medium" -> 500;
+            case "fast" -> 2000;
+            case "extreme" -> 10000;
+            default -> parseInt(raw, config.getInt("reset-blocks-per-tick", 500));
+        };
+    }
+
     private int parseInt(String raw, int def) {
         try {
             return Integer.parseInt(raw);
@@ -190,6 +205,9 @@ public final class ArenaModule extends Module implements CommandExecutor, TabCom
         if (!sender.hasPermission("sharded.arena.admin")) return List.of();
         if (args.length == 1) return TabCompleteHelper.filter(args[0], "reset", "remove", "snapshot");
         if (args.length == 2) return TabCompleteHelper.filter(args[1], snapshots.keySet());
+        if (args.length == 3 && args[0].equalsIgnoreCase("reset")) {
+            return TabCompleteHelper.filter(args[2], "slow", "medium", "fast", "extreme");
+        }
         return List.of();
     }
 }

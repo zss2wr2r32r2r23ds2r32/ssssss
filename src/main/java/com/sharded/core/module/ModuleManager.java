@@ -44,6 +44,7 @@ import com.sharded.core.modules.guide.GuideModule;
 import com.sharded.core.modules.client.ClientModule;
 import com.sharded.core.modules.collisions.CollisionsModule;
 import com.sharded.core.modules.dailyrewards.DailyRewardsModule;
+import com.sharded.core.modules.rewards.RewardsModule;
 import com.sharded.core.modules.weeklyrewards.WeeklyRewardsModule;
 import com.sharded.core.modules.leaderboards.LeaderboardsModule;
 import com.sharded.core.modules.media.MediaModule;
@@ -113,6 +114,7 @@ public final class ModuleManager {
         register(new TeamsModule(plugin));
         register(new DailyRewardsModule(plugin));
         register(new WeeklyRewardsModule(plugin));
+        register(new RewardsModule(plugin));
         register(new LeaderboardsModule(plugin));
         register(new MediaModule(plugin));
         register(new CratesModule(plugin));

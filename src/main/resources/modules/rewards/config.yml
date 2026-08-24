@@ -1,0 +1,27 @@
+config-version: 1
+message-mode: chat
+
+gui:
+  title: '&8Rewards'
+  colors:
+    daily: '&#9FFF00'
+    weekly: '&#FFD700'
+  items:
+    daily:
+      name: '&#9FFF00&lDaily Rewards'
+      lore:
+        - '&8Rewards'
+        - ''
+        - '&#9FFF00Information:'
+        - '&#9FFF00| &fClaim your daily reward.'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0TO CLAIM'
+    weekly:
+      name: '&#FFD700&lWeekly Rewards'
+      lore:
+        - '&8Rewards'
+        - ''
+        - '&#FFD700Information:'
+        - '&#FFD700| &fClaim your weekly reward.'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0TO CLAIM'

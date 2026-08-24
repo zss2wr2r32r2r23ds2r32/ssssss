@@ -1,6 +1,6 @@
 # sharded.graves.use = use graves on death (default true)
 
-config-version: 6
+config-version: 7
 message-mode: chat
 enabled-worlds: []
 expire-seconds: 300
@@ -13,6 +13,8 @@ block-material: PLAYER_HEAD
 head-drop:
   enabled: true
   chance-percent: 10
+  drop-on-ground: true
+  skip-grave-on-pvp: true
   display-name: '&#FF2727&l%player%''s Head'
   lore:
     - '&#FF2727&lDESCRIPTION:'

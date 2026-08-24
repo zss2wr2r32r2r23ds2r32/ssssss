@@ -4,3 +4,4 @@ usage: '%prefix%&#FF2727Usage: &f/arena reset <region> [speed] &7| &f/arena remo
 reset-started: '%prefix%&#9FFF00Resetting region &f%region%&#9FFF00...'
 removed: '%prefix%&#9FFF00Removed arena &f%region%&#9FFF00.'
 snapshot-saved: '%prefix%&#9FFF00Snapshot saved for &f%region%&#9FFF00.'
+no-snapshot: '%prefix%&#FF2727No snapshot for &f%region%&#FF2727. Run &f/arena snapshot %region%&#FF2727 first.'

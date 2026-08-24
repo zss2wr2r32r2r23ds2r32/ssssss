@@ -40,6 +40,11 @@ public final class LeaderboardsModule extends Module implements CommandExecutor,
         return service != null ? service.teamRank(teamId) : -1;
     }
 
+    public String hologramLineTemplate(String type) {
+        return config.getString("hologram." + type + "-line",
+                "&a#%rank% &f%name% &7— &f%value% %label%");
+    }
+
     @Override
     protected void onEnable() {
         service = new LeaderboardService(plugin, config);
