@@ -7,6 +7,7 @@ import com.sharded.core.util.ColorConfigUtil;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
+import com.sharded.core.util.TrackedInventories;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -241,7 +242,9 @@ public final class ChatColorModule extends Module implements CommandExecutor, Ta
 
     public void openMenu(Player player) {
         int rows = config.getInt("menu-rows", 6);
-        Inventory inventory = plugin.getServer().createInventory(new MenuHolder(), rows * 9, Text.c(MENU_TITLE));
+        MenuHolder menuHolder = new MenuHolder();
+        Inventory inventory = plugin.getServer().createInventory(menuHolder, rows * 9, Text.c(MENU_TITLE));
+        TrackedInventories.track(inventory, menuHolder);
         Material fillerMat = Material.matchMaterial(config.getString("filler-material", "BLACK_STAINED_GLASS_PANE"));
         if (fillerMat == null) fillerMat = Material.BLACK_STAINED_GLASS_PANE;
         ItemStack filler = new ItemBuilder(fillerMat).name(" ").hideAll().build();
@@ -281,7 +284,7 @@ public final class ChatColorModule extends Module implements CommandExecutor, Ta
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) return;
-        if (!(event.getView().getTopInventory().getHolder() instanceof MenuHolder)) return;
+        if (TrackedInventories.lookup(event.getView().getTopInventory(), MenuHolder.class) == null) return;
         event.setCancelled(true);
         if (event.getClickedInventory() != event.getView().getTopInventory()) return;
 
@@ -301,7 +304,7 @@ public final class ChatColorModule extends Module implements CommandExecutor, Ta
 
     @EventHandler
     public void onDrag(InventoryDragEvent event) {
-        if (event.getView().getTopInventory().getHolder() instanceof MenuHolder) event.setCancelled(true);
+        if (TrackedInventories.lookup(event.getView().getTopInventory(), MenuHolder.class) != null) event.setCancelled(true);
     }
 
     @Override

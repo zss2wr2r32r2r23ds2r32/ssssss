@@ -16,6 +16,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import com.sharded.core.util.Text;
+import com.sharded.core.util.TrackedInventories;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import java.io.File;
@@ -326,7 +327,7 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
     @EventHandler
     public void onTokenMethodsClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) return;
-        if (!(event.getView().getTopInventory().getHolder() instanceof TokenMethodsGuiHandler.Holder)) return;
+        if (TrackedInventories.lookup(event.getView().getTopInventory(), TokenMethodsGuiHandler.Holder.class) == null) return;
         event.setCancelled(true);
         if (event.getClickedInventory() != event.getView().getTopInventory()) return;
         tokenMethodsGui.handleClick(player, event.getSlot());

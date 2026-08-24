@@ -2,7 +2,7 @@
 #  ShardedCore - main configuration
 # ---------------------------------------------------------
 
-config-version: 15
+config-version: 16
 
 # Edit plugins/ShardedCore/gui-navigation.yml for global back/previous/next/close button styles.
 
@@ -63,4 +63,5 @@ modules:
   outpost: true
   koth: true
   protect: true
+  arena: true
   combat: true

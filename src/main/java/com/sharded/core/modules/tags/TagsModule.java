@@ -9,6 +9,7 @@ import com.sharded.core.util.GuiFooters;
 import com.sharded.core.util.TagDisplayUtil;
 import com.sharded.core.util.Text;
 import com.sharded.core.util.TabCompleteHelper;
+import com.sharded.core.util.TrackedInventories;
 import com.sharded.core.util.WordBlacklist;
 import org.bukkit.command.CommandExecutor;
 import io.papermc.paper.event.player.AsyncChatEvent;
@@ -336,6 +337,7 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         int size = config.getInt(limited ? "limited-menu-size" : "menu-size", 54);
         TagMenuHolder holder = new TagMenuHolder(limited, page);
         Inventory inventory = plugin.getServer().createInventory(holder, size, Text.c(title));
+        TrackedInventories.track(inventory, holder);
 
         Material borderMat = Material.matchMaterial(config.getString("border-material", "BLACK_STAINED_GLASS_PANE"));
         if (borderMat == null) borderMat = Material.BLACK_STAINED_GLASS_PANE;
@@ -486,7 +488,9 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) return;
-        if (!(event.getView().getTopInventory().getHolder() instanceof TagMenuHolder holder)) return;
+        TagMenuHolder holder = TrackedInventories.lookup(
+                event.getView().getTopInventory(), TagMenuHolder.class);
+        if (holder == null) return;
         event.setCancelled(true);
         if (event.getClickedInventory() != event.getView().getTopInventory()) return;
 
@@ -547,7 +551,7 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
 
     @EventHandler
     public void onDrag(InventoryDragEvent event) {
-        if (event.getView().getTopInventory().getHolder() instanceof TagMenuHolder) {
+        if (TrackedInventories.lookup(event.getView().getTopInventory(), TagMenuHolder.class) != null) {
             event.setCancelled(true);
         }
     }

@@ -7,6 +7,7 @@ import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.PlaceholderUtil;
 import com.sharded.core.util.Text;
+import com.sharded.core.util.TrackedInventories;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -247,7 +248,9 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
     @EventHandler
     public void onGuiClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) return;
-        if (!(event.getView().getTopInventory().getHolder() instanceof TeamGuiHandler.TeamGuiHolder holder)) return;
+        TeamGuiHandler.TeamGuiHolder holder = TrackedInventories.lookup(
+                event.getView().getTopInventory(), TeamGuiHandler.TeamGuiHolder.class);
+        if (holder == null) return;
         event.setCancelled(true);
         if (event.getClickedInventory() != event.getView().getTopInventory()) return;
         guiHandler.handleClick(player, holder, event.getSlot(), event.getCurrentItem());

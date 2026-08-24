@@ -2,6 +2,7 @@ package com.sharded.core.modules.crates;
 
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
+import com.sharded.core.util.TrackedInventories;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -53,7 +54,7 @@ public final class CratesModule extends Module implements CommandExecutor {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) return;
-        if (!(event.getView().getTopInventory().getHolder() instanceof CratesGuiHandler.Holder)) return;
+        if (TrackedInventories.lookup(event.getView().getTopInventory(), CratesGuiHandler.Holder.class) == null) return;
         event.setCancelled(true);
         if (event.getClickedInventory() != event.getView().getTopInventory()) return;
         gui.handleClick(player, event.getSlot(), event.getClick());

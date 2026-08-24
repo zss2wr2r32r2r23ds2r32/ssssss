@@ -3,6 +3,7 @@ package com.sharded.core.modules.trash;
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.util.Text;
+import com.sharded.core.util.TrackedInventories;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
@@ -49,6 +50,7 @@ public final class TrashModule extends Module implements CommandExecutor {
         TrashHolder holder = new TrashHolder();
         Inventory inventory = Bukkit.createInventory(holder, rows * 9, Text.c(config.getString("title", "&8Trash &7(closes = deletes)")));
         holder.inventory = inventory;
+        TrackedInventories.track(inventory, holder);
         player.openInventory(inventory);
         send(player, "opened");
         return true;
@@ -56,7 +58,7 @@ public final class TrashModule extends Module implements CommandExecutor {
 
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
-        if (!(event.getInventory().getHolder() instanceof TrashHolder)) return;
+        if (TrackedInventories.untrack(event.getInventory(), TrashHolder.class) == null) return;
         boolean hadItems = !event.getInventory().isEmpty();
         event.getInventory().clear();
         if (hadItems && event.getPlayer() instanceof Player player) {

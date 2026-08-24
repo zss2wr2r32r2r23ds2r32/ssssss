@@ -4,6 +4,7 @@ import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.Text;
+import com.sharded.core.util.TrackedInventories;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -49,9 +50,10 @@ public final class RewardsModule extends Module implements CommandExecutor {
 
     void openHub(Player player) {
         String title = config.getString("gui.title", "&8Rewards");
-        Inventory inv = Bukkit.createInventory(new Holder(), 27, Text.c(title));
-        Holder holder = (Holder) inv.getHolder();
+        Holder holder = new Holder();
+        Inventory inv = Bukkit.createInventory(holder, 27, Text.c(title));
         holder.inventory = inv;
+        TrackedInventories.track(inv, holder);
 
         ItemStack pane = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build();
         for (int i = 0; i < 27; i++) inv.setItem(i, pane);
@@ -72,7 +74,7 @@ public final class RewardsModule extends Module implements CommandExecutor {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) return;
-        if (!(event.getView().getTopInventory().getHolder() instanceof Holder)) return;
+        if (TrackedInventories.lookup(event.getView().getTopInventory(), Holder.class) == null) return;
         event.setCancelled(true);
         if (event.getClickedInventory() != event.getView().getTopInventory()) return;
         if (event.getSlot() == 11) {

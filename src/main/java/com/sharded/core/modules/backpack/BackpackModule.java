@@ -7,6 +7,7 @@ import com.sharded.core.util.Numbers;
 import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
+import com.sharded.core.util.TrackedInventories;
 import org.bukkit.Sound;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -75,7 +76,7 @@ public final class BackpackModule extends Module implements CommandExecutor, Tab
     @Override
     protected void onDisable() {
         for (Player player : plugin.getServer().getOnlinePlayers()) {
-            if (player.getOpenInventory().getTopInventory().getHolder() instanceof BackpackHolder) {
+            if (TrackedInventories.lookup(player.getOpenInventory().getTopInventory(), BackpackHolder.class) != null) {
                 player.closeInventory();
             }
         }
@@ -194,6 +195,7 @@ public final class BackpackModule extends Module implements CommandExecutor, Tab
                 "%player%", ownerName);
         Inventory inventory = Bukkit.createInventory(holder, 9, Text.c(title));
         holder.inventory = inventory;
+        TrackedInventories.track(inventory, holder);
 
         Material fillerMat = Material.BLACK_STAINED_GLASS_PANE;
         String fillerName = " ";
@@ -229,7 +231,9 @@ public final class BackpackModule extends Module implements CommandExecutor, Tab
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        if (!(event.getView().getTopInventory().getHolder() instanceof BackpackHolder holder)) return;
+        BackpackHolder holder = TrackedInventories.lookup(
+                event.getView().getTopInventory(), BackpackHolder.class);
+        if (holder == null) return;
         if (holder.readOnly) {
             event.setCancelled(true);
             if (event.getWhoClicked() instanceof Player player) send(player, "read-only");
@@ -242,7 +246,8 @@ public final class BackpackModule extends Module implements CommandExecutor, Tab
 
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
-        if (!(event.getInventory().getHolder() instanceof BackpackHolder holder)) return;
+        BackpackHolder holder = TrackedInventories.untrack(event.getInventory(), BackpackHolder.class);
+        if (holder == null) return;
         if (holder.readOnly) return;
         ItemStack[] data = new ItemStack[holder.slots.length];
         for (int i = 0; i < holder.slots.length; i++) {

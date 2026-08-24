@@ -5,6 +5,7 @@ import com.sharded.core.modules.teams.TeamsModule;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.Text;
+import com.sharded.core.util.TrackedInventories;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -59,10 +60,11 @@ final class LeaderboardGuiHandler {
     }
 
     void openHub(Player player) {
-        Inventory inv = Bukkit.createInventory(new Holder(View.HUB, "", 0, null), 27,
+        Holder holder = new Holder(View.HUB, "", 0, null);
+        Inventory inv = Bukkit.createInventory(holder, 27,
                 Text.c(cfg.getString("gui.hub-title", "&8Leaderboards")));
-        Holder holder = (Holder) inv.getHolder();
         holder.inventory = inv;
+        TrackedInventories.track(inv, holder);
         fill(inv, 27);
         putHubItem(inv, "teams", Material.PINK_BANNER, 10);
         putHubItem(inv, "tokens", Material.SUNFLOWER, 11);
@@ -81,10 +83,11 @@ final class LeaderboardGuiHandler {
         page = Math.max(0, Math.min(page, maxPage));
 
         String titleKey = "gui.board-title." + type.toLowerCase();
-        Inventory inv = Bukkit.createInventory(new Holder(View.BOARD, type, page, null), 36,
+        Holder holder = new Holder(View.BOARD, type, page, null);
+        Inventory inv = Bukkit.createInventory(holder, 36,
                 Text.c(cfg.getString(titleKey, "&8Leaderboard")));
-        Holder holder = (Holder) inv.getHolder();
         holder.inventory = inv;
+        TrackedInventories.track(inv, holder);
         fill(inv, 36);
 
         int start = page * perPage;
@@ -112,10 +115,11 @@ final class LeaderboardGuiHandler {
 
     void openStats(Player viewer, UUID targetId) {
         LeaderboardService.StatsSnapshot stats = service.statsFor(targetId);
-        Inventory inv = Bukkit.createInventory(new Holder(View.STATS, "", 0, targetId), 27,
+        Holder holder = new Holder(View.STATS, "", 0, targetId);
+        Inventory inv = Bukkit.createInventory(holder, 27,
                 Text.c(cfg.getString("gui.stats-title", "&8Stats")));
-        Holder holder = (Holder) inv.getHolder();
         holder.inventory = inv;
+        TrackedInventories.track(inv, holder);
         fill(inv, 27);
 
         inv.setItem(10, headItem(targetId, stats));

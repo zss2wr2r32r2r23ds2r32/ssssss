@@ -5,6 +5,7 @@ import com.sharded.core.module.Module;
 import com.sharded.core.util.ItemSerializer;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
+import com.sharded.core.util.TrackedInventories;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -97,7 +98,7 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
     protected void onDisable() {
         if (tickTask != null) tickTask.cancel();
         for (Player player : plugin.getServer().getOnlinePlayers()) {
-            if (player.getOpenInventory().getTopInventory().getHolder() instanceof GraveHolder) {
+            if (TrackedInventories.lookup(player.getOpenInventory().getTopInventory(), GraveHolder.class) != null) {
                 player.closeInventory();
             }
         }
@@ -353,6 +354,7 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
         Inventory inventory = Bukkit.createInventory(holder, size,
                 Text.c(Text.apply(config.getString("gui-title", "&8Grave of &f%player%"), "%player%", grave.ownerName)));
         holder.inventory = inventory;
+        TrackedInventories.track(inventory, holder);
         for (int i = 0; i < grave.items.size() && i < size; i++) {
             inventory.setItem(i, grave.items.get(i));
         }
@@ -377,7 +379,8 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
 
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
-        if (!(event.getInventory().getHolder() instanceof GraveHolder holder)) return;
+        GraveHolder holder = TrackedInventories.untrack(event.getInventory(), GraveHolder.class);
+        if (holder == null) return;
         Grave grave = holder.grave;
         grave.items.clear();
         for (ItemStack item : event.getInventory().getContents()) {
@@ -397,8 +400,9 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
 
     private void expireGrave(Grave grave) {
         for (Player viewer : plugin.getServer().getOnlinePlayers()) {
-            if (viewer.getOpenInventory().getTopInventory().getHolder() instanceof GraveHolder holder
-                    && holder.grave == grave) {
+            GraveHolder openHolder = TrackedInventories.lookup(
+                    viewer.getOpenInventory().getTopInventory(), GraveHolder.class);
+            if (openHolder != null && openHolder.grave == grave) {
                 viewer.closeInventory();
             }
         }

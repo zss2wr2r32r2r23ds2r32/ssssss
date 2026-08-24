@@ -6,6 +6,7 @@ import com.sharded.core.util.HeadUtil;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.ItemsAdderHook;
 import com.sharded.core.util.Text;
+import com.sharded.core.util.TrackedInventories;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -154,6 +155,7 @@ public final class GuiMenu {
         OpenGuiHolder holder = new OpenGuiHolder(id);
         Inventory inventory = Bukkit.createInventory(holder, size, Text.c(apply(title, player, extraPlaceholders, manager)));
         holder.inventory = inventory;
+        TrackedInventories.track(inventory, holder);
 
         for (GuiItem guiItem : itemsBySlot.values()) {
             ItemStack placed = applyItem(guiItem, player, extraPlaceholders, manager);

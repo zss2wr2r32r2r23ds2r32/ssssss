@@ -170,6 +170,7 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onMove(PlayerMoveEvent event) {
+        if (!event.hasChangedBlock()) return;
         if (!isTagged(event.getPlayer())) return;
         ProtectModule protect = plugin.modules().get(ProtectModule.class);
         CuboidRegion spawn = spawnRegion(protect);

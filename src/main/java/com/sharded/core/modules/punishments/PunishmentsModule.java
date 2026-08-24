@@ -12,6 +12,7 @@ import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.VanillaBanHelper;
 import com.sharded.core.util.Text;
+import com.sharded.core.util.TrackedInventories;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -39,17 +40,22 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /** Ban, mute, kick, IP ban, wipe, alts, and punish GUI — overrides other plugins. */
 public final class PunishmentsModule extends Module implements CommandExecutor, TabCompleter {
 
     private enum GuiType { PUNISH_MAIN, PUNISH_REASONS, WIPE_CONFIRM }
 
+    private record CachedMute(PunishmentDatabase.PunishmentRecord record, long cacheUntilMs) {
+    }
+
     private record GuiSession(GuiType type, UUID target, String punishType, String reason, String duration) {
     }
 
     private PunishmentDatabase database;
     private final Map<UUID, GuiSession> sessions = new java.util.concurrent.ConcurrentHashMap<>();
+    private final Map<UUID, CachedMute> muteCache = new ConcurrentHashMap<>();
 
     public PunishmentsModule(ShardedCore plugin) {
         super(plugin, "punishments");
@@ -97,6 +103,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         if (database != null) database.close();
         database = null;
         sessions.clear();
+        muteCache.clear();
     }
 
     @Override
@@ -481,6 +488,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         String title = Text.apply(config.getString("punish.menu.title", "&8Punish | %player%"),
                 "%player%", targetName);
         Inventory inv = Bukkit.createInventory(holder, rows * 9, Text.c(title));
+        TrackedInventories.track(inv, holder);
         fill(inv);
         inv.setItem(11, menuItem("punish.menu.ban", targetName, "ban"));
         inv.setItem(13, head(targetName));
@@ -506,6 +514,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         String title = Text.apply(config.getString("punish.reason-title", "&8%type% | %player%"),
                 "%type%", type.toUpperCase(Locale.ROOT), "%player%", targetName);
         Inventory inv = Bukkit.createInventory(holder, size, Text.c(title));
+        TrackedInventories.track(inv, holder);
         fill(inv);
         int slot = 0;
         for (String reason : keys) {
@@ -557,7 +566,9 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
     @EventHandler
     public void onGuiClick(org.bukkit.event.inventory.InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player staff)) return;
-        if (!(event.getView().getTopInventory().getHolder() instanceof PunishHolder holder)) return;
+        PunishHolder holder = TrackedInventories.lookup(
+                event.getView().getTopInventory(), PunishHolder.class);
+        if (holder == null) return;
         event.setCancelled(true);
         if (event.getClickedInventory() != event.getView().getTopInventory()) return;
 
@@ -711,6 +722,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         database.deactivatePunishments(target.getUniqueId(), PunishmentDatabase.PunishmentType.MUTE);
         database.addPunishment(target.getUniqueId(), OfflinePlayers.name(target.getUniqueId()), staffUuid, staffName,
                 PunishmentDatabase.PunishmentType.MUTE, reason, expiresAt, null, false);
+        invalidateMuteCache(target.getUniqueId());
         send(staff, "muted", "%player%", OfflinePlayers.name(target.getUniqueId()),
                 "%reason%", reason, "%duration%", formatDurationLabel(durationRaw, expiresAt));
         Player online = target.getPlayer();
@@ -799,6 +811,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
             return;
         }
         database.deactivatePunishments(target.getUniqueId(), PunishmentDatabase.PunishmentType.MUTE);
+        invalidateMuteCache(target.getUniqueId());
         send(staff, "unmuted", "%player%", OfflinePlayers.name(target.getUniqueId()));
     }
 
@@ -885,6 +898,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         String title = Text.apply(config.getString("wipe.title", "&8Wipe | %player%"),
                 "%player%", OfflinePlayers.name(target.getUniqueId()));
         Inventory inv = Bukkit.createInventory(holder, rows * 9, Text.c(title));
+        TrackedInventories.track(inv, holder);
         fillWipe(inv, OfflinePlayers.name(target.getUniqueId()));
         staff.openInventory(inv);
         sessions.put(staff.getUniqueId(), new GuiSession(GuiType.WIPE_CONFIRM, target.getUniqueId(), null, reasonKey, null));
@@ -1068,10 +1082,28 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         }
     }
 
+    private PunishmentDatabase.PunishmentRecord getActiveMute(UUID uuid) {
+        long now = System.currentTimeMillis();
+        CachedMute cached = muteCache.get(uuid);
+        if (cached != null && now < cached.cacheUntilMs()) {
+            return cached.record();
+        }
+        PunishmentDatabase.PunishmentRecord record = database.getActive(uuid, PunishmentDatabase.PunishmentType.MUTE);
+        long cacheUntil = record == null ? now + 10_000L
+                : (record.expiresAt() != null && record.expiresAt() > 0
+                ? Math.min(record.expiresAt(), now + 60_000L)
+                : Long.MAX_VALUE);
+        muteCache.put(uuid, new CachedMute(record, cacheUntil));
+        return record;
+    }
+
+    private void invalidateMuteCache(UUID uuid) {
+        muteCache.remove(uuid);
+    }
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onMutedCommand(PlayerCommandPreprocessEvent event) {
-        PunishmentDatabase.PunishmentRecord mute = database.getActive(
-                event.getPlayer().getUniqueId(), PunishmentDatabase.PunishmentType.MUTE);
+        PunishmentDatabase.PunishmentRecord mute = getActiveMute(event.getPlayer().getUniqueId());
         if (mute == null) return;
         String label = event.getMessage().substring(1).split("\\s+")[0].toLowerCase(Locale.ROOT);
         int colon = label.indexOf(':');
@@ -1087,7 +1119,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onChat(AsyncChatEvent event) {
-        PunishmentDatabase.PunishmentRecord mute = database.getActive(event.getPlayer().getUniqueId(), PunishmentDatabase.PunishmentType.MUTE);
+        PunishmentDatabase.PunishmentRecord mute = getActiveMute(event.getPlayer().getUniqueId());
         if (mute == null) return;
         event.setCancelled(true);
         plugin.getServer().getScheduler().runTask(plugin, () ->

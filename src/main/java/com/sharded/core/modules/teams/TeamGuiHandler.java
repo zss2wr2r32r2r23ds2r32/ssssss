@@ -5,6 +5,7 @@ import com.sharded.core.modules.leaderboards.LeaderboardsModule;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.Text;
+import com.sharded.core.util.TrackedInventories;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -49,6 +50,12 @@ final class TeamGuiHandler {
         this.module = module;
     }
 
+    private static void trackAndOpen(Player player, TeamGuiHolder holder, Inventory inv) {
+        holder.inventory = inv;
+        TrackedInventories.track(inv, holder);
+        player.openInventory(inv);
+    }
+
     void openFor(Player player) {
         Integer teamId = module.database().getTeamId(player.getUniqueId());
         if (teamId == null) openCreateStart(player);
@@ -56,16 +63,18 @@ final class TeamGuiHandler {
     }
 
     void openCreateStart(Player player) {
-        Inventory inv = Bukkit.createInventory(new TeamGuiHolder(MenuType.CREATE_START, null, 0, 0), 27,
+        TeamGuiHolder holder = new TeamGuiHolder(MenuType.CREATE_START, null, 0, 0);
+        Inventory inv = Bukkit.createInventory(holder, 27,
                 Text.c(module.guiRaw("create-title")));
         fill(inv);
         inv.setItem(13, button(Material.ANVIL, module.guiRaw("create-anvil-name"),
                 module.guiRawList("create-anvil-lore")));
-        player.openInventory(inv);
+        trackAndOpen(player, holder, inv);
     }
 
     void openCreateConfirm(Player player, String name) {
-        Inventory inv = Bukkit.createInventory(new TeamGuiHolder(MenuType.CREATE_CONFIRM, name, 0, 0), 27,
+        TeamGuiHolder holder = new TeamGuiHolder(MenuType.CREATE_CONFIRM, name, 0, 0);
+        Inventory inv = Bukkit.createInventory(holder, 27,
                 Text.c(module.guiRaw("confirm-title", "%team%", name)));
         fill(inv);
         inv.setItem(11, button(Material.RED_STAINED_GLASS_PANE, module.guiRaw("cancel-name"),
@@ -76,11 +85,12 @@ final class TeamGuiHandler {
                 .build());
         inv.setItem(15, button(Material.LIME_STAINED_GLASS_PANE, module.guiRaw("confirm-name"),
                 module.guiRawList("confirm-lore")));
-        player.openInventory(inv);
+        trackAndOpen(player, holder, inv);
     }
 
     void openDisbandConfirm(Player player, String teamName) {
-        Inventory inv = Bukkit.createInventory(new TeamGuiHolder(MenuType.DISBAND_CONFIRM, teamName, 0, 0), 27,
+        TeamGuiHolder holder = new TeamGuiHolder(MenuType.DISBAND_CONFIRM, teamName, 0, 0);
+        Inventory inv = Bukkit.createInventory(holder, 27,
                 Text.c(module.guiRaw("disband-confirm-title", "%team%", teamName)));
         fill(inv);
         inv.setItem(11, button(Material.RED_STAINED_GLASS_PANE, module.guiRaw("cancel-name"),
@@ -89,7 +99,7 @@ final class TeamGuiHandler {
                 module.guiRawList("disband-lore")));
         inv.setItem(15, button(Material.LIME_STAINED_GLASS_PANE, module.guiRaw("disband-confirm-name"),
                 module.guiRawList("disband-confirm-lore")));
-        player.openInventory(inv);
+        trackAndOpen(player, holder, inv);
     }
 
     void openMain(Player player) {
@@ -102,7 +112,8 @@ final class TeamGuiHandler {
         TeamDatabase.Member self = module.database().getMember(teamId, player.getUniqueId());
         boolean leader = team != null && team.leaderUuid().equals(player.getUniqueId());
 
-        Inventory inv = Bukkit.createInventory(new TeamGuiHolder(MenuType.MAIN, null, 0, 0), 27,
+        TeamGuiHolder holder = new TeamGuiHolder(MenuType.MAIN, null, 0, 0);
+        Inventory inv = Bukkit.createInventory(holder, 27,
                 Text.c(module.guiRaw("main-title", "%team%", team == null ? "?" : team.name())));
         fill(inv);
 
@@ -124,7 +135,7 @@ final class TeamGuiHandler {
         } else if (self != null) {
             inv.setItem(4, button(Material.OAK_DOOR, module.guiRaw("leave-name"), module.guiRawList("leave-lore")));
         }
-        player.openInventory(inv);
+        trackAndOpen(player, holder, inv);
     }
 
     void openMembers(Player player) {
@@ -135,7 +146,8 @@ final class TeamGuiHandler {
         members.sort(Comparator.comparingInt(TeamDatabase.Member::role));
 
         int size = 54;
-        Inventory inv = Bukkit.createInventory(new TeamGuiHolder(MenuType.MEMBERS, null, 0, 0), size,
+        TeamGuiHolder holder = new TeamGuiHolder(MenuType.MEMBERS, null, 0, 0);
+        Inventory inv = Bukkit.createInventory(holder, size,
                 Text.c(module.guiRaw("members-title", "%team%", team == null ? "?" : team.name())));
         fill(inv, size);
 
@@ -152,7 +164,7 @@ final class TeamGuiHandler {
         }
 
         inv.setItem(49, navButton("back"));
-        player.openInventory(inv);
+        trackAndOpen(player, holder, inv);
     }
 
     void openBrowse(Player player, int page) {
@@ -162,7 +174,8 @@ final class TeamGuiHandler {
         int maxPage = Math.max(0, (teams.size() + perPage - 1) / perPage - 1);
         page = Math.max(0, Math.min(page, maxPage));
 
-        Inventory inv = Bukkit.createInventory(new TeamGuiHolder(MenuType.BROWSE, null, 0, page), 54,
+        TeamGuiHolder holder = new TeamGuiHolder(MenuType.BROWSE, null, 0, page);
+        Inventory inv = Bukkit.createInventory(holder, 54,
                 Text.c(module.guiRaw("browse-title")));
         fill(inv, 54);
 
@@ -182,7 +195,7 @@ final class TeamGuiHandler {
             inv.setItem(52, navButton("next"));
         }
         inv.setItem(53, navButton("back"));
-        player.openInventory(inv);
+        trackAndOpen(player, holder, inv);
     }
 
     void openProfile(Player player, int teamId) {
@@ -196,7 +209,8 @@ final class TeamGuiHandler {
         String rankText = rank > 0 ? String.valueOf(rank) : module.guiRaw("unranked");
         long score = teamScore(teamId, stats);
 
-        Inventory inv = Bukkit.createInventory(new TeamGuiHolder(MenuType.PROFILE, null, teamId, 0), 27,
+        TeamGuiHolder holder = new TeamGuiHolder(MenuType.PROFILE, null, teamId, 0);
+        Inventory inv = Bukkit.createInventory(holder, 27,
                 Text.c(module.guiRaw("profile-title", "%team%", team.name())));
         fill(inv);
 
@@ -210,7 +224,7 @@ final class TeamGuiHandler {
                         "%playtime%", module.formatPlaytime(stats.playtime),
                         "%score%", String.valueOf(score))));
         inv.setItem(22, navButton("back"));
-        player.openInventory(inv);
+        trackAndOpen(player, holder, inv);
     }
 
     void handleClick(Player player, TeamGuiHolder holder, int slot, ItemStack current) {

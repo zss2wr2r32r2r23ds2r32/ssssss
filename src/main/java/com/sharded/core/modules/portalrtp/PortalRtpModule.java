@@ -86,6 +86,7 @@ public final class PortalRtpModule extends Module implements CommandExecutor {
             cancelPending(event.getPlayer().getUniqueId(), true);
             return;
         }
+        if (!event.getPlayer().getWorld().getName().equalsIgnoreCase(portalWorld())) return;
         if (onTriggerBlock(to)) {
             tryOpen(event.getPlayer(), to.getBlock().getLocation());
         }

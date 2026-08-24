@@ -2,6 +2,7 @@ package com.sharded.core.gui;
 
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.Text;
+import com.sharded.core.util.TrackedInventories;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -69,8 +70,10 @@ public final class RewardPickerGui {
     }
 
     public void open(Player player) {
-        Inventory inv = Bukkit.createInventory(new Holder(id), size, Text.c(title));
-        ((Holder) inv.getHolder()).inventory = inv;
+        Holder holder = new Holder(id);
+        Inventory inv = Bukkit.createInventory(holder, size, Text.c(title));
+        holder.inventory = inv;
+        TrackedInventories.track(inv, holder);
         ItemStack filler = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build();
         for (int i = 0; i < size; i++) inv.setItem(i, filler);
         for (RewardOption option : bySlot.values()) {

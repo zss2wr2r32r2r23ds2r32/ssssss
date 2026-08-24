@@ -5,6 +5,7 @@ import com.sharded.core.module.Module;
 import com.sharded.core.util.BundleUtil;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.Text;
+import com.sharded.core.util.TrackedInventories;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.Bukkit;
@@ -170,6 +171,7 @@ public final class ArmorTrimsModule extends Module implements CommandExecutor {
         TrimHolder holder = new TrimHolder();
         Inventory inv = Bukkit.createInventory(holder, guiSize, Text.c(config.getString("title", "&8Armor Trim Station")));
         holder.inventory = inv;
+        TrackedInventories.track(inv, holder);
         loadOptions(holder);
         render(holder);
         player.openInventory(inv);
@@ -298,7 +300,9 @@ public final class ArmorTrimsModule extends Module implements CommandExecutor {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        if (!(event.getView().getTopInventory().getHolder() instanceof TrimHolder holder)) return;
+        TrimHolder holder = TrackedInventories.lookup(
+                event.getView().getTopInventory(), TrimHolder.class);
+        if (holder == null) return;
         if (!(event.getWhoClicked() instanceof Player player)) return;
 
         int rawSlot = event.getRawSlot();
@@ -372,7 +376,7 @@ public final class ArmorTrimsModule extends Module implements CommandExecutor {
 
     @EventHandler
     public void onDrag(InventoryDragEvent event) {
-        if (!(event.getView().getTopInventory().getHolder() instanceof TrimHolder)) return;
+        if (TrackedInventories.lookup(event.getView().getTopInventory(), TrimHolder.class) == null) return;
         for (int slot : event.getRawSlots()) {
             if (slot < event.getView().getTopInventory().getSize() && slot != armorSlot) {
                 event.setCancelled(true);
@@ -383,7 +387,8 @@ public final class ArmorTrimsModule extends Module implements CommandExecutor {
 
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
-        if (!(event.getInventory().getHolder() instanceof TrimHolder)) return;
+        TrimHolder holder = TrackedInventories.untrack(event.getInventory(), TrimHolder.class);
+        if (holder == null) return;
         ItemStack armor = event.getInventory().getItem(armorSlot);
         if (armor != null && !armor.getType().isAir() && event.getPlayer() instanceof Player player) {
             player.getInventory().addItem(armor).values()

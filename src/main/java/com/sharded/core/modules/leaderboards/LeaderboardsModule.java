@@ -4,6 +4,7 @@ import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.TabCompleteHelper;
+import com.sharded.core.util.TrackedInventories;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -110,7 +111,9 @@ public final class LeaderboardsModule extends Module implements CommandExecutor,
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) return;
-        if (!(event.getView().getTopInventory().getHolder() instanceof LeaderboardGuiHandler.Holder holder)) return;
+        LeaderboardGuiHandler.Holder holder = TrackedInventories.lookup(
+                event.getView().getTopInventory(), LeaderboardGuiHandler.Holder.class);
+        if (holder == null) return;
         event.setCancelled(true);
         if (event.getClickedInventory() != event.getView().getTopInventory()) return;
         gui.handleClick(player, holder, event.getSlot());

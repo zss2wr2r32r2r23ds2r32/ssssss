@@ -5,6 +5,7 @@ import com.sharded.core.module.Module;
 import com.sharded.core.util.ColorUtil;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.Text;
+import com.sharded.core.util.TrackedInventories;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -121,7 +122,9 @@ public final class EGlowModule extends Module implements CommandExecutor {
 
     public void openMenu(Player player) {
         int rows = config.getInt("menu-rows", 4);
-        Inventory inventory = plugin.getServer().createInventory(new GlowMenuHolder(), rows * 9, Text.c(MENU_TITLE));
+        GlowMenuHolder menuHolder = new GlowMenuHolder();
+        Inventory inventory = plugin.getServer().createInventory(menuHolder, rows * 9, Text.c(MENU_TITLE));
+        TrackedInventories.track(inventory, menuHolder);
 
         Material fillerMat = Material.matchMaterial(config.getString("filler-material", "BLACK_STAINED_GLASS_PANE"));
         if (fillerMat == null) fillerMat = Material.BLACK_STAINED_GLASS_PANE;
@@ -185,7 +188,7 @@ public final class EGlowModule extends Module implements CommandExecutor {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) return;
-        if (!(event.getView().getTopInventory().getHolder() instanceof GlowMenuHolder)) return;
+        if (TrackedInventories.lookup(event.getView().getTopInventory(), GlowMenuHolder.class) == null) return;
         event.setCancelled(true);
         if (event.getClickedInventory() != event.getView().getTopInventory()) return;
 
@@ -207,7 +210,7 @@ public final class EGlowModule extends Module implements CommandExecutor {
 
     @EventHandler
     public void onDrag(InventoryDragEvent event) {
-        if (event.getView().getTopInventory().getHolder() instanceof GlowMenuHolder) {
+        if (TrackedInventories.lookup(event.getView().getTopInventory(), GlowMenuHolder.class) != null) {
             event.setCancelled(true);
         }
     }

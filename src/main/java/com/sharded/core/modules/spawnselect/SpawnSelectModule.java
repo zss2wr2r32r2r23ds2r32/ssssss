@@ -272,10 +272,7 @@ public final class SpawnSelectModule extends Module implements CommandExecutor, 
                 player.teleport(spawn);
             });
         }
-        if (!hasExplicitSelection(player)) {
-            setSelection(player, "vanilla");
-        }
-        if (!config.getBoolean("prompt-on-join", false)) return;
+if (!config.getBoolean("prompt-on-join", false)) return;
         if (player.hasPlayedBefore()) return;
         if (hasExplicitSelection(player)) return;
         Bukkit.getScheduler().runTaskLater(plugin, () -> {

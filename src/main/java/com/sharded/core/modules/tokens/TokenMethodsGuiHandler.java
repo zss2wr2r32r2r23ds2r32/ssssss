@@ -4,6 +4,7 @@ import com.sharded.core.util.GuiFooters;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.PlaceholderUtil;
 import com.sharded.core.util.Text;
+import com.sharded.core.util.TrackedInventories;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -35,8 +36,10 @@ final class TokenMethodsGuiHandler {
 
     void open(Player player) {
         String title = module.configString("gui.title", "&8Token Methods");
-        Inventory inv = Bukkit.createInventory(new Holder(), 36, Text.c(title));
-        ((Holder) inv.getHolder()).inventory = inv;
+        Holder holder = new Holder();
+        Inventory inv = Bukkit.createInventory(holder, 36, Text.c(title));
+        holder.inventory = inv;
+        TrackedInventories.track(inv, holder);
         fill(inv);
 
         List<Map.Entry<String, ConfigurationSection>> methods = sortedMethods();

@@ -6,6 +6,7 @@ import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
+import com.sharded.core.util.TrackedInventories;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -185,6 +186,7 @@ public final class InvRollbackModule extends Module implements CommandExecutor, 
         int size = config.getInt("categories.size", 27);
         Holder holder = new Holder(Holder.Type.CATEGORIES, targetId, null, 0);
         Inventory inv = Bukkit.createInventory(holder, size, Text.c(config.getString("categories.title", "Rollback | %player%").replace("%player%", targetName)));
+        TrackedInventories.track(inv, holder);
         putCategory(inv, "auto", SnapshotReason.AUTO, targetId);
         putCategory(inv, "join", SnapshotReason.JOIN, targetId);
         putCategory(inv, "quit", SnapshotReason.QUIT, targetId);
@@ -210,7 +212,8 @@ public final class InvRollbackModule extends Module implements CommandExecutor, 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player staff)) return;
-        if (!(event.getView().getTopInventory().getHolder() instanceof Holder holder)) return;
+        Holder holder = TrackedInventories.lookup(event.getView().getTopInventory(), Holder.class);
+        if (holder == null) return;
         event.setCancelled(true);
         if (event.getClickedInventory() != event.getView().getTopInventory()) return;
 
@@ -255,6 +258,7 @@ public final class InvRollbackModule extends Module implements CommandExecutor, 
         }
         Holder holder = new Holder(Holder.Type.LIST, targetId, reason, page);
         Inventory inv = Bukkit.createInventory(holder, 54, Text.c("&8Rollback | " + reason.name()));
+        TrackedInventories.track(inv, holder);
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withZone(ZoneId.systemDefault());
         int slot = 0;
         for (Snapshot snap : list) {

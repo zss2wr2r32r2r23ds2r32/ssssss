@@ -4,6 +4,7 @@ import com.sharded.core.ShardedCore;
 import com.sharded.core.util.HeadUtil;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.Text;
+import com.sharded.core.util.TrackedInventories;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -81,8 +82,10 @@ final class CratesGuiHandler {
     }
 
     void open(Player player) {
-        Inventory inv = Bukkit.createInventory(new Holder(), size, Text.c(apply(player, title)));
-        ((Holder) inv.getHolder()).inventory = inv;
+        Holder holder = new Holder();
+        Inventory inv = Bukkit.createInventory(holder, size, Text.c(apply(player, title)));
+        holder.inventory = inv;
+        TrackedInventories.track(inv, holder);
         ItemStack filler = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build();
         for (int i = 0; i < size; i++) inv.setItem(i, filler);
         for (Map.Entry<Integer, ItemStack> e : icons.entrySet()) {
