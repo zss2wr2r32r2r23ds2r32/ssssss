@@ -94,10 +94,10 @@ commands:
     usage: /wardrobe
   tags:
     description: Open the tag equip menu
-    usage: /tags
+    usage: /tags [create|limited|delete|set|remove|custom] [args]
   tag:
     description: Tag admin and equip commands
-    usage: /tag <create|set|remove|limited|delete|custom> [args]
+    usage: /tag <create|limited|delete|set|remove|custom> [args]
   deathtoggle:
     description: Toggle seeing death messages
     usage: /deathtoggle [toggle]

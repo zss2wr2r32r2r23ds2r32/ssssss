@@ -47,6 +47,7 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
 
     private final RegionSetup setup = new RegionSetup();
     private final Map<String, CuboidRegion> regions = new HashMap<>();
+    private Set<String> sideWorlds = Set.of();
     private Set<String> hornBlockWorlds = Set.of("spawn");
 
     public ProtectModule(ShardedCore plugin) {
@@ -61,12 +62,19 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
 
     private void reloadRegions() {
         regions.clear();
+        Set<String> worlds = new HashSet<>();
         for (String key : List.of("spawn", "pvp", "side1", "side2", "side3", "side4")) {
             CuboidRegion r = CuboidRegion.fromSection(config.getConfigurationSection("regions." + key));
-            if (r != null) regions.put(key, r);
+            if (r != null) {
+                regions.put(key, r);
+                if (SIDE_KEYS.contains(key)) {
+                    worlds.add(r.world().toLowerCase(Locale.ROOT));
+                }
+            }
         }
-        List<String> worlds = config.getStringList("horn-block-worlds");
-        hornBlockWorlds = worlds.isEmpty() ? Set.of("spawn") : new HashSet<>(worlds);
+        sideWorlds = Set.copyOf(worlds);
+        List<String> hornWorlds = config.getStringList("horn-block-worlds");
+        hornBlockWorlds = hornWorlds.isEmpty() ? Set.of("spawn") : new HashSet<>(hornWorlds);
     }
 
     public CuboidRegion region(String id) {
@@ -84,9 +92,19 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
     }
 
     public boolean inSide(Location loc) {
+        if (loc == null || loc.getWorld() == null || sideWorlds.isEmpty()) return false;
+        if (!sideWorlds.contains(loc.getWorld().getName().toLowerCase(Locale.ROOT))) return false;
+        int x = loc.getBlockX();
+        int y = loc.getBlockY();
+        int z = loc.getBlockZ();
         for (String key : SIDE_KEYS) {
             CuboidRegion side = regions.get(key);
-            if (side != null && side.contains(loc)) return true;
+            if (side == null) continue;
+            if (x >= side.minX() && x <= side.maxX()
+                    && y >= side.minY() && y <= side.maxY()
+                    && z >= side.minZ() && z <= side.maxZ()) {
+                return true;
+            }
         }
         return false;
     }
@@ -258,16 +276,41 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onSideInteract(PlayerInteractEvent event) {
+        Block block = event.getClickedBlock();
+        if (block == null) return;
         Player player = event.getPlayer();
-        Location loc = event.getClickedBlock() != null
-                ? event.getClickedBlock().getLocation()
-                : player.getLocation();
-        if (!restrictSideBreakUse(player, loc)) return;
-        if (event.getItem() != null && event.getItem().getType() == Material.GOAT_HORN) return;
-        if (event.getClickedBlock() != null) {
-            event.setCancelled(true);
-            send(player, "no-use");
+        if (bypass(player)) return;
+        Location loc = block.getLocation();
+        if (!inSide(loc)) return;
+
+        if (event.getAction().isRightClick() && event.getItem() != null && allowsSidePlacement(event.getItem().getType())) {
+            return;
         }
+        if (!isSideUseBlocked(block.getType())) return;
+
+        event.setCancelled(true);
+        event.setUseInteractedBlock(Result.DENY);
+        send(player, "no-use");
+    }
+
+    /** Block placement / planting in side regions — still capped by {@link #onPlace}. */
+    private static boolean allowsSidePlacement(Material item) {
+        if (item.isBlock()) return true;
+        String name = item.name();
+        return name.endsWith("_SEEDS") || item == Material.BONE_MEAL || item == Material.NETHER_WART;
+    }
+
+    private static boolean isSideUseBlocked(Material type) {
+        if (BLOCKED_USE.contains(type)) return true;
+        if (!type.isInteractable()) return false;
+        String name = type.name();
+        return name.endsWith("_TRAPDOOR") || name.endsWith("_DOOR")
+                || name.endsWith("_FENCE_GATE") || name.endsWith("_BUTTON")
+                || name.equals("LEVER") || name.endsWith("_CHEST") || name.equals("BARREL")
+                || name.endsWith("FURNACE") || name.equals("HOPPER") || name.equals("DROPPER")
+                || name.equals("DISPENSER") || name.equals("CRAFTING_TABLE")
+                || name.equals("ENCHANTING_TABLE") || name.equals("ANVIL")
+                || name.equals("CHIPPED_ANVIL") || name.equals("DAMAGED_ANVIL");
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)

@@ -31,6 +31,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
+import java.util.Comparator;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -100,9 +101,14 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         loadTagSection(config.getConfigurationSection("limited-tags"), limitedTags);
         buildLimitedBlocklist();
         tagPageCache.clear();
-        tags.values().stream().filter(t -> !t.customInput()).forEach(tagPageCache::add);
+        tags.values().stream()
+                .filter(t -> !t.customInput())
+                .sorted(Comparator.comparingInt(TagOption::slot))
+                .forEach(tagPageCache::add);
         limitedPageCache.clear();
-        limitedPageCache.addAll(limitedTags.values());
+        limitedTags.values().stream()
+                .sorted(Comparator.comparingInt(TagOption::slot))
+                .forEach(limitedPageCache::add);
     }
 
     private void buildLimitedBlocklist() {
@@ -139,92 +145,9 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        String cmd = command.getName().toLowerCase(Locale.ROOT);
-        if (cmd.equals("tags")) {
-            if (!(sender instanceof Player player)) {
-                send(sender, "players-only");
-                return true;
-            }
-            if (!player.hasPermission("sharded.tags.use")) {
-                send(player, "no-permission");
-                return true;
-            }
-            openMainMenu(player);
+        if (args.length > 0 && handleSubcommand(sender, args)) {
             return true;
         }
-
-        if (args.length == 0) {
-            if (!(sender instanceof Player player)) {
-                send(sender, "players-only");
-                return true;
-            }
-            if (!player.hasPermission("sharded.tags.use")) {
-                send(player, "no-permission");
-                return true;
-            }
-            openMainMenu(player);
-            return true;
-        }
-
-        String sub = args[0].toLowerCase(Locale.ROOT);
-        if (sub.equals("create") && args.length >= 3) {
-            if (!sender.hasPermission("sharded.tags.admin")) {
-                send(sender, "no-permission");
-                return true;
-            }
-            String id = args[1].toLowerCase(Locale.ROOT);
-            String display = String.join(" ", java.util.Arrays.copyOfRange(args, 2, args.length));
-            createTag(sender, id, display, false);
-            return true;
-        }
-        if (sub.equals("limited") && args.length >= 3) {
-            if (!sender.hasPermission("sharded.tags.admin")) {
-                send(sender, "no-permission");
-                return true;
-            }
-            String id = args[1].toLowerCase(Locale.ROOT);
-            String display = String.join(" ", java.util.Arrays.copyOfRange(args, 2, args.length));
-            createTag(sender, id, display, true);
-            return true;
-        }
-        if (sub.equals("delete") && args.length >= 2) {
-            if (!sender.hasPermission("sharded.tags.admin")) {
-                send(sender, "no-permission");
-                return true;
-            }
-            deleteTag(sender, args[1].toLowerCase(Locale.ROOT));
-            return true;
-        }
-        if (sub.equals("set") && args.length >= 2) {
-            if (!(sender instanceof Player player)) {
-                send(sender, "players-only");
-                return true;
-            }
-            equipTagById(player, args[1].toLowerCase(Locale.ROOT));
-            return true;
-        }
-        if (sub.equals("remove")) {
-            if (!(sender instanceof Player player)) {
-                send(sender, "players-only");
-                return true;
-            }
-            removeTag(player);
-            return true;
-        }
-        if (sub.equals("custom")) {
-            if (!(sender instanceof Player player)) {
-                send(sender, "players-only");
-                return true;
-            }
-            if (!player.hasPermission("sharded.tag.custom")) {
-                send(player, "not-owned", "%tag%", "Custom Tag");
-                return true;
-            }
-            awaitingCustomTag.put(player.getUniqueId(), true);
-            send(player, "custom-prompt");
-            return true;
-        }
-
         if (!(sender instanceof Player player)) {
             send(sender, "players-only");
             return true;
@@ -233,7 +156,88 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
             send(player, "no-permission");
             return true;
         }
-        equipTagById(player, sub);
+        openMainMenu(player);
+        return true;
+    }
+
+    private boolean handleSubcommand(CommandSender sender, String[] args) {
+        String sub = args[0].toLowerCase(Locale.ROOT);
+        return switch (sub) {
+            case "create" -> handleCreate(sender, args, false);
+            case "limited" -> handleCreate(sender, args, true);
+            case "delete" -> handleDelete(sender, args);
+            case "set" -> handleSet(sender, args);
+            case "remove" -> handleRemove(sender);
+            case "custom" -> handleCustom(sender);
+            default -> handleEquipByName(sender, sub);
+        };
+    }
+
+    private boolean handleCreate(CommandSender sender, String[] args, boolean limited) {
+        if (!sender.hasPermission("sharded.tags.admin")) {
+            send(sender, "no-permission");
+            return true;
+        }
+        if (args.length < 3) {
+            send(sender, limited ? "tag-limited-usage" : "tag-create-usage");
+            return true;
+        }
+        createTag(sender, args[1].toLowerCase(Locale.ROOT),
+                String.join(" ", java.util.Arrays.copyOfRange(args, 2, args.length)), limited);
+        return true;
+    }
+
+    private boolean handleDelete(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("sharded.tags.admin")) {
+            send(sender, "no-permission");
+            return true;
+        }
+        if (args.length < 2) return false;
+        deleteTag(sender, args[1].toLowerCase(Locale.ROOT));
+        return true;
+    }
+
+    private boolean handleSet(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player player)) {
+            send(sender, "players-only");
+            return true;
+        }
+        if (args.length < 2) return false;
+        equipTagById(player, args[1].toLowerCase(Locale.ROOT));
+        return true;
+    }
+
+    private boolean handleRemove(CommandSender sender) {
+        if (!(sender instanceof Player player)) {
+            send(sender, "players-only");
+            return true;
+        }
+        removeTag(player);
+        return true;
+    }
+
+    private boolean handleCustom(CommandSender sender) {
+        if (!(sender instanceof Player player)) {
+            send(sender, "players-only");
+            return true;
+        }
+        if (!player.hasPermission("sharded.tag.custom")) {
+            send(player, "not-owned", "%tag%", "Custom Tag");
+            return true;
+        }
+        awaitingCustomTag.put(player.getUniqueId(), true);
+        send(player, "custom-prompt");
+        return true;
+    }
+
+    private boolean handleEquipByName(CommandSender sender, String id) {
+        if (!(sender instanceof Player player)) return false;
+        if (!tags.containsKey(id) && !limitedTags.containsKey(id)) return false;
+        if (!player.hasPermission("sharded.tags.use")) {
+            send(player, "no-permission");
+            return true;
+        }
+        equipTagById(player, id);
         return true;
     }
 
@@ -254,14 +258,13 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
             send(sender, "menu-full");
             return;
         }
-        String accent = TagDisplayUtil.accentColor(display);
         String path = sectionKey + "." + id;
         config.set(path + ".slot", slot);
         config.set(path + ".permission", "sharded.tag." + id);
         config.set(path + ".material", "NAME_TAG");
         config.set(path + ".display-name", display);
         config.set(path + ".tag-display", display);
-        config.set(path + ".lore", defaultTagLore(id, accent));
+        config.set(path + ".lore", defaultTagLore(id));
         if (limited) {
             List<String> blocked = new ArrayList<>();
             blocked.add(stripColors(display));
@@ -275,15 +278,15 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         send(sender, "tag-permission-hint", "%permission%", "sharded.tag." + id);
     }
 
-    private List<String> defaultTagLore(String id, String accent) {
+    private List<String> defaultTagLore(String id) {
         return List.of(
                 "&8Description",
                 "",
-                accent + "Information:",
-                accent + "| &fEquip this tag.",
-                accent + "| &fAnd stand out on tab!",
+                "%accent%Information:",
+                "%accent%| &fEquip this tag.",
+                "%accent%| &fAnd stand out on tab!",
                 "",
-                accent + "⚓ &fOwned: %tag_owned_" + id + "%",
+                "%accent%⚓ &fOwned: %tag_owned_" + id + "%",
                 "",
                 "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nClick&r &x&F&F&B&A&0&0To Apply");
     }
@@ -312,6 +315,9 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
 
     private void saveTagsConfig() {
         try {
+            if (!config.contains("config-version")) {
+                config.set("config-version", 15);
+            }
             config.save(new File(moduleFolder(), "config.yml"));
         } catch (Exception e) {
             plugin.getLogger().warning("[tags] Could not save config: " + e.getMessage());
@@ -335,7 +341,12 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
             return TabCompleteHelper.filter(args[1], ids);
         }
         if (args.length == 2 && (args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("limited"))) {
-            return List.of("<id>");
+            return TabCompleteHelper.filter(args[1], "<id>");
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("delete")) {
+            List<String> ids = new ArrayList<>(tags.keySet());
+            ids.addAll(limitedTags.keySet());
+            return TabCompleteHelper.filter(args[1], ids);
         }
         return List.of();
     }
@@ -460,10 +471,7 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
     }
 
     private String loreAccent(TagOption tag) {
-        if (tag.customInput()) {
-            return TagDisplayUtil.accentColor(tag.displayName());
-        }
-        return TagDisplayUtil.accentColor(tag.effectiveDisplay());
+        return TagDisplayUtil.accentColor(tag.displayName());
     }
 
     private String applyPlaceholders(String line, Map<String, String> placeholders) {
