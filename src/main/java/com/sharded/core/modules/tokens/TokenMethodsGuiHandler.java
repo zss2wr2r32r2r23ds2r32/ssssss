@@ -1,5 +1,6 @@
 package com.sharded.core.modules.tokens;
 
+import com.sharded.core.util.GuiFooters;
 import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.PlaceholderUtil;
 import com.sharded.core.util.Text;
@@ -39,8 +40,7 @@ final class TokenMethodsGuiHandler {
         fill(inv);
 
         List<Map.Entry<String, ConfigurationSection>> methods = sortedMethods();
-        String click = module.configString("gui.click-footer",
-                "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nClick&r &x&F&F&B&A&0&0To View");
+        String click = module.configString("gui.click-footer", GuiFooters.view());
 
         int rank = 1;
         int slotIndex = 0;

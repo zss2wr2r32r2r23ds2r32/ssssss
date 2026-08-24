@@ -2,6 +2,7 @@ package com.sharded.core.modules.teams;
 
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
+import com.sharded.core.util.GuiFooters;
 import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.PlaceholderUtil;
@@ -97,10 +98,9 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
     }
 
     String guiRaw(String key, String... replacements) {
-        String click = config.getString("gui.click-footer",
-                "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nClick&r &x&F&F&B&A&0&0");
-        String clickConfirm = config.getString("gui.click-footer-confirm", click);
-        String clickCancel = config.getString("gui.click-footer-cancel", click);
+        String click = config.getString("gui.click-footer", GuiFooters.view());
+        String clickConfirm = config.getString("gui.click-footer-confirm", GuiFooters.confirm());
+        String clickCancel = config.getString("gui.click-footer-cancel", GuiFooters.cancel());
         String msg = config.getString("gui." + key, "");
         msg = msg.replace("%click%", click)
                 .replace("%click_confirm%", clickConfirm)
@@ -109,10 +109,9 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
     }
 
     List<String> guiRawList(String key, String... replacements) {
-        String click = config.getString("gui.click-footer",
-                "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nClick&r &x&F&F&B&A&0&0");
-        String clickConfirm = config.getString("gui.click-footer-confirm", click);
-        String clickCancel = config.getString("gui.click-footer-cancel", click);
+        String click = config.getString("gui.click-footer", GuiFooters.view());
+        String clickConfirm = config.getString("gui.click-footer-confirm", GuiFooters.confirm());
+        String clickCancel = config.getString("gui.click-footer-cancel", GuiFooters.cancel());
         List<String> lines = new ArrayList<>(config.getStringList("gui." + key));
         if (lines.isEmpty()) {
             String single = config.getString("gui." + key);

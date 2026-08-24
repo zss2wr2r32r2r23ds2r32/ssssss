@@ -5,6 +5,7 @@ import com.sharded.core.module.Module;
 import com.sharded.core.util.ColorConfigUtil;
 import com.sharded.core.util.ColorUtil;
 import com.sharded.core.util.ItemBuilder;
+import com.sharded.core.util.GuiFooters;
 import com.sharded.core.util.TagDisplayUtil;
 import com.sharded.core.util.Text;
 import com.sharded.core.util.TabCompleteHelper;
@@ -51,16 +52,11 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
             "^((?:&x(?:&[0-9A-Fa-f]){6})|(?:&#[0-9A-Fa-f]{3,8})|(?:&[0-9a-fk-or]))(.+)$",
             Pattern.CASE_INSENSITIVE);
 
-    private static final int[] TAG_CONTENT_SLOTS = {
-            10, 11, 12, 13, 14, 15, 16,
-            19, 20, 21, 22, 23, 24, 25,
-            28, 29, 30, 31, 32, 33, 34,
-            37, 38, 39, 41, 42, 43
-    };
-    private static final int REMOVE_SLOT = 40;
-    private static final int PREV_SLOT = 45;
-    private static final int LIMITED_SLOT = 46;
-    private static final int NEXT_SLOT = 47;
+    private static final int[] TAG_CONTENT_SLOTS = {19, 20, 21, 22, 23, 24, 25};
+    private static final int REMOVE_SLOT = 45;
+    private static final int PREV_SLOT = 48;
+    private static final int LIMITED_SLOT = 49;
+    private static final int NEXT_SLOT = 50;
     private static final int BACK_SLOT = 53;
 
     private final List<TagOption> tagPageCache = new ArrayList<>();
@@ -388,25 +384,32 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         }
 
         if (page > 0) {
-            inventory.setItem(PREV_SLOT, navItem(config.getString("previous-page.name", "&ePrevious Page"),
+            inventory.setItem(PREV_SLOT, navItem(Material.PEONY,
+                    config.getString("previous-page.name", "&dPrevious Page"),
                     config.getStringList("previous-page.lore")));
         }
         if (page < maxPage) {
-            inventory.setItem(NEXT_SLOT, navItem(config.getString("next-page.name", "&eNext Page"),
+            inventory.setItem(NEXT_SLOT, navItem(Material.LIME_DYE,
+                    config.getString("next-page.name", "&aNext Page"),
                     config.getStringList("next-page.lore")));
         }
 
         if (limited) {
             inventory.setItem(BACK_SLOT, plugin.guiNavigation().build("back", config.getConfigurationSection("back-button")));
         } else {
-            inventory.setItem(BACK_SLOT, plugin.guiNavigation().build("close", config.getConfigurationSection("close-button")));
+            ItemStack back = new ItemBuilder(Material.NAME_TAG)
+                    .name(config.getString("close-button.display-name", GuiFooters.yellow("Back")))
+                    .lore(applyPlaceholders(config.getStringList("close-button.lore"), placeholders))
+                    .hideAll()
+                    .build();
+            inventory.setItem(BACK_SLOT, back);
         }
 
         player.openInventory(inventory);
     }
 
-    private ItemStack navItem(String name, List<String> lore) {
-        ItemBuilder builder = new ItemBuilder(Material.ARROW).name(name).hideAll();
+    private ItemStack navItem(Material material, String name, List<String> lore) {
+        ItemBuilder builder = new ItemBuilder(material).name(name).hideAll();
         if (lore != null && !lore.isEmpty()) builder.lore(lore);
         return builder.build();
     }
@@ -432,7 +435,7 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
                 "",
                 TagDisplayUtil.loreLine(accent, "⚓ &fOwned: ") + owned,
                 "",
-                "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&nClick&r &x&F&F&B&A&0&0To Apply");
+                GuiFooters.apply());
     }
 
     private String applyPlaceholders(String line, Map<String, String> placeholders) {
@@ -555,17 +558,13 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
             return;
         }
         clearEquippedTag(player);
-        TagOption chosen = tag;
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            if (!player.isOnline()) return;
-            if (plugin.cosmetics() != null) {
-                plugin.cosmetics().setTag(player, chosen.id(), chosen.effectiveDisplay());
-            }
-            if (chosen.applyCommand() != null && !chosen.applyCommand().isBlank()) {
-                runApplyCommand(player, chosen, null);
-            }
-            send(player, "equipped", "%tag%", chosen.displayName());
-        }, 2L);
+        if (plugin.cosmetics() != null) {
+            plugin.cosmetics().setTag(player, tag.id(), tag.effectiveDisplay());
+        }
+        if (tag.applyCommand() != null && !tag.applyCommand().isBlank()) {
+            runApplyCommand(player, tag, null);
+        }
+        send(player, "equipped", "%tag%", tag.displayName());
     }
 
     private void runApplyCommand(Player player, TagOption tag, String customValue) {
@@ -649,15 +648,14 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
 
         String finalInput = input;
         boolean chatCreation = fromChat;
-        long delay = config.getLong("custom-apply-delay-ticks", 5L);
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+        plugin.getServer().getScheduler().runTask(plugin, () -> {
             if (!player.isOnline()) return;
             if (plugin.cosmetics() != null) {
                 plugin.cosmetics().setTag(player, "custom", finalInput);
             }
             if (database != null) database.saveLastCustomTag(player.getUniqueId(), finalInput, chatCreation);
             send(player, chatCreation ? "custom-set" : "custom-reapplied", "%tag%", finalInput);
-        }, delay);
+        });
     }
 
     private void removeTag(Player player) {

@@ -52,6 +52,7 @@ import com.sharded.core.modules.crates.CratesModule;
 import com.sharded.core.modules.combat.CombatModule;
 import com.sharded.core.modules.koth.KothModule;
 import com.sharded.core.modules.outpost.OutpostModule;
+import com.sharded.core.modules.arena.ArenaModule;
 import com.sharded.core.modules.protect.ProtectModule;
 import com.sharded.core.modules.roles.RolesModule;
 import com.sharded.core.modules.teams.TeamsModule;
@@ -121,6 +122,7 @@ public final class ModuleManager {
         register(new OutpostModule(plugin));
         register(new KothModule(plugin));
         register(new ProtectModule(plugin));
+        register(new ArenaModule(plugin));
         register(new CombatModule(plugin));
     }
 

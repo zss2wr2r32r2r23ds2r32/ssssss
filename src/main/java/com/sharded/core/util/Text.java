@@ -21,6 +21,14 @@ public final class Text {
                 net.kyori.adventure.text.format.TextDecoration.State.FALSE);
     }
 
+    /** Action bar / sentence-case text — does not force bold words to uppercase. */
+    public static Component cPlain(String input) {
+        if (input == null || input.isEmpty()) return Component.empty();
+        return SERIALIZER.deserialize(ColorUtil.hexToLegacyPlain(input)).decorationIfAbsent(
+                net.kyori.adventure.text.format.TextDecoration.ITALIC,
+                net.kyori.adventure.text.format.TextDecoration.State.FALSE);
+    }
+
     /** Plain legacy string with § for Bukkit APIs that do not parse hex (boss bar titles). */
     public static String legacySection(String input) {
         if (input == null || input.isEmpty()) return "";

@@ -1,4 +1,4 @@
-config-version: 6
+config-version: 7
 message-mode: chat
 
 spawn-command-enabled: true

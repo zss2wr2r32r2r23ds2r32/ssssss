@@ -197,10 +197,7 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
             if (loc.getBlockY() > maxY) {
                 event.setCancelled(true);
                 send(player, "side-build-limit", "%y%", String.valueOf(maxY));
-                return;
             }
-            event.setCancelled(true);
-            send(player, "no-place");
             return;
         }
         if (!restrictSpawnOnly(player, loc)) return;

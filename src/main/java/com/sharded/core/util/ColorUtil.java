@@ -27,10 +27,28 @@ public final class ColorUtil {
         return s;
     }
 
+    /** Color normalization without uppercasing bold words — for action bars and mixed-case UI. */
+    public static String normalizePlain(String input) {
+        if (input == null || input.isEmpty()) return "";
+        String s = input.replace('§', '&');
+        s = DOUBLE_AMP.matcher(s).replaceAll("&");
+        s = convertExtendedHex(s);
+        s = fixShortHex(s);
+        return s;
+    }
+
     /** Converts full &#RRGGBB hex to &x&R&R&G&G&B&B for legacy serializers. */
     public static String hexToLegacy(String input) {
+        return hexToLegacy(input, true);
+    }
+
+    public static String hexToLegacyPlain(String input) {
+        return hexToLegacy(input, false);
+    }
+
+    private static String hexToLegacy(String input, boolean uppercaseBold) {
         if (input == null || input.isEmpty()) return "";
-        String s = normalize(input);
+        String s = uppercaseBold ? normalize(input) : normalizePlain(input);
         Matcher matcher = FULL_HEX.matcher(s);
         StringBuilder out = new StringBuilder();
         while (matcher.find()) {

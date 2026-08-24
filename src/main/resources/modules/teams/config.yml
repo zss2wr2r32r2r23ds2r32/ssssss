@@ -1,4 +1,4 @@
-config-version: 6
+config-version: 7
 prefix: '&x&F&F&B&A&0&0&lTEAMS &8▷ '
 message-mode: chat
 
@@ -34,9 +34,9 @@ placeholders:
   not-in-team: 'N/A'
 
 gui:
-  click-footer: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&nClick&r &x&F&F&B&A&0&0'
-  click-footer-confirm: '&x&9&F&F&0&0&0▷ &x&9&F&F&0&0&0&nClick&r &x&9&F&F&0&0&0To Confirm'
-  click-footer-cancel: '&x&F&F&2&7&2&7▷ &x&F&F&2&7&2&7&nClick&r &x&F&F&2&7&2&7To Cancel'
+  click-footer: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+  click-footer-confirm: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Confirm'
+  click-footer-cancel: '&x&F&F&2&7&2&7▷ &x&F&F&2&7&2&7&l&nCLICK&r &x&F&F&2&7&2&7To Cancel'
   color: '&x&F&F&B&A&0&0'
 
   create-title: '&8Create Team'
@@ -48,7 +48,7 @@ gui:
     - '&x&F&F&B&A&0&0| &fClick here to type'
     - '&x&F&F&B&A&0&0| &fyour team name in chat.'
     - ''
-    - '%click%to create'
+    - '%click%'
 
   confirm-title: '&8Confirm &f%team%'
   cancel-name: '&#FF2727&lCancel'
@@ -59,7 +59,7 @@ gui:
     - '&#FF2727| &fGo back and cancel'
     - '&#FF2727| &fteam creation.'
     - ''
-    - '%click_cancel%to cancel'
+    - '%click_cancel%'
   confirm-name: '&#9FFF00&lConfirm'
   confirm-lore:
     - '&8Descriptions'
@@ -68,7 +68,7 @@ gui:
     - '&#9FFF00| &fCreate this team'
     - '&#9FFF00| &fwith the name shown.'
     - ''
-    - '%click_confirm%to confirm'
+    - '%click_confirm%'
 
   main-title: '&8Team &f%team%'
   members-name: '&#9FFF00&lMembers'
@@ -79,7 +79,7 @@ gui:
     - '&#9FFF00| &fView and manage'
     - '&#9FFF00| &fall team members.'
     - ''
-    - '%click%to view'
+    - '%click%'
     - ''
     - '&7Total: &f%count%'
 
@@ -91,7 +91,7 @@ gui:
     - '&#00D4FF| &fView other teams'
     - '&#00D4FF| &fand their statistics.'
     - ''
-    - '%click%to browse'
+    - '%click%'
 
   emergency-name: '&#FF2727&lEmergency'
   emergency-lore:
@@ -101,7 +101,7 @@ gui:
     - '&#FF2727| &fAlert your team members'
     - '&#FF2727| &fwith your location.'
     - ''
-    - '%click%to alert'
+    - '%click%'
 
   chat-name: '&x&F&F&B&A&0&0&lTeam Chat'
   chat-lore:
@@ -112,7 +112,7 @@ gui:
     - ''
     - '&x&F&F&B&A&0&0⚓ &fStatus: %status%'
     - ''
-    - '%click%to toggle'
+    - '%click%'
 
   allies-name: '&#FFD700&lAllies'
   allies-lore:
@@ -124,7 +124,7 @@ gui:
     - ''
     - '&#FFD700Allies: &f%count%/%max%'
     - ''
-    - '%click%for info'
+    - '%click%'
 
   leaderboard-name: '&#FFD700&lTeam Leaderboard'
   leaderboard-lore:
@@ -134,7 +134,7 @@ gui:
     - '&#FFD700| &fView the server'
     - '&#FFD700| &fteam leaderboard.'
     - ''
-    - '%click%to view'
+    - '%click%'
 
   disband-name: '&#FF2727&lDisband team'
   disband-lore:
@@ -144,7 +144,7 @@ gui:
     - '&#FF2727| &fPermanently disband'
     - '&#FF2727| &fyour team.'
     - ''
-    - '%click%to disband'
+    - '%click%'
 
   leave-name: '&#FF2727&lLeave team'
   leave-lore:
@@ -153,7 +153,7 @@ gui:
     - '&#FF2727Information:'
     - '&#FF2727| &fLeave your current team.'
     - ''
-    - '%click%to leave'
+    - '%click%'
 
   disband-confirm-title: '&8Disband &f%team%?'
   disband-confirm-name: '&#9FFF00&lConfirm disband'
@@ -164,7 +164,7 @@ gui:
     - '&#FF2727| &fThis cannot be undone!'
     - '&#FF2727| &fAll members will be removed.'
     - ''
-    - '%click_confirm%to confirm'
+    - '%click_confirm%'
 
   back-name: '&#FFD700&lBack'
   previous-name: '&ePrevious page'
@@ -199,7 +199,7 @@ gui:
     - '&x&F&F&B&A&0&0| &fMembers: &f%count%'
     - '&x&F&F&B&A&0&0| &fLeaderboard: &f#%rank%'
     - ''
-    - '%click%to view profile'
+    - '%click%'
 
   profile-title: '&8Team &f%team%'
   profile-item-name: '&x&F&F&B&A&0&0&l%team%'
@@ -214,7 +214,7 @@ gui:
     - '&x&F&F&B&A&0&0| &fPlaytime: &f%playtime%'
     - '&x&F&F&B&A&0&0| &fScore: &f%score%'
     - ''
-    - '%click%to go back'
+    - '%click%'
 
   unranked: 'Unranked'
   browse-per-page: 21

@@ -86,7 +86,7 @@ public final class NameColorModule extends Module implements CommandExecutor, Ta
         if (section == null) return;
         for (String id : section.getKeys(false)) {
             ConfigurationSection color = section.getConfigurationSection(id);
-            if (color == null) continue;
+            if (color == null || !color.contains("slot")) continue;
             colors.put(id, new ColorOption(
                     id,
                     color.getInt("slot", 0),
@@ -229,21 +229,16 @@ public final class NameColorModule extends Module implements CommandExecutor, Ta
     }
 
     private void createColor(CommandSender sender, String id, String value) {
-        int rows = config.getInt("menu-rows", 6);
-        int slot = nextFreeSlot(rows * 9);
-        if (slot < 0) {
-            send(sender, "menu-full");
+        String normalized = CosmeticService.normalizeColorSpec(value);
+        if (config.getConfigurationSection("colors." + id) != null) {
+            config.set("colors." + id + ".value", normalized);
+            saveConfig();
+            loadColors();
+            send(sender, "color-created", "%color%", id);
             return;
         }
-        String normalized = CosmeticService.normalizeColorSpec(value);
-        config.set("colors." + id + ".slot", slot);
         config.set("colors." + id + ".permission", "sharded.namecolor." + id);
         config.set("colors." + id + ".value", normalized);
-        config.set("colors." + id + ".material", "NAME_TAG");
-        config.set("colors." + id + ".display-name", "&f" + id);
-        config.set("colors." + id + ".lore", List.of(
-                "&8Descriptions", "", "&#9FFF00Information:",
-                "&#9FFF00| &fEquip this name colour.", "", "%click%to apply"));
         saveConfig();
         loadColors();
         send(sender, "color-created", "%color%", id);

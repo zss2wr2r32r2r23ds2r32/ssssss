@@ -314,6 +314,9 @@ commands:
   protect:
     description: Region protection setup
     usage: /protect [pos1|pos2|setregion <spawn|pvp|side1-4>]
+  arena:
+    description: Arena snapshot and reset for side regions
+    usage: /arena snapshot|reset <arena|side1-side4> [fast]
   combat:
     description: Combat region setup
     usage: /combat [pos1|pos2|setregion]
@@ -696,6 +699,9 @@ permissions:
     default: op
   sharded.protect.bypass:
     description: Bypass spawn/pvp protect restrictions
+    default: op
+  sharded.arena.admin:
+    description: Arena snapshot and reset
     default: op
   sharded.rewards.use:
     description: Open /rewards menu
