@@ -1,4 +1,4 @@
-config-version: 4
+config-version: 5
 prefix: '&#FF2727&lOUTPOST &8▷ &r'
 message-mode: chat
 allowed-worlds:
@@ -7,9 +7,12 @@ capture-percent-per-second: 1.0
 token-reward: 500
 max-unclaimed-seconds: 600
 active-sound-instrument: PONDER_GOAT_HORN
-active-sound-interval-seconds: 90
 actionbar: '&f%percent%% captured'
 actionbar-contested: '&cContested — solo capture required!'
 bossbar-active: '%prefix%&f%capturer% &8| &f%percent%%'
 bossbar-empty: '%prefix%&fN/A &8| &fEnds in &f%empty_time%'
+capture-rewards:
+  tokens: 500
+  commands:
+    - '[console] excellentcrates key give %player_name% OUTPOST 1'
 region: {}

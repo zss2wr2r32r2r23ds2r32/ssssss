@@ -27,6 +27,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -81,6 +82,10 @@ public final class SpawnSelectModule extends Module implements CommandExecutor, 
     }
 
     private boolean handleSpawn(Player player, String[] args) {
+        if (!config.getBoolean("spawn-command-enabled", true)) {
+            send(player, "spawn-disabled");
+            return true;
+        }
         if (args.length == 0) {
             startMainTeleport(player);
             return true;
@@ -148,8 +153,13 @@ public final class SpawnSelectModule extends Module implements CommandExecutor, 
                     return;
                 }
                 String bar = config.getString("main-teleport-actionbar",
-                        "&7Teleporting in &f%seconds%s &7— do not move!");
+                        "&#FF005D&lSPAWN &8▷ &fTeleporting you to spawn in &#FF005D&n%seconds%&r&#FF005Ds");
                 player.sendActionBar(Text.c(bar.replace("%seconds%", String.valueOf(left))));
+                String tickSound = config.getString("countdown-sound", "UI_BUTTON_CLICK");
+                try {
+                    player.playSound(player.getLocation(), Sound.valueOf(tickSound.toUpperCase(Locale.ROOT)), 0.6f, 1.2f);
+                } catch (IllegalArgumentException ignored) {
+                }
                 left--;
             }
         }, 0L, 20L);

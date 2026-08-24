@@ -27,9 +27,9 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
-      - '[deny_if_permission] ezcolor.color.red'
+      - '[deny_if_permission] sharded.chatcolor.red'
       - '[tokens_take] 300'
-      - '[console] lp user %player_name% permission set ezcolor.color.red true'
+      - '[console] lp user %player_name% permission set sharded.chatcolor.red true'
       - '[message] %token_prefix%&#9FFF00Unlocked Red Chat! Use &f/chatcolor&#9FFF00.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
@@ -48,9 +48,9 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
-      - '[deny_if_permission] ezcolor.color.orange'
+      - '[deny_if_permission] sharded.chatcolor.orange'
       - '[tokens_take] 300'
-      - '[console] lp user %player_name% permission set ezcolor.color.orange true'
+      - '[console] lp user %player_name% permission set sharded.chatcolor.orange true'
       - '[message] %token_prefix%&#9FFF00Unlocked Orange Chat! Use &f/chatcolor&#9FFF00.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
@@ -69,9 +69,9 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
-      - '[deny_if_permission] ezcolor.color.yellow'
+      - '[deny_if_permission] sharded.chatcolor.yellow'
       - '[tokens_take] 300'
-      - '[console] lp user %player_name% permission set ezcolor.color.yellow true'
+      - '[console] lp user %player_name% permission set sharded.chatcolor.yellow true'
       - '[message] %token_prefix%&#9FFF00Unlocked Yellow Chat! Use &f/chatcolor&#9FFF00.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
@@ -90,9 +90,9 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
-      - '[deny_if_permission] ezcolor.color.lime'
+      - '[deny_if_permission] sharded.chatcolor.lime'
       - '[tokens_take] 300'
-      - '[console] lp user %player_name% permission set ezcolor.color.lime true'
+      - '[console] lp user %player_name% permission set sharded.chatcolor.lime true'
       - '[message] %token_prefix%&#9FFF00Unlocked Lime Chat! Use &f/chatcolor&#9FFF00.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
@@ -111,9 +111,9 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
-      - '[deny_if_permission] ezcolor.color.aqua'
+      - '[deny_if_permission] sharded.chatcolor.aqua'
       - '[tokens_take] 300'
-      - '[console] lp user %player_name% permission set ezcolor.color.aqua true'
+      - '[console] lp user %player_name% permission set sharded.chatcolor.aqua true'
       - '[message] %token_prefix%&#9FFF00Unlocked Aqua Chat! Use &f/chatcolor&#9FFF00.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
@@ -132,9 +132,9 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
-      - '[deny_if_permission] ezcolor.color.purple'
+      - '[deny_if_permission] sharded.chatcolor.purple'
       - '[tokens_take] 300'
-      - '[console] lp user %player_name% permission set ezcolor.color.purple true'
+      - '[console] lp user %player_name% permission set sharded.chatcolor.purple true'
       - '[message] %token_prefix%&#9FFF00Unlocked Purple Chat! Use &f/chatcolor&#9FFF00.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
@@ -153,8 +153,8 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
-      - '[deny_if_permission] ezcolor.color.rainbow'
+      - '[deny_if_permission] sharded.chatcolor.rainbow'
       - '[tokens_take] 1500'
-      - '[console] lp user %player_name% permission set ezcolor.color.rainbow true'
+      - '[console] lp user %player_name% permission set sharded.chatcolor.rainbow true'
       - '[message] %token_prefix%&#9FFF00Unlocked Rainbow Chat! Use &f/chatcolor&#9FFF00.'
       - '[sound] ENTITY_PLAYER_LEVELUP'

@@ -27,9 +27,9 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
-      - '[deny_if_permission] eternaltags.tag.mvp'
+      - '[deny_if_permission] sharded.tag.mvp'
       - '[tokens_take] 100'
-      - '[console] lp user %player_name% permission set eternaltags.tag.mvp true'
+      - '[console] lp user %player_name% permission set sharded.tag.mvp true'
       - '[message] %token_prefix%&#9FFF00You unlocked the MVP Tag! Use &f/tags &#9FFF00to equip.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
@@ -48,9 +48,9 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
-      - '[deny_if_permission] eternaltags.tag.diamond'
+      - '[deny_if_permission] sharded.tag.diamond'
       - '[tokens_take] 600'
-      - '[console] lp user %player_name% permission set eternaltags.tag.diamond true'
+      - '[console] lp user %player_name% permission set sharded.tag.diamond true'
       - '[message] %token_prefix%&#9FFF00You unlocked the Diamond Tag! Use &f/tags &#9FFF00to equip.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
@@ -69,9 +69,9 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
-      - '[deny_if_permission] eternaltags.tag.elite'
+      - '[deny_if_permission] sharded.tag.elite'
       - '[tokens_take] 800'
-      - '[console] lp user %player_name% permission set eternaltags.tag.elite true'
+      - '[console] lp user %player_name% permission set sharded.tag.elite true'
       - '[message] %token_prefix%&#9FFF00You unlocked the Elite Tag! Use &f/tags &#9FFF00to equip.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
@@ -90,9 +90,9 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
-      - '[deny_if_permission] eternaltags.tag.sweat'
+      - '[deny_if_permission] sharded.tag.sweat'
       - '[tokens_take] 1000'
-      - '[console] lp user %player_name% permission set eternaltags.tag.sweat true'
+      - '[console] lp user %player_name% permission set sharded.tag.sweat true'
       - '[message] %token_prefix%&#9FFF00You unlocked the Sweat Tag! Use &f/tags &#9FFF00to equip.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
@@ -111,9 +111,9 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
-      - '[deny_if_permission] eternaltags.tag.goat'
+      - '[deny_if_permission] sharded.tag.goat'
       - '[tokens_take] 1500'
-      - '[console] lp user %player_name% permission set eternaltags.tag.goat true'
+      - '[console] lp user %player_name% permission set sharded.tag.goat true'
       - '[message] %token_prefix%&#9FFF00You unlocked the Goat Tag! Use &f/tags &#9FFF00to equip.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
@@ -132,8 +132,8 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
-      - '[deny_if_permission] eternaltags.tag.custom'
+      - '[deny_if_permission] sharded.tag.custom'
       - '[tokens_take] 3000'
-      - '[console] lp user %player_name% permission set eternaltags.tag.custom true'
+      - '[console] lp user %player_name% permission set sharded.tag.custom true'
       - '[message] %token_prefix%&#9FFF00You unlocked a Custom Tag! Use &f/tags &#9FFF00to set it.'
       - '[sound] ENTITY_PLAYER_LEVELUP'

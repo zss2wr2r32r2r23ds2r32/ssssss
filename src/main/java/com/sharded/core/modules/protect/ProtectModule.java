@@ -141,10 +141,6 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
                     ? config.getConfigurationSection("regions." + id)
                     : config.createSection("regions." + id));
             saveConfig();
-            var arena = plugin.modules().get(com.sharded.core.modules.arena.ArenaModule.class);
-            if (arena != null) {
-                arena.linkRegion(id, built);
-            }
             send(player, "region-set", "%region%", id);
             return true;
         }

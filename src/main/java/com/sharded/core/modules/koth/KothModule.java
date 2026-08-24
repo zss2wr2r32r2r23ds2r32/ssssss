@@ -4,6 +4,7 @@ import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.modules.tokens.TokenService;
 import com.sharded.core.util.CuboidRegion;
+import com.sharded.core.util.EventRewards;
 import com.sharded.core.util.EventSounds;
 import com.sharded.core.util.GameEventCoordinator;
 import com.sharded.core.util.OfflinePlayers;
@@ -18,6 +19,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -244,7 +246,6 @@ public final class KothModule extends Module implements CommandExecutor, TabComp
             }
         }
         updateBossBar(now);
-        maybePlayActiveSound();
     }
 
     private void maybePlayActiveSound() {
@@ -298,13 +299,21 @@ public final class KothModule extends Module implements CommandExecutor, TabComp
                 .sorted(Map.Entry.<UUID, Double>comparingByValue(Comparator.reverseOrder()))
                 .limit(3)
                 .toList();
-        TokenService tokens = plugin.modules().tokens();
         for (int i = 0; i < top.size(); i++) {
-            long reward = config.getLong("rewards.rank-" + (i + 1), 1000L - i * 200L);
+            int rank = i + 1;
             UUID uuid = top.get(i).getKey();
-            if (tokens != null) tokens.give(uuid, reward);
+            ConfigurationSection rewardSection = config.getConfigurationSection("rewards.rank-" + rank);
+            long reward = rewardSection != null
+                    ? rewardSection.getLong("tokens", 0)
+                    : config.getLong("rewards.rank-" + rank, 1000L - (rank - 1) * 200L);
+            if (rewardSection != null) {
+                EventRewards.grant(plugin, uuid, rewardSection);
+            } else {
+                TokenService tokens = plugin.modules().tokens();
+                if (tokens != null && reward > 0) tokens.give(uuid, reward);
+            }
             Bukkit.broadcast(Text.c(modulePrefix() + raw("reward-line",
-                    "%rank%", String.valueOf(i + 1),
+                    "%rank%", String.valueOf(rank),
                     "%player%", OfflinePlayers.name(uuid),
                     "%amount%", String.valueOf(reward))));
         }

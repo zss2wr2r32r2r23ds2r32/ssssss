@@ -1,4 +1,4 @@
-config-version: 4
+config-version: 5
 prefix: '&#FF005D&lKOTH &8▷ &r'
 message-mode: chat
 allowed-worlds:
@@ -6,13 +6,19 @@ allowed-worlds:
 duration-seconds: 300
 max-unclaimed-seconds: 600
 active-sound-instrument: SING_GOAT_HORN
-active-sound-interval-seconds: 90
 points-per-hit: 5
 points-per-second-standing: 1
 actionbar: '&f%points% pts &7| &f%time%'
 bossbar-active: '%prefix%&f%leader% &7(%points% pts) &8| &f%time%'
 rewards:
-  rank-1: 1000
-  rank-2: 750
-  rank-3: 500
+  rank-1:
+    tokens: 1000
+    commands:
+      - '[console] excellentcrates key give %player_name% KOTH 1'
+  rank-2:
+    tokens: 750
+    commands: []
+  rank-3:
+    tokens: 500
+    commands: []
 region: {}

@@ -27,9 +27,9 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
-      - '[deny_if_permission] namecolor.set.color.red'
+      - '[deny_if_permission] sharded.namecolor.red'
       - '[tokens_take] 400'
-      - '[console] lp user %player_name% permission set namecolor.set.color.red true'
+      - '[console] lp user %player_name% permission set sharded.namecolor.red true'
       - '[message] %token_prefix%&#9FFF00Unlocked Red Name Colour! Use &f/namecolor&#9FFF00.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
@@ -48,9 +48,9 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
-      - '[deny_if_permission] namecolor.set.color.orange'
+      - '[deny_if_permission] sharded.namecolor.orange'
       - '[tokens_take] 400'
-      - '[console] lp user %player_name% permission set namecolor.set.color.orange true'
+      - '[console] lp user %player_name% permission set sharded.namecolor.orange true'
       - '[message] %token_prefix%&#9FFF00Unlocked Orange Name Colour! Use &f/namecolor&#9FFF00.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
@@ -69,9 +69,9 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
-      - '[deny_if_permission] namecolor.set.color.yellow'
+      - '[deny_if_permission] sharded.namecolor.yellow'
       - '[tokens_take] 400'
-      - '[console] lp user %player_name% permission set namecolor.set.color.yellow true'
+      - '[console] lp user %player_name% permission set sharded.namecolor.yellow true'
       - '[message] %token_prefix%&#9FFF00Unlocked Yellow Name Colour! Use &f/namecolor&#9FFF00.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
@@ -90,9 +90,9 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
-      - '[deny_if_permission] namecolor.set.color.lime'
+      - '[deny_if_permission] sharded.namecolor.lime'
       - '[tokens_take] 400'
-      - '[console] lp user %player_name% permission set namecolor.set.color.lime true'
+      - '[console] lp user %player_name% permission set sharded.namecolor.lime true'
       - '[message] %token_prefix%&#9FFF00Unlocked Lime Name Colour! Use &f/namecolor&#9FFF00.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
@@ -111,9 +111,9 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
-      - '[deny_if_permission] namecolor.set.color.aqua'
+      - '[deny_if_permission] sharded.namecolor.aqua'
       - '[tokens_take] 400'
-      - '[console] lp user %player_name% permission set namecolor.set.color.aqua true'
+      - '[console] lp user %player_name% permission set sharded.namecolor.aqua true'
       - '[message] %token_prefix%&#9FFF00Unlocked Aqua Name Colour! Use &f/namecolor&#9FFF00.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
@@ -132,9 +132,9 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
-      - '[deny_if_permission] namecolor.set.color.purple'
+      - '[deny_if_permission] sharded.namecolor.purple'
       - '[tokens_take] 400'
-      - '[console] lp user %player_name% permission set namecolor.set.color.purple true'
+      - '[console] lp user %player_name% permission set sharded.namecolor.purple true'
       - '[message] %token_prefix%&#9FFF00Unlocked Purple Name Colour! Use &f/namecolor&#9FFF00.'
       - '[sound] ENTITY_PLAYER_LEVELUP'
 
@@ -153,8 +153,8 @@ items:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
     left_click_commands:
-      - '[deny_if_permission] namecolor.set.color.custom'
+      - '[deny_if_permission] sharded.namecolor.custom'
       - '[tokens_take] 2000'
-      - '[console] lp user %player_name% permission set namecolor.set.color.custom true'
+      - '[console] lp user %player_name% permission set sharded.namecolor.custom true'
       - '[message] %token_prefix%&#9FFF00Unlocked Custom Gradient! Use &f/namecolor custom&#9FFF00.'
       - '[sound] ENTITY_PLAYER_LEVELUP'

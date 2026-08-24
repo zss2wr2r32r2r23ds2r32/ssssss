@@ -15,6 +15,10 @@ custom-reapplied: '%prefix%&#9FFF00Re-applied your saved custom tag!'
 custom-limited-blocked: '%prefix%&#FF2727That tag matches a limited-time tag and is not allowed.'
 custom-too-long: '%prefix%&#FF2727Custom tags can be at most &f5 &#FF2727letters (colors don''t count).'
 custom-cooldown: '%prefix%&#FF2727You can create a new custom tag in &f%time%&#FF2727.'
+tag-created: '%prefix%&#9FFF00Created tag &f%tag%&#9FFF00.'
+tag-deleted: '%prefix%&#9FFF00Deleted tag &f%tag%&#9FFF00.'
+tag-not-found: '%prefix%&#FF2727Tag &f%tag% &#FF2727not found.'
+menu-full: '%prefix%&#FF2727The tag menu is full.'
 
 message-modes:
   equipped: actionbar

@@ -82,12 +82,12 @@ commands:
     usage: /eglow [color/off]
     aliases: [glows, glowing]
   chatcolor:
-    description: Open the chat colour equip menu
-    usage: /chatcolor
+    description: Chat colour menu and commands
+    usage: /chatcolor [create|set|reset|delete|custom] [args]
     aliases: [chatcolors]
   namecolor:
-    description: Open the name colour equip menu
-    usage: /namecolor [custom]
+    description: Name colour menu and commands
+    usage: /namecolor [create|set|reset|delete|custom] [args]
     aliases: [namecolors]
   wardrobe:
     description: Open your cosmetic hat wardrobe
@@ -311,10 +311,6 @@ commands:
   combat:
     description: Combat region setup
     usage: /combat [pos1|pos2|setregion]
-  arena:
-    description: Arena reset tools
-    usage: /arena <reset|remove|snapshot> <region> [speed]
-    permission: sharded.crates.use
   crate:
     description: Open crate preview menu
     usage: /crate
@@ -689,7 +685,4 @@ permissions:
     default: true
   sharded.combat.admin:
     description: Setup combat region
-    default: op
-  sharded.arena.admin:
-    description: Manage arena resets
     default: op

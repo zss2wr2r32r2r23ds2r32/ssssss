@@ -4,6 +4,7 @@ import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.modules.tokens.TokenService;
 import com.sharded.core.util.CuboidRegion;
+import com.sharded.core.util.EventRewards;
 import com.sharded.core.util.EventSounds;
 import com.sharded.core.util.GameEventCoordinator;
 import com.sharded.core.util.OfflinePlayers;
@@ -18,6 +19,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -245,7 +247,6 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
                 }
             }
         }
-        maybePlayActiveSound();
         updateBossBar();
         long maxUnclaimedMs = config.getLong("max-unclaimed-seconds", 600) * 1000L;
         if (System.currentTimeMillis() - eventStartedAt >= maxUnclaimedMs && capturePercent < 100.0) {
@@ -310,9 +311,14 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
     }
 
     private void completeCapture(UUID uuid) {
-        long reward = config.getLong("token-reward", 500);
-        TokenService tokens = plugin.modules().tokens();
-        if (tokens != null) tokens.give(uuid, reward);
+        ConfigurationSection rewards = config.getConfigurationSection("capture-rewards");
+        long reward = rewards != null ? rewards.getLong("tokens", config.getLong("token-reward", 500)) : config.getLong("token-reward", 500);
+        if (rewards != null) {
+            EventRewards.grant(plugin, uuid, rewards);
+        } else {
+            TokenService tokens = plugin.modules().tokens();
+            if (tokens != null) tokens.give(uuid, reward);
+        }
         Player player = Bukkit.getPlayer(uuid);
         if (player != null) {
             send(player, "captured", "%amount%", String.valueOf(reward));

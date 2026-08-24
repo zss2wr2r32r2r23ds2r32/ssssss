@@ -53,7 +53,7 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
     protected void onEnable() {
         region = CuboidRegion.fromSection(config.getConfigurationSection("region"));
         registerCommand("combat", this);
-        tickTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this::tick, 10L, 10L);
+        tickTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this::tick, 5L, 5L);
     }
 
     @Override
@@ -140,16 +140,20 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onPearl(PlayerTeleportEvent event) {
-        if (event.getCause() != PlayerTeleportEvent.TeleportCause.ENDER_PEARL) return;
+    public void onTeleport(PlayerTeleportEvent event) {
         if (!(event.getPlayer() instanceof Player player)) return;
         if (!isTagged(player)) return;
         ProtectModule protect = plugin.modules().get(ProtectModule.class);
         CuboidRegion spawn = spawnRegion(protect);
         Location to = event.getTo();
         if (spawn == null || to == null) return;
-        if (spawn.contains(to)) {
-            event.setCancelled(true);
+        if (!spawn.world().equals(to.getWorld().getName())) return;
+        if (!spawn.contains(to)) return;
+
+        event.setCancelled(true);
+        Location safe = nearestOutside(spawn, event.getFrom());
+        Bukkit.getScheduler().runTask(plugin, () -> pushBack(player, safe, spawn));
+        if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
             send(player, "no-pearl-spawn");
         }
     }
@@ -163,53 +167,49 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
         Location to = event.getTo();
         Location from = event.getFrom();
         if (to == null) return;
-
         if (!spawn.world().equals(to.getWorld().getName())) return;
-
-        boolean toSpawn = spawn.contains(to);
-        boolean fromSpawn = spawn.contains(from);
-        if (!toSpawn) return;
+        if (!spawn.contains(to)) return;
 
         event.setCancelled(true);
-        event.setTo(from);
-        Location safe = fromSpawn ? ejectFromSpawn(event.getPlayer(), spawn, from) : from.clone();
-        pushBack(event.getPlayer(), safe, spawn);
+        Location safe = spawn.contains(from) ? nearestOutside(spawn, from) : from.clone();
+        Bukkit.getScheduler().runTask(plugin, () -> pushBack(event.getPlayer(), safe, spawn));
     }
 
-    /** Combat module region takes priority; falls back to protect spawn. */
     private CuboidRegion spawnRegion(ProtectModule protect) {
         if (region != null) return region;
         return protect == null ? null : protect.region("spawn");
     }
 
-    private Location ejectFromSpawn(Player player, CuboidRegion spawn, Location inside) {
-        int x = inside.getBlockX();
-        int z = inside.getBlockZ();
-        int cx = (spawn.minX() + spawn.maxX()) / 2;
-        int cz = (spawn.minZ() + spawn.maxZ()) / 2;
-        int dx = x - cx;
-        int dz = z - cz;
-        if (dx == 0 && dz == 0) dz = 1;
-        double len = Math.sqrt(dx * dx + dz * dz);
-        int outX = x + (int) Math.round(dx / len * 3);
-        int outZ = z + (int) Math.round(dz / len * 3);
-        Location out = new Location(inside.getWorld(), outX + 0.5, inside.getY(), outZ + 0.5, inside.getYaw(), inside.getPitch());
-        if (spawn.contains(out)) {
-            out.setX(x + (dx >= 0 ? spawn.maxX() - spawn.minX() + 2 : -2));
+    private Location nearestOutside(CuboidRegion spawn, Location loc) {
+        int x = loc.getBlockX();
+        int y = loc.getBlockY();
+        int z = loc.getBlockZ();
+        int nx = x;
+        int nz = z;
+        if (!spawn.contains(loc)) {
+            return loc.clone();
         }
-        return out;
+        int dxMin = x - spawn.minX();
+        int dxMax = spawn.maxX() - x;
+        int dzMin = z - spawn.minZ();
+        int dzMax = spawn.maxZ() - z;
+        int min = Math.min(Math.min(dxMin, dxMax), Math.min(dzMin, dzMax));
+        if (min == dxMin) nx = spawn.minX() - 1;
+        else if (min == dxMax) nx = spawn.maxX() + 1;
+        else if (min == dzMin) nz = spawn.minZ() - 1;
+        else nz = spawn.maxZ() + 1;
+        return new Location(loc.getWorld(), nx + 0.5, y, nz + 0.5, loc.getYaw(), loc.getPitch());
     }
 
     private void pushBack(Player player, Location safe, CuboidRegion spawn) {
+        if (!player.isOnline()) return;
         player.teleport(safe);
         int cx = (spawn.minX() + spawn.maxX()) / 2;
         int cz = (spawn.minZ() + spawn.maxZ()) / 2;
         Vector push = safe.toVector().subtract(new Vector(cx, safe.getY(), cz));
-        if (push.lengthSquared() < 0.01) {
-            push = new Vector(0, 0, 1);
-        }
-        push.normalize().multiply(config.getDouble("pushback-strength", 1.2));
-        push.setY(config.getDouble("pushback-y", 0.4));
+        if (push.lengthSquared() < 0.01) push = new Vector(0, 0, 1);
+        push.normalize().multiply(config.getDouble("pushback-strength", 1.5));
+        push.setY(config.getDouble("pushback-y", 0.35));
         player.setVelocity(push);
         send(player, "pushback");
         if (config.getBoolean("red-glass-walls", true)) {
@@ -242,8 +242,9 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
                 wasTagged.add(id);
                 CuboidRegion spawn = spawnRegion(protect);
                 if (spawn != null && spawn.contains(player.getLocation())) {
-                    Location ejected = ejectFromSpawn(player, spawn, player.getLocation());
-                    player.teleport(ejected);
+                    Location safe = nearestOutside(spawn, player.getLocation());
+                    player.teleport(safe);
+                    pushBack(player, safe, spawn);
                 }
                 if (eventActionBarActive(player, koth, outpost)) continue;
                 long left = (until - now) / 1000L;

@@ -1,8 +1,0 @@
-prefix: '%prefix%'
-no-permission: '%prefix%&#FF2727You do not have permission.'
-usage: '%prefix%&#FF2727Usage: &f/arena reset <region> [speed] &7| &f/arena remove <region> &7| &f/arena snapshot <region>'
-reset-started: '%prefix%&#9FFF00Resetting region &f%region%&#9FFF00...'
-removed: '%prefix%&#9FFF00Removed arena &f%region%&#9FFF00.'
-snapshot-saved: '%prefix%&#9FFF00Snapshot saved for &f%region%&#9FFF00.'
-no-snapshot: '%prefix%&#FF2727No snapshot for &f%region%&#FF2727. Run &f/arena snapshot %region%&#FF2727 first.'
-no-region: '%prefix%&#FF2727No arena region linked for &f%region%&#FF2727. Set it with &f/protect setregion %region%&#FF2727 first.'

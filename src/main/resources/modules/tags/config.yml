@@ -1,10 +1,10 @@
-config-version: 9
+config-version: 10
 message-mode: chat
 
 menu-title: 'Tags'
-menu-size: 27
-limited-menu-title: 'Limited Time Tags'
-limited-menu-size: 27
+menu-size: 54
+limited-menu-title: 'Limited time tags'
+limited-menu-size: 54
 limited-close-slot: 26
 
 apply-command: 'eternaltags:tags set %tag_id% %player_name%'

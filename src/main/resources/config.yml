@@ -64,4 +64,3 @@ modules:
   koth: true
   protect: true
   combat: true
-  arena: true

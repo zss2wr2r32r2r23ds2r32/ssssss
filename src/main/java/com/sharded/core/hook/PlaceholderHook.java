@@ -148,6 +148,22 @@ public final class PlaceholderHook implements Listener {
                         return team == null ? teams.notInTeamPlaceholder() : team.name();
                     }
                 }
+
+                if (plugin.cosmetics() != null && plugin.cosmetics().database() != null) {
+                    var cosmetics = plugin.cosmetics().database().get(player.getUniqueId());
+                    if (p.equals("tag") || p.equals("tag_display")) {
+                        return cosmetics.tagDisplay() == null ? "" : ColorUtil.normalize(cosmetics.tagDisplay());
+                    }
+                    if (p.equals("name_color") || p.equals("namecolor")) {
+                        return cosmetics.nameColor() == null ? "" : cosmetics.nameColor();
+                    }
+                    if (p.equals("chat_color") || p.equals("chatcolor")) {
+                        return cosmetics.chatColor() == null ? "" : cosmetics.chatColor();
+                    }
+                    if (p.equals("formatted_name") && player.isOnline() && player.getPlayer() != null) {
+                        return ColorUtil.normalize(plugin.cosmetics().formattedName(player.getPlayer()));
+                    }
+                }
             }
 
             if (p.startsWith("tokens_top_") || p.startsWith("token_top_")) {

@@ -1,13 +1,17 @@
 package com.sharded.core.modules.chatcolor;
 
 import com.sharded.core.ShardedCore;
+import com.sharded.core.cosmetics.CosmeticService;
 import com.sharded.core.module.Module;
 import com.sharded.core.util.ItemBuilder;
+import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -16,13 +20,17 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-/** EZColor chat colour equip menu — requires ezcolor.color.* permissions. */
-public final class ChatColorModule extends Module implements CommandExecutor {
+/** Chat colour equip — sharded.chatcolor.* permissions. */
+public final class ChatColorModule extends Module implements CommandExecutor, TabCompleter {
 
     private static final String MENU_TITLE = "Chat Colours";
     private final Map<String, ColorOption> colors = new LinkedHashMap<>();
@@ -45,23 +53,18 @@ public final class ChatColorModule extends Module implements CommandExecutor {
         registerCommand("chatcolors", this);
     }
 
-    @Override
-    protected void onDisable() {
-        // Never reset player chat colours on reload.
-    }
-
     private void loadColors() {
         colors.clear();
-        var section = config.getConfigurationSection("colors");
+        ConfigurationSection section = config.getConfigurationSection("colors");
         if (section == null) return;
         for (String id : section.getKeys(false)) {
-            var color = section.getConfigurationSection(id);
+            ConfigurationSection color = section.getConfigurationSection(id);
             if (color == null) continue;
             colors.put(id, new ColorOption(
                     id,
                     color.getInt("slot", 0),
-                    color.getString("permission", "ezcolor.color." + id),
-                    color.getString("command", "ezcolor #" + id),
+                    color.getString("permission", "sharded.chatcolor." + id),
+                    color.getString("value", "&f"),
                     color.getString("material", "RED_DYE"),
                     color.getString("display-name", id),
                     color.getStringList("lore")
@@ -71,6 +74,54 @@ public final class ChatColorModule extends Module implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (args.length == 0) {
+            if (!(sender instanceof Player player)) {
+                send(sender, "players-only");
+                return true;
+            }
+            if (!player.hasPermission("sharded.chatcolor.use")) {
+                send(player, "no-permission");
+                return true;
+            }
+            openMenu(player);
+            return true;
+        }
+
+        String sub = args[0].toLowerCase(Locale.ROOT);
+        if (sub.equals("create") && args.length >= 3) {
+            if (!sender.hasPermission("sharded.chatcolor.admin")) {
+                send(sender, "no-permission");
+                return true;
+            }
+            createColor(sender, args[1].toLowerCase(Locale.ROOT),
+                    String.join(" ", java.util.Arrays.copyOfRange(args, 2, args.length)));
+            return true;
+        }
+        if (sub.equals("delete") && args.length >= 2) {
+            if (!sender.hasPermission("sharded.chatcolor.admin")) {
+                send(sender, "no-permission");
+                return true;
+            }
+            deleteColor(sender, args[1].toLowerCase(Locale.ROOT));
+            return true;
+        }
+        if (sub.equals("reset")) {
+            if (!(sender instanceof Player player)) {
+                send(sender, "players-only");
+                return true;
+            }
+            resetColor(player);
+            return true;
+        }
+        if (sub.equals("set") && args.length >= 2) {
+            if (!(sender instanceof Player player)) {
+                send(sender, "players-only");
+                return true;
+            }
+            applyColorById(player, args[1].toLowerCase(Locale.ROOT));
+            return true;
+        }
+
         if (!(sender instanceof Player player)) {
             send(sender, "players-only");
             return true;
@@ -79,12 +130,83 @@ public final class ChatColorModule extends Module implements CommandExecutor {
             send(player, "no-permission");
             return true;
         }
-        openMenu(player);
+        applyColorById(player, sub);
         return true;
     }
 
+    private void applyColorById(Player player, String id) {
+        ColorOption color = colors.get(id);
+        if (color == null) {
+            send(player, "color-not-found", "%color%", id);
+            return;
+        }
+        if (!player.hasPermission(color.permission())) {
+            send(player, "not-owned", "%color%", color.displayName());
+            return;
+        }
+        CosmeticService cosmetics = plugin.cosmetics();
+        if (cosmetics != null) {
+            cosmetics.setChatColor(player, CosmeticService.normalizeColorSpec(color.value()));
+        }
+        send(player, "applied", "%color%", color.displayName());
+    }
+
+    private void resetColor(Player player) {
+        CosmeticService cosmetics = plugin.cosmetics();
+        if (cosmetics != null) cosmetics.clearChatColor(player);
+        send(player, "removed");
+    }
+
+    private void createColor(CommandSender sender, String id, String value) {
+        int rows = config.getInt("menu-rows", 6);
+        int slot = nextFreeSlot(rows * 9);
+        if (slot < 0) {
+            send(sender, "menu-full");
+            return;
+        }
+        config.set("colors." + id + ".slot", slot);
+        config.set("colors." + id + ".permission", "sharded.chatcolor." + id);
+        config.set("colors." + id + ".value", CosmeticService.normalizeColorSpec(value));
+        config.set("colors." + id + ".material", "PAPER");
+        config.set("colors." + id + ".display-name", "&f" + id);
+        config.set("colors." + id + ".lore", List.of(
+                "&8Descriptions", "", "&#9FFF00Information:",
+                "&#9FFF00| &fEquip this chat colour.", "", "%click%to apply"));
+        saveConfig();
+        loadColors();
+        send(sender, "color-created", "%color%", id);
+    }
+
+    private void deleteColor(CommandSender sender, String id) {
+        if (config.getConfigurationSection("colors." + id) == null) {
+            send(sender, "color-not-found", "%color%", id);
+            return;
+        }
+        config.set("colors." + id, null);
+        saveConfig();
+        loadColors();
+        send(sender, "color-deleted", "%color%", id);
+    }
+
+    private int nextFreeSlot(int size) {
+        Set<Integer> used = colors.values().stream().map(ColorOption::slot).collect(Collectors.toSet());
+        used.add(config.getInt("remove.slot", 4));
+        for (int i = 0; i < size; i++) {
+            if (!used.contains(i)) return i;
+        }
+        return -1;
+    }
+
+    private void saveConfig() {
+        try {
+            config.save(new File(moduleFolder(), "config.yml"));
+        } catch (Exception e) {
+            plugin.getLogger().warning("[chatcolor] Could not save config: " + e.getMessage());
+        }
+    }
+
     public void openMenu(Player player) {
-        int rows = config.getInt("menu-rows", 4);
+        int rows = config.getInt("menu-rows", 6);
         Inventory inventory = plugin.getServer().createInventory(new MenuHolder(), rows * 9, Text.c(MENU_TITLE));
         Material fillerMat = Material.matchMaterial(config.getString("filler-material", "BLACK_STAINED_GLASS_PANE"));
         if (fillerMat == null) fillerMat = Material.BLACK_STAINED_GLASS_PANE;
@@ -104,7 +226,7 @@ public final class ChatColorModule extends Module implements CommandExecutor {
 
         int removeSlot = config.getInt("remove.slot", 4);
         inventory.setItem(removeSlot, new ItemBuilder(Material.BARRIER)
-                .name(config.getString("remove.display-name", "&c&lREMOVE CHAT COLOUR"))
+                .name(config.getString("remove.display-name", "&c&lRemove chat colour"))
                 .lore(apply(config.getStringList("remove.lore"), ph))
                 .hideAll()
                 .build());
@@ -131,20 +253,14 @@ public final class ChatColorModule extends Module implements CommandExecutor {
 
         if (event.getSlot() == config.getInt("remove.slot", 4)) {
             player.closeInventory();
-            run(player, config.getString("remove.command", "ezcolors reset"));
-            send(player, "removed");
+            resetColor(player);
             return;
         }
 
         for (ColorOption color : colors.values()) {
             if (color.slot() != event.getSlot()) continue;
             player.closeInventory();
-            if (!player.hasPermission(color.permission())) {
-                send(player, "not-owned", "%color%", color.displayName());
-                return;
-            }
-            run(player, color.command());
-            send(player, "applied", "%color%", color.displayName());
+            applyColorById(player, color.id());
             return;
         }
     }
@@ -154,9 +270,18 @@ public final class ChatColorModule extends Module implements CommandExecutor {
         if (event.getView().getTopInventory().getHolder() instanceof MenuHolder) event.setCancelled(true);
     }
 
-    private void run(Player player, String command) {
-        if (command.startsWith("/")) command = command.substring(1);
-        player.performCommand(command);
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (args.length == 1) {
+            List<String> subs = new ArrayList<>(List.of("set", "reset"));
+            if (sender.hasPermission("sharded.chatcolor.admin")) subs.addAll(List.of("create", "delete"));
+            subs.addAll(colors.keySet());
+            return TabCompleteHelper.filter(args[0], subs);
+        }
+        if (args.length == 2 && (args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("delete"))) {
+            return TabCompleteHelper.filter(args[1], colors.keySet());
+        }
+        return List.of();
     }
 
     private List<String> apply(List<String> lines, Map<String, String> ph) {
@@ -171,7 +296,7 @@ public final class ChatColorModule extends Module implements CommandExecutor {
         return out;
     }
 
-    private record ColorOption(String id, int slot, String permission, String command,
+    private record ColorOption(String id, int slot, String permission, String value,
                                String material, String displayName, List<String> lore) {
     }
 }

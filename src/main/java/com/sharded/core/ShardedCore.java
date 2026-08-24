@@ -1,5 +1,6 @@
 package com.sharded.core;
 
+import com.sharded.core.cosmetics.CosmeticService;
 import com.sharded.core.gui.GuiListener;
 import com.sharded.core.gui.GuiManager;
 import com.sharded.core.gui.GuiNavigation;
@@ -33,6 +34,7 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
     private GuiSounds guiSounds;
     private ModuleManager moduleManager;
     private CoreTabComplete coreTabComplete;
+    private CosmeticService cosmeticService;
 
     @Override
     public void onEnable() {
@@ -51,6 +53,9 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
         this.coreTabComplete = new CoreTabComplete(this);
         getServer().getPluginManager().registerEvents(new GuiListener(guiManager), this);
 
+        this.cosmeticService = new CosmeticService(this);
+        this.cosmeticService.enable();
+
         this.moduleManager = new ModuleManager(this);
         this.moduleManager.enableModules();
         placeholderHook.tryRegister();
@@ -64,6 +69,7 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
     @Override
     public void onDisable() {
         if (moduleManager != null) moduleManager.disableModules();
+        if (cosmeticService != null) cosmeticService.disable();
         if (stateStore != null) {
             stateStore.saveNow();
             stateStore.close();
@@ -149,6 +155,10 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
 
     public ModuleManager modules() {
         return moduleManager;
+    }
+
+    public CosmeticService cosmetics() {
+        return cosmeticService;
     }
 
     public CoreTabComplete coreTabComplete() {

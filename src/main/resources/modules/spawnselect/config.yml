@@ -1,21 +1,18 @@
-config-version: 3
+config-version: 4
 message-mode: chat
 
-# World used when portal RTP module is disabled
-fallback-world: world
+spawn-command-enabled: true
 main-teleport-seconds: 10
-main-teleport-actionbar: '&7Teleporting in &f%seconds%s &7— do not move!'
+main-teleport-actionbar: '&#FF005D&lSPAWN &8▷ &fTeleporting you to spawn in &#FF005D&n%seconds%&r&#FF005Ds'
+countdown-sound: UI_BUTTON_CLICK
 
-# Open spawn selector on first join (optional — closing without picking defaults to vanilla)
+fallback-world: world
 prompt-on-join: false
 prompt-delay-ticks: 40
 
-# Fallback RTP radius if portal RTP is disabled (normally uses portalrtp/config.yml)
 rtp-fallback:
   center-x: 0
   center-z: 0
   min-radius: 100
   max-radius: 500
   max-attempts: 25
-
-# main-spawn and vanilla-world are set via /setspawn

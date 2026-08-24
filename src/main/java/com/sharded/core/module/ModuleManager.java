@@ -49,7 +49,6 @@ import com.sharded.core.modules.weeklyrewards.WeeklyRewardsModule;
 import com.sharded.core.modules.leaderboards.LeaderboardsModule;
 import com.sharded.core.modules.media.MediaModule;
 import com.sharded.core.modules.crates.CratesModule;
-import com.sharded.core.modules.arena.ArenaModule;
 import com.sharded.core.modules.combat.CombatModule;
 import com.sharded.core.modules.koth.KothModule;
 import com.sharded.core.modules.outpost.OutpostModule;
@@ -123,7 +122,6 @@ public final class ModuleManager {
         register(new KothModule(plugin));
         register(new ProtectModule(plugin));
         register(new CombatModule(plugin));
-        register(new ArenaModule(plugin));
     }
 
     private void register(Module module) {

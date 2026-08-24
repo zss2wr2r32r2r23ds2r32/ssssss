@@ -1,5 +1,0 @@
-config-version: 2
-message-mode: chat
-auto-reset-minutes: 15
-reset-blocks-per-tick: 500
-arenas: {}
