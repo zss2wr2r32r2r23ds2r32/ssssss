@@ -2,6 +2,7 @@ package com.sharded.core.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Locale;
 
 /** Converts &amp;x&amp;R&amp;R&amp;G&amp;G&amp;B&amp;B to &amp;#RRGGBB for Adventure legacy serializer. */
 public final class ColorUtil {
@@ -22,7 +23,40 @@ public final class ColorUtil {
         s = DOUBLE_AMP.matcher(s).replaceAll("&");
         s = convertExtendedHex(s);
         s = fixShortHex(s);
+        s = uppercaseBoldWords(s);
         return s;
+    }
+
+    /** Converts full &#RRGGBB hex to &x&R&R&G&G&B&B for legacy serializers. */
+    public static String hexToLegacy(String input) {
+        if (input == null || input.isEmpty()) return "";
+        String s = normalize(input);
+        Matcher matcher = FULL_HEX.matcher(s);
+        StringBuilder out = new StringBuilder();
+        while (matcher.find()) {
+            String hex = matcher.group(1);
+            StringBuilder legacy = new StringBuilder("&x");
+            for (char c : hex.toCharArray()) {
+                legacy.append('&').append(c);
+            }
+            matcher.appendReplacement(out, Matcher.quoteReplacement(legacy.toString()));
+        }
+        matcher.appendTail(out);
+        return out.toString();
+    }
+
+    /** {@code &7&lMember} → {@code &7&lMEMBER} */
+    public static String uppercaseBoldWords(String input) {
+        if (input == null || input.isEmpty()) return "";
+        Pattern boldWord = Pattern.compile("(?i)&l([A-Za-z][A-Za-z0-9'\\-_ ]*)");
+        Matcher matcher = boldWord.matcher(input);
+        StringBuilder out = new StringBuilder();
+        while (matcher.find()) {
+            matcher.appendReplacement(out, Matcher.quoteReplacement(
+                    "&l" + matcher.group(1).toUpperCase(Locale.ROOT)));
+        }
+        matcher.appendTail(out);
+        return out.toString();
     }
 
     private static String convertExtendedHex(String input) {

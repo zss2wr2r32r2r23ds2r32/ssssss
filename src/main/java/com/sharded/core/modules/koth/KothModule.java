@@ -46,6 +46,7 @@ public final class KothModule extends Module implements CommandExecutor, TabComp
     private final Map<UUID, Double> points = new HashMap<>();
     private final Set<UUID> inside = new HashSet<>();
     private int tickTask = -1;
+    private long eventStartedAt;
 
     public KothModule(ShardedCore plugin) {
         super(plugin, "koth");
@@ -222,6 +223,12 @@ public final class KothModule extends Module implements CommandExecutor, TabComp
             finishEvent();
             return;
         }
+        long maxUnclaimedMs = config.getLong("max-unclaimed-seconds", 600) * 1000L;
+        if (now - eventStartedAt >= maxUnclaimedMs && points.isEmpty()) {
+            Bukkit.broadcast(Text.c(modulePrefix() + raw("timeout")));
+            finishEvent();
+            return;
+        }
         double standRate = config.getDouble("points-per-second-standing", 1.0);
         for (UUID uuid : inside) {
             addPoints(uuid, standRate);
@@ -260,8 +267,9 @@ public final class KothModule extends Module implements CommandExecutor, TabComp
         active = true;
         points.clear();
         inside.clear();
+        eventStartedAt = System.currentTimeMillis();
         eventDurationMs = config.getLong("duration-seconds", 300) * 1000L;
-        eventEndsAt = System.currentTimeMillis() + eventDurationMs;
+        eventEndsAt = eventStartedAt + eventDurationMs;
         coordinator.setKothActive(true);
         Bukkit.broadcast(Text.c(modulePrefix() + raw("broadcast-start")));
     }

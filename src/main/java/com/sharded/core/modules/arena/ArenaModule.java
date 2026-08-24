@@ -17,10 +17,12 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 /** Resets PVP/spawn arenas from stored snapshots — batched for TPS. */
 public final class ArenaModule extends Module implements CommandExecutor, TabCompleter {
@@ -39,6 +41,7 @@ public final class ArenaModule extends Module implements CommandExecutor, TabCom
     @Override
     protected void onEnable() {
         loadSnapshots();
+        syncRegionsFromProtect();
         registerCommand("arena", this);
         long interval = config.getLong("auto-reset-minutes", 15) * 60L * 20L;
         autoTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this::resetAll, interval, interval);
@@ -106,12 +109,25 @@ public final class ArenaModule extends Module implements CommandExecutor, TabCom
             return true;
         }
         if (sub.equals("snapshot") && args.length >= 2) {
-            snapshotRegion(args[1].toLowerCase(Locale.ROOT));
-            send(sender, "snapshot-saved", "%region%", args[1]);
+            String id = args[1].toLowerCase(Locale.ROOT);
+            if (snapshotRegion(id)) {
+                send(sender, "snapshot-saved", "%region%", args[1]);
+            } else {
+                send(sender, "no-region", "%region%", args[1]);
+            }
             return true;
         }
         send(sender, "usage");
         return true;
+    }
+
+    private void syncRegionsFromProtect() {
+        var protect = plugin.modules().get(com.sharded.core.modules.protect.ProtectModule.class);
+        if (protect == null) return;
+        for (String id : List.of("spawn", "pvp", "side1", "side2", "side3", "side4")) {
+            CuboidRegion region = protect.region(id);
+            if (region != null) regions.put(id, region);
+        }
     }
 
     /** Links a protect region for resets — does not snapshot until /arena snapshot. */
@@ -124,12 +140,17 @@ public final class ArenaModule extends Module implements CommandExecutor, TabCom
         saveConfig();
     }
 
-    private void snapshotRegion(String id) {
+    private boolean snapshotRegion(String id) {
         CuboidRegion region = regions.get(id);
-        if (region == null) return;
+        if (region == null) {
+            syncRegionsFromProtect();
+            region = regions.get(id);
+        }
+        if (region == null) return false;
         World world = region.bukkitWorld();
-        if (world == null) return;
+        if (world == null) return false;
         List<BlockState> blocks = ArenaSnapshotStorage.capture(world, region);
+        if (blocks.isEmpty()) return false;
         snapshots.put(id, blocks);
         var regionSection = config.getConfigurationSection("arenas." + id + ".region");
         if (regionSection == null) regionSection = config.createSection("arenas." + id + ".region");
@@ -138,8 +159,10 @@ public final class ArenaModule extends Module implements CommandExecutor, TabCom
         try {
             ArenaSnapshotStorage.save(moduleFolder(), id, blocks);
             saveConfig();
+            return true;
         } catch (Exception e) {
             plugin.getLogger().warning("[arena] Could not save snapshot " + id + ": " + e.getMessage());
+            return false;
         }
     }
 
@@ -204,7 +227,11 @@ public final class ArenaModule extends Module implements CommandExecutor, TabCom
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (!sender.hasPermission("sharded.arena.admin")) return List.of();
         if (args.length == 1) return TabCompleteHelper.filter(args[0], "reset", "remove", "snapshot");
-        if (args.length == 2) return TabCompleteHelper.filter(args[1], snapshots.keySet());
+        if (args.length == 2) {
+            Set<String> ids = new HashSet<>(snapshots.keySet());
+            ids.addAll(regions.keySet());
+            return TabCompleteHelper.filter(args[1], ids);
+        }
         if (args.length == 3 && args[0].equalsIgnoreCase("reset")) {
             return TabCompleteHelper.filter(args[2], "slow", "medium", "fast", "extreme");
         }

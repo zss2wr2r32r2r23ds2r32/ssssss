@@ -88,6 +88,10 @@ public final class RewardSpin {
         long intervalTicks = Math.max(2L, config.getLong("spin-interval-ticks", 4L));
         String format = config.getString("spin-format",
                 "&dSpinning... &f%reward% %rarity_color%[%rarity% &8(%percent%%)&r%rarity_color%&8]");
+        String prefix = config.getString("actionbar-prefix", "");
+        if (!prefix.isBlank()) {
+            format = prefix + format;
+        }
 
         Component[] frames = buildFrames(format, options, winner, frameCount);
 

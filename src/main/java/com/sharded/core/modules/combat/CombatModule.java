@@ -138,32 +138,60 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
         player.setHealth(0);
     }
 
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onMove(PlayerMoveEvent event) {
         if (!isTagged(event.getPlayer())) return;
         ProtectModule protect = plugin.modules().get(ProtectModule.class);
         if (protect == null) return;
         Location to = event.getTo();
         Location from = event.getFrom();
-        if (to == null || protect.inSpawn(from)) return;
-        if (!protect.inSpawn(to)) return;
-        pushBack(event.getPlayer(), from, protect);
+        if (to == null) return;
+
+        CuboidRegion spawn = protect.region("spawn");
+        if (spawn == null || !spawn.world().equals(to.getWorld().getName())) return;
+
+        boolean toSpawn = spawn.contains(to);
+        boolean fromSpawn = spawn.contains(from);
+        if (!toSpawn) return;
+
+        event.setCancelled(true);
+        event.setTo(from);
+        Location safe = fromSpawn ? ejectFromSpawn(event.getPlayer(), spawn, from) : from.clone();
+        pushBack(event.getPlayer(), safe, protect, spawn);
     }
 
-    private void pushBack(Player player, Location from, ProtectModule protect) {
-        player.teleport(from);
-        Vector push = from.toVector().subtract(player.getLocation().toVector());
-        if (push.lengthSquared() > 0.0001) {
-            push.normalize().multiply(0.8);
-        } else {
+    private Location ejectFromSpawn(Player player, CuboidRegion spawn, Location inside) {
+        int x = inside.getBlockX();
+        int z = inside.getBlockZ();
+        int cx = (spawn.minX() + spawn.maxX()) / 2;
+        int cz = (spawn.minZ() + spawn.maxZ()) / 2;
+        int dx = x - cx;
+        int dz = z - cz;
+        if (dx == 0 && dz == 0) dz = 1;
+        double len = Math.sqrt(dx * dx + dz * dz);
+        int outX = x + (int) Math.round(dx / len * 3);
+        int outZ = z + (int) Math.round(dz / len * 3);
+        Location out = new Location(inside.getWorld(), outX + 0.5, inside.getY(), outZ + 0.5, inside.getYaw(), inside.getPitch());
+        if (spawn.contains(out)) {
+            out.setX(x + (dx >= 0 ? spawn.maxX() - spawn.minX() + 2 : -2));
+        }
+        return out;
+    }
+
+    private void pushBack(Player player, Location safe, ProtectModule protect, CuboidRegion spawn) {
+        player.teleport(safe);
+        int cx = (spawn.minX() + spawn.maxX()) / 2;
+        int cz = (spawn.minZ() + spawn.maxZ()) / 2;
+        Vector push = safe.toVector().subtract(new Vector(cx, safe.getY(), cz));
+        if (push.lengthSquared() < 0.01) {
             push = new Vector(0, 0, 1);
         }
-        push.setY(0.35);
+        push.normalize().multiply(config.getDouble("pushback-strength", 1.2));
+        push.setY(config.getDouble("pushback-y", 0.4));
         player.setVelocity(push);
         send(player, "pushback");
-        CuboidRegion spawn = protect.region("spawn");
-        if (spawn != null) {
-            wallTracker.showLocalSpawnWall(player, spawn, from);
+        if (config.getBoolean("red-glass-walls", true)) {
+            wallTracker.showLocalSpawnWall(player, spawn, safe);
         }
     }
 
@@ -190,6 +218,13 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
 
             if (tagged) {
                 wasTagged.add(id);
+                if (protect != null && protect.inSpawn(player.getLocation())) {
+                    CuboidRegion spawn = protect.region("spawn");
+                    if (spawn != null) {
+                        Location ejected = ejectFromSpawn(player, spawn, player.getLocation());
+                        player.teleport(ejected);
+                    }
+                }
                 if (eventActionBarActive(player, koth, outpost)) continue;
                 long left = (until - now) / 1000L;
                 String msg = config.getString("actionbar", "&cCombat &7| &f%seconds%s")
@@ -198,7 +233,7 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
                 if (protect != null && config.getBoolean("red-glass-walls", true)) {
                     CuboidRegion spawn = protect.region("spawn");
                     if (spawn != null && spawn.world().equals(player.getWorld().getName())
-                            && nearSpawnBorder(player.getLocation(), spawn, 8)) {
+                            && nearSpawnBorder(player.getLocation(), spawn, 10)) {
                         wallTracker.showLocalSpawnWall(player, spawn, player.getLocation());
                     }
                 }

@@ -1,9 +1,10 @@
-config-version: 2
+config-version: 3
 prefix: '&#FF005D&lKOTH &8▷ &r'
 message-mode: chat
 allowed-worlds:
   - spawn
 duration-seconds: 300
+max-unclaimed-seconds: 600
 points-per-hit: 5
 points-per-second-standing: 1
 actionbar: '&f%points% pts &7| &f%time%'

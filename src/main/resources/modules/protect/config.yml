@@ -1,5 +1,6 @@
-config-version: 1
+config-version: 2
 message-mode: chat
+block-natural-mobs-in-spawn: true
 regions:
   spawn: {}
   pvp: {}

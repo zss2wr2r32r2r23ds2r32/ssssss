@@ -1,7 +1,9 @@
-config-version: 1
+config-version: 2
 message-mode: chat
 tag-seconds: 15
 kill-on-logout: true
 red-glass-walls: true
+pushback-strength: 1.2
+pushback-y: 0.4
 actionbar: '&cCombat &7| &f%seconds%s'
 region: {}

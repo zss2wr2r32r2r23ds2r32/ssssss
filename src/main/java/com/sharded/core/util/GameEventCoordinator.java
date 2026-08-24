@@ -24,7 +24,7 @@ public final class GameEventCoordinator {
     public GameEventCoordinator(ShardedCore plugin) {
         this.plugin = plugin;
         this.file = new File(plugin.getDataFolder(), "game-events.yml");
-        this.bossBar = new EventBossBar(plugin);
+        this.bossBar = new EventBossBar();
         reload();
         instance = this;
     }

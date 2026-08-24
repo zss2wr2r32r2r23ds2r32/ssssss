@@ -5,7 +5,6 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,21 +13,17 @@ import java.util.UUID;
 /** Single global boss bar for KOTH / Outpost events. */
 public final class EventBossBar {
 
-    private final JavaPlugin plugin;
     private BossBar bar;
     private String owner = "";
 
-    public EventBossBar(JavaPlugin plugin) {
-        this.plugin = plugin;
-    }
-
     public void show(String id, String title, BarColor color, double progress) {
+        String parsed = Text.legacySection(title);
         if (bar == null || !id.equals(owner)) {
             hide();
-            bar = Bukkit.createBossBar(ColorUtil.normalize(title), color, BarStyle.SOLID);
+            bar = Bukkit.createBossBar(parsed, color, BarStyle.SOLID);
             owner = id;
         } else {
-            bar.setTitle(ColorUtil.normalize(title));
+            bar.setTitle(parsed);
             bar.setColor(color);
         }
         bar.setProgress(Math.max(0.0, Math.min(1.0, progress)));

@@ -17,6 +17,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -141,7 +142,7 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
                     : config.createSection("regions." + id));
             saveConfig();
             var arena = plugin.modules().get(com.sharded.core.modules.arena.ArenaModule.class);
-            if (arena != null && (id.equals("spawn") || id.equals("pvp"))) {
+            if (arena != null) {
                 arena.linkRegion(id, built);
             }
             send(player, "region-set", "%region%", id);
@@ -173,6 +174,15 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
         if (!restrictSpawnOnly(player, event.getBlock().getLocation())) return;
         event.setCancelled(true);
         send(player, "no-place");
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onMobSpawn(CreatureSpawnEvent event) {
+        if (!config.getBoolean("block-natural-mobs-in-spawn", true)) return;
+        if (event.getSpawnReason() != CreatureSpawnEvent.SpawnReason.NATURAL
+                && event.getSpawnReason() != CreatureSpawnEvent.SpawnReason.JOCKEY) return;
+        if (!inSpawn(event.getLocation())) return;
+        event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)

@@ -1,6 +1,7 @@
-config-version: 4
+config-version: 5
 message-mode: chat
 cooldown-hours: 168
+actionbar-prefix: '&#FFD700&lWEEKLY &8▷ &r'
 spin-ticks: 20
 spin-interval-ticks: 4
 spin-format: '&6Weekly spin... &f%reward% %rarity_color%[%rarity% &8(%percent%%)&r%rarity_color%&8]'

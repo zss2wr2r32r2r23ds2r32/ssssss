@@ -42,6 +42,7 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
     private UUID capturingPlayer;
     private final Set<UUID> inside = new HashSet<>();
     private int tickTask = -1;
+    private long eventStartedAt;
 
     public OutpostModule(ShardedCore plugin) {
         super(plugin, "outpost");
@@ -89,7 +90,7 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
     }
 
     public String modulePrefix() {
-        return config.getString("prefix", "&#9FFF00&lOUTPOST &8▷ &r");
+        return config.getString("prefix", "&#FF2727&lOUTPOST &8▷ &r");
     }
 
     @Override
@@ -232,6 +233,11 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
             }
         }
         updateBossBar();
+        long maxUnclaimedMs = config.getLong("max-unclaimed-seconds", 600) * 1000L;
+        if (System.currentTimeMillis() - eventStartedAt >= maxUnclaimedMs && capturePercent < 100.0) {
+            Bukkit.broadcast(Text.c(modulePrefix() + raw("timeout")));
+            endEvent();
+        }
     }
 
     private void updateBossBar() {
@@ -240,9 +246,9 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
         String title = config.getString("bossbar-active",
                         "%prefix%&f%capturer% &8| &f%percent%%")
                 .replace("%prefix%", modulePrefix())
-                .replace("%capturer%", capturer)
+                .replace("%capturer%", capturer.toUpperCase(Locale.ROOT))
                 .replace("%percent%", String.format(Locale.US, "%.0f", capturePercent));
-        coordinator.bossBar().show("outpost", title, BarColor.GREEN, capturePercent / 100.0);
+        coordinator.bossBar().show("outpost", title, BarColor.RED, capturePercent / 100.0);
         coordinator.bossBar().syncPlayers();
     }
 
@@ -257,6 +263,7 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
         active = true;
         capturePercent = 0;
         capturingPlayer = null;
+        eventStartedAt = System.currentTimeMillis();
         coordinator.setOutpostActive(true);
         Bukkit.broadcast(Text.c(modulePrefix() + raw("broadcast-start")));
     }

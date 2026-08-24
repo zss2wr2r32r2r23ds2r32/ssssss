@@ -13,12 +13,18 @@ public final class Text {
     private Text() {
     }
 
-    /** Deserializes color codes including &amp;x&amp;R&amp;R&amp;G&amp;G&amp;B&amp;B and &amp;#rrggbb hex. */
+    /** Deserializes color codes including hex; bold words after &l are uppercased. */
     public static Component c(String input) {
         if (input == null || input.isEmpty()) return Component.empty();
-        return SERIALIZER.deserialize(ColorUtil.normalize(input)).decorationIfAbsent(
+        return SERIALIZER.deserialize(ColorUtil.hexToLegacy(input)).decorationIfAbsent(
                 net.kyori.adventure.text.format.TextDecoration.ITALIC,
                 net.kyori.adventure.text.format.TextDecoration.State.FALSE);
+    }
+
+    /** Plain legacy string with § for Bukkit APIs that do not parse hex (boss bar titles). */
+    public static String legacySection(String input) {
+        if (input == null || input.isEmpty()) return "";
+        return net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().serialize(c(input));
     }
 
     /** Replaces %placeholders% in pairs: apply("hi %name%", "%name%", "Bob"). */
