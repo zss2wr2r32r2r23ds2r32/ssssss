@@ -83,6 +83,8 @@ public final class CombatWallTracker {
     }
 
     private void placeBlock(Player player, Location loc, Set<Location> blocks) {
+        Block block = loc.getBlock();
+        if (!block.getType().isAir() && !block.isReplaceable()) return;
         player.sendBlockChange(loc, Material.RED_STAINED_GLASS.createBlockData());
         blocks.add(loc.clone());
     }

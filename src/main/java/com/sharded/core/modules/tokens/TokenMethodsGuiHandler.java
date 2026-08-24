@@ -1,6 +1,7 @@
 package com.sharded.core.modules.tokens;
 
 import com.sharded.core.util.ItemBuilder;
+import com.sharded.core.util.PlaceholderUtil;
 import com.sharded.core.util.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -47,16 +48,17 @@ final class TokenMethodsGuiHandler {
             if (mat == null) mat = Material.PAPER;
             List<String> lore = new ArrayList<>();
             for (String line : m.getStringList("lore")) {
-                lore.add(line.replace("%click%", click)
+                lore.add(PlaceholderUtil.apply(player, line.replace("%click%", click)
                         .replace("%amount%", String.valueOf(m.getLong("amount", 50L)))
-                        .replace("%rank%", String.valueOf(rank)));
+                        .replace("%rank%", String.valueOf(rank))));
             }
-            String name = m.getString("name", entry.getKey());
+            String name = PlaceholderUtil.apply(player, m.getString("name", entry.getKey())
+                    .replace("%rank%", String.valueOf(rank)));
             if (!name.contains("#")) {
                 name = name + " &7(#" + rank + ")";
             }
             inv.setItem(slot, new ItemBuilder(mat)
-                    .name(name.replace("%rank%", String.valueOf(rank)))
+                    .name(name)
                     .lore(lore)
                     .build());
             rank++;

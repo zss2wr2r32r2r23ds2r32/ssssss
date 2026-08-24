@@ -85,7 +85,7 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
     }
 
     public String capturerName() {
-        if (capturingPlayer == null) return "Contested";
+        if (capturingPlayer == null) return "N/A";
         return OfflinePlayers.name(capturingPlayer);
     }
 
@@ -246,7 +246,7 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
         String title = config.getString("bossbar-active",
                         "%prefix%&f%capturer% &8| &f%percent%%")
                 .replace("%prefix%", modulePrefix())
-                .replace("%capturer%", capturer.toUpperCase(Locale.ROOT))
+                .replace("%capturer%", capturer)
                 .replace("%percent%", String.format(Locale.US, "%.0f", capturePercent));
         coordinator.bossBar().show("outpost", title, BarColor.RED, capturePercent / 100.0);
         coordinator.bossBar().syncPlayers();

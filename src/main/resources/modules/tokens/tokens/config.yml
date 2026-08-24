@@ -4,7 +4,7 @@ message-mode: chat
 
 gui:
   title: '&8Token Methods'
-  click-footer: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+  click-footer: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nClick&r &x&F&F&B&A&0&0To view'
   methods:
     playtime:
       slot: 11
@@ -65,12 +65,12 @@ gui:
     pvp_heads:
       slot: 15
       material: PLAYER_HEAD
-      name: '&x&F&F&2&7&2&7&lPVP HEAD DROPS'
+      name: '&x&F&F&2&7&2&7&lPvp head drops'
       color: '&x&F&F&2&7&2&7'
       lore:
-      - '&8DESCRIPTIONS'
+      - '&8Descriptions'
       - ''
-      - '&x&F&F&2&7&2&7INFORMATION:'
+      - '&x&F&F&2&7&2&7Information:'
       - '&x&F&F&2&7&2&7| &fPlayer heads drop on kills.'
       - '&x&F&F&2&7&2&7| &fTrade them with &f/headtokens'
       - ''
@@ -79,12 +79,12 @@ gui:
     outpost:
       slot: 20
       material: BEACON
-      name: '&x&9&4&F&F&0&0&lOUTPOST'
+      name: '&x&9&4&F&F&0&0&lOutpost'
       color: '&x&9&4&F&F&0&0'
       lore:
-      - '&8DESCRIPTIONS'
+      - '&8Descriptions'
       - ''
-      - '&x&9&4&F&F&0&0INFORMATION:'
+      - '&x&9&4&F&F&0&0Information:'
       - '&x&9&4&F&F&0&0| &fCapture the outpost solo'
       - '&x&9&4&F&F&0&0| &ffor token rewards.'
       - '&x&9&4&F&F&0&0| &fNext: &f%shardedcore_outpost_time%'
@@ -97,9 +97,9 @@ gui:
       name: '&x&F&F&0&0&5&D&lKOTH'
       color: '&x&F&F&0&0&5&D'
       lore:
-      - '&8DESCRIPTIONS'
+      - '&8Descriptions'
       - ''
-      - '&x&F&F&0&0&5&DINFORMATION:'
+      - '&x&F&F&0&0&5&DInformation:'
       - '&x&F&F&0&0&5&D| &fFight in the hill for points.'
       - '&x&F&F&0&0&5&D| &fTop 3 win tokens.'
       - '&x&F&F&0&0&5&D| &fNext: &f%shardedcore_koth_time%'

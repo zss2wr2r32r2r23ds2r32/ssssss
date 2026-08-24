@@ -169,6 +169,19 @@ public final class ProtectModule extends Module implements CommandExecutor, TabC
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onSideBuildLimit(BlockPlaceEvent event) {
+        Player player = event.getPlayer();
+        if (bypass(player)) return;
+        Location loc = event.getBlock().getLocation();
+        if (!inSide(loc)) return;
+        int maxY = config.getInt("side-max-build-y", 111);
+        if (loc.getBlockY() > maxY) {
+            event.setCancelled(true);
+            send(player, "side-build-limit", "%y%", String.valueOf(maxY));
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         if (!restrictSpawnOnly(player, event.getBlock().getLocation())) return;

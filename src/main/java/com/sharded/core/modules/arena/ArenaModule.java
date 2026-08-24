@@ -173,28 +173,55 @@ public final class ArenaModule extends Module implements CommandExecutor, TabCom
     }
 
     private void resetRegion(String id, int perTick) {
-        List<BlockState> blocks = snapshots.get(id);
         CuboidRegion region = regions.get(id);
-        if (blocks == null || region == null) return;
+        if (region == null) return;
         World world = region.bukkitWorld();
         if (world == null) return;
-        Iterator<BlockState> it = new ArrayList<>(blocks).iterator();
+
+        ConfigurationSection arenaSection = config.getConfigurationSection("arenas." + id);
+        List<BlockState> loaded = ArenaSnapshotStorage.load(moduleFolder(), id, arenaSection, plugin.getLogger());
+        if (loaded.isEmpty()) return;
+        snapshots.put(id, loaded);
+
+        Map<Long, BlockState> byPos = new HashMap<>(loaded.size());
+        for (BlockState state : loaded) {
+            byPos.put(pack(state.x(), state.y(), state.z()), state);
+        }
+
+        List<BlockState> toRestore = new ArrayList<>(region.volume());
+        for (int x = region.minX(); x <= region.maxX(); x++) {
+            for (int y = region.minY(); y <= region.maxY(); y++) {
+                for (int z = region.minZ(); z <= region.maxZ(); z++) {
+                    BlockState state = byPos.get(pack(x, y, z));
+                    toRestore.add(state != null ? state : new BlockState(x, y, z, Material.AIR, ""));
+                }
+            }
+        }
+
+        Iterator<BlockState> it = toRestore.iterator();
         Bukkit.getScheduler().runTaskTimer(plugin, task -> {
             int n = 0;
             while (it.hasNext() && n < perTick) {
                 BlockState state = it.next();
                 Block block = world.getBlockAt(state.x(), state.y(), state.z());
-                block.setType(state.type(), false);
-                if (!state.blockData().isBlank()) {
-                    try {
-                        block.setBlockData(Bukkit.createBlockData(state.blockData()));
-                    } catch (Exception ignored) {
+                if (block.getType() != state.type()
+                        || !block.getBlockData().getAsString().equals(state.blockData())) {
+                    block.setType(state.type(), false);
+                    if (!state.blockData().isBlank()) {
+                        try {
+                            block.setBlockData(Bukkit.createBlockData(state.blockData()));
+                        } catch (Exception ignored) {
+                        }
                     }
                 }
                 n++;
             }
             if (!it.hasNext()) task.cancel();
         }, 0L, 1L);
+    }
+
+    private static long pack(int x, int y, int z) {
+        return ((long) x & 0x3FFFFFFL) << 38 | ((long) y & 0xFFFL) << 26 | ((long) z & 0x3FFFFFFL);
     }
 
     private void saveConfig() {

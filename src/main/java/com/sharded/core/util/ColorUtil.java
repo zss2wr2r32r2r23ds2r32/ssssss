@@ -2,7 +2,6 @@ package com.sharded.core.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.Locale;
 
 /** Converts &amp;x&amp;R&amp;R&amp;G&amp;G&amp;B&amp;B to &amp;#RRGGBB for Adventure legacy serializer. */
 public final class ColorUtil {
@@ -23,7 +22,6 @@ public final class ColorUtil {
         s = DOUBLE_AMP.matcher(s).replaceAll("&");
         s = convertExtendedHex(s);
         s = fixShortHex(s);
-        s = uppercaseBoldWords(s);
         return s;
     }
 
@@ -40,20 +38,6 @@ public final class ColorUtil {
                 legacy.append('&').append(c);
             }
             matcher.appendReplacement(out, Matcher.quoteReplacement(legacy.toString()));
-        }
-        matcher.appendTail(out);
-        return out.toString();
-    }
-
-    /** {@code &7&lMember} → {@code &7&lMEMBER} */
-    public static String uppercaseBoldWords(String input) {
-        if (input == null || input.isEmpty()) return "";
-        Pattern boldWord = Pattern.compile("(?i)&l([A-Za-z][A-Za-z0-9'\\-_ ]*)");
-        Matcher matcher = boldWord.matcher(input);
-        StringBuilder out = new StringBuilder();
-        while (matcher.find()) {
-            matcher.appendReplacement(out, Matcher.quoteReplacement(
-                    "&l" + matcher.group(1).toUpperCase(Locale.ROOT)));
         }
         matcher.appendTail(out);
         return out.toString();

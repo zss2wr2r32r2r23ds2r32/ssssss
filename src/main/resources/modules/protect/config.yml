@@ -1,6 +1,7 @@
-config-version: 2
+config-version: 3
 message-mode: chat
 block-natural-mobs-in-spawn: true
+side-max-build-y: 111
 regions:
   spawn: {}
   pvp: {}

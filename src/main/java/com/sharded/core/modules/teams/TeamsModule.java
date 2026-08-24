@@ -4,6 +4,7 @@ import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.util.OfflinePlayers;
 import com.sharded.core.util.TabCompleteHelper;
+import com.sharded.core.util.PlaceholderUtil;
 import com.sharded.core.util.Text;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
@@ -96,15 +97,21 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
 
     String guiRaw(String key, String... replacements) {
         String click = config.getString("gui.click-footer",
-                "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0");
+                "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nClick&r &x&F&F&B&A&0&0");
+        String clickConfirm = config.getString("gui.click-footer-confirm", click);
+        String clickCancel = config.getString("gui.click-footer-cancel", click);
         String msg = config.getString("gui." + key, "");
-        msg = msg.replace("%click%", click);
+        msg = msg.replace("%click%", click)
+                .replace("%click_confirm%", clickConfirm)
+                .replace("%click_cancel%", clickCancel);
         return Text.apply(msg, replacements);
     }
 
     List<String> guiRawList(String key, String... replacements) {
         String click = config.getString("gui.click-footer",
-                "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0");
+                "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nClick&r &x&F&F&B&A&0&0");
+        String clickConfirm = config.getString("gui.click-footer-confirm", click);
+        String clickCancel = config.getString("gui.click-footer-cancel", click);
         List<String> lines = new ArrayList<>(config.getStringList("gui." + key));
         if (lines.isEmpty()) {
             String single = config.getString("gui." + key);
@@ -112,9 +119,19 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
         }
         List<String> out = new ArrayList<>(lines.size());
         for (String line : lines) {
-            out.add(Text.apply(line.replace("%click%", click), replacements));
+            out.add(Text.apply(line.replace("%click%", click)
+                    .replace("%click_confirm%", clickConfirm)
+                    .replace("%click_cancel%", clickCancel), replacements));
         }
         return out;
+    }
+
+    List<String> guiRawList(Player player, String key, String... replacements) {
+        return PlaceholderUtil.applyList(player, guiRawList(key, replacements));
+    }
+
+    String guiRaw(Player player, String key, String... replacements) {
+        return PlaceholderUtil.apply(player, guiRaw(key, replacements));
     }
 
     ItemStack tagTeamId(ItemStack item, int teamId) {
