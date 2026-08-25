@@ -1,0 +1,68 @@
+config-version: 1
+message-mode: chat
+
+enabled: true
+ops-bypass: true
+
+# Commands players may use (without /). Plugin aliases count too.
+commands:
+  - help
+  - list
+  - msg
+  - tell
+  - whisper
+  - w
+  - reply
+  - r
+  - bal
+  - balance
+  - craft
+  - fix
+  - trash
+  - chattoggle
+  - togglechat
+  - ct
+  - nightvision
+  - nv
+  - backpack
+  - bp
+  - armortrims
+  - trims
+  - fly
+  - autosmelt
+  - rtp
+  - wild
+  - spawn
+  - spawnselect
+  - eglow
+  - glows
+  - chatcolor
+  - namecolor
+  - wardrobe
+  - tags
+  - tag
+  - deathtoggle
+  - jointoggle
+  - mobtoggle
+  - settings
+  - killstreak
+  - toolname
+  - tokenshop
+  - pets
+  - pet
+  - temprank
+  - rankshop
+  - guide
+  - rules
+  - team
+  - teams
+  - discord
+  - store
+  - pm
+  - msgtoggle
+
+# Always allowed even if not listed above (ShardedCore essentials)
+always-allowed:
+  - shardedcore
+  - score
+  - shardedc

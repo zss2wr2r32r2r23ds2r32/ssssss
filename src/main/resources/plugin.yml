@@ -1,0 +1,740 @@
+name: ShardedCore
+version: '${project.version}'
+main: com.sharded.core.ShardedCore
+api-version: '1.21'
+author: Sharded
+description: All-in-one core plugin for Paper 1.21.11
+softdepend: [LuckPerms, PlaceholderAPI, ItemsAdder, Topper, Duels]
+load: STARTUP
+
+commands:
+  shardedcore:
+    description: ShardedCore admin command (reload)
+    usage: /shardedcore [reload|help]
+    aliases: [score, shardedc]
+    permission: sharded.admin
+  craft:
+    description: Open a portable crafting table
+    usage: /craft
+    aliases: [workbench, wb]
+  fix:
+    description: Repair the item you are holding (6h cooldown)
+    usage: /fix
+    aliases: [repair]
+  trash:
+    description: Open a trash bin
+    usage: /trash
+    aliases: [disposal, bin]
+  chattoggle:
+    description: Toggle seeing public chat
+    usage: /chattoggle [toggle]
+    aliases: [togglechat, ct, publicchat]
+  msg:
+    description: Send a private message
+    usage: /msg <player> <message>
+    aliases: [tell, whisper, w, pm]
+  reply:
+    description: Reply to the last private message
+    usage: /reply <message>
+    aliases: [r]
+  msgtoggle:
+    description: Toggle receiving private messages
+    usage: /msgtoggle
+    aliases: [togglemsg, pmtoggle]
+  nightvision:
+    description: Toggle night vision
+    usage: /nightvision
+    aliases: [nv]
+  backpack:
+    description: Open a backpack (single slot)
+    usage: /backpack [player]
+    aliases: [bp]
+  armortrims:
+    description: Open the armor trim station
+    usage: /armortrims
+    aliases: [trims, trimstation]
+  fly:
+    description: Toggle flight (region restricted)
+    usage: /fly [player|speed <1-10>|pos1|pos2|setregion]
+  autosmelt:
+    description: Apply Auto Smelt to your pickaxe
+    usage: /autosmelt
+  rtp:
+    description: Open the random teleport menu
+    usage: /rtp
+    aliases: [wild]
+  randomtp:
+    description: Teleport to a random online player (staff)
+    usage: /randomtp
+    permission: sharded.staff.randomtp
+  spawn:
+    description: Teleport to spawn or select spawn type
+    usage: /spawn [select <main|vanilla>]
+  spawnselect:
+    description: Open the spawn selector menu
+    usage: /spawnselect
+    aliases: [spawnselector]
+  setspawn:
+    description: Set main or vanilla spawn locations
+    usage: /setspawn <main/vanilla> [world]
+  eglow:
+    description: Open the glow equip menu
+    usage: /eglow [color/off]
+    aliases: [glows, glowing]
+  chatcolor:
+    description: Chat colour menu and commands
+    usage: /chatcolor [create|set|reset|delete|custom] [args]
+    aliases: [chatcolors]
+  namecolor:
+    description: Name colour menu and commands
+    usage: /namecolor [create|set|reset|delete|custom] [args]
+    aliases: [namecolors]
+  wardrobe:
+    description: Open your cosmetic hat wardrobe
+    usage: /wardrobe
+  tags:
+    description: Open the tag equip menu
+    usage: /tags [create|limited|delete|set|remove|custom] [args]
+  tag:
+    description: Tag admin and equip commands
+    usage: /tag <create|limited|delete|set|remove|custom> [args]
+  deathtoggle:
+    description: Toggle seeing death messages
+    usage: /deathtoggle [toggle]
+    aliases: [deathmessages, dtoggle]
+  jointoggle:
+    description: Toggle join and leave messages
+    usage: /jointoggle [toggle]
+    aliases: [joinleave, jtoggle, joinmessages]
+  mobtoggle:
+    description: Toggle natural mob spawning near you
+    usage: /mobtoggle
+    aliases: [mobspawn, mtoggle]
+  eventsoundstoggle:
+    description: Toggle KOTH and outpost event horn sounds
+    usage: /eventsoundstoggle
+    aliases: [eventsounds]
+  settings:
+    description: Open your personal settings menu
+    usage: /settings
+    aliases: [setting]
+    permission: sharded.settings.use
+  killstreak:
+    description: View killstreak stats
+    usage: /killstreak [best|player] [best]
+  toolname:
+    description: Rename the item you are holding
+    usage: /toolname [name]
+  graves:
+    description: Graves admin command
+    usage: /graves [list|purge]
+  spawners:
+    description: Pay to pick up spawners
+    usage: /spawners pay [amount]
+  bal:
+    description: Check token balance
+    usage: /bal [player]
+    aliases: [balance]
+  tokens:
+    description: Token admin commands
+    usage: /tokens <give|set|remove|reset|giveall>
+  tokenshop:
+    description: Open the token shop
+    usage: /tokenshop
+  pets:
+    description: Open the pets menu
+    usage: /pets
+  pet:
+    description: Manage your cosmetic pet
+    usage: /pet <equip|remove|rename> [args]
+  temprank:
+    description: Open the temporary rank shop
+    usage: /temprank shop
+    aliases: [rankshop, temprankshop]
+  gmc:
+    description: Set creative mode
+    usage: /gmc
+  gms:
+    description: Set survival mode
+    usage: /gms
+  gmsp:
+    description: Set spectator mode
+    usage: /gmsp
+  staffmode:
+    description: Toggle staff mode
+    usage: /staffmode
+    aliases: [sfmode]
+  vanish:
+    description: Toggle vanish
+    usage: /vanish
+  freeze:
+    description: Freeze or unfreeze a player
+    usage: /freeze <player>
+  punish:
+    description: Open punish menu for a player
+    usage: /punish <player>
+  ban:
+    description: Ban a player
+    usage: /ban <player> [reason] [duration]
+  banip:
+    description: IP ban a player
+    usage: /banip <player> [reason] [duration]
+  offend:
+    description: Ban a player (offender ban)
+    usage: /offend <player> [reason] [duration]
+  unban:
+    description: Unban a player
+    usage: /unban <player>
+  unbanip:
+    description: Remove an IP ban
+    usage: /unbanip <ip>
+    aliases: [unban-ip]
+  guide:
+    description: Open the server guide menu
+    usage: /guide
+  rules:
+    description: Open the server rules menu
+    usage: /rules
+    permission: sharded.guide.use
+  unmute:
+    description: Unmute a player
+    usage: /unmute <player>
+  pardon:
+    description: Pardon a player (unban + unmute)
+    usage: /pardon <player>
+  wipe:
+    description: Wipe a player's data
+    usage: /wipe <player> [reason]
+  alts:
+    description: Show linked alt accounts
+    usage: /alts [player]
+  revokepunishment:
+    description: Revoke all punishments except doxxing bans
+    usage: /revokepunishment
+    permission: sharded.punishments.revokepunishment
+  stafflist:
+    description: List online staff
+    usage: /stafflist
+  kick:
+    description: Kick a player
+    usage: /kick <player> [reason]
+  mute:
+    description: Mute a player
+    usage: /mute <player> [reason] [duration]
+  announce:
+    description: Broadcast a server announcement
+    usage: /announce <message>
+  announcement:
+    description: Broadcast a server announcement
+    usage: /announcement <message>
+  invrollback:
+    description: Open inventory rollback for a player
+    usage: /invrollback <player>
+  screenshare:
+    description: Start or stop a screenshare
+    usage: /screenshare <player>
+    aliases: [ss]
+  staffchat:
+    description: Send a message to staff chat
+    usage: /staffchat <message>
+    aliases: [sc]
+  requeststaff:
+    description: Request staff assistance
+    usage: /requeststaff
+  team:
+    description: Team management
+    usage: /team [subcommand]
+  teams:
+    description: Open the teams menu
+    usage: /teams
+    aliases: [t]
+  discord:
+    description: Show the Discord invite link
+    usage: /discord
+  store:
+    description: Show the webstore link
+    usage: /store
+    aliases: [webstore]
+  headtokens:
+    description: Convert a player head to tokens
+    usage: /headtokens
+  dailyrewards:
+    description: Claim your daily reward
+    usage: /dailyrewards
+  daily:
+    description: Claim your daily reward
+    usage: /daily
+  weeklyrewards:
+    description: Claim your weekly reward
+    usage: /weeklyrewards
+  weekly:
+    description: Claim your weekly reward
+    usage: /weekly
+  rewards:
+    description: Open daily and weekly rewards menu
+    usage: /rewards
+    permission: sharded.rewards.use
+  tokenmethods:
+    description: Open ways to earn tokens GUI
+    usage: /tokenmethods
+  hourly:
+    description: Check hourly token reward timer
+    usage: /hourly
+  stats:
+    description: View player statistics
+    usage: /stats [player]
+    permission: sharded.stats.use
+  leaderboard:
+    description: Open leaderboards
+    usage: /leaderboard [type]
+    permission: sharded.leaderboards.use
+  leaderboards:
+    description: Open leaderboards
+    usage: /leaderboards [type]
+    permission: sharded.leaderboards.use
+  media:
+    description: Media requirements
+    usage: /media
+    permission: sharded.media.use
+  mediareq:
+    description: Media requirements
+    usage: /mediareq
+  mediarequirements:
+    description: Media requirements
+    usage: /mediarequirements
+  crates:
+    description: Open crate preview menu
+    usage: /crates
+  outpost:
+    description: Outpost event info and admin setup
+    usage: /outpost [pos1|pos2|setregion]
+  koth:
+    description: KOTH event info and admin setup
+    usage: /koth [pos1|pos2|setregion]
+  protect:
+    description: 'Deprecated — use /coreprotect'
+    usage: /coreprotect [pos1|pos2|setregion <region>]
+  coreprotect:
+    description: Region protection and arena setup
+    usage: /coreprotect [pos1|pos2|setregion <spawn|combat|pvp|side1|side2|side3|side4>]
+  arenas:
+    description: Arena snapshot for side regions
+    usage: /arenas snapshot <side|side1-side4>
+  arena:
+    description: 'Deprecated — use /arenas'
+    usage: /arenas snapshot|reset <arena|side1-side4> [fast]
+  unlock:
+    description: Unlock RTP destinations
+    usage: /unlock <nether|end|overworld>
+    permission: sharded.rtp.admin
+  lock:
+    description: Lock RTP destinations
+    usage: /lock <nether|end|overworld>
+    permission: sharded.rtp.admin
+  combat:
+    description: Combat region setup
+    usage: /combat [pos1|pos2|setregion]
+  crate:
+    description: Open crate preview menu
+    usage: /crate
+    permission: sharded.crates.use
+  roles:
+    description: Sync role permissions to a LuckPerms group
+    usage: /role <rank>
+    aliases: [roles]
+    permission: sharded.roles.admin
+  role:
+    description: Sync role permissions to a LuckPerms group
+    usage: /role <rank>
+    permission: sharded.roles.admin
+  gtp:
+    description: Teleport to a player
+    usage: /gtp <player>
+    permission: sharded.staff.teleport
+  gotoplayer:
+    description: Teleport to a player
+    usage: /gotoplayer <player>
+    permission: sharded.staff.teleport
+
+permissions:
+  sharded.leaderboards.use:
+    description: Open leaderboards
+    default: true
+  sharded.stats.use:
+    description: View your own stats
+    default: true
+  sharded.stats.others:
+    description: View other players' stats
+    default: op
+  sharded.media.use:
+    description: Open media requirements menu
+    default: true
+  sharded.crates.use:
+    description: Open crate preview menu
+    default: true
+  sharded.role.use:
+    description: Apply a role bundle to yourself with /role
+    default: op
+  sharded.roles.admin:
+    description: Apply role bundles to other players
+    default: op
+  sharded.admin:
+    description: Access to /shardedcore reload
+    default: op
+  sharded.craft.use:
+    default: false
+  sharded.fix.use:
+    default: false
+  sharded.fix.bypass:
+    default: op
+  sharded.trash.use:
+    default: false
+  sharded.chat.toggle:
+    default: true
+  sharded.msg.use:
+    default: true
+  sharded.msg.toggle:
+    default: true
+  sharded.msg.bypass:
+    default: op
+  sharded.nightvision.use:
+    default: true
+  sharded.weeklyrewards.use:
+    description: Claim weekly rewards
+    default: true
+  sharded.staff.teleport:
+    description: Use /gtp and /gotoplayer
+    default: op
+  sharded.backpack.use:
+    default: true
+  sharded.backpack.view.others:
+    default: op
+  sharded.backpack.admin:
+    description: View and take items from any player's backpack
+    default: op
+  sharded.backpack.slots.1:
+    default: true
+  sharded.backpack.slots.2:
+    default: op
+  sharded.backpack.slots.3:
+    default: op
+  sharded.backpack.slots.4:
+    default: op
+  sharded.backpack.slots.5:
+    default: op
+  sharded.backpack.slots.6:
+    default: op
+  sharded.backpack.slots.7:
+    default: op
+  sharded.backpack.slots.8:
+    default: op
+  sharded.backpack.slots.9:
+    default: op
+  sharded.graves.use:
+    description: Use graves on death
+    default: true
+  sharded.graves.duration.vip:
+    description: Graves last 10 minutes
+    default: false
+  sharded.graves.duration.mvp:
+    description: Graves last 15 minutes
+    default: false
+  sharded.graves.duration.ruby:
+    description: Graves last 20 minutes
+    default: false
+  sharded.graves.duration.sapphire:
+    description: Graves last 25 minutes
+    default: false
+  sharded.graves.duration.onyx:
+    description: Graves last 30 minutes
+    default: false
+  sharded.graves.duration.aether:
+    description: Graves last 40 minutes
+    default: false
+  sharded.graves.duration.flawless:
+    description: Graves last 60 minutes
+    default: false
+  sharded.graves.bypass:
+    default: op
+  sharded.graves.admin:
+    default: op
+  sharded.armortrims.use:
+    default: false
+  sharded.fly.use:
+    default: op
+  sharded.fly.speed:
+    default: op
+  sharded.fly.others:
+    default: op
+  sharded.fly.anywhere:
+    description: Bypass fly region bounds (region must still be set)
+    default: op
+  sharded.fly.admin:
+    default: op
+  sharded.autosmelt.use:
+    default: op
+  sharded.rtp.use:
+    default: true
+  sharded.rtp.bypass:
+    default: false
+  sharded.guide.use:
+    description: Open the server guide and rules menus
+    default: true
+  sharded.teams.use:
+    description: Use team commands and GUI
+    default: true
+  sharded.teams.admin:
+    description: Team admin commands
+    default: op
+  sharded.dailyrewards.use:
+    description: Claim daily rewards
+    default: true
+  sharded.graves.headtokens:
+    description: Convert player heads to tokens
+    default: true
+  sharded.modules.admin:
+    description: Manage modules in-game
+    default: op
+  sharded.spawn.admin:
+    description: Set main and vanilla spawn locations
+    default: op
+  eglow.use:
+    description: Open the glow equip menu
+    default: true
+  sharded.tags.use:
+    description: Open the tag equip menu
+    default: true
+  sharded.tags.admin:
+    description: Create and delete tags
+    default: op
+  sharded.chatcolor.use:
+    description: Open the chat colour equip menu
+    default: true
+  sharded.chatcolor.admin:
+    description: Create and delete chat colours
+    default: op
+  sharded.namecolor.use:
+    description: Open the name colour equip menu
+    default: true
+  sharded.namecolor.admin:
+    description: Create and delete name colours
+    default: op
+  sharded.wardrobe.use:
+    description: Open the wardrobe menu
+    default: true
+  sharded.wardrobe.tophat:
+    default: false
+  sharded.wardrobe.crown:
+    default: false
+  sharded.wardrobe.propeller_hat:
+    default: false
+  sharded.wardrobe.clown_mask:
+    default: false
+  sharded.wardrobe.sstraw_hat:
+    default: false
+  sharded.settings.use:
+    default: true
+  sharded.settings.scoreboard:
+    default: true
+  sharded.settings.deathmessages:
+    default: true
+  sharded.settings.joinmessages:
+    default: true
+  sharded.settings.mobspawn:
+    default: true
+  sharded.settings.eventsounds:
+    default: true
+  sharded.killstreak.use:
+    description: View your own killstreak
+    default: true
+  sharded.killstreak.others:
+    description: View other players' killstreaks
+    default: op
+  sharded.toolname.use:
+    default: false
+  sharded.pickupmobs.use:
+    default: op
+  sharded.spawners.use:
+    default: true
+  sharded.spawners.pickup:
+    default: false
+  sharded.tokens.admin:
+    default: op
+  sharded.tokenshop.use:
+    default: true
+  sharded.pets.use:
+    description: Equip and manage cosmetic pets
+    default: false
+  sharded.pets.view:
+    description: Open the pets menu
+    default: true
+  sharded.pets.parrot:
+    default: false
+  sharded.pets.axolotl:
+    default: false
+  sharded.pets.bee:
+    default: false
+  sharded.pets.bat:
+    default: op
+  sharded.pets.happy_ghast:
+    default: op
+    description: Legacy alias for sharded.pets.bat
+  sharded.pets.allay:
+    default: op
+  sharded.tempranks.use:
+    description: Open and purchase from the temp rank shop
+    default: true
+  sharded.staff:
+    description: Marks a player as staff for command auditing
+    default: op
+  sharded.staff.notify:
+    description: Receive in-game staff audit alerts
+    default: op
+  sharded.staff.gamemode:
+    description: Use /gmc /gms /gmsp
+    default: op
+  sharded.staff.mode:
+    description: Use /staffmode and /sfmode
+    default: op
+  sharded.staff.vanish:
+    description: Use /vanish
+    default: op
+  sharded.staff.seevanished:
+    description: See vanished staff
+    default: op
+  sharded.staff.freeze:
+    description: Use /freeze
+    default: op
+  sharded.staff.punish:
+    description: Use /punish and punish GUI
+    default: op
+  sharded.staff.ban:
+    description: Use /ban
+    default: op
+  sharded.staff.banip:
+    description: Use /banip
+    default: op
+  sharded.staff.unban:
+    description: Use /unban and /pardon
+    default: op
+  sharded.staff.unbanip:
+    description: Use /unbanip
+    default: op
+  sharded.staff.unmute:
+    description: Use /unmute
+    default: op
+  sharded.staff.pardon:
+    description: Use /pardon
+    default: op
+  sharded.staff.offend:
+    description: Use /offend
+    default: op
+  sharded.staff.kick:
+    description: Use /kick
+    default: op
+  sharded.staff.mute:
+    description: Use /mute (via punish GUI)
+    default: op
+  sharded.staff.revokepunishment:
+    description: Use /revokepunishment
+    default: op
+  sharded.staff.screenshare:
+    description: Use /screenshare and /ss
+    default: op
+  sharded.staff.invrollback:
+    description: Use /invrollback
+    default: op
+  sharded.staff.announce:
+    description: Use /announce
+    default: op
+  sharded.staff.requeststaff:
+    description: Respond to /requeststaff alerts
+    default: op
+  sharded.staff.staffchat:
+    description: Use /staffchat
+    default: op
+  sharded.punishments.revokepunishment:
+    default: op
+  sharded.staff.wipe:
+    description: Use /wipe
+    default: op
+  sharded.staff.alts:
+    description: Use /alts
+    default: op
+  sharded.staff.list:
+    description: Use /stafflist
+    default: op
+  sharded.staff.randomtp:
+    description: Use /randomtp
+    default: op
+  sharded.punishments.punish:
+    default: op
+  sharded.punishments.ban:
+    default: op
+  sharded.punishments.banip:
+    default: op
+  sharded.punishments.kick:
+    default: op
+  sharded.punishments.mute:
+    default: op
+  sharded.punishments.unban:
+    default: op
+  sharded.punishments.unbanip:
+    default: op
+  sharded.punishments.unmute:
+    default: op
+  sharded.punishments.pardon:
+    default: op
+  sharded.punishments.offend:
+    default: op
+  sharded.punishments.wipe:
+    default: op
+  sharded.punishments.alts:
+    default: op
+  sharded.chatmoderation.bypass:
+    default: op
+  sharded.announce.use:
+    default: op
+  sharded.invrollback.use:
+    default: op
+  sharded.screenshare.use:
+    default: op
+  sharded.staffchat.use:
+    default: op
+  sharded.requeststaff.use:
+    default: true
+  sharded.killstreak.farm.bypass:
+    default: op
+  sharded.outpost.admin:
+    description: Setup outpost region
+    default: op
+  sharded.koth.admin:
+    description: Setup KOTH region
+    default: op
+  sharded.coreprotect.admin:
+    description: CoreProtect region and arena admin
+    default: op
+  sharded.coreprotect.bypass:
+    description: Bypass CoreProtect restrictions
+    default: op
+  sharded.duel.use:
+    description: Send duel requests
+    default: true
+  sharded.rtp.admin:
+    description: Unlock RTP destinations and admin RTP
+    default: op
+  sharded.protect.admin:
+    description: Setup protect regions
+    default: op
+  sharded.protect.bypass:
+    description: Bypass spawn/pvp protect restrictions
+    default: op
+  sharded.arena.admin:
+    description: Arena snapshot and reset
+    default: op
+  sharded.rewards.use:
+    description: Open /rewards menu
+    default: true
+  sharded.combat.admin:
+    description: Setup combat region
+    default: op

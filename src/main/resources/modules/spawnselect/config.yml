@@ -1,0 +1,20 @@
+config-version: 7
+message-mode: chat
+
+spawn-command-enabled: true
+main-teleport-seconds: 10
+main-teleport-actionbar: '&#FF005D&lSPAWN &8▷ &fTeleporting you to spawn in &#FF005D&n%seconds%&r&#FF005Ds'
+teleport-cancelled-actionbar: '&#FF005D&lSPAWN &8▷ &fYou moved &8— &7teleport cancelled.'
+countdown-sound: BLOCK_NOTE_BLOCK_PLING
+cancel-sound: BLOCK_NOTE_BLOCK_BASS
+
+fallback-world: world
+prompt-on-join: false
+prompt-delay-ticks: 40
+
+rtp-fallback:
+  center-x: 0
+  center-z: 0
+  min-radius: 100
+  max-radius: 500
+  max-attempts: 25

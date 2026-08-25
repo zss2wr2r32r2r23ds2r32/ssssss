@@ -1,0 +1,6 @@
+prefix: '%prefix%'
+players-only: '%prefix%&#FF2727Players only.'
+no-permission: '%prefix%&#FF2727You do not have permission.'
+gui-title: '&8Module Manager'
+enabled: '%prefix%&#9FFF00Enabled module &f%module%&#9FFF00. Reloading...'
+disabled: '%prefix%&#FF2727Disabled module &f%module%&#FF2727. Reloading...'

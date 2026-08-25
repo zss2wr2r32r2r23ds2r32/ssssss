@@ -1,0 +1,40 @@
+# sharded.graves.use = use graves on death (default true)
+
+config-version: 7
+message-mode: chat
+enabled-worlds: []
+expire-seconds: 300
+drop-items-on-expire: true
+store-xp: true
+hologram-height: 1.6
+gui-title: '&8Grave of &f%player%'
+block-material: PLAYER_HEAD
+
+head-drop:
+  enabled: true
+  chance-percent: 10
+  drop-on-ground: true
+  skip-grave-on-pvp: true
+  display-name: '&#FF2727&l%player%''s Head'
+  lore:
+    - '&#FF2727&lDESCRIPTION:'
+    - '&#FF2727| &fDropped on PvP kill.'
+    - '&#FF2727| &fTrade with &f/headtokens'
+    - ''
+    - '&#FFD700▷ &#FFD700&l&nCLICK&r &#FFD700TO VIEW'
+
+head-tokens:
+  value: 50
+
+duration-permissions:
+  'sharded.graves.duration.vip': 600
+  'sharded.graves.duration.mvp': 900
+  'sharded.graves.duration.ruby': 1200
+  'sharded.graves.duration.sapphire': 1500
+  'sharded.graves.duration.onyx': 1800
+  'sharded.graves.duration.aether': 2400
+  'sharded.graves.duration.flawless': 3600
+
+sounds:
+  open: BLOCK_CHEST_OPEN
+  emptied: ENTITY_PLAYER_LEVELUP

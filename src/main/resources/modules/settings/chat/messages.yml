@@ -1,0 +1,6 @@
+config-version: 3
+prefix: '%prefix%'
+players-only: '%prefix%&#FF2727Only players can use this command.'
+no-permission: '%prefix%&#FF2727You don''t have permission to toggle chat.'
+chat-enabled: '%prefix%&#9FFF00Public chat is now visible.'
+chat-disabled: '%prefix%&#FF2727Public chat is now hidden.'

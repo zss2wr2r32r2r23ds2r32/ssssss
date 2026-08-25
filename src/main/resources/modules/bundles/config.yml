@@ -1,0 +1,7 @@
+# Hides bundle EMPTY/FULL and smithing-template tooltips in plugin menus.
+# Does not affect items players craft or hold normally.
+
+config-version: 3
+message-mode: chat
+strip-bundles: true
+strip-trim-templates: true

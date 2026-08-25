@@ -1,0 +1,26 @@
+config-version: 2
+prefix: '%prefix%'
+
+players-only: '%prefix%&#FF2727Only players can use this command.'
+no-permission: '%prefix%&#FF2727You don''t have permission to do this.'
+usage: '%prefix%&#FF2727Usage: &f/spawn &7| &f/spawn select <main|vanilla>'
+setspawn-usage: '%prefix%&#FF2727Usage: &f/setspawn main &7| &f/setspawn vanilla <world>'
+vanilla-usage: '%prefix%&#FF2727Usage: &f/setspawn vanilla <world>'
+main-set: '%prefix%&#9FFF00Main spawn has been set!'
+vanilla-set: '%prefix%&#9FFF00Vanilla spawn world set to &e%world%&#9FFF00!'
+main-not-set: '%prefix%&#FF2727The main spawn has not been set yet.'
+vanilla-not-set: '%prefix%&#FF2727The Vanilla spawn world hasn''t been configured.'
+world-not-found: '%prefix%&#FF2727World &f%world% &#FF2727does not exist!'
+no-safe-location: '%prefix%&#FF2727Could not find a safe location. Try again.'
+random-respawn: '%prefix%&#9FFF00You respawned at a random location.'
+
+message-modes:
+  selected-main: actionbar
+  selected-vanilla: actionbar
+
+selected-main: '&#9FFF00You selected &#FF0053Main Spawn&#9FFF00.'
+selected-vanilla: '&#9FFF00You selected &#9FFF00Vanilla Spawn&#9FFF00.'
+prompt-select: '%prefix%&#9FFF00Choose your spawn type — this is saved permanently.'
+teleported-main: '%prefix%&#9FFF00Teleported to spawn!'
+teleport-cancelled: '%prefix%&#FF2727Teleport cancelled — you moved.'
+spawn-disabled: '%prefix%&#FF2727The &f/spawn &#FF2727command is disabled on this server.'

@@ -1,0 +1,21 @@
+config-version: 2
+prefix: '%prefix%'
+players-only: '%prefix%&#FF2727Only players can use this command.'
+no-permission: '%prefix%&#FF2727You don''t have permission.'
+not-owned: '%prefix%&#FF2727You don''t own %hat%&#FF2727!'
+equipped: '%prefix%&#9FFF00Equipped %hat%&#9FFF00!'
+removed: '%prefix%&#9FFF00Hat removed.'
+unlocked: '%prefix%&#9FFF00%hat% &#9FFF00added to your wardrobe! Use &f/wardrobe&#9FFF00.'
+item-missing: '%prefix%&#FF2727Could not load %hat%&#FF2727 — is ItemsAdder installed?'
+preview-spawn-only: '%prefix%&#FF2727You can only preview hats at spawn!'
+preview-world-missing: '%prefix%&#FF2727Preview location is not available in this world.'
+preview-started: '%prefix%&#9FFF00Previewing %hat%&#9FFF00 — do &f/wardrobe leave&#9FFF00 when done.'
+preview-ended: '%prefix%&#9FFF00Preview ended.'
+preview-active: '%prefix%&#FF2727You are previewing — use &f/wardrobe leave&#FF2727.'
+preview-not-active: '%prefix%&#FF2727You are not previewing a hat.'
+
+message-modes:
+  equipped: actionbar
+  preview-started: actionbar
+  preview-ended: actionbar
+  preview-active: actionbar

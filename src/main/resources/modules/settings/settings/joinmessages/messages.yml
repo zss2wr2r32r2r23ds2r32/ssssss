@@ -1,0 +1,3 @@
+config-version: 3
+prefix: '%prefix%'
+# Join/quit message formats live in config.yml (formats section).

@@ -1,0 +1,13 @@
+config-version: 4
+message-mode: chat
+block-natural-mobs-in-spawn: true
+side-max-build-y: 111
+horn-block-worlds:
+  - spawn
+regions:
+  spawn: {}
+  pvp: {}
+  side1: {}
+  side2: {}
+  side3: {}
+  side4: {}

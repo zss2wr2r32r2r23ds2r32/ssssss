@@ -1,0 +1,10 @@
+config-version: 1
+prefix: '%prefix%'
+
+usage: '&fUsage: &#FF007B/screenshare <player>'
+not-online: '&#FF0000%player% is not online.'
+started: '&fYou froze &#FF007B%player% &f, screenshare countdown started.'
+stopped: '&fYou unfroze &#FF007B%player%&7.'
+command-blocked: '&#FF0000&lSCREENSHARE &8| &#FF0000You cannot use commands while frozen!'
+no-permission: '%prefix%&#FF2727You don''t have permission.'
+players-only: '%prefix%&#FF2727Only players can use this command.'

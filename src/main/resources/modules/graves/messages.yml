@@ -1,0 +1,18 @@
+config-version: 3
+prefix: '%prefix%'
+no-permission: '%prefix%&#FF2727You don''t have permission to do that.'
+grave-created: '%prefix%&7Your items are stored in a grave at &f%x%, %y%, %z% &7for
+  &f%time%&7.'
+grave-expired: '%prefix%&#FF2727Your grave has expired.'
+grave-emptied: '%prefix%&#9FFF00Grave of &f%player% &#9FFF00collected.'
+xp-claimed: '%prefix%&#9FFF00You recovered &f%xp% XP &#9FFF00from the grave.'
+purged: '%prefix%&#FF2727Purged &f%count% &#FF2727graves.'
+list-header: '%prefix%&7Active graves: &f%count%'
+list-entry: '&8- &f%player% &7at &f%x%, %y%, %z% &8(&7%time% left&8)'
+hologram-name: '&c☠ &f%player%'
+hologram-timer: '&7Despawns in: &f%time%'
+hologram-xp: '&#9FFF00%xp% XP stored'
+players-only: '%prefix%&#FF2727Players only.'
+headtokens-no-head: '%prefix%&#FF2727Hold a player head in your main hand.'
+headtokens-no-service: '%prefix%&#FF2727Token system unavailable.'
+headtokens-success: '%prefix%&#9FFF00Converted head for &#9FFF00%amount% tokens&#9FFF00!'
