@@ -48,6 +48,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -73,6 +75,7 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
     }
 
     private final Map<String, Grave> gravesByBlock = new LinkedHashMap<>();
+    private final Set<UUID> openGraves = new HashSet<>();
     private NamespacedKey hologramKey;
     private BukkitTask tickTask;
 
@@ -349,14 +352,23 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
     }
 
     private void openGrave(Player player, Grave grave) {
+        if (openGraves.contains(grave.id)) {
+            return;
+        }
         int size = Math.min(54, Math.max(9, ((grave.items.size() + 8) / 9) * 9));
         GraveHolder holder = new GraveHolder(grave);
         Inventory inventory = Bukkit.createInventory(holder, size,
                 Text.c(Text.apply(config.getString("gui-title", "&8Grave of &f%player%"), "%player%", grave.ownerName)));
         holder.inventory = inventory;
         TrackedInventories.track(inventory, holder);
-        for (int i = 0; i < grave.items.size() && i < size; i++) {
-            inventory.setItem(i, grave.items.get(i));
+        List<ItemStack> loot = new ArrayList<>();
+        for (ItemStack item : grave.items) {
+            if (item != null && !item.getType().isAir()) loot.add(item.clone());
+        }
+        grave.items.clear();
+        openGraves.add(grave.id);
+        for (int i = 0; i < loot.size() && i < size; i++) {
+            inventory.setItem(i, loot.get(i));
         }
         if (!grave.xpClaimed && grave.xp > 0) {
             player.giveExp(grave.xp);
@@ -382,6 +394,7 @@ public final class GravesModule extends Module implements CommandExecutor, TabCo
         GraveHolder holder = TrackedInventories.untrack(event.getInventory(), GraveHolder.class);
         if (holder == null) return;
         Grave grave = holder.grave;
+        openGraves.remove(grave.id);
         grave.items.clear();
         for (ItemStack item : event.getInventory().getContents()) {
             if (item != null && !item.getType().isAir()) grave.items.add(item.clone());

@@ -1,20 +1,17 @@
 menu_title: 'RTP'
-config-version: 4
+config-version: 5
 size: 27
 open_permission: sharded.rtp.use
 
-open_commands:
-  - '[sound] BLOCK_PORTAL_AMBIENT'
-
 items:
-  info_side:
+  filler:
     material: BLACK_STAINED_GLASS_PANE
-    slots: [0,1,2,3,4,5,6,7,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25]
+    slots: [0,1,2,3,4,5,6,7,8,9,17,18,19,20,21,22,23,24,25,26]
     display_name: ' '
 
   overworld:
     material: GRASS_BLOCK
-    slot: 13
+    slot: 11
     display_name: '&#9FFF00&lOVERWORLD'
     lore:
       - '&8Description'
@@ -29,10 +26,52 @@ items:
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport'
     click_commands:
       - '[close]'
-      - '[rtp_confirm]'
+      - '[rtp_overworld]'
 
-  cancel:
-    nav-override: true
-    slot: 26
+  nether:
+    material: NETHERRACK
+    slot: 12
+    display_name: '&#FF4D00&lNETHER'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF4D00Information:'
+      - '&#FF4D00| &fClick me to randomly teleport'
+      - '&#FF4D00| &fSomewhere inside the &#FF4D00Nether!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport'
     click_commands:
       - '[close]'
+      - '[rtp_nether]'
+
+  end:
+    material: END_STONE
+    slot: 13
+    display_name: '&#D896FF&lEND'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#D896FFInformation:'
+      - '&#D896FF| &fClick me to randomly teleport'
+      - '&#D896FF| &fSomewhere inside the &#D896FFEnd!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport'
+    click_commands:
+      - '[close]'
+      - '[rtp_end]'
+
+  duels:
+    material: NETHERITE_SWORD
+    slot: 15
+    display_name: '&#FF8800&lDUELS'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF8800Information:'
+      - '&#FF8800| &fClick to open the'
+      - '&#FF8800| &fDuels queue.'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Queue'
+    click_commands:
+      - '[close]'
+      - '[rtp_duels]'

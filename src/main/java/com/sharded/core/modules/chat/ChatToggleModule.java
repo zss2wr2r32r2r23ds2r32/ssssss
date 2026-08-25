@@ -3,6 +3,11 @@ package com.sharded.core.modules.chat;
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -57,5 +62,29 @@ public final class ChatToggleModule extends Module implements CommandExecutor {
     public void onChat(AsyncChatEvent event) {
         event.viewers().removeIf(viewer ->
                 viewer instanceof Player player && !isChatEnabled(player) && player != event.getPlayer());
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onMentions(AsyncChatEvent event) {
+        if (!config.getBoolean("mentions.enabled", true)) return;
+        String plain = PlainTextComponentSerializer.plainText().serialize(event.message());
+        Component message = Component.text(plain);
+        for (Player online : Bukkit.getOnlinePlayers()) {
+            String name = online.getName();
+            if (name == null || name.isBlank() || !plain.contains(name)) continue;
+            message = underlineAll(message, name);
+            plain = PlainTextComponentSerializer.plainText().serialize(message);
+        }
+        event.message(message);
+    }
+
+    private Component underlineAll(Component source, String name) {
+        String plain = PlainTextComponentSerializer.plainText().serialize(source);
+        int idx = plain.indexOf(name);
+        if (idx < 0) return source;
+        return Component.text(plain.substring(0, idx))
+                .append(Component.text(name).decorate(TextDecoration.UNDERLINED)
+                        .clickEvent(ClickEvent.suggestCommand(name)))
+                .append(underlineAll(Component.text(plain.substring(idx + name.length())), name));
     }
 }

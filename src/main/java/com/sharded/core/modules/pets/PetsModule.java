@@ -234,13 +234,17 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
             send(sender, "players-only");
             return true;
         }
-        if (!player.hasPermission("sharded.pets.use")) {
-            send(player, "no-permission");
+        if (command.getName().equalsIgnoreCase("pets")) {
+            if (!player.hasPermission("sharded.pets.view") && !player.hasPermission("sharded.pets.use")) {
+                send(player, "no-permission");
+                return true;
+            }
+            plugin.gui().open(player, "pets");
             return true;
         }
 
-        if (command.getName().equalsIgnoreCase("pets")) {
-            plugin.gui().open(player, "pets");
+        if (!player.hasPermission("sharded.pets.use")) {
+            send(player, "no-permission");
             return true;
         }
 
@@ -326,10 +330,6 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
         if (!player.hasPermission(type.permission())
                 && !(type == PetType.BAT && player.hasPermission("sharded.pets.happy_ghast"))) {
             send(player, "no-pet-permission", "%pet%", type.id());
-            return;
-        }
-        if (!player.hasPermission("sharded.pets.use")) {
-            send(player, "no-permission");
             return;
         }
         despawnEntity(player.getUniqueId());

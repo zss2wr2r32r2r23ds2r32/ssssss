@@ -146,7 +146,13 @@ public final class BackpackModule extends Module implements CommandExecutor, Tab
     }
 
     private int displaySlotCount(Player owner, ItemStack[] stored) {
-        return allowedSlots(owner);
+        int allowed = allowedSlots(owner);
+        if (stored == null || stored.length == 0) return allowed;
+        int used = 0;
+        for (ItemStack item : stored) {
+            if (item != null && !item.getType().isAir()) used++;
+        }
+        return Math.max(allowed, Math.min(maxSlots(), Math.max(stored.length, used)));
     }
 
     @Override
@@ -252,13 +258,6 @@ public final class BackpackModule extends Module implements CommandExecutor, Tab
         for (int i = 0; i < holder.slots.length; i++) {
             ItemStack item = event.getInventory().getItem(holder.slots[i]);
             data[i] = item == null || item.getType().isAir() ? null : item.clone();
-        }
-        Player ownerOnline = Bukkit.getPlayer(holder.owner);
-        int allowed = ownerOnline == null ? data.length : allowedSlots(ownerOnline);
-        if (data.length > allowed) {
-            ItemStack[] trimmed = new ItemStack[allowed];
-            System.arraycopy(data, 0, trimmed, 0, allowed);
-            data = trimmed;
         }
         final ItemStack[] saveData = data;
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {

@@ -58,8 +58,8 @@ public final class RewardsModule extends Module implements CommandExecutor {
         ItemStack pane = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build();
         for (int i = 0; i < 27; i++) inv.setItem(i, pane);
 
-        inv.setItem(11, hubItem("daily", Material.SUNFLOWER, 11));
-        inv.setItem(15, hubItem("weekly", Material.NETHER_STAR, 15));
+        inv.setItem(12, hubItem("daily", Material.SUNFLOWER, 12));
+        inv.setItem(14, hubItem("weekly", Material.NETHER_STAR, 14));
         player.openInventory(inv);
     }
 
@@ -77,10 +77,10 @@ public final class RewardsModule extends Module implements CommandExecutor {
         if (TrackedInventories.lookup(event.getView().getTopInventory(), Holder.class) == null) return;
         event.setCancelled(true);
         if (event.getClickedInventory() != event.getView().getTopInventory()) return;
-        if (event.getSlot() == 11) {
+        if (event.getSlot() == 12) {
             player.closeInventory();
             player.performCommand("dailyrewards");
-        } else if (event.getSlot() == 15) {
+        } else if (event.getSlot() == 14) {
             player.closeInventory();
             player.performCommand("weeklyrewards");
         }

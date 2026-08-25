@@ -9,7 +9,7 @@ sounds:
   navigate: UI_BUTTON_CLICK
 
 back:
-  material: ARROW
+  material: BARRIER
   display_name: '&#FF0000&lBACK'
   lore:
     - '&8Description'
@@ -21,7 +21,7 @@ back:
     - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
 
 previous:
-  material: ARROW
+  material: BARRIER
   display_name: '&#FF005D&lPREVIOUS'
   lore:
     - '&8Description'

@@ -1,0 +1,12 @@
+prefix: '%prefix%'
+message-mode: chat
+
+players-only: '%prefix%&#FF2727Players only.'
+no-permission: '%prefix%&#FF2727You do not have permission.'
+usage: '%prefix%&#FF2727Usage: &f/duel <player>'
+player-not-found: '%prefix%&#FF2727Player not found.'
+self-duel: '%prefix%&#FF2727You cannot duel yourself.'
+request-sent: '%prefix%&#9FFF00Sent a duel request to &f%player%&#9FFF00.'
+request-received: '%prefix%&#9FFF00%player% &#9FFF00sent you a duel request.'
+request-cancelled: '%prefix%&#FF2727Cancelled duel request to &f%player%&#FF2727.'
+disallowed-items: '%prefix%&#FF2727Remove disallowed items before dueling.'

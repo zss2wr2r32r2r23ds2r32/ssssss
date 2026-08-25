@@ -669,6 +669,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         send(staff, "banned", "%player%", OfflinePlayers.name(target.getUniqueId()),
                 "%reason%", reason, "%duration%", formatDurationLabel(durationRaw, expiresAt));
         broadcastPunishment("Ban", target, staffName, reason);
+        sendPunishmentWebhook("ban-webhook", target, staffName, reason, "Ban");
         if (doxxed) sendDoxxingWebhook(target, staffName, reason);
     }
 
@@ -678,6 +679,30 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
             if (reason.equalsIgnoreCase(entry)) return true;
         }
         return false;
+    }
+
+    private void sendPunishmentWebhook(String configPath, OfflinePlayer target, String staffName, String reason, String action) {
+        if (!config.getBoolean(configPath + ".enabled", false)) return;
+        String url = config.getString(configPath + ".url", "");
+        if (url.isBlank()) return;
+        String name = OfflinePlayers.name(target.getUniqueId());
+        String thumb = config.getString(configPath + ".thumbnail-url", "https://mc-heads.net/avatar/%uuid%")
+                .replace("%uuid%", target.getUniqueId().toString())
+                .replace("%player%", name);
+        List<DiscordWebhook.Field> fields = List.of(
+                new DiscordWebhook.Field("Player", name, true),
+                new DiscordWebhook.Field("Staff", staffName, true),
+                new DiscordWebhook.Field("Reason", reason, false)
+        );
+        DiscordWebhook.sendEmbedAsync(plugin.getLogger(), url,
+                config.getString(configPath + ".title", action),
+                config.getString(configPath + ".description", "%player% was %action% by %staff% for %reason%.")
+                        .replace("%player%", name).replace("%staff%", staffName).replace("%reason%", reason)
+                        .replace("%action%", action.toLowerCase(Locale.ROOT)),
+                (int) config.getLong(configPath + ".color", 0xFF0000),
+                thumb,
+                config.getString(configPath + ".footer", "ShardedCore Punishments"),
+                fields);
     }
 
     private void sendDoxxingWebhook(OfflinePlayer target, String staffName, String reason) {
@@ -728,6 +753,7 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         Player online = target.getPlayer();
         if (online != null) showMuteScreen(online, staffName, reason, expiresAt);
         broadcastPunishment("Mute", target, staffName, reason);
+        sendPunishmentWebhook("mute-webhook", target, staffName, reason, "Mute");
     }
 
     public void banIp(CommandSender staff, OfflinePlayer target, String reason, String durationRaw) {
@@ -1132,11 +1158,14 @@ public final class PunishmentsModule extends Module implements CommandExecutor, 
         if (!config.getBoolean("public-broadcast.enabled", true)) return;
         List<String> actions = config.getStringList("public-broadcast.actions");
         if (!actions.contains(action)) return;
-        String msg = raw("broadcast-punish",
-                "%action%", action,
-                "%player%", OfflinePlayers.name(target.getUniqueId()),
-                "%staff%", staff,
-                "%reason%", reason);
+        String prefix = ColorUtil.normalize(config.getString("punishment-prefix", "&#FF0000&lPUNISHMENTS &8▷ &r"));
+        String msg = messages.getString("broadcast-punish",
+                "%prefix%&#FF2727%action% &f%player% &7by &f%staff% &7— &f%reason%");
+        msg = msg.replace("%prefix%", prefix)
+                .replace("%action%", action)
+                .replace("%player%", OfflinePlayers.name(target.getUniqueId()))
+                .replace("%staff%", staff)
+                .replace("%reason%", reason);
         Bukkit.broadcast(Text.c(msg));
     }
 

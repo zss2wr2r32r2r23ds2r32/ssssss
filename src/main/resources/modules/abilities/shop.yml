@@ -1,14 +1,14 @@
 config-version: 1
 menu_title: 'Token Shop | Abilities'
 open_command: abilities
-size: 45
+size: 27
 open_permission: tokenshop.use
 
 items:
 
   back_button:
     nav-override: true
-    slot: 44
+    slot: 26
     left_click_commands:
       - '[openguimenu] mainmenu'
 

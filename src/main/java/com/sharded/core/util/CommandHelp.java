@@ -1,9 +1,11 @@
 package com.sharded.core.util;
 
+import com.sharded.core.module.ModuleManager;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /** Builds the /shardedcore command list for players. */
 public final class CommandHelp {
@@ -11,7 +13,10 @@ public final class CommandHelp {
     private CommandHelp() {
     }
 
-    public record CommandInfo(String command, String description, String permission) {
+    public record CommandInfo(String command, String description, String permission, String moduleId) {
+        public CommandInfo(String command, String description, String permission) {
+            this(command, description, permission, moduleForCommand(command));
+        }
     }
 
     public static List<CommandInfo> all() {
@@ -29,10 +34,11 @@ public final class CommandHelp {
         list.add(new CommandInfo("/fly", "Toggle flight", "sharded.fly.use"));
         list.add(new CommandInfo("/autosmelt", "Auto smelt pickaxe", "sharded.autosmelt.use"));
         list.add(new CommandInfo("/rtp", "Random teleport menu", "sharded.rtp.use"));
+        list.add(new CommandInfo("/duel <player>", "Send a duel request", "sharded.duel.use"));
         list.add(new CommandInfo("/guide", "Server guide menu", "sharded.guide.use"));
         list.add(new CommandInfo("/rules", "Server rules menu", "sharded.guide.use"));
         list.add(new CommandInfo("/spawn (/spawnselect)", "Spawn selector", "sharded.spawn.use"));
-        list.add(new CommandInfo("/pets", "Open pets menu", "sharded.pets.use"));
+        list.add(new CommandInfo("/pets", "Open pets menu", "sharded.pets.view"));
         list.add(new CommandInfo("/pet equip|remove|rename", "Manage cosmetic pet", "sharded.pets.use"));
         list.add(new CommandInfo("/settings", "Personal settings menu", "sharded.settings.use"));
         list.add(new CommandInfo("/killstreak [best|player]", "View killstreak stats", "sharded.killstreak.use"));
@@ -77,10 +83,16 @@ public final class CommandHelp {
     }
 
     public static void send(CommandSender sender, String headerPrefix) {
+        send(sender, headerPrefix, null);
+    }
+
+    public static void send(CommandSender sender, String headerPrefix, ModuleManager modules) {
         sender.sendMessage(Text.c(headerPrefix + "&bShardedCore Commands:"));
         for (CommandInfo info : all()) {
             if (info.permission() != null && !sender.hasPermission(info.permission())) continue;
-            sender.sendMessage(Text.c("&7- &f" + info.command() + " &8- &7" + info.description()));
+            boolean enabled = info.moduleId() == null || modules == null || modules.isConfiguredEnabled(info.moduleId());
+            String cmdColor = enabled ? "&f" : "&c";
+            sender.sendMessage(Text.c("&7- " + cmdColor + info.command() + " &8- &7" + info.description()));
         }
     }
 
@@ -94,5 +106,33 @@ public final class CommandHelp {
             if (info.permission() != null && !sender.hasPermission(info.permission())) continue;
             sender.sendMessage(Text.c("&7- &f" + info.command() + " &8- &7" + info.description()));
         }
+    }
+
+    private static String moduleForCommand(String command) {
+        String base = command.toLowerCase(Locale.ROOT).split("\\s")[0].replace("/", "");
+        return switch (base) {
+            case "craft" -> "craft";
+            case "fix" -> "fix";
+            case "trash" -> "trash";
+            case "chattoggle", "togglechat", "ct", "publicchat" -> "chat";
+            case "msg", "tell", "whisper", "w", "pm", "reply", "r", "msgtoggle", "togglemsg", "pmtoggle" -> "privatemessages";
+            case "nightvision", "nv" -> "nightvision";
+            case "backpack", "bp" -> "backpack";
+            case "armortrims", "trims", "trimstation" -> "armortrims";
+            case "fly" -> "fly";
+            case "autosmelt" -> "autosmelt";
+            case "rtp", "wild", "unlock" -> "portalrtp";
+            case "duel" -> "duel";
+            case "guide", "rules" -> "guide";
+            case "spawn", "spawnselect", "spawnselector", "setspawn" -> "spawnselect";
+            case "pets", "pet" -> "pets";
+            case "settings", "setting" -> "settings";
+            case "killstreak" -> "killstreaks";
+            case "bal", "balance", "tokens", "tokenshop", "temprank", "rankshop", "temprankshop" -> "tokens";
+            case "toolname" -> "toolname";
+            case "requeststaff" -> "requeststaff";
+            case "graves", "headtokens" -> "graves";
+            default -> null;
+        };
     }
 }

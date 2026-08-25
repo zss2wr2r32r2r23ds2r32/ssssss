@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import io.papermc.paper.event.entity.EntityPushedByEntityAttackEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.NamespacedKey;
 import org.bukkit.scoreboard.Scoreboard;
@@ -76,7 +78,7 @@ public final class CollisionsModule extends Module {
 
     public void applyPlayerCollision(Player player) {
         if (!config.getBoolean("disable-player-collisions", true)) return;
-        if (player.isCollidable()) player.setCollidable(false);
+        player.setCollidable(false);
         if (noCollideTeam != null) {
             String entry = player.getUniqueId().toString();
             if (!noCollideTeam.hasEntry(entry)) {
@@ -86,6 +88,20 @@ public final class CollisionsModule extends Module {
                 noCollideTeam.addEntry(player.getName());
             }
         }
+    }
+
+    @EventHandler(priority = org.bukkit.event.EventPriority.HIGH, ignoreCancelled = true)
+    public void onEntityPush(EntityPushedByEntityAttackEvent event) {
+        if (!config.getBoolean("disable-player-collisions", true)) return;
+        if (event.getEntity() instanceof Player && event.getPushedBy() instanceof Player) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = org.bukkit.event.EventPriority.MONITOR, ignoreCancelled = true)
+    public void onSwapHands(PlayerSwapHandItemsEvent event) {
+        if (!config.getBoolean("disable-player-collisions", true)) return;
+        applyPlayerCollision(event.getPlayer());
     }
 
     public void applyEntityCollision(Entity entity) {

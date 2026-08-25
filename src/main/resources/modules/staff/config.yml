@@ -2,7 +2,7 @@ config-version: 3
 
 message-mode: chat
 
-audit-prefix: '&#AD4EFF&lAUDIT LOGS &8> &r'
+audit-prefix: '&#AD4EFF&lAUDIT LOGS &8▷ &r'
 audit-enabled: true
 audit-log-to-file: true
 audit-log-file: audit.log

@@ -38,6 +38,26 @@ doxxing-deny-screen:
   - '&#FF0000You are permanently banned for doxxing.'
   - '&#FFF300This ban cannot be appealed.'
 
+punishment-prefix: '&#FF0000&lPUNISHMENTS &8▷ &r'
+
+ban-webhook:
+  enabled: false
+  url: ''
+  title: 'Player Banned'
+  description: '%player% was banned by %staff% for %reason%.'
+  color: 16711680
+  footer: 'ShardedCore Punishments'
+  thumbnail-url: 'https://mc-heads.net/avatar/%uuid%'
+
+mute-webhook:
+  enabled: false
+  url: ''
+  title: 'Player Muted'
+  description: '%player% was muted by %staff% for %reason%.'
+  color: 16753920
+  footer: 'ShardedCore Punishments'
+  thumbnail-url: 'https://mc-heads.net/avatar/%uuid%'
+
 public-broadcast:
   enabled: true
   actions:

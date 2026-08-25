@@ -82,6 +82,10 @@ public final class SpawnSelectModule extends Module implements CommandExecutor, 
     }
 
     private boolean handleSpawn(Player player, String[] args) {
+        if (args.length > 0 && args[0].equalsIgnoreCase("select")) {
+            openSelector(player);
+            return true;
+        }
         if (!config.getBoolean("spawn-command-enabled", true)) {
             send(player, "spawn-disabled");
             return true;
@@ -90,16 +94,13 @@ public final class SpawnSelectModule extends Module implements CommandExecutor, 
             startMainTeleport(player);
             return true;
         }
-        if (args[0].equalsIgnoreCase("select") && args.length >= 2) {
-            String choice = args[1].toLowerCase();
-            if (choice.equals("main")) {
-                selectMain(player);
-                return true;
-            }
-            if (choice.equals("vanilla")) {
-                selectVanilla(player);
-                return true;
-            }
+        if (args.length >= 2 && args[1].equalsIgnoreCase("main")) {
+            selectMain(player);
+            return true;
+        }
+        if (args.length >= 2 && args[1].equalsIgnoreCase("vanilla")) {
+            selectVanilla(player);
+            return true;
         }
         send(player, "usage");
         return true;

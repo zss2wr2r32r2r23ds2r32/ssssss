@@ -4,7 +4,7 @@ import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
 import com.sharded.core.modules.koth.KothModule;
 import com.sharded.core.modules.outpost.OutpostModule;
-import com.sharded.core.modules.protect.ProtectModule;
+import com.sharded.core.modules.coreprotect.CoreProtectModule;
 import com.sharded.core.util.CombatWallTracker;
 import com.sharded.core.util.CuboidRegion;
 import com.sharded.core.util.RegionSetup;
@@ -22,6 +22,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.Vector;
@@ -40,7 +41,6 @@ import java.util.UUID;
 public final class CombatModule extends Module implements CommandExecutor, TabCompleter {
 
     private final RegionSetup setup = new RegionSetup();
-    private CuboidRegion region;
     private final Map<UUID, Long> taggedUntil = new HashMap<>();
     private final CombatWallTracker wallTracker = new CombatWallTracker();
     private final Set<UUID> wasTagged = new HashSet<>();
@@ -52,7 +52,6 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
 
     @Override
     protected void onEnable() {
-        region = CuboidRegion.fromSection(config.getConfigurationSection("region"));
         registerCommand("combat", this);
         tickTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this::tick, 5L, 5L);
     }
@@ -100,15 +99,7 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
             return true;
         }
         if (sub.equals("setregion")) {
-            CuboidRegion built = setup.build(player);
-            if (built == null) {
-                send(player, "need-positions");
-                return true;
-            }
-            region = built;
-            built.write(config.createSection("region"));
-            saveConfig();
-            send(player, "region-set");
+            send(player, "region-deprecated");
             return true;
         }
         send(player, "usage");
@@ -126,6 +117,15 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
             tag(attacker);
             tag(victim);
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onDeath(PlayerDeathEvent event) {
+        Player player = event.getEntity();
+        UUID id = player.getUniqueId();
+        taggedUntil.remove(id);
+        wasTagged.remove(id);
+        wallTracker.clear(player);
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -153,8 +153,8 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
     public void onTeleport(PlayerTeleportEvent event) {
         if (!(event.getPlayer() instanceof Player player)) return;
         if (!isTagged(player)) return;
-        ProtectModule protect = plugin.modules().get(ProtectModule.class);
-        CuboidRegion spawn = spawnRegion(protect);
+        CoreProtectModule coreprotect = plugin.modules().get(CoreProtectModule.class);
+        CuboidRegion spawn = combatRegion(coreprotect);
         Location to = event.getTo();
         if (spawn == null || to == null) return;
         if (!spawn.world().equals(to.getWorld().getName())) return;
@@ -172,8 +172,8 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
     public void onMove(PlayerMoveEvent event) {
         if (!event.hasChangedBlock()) return;
         if (!isTagged(event.getPlayer())) return;
-        ProtectModule protect = plugin.modules().get(ProtectModule.class);
-        CuboidRegion spawn = spawnRegion(protect);
+        CoreProtectModule coreprotect = plugin.modules().get(CoreProtectModule.class);
+        CuboidRegion spawn = combatRegion(coreprotect);
         if (spawn == null) return;
         Location to = event.getTo();
         Location from = event.getFrom();
@@ -186,9 +186,13 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
         Bukkit.getScheduler().runTask(plugin, () -> pushBack(event.getPlayer(), safe, spawn));
     }
 
-    private CuboidRegion spawnRegion(ProtectModule protect) {
-        if (region != null) return region;
-        return protect == null ? null : protect.region("spawn");
+    private CuboidRegion combatRegion(CoreProtectModule coreprotect) {
+        if (coreprotect != null) {
+            CuboidRegion combat = coreprotect.region("combat");
+            if (combat != null) return combat;
+            return coreprotect.region("spawn");
+        }
+        return null;
     }
 
     private Location nearestOutside(CuboidRegion spawn, Location loc) {
@@ -242,7 +246,7 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
 
         KothModule koth = plugin.modules().get(KothModule.class);
         OutpostModule outpost = plugin.modules().get(OutpostModule.class);
-        ProtectModule protect = plugin.modules().get(ProtectModule.class);
+        CoreProtectModule coreprotect = plugin.modules().get(CoreProtectModule.class);
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             UUID id = player.getUniqueId();
@@ -251,7 +255,7 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
 
             if (tagged) {
                 wasTagged.add(id);
-                CuboidRegion spawn = spawnRegion(protect);
+                CuboidRegion spawn = combatRegion(coreprotect);
                 if (spawn != null && spawn.contains(player.getLocation())) {
                     Location safe = nearestOutside(spawn, player.getLocation());
                     player.teleport(safe);

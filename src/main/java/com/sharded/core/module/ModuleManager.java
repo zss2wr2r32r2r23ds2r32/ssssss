@@ -52,8 +52,8 @@ import com.sharded.core.modules.crates.CratesModule;
 import com.sharded.core.modules.combat.CombatModule;
 import com.sharded.core.modules.koth.KothModule;
 import com.sharded.core.modules.outpost.OutpostModule;
-import com.sharded.core.modules.arena.ArenaModule;
-import com.sharded.core.modules.protect.ProtectModule;
+import com.sharded.core.modules.coreprotect.CoreProtectModule;
+import com.sharded.core.modules.duel.DuelModule;
 import com.sharded.core.modules.roles.RolesModule;
 import com.sharded.core.modules.teams.TeamsModule;
 
@@ -121,8 +121,8 @@ public final class ModuleManager {
         register(new RolesModule(plugin));
         register(new OutpostModule(plugin));
         register(new KothModule(plugin));
-        register(new ProtectModule(plugin));
-        register(new ArenaModule(plugin));
+        register(new CoreProtectModule(plugin));
+        register(new DuelModule(plugin));
         register(new CombatModule(plugin));
     }
 
@@ -136,7 +136,7 @@ public final class ModuleManager {
 
     public void enableModules() {
         for (Module module : modules.values()) {
-            if (!plugin.getConfig().getBoolean("modules." + module.id(), true)) {
+            if (!isModuleEnabled(module.id())) {
                 plugin.getLogger().info("Module '" + module.id() + "' is disabled in config.yml.");
                 continue;
             }
@@ -182,5 +182,20 @@ public final class ModuleManager {
     public TokenService tokens() {
         TokensModule module = get(TokensModule.class);
         return module == null ? null : module.service();
+    }
+
+    private boolean isModuleEnabled(String id) {
+        if ("coreprotect".equals(id)) {
+            if (plugin.getConfig().contains("modules.coreprotect")) {
+                return plugin.getConfig().getBoolean("modules.coreprotect");
+            }
+            return plugin.getConfig().getBoolean("modules.protect", true)
+                    || plugin.getConfig().getBoolean("modules.arena", true);
+        }
+        return plugin.getConfig().getBoolean("modules." + id, true);
+    }
+
+    public boolean isConfiguredEnabled(String id) {
+        return isModuleEnabled(id);
     }
 }

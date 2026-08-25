@@ -312,11 +312,24 @@ commands:
     description: KOTH event info and admin setup
     usage: /koth [pos1|pos2|setregion]
   protect:
-    description: Region protection setup
-    usage: /protect [pos1|pos2|setregion <spawn|pvp|side1-4>]
+    description: 'Deprecated — use /coreprotect'
+    usage: /coreprotect [pos1|pos2|setregion <region>]
+  coreprotect:
+    description: Region protection and arena setup
+    usage: /coreprotect [pos1|pos2|setregion <spawn|combat|pvp|side1|side2|side3|side4>]
+  arenas:
+    description: Arena snapshot for side regions
+    usage: /arenas snapshot <side|side1-side4>
   arena:
-    description: Arena snapshot and reset for side regions
-    usage: /arena snapshot|reset <arena|side1-side4> [fast]
+    description: 'Deprecated — use /arenas'
+    usage: /arenas snapshot|reset <arena|side1-side4> [fast]
+  duel:
+    description: Send a duel request
+    usage: /duel <player>
+  unlock:
+    description: Unlock RTP destinations
+    usage: /unlock <nether|end|overworld>
+    permission: sharded.rtp.admin
   combat:
     description: Combat region setup
     usage: /combat [pos1|pos2|setregion]
@@ -368,13 +381,13 @@ permissions:
     description: Access to /shardedcore reload
     default: op
   sharded.craft.use:
-    default: true
+    default: false
   sharded.fix.use:
     default: false
   sharded.fix.bypass:
     default: op
   sharded.trash.use:
-    default: true
+    default: false
   sharded.chat.toggle:
     default: true
   sharded.msg.use:
@@ -549,8 +562,11 @@ permissions:
   sharded.tokenshop.use:
     default: true
   sharded.pets.use:
-    description: Use the pets system
+    description: Equip and manage cosmetic pets
     default: false
+  sharded.pets.view:
+    description: Open the pets menu
+    default: true
   sharded.pets.parrot:
     default: false
   sharded.pets.axolotl:
@@ -693,6 +709,18 @@ permissions:
     default: op
   sharded.koth.admin:
     description: Setup KOTH region
+    default: op
+  sharded.coreprotect.admin:
+    description: CoreProtect region and arena admin
+    default: op
+  sharded.coreprotect.bypass:
+    description: Bypass CoreProtect restrictions
+    default: op
+  sharded.duel.use:
+    description: Send duel requests
+    default: true
+  sharded.rtp.admin:
+    description: Unlock RTP destinations and admin RTP
     default: op
   sharded.protect.admin:
     description: Setup protect regions

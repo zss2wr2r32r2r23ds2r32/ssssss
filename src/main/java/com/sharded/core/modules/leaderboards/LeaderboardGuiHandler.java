@@ -68,7 +68,7 @@ final class LeaderboardGuiHandler {
         fill(inv, 27);
         putHubItem(inv, "teams", Material.PINK_BANNER, 10);
         putHubItem(inv, "tokens", Material.SUNFLOWER, 11);
-        putHubItem(inv, "duels", Material.IRON_SWORD, 12);
+        putHubItem(inv, "duels", Material.NETHERITE_AXE, 12);
         putHubItem(inv, "kills", Material.DIAMOND_SWORD, 13);
         putHubItem(inv, "deaths", Material.SKELETON_SKULL, 14);
         putHubItem(inv, "killstreaks", Material.NETHERITE_SWORD, 15);
@@ -152,13 +152,13 @@ final class LeaderboardGuiHandler {
 
     private String hubTypeForSlot(int slot) {
         return switch (slot) {
+            case 10 -> "teams";
             case 11 -> "tokens";
             case 12 -> "duels";
             case 13 -> "kills";
             case 14 -> "deaths";
             case 15 -> "killstreaks";
             case 16 -> "playtime";
-            case 17 -> "teams";
             default -> null;
         };
     }

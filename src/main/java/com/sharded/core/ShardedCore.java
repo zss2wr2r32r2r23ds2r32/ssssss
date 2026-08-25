@@ -116,7 +116,7 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
             CommandHelp.sendStaff(sender, getConfig().getString("prefix", "&8[&bSharded&8] &r"));
             return true;
         }
-        CommandHelp.send(sender, getConfig().getString("prefix", "&8[&bSharded&8] &r"));
+        CommandHelp.send(sender, getConfig().getString("prefix", "&8[&bSharded&8] &r"), moduleManager);
         return true;
     }
 

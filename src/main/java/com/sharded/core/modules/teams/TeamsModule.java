@@ -761,7 +761,7 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
         event.setCancelled(true);
         String message = PlainTextComponentSerializer.plainText().serialize(event.message());
         if (message.isBlank()) return;
-        String format = config.getString("chat.team-format", "&#FF3399[TEAM] &f%player% &8» &7%message%");
+        String format = config.getString("chat.team-format", "&#FCFF00&lTEAM &8▷ &r&f%player% &8» &7%message%");
         String out = Text.apply(format, "%player%", player.getName(), "%message%", message);
         plugin.getServer().getScheduler().runTask(plugin, () -> {
             for (TeamDatabase.Member member : database.getMembers(teamId)) {
@@ -772,7 +772,7 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
                 for (TeamDatabase.Member member : database.getMembers(allyId)) {
                     Player online = Bukkit.getPlayer(member.uuid());
                     if (online != null) {
-                        String allyFormat = config.getString("chat.ally-format", "&#ffb300[ALLY] &f%player% &8» &7%message%");
+                        String allyFormat = config.getString("chat.ally-format", "&#0098FF&lALLIES &8▷ &r&f%player% &8» &7%message%");
                         online.sendMessage(Text.c(Text.apply(allyFormat, "%player%", player.getName(), "%message%", message)));
                     }
                 }
