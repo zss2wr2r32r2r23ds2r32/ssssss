@@ -1,78 +1,9 @@
-config-version: 1
+config-version: 2
 message-mode: chat
 
-gui:
-  title: '&8Duel — %player%'
-  slots:
-    send: 11
-    details: 13
-    cancel: 15
-  filler:
-    material: BLACK_STAINED_GLASS_PANE
-    name: ' '
-  send:
-    material: LIME_STAINED_GLASS_PANE
-    name: '&#94FF00&lSEND &#94FF00Request'
-    lore:
-      - '&8Description'
-      - ''
-      - '&#94FF00Information:'
-      - '&#94FF00| &fClick to send %player%'
-      - '&#94FF00| &fA Duel Request.'
-      - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Send'
-  cancel:
-    material: RED_STAINED_GLASS_PANE
-    name: '&#FF0000&lCANCEL &#FF0000Request'
-    lore:
-      - '&8Description'
-      - ''
-      - '&#FF0000Information:'
-      - '&#FF0000| &fClick to cancel the'
-      - '&#FF0000| &fDuel Request.'
-      - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Cancel'
-  details:
-    material: OAK_SIGN
-    name: '&#FF0067&lDETAILS'
-    lore:
-      - '&8Description'
-      - ''
-      - '&#FF0067Information:'
-      - '&#FF0067| &fOpponent: &#FF0067%player%'
-      - '&#FF0067| &fMap: &#FF0067Desert'
-
-on-send-commands:
-  - 'duel send %sender% %player%'
-
-disallowed-items:
-  - OAK_BOAT
-  - SPRUCE_BOAT
-  - BIRCH_BOAT
-  - JUNGLE_BOAT
-  - ACACIA_BOAT
-  - DARK_OAK_BOAT
-  - MANGROVE_BOAT
-  - CHERRY_BOAT
-  - BAMBOO_RAFT
-  - OAK_CHEST_BOAT
-  - SPRUCE_CHEST_BOAT
-  - BIRCH_CHEST_BOAT
-  - JUNGLE_CHEST_BOAT
-  - ACACIA_CHEST_BOAT
-  - DARK_OAK_CHEST_BOAT
-  - MANGROVE_CHEST_BOAT
-  - CHERRY_CHEST_BOAT
-  - BAMBOO_CHEST_RAFT
-  - MINECART
-  - CHEST_MINECART
-  - FURNACE_MINECART
-  - TNT_MINECART
-  - HOPPER_MINECART
-  - ARMOR_STAND
-  - ELYTRA
-  - MACE
-  - '*_BOAT'
-  - '*_CHEST_BOAT'
-  - '*_RAFT'
-  - '*_CHEST_RAFT'
+# ShardedCore links to Realized Duels for /duel and /queue.
+# Install the Duels plugin — ShardedCore no longer overrides those commands.
+integration:
+  plugin: Duels
+  duel-command: duel
+  queue-command: queue

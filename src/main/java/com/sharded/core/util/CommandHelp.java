@@ -34,7 +34,7 @@ public final class CommandHelp {
         list.add(new CommandInfo("/fly", "Toggle flight", "sharded.fly.use"));
         list.add(new CommandInfo("/autosmelt", "Auto smelt pickaxe", "sharded.autosmelt.use"));
         list.add(new CommandInfo("/rtp", "Random teleport menu", "sharded.rtp.use"));
-        list.add(new CommandInfo("/duel <player>", "Send a duel request", "sharded.duel.use"));
+        list.add(new CommandInfo("/duel <player>", "Send a duel request (Duels plugin)", "duels.duel"));
         list.add(new CommandInfo("/guide", "Server guide menu", "sharded.guide.use"));
         list.add(new CommandInfo("/rules", "Server rules menu", "sharded.guide.use"));
         list.add(new CommandInfo("/spawn (/spawnselect)", "Spawn selector", "sharded.spawn.use"));

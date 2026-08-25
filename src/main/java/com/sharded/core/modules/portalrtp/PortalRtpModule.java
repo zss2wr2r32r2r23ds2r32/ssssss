@@ -2,7 +2,6 @@ package com.sharded.core.modules.portalrtp;
 
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
-import com.sharded.core.modules.duel.DuelModule;
 import com.sharded.core.util.MessageUtil;
 import com.sharded.core.util.SafeLocationFinder;
 import com.sharded.core.util.TabCompleteHelper;
@@ -265,15 +264,12 @@ public final class PortalRtpModule extends Module implements CommandExecutor, Ta
 
     private void openDuels(Player player) {
         player.closeInventory();
-        if (config.getBoolean("duels.use-duel-command", true)) {
-            player.performCommand("duel queue");
+        if (plugin.duelsHook().isAvailable()) {
+            plugin.duelsHook().openQueue(player);
             return;
         }
-        List<String> commands = config.getStringList("duels.commands");
-        for (String line : commands) {
-            String cmd = line.startsWith("/") ? line.substring(1) : line;
-            player.performCommand(cmd);
-        }
+        String command = config.getString("duels.command", "queue");
+        player.performCommand(command.startsWith("/") ? command.substring(1) : command);
     }
 
     private void startCountdown(Player player, String destinationId) {

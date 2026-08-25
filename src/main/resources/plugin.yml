@@ -4,7 +4,7 @@ main: com.sharded.core.ShardedCore
 api-version: '1.21'
 author: Sharded
 description: All-in-one core plugin for Paper 1.21.11
-softdepend: [LuckPerms, PlaceholderAPI, ItemsAdder, Topper]
+softdepend: [LuckPerms, PlaceholderAPI, ItemsAdder, Topper, Duels]
 load: STARTUP
 
 commands:
@@ -323,9 +323,6 @@ commands:
   arena:
     description: 'Deprecated — use /arenas'
     usage: /arenas snapshot|reset <arena|side1-side4> [fast]
-  duel:
-    description: Send a duel request
-    usage: /duel <player>
   unlock:
     description: Unlock RTP destinations
     usage: /unlock <nether|end|overworld>

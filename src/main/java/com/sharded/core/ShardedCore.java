@@ -4,6 +4,7 @@ import com.sharded.core.cosmetics.CosmeticService;
 import com.sharded.core.gui.GuiListener;
 import com.sharded.core.gui.GuiManager;
 import com.sharded.core.gui.GuiNavigation;
+import com.sharded.core.hook.DuelsHook;
 import com.sharded.core.hook.LuckPermsHook;
 import com.sharded.core.hook.PlaceholderHook;
 import com.sharded.core.module.ModuleManager;
@@ -27,6 +28,7 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
     private static ShardedCore instance;
 
     private LuckPermsHook luckPerms;
+    private DuelsHook duelsHook;
     private PlaceholderHook placeholderHook;
     private PlayerStateStore stateStore;
     private GuiManager guiManager;
@@ -44,6 +46,7 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
         ConfigSync.syncMainConfig(this);
 
         this.luckPerms = new LuckPermsHook(this);
+        this.duelsHook = new DuelsHook(this);
         this.placeholderHook = new PlaceholderHook(this);
         getServer().getPluginManager().registerEvents(placeholderHook, this);
         this.stateStore = new PlayerStateStore(this);
@@ -91,6 +94,7 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
             if (guiSounds != null) guiSounds.reload();
             moduleManager.reload();
             placeholderHook.tryRegister();
+            if (duelsHook != null) duelsHook.refreshCommands();
             stateStore.saveNow();
             MessageUtil.deliver(sender, getConfig().getString("prefix", "&8[&bSharded&8] &r")
                             + "&aConfiguration reloaded. &7(" + moduleManager.enabledCount() + " modules enabled)",
@@ -135,6 +139,10 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
 
     public LuckPermsHook luckPerms() {
         return luckPerms;
+    }
+
+    public DuelsHook duelsHook() {
+        return duelsHook;
     }
 
     public PlayerStateStore stateStore() {

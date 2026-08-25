@@ -1,5 +1,5 @@
 # Portal RTP
-config-version: 11
+config-version: 12
 message-mode: chat
 portal-world: spawn
 require-portal-world: true
@@ -25,9 +25,7 @@ max-radius: 500
 max-attempts: 25
 
 duels:
-  use-duel-command: false
-  commands:
-    - duels queue
+  command: queue
 
 destinations:
   overworld:
