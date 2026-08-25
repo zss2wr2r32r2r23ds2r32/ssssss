@@ -235,10 +235,6 @@ public final class PetsModule extends Module implements CommandExecutor, TabComp
             return true;
         }
         if (command.getName().equalsIgnoreCase("pets")) {
-            if (!player.hasPermission("sharded.pets.view") && !player.hasPermission("sharded.pets.use")) {
-                send(player, "no-permission");
-                return true;
-            }
             plugin.gui().open(player, "pets");
             return true;
         }

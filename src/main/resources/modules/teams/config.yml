@@ -1,5 +1,5 @@
-config-version: 8
-prefix: '&x&F&F&B&A&0&0&lTEAMS &8▷ '
+config-version: 9
+prefix: '&#FCFF00&lTEAM &8▷ &r'
 message-mode: chat
 
 creation:
@@ -27,8 +27,8 @@ leaderboard:
   playtime-hour-weight: 50
 
 chat:
-  team-format: '&x&F&F&B&A&0&0[TEAM] &f%player% &8» &7%message%'
-  ally-format: '&#ffb300[ALLY] &f%player% &8» &7%message%'
+  team-format: '&#FCFF00&lTEAM &8▷ &r&f%player% &8» &7%message%'
+  ally-format: '&#0098FF&lALLIES &8▷ &r&f%player% &8» &7%message%'
 
 placeholders:
   not-in-team: 'N/A'

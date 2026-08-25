@@ -1,7 +1,7 @@
-config-version: 7
+config-version: 8
 menu_title: Pets
 size: 27
-open_permission: sharded.pets.use
+open_permission: sharded.pets.view
 
 items:
   filler:

@@ -1,4 +1,4 @@
-config-version: 6
+config-version: 7
 menu_title: 'Token Shop | Glows'
 open_command: glowshop
 size: 45
@@ -8,7 +8,7 @@ items:
 
   back_button:
     nav-override: true
-    slot: 26
+    slot: 46
     left_click_commands:
       - '[openguimenu] mainmenu'
 

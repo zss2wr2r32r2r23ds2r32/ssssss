@@ -1,5 +1,5 @@
 menu_title: 'RTP'
-config-version: 5
+config-version: 6
 size: 27
 open_permission: sharded.rtp.use
 

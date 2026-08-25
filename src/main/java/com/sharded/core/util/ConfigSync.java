@@ -94,6 +94,11 @@ public final class ConfigSync {
         int diskVersion = disk.getInt("config-version", 0);
         if (diskVersion < jarVersion) {
             backup(file);
+            if (shouldReplaceOnUpgrade(resourcePath)) {
+                plugin.saveResource(resourcePath, true);
+                plugin.getLogger().info("Replaced " + file.getName() + " (v" + diskVersion + " -> v" + jarVersion + ")");
+                return;
+            }
             disk.setDefaults(defaults);
             disk.options().copyDefaults(true);
             disk.set("config-version", jarVersion);
@@ -117,6 +122,11 @@ public final class ConfigSync {
         } catch (IOException e) {
             plugin.getLogger().warning("Could not merge defaults into " + file.getPath() + ": " + e.getMessage());
         }
+    }
+
+    private static boolean shouldReplaceOnUpgrade(String resourcePath) {
+        if (resourcePath.endsWith("gui.yml") || resourcePath.endsWith("shop.yml")) return true;
+        return resourcePath.contains("/menus/") && resourcePath.endsWith(".yml");
     }
 
     /** Legacy arena snapshots stored millions of blocks in YAML and froze reloads. */

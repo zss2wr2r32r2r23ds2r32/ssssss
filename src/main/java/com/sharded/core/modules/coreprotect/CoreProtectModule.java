@@ -65,6 +65,7 @@ public final class CoreProtectModule extends Module implements CommandExecutor, 
 
     @Override
     protected void onEnable() {
+        migrateLegacyData();
         reloadRegions();
         arenaService = new ArenaService(plugin, moduleFolder());
         placedTracker = new PlayerPlacedTracker(moduleFolder());
@@ -72,6 +73,62 @@ public final class CoreProtectModule extends Module implements CommandExecutor, 
         registerCommand("arenas", this);
         registerCommand("protect", this);
         startAutoReset();
+    }
+
+    private void migrateLegacyData() {
+        File target = moduleFolder();
+        File legacyProtect = new File(plugin.getDataFolder(), "modules/protect/config.yml");
+        File legacyArena = new File(plugin.getDataFolder(), "modules/arena");
+        if (!target.exists()) target.mkdirs();
+
+        boolean needsRegionImport = config.getConfigurationSection("regions.spawn") == null
+                || CuboidRegion.fromSection(config.getConfigurationSection("regions.spawn")) == null;
+        if (needsRegionImport && legacyProtect.isFile()) {
+            var legacy = org.bukkit.configuration.file.YamlConfiguration.loadConfiguration(legacyProtect);
+            for (String key : REGION_IDS) {
+                if (config.getConfigurationSection("regions." + key) != null
+                        && CuboidRegion.fromSection(config.getConfigurationSection("regions." + key)) != null) {
+                    continue;
+                }
+                var section = legacy.getConfigurationSection("regions." + key);
+                if (section != null) {
+                    config.set("regions." + key, section.getValues(false));
+                }
+            }
+            if (legacy.contains("side-max-build-y")) {
+                config.set("side-max-build-y", legacy.getInt("side-max-build-y"));
+            }
+            if (legacy.contains("horn-block-worlds")) {
+                config.set("horn-block-worlds", legacy.getStringList("horn-block-worlds"));
+            }
+            saveConfig();
+            plugin.getLogger().info("[coreprotect] Imported regions from legacy modules/protect/config.yml");
+        }
+
+        File legacySnaps = new File(legacyArena, "snapshots");
+        File targetSnaps = new File(target, "snapshots");
+        if (legacySnaps.isDirectory() && legacySnaps.list() != null && legacySnaps.list().length > 0) {
+            if (!targetSnaps.exists()) targetSnaps.mkdirs();
+            for (File snap : legacySnaps.listFiles((dir, name) -> name.endsWith(".snap"))) {
+                File dest = new File(targetSnaps, snap.getName());
+                if (!dest.exists()) {
+                    try {
+                        java.nio.file.Files.copy(snap.toPath(), dest.toPath());
+                    } catch (Exception e) {
+                        plugin.getLogger().warning("[coreprotect] Could not copy snapshot " + snap.getName());
+                    }
+                }
+            }
+        }
+
+        File legacyArenaConfig = new File(legacyArena, "config.yml");
+        if (legacyArenaConfig.isFile() && !config.contains("auto-reset.enabled")) {
+            var legacyCfg = org.bukkit.configuration.file.YamlConfiguration.loadConfiguration(legacyArenaConfig);
+            if (legacyCfg.contains("auto-reset")) {
+                config.set("auto-reset", legacyCfg.getConfigurationSection("auto-reset").getValues(false));
+                saveConfig();
+            }
+        }
     }
 
     @Override
@@ -326,9 +383,10 @@ public final class CoreProtectModule extends Module implements CommandExecutor, 
         }
         if (inSide(loc)) {
             if (bypass(player)) return;
-            if (placedTracker.isPlaced(loc)) {
+            if (!placedTracker.isPlaced(loc)) {
                 event.setCancelled(true);
-                send(player, "no-break-placed");
+                send(player, "no-break");
+            } else {
                 placedTracker.unmark(loc);
             }
         }

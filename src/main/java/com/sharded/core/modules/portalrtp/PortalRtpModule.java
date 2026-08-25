@@ -55,6 +55,7 @@ public final class PortalRtpModule extends Module implements CommandExecutor, Ta
     protected void onEnable() {
         registerCommand("rtp", this);
         registerCommand("unlock", this);
+        registerCommand("lock", this);
         triggers = new PortalTriggerStore(plugin, moduleFolder());
         portalWorldName = config.getString("portal-world", "spawn");
         unlocked.clear();
@@ -63,6 +64,8 @@ public final class PortalRtpModule extends Module implements CommandExecutor, Ta
 
         File guiFile = syncJarResource("gui.yml");
         plugin.gui().loadMenu(guiFile, "portalrtp");
+        plugin.getServer().getScheduler().runTask(plugin, () ->
+                plugin.gui().loadMenu(new File(moduleFolder(), "gui.yml"), "portalrtp"));
         plugin.gui().registerAction("rtp_confirm", p -> startCountdown(p, config.getString("default-destination", "overworld")));
         plugin.gui().registerAction("rtp_overworld", p -> startCountdown(p, "overworld"));
         plugin.gui().registerAction("rtp_nether", p -> startCountdown(p, "nether"));
@@ -177,6 +180,9 @@ public final class PortalRtpModule extends Module implements CommandExecutor, Ta
         if (command.getName().equalsIgnoreCase("unlock")) {
             return handleUnlock(sender, args);
         }
+        if (command.getName().equalsIgnoreCase("lock")) {
+            return handleLock(sender, args);
+        }
         if (!(sender instanceof Player player)) {
             send(sender, "players-only");
             return true;
@@ -190,6 +196,26 @@ public final class PortalRtpModule extends Module implements CommandExecutor, Ta
             return true;
         }
         openGui(player);
+        return true;
+    }
+
+    private boolean handleLock(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("sharded.rtp.admin")) {
+            send(sender, "no-permission");
+            return true;
+        }
+        if (args.length == 0) {
+            send(sender, "lock-usage");
+            return true;
+        }
+        String dest = args[0].toLowerCase(Locale.ROOT);
+        if (!config.isConfigurationSection("destinations." + dest)) {
+            send(sender, "unknown-destination", "%destination%", dest);
+            return true;
+        }
+        unlocked.remove(dest);
+        saveUnlockState();
+        send(sender, "locked", "%destination%", dest);
         return true;
     }
 
@@ -398,7 +424,7 @@ public final class PortalRtpModule extends Module implements CommandExecutor, Ta
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (command.getName().equalsIgnoreCase("unlock")) {
+        if (command.getName().equalsIgnoreCase("unlock") || command.getName().equalsIgnoreCase("lock")) {
             if (!sender.hasPermission("sharded.rtp.admin")) return List.of();
             if (args.length == 1) {
                 ConfigurationSection destinations = config.getConfigurationSection("destinations");

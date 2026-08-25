@@ -254,7 +254,7 @@ commands:
   store:
     description: Show the webstore link
     usage: /store
-    aliases: [webstore, shop]
+    aliases: [webstore]
   headtokens:
     description: Convert a player head to tokens
     usage: /headtokens
@@ -329,6 +329,10 @@ commands:
   unlock:
     description: Unlock RTP destinations
     usage: /unlock <nether|end|overworld>
+    permission: sharded.rtp.admin
+  lock:
+    description: Lock RTP destinations
+    usage: /lock <nether|end|overworld>
     permission: sharded.rtp.admin
   combat:
     description: Combat region setup

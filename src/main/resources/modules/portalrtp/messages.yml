@@ -1,4 +1,4 @@
-config-version: 4
+config-version: 5
 prefix: '%prefix%'
 
 players-only: '%prefix%&#FF2727Only players can use this command.'
@@ -15,6 +15,8 @@ destination-locked: '%prefix%&#FF2727%destination% &#FF2727is locked.'
 unknown-destination: '%prefix%&#FF2727Unknown destination &f%destination%&#FF2727.'
 unlock-usage: '%prefix%&#FF2727Usage: &f/unlock <overworld|nether|end>'
 unlocked: '%prefix%&#9FFF00Unlocked RTP destination &f%destination%&#9FFF00.'
+lock-usage: '%prefix%&#FF2727Usage: &f/lock <overworld|nether|end>'
+locked: '%prefix%&#FF2727Locked RTP destination &f%destination%&#FF2727.'
 wand-given: '%prefix%&#9FFF00Portal wand given. Right-click any block to register
   an RTP trigger.'
 wand-set: '%prefix%&#9FFF00RTP trigger set on &f%block%&#9FFF00! &7(&f%count% &7registered)'
