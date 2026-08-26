@@ -1,0 +1,83 @@
+# Your own orders, and the way into placing a new one.
+title: '&8🔥 Orders | Your Orders'
+size: 27
+new:
+  material: PAPER
+  slot: 22
+  name: '&#019BEE&lNEW ORDER'
+  lore:
+  - '&8Description'
+  - ''
+  - '&#019BEEInformation:'
+  - '&fClick here, to create'
+  - '&fa new order.'
+  - ''
+  - '&#FFD900▶ &n&lCLICK&#FFD900 To Create'
+open:
+  name: '&7%item_name%'
+  glow: false
+  lore: &id001
+  - '&8Description'
+  - ''
+  - '&#45FF17Information:'
+  - '&#019BEE⚑ &fItem: &#019BEE%total_amount% %item_name%'
+  - '&#45FF17&l$ &fPrice: &#45FF17$%price_per_item% each'
+  - '&#F90EC2🌊 &fDelivered: &#F90EC2%total_delivered%&7/&#F90EC2%total_amount%'
+  - '&#45FF17&l$ &fPaid: &#45FF17%total_paid%&7/&#45FF17$%total_price%'
+  - ''
+  - '&#FFD900▶ &n&lCLICK&#FFD900 To Deliver'
+ready:
+  name: '&7%item_name%'
+  glow: true
+  lore: *id001
+closed:
+  name: '&7%item_name%'
+  glow: false
+  lore:
+  - '&8Description'
+  - ''
+  - '&#45FF17Information:'
+  - '&#45FF17&l$ &fPrice: &#45FF17$%price_per_item% each'
+  - '&#F90EC2🌊 &fDelivered: &#F90EC2%total_delivered%&7/&#F90EC2%total_amount%'
+  - ' '
+  - '&#45FF17Order Completed'
+  - '&#FFF300⌛ %time_until_delete% Until Order deletes'
+previous:
+  material: ARROW
+  slot: 21
+  name: '&#FF0000&lPREVIOUS PAGE'
+  lore:
+  - '&8Description'
+  - ''
+  - '&#FF0000Information:'
+  - '&fGo one page back.'
+  - ''
+  - '&#FFD900▶ &n&lCLICK&#FFD900 To Navigate'
+back:
+  material: RED_DYE
+  slot: 18
+  name: '&#FF0000&lBACK'
+  lore:
+  - '&8Description'
+  - ''
+  - '&#FF0000Information:'
+  - '&fClick here, to go'
+  - '&fback to the board.'
+  - ''
+  - '&#FFD900▶ &n&lCLICK&#FFD900 To Return'
+next:
+  material: ARROW
+  slot: 23
+  name: '&#45FF17&lNEXT PAGE'
+  lore:
+  - '&8Description'
+  - ''
+  - '&#45FF17Information:'
+  - '&fGo one page forward.'
+  - ''
+  - '&#FFD900▶ &n&lCLICK&#FFD900 To Navigate'
+filler:
+  material: GRAY_STAINED_GLASS_PANE
+  name: ' '
+filler-slots: 
+no-extras: '-'

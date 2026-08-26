@@ -1,0 +1,136 @@
+title: "&8Shop Menu | Buying"
+rows: 3
+max-amount: 64
+
+item:
+  slot: 13
+  name: "&#99ff00&l%item%"
+  lore:
+    - "&8Description"
+    - ""
+    - "&#99ff00Information:"
+    - "&#99ff00¦ &fYou are buying"
+    - "&#99ff00¦ &#99ff00%amount%x %item%&f."
+    - ""
+    - "&#99ff00&l$&r &fEach &7▷ &#99ff00$%price%"
+    - "&#99ff00&l$&r &fTotal &7▷ &#99ff00$%total%"
+    - ""
+    - "&#99ff00▷ &fUse the panes to change it"
+
+# amount is the step and the stack size shown on the pane.
+# set-min and set-max jump straight to 1 and to max-amount.
+buttons:
+
+  set-min:
+    slot: 9
+    material: RED_STAINED_GLASS_PANE
+    amount: 1
+    name: "&#FF0000&lSET TO %amount%"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000¦ &fClick here, to set &#FF0000%amount%x"
+      - "&#FF0000¦ &fas the current stack."
+      - ""
+      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Set"
+
+  remove-10:
+    slot: 10
+    material: RED_STAINED_GLASS_PANE
+    amount: 10
+    name: "&#FF0000&lREMOVE %amount%"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000¦ &fClick here, to remove &#FF0000%amount%x"
+      - "&#FF0000¦ &ffrom the current stack."
+      - ""
+      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Remove"
+
+  remove-1:
+    slot: 11
+    material: RED_STAINED_GLASS_PANE
+    amount: 1
+    name: "&#FF0000&lREMOVE %amount%"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000¦ &fClick here, to remove &#FF0000%amount%x"
+      - "&#FF0000¦ &ffrom the current stack."
+      - ""
+      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Remove"
+
+  add-1:
+    slot: 15
+    material: LIME_STAINED_GLASS_PANE
+    amount: 1
+    name: "&#99ff00&lADD %amount%"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#99ff00Information:"
+      - "&#99ff00¦ &fClick here, to add &#99ff00%amount%x"
+      - "&#99ff00¦ &fto the current stack."
+      - ""
+      - "&#99ff00▷ &n&lCLICK&r&#99ff00 To Add"
+
+  add-10:
+    slot: 16
+    material: LIME_STAINED_GLASS_PANE
+    amount: 10
+    name: "&#99ff00&lADD %amount%"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#99ff00Information:"
+      - "&#99ff00¦ &fClick here, to add &#99ff00%amount%x"
+      - "&#99ff00¦ &fto the current stack."
+      - ""
+      - "&#99ff00▷ &n&lCLICK&r&#99ff00 To Add"
+
+  set-max:
+    slot: 17
+    material: LIME_STAINED_GLASS_PANE
+    amount: 64
+    name: "&#99ff00&lSET TO %amount%"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#99ff00Information:"
+      - "&#99ff00¦ &fClick here, to set &#99ff00%amount%x"
+      - "&#99ff00¦ &fas the current stack."
+      - ""
+      - "&#99ff00▷ &n&lCLICK&r&#99ff00 To Set"
+
+  cancel:
+    slot: 21
+    material: RED_STAINED_GLASS_PANE
+    amount: 1
+    name: "&#FF0000&lCANCEL PURCHASE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000¦ &fClick here, to cancel"
+      - "&#FF0000¦ &fthe current purchase."
+      - ""
+      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Cancel"
+
+  confirm:
+    slot: 23
+    material: LIME_STAINED_GLASS_PANE
+    amount: 1
+    name: "&#99ff00&lCONFIRM PURCHASE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#99ff00Information:"
+      - "&#99ff00¦ &fClick here, to confirm"
+      - "&#99ff00¦ &fthe current purchase."
+      - ""
+      - "&#99ff00&l$&r &fTotal &7▷ &#99ff00$%total%"
+      - ""
+      - "&#99ff00▷ &n&lCLICK&r&#99ff00 To Buy"
