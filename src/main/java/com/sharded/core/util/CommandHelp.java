@@ -21,39 +21,54 @@ public final class CommandHelp {
 
     public static List<CommandInfo> all() {
         List<CommandInfo> list = new ArrayList<>();
-        list.add(new CommandInfo("/craft", "Portable crafting table", "sharded.craft.use"));
-        list.add(new CommandInfo("/fix", "Repair held item", "sharded.fix.use"));
-        list.add(new CommandInfo("/trash", "Open trash bin", "sharded.trash.use"));
-        list.add(new CommandInfo("/chattoggle", "Toggle public chat", "sharded.chat.toggle"));
-        list.add(new CommandInfo("/msg <player> <msg>", "Private message", "sharded.msg.use"));
-        list.add(new CommandInfo("/reply <msg>", "Reply to last PM", "sharded.msg.use"));
-        list.add(new CommandInfo("/msgtoggle", "Toggle receiving PMs", "sharded.msg.toggle"));
-        list.add(new CommandInfo("/nightvision", "Toggle night vision", "sharded.nightvision.use"));
-        list.add(new CommandInfo("/backpack [player]", "Open backpack storage", "sharded.backpack.use"));
-        list.add(new CommandInfo("/armortrims (/trims)", "Armor trim station", "sharded.armortrims.use"));
-        list.add(new CommandInfo("/fly", "Toggle flight", "sharded.fly.use"));
-        list.add(new CommandInfo("/autosmelt", "Auto smelt pickaxe", "sharded.autosmelt.use"));
-        list.add(new CommandInfo("/rtp", "Random teleport menu", "sharded.rtp.use"));
-        list.add(new CommandInfo("/duel <player>", "Send a duel request (Duels plugin)", "duels.duel"));
-        list.add(new CommandInfo("/guide", "Server guide menu", "sharded.guide.use"));
-        list.add(new CommandInfo("/rules", "Server rules menu", "sharded.guide.use"));
-        list.add(new CommandInfo("/spawn (/spawnselect)", "Spawn selector", "sharded.spawn.use"));
-        list.add(new CommandInfo("/pets", "Open pets menu", "sharded.pets.view"));
-        list.add(new CommandInfo("/pet equip|remove|rename", "Manage cosmetic pet", "sharded.pets.use"));
-        list.add(new CommandInfo("/settings", "Personal settings menu", "sharded.settings.use"));
-        list.add(new CommandInfo("/killstreak [best|player]", "View killstreak stats", "sharded.killstreak.use"));
-        list.add(new CommandInfo("/live <url>", "Announce your live stream", "sharded.live.use"));
-        list.add(new CommandInfo("/live toggle", "Toggle live announcements", "sharded.live.use"));
-        list.add(new CommandInfo("/ping [player]", "Check connection ping", "sharded.ping.use"));
-        list.add(new CommandInfo("/bal (/balance)", "Check token balance", null));
-        list.add(new CommandInfo("/tokenshop", "Open token shop", "sharded.tokenshop.use"));
-        list.add(new CommandInfo("/temprank shop", "Temporary rank shop", "sharded.tempranks.use"));
-        list.add(new CommandInfo("/toolname [name]", "Rename held item", "sharded.toolname.use"));
-        list.add(new CommandInfo("/requeststaff", "Request staff help", "sharded.requeststaff.use"));
-        list.add(new CommandInfo("/tokens ...", "Token admin commands", "sharded.tokens.admin"));
-        list.add(new CommandInfo("/graves", "Graves admin", "sharded.graves.admin"));
+        // Links & info
+        list.add(new CommandInfo("/discord", "Discord server link", null, "links"));
+        list.add(new CommandInfo("/store", "Webstore link", null, "links"));
+        list.add(new CommandInfo("/apply", "Staff application link", null, "links"));
+        list.add(new CommandInfo("/guide", "Server guide menu", "sharded.guide.use", "guide"));
+        list.add(new CommandInfo("/rules", "Server rules menu", "sharded.guide.use", "guide"));
+        list.add(new CommandInfo("/media", "Media rank applications", null, "media"));
+        // Economy
+        list.add(new CommandInfo("/bal (/balance /money)", "Check money balance", null, "economy"));
+        list.add(new CommandInfo("/pay <player> <amount>", "Pay another player", "sharded.economy.pay", "economy"));
+        list.add(new CommandInfo("/baltop (/moneytop)", "Money leaderboard", "sharded.economy.baltop", "economy"));
+        list.add(new CommandInfo("/ecogive /ecoset /ecotake /ecoreset /ecofreeze", "Economy admin", "sharded.economy.admin", "economy"));
+        // Teleport & homes
+        list.add(new CommandInfo("/spawn", "Teleport to spawn", "sharded.spawn.use", "spawnselect"));
+        list.add(new CommandInfo("/homes (/home /sethome /delhome)", "Home management GUI", null, "homes"));
+        list.add(new CommandInfo("/tpa /tpahere /tpaccept /tpacancel", "Teleport requests", "sharded.tpa.use", "tpa"));
+        list.add(new CommandInfo("/tpatoggle /tpauto", "TPA settings", "sharded.tpa.use", "tpa"));
+        list.add(new CommandInfo("/rtp", "Random teleport menu", "sharded.rtp.use", "portalrtp"));
+        // Live & social
+        list.add(new CommandInfo("/live <url>", "Announce livestream", "sharded.live.use", "live"));
+        list.add(new CommandInfo("/live toggle", "Toggle live alerts", "sharded.live.use", "live"));
+        list.add(new CommandInfo("/ping [player]", "Check ping", "sharded.ping.use", "ping"));
+        list.add(new CommandInfo("/chattoggle", "Toggle public chat", "sharded.chat.toggle", "chat"));
+        list.add(new CommandInfo("/msg /reply /msgtoggle", "Private messages", "sharded.msg.use", "privatemessages"));
+        list.add(new CommandInfo("/jointoggle", "Toggle join/leave messages", null, "joincounter"));
+        list.add(new CommandInfo("/deathtoggle", "Toggle death messages", null, "deathmessages"));
+        list.add(new CommandInfo("/mobtoggle", "Toggle mob spawning near you", null, "settings"));
+        list.add(new CommandInfo("/paytoggle", "Block incoming payments", null, "settings"));
+        list.add(new CommandInfo("/settings", "Personal settings menu", "sharded.settings.use", "settings"));
+        // Workstations & utility
+        list.add(new CommandInfo("/craft", "Portable crafting table", "sharded.craft.use", "craft"));
+        list.add(new CommandInfo("/anvil /grindstone /smithingtable", "Portable workstations", null, "workstations"));
+        list.add(new CommandInfo("/trash", "Open trash bin", "sharded.trash.use", "trash"));
+        list.add(new CommandInfo("/fix", "Repair held item", "sharded.fix.use", "fix"));
+        // Games & rewards
+        list.add(new CommandInfo("/cf (/coinflip)", "Coinflip games", "sharded.coinflip.use", "coinflip"));
+        list.add(new CommandInfo("/order (/orderadmin)", "Order board", null, "orders"));
+        list.add(new CommandInfo("/sell /worth /sellmulti", "Sell items", null, "sell"));
+        list.add(new CommandInfo("/shop", "Server shop", null, "shop"));
+        list.add(new CommandInfo("/kits (/kit)", "Kit menu", null, "kits"));
+        list.add(new CommandInfo("/killrewards", "Kill milestone rewards", null, "killrewards"));
+        list.add(new CommandInfo("/playtimerewards", "Playtime rewards", null, "playtimerewards"));
+        list.add(new CommandInfo("/team", "Team management", null, "teams"));
+        list.add(new CommandInfo("/crate", "Custom crates", null, "crates"));
+        // Admin
         list.add(new CommandInfo("/shardedcore reload", "Reload plugin", "sharded.admin"));
-        list.add(new CommandInfo("/shardedcore staff", "List all staff commands", "sharded.staff"));
+        list.add(new CommandInfo("/shardedcore features", "List all modules", "sharded.admin"));
+        list.add(new CommandInfo("/shardedcore placeholders", "List placeholders", "sharded.admin"));
         return list;
     }
 
@@ -114,7 +129,9 @@ public final class CommandHelp {
     private static String moduleForCommand(String command) {
         String base = command.toLowerCase(Locale.ROOT).split("\\s")[0].replace("/", "");
         return switch (base) {
+            case "discord", "store", "apply" -> "links";
             case "craft" -> "craft";
+            case "anvil", "grindstone", "smithingtable" -> "workstations";
             case "fix" -> "fix";
             case "trash" -> "trash";
             case "chattoggle", "togglechat", "ct", "publicchat" -> "chat";
@@ -128,15 +145,30 @@ public final class CommandHelp {
             case "duel" -> "duel";
             case "guide", "rules" -> "guide";
             case "spawn", "spawnselect", "spawnselector", "setspawn" -> "spawnselect";
+            case "home", "homes", "sethome", "delhome" -> "homes";
+            case "tpa", "tpahere", "tpaccept", "tpacancel", "tpatoggle", "tpauto" -> "tpa";
             case "pets", "pet" -> "pets";
-            case "settings", "setting" -> "settings";
+            case "settings", "setting", "paytoggle", "mobtoggle" -> "settings";
             case "killstreak" -> "killstreaks";
             case "live" -> "live";
             case "ping" -> "ping";
-            case "bal", "balance", "tokens", "tokenshop", "temprank", "rankshop", "temprankshop" -> "tokens";
+            case "bal", "balance", "money", "pay", "baltop", "moneytop", "ecogive", "ecoset", "ecotake", "ecoreset", "ecofreeze" -> "economy";
+            case "tokens", "tokenshop", "temprank", "rankshop", "temprankshop" -> "tokens";
             case "toolname" -> "toolname";
             case "requeststaff" -> "requeststaff";
             case "graves", "headtokens" -> "graves";
+            case "cf", "coinflip" -> "coinflip";
+            case "order", "orderadmin" -> "orders";
+            case "sell", "worth", "sellmulti" -> "sell";
+            case "shop", "shops" -> "shop";
+            case "kit", "kits" -> "kits";
+            case "killrewards" -> "killrewards";
+            case "playtimerewards" -> "playtimerewards";
+            case "team", "teams" -> "teams";
+            case "crate", "crates" -> "crates";
+            case "media" -> "media";
+            case "jointoggle", "joincounter" -> "joincounter";
+            case "deathtoggle" -> "deathmessages";
             default -> null;
         };
     }

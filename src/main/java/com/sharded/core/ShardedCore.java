@@ -13,6 +13,7 @@ import com.sharded.core.util.ConfigSync;
 import com.sharded.core.util.CoreTabComplete;
 import com.sharded.core.util.GuiSounds;
 import com.sharded.core.util.MessageUtil;
+import com.sharded.core.util.ModuleFeatures;
 import com.sharded.core.util.PlayerStateStore;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
@@ -66,7 +67,7 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
         var admin = getCommand("shardedcore");
         if (admin != null) admin.setTabCompleter(this);
 
-        getLogger().info("ShardedCore enabled with " + moduleManager.enabledCount() + " modules.");
+        ModuleFeatures.logStartup(this, moduleManager);
     }
 
     @Override
@@ -120,7 +121,16 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
             CommandHelp.sendStaff(sender, getConfig().getString("prefix", "&8[&bSharded&8] &r"));
             return true;
         }
-        CommandHelp.send(sender, getConfig().getString("prefix", "&8[&bSharded&8] &r"), moduleManager);
+        String prefix = getConfig().getString("prefix", "&8[&bSharded&8] &r");
+        if (args.length > 0 && args[0].equalsIgnoreCase("features")) {
+            ModuleFeatures.sendFeatures(sender, prefix, moduleManager);
+            return true;
+        }
+        if (args.length > 0 && args[0].equalsIgnoreCase("placeholders")) {
+            ModuleFeatures.sendPlaceholders(sender, prefix);
+            return true;
+        }
+        CommandHelp.send(sender, prefix, moduleManager);
         return true;
     }
 
@@ -128,7 +138,7 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (!command.getName().equalsIgnoreCase("shardedcore")) return List.of();
         if (args.length == 1) {
-            return TabCompleteHelper.filter(args[0], "reload", "resetconfigs", "staff", "help");
+            return TabCompleteHelper.filter(args[0], "reload", "resetconfigs", "staff", "features", "placeholders", "help");
         }
         return List.of();
     }

@@ -2,3 +2,14 @@
 
 mentions:
   enabled: true
+  highlight: '&#FFD900@%player%'
+  minimum-length: 3
+  ignored: []
+  mention-yourself: false
+  per-message: 3
+  cooldown: 5
+  sound:
+    enabled: true
+    sound: 'block.note_block.pling'
+    volume: 1.0
+    pitch: 1.6
