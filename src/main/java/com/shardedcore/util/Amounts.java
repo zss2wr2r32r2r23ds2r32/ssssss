@@ -1,7 +1,11 @@
 package com.shardedcore.util;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class Amounts {
 
@@ -49,6 +53,55 @@ public final class Amounts {
 
     public static String commas(double value) {
         return COMMA.format(value);
+    }
+
+    private static final Pattern DURATION = Pattern.compile("(\\d+)([dhms])");
+
+    /** 30m, 1h, 1d12h, 1h30m, or a bare number treated as minutes. */
+    public static long durationMillis(String input) {
+        if (input == null || input.isBlank()) return 0L;
+        String raw = input.trim().toLowerCase(Locale.ROOT).replace(" ", "");
+        if (raw.chars().allMatch(Character::isDigit)) {
+            try {
+                return Long.parseLong(raw) * 60_000L;
+            } catch (NumberFormatException ex) {
+                return 0L;
+            }
+        }
+        Matcher matcher = DURATION.matcher(raw);
+        long total = 0L;
+        boolean found = false;
+        while (matcher.find()) {
+            found = true;
+            long amount = Long.parseLong(matcher.group(1));
+            total += switch (matcher.group(2)) {
+                case "d" -> amount * 86_400_000L;
+                case "h" -> amount * 3_600_000L;
+                case "m" -> amount * 60_000L;
+                default -> amount * 1_000L;
+            };
+        }
+        return found ? total : 0L;
+    }
+
+    public static String duration(long millis, String day, String hour, String minute, String second, int units) {
+        if (millis <= 0L) return "0" + second;
+        long seconds = Math.max(0L, millis / 1000L);
+        long days = seconds / 86_400L;
+        seconds %= 86_400L;
+        long hours = seconds / 3600L;
+        seconds %= 3600L;
+        long minutes = seconds / 60L;
+        seconds %= 60L;
+        List<String> parts = new ArrayList<>();
+        if (days > 0) parts.add(days + day);
+        if (hours > 0) parts.add(hours + hour);
+        if (minutes > 0) parts.add(minutes + minute);
+        if (seconds > 0 && parts.size() < Math.max(1, units)) parts.add(seconds + second);
+        if (parts.isEmpty()) parts.add("0" + second);
+        int limit = Math.max(1, units);
+        if (parts.size() > limit) parts = parts.subList(0, limit);
+        return String.join(" ", parts);
     }
 
     private static String trim(double value) {

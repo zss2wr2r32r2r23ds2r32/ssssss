@@ -16,13 +16,42 @@ previous:
   slot: 18
   material: RED_STAINED_GLASS_PANE
   name: "&#FF0000&lPREVIOUS PAGE"
+  lore:
+    - "&8Description"
+    - ""
+    - "&#FF0000Information:"
+    - "&#FF0000¦ &fGo one page back."
+    - ""
+    - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Navigate"
 next:
   slot: 26
   material: LIME_STAINED_GLASS_PANE
   name: "&#80ee0b&lNEXT PAGE"
+  lore:
+    - "&8Description"
+    - ""
+    - "&#80ee0bInformation:"
+    - "&#80ee0b¦ &fGo one page forward."
+    - ""
+    - "&#80ee0b▷ &n&lCLICK&r&#80ee0b To Navigate"
 filler:
   material: BLACK_STAINED_GLASS_PANE
   name: " "
+  lore: []
+
+# Used when an entry has no lore of its own.
+# %color% %description% %command% %status% %click%
+lore:
+  - "&8Description"
+  - ""
+  - "%color%Information:"
+  - "%color%| &fClick To"
+  - "%color%| &f%description%"
+  - ""
+  - "%color%ℹ &fCommand: %color%%command%"
+  - "%color%⚓ &fCurrently: %status%"
+  - ""
+  - "%click%"
 
 defaults:
   chat: true
@@ -40,6 +69,7 @@ defaults:
   scoreboard: true
   tpauto: false
   coinflip: true
+  crystal: true
 
 mob-radius: 50
 
@@ -119,6 +149,11 @@ entries:
     material: SUNFLOWER
     name: "&#FF0072&lCOINFLIP MESSAGES"
     description: "Toggle Coinflip Messages"
+  crystal:
+    command: "/crystaltoggle"
+    material: END_CRYSTAL
+    name: "&#FF0072&lFAST CRYSTAL"
+    description: "Toggle Fast Crystal"
 
 messages:
   chat-on: "&#FF0072&lSETTINGS &7▷ &fPublic chat is now shown."
@@ -151,6 +186,8 @@ messages:
   tpauto-off: "&#FF0072&lSETTINGS &7▷ &fTPA auto-accept disabled."
   cf-on: "&#FFE925&lCOINFLIP &7▷ &fYou can see Coinflip messages again."
   cf-off: "&#FFE925&lCOINFLIP &7▷ &fYou will no longer see Coinflip messages."
+  crystal-on: "&#FF0072&lSETTINGS &7▷ &fFast crystal is now enabled."
+  crystal-off: "&#FF0072&lSETTINGS &7▷ &fFast crystal is now disabled."
   msg-usage: "&#FF0072&lMSG &7▷ &fUse /msg <player> <message>"
   msg-ignored: "&#FF0072&lMSG &7▷ &fThat player is not accepting messages."
   msg-self: "&#FF0072&lMSG &7▷ &fYou cannot message yourself."

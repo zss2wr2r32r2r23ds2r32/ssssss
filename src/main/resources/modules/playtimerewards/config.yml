@@ -1,0 +1,288 @@
+time-format:
+  days: "d"
+  hours: "h"
+  minutes: "m"
+  seconds: "s"
+  units: 2
+  none: "-"
+notify:
+  enabled: true
+  interval-seconds: 60
+menu:
+  title: "&8☀ Playtime | Rewards"
+  rows: 6
+  reward-slots: "10-16,19-25,28-34,37-43"
+  filler:
+    enabled: true
+    material: GRAY_STAINED_GLASS_PANE
+    name: " "
+    lore: []
+  stats:
+    enabled: true
+    slot: 49
+    material: PLAYER_HEAD
+    name: "&#FFEE00&lYOUR PLAYTIME"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFEE00Information:"
+      - "&#FFEE00¦ &fYou played &#FFEE00%playtime%"
+      - "&#FFEE00¦ &fon this server so far."
+      - ""
+      - "&#FFEE00Progress:"
+      - "&#FFEE00¦ &fClaimed: &#FFEE00%claimed%&7/&#FFEE00%total%"
+      - "&#FFEE00¦ &fReady to claim: &#FFEE00%ready%"
+      - "&#FFEE00¦ &fNext reward in: &#FFEE00%next%"
+      - ""
+      - "&#FFEE00▷ &n&lCLICK&r&#FFEE00 To Refresh"
+icons:
+  no-rewards: "&f- &7none"
+  locked:
+    material: RED_DYE
+    name: "&#FF0000&lIN PROGRESS &r&#FF0000(%required%)"
+    lore: ["&8Description","","&#FF0000Information:","&#FF0000¦ &fYou need &#FF0000%left% &fmore","&#FF0000¦ &fplaytime for this &#FF0000reward&f!","","&#FF0000Rewards:","%rewards%","","&#FF0000▷ &n&lCLICK&r&#FF0000 To Refresh"]
+  ready:
+    material: YELLOW_DYE
+    glow: true
+    name: "&#FFEE00&lREADY &r&#FFEE00(%required%)"
+    lore: ["&8Description","","&#FFEE00Information:","&#FFEE00¦ &fYou played &#FFEE00%required%&f,","&#FFEE00¦ &fthis &#FFEE00reward &fis yours!","","&#FFEE00Rewards:","%rewards%","","&#FFEE00▷ &n&lCLICK&r&#FFEE00 To Claim"]
+  claimed:
+    material: LIME_DYE
+    name: "&#80EE0B&lCLAIMED &r&#80EE0B(%required%)"
+    lore: ["&8Description","","&#80EE0BInformation:","&#80EE0B¦ &fYou already took","&#80EE0B¦ &fthis &#80EE0Breward&f.","","&#80EE0BRewards:","%rewards%"]
+sounds:
+  open: {enabled: true, sound: "block.chest.open", volume: 0.7, pitch: 1.2}
+  claim: {enabled: true, sound: "entity.player.levelup", volume: 1.0, pitch: 1.4}
+  notify: {enabled: true, sound: "entity.experience_orb.pickup", volume: 1.0, pitch: 1.2}
+  error: {enabled: true, sound: "block.note_block.bass", volume: 1.0, pitch: 0.8}
+messages:
+  playtime: "&#FFEE00&lPLAYTIME &7▷ &fYou played &#FFEE00%playtime% &fon this server."
+  claimed: "&#FFEE00&lPLAYTIME &7▷ &fThe &#FFEE00%required% &freward is yours."
+  players-only: "&#FF0000&lERROR &7▷ &fOnly players have a playtime."
+  already-claimed: "&#FF0000&lERROR &7▷ &fYou already took that reward."
+  ready: "&#FFEE00&lPLAYTIME &7▷ &f&#FFEE00%amount% &freward(s) are ready. Use &#FFEE00/playtimerewards"
+rewards:
+  "01":
+    playtime: 30m
+    commands:
+      - "ecogive %player% 100000"
+      - "gems give %player% 10"
+    display:
+      - "&f- &#80EE0B$100,000"
+      - "&f- &#FC258D10x &lGEMS"
+  "02":
+    playtime: 1h
+    commands:
+      - "ecogive %player% 150000"
+      - "gems give %player% 12"
+    display:
+      - "&f- &#80EE0B$150,000"
+      - "&f- &#FC258D12x &lGEMS"
+  "03":
+    playtime: 2h
+    commands:
+      - "ecogive %player% 250000"
+      - "gems give %player% 15"
+    display:
+      - "&f- &#80EE0B$250,000"
+      - "&f- &#FC258D15x &lGEMS"
+  "04":
+    playtime: 3h
+    commands:
+      - "ecogive %player% 350000"
+      - "gems give %player% 18"
+    display:
+      - "&f- &#80EE0B$350,000"
+      - "&f- &#FC258D18x &lGEMS"
+  "05":
+    playtime: 5h
+    commands:
+      - "ecogive %player% 500000"
+      - "gems give %player% 22"
+    display:
+      - "&f- &#80EE0B$500,000"
+      - "&f- &#FC258D22x &lGEMS"
+  "06":
+    playtime: 8h
+    commands:
+      - "ecogive %player% 750000"
+      - "gems give %player% 26"
+    display:
+      - "&f- &#80EE0B$750,000"
+      - "&f- &#FC258D26x &lGEMS"
+  "07":
+    playtime: 12h
+    commands:
+      - "ecogive %player% 1000000"
+      - "gems give %player% 30"
+    display:
+      - "&f- &#80EE0B$1,000,000"
+      - "&f- &#FC258D30x &lGEMS"
+  "08":
+    playtime: 18h
+    commands:
+      - "ecogive %player% 1500000"
+      - "gems give %player% 35"
+    display:
+      - "&f- &#80EE0B$1,500,000"
+      - "&f- &#FC258D35x &lGEMS"
+  "09":
+    playtime: 1d
+    commands:
+      - "ecogive %player% 2000000"
+      - "gems give %player% 40"
+    display:
+      - "&f- &#80EE0B$2,000,000"
+      - "&f- &#FC258D40x &lGEMS"
+  "10":
+    playtime: 1d12h
+    commands:
+      - "ecogive %player% 2750000"
+      - "gems give %player% 45"
+    display:
+      - "&f- &#80EE0B$2,750,000"
+      - "&f- &#FC258D45x &lGEMS"
+  "11":
+    playtime: 2d
+    commands:
+      - "ecogive %player% 3500000"
+      - "gems give %player% 50"
+    display:
+      - "&f- &#80EE0B$3,500,000"
+      - "&f- &#FC258D50x &lGEMS"
+  "12":
+    playtime: 3d
+    commands:
+      - "ecogive %player% 5000000"
+      - "gems give %player% 60"
+    display:
+      - "&f- &#80EE0B$5,000,000"
+      - "&f- &#FC258D60x &lGEMS"
+  "13":
+    playtime: 4d
+    commands:
+      - "ecogive %player% 6500000"
+      - "gems give %player% 70"
+    display:
+      - "&f- &#80EE0B$6,500,000"
+      - "&f- &#FC258D70x &lGEMS"
+  "14":
+    playtime: 5d
+    commands:
+      - "ecogive %player% 8000000"
+      - "gems give %player% 80"
+    display:
+      - "&f- &#80EE0B$8,000,000"
+      - "&f- &#FC258D80x &lGEMS"
+  "15":
+    playtime: 6d
+    commands:
+      - "ecogive %player% 10000000"
+      - "gems give %player% 90"
+    display:
+      - "&f- &#80EE0B$10,000,000"
+      - "&f- &#FC258D90x &lGEMS"
+  "16":
+    playtime: 7d
+    commands:
+      - "ecogive %player% 12500000"
+      - "gems give %player% 100"
+    display:
+      - "&f- &#80EE0B$12,500,000"
+      - "&f- &#FC258D100x &lGEMS"
+  "17":
+    playtime: 9d
+    commands:
+      - "ecogive %player% 15000000"
+      - "gems give %player% 115"
+    display:
+      - "&f- &#80EE0B$15,000,000"
+      - "&f- &#FC258D115x &lGEMS"
+  "18":
+    playtime: 11d
+    commands:
+      - "ecogive %player% 18000000"
+      - "gems give %player% 130"
+    display:
+      - "&f- &#80EE0B$18,000,000"
+      - "&f- &#FC258D130x &lGEMS"
+  "19":
+    playtime: 14d
+    commands:
+      - "ecogive %player% 22000000"
+      - "gems give %player% 150"
+    display:
+      - "&f- &#80EE0B$22,000,000"
+      - "&f- &#FC258D150x &lGEMS"
+  "20":
+    playtime: 17d
+    commands:
+      - "ecogive %player% 26000000"
+      - "gems give %player% 170"
+    display:
+      - "&f- &#80EE0B$26,000,000"
+      - "&f- &#FC258D170x &lGEMS"
+  "21":
+    playtime: 20d
+    commands:
+      - "ecogive %player% 30000000"
+      - "gems give %player% 190"
+    display:
+      - "&f- &#80EE0B$30,000,000"
+      - "&f- &#FC258D190x &lGEMS"
+  "22":
+    playtime: 24d
+    commands:
+      - "ecogive %player% 36000000"
+      - "gems give %player% 215"
+    display:
+      - "&f- &#80EE0B$36,000,000"
+      - "&f- &#FC258D215x &lGEMS"
+  "23":
+    playtime: 28d
+    commands:
+      - "ecogive %player% 42000000"
+      - "gems give %player% 240"
+    display:
+      - "&f- &#80EE0B$42,000,000"
+      - "&f- &#FC258D240x &lGEMS"
+  "24":
+    playtime: 32d
+    commands:
+      - "ecogive %player% 50000000"
+      - "gems give %player% 270"
+    display:
+      - "&f- &#80EE0B$50,000,000"
+      - "&f- &#FC258D270x &lGEMS"
+  "25":
+    playtime: 37d
+    commands:
+      - "ecogive %player% 60000000"
+      - "gems give %player% 300"
+    display:
+      - "&f- &#80EE0B$60,000,000"
+      - "&f- &#FC258D300x &lGEMS"
+  "26":
+    playtime: 42d
+    commands:
+      - "ecogive %player% 72000000"
+      - "gems give %player% 340"
+    display:
+      - "&f- &#80EE0B$72,000,000"
+      - "&f- &#FC258D340x &lGEMS"
+  "27":
+    playtime: 50d
+    commands:
+      - "ecogive %player% 90000000"
+      - "gems give %player% 380"
+    display:
+      - "&f- &#80EE0B$90,000,000"
+      - "&f- &#FC258D380x &lGEMS"
+  "28":
+    playtime: 60d
+    commands:
+      - "ecogive %player% 120000000"
+      - "gems give %player% 450"
+    display:
+      - "&f- &#80EE0B$120,000,000"
+      - "&f- &#FC258D450x &lGEMS"

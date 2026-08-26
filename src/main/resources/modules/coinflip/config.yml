@@ -19,7 +19,7 @@ menu:
   head:
     name: "&#FFE925%player%'s Bet"
     lore:
-      - "&7[ᴄᴏɪɴғʟɪᴘ]"
+      - "&8[ᴄᴏɪɴғʟɪᴘ]"
       - ""
       - "&#FFE925Information:"
       - "&#FFE925¦ &fClick here to play"
@@ -34,7 +34,7 @@ menu:
     material: GUSTER_BANNER_PATTERN
     name: "&#FFE925&lCOINFLIP"
     lore:
-      - "&7[ᴄᴏɪɴғʟɪᴘ]"
+      - "&8[ᴄᴏɪɴғʟɪᴘ]"
       - ""
       - "&#FFE925Information:"
       - "&#FFE925¦ &fHere you can see"
@@ -50,7 +50,7 @@ menu:
     material: MINECART
     name: "&#FF0000&lNO GAMES FOUND"
     lore:
-      - "&7[ᴄᴏɪɴғʟɪᴘ]"
+      - "&8[ᴄᴏɪɴғʟɪᴘ]"
       - ""
       - "&#FF0000Information:"
       - "&#FF0000¦ &fNobody has a coinflip"
@@ -63,7 +63,7 @@ menu:
     material: CLOCK
     name: "&#FFE925&lREFRESH"
     lore:
-      - "&7[ᴄᴏɪɴғʟɪᴘ]"
+      - "&8[ᴄᴏɪɴғʟɪᴘ]"
       - ""
       - "&#FFE925Information:"
       - "&#FFE925¦ &fClick here to reload"
@@ -76,7 +76,7 @@ menu:
     material: RED_STAINED_GLASS_PANE
     name: "&#FF0000&lPREVIOUS PAGE"
     lore:
-      - "&7[ᴄᴏɪɴғʟɪᴘ]"
+      - "&8[ᴄᴏɪɴғʟɪᴘ]"
       - ""
       - "&#FF0000Information:"
       - "&#FF0000¦ &fClick here to return"
@@ -89,7 +89,7 @@ menu:
     material: LIME_STAINED_GLASS_PANE
     name: "&#80ee0b&lNEXT PAGE"
     lore:
-      - "&7[ᴄᴏɪɴғʟɪᴘ]"
+      - "&8[ᴄᴏɪɴғʟɪᴘ]"
       - ""
       - "&#80ee0bDescription:"
       - "&#80ee0b¦ &fClick here to open"
@@ -107,7 +107,7 @@ history:
   entry:
     name: "&#80ee0b&l$%amount%"
     lore:
-      - "&7[ᴄᴏɪɴғʟɪᴘ]"
+      - "&8[ᴄᴏɪɴғʟɪᴘ]"
       - ""
       - "&#FFE925Information:"
       - "&#FFE925¦ &fOne finished game"
@@ -122,7 +122,7 @@ history:
     material: RED_STAINED_GLASS_PANE
     name: "&#FF0000&lPREVIOUS PAGE"
     lore:
-      - "&7[ᴄᴏɪɴғʟɪᴘ]"
+      - "&8[ᴄᴏɪɴғʟɪᴘ]"
       - ""
       - "&#FF0000Information:"
       - "&#FF0000¦ &fClick here to return"
@@ -135,7 +135,7 @@ history:
     material: NAME_TAG
     name: "&#FFD900&lSEARCH"
     lore:
-      - "&7[ᴄᴏɪɴғʟɪᴘ]"
+      - "&8[ᴄᴏɪɴғʟɪᴘ]"
       - ""
       - "&#FFD900Information:"
       - "&#FFD900¦ &fLook for the games"
@@ -148,7 +148,7 @@ history:
     material: LIME_STAINED_GLASS_PANE
     name: "&#80ee0b&lNEXT PAGE"
     lore:
-      - "&7[ᴄᴏɪɴғʟɪᴘ]"
+      - "&8[ᴄᴏɪɴғʟɪᴘ]"
       - ""
       - "&#80ee0bInformation:"
       - "&#80ee0b¦ &fClick here to open"
@@ -183,7 +183,7 @@ animation:
   head:
     name: "&#FFE925&l%player%"
     lore:
-      - "&7[ᴄᴏɪɴғʟɪᴘ]"
+      - "&8[ᴄᴏɪɴғʟɪᴘ]"
       - ""
       - "&#FFE925Information:"
       - "&#FFE925¦ &fThe coin is still"
@@ -241,7 +241,7 @@ sounds:
 win:
   - ""
   - "&#80ee0b&lYOU WON"
-  - "&7[ɪɴғᴏʀᴍᴀᴛɪᴏɴ]"
+  - "&8[ɪɴғᴏʀᴍᴀᴛɪᴏɴ]"
   - ""
   - "&#80ee0b¦ &fYou won a Coinflip"
   - "&#80ee0b¦ &fagainst &#FF256E%player%&f."
@@ -251,7 +251,7 @@ win:
 lose:
   - ""
   - "&#FF0000&lYOU LOST"
-  - "&7[ɪɴғᴏʀᴍᴀᴛɪᴏɴ]"
+  - "&8[ɪɴғᴏʀᴍᴀᴛɪᴏɴ]"
   - ""
   - "&#FF0000¦ &fYou lost a Coinflip"
   - "&#FF0000¦ &fagainst &#FF256E%player%&f."
@@ -259,29 +259,29 @@ lose:
   - "&#80ee0b&l$&r &fAmount: &#80ee0b%amount%"
 
 messages:
-  created: "&#FFE925&lCOINFLIP &7▷ &#22AFFB%player% &fcreated a Coinflip of &#80ee0b$%amount%"
-  won-broadcast: "&#FFE925&lCOINFLIP &7▷ &#80ee0b%winner% &fjust beat &#FF256E%loser% &fIn a Coinflip worth &#80ee0b$%amount%"
-  gone: "&#FFE925&lCOINFLIP &7▷ &fThis game is &#FF256Eno longer &favailable."
+  created: "&#FFE925&lCOINFLIP &8▷ &#22AFFB%player% &fcreated a Coinflip of &#80ee0b$%amount%"
+  won-broadcast: "&#FFE925&lCOINFLIP &8▷ &#80ee0b%winner% &fjust beat &#FF256E%loser% &fIn a Coinflip worth &#80ee0b$%amount%"
+  gone: "&#FFE925&lCOINFLIP &8▷ &fThis game is &#FF256Eno longer &favailable."
 
-  created-self: "&#FFE925&lCOINFLIP &7▷ &fYour Coinflip of &#80ee0b$%amount% &fis open."
-  deleted: "&#FFE925&lCOINFLIP &7▷ &fYour Coinflip was closed, &#80ee0b$%amount% &fis back."
-  toggle-on: "&#FFE925&lCOINFLIP &7▷ &fYou can see Coinflip messages again."
-  toggle-off: "&#FFE925&lCOINFLIP &7▷ &fYou will no longer see Coinflip messages."
+  created-self: "&#FFE925&lCOINFLIP &8▷ &fYour Coinflip of &#80ee0b$%amount% &fis open."
+  deleted: "&#FFE925&lCOINFLIP &8▷ &fYour Coinflip was closed, &#80ee0b$%amount% &fis back."
+  toggle-on: "&#FFE925&lCOINFLIP &8▷ &fYou can see Coinflip messages again."
+  toggle-off: "&#FFE925&lCOINFLIP &8▷ &fYou will no longer see Coinflip messages."
 
-  self: "&#FF0000&lERROR &7▷ &fYou cannot play your own game."
-  already-open: "&#FF0000&lERROR &7▷ &fYou already have a Coinflip open."
-  no-game: "&#FF0000&lERROR &7▷ &fYou have no Coinflip open."
-  invalid-amount: "&#FF0000&lERROR &7▷ &fThat is not a valid amount."
-  minimum: "&#FF0000&lERROR &7▷ &fThe smallest bet is &#80ee0b$%amount%&f."
-  maximum: "&#FF0000&lERROR &7▷ &fThe biggest bet is &#80ee0b$%amount%&f."
-  cannot-afford: "&#FF0000&lERROR &7▷ &fYou cannot afford that bet."
-  frozen: "&#FF0000&lERROR &7▷ &fYour balance is frozen."
-  in-combat: "&#FF0000&lERROR &7▷ &fYou cannot play while in combat."
-  no-economy: "&#FF0000&lERROR &7▷ &fThe economy is not available."
-  too-fast: "&#FF0000&lERROR &7▷ &fSlow down a moment."
-  search-prompt: "&#FFD900&lSEARCH &7▷ &fType a name in the chat, or &#FFD900cancel&f."
-  players-only: "&#FF0000&lERROR &7▷ &fOnly a player can use that."
+  self: "&#FF0000&lERROR &8▷ &fYou cannot play your own game."
+  already-open: "&#FFE925&lCOINFLIP &8▷ &fYou already have a Coinflip open."
+  no-game: "&#FFE925&lCOINFLIP &8▷ &fYou have no Coinflip open."
+  invalid-amount: "&#FFE925&lCOINFLIP &8▷ &fThat is not a valid amount."
+  minimum: "&#FFE925&lCOINFLIP &8▷ &fThe smallest bet is &#80ee0b$%amount%&f."
+  maximum: "&#FFE925&lCOINFLIP &8▷ &fThe biggest bet is &#80ee0b$%amount%&f."
+  cannot-afford: "&#FFE925&lCOINFLIP &8▷ &fYou cannot afford that bet."
+  frozen: "&#FFE925&lCOINFLIP &8▷ &fYour balance is frozen."
+  in-combat: "&#FFE925&lCOINFLIP &8▷ &fYou cannot play while in combat."
+  no-economy: "&#FFE925&lCOINFLIP &8▷ &fThe economy is not available."
+  too-fast: "&#FFE925&lCOINFLIP &8▷ &fSlow down a moment."
+  search-prompt: "&#FFD900&lSEARCH &8▷ &fType a name in the chat, or &#FFD900cancel&f."
+  players-only: "&#FFE925&lCOINFLIP &8▷ &fOnly a player can use that."
 
-  usage: "&#FFE925&lCOINFLIP &7▷ &fUse /cf, /cf create <amount>, /cf delete or /cf toggle"
-  usage-history: "&#FFE925&lCOINFLIP &7▷ &fUse /cf history [player]"
-  usage-create: "&#FFE925&lCOINFLIP &7▷ &fUse /cf create <amount>"
+  usage: "&#FFE925&lCOINFLIP &8▷ &fUse /cf, /cf create <amount>, /cf delete or /cf toggle"
+  usage-history: "&#FFE925&lCOINFLIP &8▷ &fUse /cf history [player]"
+  usage-create: "&#FFE925&lCOINFLIP &8▷ &fUse /cf create <amount>"

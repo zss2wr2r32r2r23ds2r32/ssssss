@@ -43,8 +43,178 @@ message:
   - ""
   - "&#97F900▷ &fLink: &#97F900&nstore.shardedmc.net"
 
-# Opened when the last non-empty message line is clicked.
 url: "https://store.shardedmc.net"
-
-# Empty string disables the sound.
 sound: "block.note_block.pling"
+
+Media:
+message:
+  - ""
+  - "&#FF256E☀ &lMEDIA RANK&r &#FF256E☀"
+  - "&7[ᴀɴɴᴏᴜɴᴄᴇᴍᴇɴᴛ]"
+  - ""
+  - "&#FF256E¦ &fApply for the &#FF256EMedia Rank"
+  - "&#FF256E¦ &finside our &#FF256EDiscord Server&f!"
+  - ""
+  - "&#FF256E▷ &fLink: &#FF256E&ndiscord.gg/shardedmc"
+url: "https://discord.gg/shardedmc"
+sound: "block.note_block.pling"
+
+media:
+  menu:
+    enabled: true
+    menu_title: "Media Requirements"
+    size: 27
+    open_permission: shardedcore.command.media
+    items:
+      filler:
+        material: BLACK_STAINED_GLASS_PANE
+        display_name: " "
+        slots: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]
+      youtube:
+        material: basehead-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDQ1NTg2MDY1ZjAyZTg1NTMwMTI1ZjQ2NmRmMTA3YzFjOGQzZTE0MzEwMTAzMmMyYjQ3ODA3MTE1YmJkYTJmMCJ9fX0=
+        slot: 11
+        name: "&x&F&F&0&0&0&0&lYOUTUBE &7(/media)"
+        lore:
+          - "&8Descriptions"
+          - ""
+          - "&x&F&F&0&0&0&0Information:"
+          - "&x&F&F&0&0&0&0| &fLong Form: &x&F&F&0&0&0&0500 Views"
+          - "&x&F&F&0&0&0&0| &fShorts: &x&F&F&0&0&0&02,500 Views"
+          - "&x&F&F&0&0&0&0| &fLive: &x&F&F&0&0&0&015 Avg Viewers"
+          - ""
+          - "&x&F&F&0&0&0&0⚓ &fIP must be &x&F&F&0&0&0&0visible"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply"
+        left_click_commands:
+          - "[message] media"
+      tiktok:
+        material: basehead-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNThkMDI5ODRhNDNlNmM2OTEwZDBkOTA4YTU3ZTA0MWMzY2ZiMWRkODgxYjViNzIwYzU1NTYzZTY4MWY1OWUwZSJ9fX0=
+        slot: 13
+        name: "&x&F&F&0&0&7&2&lTIKTOK &7(/media)"
+        lore:
+          - "&8Descriptions"
+          - ""
+          - "&x&F&F&0&0&7&2Information:"
+          - "&x&F&F&0&0&7&2| &fVideo: &x&F&F&0&0&7&25,000 Views"
+          - "&x&F&F&0&0&7&2| &fLive: &x&F&F&0&0&7&225 Avg Viewers"
+          - ""
+          - "&x&F&F&0&0&7&2⚓ &fIP must be &x&F&F&0&0&7&2visible"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply"
+        left_click_commands:
+          - "[player] discord"
+      twitch:
+        material: basehead-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWQyYjA1YWJlNDk3NmMwYWYxZjU0YjhkMzRlNjU2ZDE0MzgzMTc0ZmY1YzZlYmE2MTNhOGE4NDA1NDk4Y2IxNSJ9fX0=
+        slot: 15
+        name: "&x&8&0&0&0&F&F&lTWITCH &7(/media)"
+        lore:
+          - "&8Descriptions"
+          - ""
+          - "&x&8&0&0&0&F&FInformation:"
+          - "&x&8&0&0&0&F&F| &fLive: &x&8&0&0&0&F&F10 Avg Viewers"
+          - ""
+          - "&x&8&0&0&0&F&F⚓ &fIP must be &x&8&0&0&0&F&Fvisible"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply"
+        left_click_commands:
+          - "[player] discord"
+
+whitelist:
+  enabled: true
+  bypass-permission: shardedcore.command.bypass
+  unknown: "&#00A2FF&lCORE &8▷ &fYou do not have Permission."
+  sound:
+    enabled: true
+    sound: "block.note_block.bass"
+    volume: 0.8
+    pitch: 0.8
+  commands:
+    - help
+    - spawn
+    - setspawn
+    - rtp
+    - wild
+    - rtpqueue
+    - rtpq
+    - tpa
+    - tpahere
+    - tpaccept
+    - tpyes
+    - tpacancel
+    - tpdeny
+    - discord
+    - store
+    - webstore
+    - apply
+    - media
+    - settings
+    - setting
+    - ping
+    - kit
+    - kits
+    - shop
+    - rules
+    - w
+    - msg
+    - tell
+    - whisper
+    - m
+    - message
+    - r
+    - reply
+    - bal
+    - balance
+    - money
+    - pay
+    - baltop
+    - home
+    - homes
+    - sethome
+    - delhome
+    - trash
+    - craft
+    - wb
+    - workbench
+    - anvil
+    - toolsmith
+    - smithing
+    - cf
+    - coinflip
+    - crate
+    - crates
+    - sell
+    - worth
+    - live
+    - guide
+    - killrewards
+    - krewards
+    - playtimerewards
+    - ptrewards
+    - playtime
+    - chattoggle
+    - msgtoggle
+    - livetoggle
+    - tpatoggle
+    - tpauto
+    - nvtoggle
+    - nv
+    - crystaltoggle
+    - fastcrystal
+    - tpaheretoggle
+    - joinleavetoggle
+    - jointoggle
+    - mobspawning
+    - mobtoggle
+    - deathtoggle
+    - paytoggle
+    - nightvisiontoggle
+    - nightvision
+    - nv
+    - ordertoggle
+    - tabbossbar
+    - tabscoreboard
+    - shardedcore
+    - sc
+    - sharded
+    - modules
+

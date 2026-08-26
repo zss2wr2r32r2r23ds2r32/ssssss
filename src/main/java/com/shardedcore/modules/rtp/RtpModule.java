@@ -47,6 +47,9 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
     private final Map<UUID, Long> cooldown = new ConcurrentHashMap<>();
     private final Map<UUID, Long> safeUntil = new ConcurrentHashMap<>();
     private final Set<UUID> duelPrompt = ConcurrentHashMap.newKeySet();
+    private final Set<UUID> queue = ConcurrentHashMap.newKeySet();
+    private BukkitTask queueTask;
+    private int queueDots;
     private RtpSafeSpotPool pool;
 
     public RtpModule(ShardedCore plugin) {
@@ -58,12 +61,16 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
         pool = new RtpSafeSpotPool(this);
         pool.start();
         registerCommand("rtp", this);
+        registerCommand("rtpqueue", this);
         registerListener(this);
+        queueTask = Bukkit.getScheduler().runTaskTimer(plugin, this::tickQueue, 20L, 20L);
     }
 
     @Override
     public void disable() {
         if (pool != null) pool.shutdown();
+        if (queueTask != null) queueTask.cancel();
+        queue.clear();
         pending.values().forEach(BukkitTask::cancel);
         pending.clear();
         cooldown.clear();
@@ -85,7 +92,11 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            send(sender, "players-only");
+            sendBar(sender, "players-only");
+            return true;
+        }
+        if (command.getName().equalsIgnoreCase("rtpqueue")) {
+            toggleQueue(player);
             return true;
         }
         if (args.length == 0) {
@@ -121,6 +132,11 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
                 startDuel(player);
             });
         }
+        menu.fill(Items.named(
+                Sounds.material(cfg("menu.filler.material", "BLACK_STAINED_GLASS_PANE"), Material.BLACK_STAINED_GLASS_PANE),
+                cfg("menu.filler.name", " "),
+                config.getStringList("menu.filler.lore")
+        ));
         plugin.menus().open(player, menu);
         sound(player, "sounds.menu-open");
     }
@@ -144,13 +160,13 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
 
     void begin(Player player, String arg) {
         if (pending.containsKey(player.getUniqueId())) {
-            send(player, "already-teleporting");
+            sendBar(player, "already-teleporting");
             sound(player, "sounds.error");
             return;
         }
         CombatModule combat = plugin.modules().get(CombatModule.class);
         if (combat != null && combat.tagged(player)) {
-            send(player, "restricted");
+            sendBar(player, "restricted");
             sound(player, "sounds.error");
             return;
         }
@@ -158,14 +174,14 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
         Long last = cooldown.get(player.getUniqueId());
         if (last != null && System.currentTimeMillis() - last < wait) {
             long left = (wait - (System.currentTimeMillis() - last) + 999) / 1000L;
-            send(player, "cooldown", "time", String.valueOf(Math.max(1, left)));
+            sendBar(player, "cooldown", "time", String.valueOf(Math.max(1, left)));
             sound(player, "sounds.error");
             return;
         }
         double cost = Amounts.parse(String.valueOf(config.get("cost", 0)));
         EconomyModule economy = plugin.modules().get(EconomyModule.class);
         if (cost > 0 && (economy == null || economy.service().get(player.getUniqueId()) < cost)) {
-            send(player, "cannot-afford", "amount", economy == null ? String.valueOf((long) cost) : economy.service().format(cost));
+            sendBar(player, "cannot-afford", "amount", economy == null ? String.valueOf((long) cost) : economy.service().format(cost));
             sound(player, "sounds.error");
             return;
         }
@@ -174,20 +190,22 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
         ConfigurationSection dest = config.getConfigurationSection("worlds." + destId);
         World world = named != null ? named : (dest == null ? null : resolveWorld(destId, dest));
         if (world == null) {
-            send(player, "world-missing");
+            sendBar(player, "world-missing");
             sound(player, "sounds.error");
             return;
         }
         if (dest == null) dest = destFor(world);
-        send(player, "searching");
-        Location spot = pool.poll(world);
-        if (spot == null) spot = pool.searchNow(world, dest);
-        if (spot == null) {
-            send(player, "not-found");
-            sound(player, "sounds.error");
-            return;
-        }
-        startCountdown(player, spot, cost, economy);
+        sendBar(player, "searching");
+        ConfigurationSection destination = dest;
+        pool.request(world, destination, spot -> {
+            if (!player.isOnline()) return;
+            if (spot == null) {
+                sendBar(player, "not-found");
+                sound(player, "sounds.error");
+                return;
+            }
+            startCountdown(player, spot, cost, economy);
+        });
     }
 
     private void startCountdown(Player player, Location dest, double cost, EconomyModule economy) {
@@ -207,7 +225,7 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
                 finish(player, dest, cost, economy);
                 return;
             }
-            send(player, "countdown", "seconds", String.valueOf(left[0]));
+            sendBar(player, "countdown", "seconds", String.valueOf(left[0]));
             sound(player, "sounds.countdown");
             left[0]--;
         }, 0L, 20L);
@@ -217,7 +235,7 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
     private void finish(Player player, Location dest, double cost, EconomyModule economy) {
         if (cost > 0) {
             if (economy == null || !economy.service().take(player.getUniqueId(), cost)) {
-                send(player, "cannot-afford", "amount", economy == null ? String.valueOf((long) cost) : economy.service().format(cost));
+                sendBar(player, "cannot-afford", "amount", economy == null ? String.valueOf((long) cost) : economy.service().format(cost));
                 sound(player, "sounds.error");
                 return;
             }
@@ -232,7 +250,7 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
             }
             sound(player, "sounds.teleport");
             String coords = dest.getBlockX() + ", " + dest.getBlockY() + ", " + dest.getBlockZ();
-            send(player, "teleported", "coordinates", coords);
+            sendBar(player, "teleported", "coordinates", coords);
         }));
     }
 
@@ -242,7 +260,7 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
             return;
         }
         duelPrompt.add(player.getUniqueId());
-        send(player, "duel-prompt");
+        sendBar(player, "duel-prompt");
     }
 
     private boolean commandExists(String name) {
@@ -257,12 +275,12 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
         String typed = PlainTextComponentSerializer.plainText().serialize(event.message()).trim();
         Bukkit.getScheduler().runTask(plugin, () -> {
             if (typed.equalsIgnoreCase("cancel")) {
-                send(player, "duel-cancelled");
+                sendBar(player, "duel-cancelled");
                 return;
             }
             Player target = Bukkit.getPlayerExact(typed);
             if (target == null) {
-                send(player, "duel-unknown", "player", typed);
+                sendBar(player, "duel-unknown", "player", typed);
                 return;
             }
             if (commandExists("1v1")) {
@@ -270,7 +288,7 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
             } else if (commandExists("duel")) {
                 player.performCommand("duel " + target.getName());
             } else {
-                send(player, "duel-missing");
+                sendBar(player, "duel-missing");
             }
         });
     }
@@ -283,7 +301,7 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
                 && event.getFrom().getBlockZ() == event.getTo().getBlockZ()) return;
         if (!pending.containsKey(event.getPlayer().getUniqueId())) return;
         stop(event.getPlayer().getUniqueId());
-        send(event.getPlayer(), "cancelled");
+        sendBar(event.getPlayer(), "cancelled");
         sound(event.getPlayer(), "sounds.error");
     }
 
@@ -303,8 +321,84 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         stop(event.getPlayer().getUniqueId());
+        queue.remove(event.getPlayer().getUniqueId());
         duelPrompt.remove(event.getPlayer().getUniqueId());
         safeUntil.remove(event.getPlayer().getUniqueId());
+    }
+
+    private void toggleQueue(Player player) {
+        if (queue.remove(player.getUniqueId())) {
+            sendBar(player, "queue.cancelled");
+            return;
+        }
+        queue.add(player.getUniqueId());
+        sendRawBar(player, lookingText(1));
+    }
+
+    private void tickQueue() {
+        queue.removeIf(uuid -> Bukkit.getPlayer(uuid) == null);
+        if (queue.size() >= 2) {
+            java.util.Iterator<UUID> iterator = queue.iterator();
+            UUID first = iterator.next();
+            UUID second = iterator.next();
+            queue.remove(first);
+            queue.remove(second);
+            Player a = Bukkit.getPlayer(first);
+            Player b = Bukkit.getPlayer(second);
+            if (a != null && b != null) pairQueue(a, b);
+            return;
+        }
+        queueDots = queueDots % 3 + 1;
+        String text = lookingText(queueDots);
+        for (UUID uuid : queue) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null) sendRawBar(player, text);
+        }
+    }
+
+    private String lookingText(int dots) {
+        String base = cfg("queue.looking", "&#22AFFB&lRTP QUEUE &8▷ &fLooking for Player");
+        return base + ".".repeat(Math.max(1, Math.min(3, dots)));
+    }
+
+    private void pairQueue(Player a, Player b) {
+        int seconds = Math.max(1, config.getInt("queue.countdown-seconds", 5));
+        World world = a.getWorld();
+        ConfigurationSection dest = destFor(world);
+        if (dest == null) dest = config.getConfigurationSection("worlds.overworld");
+        pool.request(world, dest, first -> {
+            if (first == null) {
+                sendBar(a, "not-found");
+                sendBar(b, "not-found");
+                return;
+            }
+            Location second = first.clone().add(config.getDouble("queue.offset", 8), 0, 0);
+            second.setYaw(first.getYaw() + 180f);
+            startQueueCountdown(a, first, seconds);
+            startQueueCountdown(b, second, seconds);
+        });
+    }
+
+    private void startQueueCountdown(Player player, Location dest, int seconds) {
+        int[] left = {seconds};
+        BukkitTask task = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+            if (!player.isOnline()) {
+                stop(player.getUniqueId());
+                return;
+            }
+            if (left[0] <= 0) {
+                stop(player.getUniqueId());
+                player.teleportAsync(dest);
+                sound(player, "sounds.teleport");
+                return;
+            }
+            sendRawBar(player, Text.apply(cfg("queue.found",
+                    "&#22AFFB&lRTP QUEUE &8▷ &fFound Player, Teleporting in &#22AFFB&n%seconds%s"),
+                    "seconds", String.valueOf(left[0])));
+            sound(player, "sounds.countdown");
+            left[0]--;
+        }, 0L, 20L);
+        pending.put(player.getUniqueId(), task);
     }
 
     private void stop(UUID uuid) {

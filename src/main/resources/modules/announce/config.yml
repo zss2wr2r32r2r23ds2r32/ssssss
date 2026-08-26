@@ -1,5 +1,5 @@
 # /announce and /announcement show a title plus subtitle.
-color: "&#A370EE"
+color: "&f"
 title: "&#A370EE&lANNOUNCEMENT"
 fade-in: 10
 stay: 70
@@ -12,6 +12,6 @@ sound:
   pitch: 1.0
 
 messages:
-  usage: "&#A370EE&lANNOUNCE &7▷ &fUse /announce <message>"
-  sent: "&#A370EE&lANNOUNCE &7▷ &fAnnouncement sent."
-  no-permission: "&#FF0000&lERROR &7▷ &fYou do not have permission."
+  usage: "&#FF0000&lERROR &8▷ &fUse /announce <message>"
+  sent: "&#FF0000&lERROR &8▷ &fAnnouncement sent."
+  no-permission: "&#FF0000&lERROR &8▷ &fYou do not have permission."

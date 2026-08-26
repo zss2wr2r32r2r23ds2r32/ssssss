@@ -1,14 +1,17 @@
 package com.shardedcore.modules.kits;
 
 import com.shardedcore.ShardedCore;
+import com.shardedcore.database.Sqlite;
 import com.shardedcore.gui.Menus;
 import com.shardedcore.module.Module;
+import com.shardedcore.util.Amounts;
 import com.shardedcore.util.Configs;
 import com.shardedcore.util.Items;
 import com.shardedcore.util.Players;
 import com.shardedcore.util.Sounds;
 import com.shardedcore.util.Tabs;
 import com.shardedcore.util.Text;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -18,25 +21,42 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 public final class KitsModule extends Module implements CommandExecutor, TabCompleter {
 
     private static final String ADMIN = "shardedcore.kits.admin";
+    private static final int[] GUI_TO_PLAYER = new int[54];
+
+    static {
+        for (int i = 0; i < 54; i++) GUI_TO_PLAYER[i] = -1;
+        for (int i = 0; i < 27; i++) GUI_TO_PLAYER[i] = 9 + i;
+        for (int i = 0; i < 9; i++) GUI_TO_PLAYER[27 + i] = i;
+        GUI_TO_PLAYER[36] = 39;
+        GUI_TO_PLAYER[37] = 38;
+        GUI_TO_PLAYER[38] = 37;
+        GUI_TO_PLAYER[39] = 36;
+        GUI_TO_PLAYER[40] = 40;
+    }
 
     private File kitsFolder;
     private File layoutsFolder;
+    private Sqlite sqlite;
+    private final Map<UUID, Map<String, Long>> cooldowns = new ConcurrentHashMap<>();
 
     public KitsModule(ShardedCore plugin) {
         super(plugin, "kits");
@@ -46,11 +66,20 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
     public void enable() {
         kitsFolder = new File(folder, "kits");
         layoutsFolder = new File(folder, "layouts");
-        if (!kitsFolder.exists() && !kitsFolder.mkdirs()) {
-            plugin.getLogger().warning("Could not create kits folder");
-        }
-        if (!layoutsFolder.exists() && !layoutsFolder.mkdirs()) {
-            plugin.getLogger().warning("Could not create kit layouts folder");
+        kitsFolder.mkdirs();
+        layoutsFolder.mkdirs();
+        sqlite = plugin.toggles().sqlite();
+        try {
+            sqlite.run("""
+                    CREATE TABLE IF NOT EXISTS kit_cooldowns (
+                        uuid TEXT NOT NULL,
+                        kit TEXT NOT NULL,
+                        until INTEGER NOT NULL,
+                        PRIMARY KEY (uuid, kit)
+                    )
+                    """);
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, "Failed to create kit_cooldowns", ex);
         }
         registerCommand("kit", this);
         registerCommand("kits", this);
@@ -63,33 +92,26 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("kits")) {
+        if (args.length == 0 || command.getName().equalsIgnoreCase("kits")) {
             if (!(sender instanceof Player player)) {
                 send(sender, "players-only");
                 return true;
             }
-            openGui(player, 0);
-            return true;
-        }
-        if (args.length == 0) {
-            if (!(sender instanceof Player player)) {
-                send(sender, "players-only");
-                return true;
-            }
-            openGui(player, 0);
+            openGui(player);
             return true;
         }
         return switch (args[0].toLowerCase(Locale.ROOT)) {
             case "create" -> create(sender, args);
             case "delete" -> delete(sender, args);
             case "give" -> giveCommand(sender, args);
-            case "claim" -> claimCommand(sender, args);
+            case "list" -> list(sender);
+            case "help" -> {
+                sendLines(sender, config.getStringList("messages.help"), "");
+                yield true;
+            }
             default -> {
-                if (sender instanceof Player player && kit(args[0]) != null) {
-                    startClaim(player, args[0]);
-                } else {
-                    send(sender, "usage");
-                }
+                if (sender instanceof Player player) claim(player, args[0]);
+                else send(sender, "players-only");
                 yield true;
             }
         };
@@ -110,41 +132,20 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
             send(player, "invalid-name", "kit", args[1]);
             return true;
         }
-        PlayerInventory inventory = player.getInventory();
-        Map<Integer, ItemStack> items = new HashMap<>();
-        ItemStack[] contents = inventory.getContents();
-        for (int slot = 0; slot < contents.length; slot++) {
-            ItemStack item = contents[slot];
-            if (isAir(item)) continue;
-            items.put(slot, item.clone());
-        }
+        Map<Integer, ItemStack> items = snapshot(player.getInventory());
         if (items.isEmpty()) {
             send(player, "empty-inventory");
             return true;
         }
-        File kitFolder = kitFolder(id);
-        if (!kitFolder.exists() && !kitFolder.mkdirs()) {
-            send(player, "invalid-name", "kit", args[1]);
-            return true;
-        }
-        YamlConfiguration kitYaml = new YamlConfiguration();
-        kitYaml.set("name", args[1]);
+        File kitFolder = new File(kitsFolder, id);
+        kitFolder.mkdirs();
+        YamlConfiguration yaml = new YamlConfiguration();
+        yaml.set("name", args[1]);
         for (Map.Entry<Integer, ItemStack> entry : items.entrySet()) {
-            kitYaml.set("items." + entry.getKey(), entry.getValue());
+            yaml.set("items." + entry.getKey(), entry.getValue());
         }
-        Configs.save(kitYaml, new File(kitFolder, "kit.yml"));
-
-        File guiFile = new File(kitFolder, "gui.yml");
-        if (!guiFile.exists()) {
-            YamlConfiguration gui = new YamlConfiguration();
-            gui.set("material", cfg("defaults.material", "CHEST"));
-            gui.set("name", Text.apply(cfg("defaults.name", "&f%kit%"), "kit", args[1]));
-            gui.set("lore", config.getStringList("defaults.lore"));
-            gui.set("slot", -1);
-            gui.set("permission", "");
-            Configs.save(gui, guiFile);
-        }
-        send(player, "created", "kit", args[1]);
+        Configs.save(yaml, new File(kitFolder, "kit.yml"));
+        send(player, "created", "kit", args[1], "items", String.valueOf(items.size()));
         sound(player, "sounds.create");
         return true;
     }
@@ -155,14 +156,13 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
             send(sender, "usage-delete");
             return true;
         }
-        Kit kit = kit(args[1]);
-        if (kit == null) {
-            send(sender, "missing", "kit", args[1]);
+        File folder = new File(kitsFolder, sanitize(args[1]));
+        if (!folder.isDirectory()) {
+            send(sender, "unknown", "kit", args[1]);
             return true;
         }
-        File folder = kitFolder(kit.id);
         deleteTree(folder);
-        send(sender, "deleted", "kit", kit.displayName);
+        send(sender, "deleted", "kit", args[1]);
         return true;
     }
 
@@ -174,267 +174,290 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
         }
         Player target = Players.online(args[1]);
         if (target == null) {
-            send(sender, "player-offline");
+            send(sender, "unknown-player", "player", args[1]);
             return true;
         }
-        Kit kit = kit(args[2]);
-        if (kit == null) {
-            send(sender, "missing", "kit", args[2]);
+        Map<Integer, ItemStack> items = loadItems(sanitize(args[2]));
+        if (items.isEmpty()) {
+            send(sender, "unknown", "kit", args[2]);
             return true;
         }
-        for (ItemStack item : kit.items()) give(target, item);
-        send(sender, "gave", "player", target.getName(), "kit", kit.displayName);
-        send(target, "received", "kit", kit.displayName);
+        giveMapped(target, items, loadLayout(target.getUniqueId(), sanitize(args[2])));
+        send(sender, "gave", "player", target.getName(), "kit", args[2]);
+        send(target, "received", "kit", args[2]);
         sound(target, "sounds.claim");
         return true;
     }
 
-    private boolean claimCommand(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player player)) {
-            send(sender, "players-only");
+    private boolean list(CommandSender sender) {
+        List<String> names = kitIds();
+        if (names.isEmpty()) {
+            send(sender, "list-empty");
             return true;
         }
-        if (args.length < 2) {
-            send(player, "usage-claim");
-            return true;
-        }
-        startClaim(player, args[1]);
+        send(sender, "list", "amount", String.valueOf(names.size()), "kits", String.join(", ", names));
         return true;
     }
 
-    private void startClaim(Player player, String name) {
-        Kit kit = kit(name);
-        if (kit == null) {
-            send(player, "missing", "kit", name);
+    private void openGui(Player player) {
+        int size = Math.max(9, config.getInt("menu.size", 27));
+        int rows = Math.max(1, size / 9);
+        Menus.Menu menu = plugin.menus().create(player, cfg("menu.title", "&8Kits"), rows);
+        ConfigurationSection kits = config.getConfigurationSection("kits");
+        if (kits != null) {
+            for (String id : kits.getKeys(false)) {
+                ConfigurationSection section = kits.getConfigurationSection(id);
+                if (section == null) continue;
+                boolean unlocked = canUse(player, id, section.getString("permission", "shardedcore.kit." + id));
+                ConfigurationSection icon = section.getConfigurationSection(unlocked ? "item" : "locked");
+                if (icon == null) icon = section.getConfigurationSection("item");
+                if (icon == null) continue;
+                ConfigurationSection shown = icon;
+                boolean canClaim = unlocked;
+                String kitId = id;
+                long left = remaining(player.getUniqueId(), id);
+                String cooldown = section.getString("cooldown", cfg("no-cooldown", "None"));
+                String time = left <= 0 ? cfg("ready", "Ready") : Amounts.duration(left, "d", "h", "m", "s", 2);
+                ItemStack stack = Items.fromSection(shown, player, "cooldown", cooldown, "time", time, "kit", kitId);
+                int slot = section.getInt("slot", 0);
+                menu.set(slot, stack, event -> {
+                    event.setCancelled(true);
+                    if (!canClaim) {
+                        send(player, "no-kit-permission", "kit", shown.getString("name", kitId));
+                        sound(player, "sounds.denied");
+                        return;
+                    }
+                    if (event.getClick() == ClickType.RIGHT || event.isRightClick()) {
+                        player.closeInventory();
+                        openArrange(player, kitId);
+                    } else {
+                        player.closeInventory();
+                        claim(player, kitId);
+                    }
+                });
+            }
+        }
+        menu.fill(Items.fromSection(config.getConfigurationSection("menu.filler"), player));
+        plugin.menus().open(player, menu);
+        sound(player, "sounds.open");
+    }
+
+    private void claim(Player player, String name) {
+        String id = sanitize(name);
+        ConfigurationSection section = config.getConfigurationSection("kits." + id);
+        String permission = section == null ? "shardedcore.kit." + id : section.getString("permission", "shardedcore.kit." + id);
+        if (!canUse(player, id, permission)) {
+            send(player, "no-kit-permission", "kit", name);
+            sound(player, "sounds.denied");
             return;
         }
-        if (!canUse(player, kit)) {
-            send(player, "no-kit-permission", "kit", kit.displayName);
+        long left = remaining(player.getUniqueId(), id);
+        if (left > 0) {
+            send(player, "cooldown", "kit", name, "time", Amounts.duration(left, "d", "h", "m", "s", 2));
+            sound(player, "sounds.denied");
             return;
         }
-        List<ItemStack> items = kit.items();
+        Map<Integer, ItemStack> items = loadItems(id);
         if (items.isEmpty()) {
-            send(player, "empty-kit", "kit", kit.displayName);
+            send(player, "empty-kit", "kit", name);
             return;
         }
-        List<ItemStack> layout = loadLayout(player.getUniqueId(), kit.id);
-        if (layout == null || !sameItems(layout, items)) layout = items;
-        openLayout(player, kit, layout);
+        giveMapped(player, items, loadLayout(player.getUniqueId(), id));
+        long wait = Amounts.durationMillis(section == null ? "1h" : section.getString("cooldown", "1h"));
+        setCooldown(player.getUniqueId(), id, System.currentTimeMillis() + wait);
+        send(player, "claimed", "kit", name);
+        sound(player, "sounds.claim");
     }
 
-    private void openLayout(Player player, Kit kit, List<ItemStack> items) {
-        int rows = Math.max(1, Math.min(6, (items.size() + 8) / 9));
-        Menus.Menu menu = plugin.menus().create(player, Text.apply(cfg("layout-title", "&8%kit%"), "kit", kit.displayName), rows);
-        int size = rows * 9;
-        for (int i = 0; i < items.size() && i < size; i++) {
-            menu.set(i, items.get(i).clone());
+    private void openArrange(Player player, String id) {
+        ConfigurationSection section = config.getConfigurationSection("kits." + id);
+        String permission = section == null ? "shardedcore.kit." + id : section.getString("permission", "shardedcore.kit." + id);
+        if (!canUse(player, id, permission)) {
+            send(player, "no-kit-permission", "kit", id);
+            return;
         }
-        menu.onAny(event -> {
+        Map<Integer, ItemStack> items = loadItems(id);
+        if (items.isEmpty()) {
+            send(player, "empty-kit", "kit", id);
+            return;
+        }
+        int rows = Math.max(6, config.getInt("layout.rows", 6));
+        Menus.Menu menu = plugin.menus().create(player, cfg("layout.title", "&8Kits | Preview"), rows).unlocked();
+        Map<Integer, ItemStack> layout = loadLayout(player.getUniqueId(), id);
+        Map<Integer, ItemStack> placed = layout == null || !sameItems(flat(layout), flat(items)) ? items : layout;
+        for (Map.Entry<Integer, ItemStack> entry : placed.entrySet()) {
+            int gui = playerToGui(entry.getKey());
+            if (gui >= 0) menu.set(gui, entry.getValue().clone());
+        }
+        ConfigurationSection back = config.getConfigurationSection("layout.back");
+        int backSlot = back == null ? 45 : back.getInt("slot", 45);
+        menu.set(backSlot, Items.fromSection(back, player), event -> {
             event.setCancelled(true);
-            int slot = event.getRawSlot();
-            if (slot < 0 || slot >= size) return;
-            ItemStack cursor = event.getCursor();
-            ItemStack current = event.getCurrentItem();
-            ItemStack cursorCopy = isAir(cursor) ? null : cursor.clone();
-            ItemStack currentCopy = isAir(current) ? null : current.clone();
-            event.getView().setCursor(currentCopy);
-            event.getInventory().setItem(slot, cursorCopy);
+            saveArrange(player, id, menu, items);
+            player.closeInventory();
+            openGui(player);
         });
-        menu.onClose(closed -> {
-            List<ItemStack> arranged = new ArrayList<>();
-            ItemStack cursor = closed.getItemOnCursor();
-            if (!isAir(cursor)) {
-                arranged.add(cursor.clone());
-                closed.setItemOnCursor(null);
-            }
-            for (ItemStack item : menu.inventory().getContents()) {
-                if (!isAir(item)) arranged.add(item.clone());
-            }
-            saveLayout(closed.getUniqueId(), kit.id, arranged);
-            for (ItemStack item : arranged) give(closed, item);
-            send(closed, "claimed", "kit", kit.displayName);
-            sound(closed, "sounds.claim");
-        });
+        menu.fill(Items.fromSection(config.getConfigurationSection("layout.filler"), player));
+        menu.onClose(closed -> saveArrange(closed, id, menu, items));
         plugin.menus().open(player, menu);
-        send(player, "layout-hint", "kit", kit.displayName);
-        sound(player, "sounds.open");
     }
 
-    private void openGui(Player player, int page) {
-        List<Kit> kits = visible(player);
-        if (kits.isEmpty()) {
-            send(player, "none");
+    private void saveArrange(Player player, String id, Menus.Menu menu, Map<Integer, ItemStack> original) {
+        Map<Integer, ItemStack> arranged = new HashMap<>();
+        ItemStack[] contents = menu.inventory().getContents();
+        for (int slot = 0; slot < contents.length; slot++) {
+            if (slot == config.getInt("layout.back.slot", 45)) continue;
+            ItemStack item = contents[slot];
+            if (isAir(item)) continue;
+            int playerSlot = slot < GUI_TO_PLAYER.length ? GUI_TO_PLAYER[slot] : -1;
+            if (playerSlot < 0) continue;
+            arranged.put(playerSlot, item.clone());
+        }
+        if (!sameItems(flat(arranged), flat(original))) {
+            send(player, "layout-refused", "kit", id);
             return;
         }
-        int rows = Math.max(3, Math.min(6, config.getInt("gui.rows", 4)));
-        List<Integer> content = contentSlots(rows);
-        int per = Math.max(1, content.size());
-        int pages = Math.max(1, (kits.size() + per - 1) / per);
-        int current = Math.max(0, Math.min(page, pages - 1));
-        Menus.Menu menu = plugin.menus().create(player, cfg("gui.title", "&8Kits"), rows);
-        int start = current * per;
-        for (int i = 0; i < per && start + i < kits.size(); i++) {
-            Kit kit = kits.get(start + i);
-            int slot = kit.slot >= 0 && kit.slot < rows * 9 && current == 0 ? kit.slot : content.get(i);
-            List<String> lore = kit.lore.isEmpty() ? config.getStringList("defaults.lore") : kit.lore;
-            lore = Text.applyList(lore, "kit", kit.displayName);
-            menu.set(slot, Items.named(kit.material, kit.iconName, lore), event -> {
-                event.setCancelled(true);
-                player.closeInventory();
-                startClaim(player, kit.id);
-            });
-        }
-        if (pages > 1) {
-            menu.set(config.getInt("gui.previous.slot", rows * 9 - 9), Items.named(
-                    Sounds.material(cfg("gui.previous.material", "RED_STAINED_GLASS_PANE"), Material.RED_STAINED_GLASS_PANE),
-                    cfg("gui.previous.name", "&#FF0000&lPREVIOUS PAGE"),
-                    List.of("&7Page " + current)
-            ), event -> {
-                event.setCancelled(true);
-                if (current > 0) openGui(player, current - 1);
-            });
-            menu.set(config.getInt("gui.next.slot", rows * 9 - 1), Items.named(
-                    Sounds.material(cfg("gui.next.material", "LIME_STAINED_GLASS_PANE"), Material.LIME_STAINED_GLASS_PANE),
-                    cfg("gui.next.name", "&#80ee0b&lNEXT PAGE"),
-                    List.of("&7Page " + (current + 2))
-            ), event -> {
-                event.setCancelled(true);
-                if (current + 1 < pages) openGui(player, current + 1);
-            });
-        }
-        menu.fill(Items.named(
-                Sounds.material(cfg("gui.filler.material", "BLACK_STAINED_GLASS_PANE"), Material.BLACK_STAINED_GLASS_PANE),
-                cfg("gui.filler.name", " "),
-                List.of()
-        ));
-        plugin.menus().open(player, menu);
-        sound(player, "sounds.open");
+        saveLayout(player.getUniqueId(), id, arranged);
+        send(player, "layout-saved", "kit", id);
     }
 
-    private List<Kit> visible(Player player) {
-        List<Kit> kits = new ArrayList<>();
-        File[] folders = kitsFolder.listFiles(File::isDirectory);
-        if (folders == null) return kits;
-        for (File folder : folders) {
-            Kit kit = loadKit(folder);
-            if (kit != null && canUse(player, kit)) kits.add(kit);
+    private void giveMapped(Player player, Map<Integer, ItemStack> items, Map<Integer, ItemStack> layout) {
+        Map<Integer, ItemStack> use = layout != null && sameItems(flat(layout), flat(items)) ? layout : items;
+        PlayerInventory inventory = player.getInventory();
+        for (Map.Entry<Integer, ItemStack> entry : use.entrySet()) {
+            int slot = entry.getKey();
+            ItemStack item = entry.getValue().clone();
+            if (slot >= 0 && slot < inventory.getSize() && isAir(inventory.getItem(slot))) {
+                inventory.setItem(slot, item);
+            } else {
+                HashMap<Integer, ItemStack> leftover = inventory.addItem(item);
+                leftover.values().forEach(stack -> player.getWorld().dropItemNaturally(player.getLocation(), stack));
+            }
         }
-        kits.sort(Comparator.comparingInt((Kit kit) -> kit.slot < 0 ? Integer.MAX_VALUE : kit.slot)
-                .thenComparing(kit -> kit.displayName, String.CASE_INSENSITIVE_ORDER));
-        return kits;
     }
 
-    private Kit kit(String name) {
-        if (name == null) return null;
-        File exact = kitFolder(sanitize(name));
-        if (exact.isDirectory()) return loadKit(exact);
-        File[] folders = kitsFolder.listFiles(File::isDirectory);
-        if (folders == null) return null;
-        for (File folder : folders) {
-            if (folder.getName().equalsIgnoreCase(name)) return loadKit(folder);
-            Kit kit = loadKit(folder);
-            if (kit != null && kit.displayName.equalsIgnoreCase(name)) return kit;
-        }
-        return null;
-    }
-
-    private Kit loadKit(File folder) {
-        File kitFile = new File(folder, "kit.yml");
-        if (!kitFile.exists()) return null;
-        FileConfiguration yaml = Configs.load(kitFile);
-        String id = folder.getName().toLowerCase(Locale.ROOT);
-        String display = yaml.getString("name", folder.getName());
+    private Map<Integer, ItemStack> loadItems(String id) {
+        File file = new File(new File(kitsFolder, id), "kit.yml");
+        if (!file.exists()) return Map.of();
+        FileConfiguration yaml = Configs.load(file);
         Map<Integer, ItemStack> items = new HashMap<>();
         ConfigurationSection section = yaml.getConfigurationSection("items");
-        if (section != null) {
-            for (String key : section.getKeys(false)) {
-                try {
-                    int slot = Integer.parseInt(key);
-                    ItemStack item = section.getItemStack(key);
-                    if (!isAir(item)) items.put(slot, item.clone());
-                } catch (NumberFormatException ignored) {
-                }
-            }
-        } else {
-            List<?> list = yaml.getList("items");
-            if (list != null) {
-                int slot = 0;
-                for (Object object : list) {
-                    if (object instanceof ItemStack item && !isAir(item)) items.put(slot, item.clone());
-                    slot++;
-                }
+        if (section == null) return items;
+        for (String key : section.getKeys(false)) {
+            try {
+                ItemStack item = section.getItemStack(key);
+                if (!isAir(item)) items.put(Integer.parseInt(key), item.clone());
+            } catch (NumberFormatException ignored) {
             }
         }
-        File guiFile = new File(folder, "gui.yml");
-        Material material = Sounds.material(cfg("defaults.material", "CHEST"), Material.CHEST);
-        String iconName = Text.apply(cfg("defaults.name", "&f%kit%"), "kit", display);
-        List<String> lore = new ArrayList<>(config.getStringList("defaults.lore"));
-        int slot = -1;
-        String permission = "";
-        if (guiFile.exists()) {
-            FileConfiguration gui = Configs.load(guiFile);
-            material = Sounds.material(gui.getString("material", material.name()), material);
-            iconName = gui.getString("name", iconName);
-            if (gui.isList("lore") && !gui.getStringList("lore").isEmpty()) lore = gui.getStringList("lore");
-            slot = gui.getInt("slot", -1);
-            permission = gui.getString("permission", "");
-        }
-        return new Kit(id, display, items, material, iconName, lore, slot, permission);
+        return items;
     }
 
-    private boolean canUse(Player player, Kit kit) {
-        if (player.hasPermission(ADMIN)) return true;
-        if (kit.permission != null && !kit.permission.isBlank()) return player.hasPermission(kit.permission);
-        return player.hasPermission("shardedcore.kit." + kit.id) || player.hasPermission("shardedcore.kits");
-    }
-
-    private List<ItemStack> loadLayout(UUID uuid, String kitId) {
+    private Map<Integer, ItemStack> loadLayout(UUID uuid, String kitId) {
         File file = new File(layoutsFolder, uuid + ".yml");
         if (!file.exists()) return null;
         FileConfiguration yaml = Configs.load(file);
-        ConfigurationSection section = yaml.getConfigurationSection(kitId);
-        if (section == null) section = yaml.getConfigurationSection("kits." + kitId);
+        ConfigurationSection section = yaml.getConfigurationSection(kitId + ".items");
         if (section == null) return null;
-        ConfigurationSection items = section.getConfigurationSection("items");
-        List<ItemStack> list = new ArrayList<>();
-        if (items != null) {
-            List<Integer> slots = new ArrayList<>();
-            for (String key : items.getKeys(false)) {
-                try {
-                    slots.add(Integer.parseInt(key));
-                } catch (NumberFormatException ignored) {
-                }
+        Map<Integer, ItemStack> items = new HashMap<>();
+        for (String key : section.getKeys(false)) {
+            try {
+                ItemStack item = section.getItemStack(key);
+                if (!isAir(item)) items.put(Integer.parseInt(key), item.clone());
+            } catch (NumberFormatException ignored) {
             }
-            slots.sort(Integer::compareTo);
-            for (int slot : slots) {
-                ItemStack item = items.getItemStack(String.valueOf(slot));
-                if (!isAir(item)) list.add(item.clone());
-            }
-            return list;
         }
-        List<?> raw = section.getList("items");
-        if (raw == null) return null;
-        for (Object object : raw) {
-            if (object instanceof ItemStack item && !isAir(item)) list.add(item.clone());
-        }
-        return list;
+        return items;
     }
 
-    private void saveLayout(UUID uuid, String kitId, List<ItemStack> items) {
+    private void saveLayout(UUID uuid, String kitId, Map<Integer, ItemStack> items) {
         File file = new File(layoutsFolder, uuid + ".yml");
         YamlConfiguration yaml = file.exists() ? YamlConfiguration.loadConfiguration(file) : new YamlConfiguration();
         yaml.set(kitId, null);
-        yaml.set("kits." + kitId, null);
-        int slot = 0;
-        for (ItemStack item : items) {
-            if (isAir(item)) continue;
-            yaml.set(kitId + ".items." + slot, item);
-            slot++;
+        for (Map.Entry<Integer, ItemStack> entry : items.entrySet()) {
+            yaml.set(kitId + ".items." + entry.getKey(), entry.getValue());
         }
         Configs.save(yaml, file);
     }
 
-    private boolean sameItems(List<ItemStack> a, List<ItemStack> b) {
+    private long remaining(UUID uuid, String kit) {
+        long until = cooldowns.computeIfAbsent(uuid, this::loadCooldowns).getOrDefault(kit, 0L);
+        return Math.max(0L, until - System.currentTimeMillis());
+    }
+
+    private void setCooldown(UUID uuid, String kit, long until) {
+        cooldowns.computeIfAbsent(uuid, ignored -> new ConcurrentHashMap<>()).put(kit, until);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                sqlite.execute("""
+                        INSERT INTO kit_cooldowns (uuid, kit, until) VALUES (?, ?, ?)
+                        ON CONFLICT(uuid, kit) DO UPDATE SET until = excluded.until
+                        """, uuid.toString(), kit, until);
+            } catch (SQLException ex) {
+                plugin.getLogger().log(Level.SEVERE, "Failed to save kit cooldown", ex);
+            }
+        });
+    }
+
+    private Map<String, Long> loadCooldowns(UUID uuid) {
+        Map<String, Long> map = new ConcurrentHashMap<>();
+        try {
+            sqlite.query("SELECT kit, until FROM kit_cooldowns WHERE uuid = ?", rs -> {
+                try {
+                    while (rs.next()) map.put(rs.getString("kit"), rs.getLong("until"));
+                } catch (SQLException ex) {
+                    throw new IllegalStateException(ex);
+                }
+                return map;
+            }, uuid.toString());
+        } catch (SQLException ignored) {
+        }
+        return map;
+    }
+
+    private boolean canUse(Player player, String id, String permission) {
+        if (player.hasPermission(ADMIN) || player.hasPermission("shardedcore.kits.all")) return true;
+        if (permission != null && !permission.isBlank()) return player.hasPermission(permission);
+        return player.hasPermission("shardedcore.kit." + id);
+    }
+
+    private boolean admin(CommandSender sender) {
+        if (sender.hasPermission(ADMIN)) return true;
+        send(sender, "no-permission");
+        return false;
+    }
+
+    private List<String> kitIds() {
+        List<String> ids = new ArrayList<>();
+        ConfigurationSection kits = config.getConfigurationSection("kits");
+        if (kits != null) ids.addAll(kits.getKeys(false));
+        File[] folders = kitsFolder.listFiles(File::isDirectory);
+        if (folders != null) {
+            for (File folder : folders) {
+                if (!ids.contains(folder.getName())) ids.add(folder.getName());
+            }
+        }
+        return ids;
+    }
+
+    private static Map<Integer, ItemStack> snapshot(PlayerInventory inventory) {
+        Map<Integer, ItemStack> items = new HashMap<>();
+        ItemStack[] contents = inventory.getContents();
+        for (int slot = 0; slot < contents.length; slot++) {
+            if (!isAir(contents[slot])) items.put(slot, contents[slot].clone());
+        }
+        return items;
+    }
+
+    private static List<ItemStack> flat(Map<Integer, ItemStack> items) {
+        List<ItemStack> list = new ArrayList<>();
+        items.values().forEach(item -> {
+            if (!isAir(item)) list.add(item.clone());
+        });
+        return list;
+    }
+
+    private static boolean sameItems(List<ItemStack> a, List<ItemStack> b) {
         if (a.size() != b.size()) return false;
         List<ItemStack> remaining = new ArrayList<>();
         for (ItemStack item : b) remaining.add(item.clone());
@@ -454,50 +477,25 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
         return remaining.isEmpty();
     }
 
-    private void give(Player player, ItemStack item) {
-        if (isAir(item)) return;
-        HashMap<Integer, ItemStack> leftover = player.getInventory().addItem(item.clone());
-        leftover.values().forEach(stack -> player.getWorld().dropItemNaturally(player.getLocation(), stack));
-    }
-
-    private boolean admin(CommandSender sender) {
-        if (sender.hasPermission(ADMIN)) return true;
-        send(sender, "no-permission");
-        return false;
-    }
-
-    private File kitFolder(String id) {
-        return new File(kitsFolder, id);
+    private static int playerToGui(int playerSlot) {
+        for (int i = 0; i < GUI_TO_PLAYER.length; i++) {
+            if (GUI_TO_PLAYER[i] == playerSlot) return i;
+        }
+        return -1;
     }
 
     private static String sanitize(String name) {
-        if (name == null) return "";
-        return name.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9_-]", "_");
+        return name == null ? "" : name.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9_-]", "_");
     }
 
     private static boolean isAir(ItemStack item) {
         return item == null || item.getType().isAir() || item.getAmount() <= 0;
     }
 
-    private static List<Integer> contentSlots(int rows) {
-        List<Integer> slots = new ArrayList<>();
-        int last = Math.max(0, rows - 1);
-        for (int row = 0; row < rows; row++) {
-            if (rows >= 3 && (row == 0 || row == last)) continue;
-            for (int col = 1; col < 8; col++) slots.add(row * 9 + col);
-        }
-        if (slots.isEmpty()) {
-            for (int i = 0; i < rows * 9; i++) slots.add(i);
-        }
-        return slots;
-    }
-
     private static void deleteTree(File file) {
-        if (file.isDirectory()) {
-            File[] children = file.listFiles();
-            if (children != null) {
-                for (File child : children) deleteTree(child);
-            }
+        File[] children = file.listFiles();
+        if (children != null) {
+            for (File child : children) deleteTree(child);
         }
         file.delete();
     }
@@ -505,51 +503,20 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (command.getName().equalsIgnoreCase("kits")) return List.of();
-        List<String> names = kitNames();
+        List<String> names = kitIds();
         if (args.length == 1) {
             List<String> options = new ArrayList<>(names);
-            if (sender.hasPermission(ADMIN)) options.addAll(0, List.of("create", "delete", "give"));
-            options.add("claim");
+            if (sender.hasPermission(ADMIN)) options.addAll(0, List.of("create", "delete", "give", "list", "help"));
             return Tabs.filter(options, args[0]);
         }
         if (args.length == 2) {
             return switch (args[0].toLowerCase(Locale.ROOT)) {
-                case "delete", "claim" -> Tabs.filter(names, args[1]);
+                case "delete" -> Tabs.filter(names, args[1]);
                 case "give" -> Tabs.players(args[1]);
                 default -> List.of();
             };
         }
         if (args.length == 3 && args[0].equalsIgnoreCase("give")) return Tabs.filter(names, args[2]);
         return List.of();
-    }
-
-    private List<String> kitNames() {
-        List<String> names = new ArrayList<>();
-        File[] folders = kitsFolder == null ? null : kitsFolder.listFiles(File::isDirectory);
-        if (folders == null) return names;
-        for (File folder : folders) names.add(folder.getName());
-        return names;
-    }
-
-    private record Kit(
-            String id,
-            String displayName,
-            Map<Integer, ItemStack> slots,
-            Material material,
-            String iconName,
-            List<String> lore,
-            int slot,
-            String permission
-    ) {
-        private List<ItemStack> items() {
-            List<Integer> order = new ArrayList<>(slots.keySet());
-            order.sort(Integer::compareTo);
-            List<ItemStack> list = new ArrayList<>();
-            for (int index : order) {
-                ItemStack item = slots.get(index);
-                if (!isAir(item)) list.add(item.clone());
-            }
-            return list;
-        }
     }
 }

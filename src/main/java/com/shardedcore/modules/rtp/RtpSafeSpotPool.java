@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -28,11 +29,13 @@ final class RtpSafeSpotPool {
 
     private final RtpModule module;
     private final Map<UUID, ConcurrentLinkedDeque<Location>> pools = new ConcurrentHashMap<>();
+    private final ConcurrentLinkedQueue<Runnable> mainWork = new ConcurrentLinkedQueue<>();
     private final AtomicInteger inFlight = new AtomicInteger();
     private final AtomicInteger generated = new AtomicInteger();
     private final Set<Biome> blocked = new HashSet<>();
     private BukkitTask refill;
     private BukkitTask minute;
+    private BukkitTask drain;
 
     RtpSafeSpotPool(RtpModule module) {
         this.module = module;
@@ -43,15 +46,17 @@ final class RtpSafeSpotPool {
     }
 
     void start() {
-        int refillSeconds = Math.max(1, module.config().getInt("refill-seconds", 5));
-        refill = Bukkit.getScheduler().runTaskTimerAsynchronously(module.plugin(), this::refill, 20L, refillSeconds * 20L);
+        int refillSeconds = Math.max(5, module.config().getInt("refill-seconds", 10));
+        refill = Bukkit.getScheduler().runTaskTimerAsynchronously(module.plugin(), this::refill, 40L, refillSeconds * 20L);
         minute = Bukkit.getScheduler().runTaskTimerAsynchronously(module.plugin(), () -> generated.set(0), 20L * 60L, 20L * 60L);
-        Bukkit.getScheduler().runTask(module.plugin(), this::refill);
+        drain = Bukkit.getScheduler().runTaskTimer(module.plugin(), this::drain, 1L, 1L);
     }
 
     void shutdown() {
         if (refill != null) refill.cancel();
         if (minute != null) minute.cancel();
+        if (drain != null) drain.cancel();
+        mainWork.clear();
         pools.clear();
         inFlight.set(0);
     }
@@ -66,19 +71,29 @@ final class RtpSafeSpotPool {
         return null;
     }
 
-    Location searchNow(World world, ConfigurationSection dest) {
-        int attempts = Math.max(1, module.config().getInt("attempts", 30));
-        ConfigurationSection settings = dest == null ? module.config() : dest;
-        for (int i = 0; i < attempts; i++) {
-            Location loc = tryOnce(world, settings, i);
-            if (loc != null) return loc;
+    void request(World world, ConfigurationSection dest, Consumer<Location> done) {
+        Location ready = poll(world);
+        if (ready != null) {
+            done.accept(ready);
+            return;
         }
-        return null;
+        ConcurrentLinkedDeque<Location> pool = pools.computeIfAbsent(world.getUID(), ignored -> new ConcurrentLinkedDeque<>());
+        startSearch(world, dest, pool, Math.max(1, module.config().getInt("pool-size", 5)), loc ->
+                Bukkit.getScheduler().runTask(module.plugin(), () -> done.accept(loc)));
+    }
+
+    private void drain() {
+        int budget = Math.max(1, module.config().getInt("main-checks-per-tick", 1));
+        for (int i = 0; i < budget; i++) {
+            Runnable work = mainWork.poll();
+            if (work == null) return;
+            work.run();
+        }
     }
 
     private void refill() {
         int size = module.config().getInt("pool-size", 5);
-        int max = Math.max(1, module.config().getInt("concurrent-searches", 2));
+        int max = Math.max(1, module.config().getInt("concurrent-searches", 1));
         ConfigurationSection worlds = module.config().getConfigurationSection("worlds");
         if (worlds == null) return;
         for (String id : worlds.getKeys(false)) {
@@ -94,19 +109,23 @@ final class RtpSafeSpotPool {
     }
 
     private void startSearch(World world, ConfigurationSection dest, ConcurrentLinkedDeque<Location> pool, int size) {
-        if (inFlight.incrementAndGet() > module.config().getInt("concurrent-searches", 2)) {
-            inFlight.decrementAndGet();
-            return;
-        }
+        startSearch(world, dest, pool, size, loc -> {
+            if (loc != null && pool.size() < size) pool.offerLast(loc);
+        });
+    }
+
+    private void startSearch(World world, ConfigurationSection dest, ConcurrentLinkedDeque<Location> pool, int size,
+                             Consumer<Location> done) {
+        inFlight.incrementAndGet();
         attempt(world, dest, module.config().getInt("attempts", 30), 0, loc -> {
             inFlight.decrementAndGet();
-            if (loc != null && pool.size() < size) pool.offerLast(loc);
+            done.accept(loc);
         });
     }
 
     private void attempt(World world, ConfigurationSection dest, int remaining, int used, Consumer<Location> done) {
         if (remaining <= 0) {
-            Bukkit.getScheduler().runTask(module.plugin(), () -> done.accept(null));
+            mainWork.offer(() -> done.accept(null));
             return;
         }
         int radius = Math.max(16, dest.getInt("radius", 1000));
@@ -137,27 +156,8 @@ final class RtpSafeSpotPool {
                 }
                 attempt(world, dest, remaining - 1, used + 1, done);
             };
-            if (Bukkit.isPrimaryThread()) next.run();
-            else Bukkit.getScheduler().runTask(module.plugin(), next);
+            mainWork.offer(next);
         });
-    }
-
-    private Location tryOnce(World world, ConfigurationSection dest, int used) {
-        int radius = Math.max(16, dest.getInt("radius", 1000));
-        int cx = dest.getInt("center-x", 0);
-        int cz = dest.getInt("center-z", 0);
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-        int x = cx + random.nextInt(-radius, radius + 1);
-        int z = cz + random.nextInt(-radius, radius + 1);
-        int chunkX = x >> 4;
-        int chunkZ = z >> 4;
-        boolean generatedChunk = world.isChunkGenerated(chunkX, chunkZ);
-        boolean prefer = module.config().getBoolean("prefer-generated", true);
-        int generatedAttempts = module.config().getInt("generated-attempts", 20);
-        if (prefer && used < generatedAttempts && !generatedChunk) return null;
-        if (!generatedChunk && !allowGenerate()) return null;
-        world.getChunkAt(chunkX, chunkZ);
-        return findSafe(world, dest, x, z);
     }
 
     private boolean allowGenerate() {

@@ -54,7 +54,7 @@ public final class SpawnModule extends Module implements CommandExecutor, Listen
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            send(sender, "players-only");
+            sendBar(sender, "players-only");
             return true;
         }
         if (command.getName().equalsIgnoreCase("setspawn")) {
@@ -64,11 +64,11 @@ public final class SpawnModule extends Module implements CommandExecutor, Listen
             }
             spawn = player.getLocation();
             saveSpawn();
-            send(player, "set");
+            sendBar(player, "set");
             return true;
         }
         if (spawn == null) {
-            send(player, "missing");
+            sendBar(player, "missing");
             return true;
         }
         start(player);
@@ -77,7 +77,7 @@ public final class SpawnModule extends Module implements CommandExecutor, Listen
 
     private void start(Player player) {
         if (pending.containsKey(player.getUniqueId())) {
-            send(player, "already");
+            sendBar(player, "already");
             return;
         }
         int seconds = config.getInt("countdown-seconds", 5);
@@ -91,7 +91,7 @@ public final class SpawnModule extends Module implements CommandExecutor, Listen
                 cancel(player.getUniqueId());
                 player.teleportAsync(spawn);
                 Sounds.play(player, cfg("sound", "entity.enderman.teleport"), 1f, 1f);
-                send(player, "teleported");
+                sendBar(player, "teleported");
                 return;
             }
             player.sendActionBar(ColorUtil.parse(cfg("prefix", "").replace("%seconds%", String.valueOf(left[0]))));
@@ -113,7 +113,7 @@ public final class SpawnModule extends Module implements CommandExecutor, Listen
                 && event.getFrom().getBlockZ() == event.getTo().getBlockZ()) return;
         if (!pending.containsKey(event.getPlayer().getUniqueId())) return;
         cancel(event.getPlayer().getUniqueId());
-        send(event.getPlayer(), "cancelled");
+        sendBar(event.getPlayer(), "cancelled");
     }
 
     @EventHandler

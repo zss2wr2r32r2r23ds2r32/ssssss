@@ -20,7 +20,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -49,9 +51,10 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
     public static final String SCOREBOARD = "scoreboard";
     public static final String TPAUTO = "tpauto";
     public static final String CF = "coinflip";
+    public static final String CRYSTAL = "crystal";
 
     private static final List<String> ORDER = List.of(
-            CHAT, MSG, LIVE, TPA, TPAHERE, JOIN, MOBS, DEATH, PAY, NV, ORDERS, BOSSBAR, SCOREBOARD, TPAUTO, CF
+            CHAT, MSG, LIVE, TPA, TPAHERE, JOIN, MOBS, DEATH, PAY, NV, ORDERS, BOSSBAR, SCOREBOARD, TPAUTO, CF, CRYSTAL
     );
 
     private final Map<UUID, UUID> replies = new ConcurrentHashMap<>();
@@ -78,6 +81,7 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
         registerCommand("tabbossbar", this);
         registerCommand("tabscoreboard", this);
         registerCommand("tpauto", this);
+        registerCommand("crystaltoggle", this);
         registerCommand("msg", this);
         registerCommand("r", this);
         for (Player player : Bukkit.getOnlinePlayers()) applyNightVision(player);
@@ -132,7 +136,7 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
             open(player, 0);
             return true;
         }
-        if (name.equals("msg") || name.equals("tell") || name.equals("whisper") || name.equals("w") || name.equals("m") || name.equals("message")) {
+        if (name.equals("msg") || name.equals("tell") || name.equals("whisper") || name.equals("m") || name.equals("message")) {
             return msg(player, args);
         }
         if (name.equals("r") || name.equals("reply")) {
@@ -158,6 +162,8 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
         map.put("tabbossbar", BOSSBAR);
         map.put("tabscoreboard", SCOREBOARD);
         map.put("tpauto", TPAUTO);
+        map.put("crystaltoggle", CRYSTAL);
+        map.put("fastcrystal", CRYSTAL);
         String key = map.get(name);
         if (key != null) {
             String msgKey = switch (key) {
@@ -175,6 +181,8 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
                 case BOSSBAR -> "bossbar";
                 case SCOREBOARD -> "scoreboard";
                 case TPAUTO -> "tpauto";
+                case CF -> "cf";
+                case CRYSTAL -> "crystal";
                 default -> key;
             };
             flip(player, key, msgKey);
@@ -183,8 +191,9 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
     }
 
     public void open(Player player, int page) {
-        int per = config.getInt("items-per-page", 7);
-        int pages = Math.max(1, (ORDER.size() + per - 1) / per);
+        List<String> keys = visibleKeys();
+        int per = Math.max(1, config.getInt("items-per-page", 7));
+        int pages = Math.max(1, (keys.size() + per - 1) / per);
         int current = Math.max(0, Math.min(page, pages - 1));
         Menus.Menu menu = plugin.menus().create(player, cfg("title", "&8Settings"), config.getInt("rows", 3));
         int[] slots = {10, 11, 12, 13, 14, 15, 16};
@@ -192,72 +201,103 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
         String loreColor = cfg("lore-color", "&#FF0072");
         String enabledText = cfg("enabled.text", "&#A9FF00&lENABLED");
         String disabledText = cfg("disabled.text", "&#FF0000&lDISABLED");
-        for (int i = 0; i < slots.length && start + i < ORDER.size() && i < per; i++) {
-            String key = ORDER.get(start + i);
+        List<String> defaultLore = config.getStringList("lore");
+        if (defaultLore.isEmpty()) {
+            defaultLore = List.of(
+                    "&8Description",
+                    "",
+                    "%color%Information:",
+                    "%color%| &fClick To",
+                    "%color%| &f%description%",
+                    "",
+                    "%color%ℹ &fCommand: %color%%command%",
+                    "%color%⚓ &fCurrently: %status%",
+                    "",
+                    "%click%"
+            );
+        }
+        for (int i = 0; i < slots.length && start + i < keys.size() && i < per; i++) {
+            String key = keys.get(start + i);
             ConfigurationSection entry = config.getConfigurationSection("entries." + key);
             if (entry == null) continue;
             boolean on = on(player, key);
             Material material = Sounds.material(entry.getString("material",
                     on ? cfg("enabled.material", "LIME_DYE") : cfg("disabled.material", "GRAY_DYE")), Material.PAPER);
             String name = entry.getString("name", "&#FF0072&l" + key.toUpperCase(Locale.ROOT));
-            List<String> lore = List.of(
-                    "&8Description",
-                    "",
-                    loreColor + "Information:",
-                    loreColor + "| &fClick To",
-                    loreColor + "| &f" + entry.getString("description", "Toggle"),
-                    "",
-                    loreColor + "ℹ &fCommand: " + loreColor + entry.getString("command", ""),
-                    loreColor + "⚓ &fCurrently: " + (on ? enabledText : disabledText),
-                    "",
-                    cfg("click-line", "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle")
+            List<String> loreLines = entry.getStringList("lore");
+            if (loreLines.isEmpty()) loreLines = defaultLore;
+            loreLines = Text.applyList(new ArrayList<>(loreLines),
+                    "color", loreColor,
+                    "description", entry.getString("description", "Toggle"),
+                    "command", entry.getString("command", ""),
+                    "status", on ? enabledText : disabledText,
+                    "click", cfg("click-line", "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle")
             );
-            menu.set(slots[i], Items.named(material, name, lore), event -> {
+            menu.set(slots[i], Items.named(material, name, loreLines), event -> {
                 event.setCancelled(true);
-                String msgKey = switch (key) {
-                    case CHAT -> "chat";
-                    case MSG -> "msg";
-                    case LIVE -> "live";
-                    case TPA -> "tpa";
-                    case TPAHERE -> "tpahere";
-                    case JOIN -> "join";
-                    case MOBS -> "mobs";
-                    case DEATH -> "death";
-                    case PAY -> "pay";
-                    case NV -> "nv";
-                    case ORDERS -> "orders";
-                    case BOSSBAR -> "bossbar";
-                    case SCOREBOARD -> "scoreboard";
-                    case TPAUTO -> "tpauto";
-                    case CF -> "cf";
-                    default -> key;
-                };
+                String msgKey = messageKey(key);
                 flip(player, key, msgKey);
                 open(player, current);
             });
         }
-        menu.set(config.getInt("previous.slot", 18), Items.named(
-                Sounds.material(cfg("previous.material", "RED_STAINED_GLASS_PANE"), Material.RED_STAINED_GLASS_PANE),
-                cfg("previous.name", "&#FF0000&lPREVIOUS PAGE"),
-                List.of("&7Page " + current)
-        ), event -> {
-            event.setCancelled(true);
-            if (current > 0) open(player, current - 1);
-        });
-        menu.set(config.getInt("next.slot", 26), Items.named(
-                Sounds.material(cfg("next.material", "LIME_STAINED_GLASS_PANE"), Material.LIME_STAINED_GLASS_PANE),
-                cfg("next.name", "&#80ee0b&lNEXT PAGE"),
-                List.of("&7Page " + (current + 2))
-        ), event -> {
-            event.setCancelled(true);
-            if (current + 1 < pages) open(player, current + 1);
-        });
+        if (current > 0) {
+            menu.set(config.getInt("previous.slot", 18), Items.named(
+                    Sounds.material(cfg("previous.material", "RED_STAINED_GLASS_PANE"), Material.RED_STAINED_GLASS_PANE),
+                    cfg("previous.name", "&#FF0000&lPREVIOUS PAGE"),
+                    Items.lore(config, "previous.lore", List.of("&7Page %page%"), "page", String.valueOf(current), "next", String.valueOf(current))
+            ), event -> {
+                event.setCancelled(true);
+                open(player, current - 1);
+            });
+        }
+        if (current + 1 < pages) {
+            menu.set(config.getInt("next.slot", 26), Items.named(
+                    Sounds.material(cfg("next.material", "LIME_STAINED_GLASS_PANE"), Material.LIME_STAINED_GLASS_PANE),
+                    cfg("next.name", "&#80ee0b&lNEXT PAGE"),
+                    Items.lore(config, "next.lore", List.of("&7Page %page%"), "page", String.valueOf(current + 2), "next", String.valueOf(current + 2))
+            ), event -> {
+                event.setCancelled(true);
+                open(player, current + 1);
+            });
+        }
         menu.fill(Items.named(
                 Sounds.material(cfg("filler.material", "BLACK_STAINED_GLASS_PANE"), Material.BLACK_STAINED_GLASS_PANE),
                 cfg("filler.name", " "),
-                List.of()
+                config.getStringList("filler.lore")
         ));
         plugin.menus().open(player, menu);
+    }
+
+    private List<String> visibleKeys() {
+        List<String> keys = new ArrayList<>();
+        ConfigurationSection entries = config.getConfigurationSection("entries");
+        if (entries == null) return ORDER;
+        for (String key : ORDER) {
+            if (entries.isConfigurationSection(key)) keys.add(key);
+        }
+        return keys;
+    }
+
+    private String messageKey(String key) {
+        return switch (key) {
+            case CHAT -> "chat";
+            case MSG -> "msg";
+            case LIVE -> "live";
+            case TPA -> "tpa";
+            case TPAHERE -> "tpahere";
+            case JOIN -> "join";
+            case MOBS -> "mobs";
+            case DEATH -> "death";
+            case PAY -> "pay";
+            case NV -> "nv";
+            case ORDERS -> "orders";
+            case BOSSBAR -> "bossbar";
+            case SCOREBOARD -> "scoreboard";
+            case TPAUTO -> "tpauto";
+            case CF -> "cf";
+            case CRYSTAL -> "crystal";
+            default -> key;
+        };
     }
 
     private boolean msg(Player player, String[] args) {
@@ -318,6 +358,18 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         applyNightVision(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onCrystal(PlayerInteractEvent event) {
+        ItemStack item = event.getItem();
+        if (item == null || item.getType() != Material.END_CRYSTAL) return;
+        if (!on(event.getPlayer(), CRYSTAL)) return;
+        Player player = event.getPlayer();
+        player.setCooldown(Material.END_CRYSTAL, 0);
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            if (player.isOnline() && on(player, CRYSTAL)) player.setCooldown(Material.END_CRYSTAL, 0);
+        });
     }
 
     @EventHandler

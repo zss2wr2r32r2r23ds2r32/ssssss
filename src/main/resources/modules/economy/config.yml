@@ -1,4 +1,7 @@
 prefix: "&#94FF00&lMONEY &8▷ &r"
+# Placeholders: %shardedcore_money% %shardedcore_balance% %shardedcore_bal%
+#               %shardedcore_money_formatted% %shardedcore_balance_formatted%
+#               %shardedcore_money_commas% %shardedcore_balance_commas%
 starting-balance: 0
 self: "%prefix%You have &#94FF00$%amount%"
 other: "%prefix%&#94FF00%player% &fhas &#94FF00$%amount%"

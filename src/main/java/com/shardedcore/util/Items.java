@@ -1,6 +1,9 @@
 package com.shardedcore.util;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
@@ -13,6 +16,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 public final class Items {
@@ -26,11 +30,17 @@ public final class Items {
         return builder.build();
     }
 
+    public static ItemStack fromMaterial(String raw) {
+        if (raw != null && raw.toLowerCase().startsWith("basehead-")) {
+            return texturedHead(raw.substring("basehead-".length()));
+        }
+        return new ItemStack(Sounds.material(raw, Material.STONE));
+    }
+
     public static ItemStack fromSection(ConfigurationSection section, Player player, String... pairs) {
         if (section == null) return new ItemStack(Material.STONE);
-        Material material = Sounds.material(section.getString("material", "STONE"), Material.STONE);
-        ItemBuilder builder = new ItemBuilder(material);
-        String name = section.getString("name");
+        ItemBuilder builder = new ItemBuilder(fromMaterial(section.getString("material", "STONE")));
+        String name = section.getString("name", section.getString("display_name"));
         if (name != null) {
             name = Text.apply(name, pairs);
             if (player != null) name = Text.applyPlaceholders(name, player);
@@ -47,6 +57,11 @@ public final class Items {
             builder.lore(out);
         }
         if (section.getBoolean("glow", false)) builder.glow(true);
+        if (section.getInt("amount", 0) > 0) builder.amount(section.getInt("amount"));
+        if (section.getInt("custom-model-data", 0) > 0) {
+            int model = section.getInt("custom-model-data");
+            builder.edit(meta -> meta.setCustomModelData(model));
+        }
         builder.hideAll();
         return builder.build();
     }
@@ -65,7 +80,67 @@ public final class Items {
             skull.addItemFlags(ItemFlag.values());
             item.setItemMeta(skull);
         }
+        hideBundleBits(item);
         return item;
+    }
+
+    public static ItemStack texturedHead(String base64) {
+        ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+        ItemMeta meta = item.getItemMeta();
+        if (meta instanceof SkullMeta skull && base64 != null && !base64.isBlank()) {
+            PlayerProfile profile = Bukkit.createProfile(UUID.nameUUIDFromBytes(base64.getBytes()));
+            profile.setProperty(new ProfileProperty("textures", base64));
+            skull.setPlayerProfile(profile);
+            item.setItemMeta(skull);
+        }
+        hideBundleBits(item);
+        return item;
+    }
+
+    public static ItemStack hideBundleBits(ItemStack item) {
+        if (item == null || item.getType().isAir()) return item;
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            meta.addItemFlags(ItemFlag.values());
+            item.setItemMeta(meta);
+        }
+        try {
+            Class<?> types = Class.forName("io.papermc.paper.datacomponent.DataComponentTypes");
+            Object bundle = types.getField("BUNDLE_CONTENTS").get(null);
+            Object tooltipType = types.getField("TOOLTIP_DISPLAY").get(null);
+            Class<?> display = Class.forName("io.papermc.paper.datacomponent.item.TooltipDisplay");
+            Object builder = display.getMethod("tooltipDisplay").invoke(null);
+            boolean applied = false;
+            for (java.lang.reflect.Method method : builder.getClass().getMethods()) {
+                if (method.getParameterCount() != 1) continue;
+                if (method.getName().equals("hiddenComponents") || method.getName().equals("hide")) {
+                    Class<?> param = method.getParameterTypes()[0];
+                    if (java.util.Set.class.isAssignableFrom(param)) {
+                        method.invoke(builder, java.util.Set.of(bundle));
+                        applied = true;
+                        break;
+                    }
+                    if (param.isInstance(bundle)) {
+                        method.invoke(builder, bundle);
+                        applied = true;
+                        break;
+                    }
+                }
+            }
+            if (applied) {
+                Object built = builder.getClass().getMethod("build").invoke(builder);
+                item.getClass().getMethod("setData", Class.forName("io.papermc.paper.datacomponent.DataComponentType"), Object.class)
+                        .invoke(item, tooltipType, built);
+            }
+        } catch (Throwable ignored) {
+        }
+        return item;
+    }
+
+    public static List<String> lore(ConfigurationSection section, String path, List<String> fallback, String... pairs) {
+        List<String> lines = section == null ? List.of() : section.getStringList(path);
+        if (lines == null || lines.isEmpty()) lines = fallback == null ? List.of() : fallback;
+        return Text.applyList(new ArrayList<>(lines), pairs);
     }
 
     public static final class ItemBuilder {
@@ -120,7 +195,7 @@ public final class Items {
         }
 
         public ItemStack build() {
-            return item.clone();
+            return hideBundleBits(item.clone());
         }
     }
 
@@ -128,10 +203,7 @@ public final class Items {
         if (stack == null || placeholders == null) return stack;
         ItemMeta meta = stack.getItemMeta();
         if (meta == null) return stack;
-        if (meta.hasDisplayName() && meta.displayName() != null) {
-            // names already components; skip
-        }
         stack.setItemMeta(meta);
-        return stack;
+        return hideBundleBits(stack);
     }
 }

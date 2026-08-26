@@ -28,6 +28,9 @@ commands:
   apply:
     description: Staff applications
     permission: shardedcore.command.apply
+  media:
+    description: Media requirements
+    permission: shardedcore.command.media
   chatfilter:
     description: Chat filter admin
     permission: shardedcore.chatfilter.admin
@@ -83,6 +86,10 @@ commands:
   tpauto:
     description: Auto-accept TPA
     permission: shardedcore.settings.tpauto
+  crystaltoggle:
+    description: Toggle fast crystal
+    aliases: [fastcrystal]
+    permission: shardedcore.settings.crystal
   cf:
     description: Coinflip
     aliases: [coinflip]
@@ -150,6 +157,10 @@ commands:
     description: Random teleport
     aliases: [wild]
     permission: shardedcore.rtp
+  rtpqueue:
+    description: Queue for a 1v1 random teleport
+    aliases: [rtpq]
+    permission: shardedcore.rtp.queue
   sell:
     description: Sell menu
     permission: shardedcore.sell
@@ -198,12 +209,32 @@ commands:
     permission: shardedcore.toolsmith
   msg:
     description: Private message
-    aliases: [tell, whisper, w, m, message]
+    aliases: [tell, whisper, m, message]
     permission: shardedcore.msg
   r:
     description: Reply
     aliases: [reply]
     permission: shardedcore.msg
+  w:
+    description: Welcome a new player
+    permission: shardedcore.welcome
+  shop:
+    description: Server shop
+    permission: shardedcore.shop
+  rules:
+    description: Server rules
+    permission: shardedcore.rules
+  killrewards:
+    description: Kill rewards
+    aliases: [krewards]
+    permission: shardedcore.killrewards
+  playtimerewards:
+    description: Playtime rewards
+    aliases: [ptrewards]
+    permission: shardedcore.playtimerewards
+  playtime:
+    description: Show playtime
+    permission: shardedcore.playtimerewards
 
 permissions:
   shardedcore.admin:
@@ -216,6 +247,10 @@ permissions:
     default: true
   shardedcore.command.apply:
     default: true
+  shardedcore.command.media:
+    default: true
+  shardedcore.command.bypass:
+    default: op
   shardedcore.chatfilter.admin:
     default: op
   shardedcore.chatfilter.alerts:
@@ -245,6 +280,7 @@ permissions:
       shardedcore.settings.bossbar: true
       shardedcore.settings.scoreboard: true
       shardedcore.settings.tpauto: true
+      shardedcore.settings.crystal: true
   shardedcore.settings.chat:
     default: true
   shardedcore.settings.msg:
@@ -273,6 +309,8 @@ permissions:
     default: true
   shardedcore.settings.tpauto:
     default: true
+  shardedcore.settings.crystal:
+    default: true
   shardedcore.coinflip:
     default: true
   shardedcore.crates:
@@ -293,15 +331,35 @@ permissions:
     default: true
   shardedcore.kits:
     default: true
+  shardedcore.kits.all:
+    default: false
   shardedcore.kits.admin:
     default: op
+  shardedcore.kit.default:
+    default: true
+  shardedcore.kit.vip:
+    default: false
+  shardedcore.kit.mvp:
+    default: false
+  shardedcore.kit.elite:
+    default: false
+  shardedcore.kit.divine:
+    default: false
+  shardedcore.kit.legend:
+    default: false
+  shardedcore.kit.immortal:
+    default: false
   shardedcore.live:
     default: true
+  shardedcore.live.bypass:
+    default: op
   shardedcore.nametags.admin:
     default: op
   shardedcore.ping:
     default: true
   shardedcore.rtp:
+    default: true
+  shardedcore.rtp.queue:
     default: true
   shardedcore.sell:
     default: true
@@ -329,5 +387,19 @@ permissions:
     default: true
   shardedcore.combat.bypass:
     default: op
+  shardedcore.shop:
+    default: true
+  shardedcore.shop.premium:
+    default: false
+  shardedcore.shop.fastbuy:
+    default: false
+  shardedcore.rules:
+    default: true
+  shardedcore.welcome:
+    default: true
+  shardedcore.killrewards:
+    default: true
+  shardedcore.playtimerewards:
+    default: true
   shardedcore.internal.disabled:
     default: false

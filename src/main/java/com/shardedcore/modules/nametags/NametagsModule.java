@@ -60,8 +60,8 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
         key = new NamespacedKey(plugin, "nametag");
         applyDisplay();
         purgeWorld();
-        int refresh = Math.max(1, config.getInt("refresh", 10));
-        task = Bukkit.getScheduler().runTaskTimer(plugin, this::tick, refresh, refresh);
+        int refresh = Math.max(1, config.getInt("refresh", 1));
+        task = Bukkit.getScheduler().runTaskTimer(plugin, this::tick, 1L, refresh);
         registerCommand("nametags", this);
         registerListener(this);
         for (Player player : Bukkit.getOnlinePlayers()) spawn(player);
@@ -81,9 +81,9 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
     public void reload() {
         super.reload();
         applyDisplay();
-        int refresh = Math.max(1, config.getInt("refresh", 10));
+        int refresh = Math.max(1, config.getInt("refresh", 1));
         if (task != null) task.cancel();
-        task = Bukkit.getScheduler().runTaskTimer(plugin, this::tick, refresh, refresh);
+        task = Bukkit.getScheduler().runTaskTimer(plugin, this::tick, 1L, refresh);
         for (Player player : Bukkit.getOnlinePlayers()) spawn(player);
     }
 
@@ -104,9 +104,9 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
         }
         loadFiles();
         applyDisplay();
-        int refresh = Math.max(1, config.getInt("refresh", 10));
+        int refresh = Math.max(1, config.getInt("refresh", 1));
         if (task != null) task.cancel();
-        task = Bukkit.getScheduler().runTaskTimer(plugin, this::tick, refresh, refresh);
+        task = Bukkit.getScheduler().runTaskTimer(plugin, this::tick, 1L, refresh);
         int count = 0;
         for (Player player : Bukkit.getOnlinePlayers()) {
             spawn(player);
@@ -165,15 +165,23 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
             entity.setBackgroundColor(background);
             if (brightness != null) entity.setBrightness(brightness);
             entity.setViewRange(viewRange);
+            entity.setInterpolationDuration(0);
+            entity.setInterpolationDelay(0);
+            int teleport = config.getBoolean("display.ride", true)
+                    ? 0
+                    : Math.max(0, config.getInt("display.teleport-duration", 1));
+            entity.setTeleportDuration(teleport);
             entity.setTransformation(new Transformation(
-                    new Vector3f(), new Quaternionf(), new Vector3f(scale, scale, scale), new Quaternionf()));
-            entity.setTeleportDuration(Math.max(1, config.getInt("refresh", 10)));
+                    offset(player, top), new Quaternionf(), new Vector3f(scale, scale, scale), new Quaternionf()));
             entity.getPersistentDataContainer().set(key, PersistentDataType.STRING, player.getUniqueId().toString());
         });
         if (config.getBoolean("display.hide-own", false)) {
             player.hideEntity(plugin, display);
         } else {
             player.showEntity(plugin, display);
+        }
+        if (config.getBoolean("display.ride", true)) {
+            player.addPassenger(display);
         }
         return display;
     }
@@ -201,8 +209,14 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
             spawn(player);
             return;
         }
-        display.teleport(anchor(player, top));
         display.setInvisible(hide);
+        if (config.getBoolean("display.ride", true)) {
+            if (!player.getPassengers().contains(display)) player.addPassenger(display);
+            display.setTransformation(new Transformation(
+                    offset(player, top), new Quaternionf(), new Vector3f(scale, scale, scale), new Quaternionf()));
+        } else {
+            display.teleport(anchor(player, top));
+        }
         String path = top ? "lines.top" : "lines.bottom";
         if (!config.getBoolean(path + ".enabled", true)) {
             if (!"".equals(top ? tag.topSerial : tag.bottomSerial)) {
@@ -240,11 +254,16 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
         return frames.get(index);
     }
 
-    private org.bukkit.Location anchor(Player player, boolean top) {
-        double offset = config.getDouble("display.y-offset", 0.5);
+    private Vector3f offset(Player player, boolean top) {
+        double extra = config.getDouble("display.y-offset", 0.5);
         double gap = config.getDouble("display.line-gap", 0.25);
-        double y = player.getHeight() + offset + (top ? gap : 0);
-        return player.getLocation().clone().add(0, y, 0);
+        float y = (float) (player.getHeight() + extra + (top ? gap : 0));
+        return new Vector3f(0f, y, 0f);
+    }
+
+    private org.bukkit.Location anchor(Player player, boolean top) {
+        Vector3f off = offset(player, top);
+        return player.getLocation().clone().add(off.x, off.y, off.z);
     }
 
     private boolean invisible(Player player) {

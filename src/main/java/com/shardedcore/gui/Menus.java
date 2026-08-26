@@ -2,6 +2,7 @@ package com.shardedcore.gui;
 
 import com.shardedcore.ShardedCore;
 import com.shardedcore.util.ColorUtil;
+import com.shardedcore.util.Items;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -104,7 +105,9 @@ public final class Menus implements Listener {
         }
 
         public Menu set(int slot, ItemStack item) {
-            if (slot >= 0 && slot < inventory.getSize()) inventory.setItem(slot, item);
+            if (slot >= 0 && slot < inventory.getSize()) {
+                inventory.setItem(slot, item == null ? null : Items.hideBundleBits(item.clone()));
+            }
             return this;
         }
 
@@ -115,8 +118,9 @@ public final class Menus implements Listener {
         }
 
         public Menu fill(ItemStack item) {
+            ItemStack filler = item == null ? null : Items.hideBundleBits(item.clone());
             for (int i = 0; i < inventory.getSize(); i++) {
-                if (inventory.getItem(i) == null) inventory.setItem(i, item);
+                if (inventory.getItem(i) == null) inventory.setItem(i, filler);
             }
             return this;
         }

@@ -16,6 +16,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -255,7 +256,7 @@ public final class TpaModule extends Module implements CommandExecutor, TabCompl
                 && event.getFrom().getBlockZ() == event.getTo().getBlockZ()) return;
         if (!teleporting.containsKey(event.getPlayer().getUniqueId())) return;
         stop(event.getPlayer().getUniqueId());
-        send(event.getPlayer(), "messages.cancelled-move");
+        sendBar(event.getPlayer(), "messages.cancelled-move");
     }
 
     @EventHandler
@@ -265,19 +266,26 @@ public final class TpaModule extends Module implements CommandExecutor, TabCompl
     }
 
     private String region(Player player) {
-        if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
-            try {
-                Class<?> bukkit = Class.forName("com.sk89q.worldguard.bukkit.WorldGuardPlugin");
-                Object inst = bukkit.getMethod("inst").invoke(null);
-                Object regionContainer = inst.getClass().getMethod("getRegionContainer").invoke(inst);
-                Object query = regionContainer.getClass().getMethod("createQuery").invoke(regionContainer);
-                Object set = query.getClass().getMethod("getApplicableRegions", org.bukkit.Location.class).invoke(query, player.getLocation());
-                String text = String.valueOf(set);
-                if (text != null && !text.isBlank() && !text.equals("[]")) return text;
-            } catch (Exception ignored) {
+        String locale = player.locale().toString().toLowerCase(Locale.ROOT).replace('-', '_');
+        ConfigurationSection map = config.getConfigurationSection("regions");
+        if (map != null) {
+            String exact = map.getString(locale);
+            if (exact != null && !exact.isBlank()) return exact;
+            int under = locale.indexOf('_');
+            if (under > 0) {
+                String lang = map.getString(locale.substring(0, under));
+                if (lang != null && !lang.isBlank()) return lang;
             }
         }
-        return player.getWorld().getName();
+        if (locale.startsWith("en_us") || locale.startsWith("en_ca") || locale.startsWith("es_mx")
+                || locale.startsWith("es_us") || locale.startsWith("fr_ca")) return "NA";
+        if (locale.startsWith("pt_br") || locale.startsWith("es_ar") || locale.startsWith("es_cl")
+                || locale.startsWith("es_co") || locale.startsWith("es_pe")) return "SA";
+        if (locale.startsWith("ja") || locale.startsWith("ko") || locale.startsWith("zh")
+                || locale.startsWith("th") || locale.startsWith("vi") || locale.startsWith("hi")) return "AS";
+        if (locale.startsWith("en_au") || locale.startsWith("en_nz")) return "OC";
+        if (locale.startsWith("en_za") || locale.startsWith("af") || locale.startsWith("ar")) return "AF";
+        return cfg("regions.default", "EU");
     }
 
     @Override

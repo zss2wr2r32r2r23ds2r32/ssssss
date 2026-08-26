@@ -336,37 +336,30 @@ public final class CratesModule extends Module implements CommandExecutor, TabCo
     }
 
     private void openEdit(Player player, Crate crate) {
-        Menus.Menu menu = plugin.menus().create(player, title("edit-title", crate), crate.rows);
+        Menus.Menu menu = plugin.menus().create(player, title("edit-title", crate), crate.rows).unlocked();
         int size = crate.size();
         for (int slot = 0; slot < size; slot++) {
             ItemStack reward = crate.rewards.get(slot);
             if (!CrateStorage.isAir(reward)) menu.set(slot, reward.clone());
         }
-        menu.onAny(event -> {
-            event.setCancelled(true);
-            int slot = event.getRawSlot();
-            if (slot < 0 || slot >= size) return;
+        menu.onClose(closed -> {
             Crate current = storage.get(crate.id);
             if (current == null) {
-                player.closeInventory();
-                send(player, "missing", "crate", crate.displayName);
+                send(closed, "missing", "crate", crate.displayName);
                 return;
             }
-            ItemStack cursor = event.getCursor();
-            ItemStack existing = current.rewards.get(slot);
-            if (!CrateStorage.isAir(existing)) {
-                current.rewards.remove(slot);
-                storage.save(current);
-                sound(player, "sounds.remove");
-                openEdit(player, current);
-                return;
+            current.rewards.clear();
+            ItemStack[] contents = menu.inventory().getContents();
+            int saved = 0;
+            for (int slot = 0; slot < contents.length && slot < current.size(); slot++) {
+                ItemStack item = contents[slot];
+                if (CrateStorage.isAir(item)) continue;
+                current.rewards.put(slot, item.clone());
+                saved++;
             }
-            if (!CrateStorage.isAir(cursor)) {
-                current.rewards.put(slot, cursor.clone());
-                storage.save(current);
-                sound(player, "sounds.add");
-                openEdit(player, current);
-            }
+            storage.save(current);
+            send(closed, "edited", "crate", current.displayName, "amount", String.valueOf(saved));
+            sound(closed, "sounds.add");
         });
         plugin.menus().open(player, menu);
         sound(player, "sounds.edit");
@@ -588,6 +581,10 @@ public final class CratesModule extends Module implements CommandExecutor, TabCo
 
     public int keys(UUID uuid, String crateId) {
         return keyMap(uuid).getOrDefault(crateId.toLowerCase(Locale.ROOT), 0);
+    }
+
+    public List<String> crateIds() {
+        return storage == null ? List.of() : storage.ids();
     }
 
     public void addKeys(UUID uuid, String crateId, int amount) {

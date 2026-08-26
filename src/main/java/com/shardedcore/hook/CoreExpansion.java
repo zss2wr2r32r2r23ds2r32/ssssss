@@ -1,8 +1,11 @@
 package com.shardedcore.hook;
 
 import com.shardedcore.ShardedCore;
+import com.shardedcore.modules.crates.CratesModule;
 import com.shardedcore.modules.economy.EconomyModule;
+import com.shardedcore.util.Amounts;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,20 +42,49 @@ public final class CoreExpansion extends PlaceholderExpansion {
     public @Nullable String onPlaceholderRequest(Player player, @NotNull String params) {
         if (player == null) return "";
         EconomyModule economy = plugin.modules().get(EconomyModule.class);
-        return switch (params.toLowerCase()) {
+        CratesModule crates = plugin.modules().get(CratesModule.class);
+        String key = params.toLowerCase();
+        return switch (key) {
             case "prefix" -> plugin.prefix();
             case "ping" -> String.valueOf(player.getPing());
-            case "balance", "lifestealcore_balance" ->
+            case "money", "balance", "bal", "lifestealcore_balance" ->
                     economy == null ? "0" : String.valueOf((long) economy.service().get(player.getUniqueId()));
-            case "balance_formatted", "lifestealcore_balance_formatted" ->
+            case "money_formatted", "balance_formatted", "bal_formatted",
+                 "lifestealcore_balance_formatted" ->
                     economy == null ? "0" : economy.service().format(economy.service().get(player.getUniqueId()));
+            case "money_commas", "balance_commas" ->
+                    economy == null ? "0" : Amounts.commas(economy.service().get(player.getUniqueId()));
+            case "kills" -> String.valueOf(player.getStatistic(Statistic.PLAYER_KILLS));
+            case "deaths" -> String.valueOf(player.getStatistic(Statistic.DEATHS));
+            case "playtime" -> playtime(player);
             case "module_announce" -> plugin.modules().isEnabled("announce") ? "true" : "false";
             default -> {
-                if (params.startsWith("module_")) {
-                    yield plugin.modules().isEnabled(params.substring(7)) ? "enabled" : "disabled";
+                if (key.startsWith("module_")) {
+                    yield plugin.modules().isEnabled(key.substring(7)) ? "enabled" : "disabled";
+                }
+                if (crates != null) {
+                    if (key.startsWith("crate_keys_")) {
+                        yield String.valueOf(crates.keys(player.getUniqueId(), key.substring("crate_keys_".length())));
+                    }
+                    if (key.startsWith("keys_")) {
+                        yield String.valueOf(crates.keys(player.getUniqueId(), key.substring("keys_".length())));
+                    }
+                    if (key.startsWith("key_")) {
+                        yield String.valueOf(crates.keys(player.getUniqueId(), key.substring("key_".length())));
+                    }
                 }
                 yield null;
             }
         };
+    }
+
+    private static String playtime(Player player) {
+        long seconds = player.getStatistic(Statistic.PLAY_ONE_MINUTE) / 20L;
+        long days = seconds / 86400L;
+        long hours = (seconds % 86400L) / 3600L;
+        long minutes = (seconds % 3600L) / 60L;
+        if (days > 0) return days + "d " + hours + "h";
+        if (hours > 0) return hours + "h " + minutes + "m";
+        return minutes + "m";
     }
 }

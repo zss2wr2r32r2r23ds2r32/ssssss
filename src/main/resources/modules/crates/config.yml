@@ -1,4 +1,8 @@
 # Crate GUIs, keys, and messages.
+# Placeholders (new crates work automatically):
+#   %shardedcore_keys_<crateid>%
+#   %shardedcore_crate_keys_<crateid>%
+#   %shardedcore_key_<crateid>%
 edit-title: "&8Edit %crate%"
 preview-title: "&8Preview %crate%"
 open-title: "&8%crate%"
@@ -98,6 +102,7 @@ messages:
   already-exists: "&#FF0000&lERROR &7▷ &fCrate &#FF0000%crate% &falready exists."
   missing: "&#FF0000&lERROR &7▷ &fUnknown crate &#FF0000%crate%&f."
   created: "&#94FF00&lCRATES &7▷ &fCreated crate &#94FF00%crate%&f."
+  edited: "&#94FF00&lCRATES &7▷ &fSaved &#94FF00%amount% &freward(s) for &#94FF00%crate%&f."
   deleted: "&#94FF00&lCRATES &7▷ &fDeleted crate &#94FF00%crate%&f."
   list-empty: "&#94FF00&lCRATES &7▷ &fThere are no crates."
   list-header: "&#94FF00&lCRATES"

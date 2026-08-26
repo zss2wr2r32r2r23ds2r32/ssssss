@@ -35,7 +35,7 @@ public final class PingModule extends Module implements CommandExecutor, TabComp
                 send(sender, "players-only");
                 return true;
             }
-            sendRaw(sender, cfg("self", "").replace("%ping%", String.valueOf(player.getPing())));
+            sendRawBar(sender, cfg("self", "").replace("%ping%", String.valueOf(player.getPing())));
             return true;
         }
         Player target = Bukkit.getPlayerExact(args[0]);
@@ -43,7 +43,7 @@ public final class PingModule extends Module implements CommandExecutor, TabComp
             send(sender, "offline");
             return true;
         }
-        sendRaw(sender, cfg("other", "")
+        sendRawBar(sender, cfg("other", "")
                 .replace("%player%", target.getName())
                 .replace("%ping%", String.valueOf(target.getPing())));
         return true;

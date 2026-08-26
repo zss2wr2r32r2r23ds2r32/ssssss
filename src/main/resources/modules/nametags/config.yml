@@ -1,5 +1,5 @@
-# ticks between updates. only text that really changed is sent.
-refresh: 10
+# ticks between updates. 1 keeps the tag glued to the player.
+refresh: 1
 
 display:
   background: '#00000000'
@@ -15,6 +15,9 @@ display:
   hide-when-sneaking: true
   hide-when-invisible: true
   hide-own: false
+  # Ride the player so the hologram does not lag behind.
+  ride: true
+  teleport-duration: 1
 
 disabled-worlds: []
 

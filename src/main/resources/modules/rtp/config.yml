@@ -8,12 +8,16 @@ cooldown-seconds: 10
 cost: 0
 
 # How many finished spots are kept per world and how often they are topped up.
-pool-size: 5
-refill-seconds: 5
+pool-size: 8
+refill-seconds: 10
+
+# Block lookups that actually hit the world stay on the server thread.
+# Keep this at 1 so RTP never spikes the tick.
+main-checks-per-tick: 1
 
 # Never more searches than this at once, so thirty clicks cannot generate
 # thirty areas at the same time.
-concurrent-searches: 2
+concurrent-searches: 1
 attempts: 30
 
 # The first attempts only take chunks that already exist. Pre generate the world
@@ -45,6 +49,10 @@ blocked-biomes:
 menu:
   title: "&8Random Teleport"
   rows: 3
+  filler:
+    material: BLACK_STAINED_GLASS_PANE
+    name: " "
+    lore: []
 
   duel:
     slot: 15
@@ -160,6 +168,7 @@ sounds:
     pitch: 0.8
 
 messages:
+  actionbar: true
   countdown: "&#97F900&lRTP &7▷ &fTeleporting you away in &#97F900%seconds%&f."
   teleported: "&#97F900&lRTP &7▷ &fYou have been &#22AFFBteleported &faway to &#97F900%coordinates%!"
   searching: "&#97F900&lRTP &7▷ &fLooking for a safe spot..."
@@ -177,3 +186,10 @@ messages:
   duel-cancelled: "&#22AFFB&l1V1 &7▷ &fYou stopped the challenge."
   duel-unknown: "&#FF0000&lERROR &7▷ &#22AFFB%player% &fis not online."
   duel-missing: "&#FF0000&lERROR &7▷ &fFights are switched off on this server."
+
+queue:
+  countdown-seconds: 5
+  offset: 8
+  looking: "&#22AFFB&lRTP QUEUE &8▷ &fLooking for Player"
+  found: "&#22AFFB&lRTP QUEUE &8▷ &fFound Player, Teleporting in &#22AFFB&n%seconds%s"
+  cancelled: "&#22AFFB&lRTP QUEUE &8▷ &fYou left the queue."

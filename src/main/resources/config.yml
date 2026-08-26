@@ -26,3 +26,8 @@ modules:
   spawn: true
   tpa: true
   workstations: true
+  shop: true
+  rules: true
+  welcome: true
+  killrewards: true
+  playtimerewards: true

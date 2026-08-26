@@ -131,15 +131,32 @@ public abstract class Module {
         return config.getString(path, fallback);
     }
 
+    protected String message(String path, String... pairs) {
+        return Text.apply(cfg("messages." + path, cfg(path, "")), pairs);
+    }
+
     protected void send(CommandSender to, String path, String... pairs) {
-        String message = Text.apply(cfg("messages." + path, cfg(path, "")), pairs);
-        if (message == null || message.isEmpty()) return;
-        if (to instanceof Player player && config.getBoolean("messages.actionbar", false)
-                && !path.startsWith("usage")) {
-            player.sendActionBar(ColorUtil.parse(message));
+        String text = message(path, pairs);
+        if (text == null || text.isEmpty()) return;
+        boolean bar = config.getBoolean("messages.actionbar", false)
+                || config.getBoolean("actionbar", false)
+                || config.getBoolean("actionbar." + path, false)
+                || config.getBoolean("messages." + path + "-actionbar", false);
+        if (to instanceof Player player && bar && !path.startsWith("usage")) {
+            player.sendActionBar(ColorUtil.parse(text));
             return;
         }
-        to.sendMessage(ColorUtil.parse(message));
+        to.sendMessage(ColorUtil.parse(text));
+    }
+
+    protected void sendBar(CommandSender to, String path, String... pairs) {
+        String text = message(path, pairs);
+        if (text == null || text.isEmpty()) return;
+        if (to instanceof Player player) {
+            player.sendActionBar(ColorUtil.parse(text));
+            return;
+        }
+        to.sendMessage(ColorUtil.parse(text));
     }
 
     protected void sendRaw(CommandSender to, String message) {
@@ -147,7 +164,17 @@ public abstract class Module {
         to.sendMessage(ColorUtil.parse(message));
     }
 
+    protected void sendRawBar(CommandSender to, String message) {
+        if (message == null || message.isEmpty()) return;
+        if (to instanceof Player player) {
+            player.sendActionBar(ColorUtil.parse(message));
+            return;
+        }
+        to.sendMessage(ColorUtil.parse(message));
+    }
+
     protected void sendLines(CommandSender to, List<String> lines, String url, String... pairs) {
+        if (lines == null || lines.isEmpty()) return;
         int last = -1;
         for (int i = lines.size() - 1; i >= 0; i--) {
             if (lines.get(i) != null && !lines.get(i).isBlank()) {
@@ -155,7 +182,6 @@ public abstract class Module {
                 break;
             }
         }
-        List<Component> parts = new ArrayList<>();
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
             if (line == null) continue;
@@ -165,9 +191,8 @@ public abstract class Module {
                 part = part.clickEvent(ClickEvent.openUrl(href))
                         .hoverEvent(HoverEvent.showText(ColorUtil.parse("&7Click to open")));
             }
-            parts.add(part);
+            to.sendMessage(part);
         }
-        to.sendMessage(Component.join(net.kyori.adventure.text.JoinConfiguration.newlines(), parts));
     }
 
     protected void sound(Player player, String path) {
