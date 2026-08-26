@@ -1,0 +1,6 @@
+config-version: 1
+prefix: '%prefix%'
+
+players-only: '%prefix%&#FF2727Only players can use this command.'
+missing-section: '%prefix%&#FF2727Link section &f%section% &#FF2727is not configured.'
+click-hover: '&aClick to open &f%url%'
