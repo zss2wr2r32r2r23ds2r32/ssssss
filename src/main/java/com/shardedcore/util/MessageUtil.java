@@ -10,75 +10,45 @@ public final class MessageUtil {
     public enum MessageMode {
         CHAT,
         ACTIONBAR,
-        BOTH;
-
-        public static MessageMode parse(String raw) {
-            if (raw == null || raw.isBlank()) return CHAT;
-            return switch (raw.trim().toLowerCase().replace('-', '_')) {
-                case "actionbar", "action_bar" -> ACTIONBAR;
-                case "both" -> BOTH;
-                default -> CHAT;
-            };
-        }
+        BOTH
     }
-
-    public enum Delivery {
-        CHAT,
-        ACTIONBAR,
-        BOTH;
-
-        public static Delivery parse(String raw) {
-            if (raw == null || raw.isBlank() || raw.equalsIgnoreCase("inherit")) return null;
-            return switch (raw.trim().toLowerCase().replace('-', '_')) {
-                case "actionbar", "action_bar" -> ACTIONBAR;
-                case "both" -> BOTH;
-                default -> CHAT;
-            };
-        }
-    }
-
-    private static MessageMode globalMode = MessageMode.CHAT;
 
     private MessageUtil() {
     }
 
     public static void reload(ShardedCore plugin) {
-        globalMode = MessageMode.parse(plugin.pluginConfig().getString("message-mode", "chat"));
+        // Reserved for cached message settings.
     }
 
-    public static void send(CommandSender to, ShardedCore plugin, String message) {
-        deliver(to, Text.c(message), globalMode);
+    public static MessageMode messageMode(String raw) {
+        if (raw == null) {
+            return MessageMode.CHAT;
+        }
+        return switch (raw.toLowerCase()) {
+            case "actionbar" -> MessageMode.ACTIONBAR;
+            case "both" -> MessageMode.BOTH;
+            default -> MessageMode.CHAT;
+        };
     }
 
-    public static void deliver(CommandSender to, Component component, MessageMode mode) {
-        if (mode == null) mode = MessageMode.CHAT;
-        if (to instanceof Player player) {
-            switch (mode) {
-                case ACTIONBAR -> player.sendActionBar(component);
-                case BOTH -> {
-                    player.sendMessage(component);
-                    player.sendActionBar(component);
-                }
-                default -> to.sendMessage(component);
-            }
-        } else {
-            to.sendMessage(component);
+    public static void send(CommandSender sender, ShardedCore plugin, String message) {
+        Component component = Text.component(plugin.prefix() + message, sender instanceof Player player ? player : null);
+        MessageMode mode = plugin.messageMode();
+
+        if (mode == MessageMode.CHAT || mode == MessageMode.BOTH) {
+            sender.sendMessage(component);
+        }
+        if ((mode == MessageMode.ACTIONBAR || mode == MessageMode.BOTH) && sender instanceof Player player) {
+            player.sendActionBar(component);
         }
     }
 
-    public static void deliver(CommandSender to, Component component, Delivery mode) {
-        if (mode == null) mode = Delivery.CHAT;
-        if (to instanceof Player player) {
-            switch (mode) {
-                case ACTIONBAR -> player.sendActionBar(component);
-                case BOTH -> {
-                    player.sendMessage(component);
-                    player.sendActionBar(component);
-                }
-                default -> to.sendMessage(component);
-            }
-        } else {
-            to.sendMessage(component);
-        }
+    public static void sendRaw(CommandSender sender, String message, Player placeholderPlayer) {
+        Component component = Text.component(message, placeholderPlayer);
+        sender.sendMessage(component);
+    }
+
+    public static void sendActionBar(Player player, ShardedCore plugin, String message) {
+        player.sendActionBar(Text.component(message, player));
     }
 }

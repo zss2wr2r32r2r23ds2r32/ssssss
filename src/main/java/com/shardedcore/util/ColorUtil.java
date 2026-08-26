@@ -1,98 +1,44 @@
 package com.shardedcore.util;
 
-import java.util.Locale;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class ColorUtil {
 
-    private static final Pattern EXTENDED_HEX = Pattern.compile("(?i)&x((?:&[0-9a-fA-F]){6})");
-    private static final Pattern FULL_HEX = Pattern.compile("(?i)&#([0-9a-fA-F]{6})");
-    private static final Pattern SHORT_HEX = Pattern.compile("(?i)&#([0-9a-fA-F])(?![0-9a-fA-F])");
-    private static final Pattern DOUBLE_AMP = Pattern.compile("&&+");
+    private static final Pattern HEX_PATTERN = Pattern.compile("&#([A-Fa-f0-9]{6})");
+    private static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
+    private static final LegacyComponentSerializer LEGACY = LegacyComponentSerializer.legacyAmpersand();
 
     private ColorUtil() {
     }
 
-    public static String normalize(String input) {
-        if (input == null || input.isEmpty()) return "";
-        String s = input.replace('§', '&');
-        s = DOUBLE_AMP.matcher(s).replaceAll("&");
-        s = convertExtendedHex(s);
-        s = fixShortHex(s);
-        s = uppercaseBoldWords(s);
-        return s;
-    }
-
-    public static String normalizePlain(String input) {
-        if (input == null || input.isEmpty()) return "";
-        String s = input.replace('§', '&');
-        s = DOUBLE_AMP.matcher(s).replaceAll("&");
-        s = convertExtendedHex(s);
-        s = fixShortHex(s);
-        return s;
-    }
-
-    public static String hexToLegacy(String input) {
-        return hexToLegacy(input, true);
-    }
-
-    public static String hexToLegacyPlain(String input) {
-        return hexToLegacy(input, false);
-    }
-
-    private static String hexToLegacy(String input, boolean uppercaseBold) {
-        if (input == null || input.isEmpty()) return "";
-        String s = uppercaseBold ? normalize(input) : normalizePlain(input);
-        Matcher matcher = FULL_HEX.matcher(s);
-        StringBuilder out = new StringBuilder();
-        while (matcher.find()) {
-            String hex = matcher.group(1);
-            StringBuilder legacy = new StringBuilder("&x");
-            for (char c : hex.toCharArray()) {
-                legacy.append('&').append(c);
-            }
-            matcher.appendReplacement(out, Matcher.quoteReplacement(legacy.toString()));
+    public static Component parse(String input) {
+        if (input == null || input.isEmpty()) {
+            return Component.empty();
         }
-        matcher.appendTail(out);
-        return out.toString();
-    }
-
-    public static String uppercaseBoldWords(String input) {
-        if (input == null || input.isEmpty()) return "";
-        Pattern boldWord = Pattern.compile("(?i)&l([A-Za-z][A-Za-z0-9'\\-_ ]*)");
-        Matcher matcher = boldWord.matcher(input);
-        StringBuilder out = new StringBuilder();
-        while (matcher.find()) {
-            matcher.appendReplacement(out, Matcher.quoteReplacement(
-                    "&l" + matcher.group(1).toUpperCase(Locale.ROOT)));
+        String converted = convertHexToMiniMessage(input);
+        if (containsMiniMessageTags(converted)) {
+            return MINI_MESSAGE.deserialize(converted).decoration(TextDecoration.ITALIC, false);
         }
-        matcher.appendTail(out);
-        return out.toString();
+        return LEGACY.deserialize(converted).decoration(TextDecoration.ITALIC, false);
     }
 
-    private static String convertExtendedHex(String input) {
-        Matcher matcher = EXTENDED_HEX.matcher(input);
-        StringBuilder out = new StringBuilder();
+    public static String convertHexToMiniMessage(String input) {
+        Matcher matcher = HEX_PATTERN.matcher(input);
+        StringBuffer buffer = new StringBuffer();
         while (matcher.find()) {
-            String group = matcher.group(1);
-            StringBuilder hex = new StringBuilder();
-            for (int i = 0; i < group.length(); i += 2) {
-                if (group.charAt(i) == '&' && i + 1 < group.length()) {
-                    hex.append(group.charAt(i + 1));
-                }
-            }
-            if (hex.length() == 6) {
-                matcher.appendReplacement(out, Matcher.quoteReplacement("&#" + hex));
-            } else {
-                matcher.appendReplacement(out, Matcher.quoteReplacement(matcher.group()));
-            }
+            matcher.appendReplacement(buffer, "<#" + matcher.group(1) + ">");
         }
-        matcher.appendTail(out);
-        return out.toString();
+        matcher.appendTail(buffer);
+        return buffer.toString();
     }
 
-    private static String fixShortHex(String input) {
-        return SHORT_HEX.matcher(input).replaceAll("&$1");
+    private static boolean containsMiniMessageTags(String input) {
+        return input.indexOf('<') >= 0 && input.indexOf('>') > input.indexOf('<');
     }
 }
