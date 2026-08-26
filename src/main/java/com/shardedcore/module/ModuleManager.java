@@ -1,6 +1,10 @@
 package com.shardedcore.module;
 
 import com.shardedcore.ShardedCore;
+import com.shardedcore.modules.economy.EconomyModule;
+import com.shardedcore.modules.links.LinksModule;
+import com.shardedcore.modules.live.LiveModule;
+import com.shardedcore.modules.ping.PingModule;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,6 +22,10 @@ public final class ModuleManager {
 
     public ModuleManager(ShardedCore plugin) {
         this.plugin = plugin;
+        register(new EconomyModule(plugin));
+        register(new LiveModule(plugin));
+        register(new LinksModule(plugin));
+        register(new PingModule(plugin));
     }
 
     public void register(Module module) {
@@ -76,6 +84,16 @@ public final class ModuleManager {
 
     public Module getModule(String id) {
         return enabled.get(id);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends Module> T get(Class<T> type) {
+        for (Module module : enabled.values()) {
+            if (type.isInstance(module)) {
+                return (T) module;
+            }
+        }
+        return null;
     }
 
     public boolean isEnabled(String id) {

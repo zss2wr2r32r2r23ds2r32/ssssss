@@ -49,4 +49,27 @@ public final class Text {
             return input;
         }
     }
+
+    public static String apply(String input, String... pairs) {
+        if (input == null) {
+            return "";
+        }
+        String result = input;
+        for (int i = 0; i + 1 < pairs.length; i += 2) {
+            result = result.replace(pairs[i], pairs[i + 1] == null ? "" : pairs[i + 1]);
+        }
+        return result;
+    }
+
+    public static String time(long seconds) {
+        if (seconds < 60) {
+            return seconds + "s";
+        }
+        long minutes = seconds / 60;
+        long remaining = seconds % 60;
+        if (remaining == 0) {
+            return minutes + "m";
+        }
+        return minutes + "m " + remaining + "s";
+    }
 }

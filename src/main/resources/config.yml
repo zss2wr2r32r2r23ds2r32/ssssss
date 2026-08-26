@@ -4,9 +4,7 @@ prefix: "<gradient:#5b8cff:#9b59ff>ShardedCore</gradient> <dark_gray>»</dark_gr
 message-mode: chat
 
 modules:
-  discord: true
-  store: true
-  apply: true
+  links: true
   live: true
   ping: true
   economy: true

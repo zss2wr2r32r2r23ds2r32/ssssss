@@ -64,6 +64,14 @@ public final class PlayerStateStore implements AutoCloseable {
         return next;
     }
 
+    public boolean getBool(UUID uuid, String key, boolean defaultValue) {
+        return getToggle(uuid, key, defaultValue);
+    }
+
+    public void setBool(UUID uuid, String key, boolean value) {
+        setToggle(uuid, key, value);
+    }
+
     private boolean loadToggle(UUID uuid, String key, boolean defaultValue) {
         try {
             Boolean value = database.query(

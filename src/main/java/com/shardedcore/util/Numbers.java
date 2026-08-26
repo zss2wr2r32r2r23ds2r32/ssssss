@@ -53,4 +53,19 @@ public final class Numbers {
         }
         return text;
     }
+
+    public static long parseAmount(String raw) {
+        if (raw == null || raw.isBlank()) {
+            return 0L;
+        }
+        try {
+            return Math.max(0L, (long) parse(raw));
+        } catch (NumberFormatException ex) {
+            return 0L;
+        }
+    }
+
+    public static String format(long value) {
+        return formatShorthand(value);
+    }
 }

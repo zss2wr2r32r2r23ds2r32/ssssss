@@ -31,10 +31,10 @@ public final class ShardedCore extends JavaPlugin {
         stateStore = new PlayerStateStore(this);
         stateStore.init();
 
+        registerCommands();
+
         moduleManager = new ModuleManager(this);
         moduleManager.loadAll();
-
-        registerCommands();
         getLogger().info("ShardedCore enabled.");
     }
 
@@ -71,8 +71,6 @@ public final class ShardedCore extends JavaPlugin {
 
         StubCommand stub = new StubCommand(this);
         List<String> stubCommands = List.of(
-                "discord", "store", "apply", "live", "ping",
-                "bal", "pay", "baltop", "ecofreeze", "ecogive", "ecoset", "ecoreset", "ecotake",
                 "trash", "spawn", "setspawn", "delspawn",
                 "home", "homes", "sethome", "delhome",
                 "tpa", "tpahere", "tpaccept", "tpacancel", "tpatoggle", "tpauto",
