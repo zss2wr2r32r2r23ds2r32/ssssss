@@ -1,0 +1,179 @@
+# Random teleport. Safe spots are looked for in the background and kept ready,
+# so a click does not have to search first.
+
+countdown-seconds: 5
+cooldown-seconds: 10
+
+# Costs nothing at 0. Uses the same amounts as /pay, so 10k works too.
+cost: 0
+
+# How many finished spots are kept per world and how often they are topped up.
+pool-size: 5
+refill-seconds: 5
+
+# Never more searches than this at once, so thirty clicks cannot generate
+# thirty areas at the same time.
+concurrent-searches: 2
+attempts: 30
+
+# The first attempts only take chunks that already exist. Pre generate the world
+# with Chunky and a teleport never has to create terrain.
+prefer-generated: true
+generated-attempts: 20
+
+# Hard ceiling on how many chunks the whole server may generate for teleports in
+# one minute. Once it is used up only existing chunks are looked at. 0 never
+# generates at all, which is the right setting on a pre generated world.
+generate-per-minute: 30
+
+# No fall damage and slow falling for this long after landing.
+safe-landing-seconds: 5
+
+blocked-biomes:
+  - OCEAN
+  - DEEP_OCEAN
+  - COLD_OCEAN
+  - DEEP_COLD_OCEAN
+  - FROZEN_OCEAN
+  - DEEP_FROZEN_OCEAN
+  - LUKEWARM_OCEAN
+  - DEEP_LUKEWARM_OCEAN
+  - WARM_OCEAN
+  - RIVER
+  - FROZEN_RIVER
+
+menu:
+  title: "&8Random Teleport"
+  rows: 3
+
+  duel:
+    slot: 15
+    material: DIAMOND_SWORD
+    name: "&#22AFFB&l1V1"
+    lore:
+      - "&7[ʀᴀɴᴅᴏᴍ ᴛᴇʟᴇᴘᴏʀᴛ]"
+      - ""
+      - "&#22AFFBDescription:"
+      - "&#22AFFB¦ &fChallenge a player to"
+      - "&#22AFFB¦ &fa fight one on one."
+      - ""
+      - "&#22AFFB⚓ &fAccess: &#22AFFB/1v1"
+      - ""
+      - "&#22AFFB▷ &n&lCLICK&r&#22AFFB To Start"
+
+worlds:
+  overworld:
+    display: "Overworld"
+    # Empty picks the first matching world on the server.
+    world: ""
+    slot: 11
+    material: MOSS_BLOCK
+    radius: 50000
+    center-x: 0
+    center-z: 0
+    min-y: 50
+    name: "&#97F900&lOVERWORLD"
+    lore:
+      - "&7[ʀᴀɴᴅᴏᴍ ᴛᴇʟᴇᴘᴏʀᴛ]"
+      - ""
+      - "&#97F900Description:"
+      - "&#97F900¦ &fClick to randomly teleport"
+      - "&#97F900¦ &fsomewhere inside the &#97F900Overworld&f!"
+      - ""
+      - "&#97F900⚓ &fPlayers: &#97F900%players%"
+      - "&#97F900⚡ &fRadius: &#97F900%radius%"
+      - "&#97F900✉ &fBorder: &#97F900%border%"
+      - ""
+      - "&#97F900▷ &n&lCLICK&r&#97F900 To Teleport"
+
+  nether:
+    display: "Nether"
+    world: ""
+    slot: 12
+    material: NETHER_WART_BLOCK
+    radius: 10000
+    center-x: 0
+    center-z: 0
+    # Above the lava sea and below the bedrock roof. The highest block in the
+    # nether is that roof, so the search walks down from max-y instead.
+    min-y: 32
+    max-y: 120
+    name: "&#FF0000&lNETHER"
+    lore:
+      - "&7[ʀᴀɴᴅᴏᴍ ᴛᴇʟᴇᴘᴏʀᴛ]"
+      - ""
+      - "&#FF0000Description:"
+      - "&#FF0000¦ &fClick to randomly teleport"
+      - "&#FF0000¦ &fsomewhere inside the &#FF0000Nether&f!"
+      - ""
+      - "&#FF0000⚓ &fPlayers: &#FF0000%players%"
+      - "&#FF0000⚡ &fRadius: &#FF0000%radius%"
+      - "&#FF0000✉ &fBorder: &#FF0000%border%"
+      - ""
+      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Teleport"
+
+  end:
+    display: "The End"
+    world: ""
+    slot: 13
+    material: END_STONE
+    radius: 20000
+    center-x: 0
+    center-z: 0
+    # Most of the end is void. A column whose highest block sits below this is
+    # refused, otherwise the teleport would drop the player into nothing.
+    min-y: 40
+    name: "&#D66BFC&lTHE END"
+    lore:
+      - "&7[ʀᴀɴᴅᴏᴍ ᴛᴇʟᴇᴘᴏʀᴛ]"
+      - ""
+      - "&#D66BFCDescription:"
+      - "&#D66BFC¦ &fClick to randomly teleport"
+      - "&#D66BFC¦ &fsomewhere inside &#D66BFCThe End&f!"
+      - ""
+      - "&#D66BFC⚓ &fPlayers: &#D66BFC%players%"
+      - "&#D66BFC⚡ &fRadius: &#D66BFC%radius%"
+      - "&#D66BFC✉ &fBorder: &#D66BFC%border%"
+      - ""
+      - "&#D66BFC▷ &n&lCLICK&r&#D66BFC To Teleport"
+
+sounds:
+  menu-open:
+    enabled: true
+    sound: "block.note_block.pling"
+    volume: 1.0
+    pitch: 1.2
+  countdown:
+    enabled: true
+    sound: "block.note_block.hat"
+    volume: 1.0
+    pitch: 1.0
+  teleport:
+    enabled: true
+    sound: "entity.enderman.teleport"
+    volume: 1.0
+    pitch: 1.0
+  error:
+    enabled: true
+    sound: "block.note_block.bass"
+    volume: 1.0
+    pitch: 0.8
+
+messages:
+  countdown: "&#97F900&lRTP &7▷ &fTeleporting you away in &#97F900%seconds%&f."
+  teleported: "&#97F900&lRTP &7▷ &fYou have been &#22AFFBteleported &faway to &#97F900%coordinates%!"
+  searching: "&#97F900&lRTP &7▷ &fLooking for a safe spot..."
+  cancelled: "&#97F900&lRTP &7▷ &fYou moved, the teleport was stopped."
+
+  cooldown: "&#FF0000&lERROR &7▷ &fWait &#97F900%time%s &fbefore the next teleport."
+  already-teleporting: "&#FF0000&lERROR &7▷ &fYou are already being teleported."
+  restricted: "&#FF0000&lERROR &7▷ &fYou cannot teleport right now."
+  cannot-afford: "&#FF0000&lERROR &7▷ &fA teleport costs &#97F900%amount%&f."
+  not-found: "&#FF0000&lERROR &7▷ &fNo safe spot was found, try again."
+  world-missing: "&#FF0000&lERROR &7▷ &fThat world does not exist on this server."
+  players-only: "&#FF0000&lERROR &7▷ &fOnly a player can use that."
+
+  duel-prompt: "&#22AFFB&l1V1 &7▷ &fType a player name in the chat, or &#22AFFBcancel&f."
+  duel-cancelled: "&#22AFFB&l1V1 &7▷ &fYou stopped the challenge."
+  duel-unknown: "&#FF0000&lERROR &7▷ &#22AFFB%player% &fis not online."
+  duel-missing: "&#FF0000&lERROR &7▷ &fFights are switched off on this server."
