@@ -23,18 +23,10 @@ public final class HeadUtil {
         if (value.equalsIgnoreCase("PLAYER_HEAD") || value.equalsIgnoreCase("%player_head%")) {
             return new ItemStack(Material.PLAYER_HEAD);
         }
-        if (value.regionMatches(true, 0, "basehead-", 0, 9)) {
-            return textureHead(value.substring(9).trim());
-        }
-        if (value.regionMatches(true, 0, "head:", 0, 5)) {
-            return namedHead(value.substring(5).trim());
-        }
-        if (value.regionMatches(true, 0, "texture:", 0, 8)) {
-            return textureHead(value.substring(8).trim());
-        }
-        if (value.startsWith("eyJ")) {
-            return textureHead(value);
-        }
+        if (value.regionMatches(true, 0, "basehead-", 0, 9)) return textureHead(value.substring(9).trim());
+        if (value.regionMatches(true, 0, "head:", 0, 5)) return namedHead(value.substring(5).trim());
+        if (value.regionMatches(true, 0, "texture:", 0, 8)) return textureHead(value.substring(8).trim());
+        if (value.startsWith("eyJ")) return textureHead(value);
         return null;
     }
 

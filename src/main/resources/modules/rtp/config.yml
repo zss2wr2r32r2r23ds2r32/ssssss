@@ -1,0 +1,28 @@
+config-version: 1
+prefix: '&#97F900&lRTP &8▷ &r'
+message-mode: chat
+countdown-seconds: 5
+cooldown-seconds: 30
+cost: 0
+safe-pool-size: 10
+safe-pool-refill-ticks: 40
+countdown-actionbar: '&#97F900&lRTP &8▷ &fTeleporting in &#97F900&n{seconds}s'
+teleport-cancelled-actionbar: '&#97F900&lRTP &8▷ &fYou moved &8— &7teleport cancelled.'
+center-x: 0
+center-z: 0
+min-radius: 100
+max-radius: 500
+max-attempts: 25
+destinations:
+  overworld:
+    display-name: Overworld
+    world: world
+    locked: false
+  nether:
+    display-name: Nether
+    world: world_nether
+    locked: false
+  end:
+    display-name: End
+    world: world_the_end
+    locked: false

@@ -1,0 +1,9 @@
+config-version: 1
+message-mode: chat
+
+enabled: true
+player-drops: true
+mob-drops: true
+center-on-block: true
+merge-stacks: true
+merge-radius: 1.5

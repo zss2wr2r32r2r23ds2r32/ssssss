@@ -32,4 +32,7 @@ modules:
   crates: true
   media: true
   join-counter: true
+  death-messages: true
+  dropfix: true
+  nametags: true
   staff: true

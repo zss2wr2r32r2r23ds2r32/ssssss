@@ -1,0 +1,16 @@
+config-version: 1
+message-mode: chat
+
+play-sound: true
+
+permissions:
+  anvil: shardedcore.command.anvil
+  grindstone: shardedcore.command.grindstone
+  smithingtable: shardedcore.command.smithingtable
+  craft: shardedcore.command.craft
+
+sounds:
+  anvil: BLOCK_ANVIL_PLACE
+  grindstone: BLOCK_GRINDSTONE_USE
+  smithingtable: BLOCK_SMITHING_TABLE_USE
+  craft: BLOCK_WOOD_PLACE

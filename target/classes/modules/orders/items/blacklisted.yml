@@ -1,0 +1,5 @@
+# Never orderable. Everything else the server counts as an item is offered, so a Minecraft
+# update needs no list kept up to date here.
+items:
+- BEDROCK
+- BARRIER

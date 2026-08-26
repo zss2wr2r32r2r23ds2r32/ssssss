@@ -1,0 +1,9 @@
+config-version: 1
+prefix: '%prefix%'
+
+players-only: '%prefix%&#FF2727Only players can use this command.'
+no-permission: '%prefix%&#FF2727You don''t have permission to use /ping.'
+no-permission-others: '%prefix%&#FF2727You don''t have permission to check other players'' ping.'
+player-not-found: '%prefix%&#FF2727Player &f%player% &7is not online.'
+self: '%prefix%&#00A2FFYour ping: %colour%%ping%ms'
+other: '%prefix%&#00A2FF%player%''s ping: %colour%%ping%ms'

@@ -12,17 +12,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public final class ItemBuilder {
 
     private final ItemStack item;
 
     public ItemBuilder(Material material) {
-        this.item = new ItemStack(material);
+        this.item = new ItemStack(material == null ? Material.STONE : material);
     }
 
     public ItemBuilder(ItemStack item) {
-        this.item = item.clone();
+        this.item = item == null ? new ItemStack(Material.STONE) : item.clone();
     }
 
     public ItemBuilder name(String legacyName) {
@@ -31,6 +32,7 @@ public final class ItemBuilder {
 
     public ItemBuilder lore(List<String> lines) {
         return edit(meta -> {
+            if (lines == null || lines.isEmpty()) return;
             List<Component> lore = new ArrayList<>();
             for (String line : lines) lore.add(ColorUtil.parse(line));
             meta.lore(lore);
@@ -56,7 +58,7 @@ public final class ItemBuilder {
         return edit(meta -> meta.addItemFlags(ItemFlag.values()));
     }
 
-    public ItemBuilder edit(java.util.function.Consumer<ItemMeta> consumer) {
+    public ItemBuilder edit(Consumer<ItemMeta> consumer) {
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             consumer.accept(meta);
@@ -66,24 +68,18 @@ public final class ItemBuilder {
     }
 
     public ItemStack build() {
-        return item;
+        return item.clone();
     }
 
     public static ItemStack fromSection(ConfigurationSection section) {
-        if (section == null) {
-            return new ItemStack(Material.STONE);
-        }
+        if (section == null) return new ItemStack(Material.STONE);
 
         Material material = Material.matchMaterial(section.getString("material", "STONE"));
-        if (material == null) {
-            material = Material.STONE;
-        }
+        if (material == null) material = Material.STONE;
 
         ItemStack stack = new ItemStack(material, section.getInt("amount", 1));
         ItemMeta meta = stack.getItemMeta();
-        if (meta == null) {
-            return stack;
-        }
+        if (meta == null) return stack;
 
         if (section.contains("name")) {
             meta.displayName(ColorUtil.parse(section.getString("name", "")));
@@ -92,27 +88,22 @@ public final class ItemBuilder {
         List<String> loreLines = section.getStringList("lore");
         if (!loreLines.isEmpty()) {
             List<Component> lore = new ArrayList<>();
-            for (String line : loreLines) {
-                lore.add(ColorUtil.parse(line));
-            }
+            for (String line : loreLines) lore.add(ColorUtil.parse(line));
             meta.lore(lore);
         }
 
-        if (section.getBoolean("unbreakable", false)) {
-            meta.setUnbreakable(true);
-        }
-
-        if (section.getBoolean("hide-flags", false)) {
-            meta.addItemFlags(ItemFlag.values());
+        if (section.getBoolean("unbreakable", false)) meta.setUnbreakable(true);
+        if (section.getBoolean("hide-flags", false)) meta.addItemFlags(ItemFlag.values());
+        if (section.getBoolean("glow", false)) {
+            meta.addEnchant(Enchantment.UNBREAKING, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
 
         ConfigurationSection enchantSection = section.getConfigurationSection("enchantments");
         if (enchantSection != null) {
             for (String key : enchantSection.getKeys(false)) {
                 Enchantment enchantment = Enchantment.getByName(key.toUpperCase(Locale.ROOT));
-                if (enchantment != null) {
-                    meta.addEnchant(enchantment, enchantSection.getInt(key), true);
-                }
+                if (enchantment != null) meta.addEnchant(enchantment, enchantSection.getInt(key), true);
             }
         }
 
@@ -121,13 +112,9 @@ public final class ItemBuilder {
     }
 
     public static ItemStack fromMap(Map<String, Object> map) {
-        if (map == null || map.isEmpty()) {
-            return new ItemStack(Material.STONE);
-        }
+        if (map == null || map.isEmpty()) return new ItemStack(Material.STONE);
         org.bukkit.configuration.file.YamlConfiguration yaml = new org.bukkit.configuration.file.YamlConfiguration();
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            yaml.set(entry.getKey(), entry.getValue());
-        }
+        for (Map.Entry<String, Object> entry : map.entrySet()) yaml.set(entry.getKey(), entry.getValue());
         return fromSection(yaml);
     }
 }

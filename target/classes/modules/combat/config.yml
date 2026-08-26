@@ -1,0 +1,7 @@
+config-version: 1
+prefix: '&#FF0000&lCOMBAT &8▷ &r'
+message-mode: chat
+
+tag-seconds: 15
+kill-on-logout: true
+actionbar: '&#FF0000&lCOMBAT &8▷ &rYou are in combat for &#FF0000&n%seconds%&r&#FF0000s'

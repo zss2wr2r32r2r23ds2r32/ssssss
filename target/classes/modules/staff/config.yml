@@ -1,0 +1,9 @@
+config-version: 1
+
+prefix: '<red>Staff</red> '
+
+players-only: '%prefix%&cOnly players can use this command.'
+no-permission: '%prefix%&cYou do not have permission.'
+usage: '%prefix%&cUsage: /tp <player>'
+player-not-found: '%prefix%&cPlayer &f%player% &cnot found.'
+teleported: '%prefix%&aTeleported to &f%player%&a.'

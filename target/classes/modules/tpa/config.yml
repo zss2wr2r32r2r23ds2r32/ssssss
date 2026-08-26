@@ -1,0 +1,43 @@
+config-version: 1
+prefix: '&#0098FF&lTPA &8▷ &r'
+message-mode: chat
+
+request-lifetime-seconds: 60
+request-expire-check-seconds: 5
+
+gui:
+  enabled: true
+  size: 27
+  filler:
+    material: BLACK_STAINED_GLASS_PANE
+  slots:
+    cancel: 10
+    world: 12
+    head: 13
+    compass: 14
+    send: 16
+  request-title: '&8TPA &f%player%'
+  cancel-name: '&#FF2727&lCancel'
+  cancel-lore:
+    - '&7Cancel this request.'
+  send-name: '&#9FFF00&lSend Request'
+  send-lore:
+    - '&7Send a teleport request'
+    - '&7to &f%player%&7.'
+  world-name: '&#9FFF00&l%world%'
+  world-lore:
+    - '&7Target world'
+    - '&f%world%'
+    - '&7X: &f%x% Y: &f%y% Z: &f%z%'
+  head-name: '&#0098FF&l%player%'
+  head-lore:
+    - '&7Teleport request target'
+  compass-name: '&#FFD700&lDistance'
+  compass-lore:
+    - '&7You are &f%distance% &7blocks'
+    - '&7from &f%player%&7.'
+
+teleport:
+  delay-seconds: 5
+  countdown-actionbar: '&#0098FF&lTPA &8▷ &fTeleporting in &#0098FF&n{seconds}s'
+  cancelled-actionbar: '&#0098FF&lTPA &8▷ &fYou moved &8— &7teleport cancelled.'

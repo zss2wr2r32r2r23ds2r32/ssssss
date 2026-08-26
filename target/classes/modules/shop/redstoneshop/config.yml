@@ -1,0 +1,263 @@
+# The redstone shop. Its icon and its slot in the main menu sit in ../config.yml
+
+menu:
+  title: "&8Shop Menu | Redstone"
+  rows: 5
+  pages: 2
+
+buttons:
+
+  previous:
+    slot: 39
+    material: RED_STAINED_GLASS_PANE
+    name: "&#FF0000&lPREVIOUS PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000¦ &fGo one page back."
+      - ""
+      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Navigate"
+
+  return:
+    slot: 40
+    material: GUSTER_BANNER_PATTERN
+    name: "&#FFD900&lRETURN BACK"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFD900Information:"
+      - "&#FFD900¦ &fGo back to the"
+      - "&#FFD900¦ &f&#FFD900shop menu&f."
+      - ""
+      - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Return"
+
+  next:
+    slot: 41
+    material: LIME_STAINED_GLASS_PANE
+    name: "&#99ff00&lUPCOMING PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#99ff00Information:"
+      - "&#99ff00¦ &fGo one page forward."
+      - ""
+      - "&#99ff00▷ &n&lCLICK&r&#99ff00 To Navigate"
+
+items:
+
+  redstoneblock:
+    page: 1
+    slot: 10
+    material: REDSTONE_BLOCK
+    price: 1450
+  redstonedust:
+    page: 1
+    slot: 11
+    material: REDSTONE
+    price: 250
+  redstonetorch:
+    page: 1
+    slot: 12
+    material: REDSTONE_TORCH
+    price: 300
+  repeater:
+    page: 1
+    slot: 13
+    material: REPEATER
+    price: 550
+  comparator:
+    page: 1
+    slot: 14
+    material: COMPARATOR
+    price: 750
+  target:
+    page: 1
+    slot: 15
+    material: TARGET
+    price: 900
+  observer:
+    page: 1
+    slot: 16
+    material: OBSERVER
+    price: 1100
+
+  crafter:
+    page: 1
+    slot: 19
+    material: CRAFTER
+    price: 1350
+  minecart:
+    page: 1
+    slot: 20
+    material: MINECART
+    price: 800
+  tntminecart:
+    page: 1
+    slot: 21
+    material: TNT_MINECART
+    price: 1800
+  noteblock:
+    page: 1
+    slot: 22
+    material: NOTE_BLOCK
+    price: 950
+  redstonelamp:
+    page: 1
+    slot: 23
+    material: REDSTONE_LAMP
+    price: 1000
+  piston:
+    page: 1
+    slot: 24
+    material: PISTON
+    price: 1200
+  stickypiston:
+    page: 1
+    slot: 25
+    material: STICKY_PISTON
+    price: 1250
+
+  slimeblock:
+    page: 1
+    slot: 28
+    material: SLIME_BLOCK
+    price: 2300
+  dispenser:
+    page: 1
+    slot: 29
+    material: DISPENSER
+    price: 1300
+  dropper:
+    page: 1
+    slot: 30
+    material: DROPPER
+    price: 1300
+  hopper:
+    page: 1
+    slot: 31
+    material: HOPPER
+    price: 680
+  chest:
+    page: 1
+    slot: 32
+    material: CHEST
+    price: 1200
+  honeyblock:
+    page: 1
+    slot: 33
+    material: HONEY_BLOCK
+    price: 2800
+  lever:
+    page: 1
+    slot: 34
+    material: LEVER
+    price: 300
+
+  tripwirehook:
+    page: 2
+    slot: 10
+    material: TRIPWIRE_HOOK
+    price: 760
+  oakbutton:
+    page: 2
+    slot: 11
+    material: OAK_BUTTON
+    price: 300
+  stonebutton:
+    page: 2
+    slot: 12
+    material: STONE_BUTTON
+    price: 300
+  armorstand:
+    page: 2
+    slot: 13
+    material: ARMOR_STAND
+    price: 1300
+  waxedoxidizedcopperbulb:
+    page: 2
+    slot: 14
+    material: WAXED_OXIDIZED_COPPER_BULB
+    price: 800
+  waxedweatheredcopperbulb:
+    page: 2
+    slot: 15
+    material: WAXED_WEATHERED_COPPER_BULB
+    price: 850
+  waxedcopperbulb:
+    page: 2
+    slot: 16
+    material: WAXED_COPPER_BULB
+    price: 80000
+
+  waxedexposedcopperbulb:
+    page: 2
+    slot: 19
+    material: WAXED_EXPOSED_COPPER_BULB
+    price: 900
+  lightweightedpressureplate:
+    page: 2
+    slot: 20
+    material: LIGHT_WEIGHTED_PRESSURE_PLATE
+    price: 1200
+  furnace:
+    page: 2
+    slot: 21
+    material: FURNACE
+    price: 2800
+  string:
+    page: 2
+    slot: 22
+    material: STRING
+    price: 1200
+  sculksensor:
+    page: 2
+    slot: 23
+    material: SCULK_SENSOR
+    price: 1200
+  daylightdetector:
+    page: 2
+    slot: 24
+    material: DAYLIGHT_DETECTOR
+    price: 1200
+  smoker:
+    page: 2
+    slot: 25
+    material: SMOKER
+    price: 800
+
+  activatorrail:
+    page: 2
+    slot: 28
+    material: ACTIVATOR_RAIL
+    price: 900
+  poweredrail:
+    page: 2
+    slot: 29
+    material: POWERED_RAIL
+    price: 900
+  rail:
+    page: 2
+    slot: 30
+    material: RAIL
+    price: 900
+  detectorrail:
+    page: 2
+    slot: 31
+    material: DETECTOR_RAIL
+    price: 900
+  tnt:
+    page: 2
+    slot: 32
+    material: TNT
+    price: 900
+  lavabucket:
+    page: 2
+    slot: 33
+    material: LAVA_BUCKET
+    price: 1000
+  waterbucket:
+    page: 2
+    slot: 34
+    material: WATER_BUCKET
+    price: 1000

@@ -1,0 +1,43 @@
+title: '&8🔥 Orders | Deliver Items'
+size: 27
+no-extras: '-'
+confirm:
+  material: LIME_DYE
+  slot: 26
+  name: '&#45FF17&lCONFIRM DELIVERY'
+  lore:
+  - '&8Description'
+  - ''
+  - '&#45FF17Information:'
+  - '&fClick here, to hand in'
+  - '&fthe items above.'
+  - ''
+  - '&#FFD900▶ &n&lCLICK&#FFD900 To Confirm'
+info:
+  slot: 22
+  name: '&#019BEE&l%player_name%''s ORDER'
+  lore:
+  - '&8Description'
+  - ''
+  - '&#019BEEInformation:'
+  - '&#019BEE⚑ &fItem: &#019BEE%total_amount% %item_name%'
+  - '&#45FF17&l$ &fPrice: &#45FF17$%price_per_item% each'
+  - '&#F90EC2🌊 &fDelivered: &#F90EC2%total_delivered%&7/&#F90EC2%total_amount%'
+  - ''
+  - '&#FFF300⌛ %time_remaining% Until Order expires'
+back:
+  material: RED_DYE
+  slot: 18
+  name: '&#FF0000&lBACK'
+  lore:
+  - '&8Description'
+  - ''
+  - '&#FF0000Information:'
+  - '&fClick here, to go'
+  - '&fone step back.'
+  - ''
+  - '&#FFD900▶ &n&lCLICK&#FFD900 To Return'
+filler:
+  material: GRAY_STAINED_GLASS_PANE
+  name: ' '
+filler-slots: 19,20,21,23,24,25

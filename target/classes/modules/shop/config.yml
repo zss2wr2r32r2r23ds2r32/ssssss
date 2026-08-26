@@ -1,0 +1,248 @@
+# The main shop menu and everything the whole shop shares.
+# Every section owns a folder next to this file, the folder name is its key below.
+# The buying menu sits in buyingmenu.yml.
+
+# Milliseconds between two clicks for lifestealcore.shop.fastbuy holders.
+# Everyone else waits 200. Lower means faster spam buying.
+fast-buy-millis: 50
+
+menu:
+  title: "&8Shop Menu"
+  rows: 4
+  open-sound:
+    enabled: true
+    sound: "block.barrel.open"
+    volume: 0.7
+    pitch: 1.2
+
+# Off by default, the sections sit on plain slots.
+frame:
+  enabled: false
+  slots: "auto"
+  material: BLACK_STAINED_GLASS_PANE
+  name: " "
+  lore: []
+
+sounds:
+  click:
+    enabled: true
+    sound: "ui.button.click"
+    volume: 1.0
+    pitch: 1.2
+  buy:
+    enabled: true
+    sound: "entity.player.levelup"
+    volume: 1.0
+    pitch: 1.4
+  error:
+    enabled: true
+    sound: "block.note_block.bass"
+    volume: 0.8
+    pitch: 0.8
+  close:
+    enabled: true
+    sound: "block.barrel.close"
+    volume: 0.7
+    pitch: 1.2
+
+# Used by every item that brings no own name or lore.
+# A section can carry its own item-template and overrules this one.
+item-template:
+  name: "&f%item%"
+  lore:
+    - "&8Description"
+    - ""
+    - "&#99ff00Information:"
+    - "&#99ff00¦ &fBuy this item straight"
+    - "&#99ff00¦ &ffrom the &#99ff00shop&f."
+    - ""
+    - "&#99ff00&l$&r &fPrice &7▷ &#99ff00$&r&#99ff00%price%"
+    - ""
+    - "&#99ff00▷ &n&lCLICK&r&#99ff00 To Buy"
+
+# The key is the folder name. blockshop reads features/shop/blockshop/config.yml
+sections:
+
+  blockshop:
+    enabled: true
+    slot: 11
+    permission: ""
+    icon:
+      material: GRASS_BLOCK
+      name: "&#99ff00&lBLOCKS SHOP"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#99ff00Information:"
+        - "&#99ff00¦ &fBlock shop is used, to"
+        - "&#99ff00¦ &fgain &#99ff00blocks &fto build."
+        - ""
+        - "&#99ff00▷ &n&lCLICK&r&#99ff00 To Open"
+
+  farmshop:
+    enabled: true
+    slot: 12
+    permission: ""
+    icon:
+      material: SUGAR_CANE
+      name: "&#99ff00&lFARM SHOP"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#99ff00Information:"
+        - "&#99ff00¦ &fFarm shop can be used,"
+        - "&#99ff00¦ &fto build your own &#99ff00farms&f."
+        - ""
+        - "&#99ff00▷ &n&lCLICK&r&#99ff00 To Open"
+
+  gearshop:
+    enabled: true
+    slot: 13
+    permission: ""
+    icon:
+      material: TOTEM_OF_UNDYING
+      name: "&#22AFFB&lGEAR SHOP"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#22AFFBInformation:"
+        - "&#22AFFB¦ &fGear shop can be used,"
+        - "&#22AFFB¦ &fto purchase &#22AFFBfight stuff&f."
+        - ""
+        - "&#22AFFB▷ &n&lCLICK&r&#22AFFB To Open"
+
+  mobdrops:
+    enabled: true
+    slot: 14
+    permission: ""
+    icon:
+      material: BONE
+      name: "&#ABABAB&lMOB DROPS"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#ABABABInformation:"
+        - "&#ABABAB¦ &fMob drops can be used,"
+        - "&#ABABAB¦ &fto skip the &#ABABABgrinding&f."
+        - ""
+        - "&#ABABAB▷ &n&lCLICK&r&#ABABAB To Open"
+
+  redstoneshop:
+    enabled: true
+    slot: 15
+    permission: ""
+    icon:
+      material: REDSTONE
+      name: "&#FF0000&lREDSTONE SHOP"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#FF0000Information:"
+        - "&#FF0000¦ &fRedstone shop is used,"
+        - "&#FF0000¦ &fto build your own &#FF0000farms&f."
+        - ""
+        - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Open"
+
+  # command: runs as the player instead of opening a section, so this one
+  # needs no folder next to this file.
+  gemsshop:
+    enabled: true
+    slot: 21
+    permission: ""
+    command: "gems shop"
+    icon:
+      material: DIAMOND
+      name: "&#FF256E&lGEMS SHOP"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#FF256EInformation:"
+        - "&#FF256E¦ &fGems shop used to buy,"
+        - "&#FF256E¦ &fspecial and &#FF256Eunique items&f."
+        - ""
+        - "&#FF256E▷ &n&lCLICK&r&#FF256E To Open"
+
+  # Without this permission the section is not shown at all.
+  premiumshop:
+    enabled: true
+    slot: 22
+    permission: "shardedcore.shop.premium"
+    icon:
+      material: NETHERITE_SWORD
+      name: "&#FFD900&lPREMIUM SHOP"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#FFD900Information:"
+        - "&#FFD900¦ &fPurchase premium items,"
+        - "&#FFD900¦ &fnobody else can &#FFD900get&f."
+        - ""
+        - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Open"
+
+  spawnershop:
+    enabled: true
+    slot: 23
+    permission: ""
+    icon:
+      material: SPAWNER
+      name: "&#00BDF9&lSPAWNER SHOP"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#00BDF9Information:"
+        - "&#00BDF9¦ &fSpawner shop used,"
+        - "&#00BDF9¦ &fto obtain &#00BDF9spawners&f."
+        - ""
+        - "&#00BDF9▷ &n&lCLICK&r&#00BDF9 To Open"
+
+history:
+  title: "&8Shop History [%page%]"
+  time-format: "dd.MM.yyyy HH:mm"
+  # Purchases older than this are deleted. 0 keeps everything.
+  keep-days: 30
+
+  entry:
+    name: "&#99ff00&l%amount%x %item%"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#99ff00Information:"
+      - "&#99ff00¦ &fA purchase from the"
+      - "&#99ff00¦ &f&#99ff00%section% &fsection."
+      - ""
+      - "&#22AFFBℹ &fPlayer: &#22AFFB%player%"
+      - "&#99ff00&l$&r &fPaid &7▷ &#99ff00$%price%"
+      - "&#FFD900⌛ &fWhen: &#FFD900%time%"
+
+  previous:
+    slot: 48
+    material: ARROW
+    name: "&#FF0000&lPREVIOUS PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000¦ &fGo one page back."
+      - ""
+      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Navigate"
+
+  next:
+    slot: 50
+    material: ARROW
+    name: "&#99ff00&lUPCOMING PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#99ff00Information:"
+      - "&#99ff00¦ &fGo one page forward."
+      - ""
+      - "&#99ff00▷ &n&lCLICK&r&#99ff00 To Navigate"
+
+messages:
+  bought: "&#99ff00&lSHOP &7▷ &fYou bought &#99ff00%amount%x %item% &ffor &#99ff00$%total%&f."
+  cannot-afford: "&#FF0000&lERROR &7▷ &fYou need &#99ff00$%total% &ffor that."
+  no-space: "&#FF0000&lERROR &7▷ &fYour inventory has no room for that."
+  no-economy: "&#FF0000&lERROR &7▷ &fThe shop is not ready yet."
+  no-sections: "&#FF0000&lERROR &7▷ &fThe shop has nothing in it yet."
+  players-only: "&#FF0000&lERROR &7▷ &fOnly players can open the shop."
+  history-empty: "&#99ff00&lSHOP &7▷ &fNothing has been bought yet."

@@ -1,0 +1,17 @@
+config-version: 1
+prefix: '&#FF005D&lHOME &8▷ &r'
+
+players-only: '%prefix%&#FF2727Only players can use this command.'
+no-permission: '%prefix%&#FF2727You don''t have permission to use homes.'
+sethome-usage: '%prefix%&#FF2727Usage: &f/sethome <1-14>'
+delhome-usage: '%prefix%&#FF2727Usage: &f/delhome <1-14>'
+home-usage: '%prefix%&#FF2727Usage: &f/home <1-14>'
+invalid-slot: '%prefix%&#FF2727Invalid home slot.'
+slot-locked: '%prefix%&#FF2727You can only use &f%max% &7homes. Slot &f%slot% &7requires a higher rank.'
+world-disabled: '%prefix%&#FF2727Homes are disabled in &f%world%&7.'
+world-not-found: '%prefix%&#FF2727World &f%world% &7is not loaded.'
+set: '%prefix%&#9FFF00Home &f%slot% &7has been set.'
+deleted: '%prefix%&#9FFF00Home &f%slot% &7has been deleted.'
+not-set: '%prefix%&#FF2727You don''t have a home in slot &f%slot%&7.'
+empty-slot: '%prefix%&#FF2727Slot &f%slot% &7is empty. Use &f/sethome %slot%&7.'
+teleported: '%prefix%&#9FFF00Teleported to home &f%slot% &7(&f%world% %x% %y% %z%&7).'
