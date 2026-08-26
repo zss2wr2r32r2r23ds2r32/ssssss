@@ -1,86 +1,34 @@
-# ---------------------------------------------------------
-#  ShardedCore - main configuration
-# ---------------------------------------------------------
+config-version: 1
 
-config-version: 20
-
-# Edit plugins/ShardedCore/gui-navigation.yml for global back/previous/next/close button styles.
-
-prefix: '&#00A2FF&lCORE &8▷ &r'
-# chat | actionbar | both — global default for all modules
+prefix: "<gradient:#5b8cff:#9b59ff>ShardedCore</gradient> <dark_gray>»</dark_gray> "
 message-mode: chat
 
 modules:
-  craft: true
-  fix: true
-  trash: true
-  chat: true
-  privatemessages: true
-  nightvision: true
-  deathmessages: true
-  joinmessages: true
-  joincounter: true
-  nametags: true
-  chatformat: true
-  links: true
-  dropfix: true
-  workstations: true
-  killrewards: true
-  playtimerewards: true
-  backpack: true
-  graves: true
-  armortrims: true
-  fly: true
-  autosmelt: true
-  portalrtp: true
-  spawnselect: true
-  settings: true
-  killstreaks: true
-  pets: true
-  tempranks: true
-  abilities: true
-  pickupmobs: true
-  pickupspawners: true
-  tokens: true
-  eglow: true
-  tags: true
-  chatcolor: true
-  namecolor: true
-  wardrobe: true
-  toolname: true
-  bundles: true
-  staff: true
-  punishments: true
-  chatmoderation: true
-  announce: true
-  invrollback: true
-  screenshare: true
-  staffchat: true
-  requeststaff: true
-  guide: true
-  client: true
-  collisions: true
-  teams: true
-  dailyrewards: true
-  weeklyrewards: true
-  rewards: true
-  leaderboards: true
-  media: true
-  crates: true
-  roles: true
-  outpost: true
-  koth: true
-  coreprotect: true
-  duel: true
-  combat: true
-  economy: true
-  homes: true
-  tpa: true
-  coinflip: true
+  discord: true
+  store: true
+  apply: true
   live: true
   ping: true
-  commandwhitelist: true
+  economy: true
+  trash: true
+  spawn: true
+  homes: true
+  tpa: true
+  rules: true
+  guide: true
+  announce: true
+  virtual-inventories: true
+  settings: true
+  coinflip: true
   orders: true
   sell: true
   shop: true
   kits: true
+  kill-rewards: true
+  playtime-rewards: true
+  rtp: true
+  team: true
+  crates: true
+  media: true
+  join-counter: true
+  staff: true
