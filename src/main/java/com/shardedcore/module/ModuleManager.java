@@ -9,10 +9,15 @@ import com.shardedcore.modules.commands.spawn.SpawnModule;
 import com.shardedcore.modules.commands.tpa.TpaModule;
 import com.shardedcore.modules.commands.trash.TrashModule;
 import com.shardedcore.modules.commands.workstations.WorkstationsModule;
+import com.shardedcore.modules.chatformat.ChatFormatModule;
+import com.shardedcore.modules.coinflip.CoinflipModule;
+import com.shardedcore.modules.combat.CombatModule;
+import com.shardedcore.modules.commandwhitelist.CommandWhitelistModule;
 import com.shardedcore.modules.economy.EconomyModule;
 import com.shardedcore.modules.links.LinksModule;
 import com.shardedcore.modules.live.LiveModule;
 import com.shardedcore.modules.ping.PingModule;
+import com.shardedcore.modules.settings.SettingsModule;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,6 +47,11 @@ public final class ModuleManager {
         register(new GuideModule(plugin));
         register(new WorkstationsModule(plugin));
         register(new AnnounceModule(plugin));
+        register(new CoinflipModule(plugin));
+        register(new CombatModule(plugin));
+        register(new CommandWhitelistModule(plugin));
+        register(new SettingsModule(plugin));
+        register(new ChatFormatModule(plugin));
     }
 
     public void register(Module module) {

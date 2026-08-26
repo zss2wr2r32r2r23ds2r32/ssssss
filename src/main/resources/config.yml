@@ -18,6 +18,9 @@ modules:
   workstations: true
   settings: true
   coinflip: true
+  combat: true
+  commandwhitelist: true
+  chatformat: true
   orders: true
   sell: true
   shop: true

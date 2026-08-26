@@ -28,8 +28,17 @@ public final class EconomyModule extends Module implements CommandExecutor, TabC
         super(plugin, "economy");
     }
 
+    public static EconomyModule get() {
+        ShardedCore plugin = ShardedCore.getInstance();
+        return plugin == null ? null : plugin.modules().get(EconomyModule.class);
+    }
+
     public EconomyService service() {
         return service;
+    }
+
+    public String formatBalance(long amount) {
+        return formatBalanceInternal(amount);
     }
 
     @Override
@@ -95,7 +104,7 @@ public final class EconomyModule extends Module implements CommandExecutor, TabC
                 send(sender, "no-permission");
                 return true;
             }
-            send(player, "balance-self", "formatted", formatBalance(service.getBalance(player.getUniqueId())));
+            send(player, "balance-self", "formatted", formatBalanceInternal(service.getBalance(player.getUniqueId())));
             return true;
         }
         if (!sender.hasPermission("shardedcore.economy.balance")) {
@@ -108,7 +117,7 @@ public final class EconomyModule extends Module implements CommandExecutor, TabC
             return true;
         }
         send(sender, "balance-other", "player", name(target), "formatted",
-                formatBalance(service.getBalance(target.getUniqueId())));
+                formatBalanceInternal(service.getBalance(target.getUniqueId())));
         return true;
     }
 
@@ -164,8 +173,8 @@ public final class EconomyModule extends Module implements CommandExecutor, TabC
             return true;
         }
         service.add(target.getUniqueId(), amount);
-        send(player, "pay-sent", "player", target.getName(), "formatted", formatBalance(amount));
-        send(target, "pay-received", "player", player.getName(), "formatted", formatBalance(amount));
+        send(player, "pay-sent", "player", target.getName(), "formatted", formatBalanceInternal(amount));
+        send(target, "pay-received", "player", player.getName(), "formatted", formatBalanceInternal(amount));
         return true;
     }
 
@@ -194,7 +203,7 @@ public final class EconomyModule extends Module implements CommandExecutor, TabC
             send(sender, "baltop-line",
                     "rank", String.valueOf(rank++),
                     "player", OfflinePlayers.name(entry.uuid()),
-                    "formatted", formatBalance(entry.balance()));
+                    "formatted", formatBalanceInternal(entry.balance()));
         }
         return true;
     }
@@ -240,7 +249,7 @@ public final class EconomyModule extends Module implements CommandExecutor, TabC
             return true;
         }
         service.add(target.getUniqueId(), amount);
-        send(sender, "ecogive", "player", name(target), "formatted", formatBalance(amount));
+        send(sender, "ecogive", "player", name(target), "formatted", formatBalanceInternal(amount));
         return true;
     }
 
@@ -283,7 +292,7 @@ public final class EconomyModule extends Module implements CommandExecutor, TabC
             return true;
         }
         service.setBalance(target.getUniqueId(), amount);
-        send(sender, "ecoset", "player", name(target), "formatted", formatBalance(amount));
+        send(sender, "ecoset", "player", name(target), "formatted", formatBalanceInternal(amount));
         return true;
     }
 
@@ -310,11 +319,11 @@ public final class EconomyModule extends Module implements CommandExecutor, TabC
             send(sender, "ecotake-failed", "player", name(target));
             return true;
         }
-        send(sender, "ecotake", "player", name(target), "formatted", formatBalance(amount));
+        send(sender, "ecotake", "player", name(target), "formatted", formatBalanceInternal(amount));
         return true;
     }
 
-    private String formatBalance(long amount) {
+    private String formatBalanceInternal(long amount) {
         if (config.getBoolean("format-decimals", false)) {
             return String.format(Locale.US, "%,.2f", (double) amount);
         }

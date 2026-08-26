@@ -214,6 +214,30 @@ permissions:
   shardedcore.live.use:
     description: Announce livestreams and toggle live alerts
     default: true
+  shardedcore.coinflip.use:
+    description: Use the coinflip system
+    default: true
+  shardedcore.coinflip.history.others:
+    description: View other players coinflip history
+    default: op
+  shardedcore.settings.use:
+    description: Open and use player settings
+    default: true
+  shardedcore.combat.commandbypass:
+    description: Use commands while in combat
+    default: op
+  shardedcore.commandwhitelist.bypass:
+    description: Bypass command whitelist filtering
+    default: op
+  shardedcore.commandwhitelist.ranks:
+    description: Access rank command whitelist group
+    default: false
+  shardedcore.commandwhitelist.immortal:
+    description: Access immortal command whitelist group
+    default: false
+  shardedcore.commandwhitelist.media:
+    description: Access media command whitelist group
+    default: false
   shardedcore.ping.use:
     description: Check your ping
     default: true

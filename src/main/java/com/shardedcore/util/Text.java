@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public final class Text {
@@ -13,6 +14,10 @@ public final class Text {
 
     public static Component component(String input) {
         return ColorUtil.parse(input);
+    }
+
+    public static Component c(String input) {
+        return component(input);
     }
 
     public static Component component(String input, Player player) {
@@ -71,5 +76,21 @@ public final class Text {
             return minutes + "m";
         }
         return minutes + "m " + remaining + "s";
+    }
+
+    public static String formatPlaytime(long minutes) {
+        if (minutes < 60) return minutes + "m";
+        long hours = minutes / 60;
+        long mins = minutes % 60;
+        if (hours < 24) return mins == 0 ? hours + "h" : hours + "h " + mins + "m";
+        long days = hours / 24;
+        hours = hours % 24;
+        return days + "d " + hours + "h";
+    }
+
+    public static java.util.List<String> applyPlaceholderList(org.bukkit.entity.Player player, java.util.List<String> lines) {
+        java.util.List<String> out = new ArrayList<>();
+        for (String line : lines) out.add(applyPlaceholders(line, player));
+        return out;
     }
 }
