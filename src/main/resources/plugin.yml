@@ -1,0 +1,290 @@
+name: ShardedCore
+version: '${project.version}'
+main: com.shardedcore.ShardedCore
+api-version: '1.21'
+authors: [ShardedMC]
+description: Modular ShardedMC core
+softdepend: [LuckPerms, PlaceholderAPI, TAB, WorldGuard]
+
+commands:
+  shardedcore:
+    description: ShardedCore admin
+    aliases: [sc, sharded]
+    permission: shardedcore.admin
+  modules:
+    description: Toggle modules
+    permission: shardedcore.admin
+  announce:
+    description: Broadcast a title
+    aliases: [announcement]
+    permission: shardedcore.announce
+  discord:
+    description: Discord link
+    permission: shardedcore.command.discord
+  store:
+    description: Store link
+    aliases: [webstore]
+    permission: shardedcore.command.store
+  apply:
+    description: Staff applications
+    permission: shardedcore.command.apply
+  chatfilter:
+    description: Chat filter admin
+    permission: shardedcore.chatfilter.admin
+  chathistory:
+    description: Chat filter history
+    permission: shardedcore.chatfilter.history
+  settings:
+    description: Player settings
+    aliases: [setting]
+    permission: shardedcore.settings
+  chattoggle:
+    description: Toggle public chat
+    permission: shardedcore.settings.chat
+  msgtoggle:
+    description: Toggle private messages
+    permission: shardedcore.settings.msg
+  livetoggle:
+    description: Toggle live messages
+    permission: shardedcore.settings.live
+  tpatoggle:
+    description: Toggle TPA requests
+    permission: shardedcore.settings.tpa
+  tpaheretoggle:
+    description: Toggle TPA here requests
+    permission: shardedcore.settings.tpahere
+  joinleavetoggle:
+    description: Toggle join/leave messages
+    aliases: [jointoggle]
+    permission: shardedcore.settings.joinleave
+  mobspawning:
+    description: Toggle nearby mob spawning
+    aliases: [mobtoggle]
+    permission: shardedcore.settings.mobs
+  deathtoggle:
+    description: Toggle death messages
+    permission: shardedcore.settings.death
+  paytoggle:
+    description: Toggle payments
+    permission: shardedcore.settings.pay
+  nvtoggle:
+    description: Toggle night vision
+    aliases: [nightvisiontoggle, nightvision, nv]
+    permission: shardedcore.settings.nightvision
+  ordertoggle:
+    description: Toggle order messages
+    permission: shardedcore.settings.orders
+  tabbossbar:
+    description: Toggle TAB bossbar
+    permission: shardedcore.settings.bossbar
+  tabscoreboard:
+    description: Toggle TAB scoreboard
+    permission: shardedcore.settings.scoreboard
+  tpauto:
+    description: Auto-accept TPA
+    permission: shardedcore.settings.tpauto
+  cf:
+    description: Coinflip
+    aliases: [coinflip]
+    permission: shardedcore.coinflip
+  crate:
+    description: Crates
+    aliases: [crates]
+    permission: shardedcore.crates
+  ecofreeze:
+    description: Freeze a balance
+    permission: shardedcore.economy.admin
+  ecogive:
+    description: Give money
+    permission: shardedcore.economy.admin
+  ecoreset:
+    description: Reset a balance
+    permission: shardedcore.economy.admin
+  ecoset:
+    description: Set a balance
+    permission: shardedcore.economy.admin
+  ecotake:
+    description: Take money
+    permission: shardedcore.economy.admin
+  bal:
+    description: Balance
+    aliases: [balance, money]
+    permission: shardedcore.economy.balance
+  pay:
+    description: Pay a player
+    permission: shardedcore.economy.pay
+  baltop:
+    description: Balance top
+    permission: shardedcore.economy.balance
+  guide:
+    description: Server guide
+    permission: shardedcore.guide
+  home:
+    description: Teleport home
+    permission: shardedcore.homes
+  homes:
+    description: Homes GUI
+    permission: shardedcore.homes
+  sethome:
+    description: Set a home
+    permission: shardedcore.homes
+  delhome:
+    description: Delete a home
+    permission: shardedcore.homes
+  kit:
+    description: Kits
+    permission: shardedcore.kits
+  kits:
+    description: Kits GUI
+    permission: shardedcore.kits
+  live:
+    description: Livestream broadcast
+    permission: shardedcore.live
+  nametags:
+    description: Nametag admin
+    permission: shardedcore.nametags.admin
+  ping:
+    description: Show ping
+    permission: shardedcore.ping
+  rtp:
+    description: Random teleport
+    aliases: [wild]
+    permission: shardedcore.rtp
+  sell:
+    description: Sell menu
+    permission: shardedcore.sell
+  worth:
+    description: Sell prices
+    permission: shardedcore.sell
+  sellmulti:
+    description: Sell multiplier
+    permission: shardedcore.sell
+  sellhistory:
+    description: Sell history
+    permission: shardedcore.sell.history
+  spawn:
+    description: Teleport to spawn
+    permission: shardedcore.spawn
+  setspawn:
+    description: Set spawn
+    permission: shardedcore.spawn.admin
+  tpa:
+    description: Request teleport
+    permission: shardedcore.tpa
+  tpahere:
+    description: Request teleport here
+    permission: shardedcore.tpa.here
+  tpaccept:
+    description: Accept teleport
+    aliases: [tpyes]
+    permission: shardedcore.tpa
+  tpacancel:
+    description: Cancel teleport requests
+    aliases: [tpdeny, tpadeny]
+    permission: shardedcore.tpa
+  trash:
+    description: Trash menu
+    permission: shardedcore.trash
+  craft:
+    description: Workbench
+    aliases: [wb, workbench]
+    permission: shardedcore.craft
+  anvil:
+    description: Anvil
+    permission: shardedcore.anvil
+  toolsmith:
+    description: Smithing table
+    aliases: [smithing, smithingtable]
+    permission: shardedcore.toolsmith
+  msg:
+    description: Private message
+    aliases: [tell, whisper, w, m, message]
+    permission: shardedcore.msg
+  r:
+    description: Reply
+    aliases: [reply]
+    permission: shardedcore.msg
+
+permissions:
+  shardedcore.admin:
+    default: op
+  shardedcore.announce:
+    default: op
+  shardedcore.command.discord:
+    default: true
+  shardedcore.command.store:
+    default: true
+  shardedcore.command.apply:
+    default: true
+  shardedcore.chatfilter.admin:
+    default: op
+  shardedcore.chatfilter.alerts:
+    default: op
+  shardedcore.chatfilter.history:
+    default: op
+  shardedcore.chatfilter.bypass:
+    default: op
+  shardedcore.chatfilter.bypass.advertising:
+    default: op
+  shardedcore.chatfilter.bypass.links:
+    default: op
+  shardedcore.settings:
+    default: true
+  shardedcore.coinflip:
+    default: true
+  shardedcore.crates:
+    default: true
+  shardedcore.crates.admin:
+    default: op
+  shardedcore.economy.admin:
+    default: op
+  shardedcore.economy.balance:
+    default: true
+  shardedcore.economy.pay:
+    default: true
+  shardedcore.guide:
+    default: true
+  shardedcore.homes:
+    default: true
+  shardedcore.homes.limit.3:
+    default: true
+  shardedcore.kits:
+    default: true
+  shardedcore.kits.admin:
+    default: op
+  shardedcore.live:
+    default: true
+  shardedcore.nametags.admin:
+    default: op
+  shardedcore.ping:
+    default: true
+  shardedcore.rtp:
+    default: true
+  shardedcore.sell:
+    default: true
+  shardedcore.sell.history:
+    default: true
+  shardedcore.sell.history.admin:
+    default: op
+  shardedcore.spawn:
+    default: true
+  shardedcore.spawn.admin:
+    default: op
+  shardedcore.tpa:
+    default: true
+  shardedcore.tpa.here:
+    default: true
+  shardedcore.trash:
+    default: true
+  shardedcore.craft:
+    default: true
+  shardedcore.anvil:
+    default: true
+  shardedcore.toolsmith:
+    default: true
+  shardedcore.msg:
+    default: true
+  shardedcore.combat.bypass:
+    default: op
+  shardedcore.internal.disabled:
+    default: false
