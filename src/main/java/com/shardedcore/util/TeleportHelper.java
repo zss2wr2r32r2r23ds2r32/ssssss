@@ -68,7 +68,9 @@ public final class TeleportHelper implements Listener {
             }
             if (teleport.countdownMessage != null && teleport.ticksRemaining % 20 == 0) {
                 int seconds = teleport.ticksRemaining / 20;
-                player.sendActionBar(Text.component(teleport.countdownMessage.replace("{seconds}", String.valueOf(seconds)), player));
+                player.sendActionBar(Text.cPlain(teleport.countdownMessage
+                        .replace("{seconds}", String.valueOf(seconds))
+                        .replace("%seconds%", String.valueOf(seconds))));
             }
             return false;
         });

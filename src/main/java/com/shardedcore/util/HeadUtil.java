@@ -66,6 +66,12 @@ public final class HeadUtil {
         return copy;
     }
 
+    public static boolean isViewerHeadMaterial(String raw) {
+        if (raw == null) return false;
+        String lower = raw.trim().toLowerCase(Locale.ROOT);
+        return lower.equals("player_head") || lower.equals("%player_head%");
+    }
+
     public static boolean isHeadMaterial(String raw) {
         if (raw == null) return false;
         String lower = raw.toLowerCase(Locale.ROOT);

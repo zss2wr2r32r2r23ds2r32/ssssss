@@ -1,26 +1,9 @@
 prefix: '&#FFD900&lKITS &8▷ &r'
-
 default-cooldown-seconds: 86400
-
 gui:
-  main:
-    title: '&8Kits Menu'
-    size: 54
-  preview:
-    title: '&8Kit Preview | %kit%'
-    size: 54
-  layout:
-    title: '&8Kit Layout | %kit%'
-    size: 54
-
+  main: {title: '&8Kits Menu', size: 54}
+  preview: {title: '&8Kit Preview | %kit%', size: 54}
+  layout: {title: '&8Kit Layout | %kit%', size: 54}
 sounds:
-  claim:
-    enabled: true
-    sound: ENTITY_PLAYER_LEVELUP
-    volume: 1.0
-    pitch: 1.2
-  error:
-    enabled: true
-    sound: BLOCK_NOTE_BLOCK_BASS
-    volume: 0.8
-    pitch: 0.8
+  claim: {enabled: true, sound: ENTITY_PLAYER_LEVELUP, volume: 1.0, pitch: 1.2}
+  error: {enabled: true, sound: BLOCK_NOTE_BLOCK_BASS, volume: 0.8, pitch: 0.8}

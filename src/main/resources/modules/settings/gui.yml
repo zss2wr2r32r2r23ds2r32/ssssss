@@ -1,0 +1,181 @@
+config-version: 7
+menu_title: 'Settings'
+size: 36
+open_permission: sharded.settings.use
+
+filler:
+  material: BLACK_STAINED_GLASS_PANE
+  name: ' '
+  auto-fill: true
+
+items:
+
+  filler:
+    material: BLACK_STAINED_GLASS_PANE
+    slots:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 17
+      - 18
+      - 19
+      - 20
+      - 21
+      - 24
+      - 25
+      - 26
+      - 27
+      - 28
+      - 29
+      - 30
+      - 32
+      - 33
+      - 34
+      - 35
+    display_name: ' '
+
+  scoreboard:
+    material: OAK_SIGN
+    slot: 11
+    permission: sharded.settings.scoreboard
+    display_name: '&#0098FF&lSCOREBOARD'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#0098FFInformation:'
+      - '&#0098FF| &fToggle the Servers'
+      - '&#0098FF| &fScoreboard'
+      - ''
+      - '&#0098FF⛨ &fStatus: %status_scoreboard%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    left_click_commands:
+      - '[scoreboard_toggle]'
+      - '[refresh] settings'
+
+  death_messages:
+    material: SKELETON_SKULL
+    slot: 12
+    permission: sharded.settings.deathmessages
+    display_name: '&#FF3400&lDEATH MESSAGES'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF3400Information:'
+      - '&#FF3400| &fToggle the Death Messages'
+      - '&#FF3400| &fFrom Chat'
+      - ''
+      - '&#FF3400⛨ &fStatus: %status_death_messages%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    left_click_commands:
+      - '[player] deathmessages toggle'
+      - '[refresh] settings'
+
+  join_messages:
+    material: OAK_DOOR
+    slot: 13
+    permission: sharded.settings.joinmessages
+    display_name: '&#FFD900&lJOIN/LEAVE MESSAGES'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FFD900Information:'
+      - '&#FFD900| &fToggle the Join/Leave Messages'
+      - '&#FFD900| &fFrom Chat'
+      - ''
+      - '&#FFD900⛨ &fStatus: %status_join_messages%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    left_click_commands:
+      - '[player] joinmessages toggle'
+      - '[refresh] settings'
+
+  mob_toggle:
+    material: SPAWNER
+    slot: 14
+    permission: sharded.settings.mobspawn
+    display_name: '&#56FF00&lMOB TOGGLE'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#56FF00Information:'
+      - '&#56FF00| &fToggle the Mob Spawns'
+      - '&#56FF00| &fFor Just you'
+      - ''
+      - '&#56FF00⛨ &fStatus: %status_mob_toggle%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    left_click_commands:
+      - '[player] mobtoggle'
+      - '[refresh] settings'
+
+  public_chat:
+    material: NAME_TAG
+    slot: 15
+    permission: sharded.chat.toggle
+    display_name: '&#FF0072&lPUBLIC CHAT'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF0072Information:'
+      - '&#FF0072| &fToggle Public Chat'
+      - '&#FF0072| &fFrom Your View'
+      - ''
+      - '&#FF0072⛨ &fStatus: %status_public_chat%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    left_click_commands:
+      - '[player] publicchat toggle'
+      - '[refresh] settings'
+
+  private_messages:
+    material: WRITABLE_BOOK
+    slot: 22
+    permission: sharded.msg.toggle
+    display_name: '&#FF0000&lPRIVATE MESSAGES'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF0000Information:'
+      - '&#FF0000| &fToggle private messages'
+      - ''
+      - '&#FF0000⛨ &fStatus: %status_private_messages%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    left_click_commands:
+      - '[player] msgtoggle'
+      - '[refresh] settings'
+
+  event_sounds:
+    material: GOAT_HORN
+    slot: 16
+    permission: sharded.settings.eventsounds
+    display_name: '&#FF8800&lEVENT SOUNDS'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF8800Information:'
+      - '&#FF8800| &fToggle KOTH and outpost'
+      - '&#FF8800| &fhorn sounds for you'
+      - ''
+      - '&#FF8800⛨ &fStatus: %status_event_sounds%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    left_click_commands:
+      - '[player] eventsoundstoggle'
+      - '[refresh] settings'
+
+  close:
+    nav-override: true
+    slot: 31
+    click_commands:
+      - '[close]'

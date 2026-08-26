@@ -1,0 +1,5 @@
+config-version: 2
+message-mode: chat
+
+permission: sharded.staffchat.use
+format: '&#AD4EFF&lSTAFF &8▷ &f%player%&7: &f%message%'

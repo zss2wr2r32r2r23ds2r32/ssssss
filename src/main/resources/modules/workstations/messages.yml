@@ -1,4 +1,5 @@
 config-version: 1
+prefix: '%prefix%'
 
 players-only: '%prefix%&#FF2727Only players can use this command.'
-no-permission: '%prefix%&#FF2727You don''t have permission to use this workstation.'
+no-permission: '%prefix%&#FF2727You do not have permission.'

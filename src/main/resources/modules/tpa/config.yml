@@ -39,5 +39,8 @@ gui:
 
 teleport:
   delay-seconds: 5
-  countdown-actionbar: '&#0098FF&lTPA &8▷ &fTeleporting in &#0098FF&n{seconds}s'
+  countdown-actionbar: '&#0098FF&lTPA &8▷ &fTeleporting in &#0098FF&n%seconds%&r&#0098FFs'
   cancelled-actionbar: '&#0098FF&lTPA &8▷ &fYou moved &8— &7teleport cancelled.'
+  countdown-sound: BLOCK_NOTE_BLOCK_PLING
+  cancel-sound: BLOCK_NOTE_BLOCK_BASS
+  success-sound: ENTITY_ENDERMAN_TELEPORT

@@ -2,12 +2,13 @@ config-version: 1
 message-mode: chat
 
 play-sound: true
+override-craft: false
 
 permissions:
-  anvil: shardedcore.command.anvil
-  grindstone: shardedcore.command.grindstone
-  smithingtable: shardedcore.command.smithingtable
-  craft: shardedcore.command.craft
+  anvil: sharded.workstations.anvil
+  grindstone: sharded.workstations.grindstone
+  smithingtable: sharded.workstations.smithingtable
+  craft: sharded.craft.use
 
 sounds:
   anvil: BLOCK_ANVIL_PLACE

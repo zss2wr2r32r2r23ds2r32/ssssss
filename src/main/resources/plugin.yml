@@ -120,16 +120,20 @@ commands:
     description: Open player settings
     permission: shardedcore.command.settings
   chattoggle:
-    description: Toggle chat visibility
+    description: Toggle public chat visibility
+    aliases: [togglechat, ct, publicchat]
     permission: shardedcore.command.chattoggle
   msgtoggle:
     description: Toggle private messages
+    aliases: [togglemsg, pmtoggle]
     permission: shardedcore.command.msgtoggle
   jointoggle:
     description: Toggle join messages
+    aliases: [jtoggle, joinleave, joinmessages]
     permission: shardedcore.command.jointoggle
   deathtoggle:
     description: Toggle death messages
+    aliases: [dtoggle, deathmessages]
     permission: shardedcore.command.deathtoggle
   mobtoggle:
     description: Toggle mob spawning near you
@@ -139,8 +143,12 @@ commands:
     permission: shardedcore.command.paytoggle
   nightvision:
     description: Toggle night vision
-    aliases: [nvtoggle]
+    aliases: [nvtoggle, nv]
     permission: shardedcore.command.nightvision
+  eventsoundstoggle:
+    description: Toggle event horn sounds
+    aliases: [eventsounds]
+    permission: shardedcore.command.eventsounds
   cf:
     description: Start a coinflip
     aliases: [coinflip]
@@ -188,6 +196,12 @@ commands:
   media:
     description: Media rank info
     permission: shardedcore.command.media
+  mediareq:
+    description: Media requirements
+    permission: shardedcore.command.media
+  mediarequirements:
+    description: Media requirements
+    permission: shardedcore.command.media
   joincounter:
     description: View join counter
     permission: shardedcore.command.joincounter
@@ -199,6 +213,39 @@ permissions:
   shardedcore.admin:
     description: ShardedCore administration
     default: op
+  sharded.admin:
+    description: ShardedCore administration (config alias)
+    default: op
+  sharded.settings.use:
+    description: Open settings menu
+    default: true
+  sharded.settings.scoreboard:
+    description: Toggle scoreboard in settings
+    default: true
+  sharded.settings.deathmessages:
+    description: Toggle death messages in settings
+    default: true
+  sharded.settings.joinmessages:
+    description: Toggle join messages in settings
+    default: true
+  sharded.settings.mobspawn:
+    description: Toggle mob spawn in settings
+    default: true
+  sharded.settings.eventsounds:
+    description: Toggle event sounds in settings
+    default: true
+  sharded.chat.toggle:
+    description: Toggle public chat visibility
+    default: true
+  sharded.msg.toggle:
+    description: Toggle private messages
+    default: true
+  sharded.rtp.use:
+    description: Use RTP menu
+    default: true
+  sharded.media.use:
+    description: Open media requirements menu
+    default: true
   shardedcore.economy.balance:
     description: Check economy balance
     default: true

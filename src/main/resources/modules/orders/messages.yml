@@ -1,7 +1,5 @@
 # Everything the board says. A message holding the error colour also plays the error sound.
 
-no-permission: '&#FF1D54&lORDERS &8▷ &fYou do not have permission.'
-
 created: '&#FF3DE0&lORDERS &8▷ &fYou ordered &#FF3DE0%amount%x %item% &ffor &#FF7BE9%price%&f.'
 delivered: '&#FF3DE0&lORDERS &8▷ &fYou handed in &#FF3DE0%amount%x %item% &fand got &#FF7BE9%money%&f.'
 owner-delivery: '&#FF3DE0&lORDERS &8▷ &#FF3DE0%player% &fdelivered &#FF3DE0%amount%x %item%&f.'

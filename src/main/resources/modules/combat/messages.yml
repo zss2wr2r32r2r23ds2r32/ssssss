@@ -1,4 +1,12 @@
-config-version: 1
-prefix: '&#FF0000&lCOMBAT &8▷ &r'
-
+prefix: '%prefix%'
+players-only: '%prefix%&#FF2727Only players can use this command.'
+no-permission: '%prefix%&#FF2727You do not have permission.'
+usage: '%prefix%&#FF2727Usage: &f/combat pos1|pos2|setregion'
+pos1-set: '%prefix%&#9FFF00Position 1 set.'
+pos2-set: '%prefix%&#9FFF00Position 2 set.'
+region-set: '%prefix%&#9FFF00Combat region saved.'
+region-deprecated: '%prefix%&#FF8300Use &f/coreprotect setregion combat &#FF8300instead.'
+need-positions: '%prefix%&#FF2727Set pos1 and pos2 first.'
+pushback: '%prefix%&#FF2727You cannot enter spawn while in combat!'
+no-pearl-spawn: '%prefix%&#FF2727You cannot ender pearl into spawn while in combat!'
 no-commands: '%prefix%&#FF2727You cannot use commands while in combat!'

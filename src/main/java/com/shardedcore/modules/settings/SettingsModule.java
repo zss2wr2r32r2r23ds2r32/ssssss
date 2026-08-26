@@ -2,7 +2,8 @@ package com.shardedcore.modules.settings;
 
 import com.shardedcore.ShardedCore;
 import com.shardedcore.module.Module;
-import com.shardedcore.modules.live.LiveModule;
+import com.shardedcore.util.ConfigSync;
+import com.shardedcore.util.PlayerToggles;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,30 +12,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
 
 public final class SettingsModule extends Module implements CommandExecutor, Listener {
 
     public static final String KEY_PUBLIC_CHAT = "public-chat";
     public static final String KEY_MSG = "msgtoggle";
-    public static final String KEY_JOIN = "jointoggle";
-    public static final String KEY_DEATH = "deathtoggle";
-    public static final String KEY_MOB = "mobtoggle";
-    public static final String KEY_PAY = "paytoggle";
-    public static final String KEY_NIGHT_VISION = "nightvision";
-    public static final String KEY_MENTIONS = "mentions";
-    public static final String KEY_TPA_IN = "tpa-incoming-enabled";
-    public static final String KEY_TPA_HERE = "tpa-here-enabled";
-    public static final String KEY_TPA_AUTO = "tpa-auto";
-
-    private SettingsGuiHandler guiHandler;
 
     public SettingsModule(ShardedCore plugin) {
         super(plugin, "settings");
@@ -42,16 +30,19 @@ public final class SettingsModule extends Module implements CommandExecutor, Lis
 
     @Override
     public void enable() {
-        guiHandler = new SettingsGuiHandler(this);
+        File guiFile = syncJarResource("gui.yml");
+        plugin.gui().loadMenu(guiFile, "settings");
+        plugin.gui().registerMenuExtras("settings", this::placeholders);
+        plugin.gui().registerAction("scoreboard_toggle", this::toggleScoreboardExternal);
+
         registerListener(this);
         registerCommand("settings", this);
+        registerCommand("deathtoggle", this);
+        registerCommand("jointoggle", this);
+        registerCommand("mobtoggle", this);
         registerCommand("chattoggle", this);
         registerCommand("msgtoggle", this);
-        registerCommand("jointoggle", this);
-        registerCommand("deathtoggle", this);
-        registerCommand("mobtoggle", this);
-        registerCommand("paytoggle", this);
-        registerCommand("nightvision", this);
+        registerCommand("eventsoundstoggle", this);
     }
 
     @Override
@@ -59,55 +50,37 @@ public final class SettingsModule extends Module implements CommandExecutor, Lis
         cleanup();
     }
 
+    public void openSettings(Player player) {
+        if (!player.hasPermission("sharded.settings.use") && !player.hasPermission("shardedcore.settings.use")) {
+            send(player, "no-permission");
+            return;
+        }
+        plugin.gui().open(player, "settings", placeholders(player));
+    }
+
     public Map<String, String> placeholders(Player player) {
         Map<String, String> map = new HashMap<>();
+        map.put("status_scoreboard", formatStatus(PlayerToggles.scoreboardDisplay(player)));
+        map.put("status_death_messages", formatStatus(PlayerToggles.deathMessages(player)));
+        map.put("status_join_messages", formatStatus(PlayerToggles.joinMessages(player)));
+        map.put("status_mob_toggle", formatStatus(PlayerToggles.mobSpawn(player)));
         map.put("status_public_chat", formatStatus(getBool(player, KEY_PUBLIC_CHAT, true)));
         map.put("status_private_messages", formatStatus(getBool(player, KEY_MSG, true)));
-        map.put("status_join_messages", formatStatus(getBool(player, KEY_JOIN, true)));
-        map.put("status_death_messages", formatStatus(getBool(player, KEY_DEATH, true)));
-        map.put("status_mob_toggle", formatStatus(getBool(player, KEY_MOB, true)));
-        map.put("status_pay", formatStatus(!getBool(player, KEY_PAY, false)));
-        map.put("status_nightvision", formatStatus(getBool(player, KEY_NIGHT_VISION, false)));
-        map.put("status_live", formatStatus(getBool(player, LiveModule.STATE_KEY, true)));
-        map.put("status_mentions", formatStatus(getBool(player, KEY_MENTIONS, true)));
-        map.put("status_tpa", formatStatus(getBool(player, KEY_TPA_IN, true)));
-        map.put("status_tpa_auto", formatStatus(getBool(player, KEY_TPA_AUTO, false)));
+        map.put("status_event_sounds", formatStatus(PlayerToggles.eventSounds(player)));
         return map;
     }
 
     public String formatStatus(boolean enabled) {
         String key = enabled ? "status.enabled" : "status.disabled";
-        return config.getString(key, enabled ? "&#9FFF00&lENABLED" : "&#FF2727&lDISABLED");
+        return messages.getString(key, enabled ? "&#9FFF00&lENABLED" : "&#FF2727&lDISABLED");
     }
 
     public boolean getBool(Player player, String key, boolean defaultValue) {
         return plugin.stateStore().getBool(player.getUniqueId(), key, defaultValue);
     }
 
-    public boolean toggleSetting(Player player, String key, boolean defaultValue, String effect) {
-        boolean next = !getBool(player, key, defaultValue);
-        plugin.stateStore().setBool(player.getUniqueId(), key, next);
-        applyEffect(player, effect, next);
-        return next;
-    }
-
-    private void applyEffect(Player player, String effect, boolean enabled) {
-        if (effect == null || effect.isBlank()) return;
-        if (effect.equals("nightvision")) {
-            if (enabled) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 0, false, false, false));
-            } else {
-                player.removePotionEffect(PotionEffectType.NIGHT_VISION);
-            }
-        }
-    }
-
-    public void openSettings(Player player) {
-        if (!player.hasPermission("shardedcore.settings.use")) {
-            send(player, "no-permission");
-            return;
-        }
-        guiHandler.open(player);
+    public void setBool(Player player, String key, boolean value) {
+        plugin.stateStore().setBool(player.getUniqueId(), key, value);
     }
 
     @Override
@@ -116,92 +89,110 @@ public final class SettingsModule extends Module implements CommandExecutor, Lis
             send(sender, "players-only");
             return true;
         }
-        return switch (command.getName().toLowerCase(Locale.ROOT)) {
-            case "settings" -> {
-                openSettings(player);
-                yield true;
-            }
-            case "chattoggle" -> {
-                toggle(player, KEY_PUBLIC_CHAT, true, null, "chat-on", "chat-off");
-                yield true;
-            }
-            case "msgtoggle" -> {
-                toggle(player, KEY_MSG, true, null, "msg-on", "msg-off");
-                yield true;
-            }
-            case "jointoggle" -> {
-                toggle(player, KEY_JOIN, true, null, "join-on", "join-off");
-                yield true;
-            }
-            case "deathtoggle" -> {
-                toggle(player, KEY_DEATH, true, null, "death-on", "death-off");
-                yield true;
-            }
-            case "mobtoggle" -> {
-                toggle(player, KEY_MOB, true, null, "mob-on", "mob-off");
-                yield true;
-            }
-            case "paytoggle" -> {
-                boolean disabled = plugin.stateStore().toggle(player.getUniqueId(), KEY_PAY, false);
-                send(player, disabled ? "pay-off" : "pay-on");
-                yield true;
-            }
-            case "nightvision", "nvtoggle" -> {
-                toggle(player, KEY_NIGHT_VISION, false, "nightvision", "nv-on", "nv-off");
-                yield true;
-            }
-            default -> true;
-        };
+        String cmd = command.getName().toLowerCase(Locale.ROOT);
+        if (cmd.equals("settings") || cmd.equals("setting")) {
+            openSettings(player);
+            return true;
+        }
+        if (args.length > 0 && !args[0].equalsIgnoreCase("toggle")) {
+            return true;
+        }
+        switch (cmd) {
+            case "deathtoggle", "deathmessages", "dtoggle" -> toggleDeath(player);
+            case "jointoggle", "joinmessages", "jtoggle" -> toggleJoin(player);
+            case "mobtoggle", "mobspawn", "mtoggle" -> toggleMobSpawn(player);
+            case "chattoggle", "publicchat", "togglechat", "ct" -> togglePublicChat(player);
+            case "msgtoggle", "togglemsg", "pmtoggle" -> togglePrivateMessages(player);
+            case "eventsoundstoggle", "eventsounds" -> toggleEventSounds(player);
+        }
+        return true;
     }
 
-    public boolean togglePay(Player player) {
-        return plugin.stateStore().toggle(player.getUniqueId(), KEY_PAY, false);
+    public void toggleScoreboardExternal(Player player) {
+        if (!check(player, "sharded.settings.scoreboard")) return;
+        if (canUseTabScoreboard(player)) {
+            player.performCommand("sb");
+            PlayerToggles.flipScoreboardDisplay(player);
+            return;
+        }
+        PlayerToggles.setScoreboard(player, !PlayerToggles.scoreboard(player));
+        send(player, PlayerToggles.scoreboard(player) ? "scoreboard-on" : "scoreboard-off");
     }
 
-    private void toggle(Player player, String key, boolean defaultValue, String effect, String onKey, String offKey) {
-        boolean enabled = toggleSetting(player, key, defaultValue, effect);
-        send(player, enabled ? onKey : offKey);
+    private boolean canUseTabScoreboard(Player player) {
+        return player.hasPermission("tab.scoreboard.toggle")
+                || player.hasPermission("tab.scoreboard.show")
+                || player.hasPermission("tab.use");
     }
 
-    @EventHandler
-    public void onGuiClick(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player player)) return;
-        SettingsGuiHandler.SettingsGuiHolder holder = com.shardedcore.util.TrackedInventories.lookup(
-                event.getView().getTopInventory(), SettingsGuiHandler.SettingsGuiHolder.class);
-        if (holder == null) return;
-        event.setCancelled(true);
-        if (event.getClickedInventory() != event.getView().getTopInventory()) return;
-        guiHandler.handleClick(player, event.getSlot());
+    private void toggleDeath(Player player) {
+        if (!check(player, "sharded.settings.deathmessages")) return;
+        PlayerToggles.setDeathMessages(player, !PlayerToggles.deathMessages(player));
+        send(player, PlayerToggles.deathMessages(player) ? "death-on" : "death-off");
+    }
+
+    private void toggleJoin(Player player) {
+        if (!check(player, "sharded.settings.joinmessages")) return;
+        PlayerToggles.setJoinMessages(player, !PlayerToggles.joinMessages(player));
+        send(player, PlayerToggles.joinMessages(player) ? "join-on" : "join-off");
+    }
+
+    private void toggleMobSpawn(Player player) {
+        if (!check(player, "sharded.settings.mobspawn")) return;
+        PlayerToggles.setMobSpawn(player, !PlayerToggles.mobSpawn(player));
+        send(player, PlayerToggles.mobSpawn(player) ? "mobspawn-on" : "mobspawn-off");
+    }
+
+    private void togglePublicChat(Player player) {
+        if (!check(player, "sharded.chat.toggle")) return;
+        boolean next = !getBool(player, KEY_PUBLIC_CHAT, true);
+        setBool(player, KEY_PUBLIC_CHAT, next);
+        send(player, next ? "chat-on" : "chat-off");
+    }
+
+    private void togglePrivateMessages(Player player) {
+        if (!check(player, "sharded.msg.toggle")) return;
+        boolean next = !getBool(player, KEY_MSG, true);
+        setBool(player, KEY_MSG, next);
+        send(player, next ? "msg-on" : "msg-off");
+    }
+
+    private void toggleEventSounds(Player player) {
+        if (!check(player, "sharded.settings.eventsounds")) return;
+        PlayerToggles.setEventSounds(player, !PlayerToggles.eventSounds(player));
+        send(player, PlayerToggles.eventSounds(player) ? "eventsounds-on" : "eventsounds-off");
+    }
+
+    private boolean check(Player player, String permission) {
+        if (player.hasPermission(permission) || player.hasPermission(permission.replace("sharded.", "shardedcore."))) {
+            return true;
+        }
+        PlayerToggles.noPermissionActionBar(player, raw("no-permission-actionbar"));
+        return false;
+    }
+
+    protected File syncJarResource(String fileName) {
+        File target = new File(moduleFolder, fileName);
+        ConfigSync.sync(plugin, target, "modules/settings/" + fileName);
+        return target;
     }
 
     @EventHandler
     public void onMobSpawn(CreatureSpawnEvent event) {
-        if (event.getSpawnReason() != CreatureSpawnEvent.SpawnReason.NATURAL) return;
-        World world = event.getEntity().getWorld();
-        if (world.getPlayers().isEmpty()) return;
-        var loc = event.getLocation();
-        for (Player player : world.getPlayers()) {
-            if (getBool(player, KEY_MOB, true)) continue;
-            if (player.getLocation().distanceSquared(loc) <= 256) {
-                event.setCancelled(true);
-                return;
-            }
+        if (!(event.getEntity().getWorld().getEnvironment() == World.Environment.NORMAL)) return;
+        if (event.getEntity().getCustomName() != null) return;
+        if (event.getEntity().getNearbyEntities(32, 32, 32).stream()
+                .filter(e -> e instanceof Player player && !PlayerToggles.mobSpawn(player))
+                .findAny().isEmpty()) {
+            return;
         }
+        event.setCancelled(true);
     }
 
-    public static boolean isPublicChatEnabled(UUID uuid, ShardedCore plugin) {
-        return plugin.stateStore().getBool(uuid, KEY_PUBLIC_CHAT, true);
-    }
-
-    public static boolean isMsgEnabled(UUID uuid, ShardedCore plugin) {
-        return plugin.stateStore().getBool(uuid, KEY_MSG, true);
-    }
-
-    public static boolean isDeathMessagesEnabled(UUID uuid, ShardedCore plugin) {
-        return plugin.stateStore().getBool(uuid, KEY_DEATH, true);
-    }
-
-    public static boolean isJoinMessagesEnabled(UUID uuid, ShardedCore plugin) {
-        return plugin.stateStore().getBool(uuid, KEY_JOIN, true);
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        if (PlayerToggles.scoreboard(event.getPlayer())) {
+            // TAB/scoreboard plugins handle visibility externally.
+        }
     }
 }

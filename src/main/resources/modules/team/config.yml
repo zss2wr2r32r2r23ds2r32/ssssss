@@ -1,5 +1,5 @@
 config-version: 9
-prefix: '&#FF00F8&lTEAM &8▷ &r'
+prefix: '&#FCFF00&lTEAM &8▷ &r'
 message-mode: chat
 
 creation:
@@ -20,11 +20,6 @@ ally:
 emergency:
   cooldown-seconds: 60
 
-home:
-  teleport-delay-seconds: 3
-  countdown-actionbar: '&#FF00F8&lTEAM &8▷ &#FF00F8&n{seconds}s'
-  cancelled-actionbar: '&#FF00F8&lTEAM &8▷ &7Teleport cancelled.'
-
 leaderboard:
   limit: 10
   token-weight: 1
@@ -32,7 +27,7 @@ leaderboard:
   playtime-hour-weight: 50
 
 chat:
-  team-format: '&#FCFF00&lTEAM#FF00F8&#FCFF00&lTEAMlTEAM &8▷ &r&f%player% &8» &7%message%'
+  team-format: '&#FCFF00&lTEAM &8▷ &r&f%player% &8» &7%message%'
   ally-format: '&#0098FF&lALLIES &8▷ &r&f%player% &8» &7%message%'
 
 placeholders:

@@ -1,7 +1,2 @@
 config-version: 1
-message-mode: chat
-prefix: '&#A4FF39&lECONOMY &8▷ &r'
-
-starting-balance: 0
-max-balance: 0
-format-decimals: false
+prefix: '&#FFD700&lECONOMY &8▷ &r'

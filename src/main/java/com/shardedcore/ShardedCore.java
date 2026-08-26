@@ -2,9 +2,12 @@ package com.shardedcore;
 
 import com.shardedcore.command.ShardedCoreCommand;
 import com.shardedcore.command.StubCommand;
+import com.shardedcore.gui.GuiListener;
+import com.shardedcore.gui.GuiManager;
+import com.shardedcore.gui.GuiNavigation;
 import com.shardedcore.hook.ShardedCoreExpansion;
 import com.shardedcore.module.ModuleManager;
-import com.shardedcore.util.ConfigUtil;
+import com.shardedcore.util.ConfigSync;
 import com.shardedcore.util.MessageUtil;
 import com.shardedcore.util.PlayerStateStore;
 import org.bukkit.Bukkit;
@@ -23,15 +26,23 @@ public final class ShardedCore extends JavaPlugin {
     private PlayerStateStore stateStore;
     private FileConfiguration config;
     private ShardedCoreExpansion placeholderExpansion;
+    private GuiManager guiManager;
+    private GuiNavigation guiNavigation;
 
     @Override
     public void onEnable() {
         instance = this;
+        if (!getDataFolder().exists()) getDataFolder().mkdirs();
         saveDefaultConfig();
+        ConfigSync.syncMainConfig(this);
         reloadLocalConfig();
 
         stateStore = new PlayerStateStore(this);
         stateStore.init();
+
+        guiNavigation = new GuiNavigation(this);
+        guiManager = new GuiManager(this);
+        getServer().getPluginManager().registerEvents(new GuiListener(guiManager), this);
 
         registerCommands();
 
@@ -47,6 +58,10 @@ public final class ShardedCore extends JavaPlugin {
         if (moduleManager != null) {
             moduleManager.disableAll();
         }
+        if (guiManager != null) {
+            guiManager.clearMenus();
+            guiManager.unregisterActions();
+        }
         if (stateStore != null) {
             stateStore.close();
         }
@@ -61,11 +76,17 @@ public final class ShardedCore extends JavaPlugin {
     }
 
     public void reloadPlugin() {
+        ConfigSync.syncMainConfig(this);
         reloadLocalConfig();
+        if (guiNavigation != null) guiNavigation.reload(this);
         if (stateStore != null) {
             stateStore.reload();
         }
         if (moduleManager != null) {
+            if (guiManager != null) {
+                guiManager.clearMenus();
+                guiManager.unregisterActions();
+            }
             moduleManager.reloadAll();
         }
     }
@@ -133,7 +154,15 @@ public final class ShardedCore extends JavaPlugin {
     }
 
     public String prefix() {
-        return config.getString("prefix", "<gray>[ShardedCore]</gray> ");
+        return config.getString("prefix", "&#00A2FF&lCORE &8▷ &r");
+    }
+
+    public GuiManager gui() {
+        return guiManager;
+    }
+
+    public GuiNavigation guiNavigation() {
+        return guiNavigation;
     }
 
     public MessageUtil.MessageMode messageMode() {

@@ -4,6 +4,7 @@ message-mode: chat
 enabled: true
 ops-bypass: true
 
+# Always allowed even if not listed in a group (ShardedCore essentials).
 always-allowed:
   - shardedcore
   - score
@@ -68,19 +69,9 @@ groups:
       - msgtoggle
       - ping
       - live
-      - cf
-      - coinflip
-      - paytoggle
-      - pay
-      - tpa
-      - tpahere
-      - tpaccept
-      - tpacancel
-      - tpatoggle
-      - tpauto
 
   ranks:
-    permission: shardedcore.commandwhitelist.ranks
+    permission: sharded.commandwhitelist.ranks
     commands:
       - duel
       - rewards
@@ -93,7 +84,7 @@ groups:
       - tempranks
 
   immortal:
-    permission: shardedcore.commandwhitelist.immortal
+    permission: sharded.commandwhitelist.immortal
     commands:
       - hide
       - spawners
@@ -104,6 +95,9 @@ groups:
       - arena
 
   media:
-    permission: shardedcore.commandwhitelist.media
+    permission: sharded.commandwhitelist.media
     commands:
       - live
+      - mediareq
+      - mediarequirements
+      - announce

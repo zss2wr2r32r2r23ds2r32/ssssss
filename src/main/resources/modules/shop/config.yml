@@ -166,7 +166,7 @@ sections:
   premiumshop:
     enabled: true
     slot: 22
-    permission: "shardedcore.shop.premium"
+    permission: "sharded.shop.premium"
     icon:
       material: NETHERITE_SWORD
       name: "&#FFD900&lPREMIUM SHOP"

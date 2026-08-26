@@ -1,99 +1,36 @@
 kits:
-  default:
-    display-name: '&#99FF00&lDEFAULT KIT'
-    icon: CANDLE
+  starter:
+    display-name: '&#99FF00&lSTARTER KIT'
+    icon: CHEST
     slot: 11
-    permission: shardedcore.kits.default
+    permission: sharded.kits.starter
     cooldown-seconds: 86400
-    lore:
-      - '&7Basic starter supplies'
-      - ''
-      - '&#FFD900▷ Click to preview'
+    lore: ['&7Basic tools and food', '', '&#FFD900▷ Click to preview']
     items:
       - {slot: 0, material: STONE_SWORD, amount: 1}
       - {slot: 1, material: STONE_PICKAXE, amount: 1}
       - {slot: 2, material: STONE_AXE, amount: 1}
       - {slot: 3, material: STONE_SHOVEL, amount: 1}
       - {slot: 8, material: BREAD, amount: 16}
-
-  vip:
-    display-name: '&#22AFFB&lVIP KIT'
-    icon: LIGHT_BLUE_CANDLE
-    slot: 13
-    permission: shardedcore.kits.vip
-    cooldown-seconds: 43200
-    lore:
-      - '&7Iron tools and extra food'
-      - ''
-      - '&#FFD900▷ Click to preview'
-    items:
-      - {slot: 0, material: IRON_SWORD, amount: 1}
-      - {slot: 1, material: IRON_PICKAXE, amount: 1}
-      - {slot: 2, material: IRON_AXE, amount: 1}
-      - {slot: 3, material: IRON_SHOVEL, amount: 1}
-      - {slot: 8, material: COOKED_BEEF, amount: 32}
-
-  mvp:
-    display-name: '&#FF256E&lMVP KIT'
-    icon: MAGENTA_CANDLE
-    slot: 15
-    permission: shardedcore.kits.mvp
-    cooldown-seconds: 21600
-    lore:
-      - '&7Diamond gear and golden food'
-      - ''
-      - '&#FFD900▷ Click to preview'
-    items:
-      - {slot: 0, material: DIAMOND_SWORD, amount: 1}
-      - {slot: 1, material: DIAMOND_PICKAXE, amount: 1}
-      - {slot: 2, material: DIAMOND_AXE, amount: 1}
-      - {slot: 3, material: DIAMOND_SHOVEL, amount: 1}
-      - {slot: 8, material: GOLDEN_CARROT, amount: 32}
-
-  premium:
-    display-name: '&#FFD900&lPREMIUM KIT'
-    icon: YELLOW_CANDLE
-    slot: 22
-    permission: shardedcore.kits.premium
-    cooldown-seconds: 86400
-    lore:
-      - '&7Netherite tools and extras'
-      - ''
-      - '&#FFD900▷ Click to preview'
-    items:
-      - {slot: 0, material: NETHERITE_SWORD, amount: 1}
-      - {slot: 1, material: NETHERITE_PICKAXE, amount: 1}
-      - {slot: 2, material: NETHERITE_AXE, amount: 1}
-      - {slot: 3, material: NETHERITE_SHOVEL, amount: 1}
-      - {slot: 4, material: TOTEM_OF_UNDYING, amount: 1}
-      - {slot: 8, material: ENCHANTED_GOLDEN_APPLE, amount: 8}
-
   tools:
-    display-name: '&#FB7B0B&lTOOLS KIT'
-    icon: ORANGE_CANDLE
-    slot: 29
-    permission: shardedcore.kits.tools
+    display-name: '&#22AFFB&lTOOLS KIT'
+    icon: IRON_PICKAXE
+    slot: 13
+    permission: sharded.kits.tools
     cooldown-seconds: 43200
-    lore:
-      - '&7Extra iron tools'
-      - ''
-      - '&#FFD900▷ Click to preview'
+    lore: ['&7Iron tools', '', '&#FFD900▷ Click to preview']
     items:
       - {slot: 0, material: IRON_SWORD, amount: 1}
       - {slot: 1, material: IRON_PICKAXE, amount: 1}
       - {slot: 2, material: IRON_AXE, amount: 1}
       - {slot: 3, material: IRON_SHOVEL, amount: 1}
-
   food:
-    display-name: '&#45FF17&lFOOD KIT'
-    icon: LIME_CANDLE
-    slot: 31
-    permission: shardedcore.kits.food
+    display-name: '&#FB7B0B&lFOOD KIT'
+    icon: COOKED_BEEF
+    slot: 15
+    permission: sharded.kits.food
     cooldown-seconds: 21600
-    lore:
-      - '&7Cooked food stacks'
-      - ''
-      - '&#FFD900▷ Click to preview'
+    lore: ['&7Cooked food stacks', '', '&#FFD900▷ Click to preview']
     items:
       - {slot: 0, material: COOKED_BEEF, amount: 32}
       - {slot: 1, material: COOKED_PORKCHOP, amount: 32}

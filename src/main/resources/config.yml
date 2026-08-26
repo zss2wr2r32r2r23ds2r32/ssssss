@@ -1,6 +1,6 @@
-config-version: 1
+config-version: 20
 
-prefix: "<gradient:#5b8cff:#9b59ff>ShardedCore</gradient> <dark_gray>»</dark_gray> "
+prefix: '&#00A2FF&lCORE &8▷ &r'
 message-mode: chat
 
 modules:

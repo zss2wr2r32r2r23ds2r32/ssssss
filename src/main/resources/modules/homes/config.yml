@@ -11,8 +11,11 @@ disabled-worlds:
 
 teleport:
   delay-seconds: 5
-  countdown-actionbar: '&#FF005D&lHOME &8▷ &fTeleporting in &#FF005D&n{seconds}s'
+  countdown-actionbar: '&#FF005D&lHOME &8▷ &fTeleporting in &#FF005D&n%seconds%&r&#FF005Ds'
   cancelled-actionbar: '&#FF005D&lHOME &8▷ &fYou moved &8— &7teleport cancelled.'
+  countdown-sound: BLOCK_NOTE_BLOCK_PLING
+  cancel-sound: BLOCK_NOTE_BLOCK_BASS
+  success-sound: ENTITY_ENDERMAN_TELEPORT
 
 gui:
   size: 54
@@ -56,7 +59,7 @@ gui:
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nSHIFT+CLICK&r &x&F&F&B&A&0&0To Delete'
   click-teleport: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport'
   shift-delete: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nSHIFT+CLICK&r &x&F&F&B&A&0&0To Delete'
-  permission-required: '&#FF2727Requires &fshardedcore.homes.%slot%'
+  permission-required: '&#FF2727Requires &fsharded.homes.%slot%'
   delete-title: '&8Delete Home &#FF005D%slot%'
   delete-cancel-name: '&#FF2727&lCancel'
   delete-cancel-lore:

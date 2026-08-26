@@ -1,4 +1,6 @@
-config-version: 1
-
+config-version: 4
+prefix: '&#00A2FF&lCORE &8▷ &r'
 players-only: '%prefix%&#FF2727Only players can use this command.'
-no-permission: '%prefix%&#FF2727You don''t have permission to use trash.'
+no-permission: '%prefix%&#FF2727You don''t have permission to use /trash.'
+opened: ''
+emptied: ''

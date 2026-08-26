@@ -32,7 +32,8 @@ public final class MessageUtil {
     }
 
     public static void send(CommandSender sender, ShardedCore plugin, String message) {
-        Component component = Text.component(plugin.prefix() + message, sender instanceof Player player ? player : null);
+        String full = Text.apply(message, "%prefix%", plugin.prefix());
+        Component component = Text.component(full, sender instanceof Player player ? player : null);
         MessageMode mode = plugin.messageMode();
 
         if (mode == MessageMode.CHAT || mode == MessageMode.BOTH) {
@@ -44,11 +45,10 @@ public final class MessageUtil {
     }
 
     public static void sendRaw(CommandSender sender, String message, Player placeholderPlayer) {
-        Component component = Text.component(message, placeholderPlayer);
-        sender.sendMessage(component);
+        sender.sendMessage(Text.c(Text.applyPlaceholders(message, placeholderPlayer)));
     }
 
     public static void sendActionBar(Player player, ShardedCore plugin, String message) {
-        player.sendActionBar(Text.component(message, player));
+        player.sendActionBar(Text.cPlain(Text.apply(message, "%prefix%", plugin.prefix())));
     }
 }

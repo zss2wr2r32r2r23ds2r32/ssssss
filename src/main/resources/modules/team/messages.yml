@@ -1,4 +1,4 @@
-prefix: '&#FF00F8&lTEAM &8▷ &r'
+prefix: '&#FCFF00&lTEAM &8▷ &r'
 
 players-only: '%prefix%&#FF2727Players only.'
 no-permission: '%prefix%&#FF2727You do not have permission.'
@@ -80,20 +80,6 @@ ally-formed-broadcast: '%prefix%&#9FFF00Now allied with &f%team%&#9FFF00.'
 
 chat-enabled: '%prefix%&#9FFF00Team chat &aenabled&#9FFF00 — type normally to talk to your team.'
 chat-disabled: '%prefix%&#FF2727Team chat &cdisabled&#FF2727.'
-
-home-set: '%prefix%&#9FFF00Team home set to your current location.'
-home-deleted: '%prefix%&#9FFF00Team home removed.'
-no-home: '%prefix%&#FF2727Your team has no home set.'
-home-world-missing: '%prefix%&#FF2727Team home world is unavailable.'
-home-teleported: '%prefix%&#9FFF00Teleported to team home.'
-pvp-usage: '%prefix%&#FF2727Usage: &f/team pvp <on|off|toggle>'
-pvp-enabled: '%prefix%&#9FFF00Team PVP &aenabled&#9FFF00.'
-pvp-disabled: '%prefix%&#9FFF00Team PVP &cdisabled&#9FFF00.'
-pvp-already-enabled: '%prefix%&#FF2727Team PVP is already enabled.'
-pvp-already-disabled: '%prefix%&#FF2727Team PVP is already disabled.'
-pvp-enabled-broadcast: '%prefix%&#9FFF00%player% &#9FFF00enabled team PVP.'
-pvp-disabled-broadcast: '%prefix%&#FF2727%player% &#FF2727disabled team PVP.'
-pvp-blocked: '%prefix%&#FF2727Team PVP is disabled.'
 
 role-leader: 'Leader'
 role-officer: 'Officer'

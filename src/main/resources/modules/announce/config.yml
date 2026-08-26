@@ -1,9 +1,14 @@
-config-version: 1
+config-version: 2
+
+# chat | actionbar | both | inherit — controls sender feedback (sent, usage, etc.)
 message-mode: chat
 
+# title | chat | both — how announcements are shown to all players
 display-mode: title
 title-text: '&#00A2FF&lANNOUNCEMENT'
 title-fade-in: 10
 title-stay: 70
 title-fade-out: 20
+
+# Used when display-mode is chat or both
 format: '%prefix%&#00A2FF&lANNOUNCEMENT &8▷ &r%message%'

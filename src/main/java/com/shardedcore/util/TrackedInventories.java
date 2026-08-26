@@ -16,6 +16,10 @@ public final class TrackedInventories {
         if (inventory != null && holder != null) HOLDERS.put(inventory, holder);
     }
 
+    public static Object lookup(Inventory inventory) {
+        return inventory == null ? null : HOLDERS.get(inventory);
+    }
+
     @SuppressWarnings("unchecked")
     public static <T> T lookup(Inventory inventory, Class<T> type) {
         Object holder = inventory == null ? null : HOLDERS.get(inventory);
