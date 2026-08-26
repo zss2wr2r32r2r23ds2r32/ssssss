@@ -15,6 +15,10 @@ public final class Text {
         return ColorUtil.parse(input);
     }
 
+    public static Component c(String input) {
+        return component(input);
+    }
+
     public static Component component(String input, Player player) {
         return component(applyPlaceholders(input, player));
     }

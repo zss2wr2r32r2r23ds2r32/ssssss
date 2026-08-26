@@ -10,9 +10,13 @@ import com.shardedcore.modules.commands.tpa.TpaModule;
 import com.shardedcore.modules.commands.trash.TrashModule;
 import com.shardedcore.modules.commands.workstations.WorkstationsModule;
 import com.shardedcore.modules.economy.EconomyModule;
+import com.shardedcore.modules.kits.KitsModule;
 import com.shardedcore.modules.links.LinksModule;
 import com.shardedcore.modules.live.LiveModule;
+import com.shardedcore.modules.orders.OrdersModule;
 import com.shardedcore.modules.ping.PingModule;
+import com.shardedcore.modules.sell.SellModule;
+import com.shardedcore.modules.shop.ShopModule;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,6 +46,10 @@ public final class ModuleManager {
         register(new GuideModule(plugin));
         register(new WorkstationsModule(plugin));
         register(new AnnounceModule(plugin));
+        register(new SellModule(plugin));
+        register(new ShopModule(plugin));
+        register(new OrdersModule(plugin));
+        register(new KitsModule(plugin));
     }
 
     public void register(Module module) {

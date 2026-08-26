@@ -4,6 +4,7 @@ import com.shardedcore.ShardedCore;
 import com.shardedcore.util.ColorUtil;
 import com.shardedcore.util.ConfigUtil;
 import com.shardedcore.util.MessageUtil;
+import com.shardedcore.util.Text;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -137,5 +138,24 @@ public abstract class Module {
             return;
         }
         MessageUtil.sendRaw(to, message, to instanceof Player player ? player : null);
+    }
+
+    protected List<String> rawList(String key, String... replacements) {
+        List<String> lines = new ArrayList<>(messages.getStringList(key));
+        if (lines.isEmpty()) {
+            String single = messages.getString(key);
+            if (single != null && !single.isEmpty()) {
+                lines.add(single);
+            }
+        }
+        List<String> out = new ArrayList<>(lines.size());
+        for (String line : lines) {
+            out.add(Text.apply(line.replace("%prefix%", messagePrefix()), replacements));
+        }
+        return out;
+    }
+
+    protected void syncResource(String resourcePath, File target) {
+        ConfigUtil.saveDefaultResource(plugin, resourcePath, target, false);
     }
 }
