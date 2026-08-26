@@ -1,0 +1,8 @@
+prefix: '&#99FF00&lSELL &8▷ &r'
+players-only: '&#FF2727Only players can use the sell menu.'
+no-permission: '&#FF2727You do not have permission to sell items.'
+no-economy: '&#FF2727The economy is not available right now.'
+nothing-to-sell: '&#FF2727Put items in the sell slots first.'
+sold: '&#99FF00You sold items for &#99FF00%money%&f.'
+multiplier-current: '&#99FF00Your sell multiplier is &#99FF00%multiplier%x&f.'
+no-price: '&#FF2727That item cannot be sold.'

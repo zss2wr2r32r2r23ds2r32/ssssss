@@ -70,6 +70,10 @@ import com.sharded.core.modules.economy.EconomyService;
 import com.sharded.core.modules.homes.HomesModule;
 import com.sharded.core.modules.tpa.TpaModule;
 import com.sharded.core.modules.coinflip.CoinflipModule;
+import com.sharded.core.modules.orders.OrdersModule;
+import com.sharded.core.modules.sell.SellModule;
+import com.sharded.core.modules.shop.ShopModule;
+import com.sharded.core.modules.kits.KitsModule;
 import com.sharded.core.modules.roles.RolesModule;
 import com.sharded.core.modules.teams.TeamsModule;
 
@@ -155,6 +159,10 @@ public final class ModuleManager {
         register(new HomesModule(plugin));
         register(new TpaModule(plugin));
         register(new CoinflipModule(plugin));
+        register(new OrdersModule(plugin));
+        register(new SellModule(plugin));
+        register(new ShopModule(plugin));
+        register(new KitsModule(plugin));
     }
 
     private void register(Module module) {

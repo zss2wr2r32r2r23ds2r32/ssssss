@@ -1,0 +1,16 @@
+prefix: '&#99FF00&lSELL &8▷ &r'
+gui:
+  sell:
+    title: '&8Sell Items'
+    size: 54
+    confirm-slot: 49
+    confirm:
+      material: LIME_STAINED_GLASS_PANE
+      name: '&#99FF00&lCONFIRM SELL'
+      lore: ['&7Drop items above, then click to sell.']
+    filler:
+      material: GRAY_STAINED_GLASS_PANE
+      name: ' '
+sounds:
+  sell: {enabled: true, sound: ENTITY_EXPERIENCE_ORB_PICKUP, volume: 1.0, pitch: 1.2}
+  error: {enabled: true, sound: BLOCK_NOTE_BLOCK_BASS, volume: 0.8, pitch: 0.8}

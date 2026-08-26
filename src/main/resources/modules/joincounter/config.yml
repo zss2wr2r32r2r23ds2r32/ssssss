@@ -1,3 +1,4 @@
+# Disable modules.joinmessages when using this module to avoid duplicate join/quit messages.
 config-version: 1
 message-mode: chat
 
