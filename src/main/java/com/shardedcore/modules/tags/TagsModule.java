@@ -2,9 +2,11 @@ package com.shardedcore.modules.tags;
 
 import com.shardedcore.ShardedCore;
 import com.shardedcore.database.Sqlite;
+import com.shardedcore.gui.CosmeticsMenus;
 import com.shardedcore.module.Module;
 import com.shardedcore.util.ColorUtil;
 import com.shardedcore.util.Configs;
+import com.shardedcore.util.Perms;
 import com.shardedcore.util.Tabs;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -61,8 +63,10 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
             plugin.getLogger().log(Level.SEVERE, "Failed to create tag tables", ex);
         }
         registerCommand("tag", this);
+        registerCommand("tags", this);
         registerListener(this);
-        for (Player player : Bukkit.getOnlinePlayers()) applyTab(player);
+        registerAll();
+        for (Player player : Bukkit.getOnlinePlayers()) clearTab(player);
     }
 
     @Override
@@ -81,14 +85,13 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
     public String display(Player player) {
         String tag = raw(player);
         if (tag == null || tag.isBlank()) return "";
-        String spaced = cfg("tab-format", "%tag% ");
-        return spaced.replace("%tag%", tag);
+        return cfg("tab-format", " %tag%").replace("%tag%", tag);
     }
 
     public String chatPrefix(Player player) {
         String tag = raw(player);
         if (tag == null || tag.isBlank()) return "";
-        return cfg("chat-format", "%tag% ").replace("%tag%", tag);
+        return cfg("chat-format", " %tag%").replace("%tag%", tag);
     }
 
     public boolean exists(String name) {
@@ -96,8 +99,11 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
     }
 
     public List<String> names() {
-        ConfigurationSection section = config.getConfigurationSection("tags");
-        return section == null ? List.of() : new ArrayList<>(section.getKeys(false));
+        return keys("tags");
+    }
+
+    public List<String> limitedNames() {
+        return keys("limited");
     }
 
     public boolean unlock(UUID uuid, String name) {
@@ -128,14 +134,30 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
                 plugin.getLogger().log(Level.WARNING, "Failed to save tag", ex);
             }
         });
-        applyTab(player);
         return true;
+    }
+
+    public void wipe(UUID uuid) {
+        selected.remove(uuid);
+        unlocked.remove(uuid);
+        try {
+            sqlite.execute("DELETE FROM tag_selected WHERE uuid = ?", uuid.toString());
+            sqlite.execute("DELETE FROM tag_unlocks WHERE uuid = ?", uuid.toString());
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.WARNING, "Failed to wipe tags", ex);
+        }
+    }
+
+    public boolean canUse(Player player, String name) {
+        if (player.hasPermission("shardedcore.tag.admin")) return true;
+        if (player.hasPermission("shardedcore.tag." + name)) return true;
+        return unlocked(player.getUniqueId()).contains(name.toLowerCase(Locale.ROOT));
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            if (event.getPlayer().isOnline()) applyTab(event.getPlayer());
+            if (event.getPlayer().isOnline()) clearTab(event.getPlayer());
         }, 10L);
     }
 
@@ -149,15 +171,24 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0) {
-            send(sender, "usage");
+        boolean tagsCommand = command.getName().equalsIgnoreCase("tags");
+        if (tagsCommand && args.length >= 1 && args[0].equalsIgnoreCase("limited")) {
+            return limited(sender, args);
+        }
+        if (tagsCommand || args.length == 0) {
+            if (!(sender instanceof Player player)) {
+                send(sender, "players-only");
+                return true;
+            }
+            openGui(player, 0, false);
             return true;
         }
         return switch (args[0].toLowerCase(Locale.ROOT)) {
-            case "create" -> create(sender, args);
+            case "create" -> create(sender, args, false);
             case "set" -> set(sender, args);
             case "remove", "delete" -> remove(sender, args);
             case "clear", "off" -> clear(sender);
+            case "limited" -> limited(sender, args);
             default -> {
                 send(sender, "usage");
                 yield true;
@@ -165,10 +196,38 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         };
     }
 
-    private boolean create(CommandSender sender, String[] args) {
+    private void openGui(Player player, int page, boolean limited) {
+        List<String> ids = limited ? limitedNames() : names();
+        List<CosmeticsMenus.Entry> entries = new ArrayList<>();
+        for (String id : ids) {
+            TagDef def = definition(id, limited);
+            if (def == null) continue;
+            String color = CosmeticsMenus.colorOf(def.text, cfg("gui.default-color", "0083FF"));
+            String title = CosmeticsMenus.pretty(ColorUtil.strip(def.text).isBlank() ? def.id : ColorUtil.strip(def.text));
+            entries.add(new CosmeticsMenus.Entry(def.id, title.toUpperCase(Locale.ROOT),
+                    ColorUtil.strip(def.text).isBlank() ? title : ColorUtil.strip(def.text),
+                    def.description, color, canUse(player, def.id)));
+        }
+        CosmeticsMenus.open(plugin, player, config,
+                limited ? cfg("gui.limited-title", "&8Limited Tags") : cfg("gui.title", "&8Tags"),
+                entries, page, "", limited,
+                next -> openGui(player, next, limited),
+                limited ? null : () -> openGui(player, 0, true),
+                entry -> {
+                    if (!canUse(player, entry.id())) {
+                        send(player, "locked", "name", entry.id());
+                        return;
+                    }
+                    apply(player, entry.id());
+                    send(player, "set", "tag", definition(entry.id(), limited) == null ? entry.title() : definition(entry.id(), limited).text);
+                    openGui(player, page, limited);
+                });
+    }
+
+    private boolean create(CommandSender sender, String[] args, boolean limited) {
         if (!admin(sender)) return true;
         if (args.length < 3) {
-            send(sender, "usage-create");
+            send(sender, limited ? "usage-limited" : "usage-create");
             return true;
         }
         String name = sanitize(args[1]);
@@ -177,10 +236,23 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
             send(sender, "invalid");
             return true;
         }
-        config.set("tags." + name + ".tag", tag);
+        String path = (limited ? "limited." : "tags.") + name;
+        config.set(path + ".tag", tag);
+        if (config.getString(path + ".description") == null) {
+            config.set(path + ".description", cfg("gui.default-description", "&8Description"));
+        }
         Configs.save(config, new File(folder, "config.yml"));
-        send(sender, "created", "name", name, "tag", tag);
+        Perms.ensure("shardedcore.tag." + name);
+        send(sender, limited ? "created-limited" : "created", "name", name, "tag", tag);
         return true;
+    }
+
+    private boolean limited(CommandSender sender, String[] args) {
+        if (args.length < 3) {
+            send(sender, "usage-limited");
+            return true;
+        }
+        return create(sender, args, true);
     }
 
     private boolean set(CommandSender sender, String[] args) {
@@ -218,6 +290,7 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
             return true;
         }
         config.set("tags." + name, null);
+        config.set("limited." + name, null);
         Configs.save(config, new File(folder, "config.yml"));
         send(sender, "removed", "name", name);
         return true;
@@ -236,24 +309,8 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
                 plugin.getLogger().log(Level.WARNING, "Failed to clear tag", ex);
             }
         });
-        clearTab(player);
         send(player, "cleared");
         return true;
-    }
-
-    private void applyTab(Player player) {
-        if (!config.getBoolean("tab.enabled", true)) return;
-        String tag = raw(player);
-        Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
-        String teamName = teamName(player);
-        Team team = board.getTeam(teamName);
-        if (tag == null || tag.isBlank()) {
-            if (team != null) team.unregister();
-            return;
-        }
-        if (team == null) team = board.registerNewTeam(teamName);
-        team.prefix(ColorUtil.parse(cfg("tab-format", "%tag% ").replace("%tag%", tag)));
-        if (!team.hasEntry(player.getName())) team.addEntry(player.getName());
     }
 
     private void clearTab(Player player) {
@@ -273,30 +330,41 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         return false;
     }
 
-    private boolean canUse(Player player, String name) {
-        if (player.hasPermission("shardedcore.tag.admin")) return true;
-        if (player.hasPermission("shardedcore.tag." + name)) return true;
-        return unlocked(player.getUniqueId()).contains(name.toLowerCase(Locale.ROOT));
+    private TagDef definition(String name) {
+        TagDef regular = definition(name, false);
+        return regular == null ? definition(name, true) : regular;
     }
 
-    private TagDef definition(String name) {
+    private TagDef definition(String name, boolean limited) {
         if (name == null || name.isBlank()) return null;
+        String root = limited ? "limited" : "tags";
         String id = sanitize(name);
-        ConfigurationSection section = config.getConfigurationSection("tags." + id);
+        ConfigurationSection section = config.getConfigurationSection(root + "." + id);
         if (section == null) {
-            ConfigurationSection root = config.getConfigurationSection("tags");
-            if (root != null) {
-                for (String key : root.getKeys(false)) {
+            ConfigurationSection all = config.getConfigurationSection(root);
+            if (all != null) {
+                for (String key : all.getKeys(false)) {
                     if (key.equalsIgnoreCase(name)) {
                         id = key;
-                        section = root.getConfigurationSection(key);
+                        section = all.getConfigurationSection(key);
                         break;
                     }
                 }
             }
         }
         if (section == null) return null;
-        return new TagDef(id, section.getString("tag", section.getString("text", "")));
+        return new TagDef(id, section.getString("tag", section.getString("text", "")),
+                section.getString("description", cfg("gui.default-description", "&8Description")));
+    }
+
+    private List<String> keys(String path) {
+        ConfigurationSection section = config.getConfigurationSection(path);
+        return section == null ? List.of() : new ArrayList<>(section.getKeys(false));
+    }
+
+    private void registerAll() {
+        for (String name : names()) Perms.ensure("shardedcore.tag." + name);
+        for (String name : limitedNames()) Perms.ensure("shardedcore.tag." + name);
     }
 
     private String selected(UUID uuid) {
@@ -340,13 +408,20 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (args.length == 1) return Tabs.filter(List.of("create", "set", "remove", "clear"), args[0]);
+        if (command.getName().equalsIgnoreCase("tags")) {
+            if (args.length == 1) return Tabs.filter(List.of("limited"), args[0]);
+            if (args.length == 2 && args[0].equalsIgnoreCase("limited")) return Tabs.filter(limitedNames(), args[1]);
+            return List.of();
+        }
+        if (args.length == 1) return Tabs.filter(List.of("create", "set", "remove", "clear", "limited"), args[0]);
         if (args.length == 2 && (args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("remove"))) {
-            return Tabs.filter(names(), args[1]);
+            List<String> all = new ArrayList<>(names());
+            all.addAll(limitedNames());
+            return Tabs.filter(all, args[1]);
         }
         return List.of();
     }
 
-    private record TagDef(String id, String text) {
+    private record TagDef(String id, String text, String description) {
     }
 }

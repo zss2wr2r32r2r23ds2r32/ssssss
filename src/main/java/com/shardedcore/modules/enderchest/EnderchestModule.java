@@ -84,6 +84,16 @@ public final class EnderchestModule extends Module implements CommandExecutor {
         plugin.menus().open(player, menu);
     }
 
+    public void wipe(UUID uuid) {
+        try {
+            sqlite.execute("DELETE FROM enderchest_items WHERE uuid = ?", uuid.toString());
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.WARNING, "Failed to wipe enderchest", ex);
+        }
+        Player player = org.bukkit.Bukkit.getPlayer(uuid);
+        if (player != null) player.getEnderChest().clear();
+    }
+
     private Map<Integer, ItemStack> load(UUID uuid) {
         Map<Integer, ItemStack> items = new HashMap<>();
         try {

@@ -1,0 +1,48 @@
+gui:
+  title: "&8Wipe %player%?"
+  rows: 3
+  filler:
+    enabled: true
+    material: BLACK_STAINED_GLASS_PANE
+    name: " "
+    lore: []
+  head:
+    slot: 13
+    name: "&#FF2727&l%player%"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF2727Information:"
+      - "&#FF2727| &fWipe this player's"
+      - "&#FF2727| &fstats, money, crystals, team,"
+      - "&#FF2727| &fvaults, enderchest, keys and orders."
+  confirm:
+    slot: 11
+    material: LIME_DYE
+    name: "&#9FFF00&lConfirm"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#9FFF00Information:"
+      - "&#9FFF00| &fThis cannot be undone."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Confirm"
+  cancel:
+    slot: 15
+    material: RED_DYE
+    name: "&#FF2727&lCancel"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF2727Information:"
+      - "&#FF2727| &fGo back and cancel."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Cancel"
+
+kick: "&cYou was kicked due to being Wiped."
+
+messages:
+  usage: "&#FF2727&lWIPE &7▷ &f/wipe <player>"
+  wiped: "&#FF2727&lWIPE &7▷ &fWiped &#FF2727%player%&f."
+  unknown-player: "&#FF0000&lERROR &7▷ &fUnknown player &#FF0000%player%&f."
+  no-permission: "&#FF0000&lERROR &7▷ &fYou do not have permission."

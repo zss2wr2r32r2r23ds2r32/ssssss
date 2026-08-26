@@ -18,6 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
@@ -33,6 +34,15 @@ public final class SpawnModule extends Module implements CommandExecutor, Listen
 
     public SpawnModule(ShardedCore plugin) {
         super(plugin, "spawn");
+    }
+
+    public Location location() {
+        return spawn == null ? null : spawn.clone();
+    }
+
+    public void teleportNow(Player player) {
+        if (player == null || spawn == null) return;
+        player.teleportAsync(spawn.clone());
     }
 
     @Override
@@ -119,6 +129,12 @@ public final class SpawnModule extends Module implements CommandExecutor, Listen
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         cancel(event.getPlayer().getUniqueId());
+    }
+
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent event) {
+        if (event.isBedSpawn() || event.isAnchorSpawn()) return;
+        if (spawn != null) event.setRespawnLocation(spawn.clone());
     }
 
     private void loadSpawn() {

@@ -1,4 +1,4 @@
-format: "{prefix}{tag}{name} &8▷ &r{message}"
+format: "{prefix}{name}{tag} &8▷ &r{message}"
 
 # What {prefix}, {suffix}, and {tag} stand for.
 prefix-placeholder: "%luckperms_prefix%"

@@ -1,0 +1,47 @@
+# /glows opens a cosmetics GUI. Effects are pulled from eGlow when it is installed.
+
+gui:
+  title: "&8Glows"
+  rows: 6
+  default-color: "0083FF"
+  default-description: "&8Description"
+  item-material: NAME_TAG
+  item-name: "%color%&l%name% %color%Glow"
+  status-owned: "%color% ☀︎ &fStatus: &#94FF00&nOWNED"
+  status-locked: "%color% ☀︎ &fStatus: &#94FF00&nUNLOCK"
+  click-footer: "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip"
+  lore:
+    - "%color%&l%name% %color%Glow"
+    - "%description%"
+    - ""
+    - "%color%Information:"
+    - "%color%| &fClick to"
+    - "%color%| &fEquip %color%%display%"
+    - ""
+    - "%status%"
+    - ""
+    - "%click%"
+  filler:
+    material: BLACK_STAINED_GLASS_PANE
+    name: " "
+    lore: []
+  previous:
+    slot: 48
+    material: RED_DYE
+    name: "&cPrevious page"
+    lore:
+      - "&7Page %page%"
+  next:
+    slot: 50
+    material: LIME_DYE
+    name: "&aNext page"
+    lore:
+      - "&7Page %page%"
+  extra:
+    enabled: false
+
+messages:
+  set: "&#A370EE&lGLOW &7▷ &fYour glow is now &#A370EE%name%&f."
+  cleared: "&#A370EE&lGLOW &7▷ &fYour glow was cleared."
+  locked: "&#FF0000&lERROR &7▷ &fYou have not unlocked &#A370EE%name%&f."
+  players-only: "&#FF0000&lERROR &7▷ &fOnly a player can use that."

@@ -31,9 +31,9 @@ public final class XpBottlesModule extends Module implements Listener {
         if (!config.getBoolean("convert-merges", true)) return;
         ExperienceOrb target = event.getMergeTarget();
         ExperienceOrb source = event.getMergeSource();
-        int total = target.getExperience() + source.getExperience();
+        int total = xp(target) + xp(source);
         int per = Math.max(1, config.getInt("experience-per-bottle", 7));
-        int min = config.getInt("min-experience", per * config.getInt("min-bottles", 8));
+        int min = config.getInt("min-experience", per * config.getInt("min-bottles", 2));
         if (total < min) return;
         event.setCancelled(true);
         convert(target, total, per);
@@ -45,12 +45,23 @@ public final class XpBottlesModule extends Module implements Listener {
         if (!config.getBoolean("convert-spawns", true)) return;
         if (!(event.getEntity() instanceof ExperienceOrb orb)) return;
         int per = Math.max(1, config.getInt("experience-per-bottle", 7));
-        int min = config.getInt("min-experience", per * config.getInt("min-bottles", 8));
+        int min = config.getInt("min-experience", per * config.getInt("min-bottles", 2));
         org.bukkit.Bukkit.getScheduler().runTask(plugin, () -> {
             if (!orb.isValid()) return;
-            if (orb.getExperience() < min) return;
-            convert(orb, orb.getExperience(), per);
+            int total = xp(orb);
+            if (total < min) return;
+            convert(orb, total, per);
         });
+    }
+
+    private int xp(ExperienceOrb orb) {
+        int experience = Math.max(0, orb.getExperience());
+        int count = 1;
+        try {
+            count = Math.max(1, orb.getCount());
+        } catch (Throwable ignored) {
+        }
+        return Math.max(1, experience) * count;
     }
 
     private void convert(ExperienceOrb orb, int total, int per) {
@@ -65,6 +76,10 @@ public final class XpBottlesModule extends Module implements Listener {
         }
         if (leftover > 0 && config.getBoolean("keep-leftover-orb", true)) {
             orb.setExperience(leftover);
+            try {
+                orb.setCount(1);
+            } catch (Throwable ignored) {
+            }
         } else {
             orb.remove();
         }

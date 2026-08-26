@@ -36,6 +36,9 @@ modules:
   vaults: true
   chatcolor: true
   tags: true
+  glows: true
+  teams: true
+  wipe: true
   crystals: true
   enderchest: true
   fly: true

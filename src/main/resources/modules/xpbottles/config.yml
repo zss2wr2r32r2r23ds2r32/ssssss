@@ -2,7 +2,7 @@
 convert-merges: true
 convert-spawns: true
 experience-per-bottle: 7
-min-bottles: 8
-min-experience: 56
+min-bottles: 2
+min-experience: 14
 max-bottles: 64
 keep-leftover-orb: true

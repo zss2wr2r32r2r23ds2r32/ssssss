@@ -6,7 +6,7 @@ display:
   brightness: 15
   view-distance: 64
   scale: 1.0
-  y-offset: 0.35
+  y-offset: 0.55
   line-gap: 0.28
   line-width: 1000
   text-opacity: 255
@@ -15,8 +15,8 @@ display:
   hide-when-sneaking: true
   hide-when-invisible: true
   hide-own: false
-  # Ride the player so the hologram does not lag behind.
-  ride: true
+  # Keep this off so the hologram sits above the head instead of the body.
+  ride: false
   teleport-duration: 0
 
 disabled-worlds: []
@@ -30,14 +30,14 @@ lines:
     interval: 0
     refresh: 100
     frames:
-      - '%shardedcore_tag%%luckperms_prefix%&f%player_name% %luckperms_suffix%'
+      - '%luckperms_prefix%&f%player_name%%shardedcore_tag% %luckperms_suffix%'
 
   bottom:
     enabled: true
     interval: 80
     refresh: 40
     frames:
-      - '&#80ee0b&l$&r &#80ee0b%shardedcore_money_formatted% &7| &#F47714⚑ &#F47714%lifestealcore_team% &7| &#0AACE6☀ &#0AACE6%shards_value_formatted%'
+      - '&#80ee0b&l$&r &#80ee0b%shardedcore_money_formatted% &7| &#F47714⚑ &#F47714%shardedcore_team% &7| &#0AACE6☀ &#0AACE6%shards_value_formatted%'
       - '&#FF0000🗡 &#FF0000%statistic_player_kills% &7| &#FB7B0B☠ &#FB7B0B%statistic_deaths% &7| &#FFF300⌛ &#FFF300%statistic_time_played%'
 
 messages:

@@ -26,6 +26,40 @@ sounds:
     volume: 1.0
     pitch: 0.8
 
+confirm:
+  title: "&8Confirm Purchase"
+  rows: 3
+  item-slot: 13
+  filler:
+    enabled: true
+    material: BLACK_STAINED_GLASS_PANE
+    name: " "
+    lore: []
+  confirm:
+    slot: 11
+    material: LIME_DYE
+    name: "&#9FFF00&lConfirm"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#9FFF00Information:"
+      - "&#9FFF00| &fBuy %item%"
+      - "&#9FFF00| &ffor &#9FFF00%price% &fcrystals."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Confirm"
+  cancel:
+    slot: 15
+    material: RED_DYE
+    name: "&#FF2727&lCancel"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF2727Information:"
+      - "&#FF2727| &fGo back and cancel"
+      - "&#FF2727| &fthis purchase."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Cancel"
+
 messages:
   self: "&#A370EE&lCRYSTALS &7▷ &fYou have &#A370EE%amount% &fcrystals."
   other: "&#A370EE&lCRYSTALS &7▷ &#A370EE%player% &fhas &#A370EE%amount% &fcrystals."

@@ -155,9 +155,25 @@ entries:
     name: "&#FF0072&lFAST CRYSTAL"
     description: "Toggle Fast Crystal"
 
-# Prefix used by /chattoggle, /mobtoggle, and the other toggle commands.
-# The GUI still uses the messages below, including LIVE / DEATH / MONEY / COINFLIP.
+# Prefix used by toggle commands. The GUI still uses messages.* below.
 command-prefix: "&#FF0072&lSETTINGS &7▷"
+command-prefixes:
+  chat: "&#FF0072&lCHAT &7▷"
+  msg: "&#FF0072&lMSG &7▷"
+  live: "&#FF256E&lLIVE &7▷"
+  tpa: "&#FF0072&lTPA &7▷"
+  tpahere: "&#FF0072&lTPAHERE &7▷"
+  join: "&#FF0072&lJOIN &7▷"
+  mobs: "&#FF0072&lMOBS &7▷"
+  death: "&#FF256E&lDEATH &7▷"
+  pay: "&#94FF00&lMONEY &7▷"
+  nv: "&#FF0072&lNV &7▷"
+  orders: "&#FF0072&lORDERS &7▷"
+  bossbar: "&#FF0072&lBOSSBAR &7▷"
+  scoreboard: "&#FF0072&lSCOREBOARD &7▷"
+  tpauto: "&#FF0072&lTPAUTO &7▷"
+  cf: "&#FFE925&lCOINFLIP &7▷"
+  crystal: "&#FF0072&lCRYSTAL &7▷"
 command-messages:
   chat-on: "%prefix% &fPublic chat is now shown."
   chat-off: "%prefix% &fPublic chat is now hidden."

@@ -128,14 +128,28 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
             if (text == null || text.isBlank()) {
                 text = config.getString("messages." + messageKey + suffix, "");
             }
-            sendRaw(player, Text.apply(text, "prefix", cfg("command-prefix", "&#FF0072&lSETTINGS &7▷")));
+            sendRaw(player, Text.apply(text, "prefix", commandPrefix(messageKey)));
         } else {
             send(player, "messages." + messageKey + suffix);
         }
         if (key.equals(NV)) applyNightVision(player);
-        if (key.equals(BOSSBAR)) player.performCommand("tab bossbar toggle");
-        if (key.equals(SCOREBOARD)) player.performCommand("tab scoreboard toggle");
+        syncTab(player, key, next);
         return next;
+    }
+
+    private String commandPrefix(String messageKey) {
+        String specific = config.getString("command-prefixes." + messageKey, "");
+        if (specific != null && !specific.isBlank()) return specific;
+        return cfg("command-prefix", "&#FF0072&lSETTINGS &7▷");
+    }
+
+    private void syncTab(Player player, String key, boolean on) {
+        if (key.equals(BOSSBAR)) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab bossbar " + (on ? "on" : "off") + " " + player.getName());
+        }
+        if (key.equals(SCOREBOARD)) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab scoreboard " + (on ? "on" : "off") + " " + player.getName());
+        }
     }
 
     @Override
@@ -370,7 +384,19 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        applyNightVision(event.getPlayer());
+        Player player = event.getPlayer();
+        applyNightVision(player);
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (!player.isOnline()) return;
+            if (on(player, BOSSBAR)) {
+                syncTab(player, BOSSBAR, true);
+                send(player, "messages.bossbar-on");
+            }
+            if (on(player, SCOREBOARD)) {
+                syncTab(player, SCOREBOARD, true);
+                send(player, "messages.scoreboard-on");
+            }
+        }, 20L);
     }
 
     @EventHandler

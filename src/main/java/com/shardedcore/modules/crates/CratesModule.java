@@ -587,6 +587,17 @@ public final class CratesModule extends Module implements CommandExecutor, TabCo
         keys.remove(uuid);
     }
 
+    public void wipe(UUID uuid) {
+        keys.remove(uuid);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                sqlite.execute("DELETE FROM crate_keys WHERE uuid = ?", uuid.toString());
+            } catch (SQLException ex) {
+                plugin.getLogger().log(Level.WARNING, "Failed to wipe crate keys", ex);
+            }
+        });
+    }
+
     public int keys(UUID uuid, String crateId) {
         return keyMap(uuid).getOrDefault(crateId.toLowerCase(Locale.ROOT), 0);
     }

@@ -94,7 +94,7 @@ public final class TpaModule extends Module implements CommandExecutor, TabCompl
                 send(player, "messages.disabled");
                 return true;
             }
-            if (settings.tpAuto(target)) {
+            if (settings.tpAuto(target) && !here) {
                 sendNow(player, target, here);
                 return true;
             }

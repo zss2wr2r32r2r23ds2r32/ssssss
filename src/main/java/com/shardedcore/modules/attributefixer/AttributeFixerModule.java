@@ -2,6 +2,8 @@ package com.shardedcore.modules.attributefixer;
 
 import com.shardedcore.ShardedCore;
 import com.shardedcore.module.Module;
+import io.papermc.paper.datacomponent.DataComponentTypes;
+import io.papermc.paper.datacomponent.item.ItemAttributeModifiers;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -11,8 +13,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -57,6 +63,29 @@ public final class AttributeFixerModule extends Module implements Listener {
     }
 
     @EventHandler
+    public void onDrag(InventoryDragEvent event) {
+        if (!config.getBoolean("fix-on-click", true)) return;
+        if (!(event.getWhoClicked() instanceof Player player)) return;
+        Bukkit.getScheduler().runTask(plugin, () -> fixPlayer(player));
+    }
+
+    @EventHandler
+    public void onSwap(PlayerSwapHandItemsEvent event) {
+        if (!config.getBoolean("fix-on-click", true)) return;
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            fix(event.getMainHandItem());
+            fix(event.getOffHandItem());
+            fixPlayer(event.getPlayer());
+        });
+    }
+
+    @EventHandler
+    public void onHeld(PlayerItemHeldEvent event) {
+        if (!config.getBoolean("fix-on-click", true)) return;
+        Bukkit.getScheduler().runTask(plugin, () -> fixPlayer(event.getPlayer()));
+    }
+
+    @EventHandler
     public void onPickup(EntityPickupItemEvent event) {
         if (!config.getBoolean("fix-on-pickup", true)) return;
         if (!(event.getEntity() instanceof Player)) return;
@@ -71,13 +100,53 @@ public final class AttributeFixerModule extends Module implements Listener {
 
     private void fix(ItemStack item) {
         if (item == null || item.getType().isAir()) return;
+        boolean resetAll = config.getBoolean("reset-all-custom", false);
+        if (fixComponents(item, resetAll)) return;
         ItemMeta meta = item.getItemMeta();
         if (meta == null || !meta.hasAttributeModifiers()) return;
-        if (!swapped(item.getType(), meta)) {
-            if (!config.getBoolean("reset-all-custom", false)) return;
-        }
+        if (!swapped(item.getType(), meta) && !resetAll) return;
         meta.setAttributeModifiers(null);
         item.setItemMeta(meta);
+    }
+
+    private boolean fixComponents(ItemStack item, boolean resetAll) {
+        try {
+            if (!item.hasData(DataComponentTypes.ATTRIBUTE_MODIFIERS)) return false;
+            ItemAttributeModifiers modifiers = item.getData(DataComponentTypes.ATTRIBUTE_MODIFIERS);
+            if (modifiers == null) return false;
+            if (!resetAll && !swapped(item.getType(), modifiers)) return true;
+            item.resetData(DataComponentTypes.ATTRIBUTE_MODIFIERS);
+            return true;
+        } catch (Throwable ignored) {
+            return false;
+        }
+    }
+
+    private boolean swapped(Material material, ItemAttributeModifiers modifiers) {
+        EquipmentSlot expected = slotOf(material);
+        for (ItemAttributeModifiers.Entry entry : modifiers.modifiers()) {
+            EquipmentSlotGroup group = entry.getGroup();
+            if (group == null || group == EquipmentSlotGroup.ANY) continue;
+            if (expected == EquipmentSlot.HAND) {
+                if (group == EquipmentSlotGroup.HEAD || group == EquipmentSlotGroup.CHEST
+                        || group == EquipmentSlotGroup.LEGS || group == EquipmentSlotGroup.FEET
+                        || group == EquipmentSlotGroup.ARMOR) return true;
+            } else if (!matches(expected, group)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean matches(EquipmentSlot expected, EquipmentSlotGroup group) {
+        if (group == EquipmentSlotGroup.ANY || group == EquipmentSlotGroup.HAND) return true;
+        return switch (expected) {
+            case HEAD -> group == EquipmentSlotGroup.HEAD || group == EquipmentSlotGroup.ARMOR;
+            case CHEST -> group == EquipmentSlotGroup.CHEST || group == EquipmentSlotGroup.ARMOR;
+            case LEGS -> group == EquipmentSlotGroup.LEGS || group == EquipmentSlotGroup.ARMOR;
+            case FEET -> group == EquipmentSlotGroup.FEET || group == EquipmentSlotGroup.ARMOR;
+            default -> true;
+        };
     }
 
     private boolean swapped(Material material, ItemMeta meta) {

@@ -195,7 +195,7 @@ public final class CrystalsModule extends Module implements CommandExecutor, Tab
                         "price", service.format(item.getDouble("price", 0)),
                         "crystals", service.format(service.get(player.getUniqueId()))), event -> {
                     event.setCancelled(true);
-                    buy(player, sectionId, id, item);
+                    openConfirm(player, sectionId, id, item);
                 });
             }
         }
@@ -209,6 +209,45 @@ public final class CrystalsModule extends Module implements CommandExecutor, Tab
         if (section.getBoolean("filler.enabled", config.getBoolean("menu.filler.enabled", true))) {
             ConfigurationSection filler = section.getConfigurationSection("filler");
             if (filler == null) filler = config.getConfigurationSection("menu.filler");
+            menu.fill(filler == null
+                    ? Items.named(Material.BLACK_STAINED_GLASS_PANE, " ", List.of())
+                    : Items.fromSection(filler, player));
+        }
+        plugin.menus().open(player, menu);
+    }
+
+    private void openConfirm(Player player, String sectionId, String itemId, ConfigurationSection item) {
+        ConfigurationSection confirm = config.getConfigurationSection("confirm");
+        int rows = confirm == null ? 3 : confirm.getInt("rows", 3);
+        Menus.Menu menu = plugin.menus().create(player,
+                confirm == null ? "&8Confirm Purchase" : confirm.getString("title", "&8Confirm Purchase"), rows);
+        String name = item.getString("name", itemId);
+        String price = service.format(item.getDouble("price", 0));
+        int itemSlot = confirm == null ? 13 : confirm.getInt("item-slot", 13);
+        menu.set(itemSlot, Items.fromSection(item, player, "price", price,
+                "crystals", service.format(service.get(player.getUniqueId()))));
+        ConfigurationSection yes = confirm == null ? null : confirm.getConfigurationSection("confirm");
+        ConfigurationSection no = confirm == null ? null : confirm.getConfigurationSection("cancel");
+        menu.set(yes == null ? 11 : yes.getInt("slot", 11),
+                yes == null ? Items.named(Material.LIME_DYE, "&#9FFF00&lConfirm", List.of(
+                        "&8Description", "", "&#9FFF00Information:", "&#9FFF00| &fBuy this item.", "",
+                        cfg("confirm.click-confirm", "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Confirm")))
+                        : Items.fromSection(yes, player, "item", name, "price", price),
+                event -> {
+                    event.setCancelled(true);
+                    buy(player, sectionId, itemId, item);
+                });
+        menu.set(no == null ? 15 : no.getInt("slot", 15),
+                no == null ? Items.named(Material.RED_DYE, "&#FF2727&lCancel", List.of(
+                        "&8Description", "", "&#FF2727Information:", "&#FF2727| &fGo back.", "",
+                        cfg("confirm.click-cancel", "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Cancel")))
+                        : Items.fromSection(no, player, "item", name, "price", price),
+                event -> {
+                    event.setCancelled(true);
+                    openSection(player, sectionId);
+                });
+        if (confirm == null || confirm.getBoolean("filler.enabled", true)) {
+            ConfigurationSection filler = confirm == null ? null : confirm.getConfigurationSection("filler");
             menu.fill(filler == null
                     ? Items.named(Material.BLACK_STAINED_GLASS_PANE, " ", List.of())
                     : Items.fromSection(filler, player));

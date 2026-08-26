@@ -106,7 +106,7 @@ public final class VaultsModule extends Module implements CommandExecutor, TabCo
             }
             int number = args.length > offset + 1 ? parseNumber(args[offset + 1]) : 0;
             if (number > 0) openVault(player, target, number, true);
-            else openMenu(player, target, true);
+            else openMenu(player, target, true, 0);
             return true;
         }
         if (args.length == 1) {
@@ -116,27 +116,33 @@ public final class VaultsModule extends Module implements CommandExecutor, TabCo
                 return true;
             }
         }
-        openMenu(player, player, false);
+        openMenu(player, player, false, 0);
         return true;
     }
 
-    private void openMenu(Player viewer, OfflinePlayer owner, boolean admin) {
+    private void openMenu(Player viewer, OfflinePlayer owner, boolean admin, int page) {
         int max = Math.max(1, Math.min(45, config.getInt("vaults", 45)));
-        List<Integer> slots = Slots.parse(config.getString("menu.vault-slots", "0-44"));
-        String title = admin
-                ? Text.apply(cfg("menu.admin-title", "&8Private Vaults | %player%"), "player", Players.name(owner))
-                : cfg("menu.title", "&8Private Vaults");
-        Menus.Menu menu = plugin.menus().create(viewer, title, config.getInt("menu.rows", 6));
-        int unlocked = unlockedCount(owner instanceof Player player ? player : null, owner.getUniqueId(), admin);
+        if (admin) {
+            openAdminMenu(viewer, owner, max);
+            return;
+        }
+        List<Integer> slots = Slots.parse(config.getString("menu.vault-slots", "0-17"));
+        int per = Math.max(1, slots.size());
+        int pages = Math.max(1, (max + per - 1) / per);
+        int current = Math.max(0, Math.min(page, pages - 1));
+        String title = cfg("menu.title", "&8Private Vaults");
+        Menus.Menu menu = plugin.menus().create(viewer, title, config.getInt("menu.rows", 3));
+        int unlocked = unlockedCount(viewer, owner.getUniqueId(), false);
         Map<Integer, Integer> used = usedSlots(owner.getUniqueId());
         int vaultRows = config.getInt("vault.rows", 6);
         int capacity = vaultRows * 9;
-        for (int i = 0; i < max && i < slots.size(); i++) {
-            int number = i + 1;
+        int start = current * per;
+        for (int i = 0; i < per && start + i < max; i++) {
+            int number = start + i + 1;
             int slot = slots.get(i);
-            boolean open = admin || number <= unlocked;
+            boolean open = number <= unlocked;
             ConfigurationSection icon = config.getConfigurationSection(open ? "menu.unlocked" : "menu.locked");
-            ItemStack stack = Items.fromSection(icon, viewer instanceof Player ? viewer : null,
+            ItemStack stack = Items.fromSection(icon, viewer,
                     "number", String.valueOf(number),
                     "used", String.valueOf(used.getOrDefault(number, 0)),
                     "max", String.valueOf(capacity),
@@ -148,12 +154,76 @@ public final class VaultsModule extends Module implements CommandExecutor, TabCo
                     sound(viewer, "sounds.error");
                     return;
                 }
-                openVault(viewer, owner, number, admin);
+                openVault(viewer, owner, number, false);
+            });
+        }
+        ItemStack glass = Items.fromSection(config.getConfigurationSection("menu.filler"), viewer);
+        int size = menu.inventory().getSize();
+        int bottom = size - 9;
+        for (int slot = bottom; slot < size; slot++) {
+            menu.set(slot, glass);
+        }
+        ConfigurationSection close = config.getConfigurationSection("menu.close");
+        if (close != null && close.getBoolean("enabled", true)) {
+            menu.set(close.getInt("slot", 22), Items.fromSection(close, viewer), event -> {
+                event.setCancelled(true);
+                viewer.closeInventory();
+            });
+        }
+        if (current > 0) {
+            ConfigurationSection prev = config.getConfigurationSection("menu.previous");
+            menu.set(prev == null ? 19 : prev.getInt("slot", 19),
+                    prev == null
+                            ? Items.named(Material.RED_DYE, cfg("menu.previous.name", "&ePrevious page"), List.of())
+                            : Items.fromSection(prev, viewer, "page", String.valueOf(current)),
+                    event -> {
+                        event.setCancelled(true);
+                        openMenu(viewer, owner, false, current - 1);
+                    });
+        }
+        if (current + 1 < pages) {
+            ConfigurationSection next = config.getConfigurationSection("menu.next");
+            menu.set(next == null ? 25 : next.getInt("slot", 25),
+                    next == null
+                            ? Items.named(Material.LIME_DYE, cfg("menu.next.name", "&eNext page"), List.of())
+                            : Items.fromSection(next, viewer, "page", String.valueOf(current + 2)),
+                    event -> {
+                        event.setCancelled(true);
+                        openMenu(viewer, owner, false, current + 1);
+                    });
+        }
+        if (config.getBoolean("menu.filler.enabled", true)) {
+            menu.fill(glass);
+        }
+        plugin.menus().open(viewer, menu);
+        sound(viewer, "sounds.open");
+    }
+
+    private void openAdminMenu(Player viewer, OfflinePlayer owner, int max) {
+        List<Integer> slots = Slots.parse(config.getString("menu.admin-vault-slots",
+                config.getString("menu.vault-slots-admin", "0-44")));
+        String title = Text.apply(cfg("menu.admin-title", "&8Private Vaults | %player%"), "player", Players.name(owner));
+        Menus.Menu menu = plugin.menus().create(viewer, title, config.getInt("menu.admin-rows", 6));
+        Map<Integer, Integer> used = usedSlots(owner.getUniqueId());
+        int vaultRows = config.getInt("vault.rows", 6);
+        int capacity = vaultRows * 9;
+        for (int i = 0; i < max && i < slots.size(); i++) {
+            int number = i + 1;
+            int slot = slots.get(i);
+            ConfigurationSection icon = config.getConfigurationSection("menu.unlocked");
+            ItemStack stack = Items.fromSection(icon, viewer,
+                    "number", String.valueOf(number),
+                    "used", String.valueOf(used.getOrDefault(number, 0)),
+                    "max", String.valueOf(capacity),
+                    "player", Players.name(owner));
+            menu.set(slot, stack, event -> {
+                event.setCancelled(true);
+                openVault(viewer, owner, number, true);
             });
         }
         ConfigurationSection close = config.getConfigurationSection("menu.close");
         if (close != null && close.getBoolean("enabled", true)) {
-            menu.set(close.getInt("slot", 49), Items.fromSection(close, viewer), event -> {
+            menu.set(config.getInt("menu.admin-close-slot", close.getInt("slot", 49)), Items.fromSection(close, viewer), event -> {
                 event.setCancelled(true);
                 viewer.closeInventory();
             });
@@ -163,6 +233,16 @@ public final class VaultsModule extends Module implements CommandExecutor, TabCo
         }
         plugin.menus().open(viewer, menu);
         sound(viewer, "sounds.open");
+    }
+
+    public void wipe(UUID uuid) {
+        if (uuid == null) return;
+        inUse.keySet().removeIf(key -> key.startsWith(uuid + ":"));
+        try {
+            sqlite.execute("DELETE FROM vault_items WHERE uuid = ?", uuid.toString());
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.WARNING, "Failed to wipe vaults", ex);
+        }
     }
 
     private void openVault(Player viewer, OfflinePlayer owner, int number, boolean admin) {

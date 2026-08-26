@@ -146,8 +146,14 @@ public final class Menus implements Listener {
         }
 
         public Menu fill(ItemStack item) {
+            return fillExcept(item, Set.of());
+        }
+
+        public Menu fillExcept(ItemStack item, Collection<Integer> skip) {
             ItemStack filler = item == null ? null : Items.hideBundleBits(item.clone());
+            Set<Integer> ignored = skip == null ? Set.of() : new HashSet<>(skip);
             for (int i = 0; i < inventory.getSize(); i++) {
+                if (ignored.contains(i)) continue;
                 if (inventory.getItem(i) == null) inventory.setItem(i, filler);
             }
             return this;

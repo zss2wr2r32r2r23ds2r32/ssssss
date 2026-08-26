@@ -76,6 +76,29 @@ public final class ColorUtil {
         return SHORT_HEX.matcher(input).replaceAll("&$1");
     }
 
+    public static String strip(String input) {
+        if (input == null || input.isEmpty()) return "";
+        return normalize(input)
+                .replaceAll("(?i)&#[0-9a-f]{6}", "")
+                .replaceAll("(?i)&x(?:&[0-9a-f]){6}", "")
+                .replaceAll("(?i)&[0-9a-fk-or]", "");
+    }
+
+    public static String firstHex(String input, String fallback) {
+        if (input != null && !input.isEmpty()) {
+            String normalized = normalize(input);
+            Matcher matcher = FULL_HEX.matcher(normalized);
+            if (matcher.find()) return matcher.group(1).toUpperCase(Locale.ROOT);
+        }
+        String value = hex(fallback);
+        return value.isEmpty() ? "0083FF" : value;
+    }
+
+    public static String colorCode(String hexCode) {
+        String value = hex(hexCode);
+        return value.isEmpty() ? "&#0083FF" : "&#" + value;
+    }
+
     public static String hex(String raw) {
         if (raw == null) return "";
         String value = raw.trim().replace("#", "").replace("&", "");

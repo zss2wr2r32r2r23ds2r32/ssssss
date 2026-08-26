@@ -118,11 +118,6 @@ public final class Items {
 
     public static ItemStack hideBundleBits(ItemStack item) {
         if (item == null || item.getType().isAir()) return item;
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.addItemFlags(ItemFlag.values());
-            item.setItemMeta(meta);
-        }
         try {
             Class<?> types = Class.forName("io.papermc.paper.datacomponent.DataComponentTypes");
             Object bundle = types.getField("BUNDLE_CONTENTS").get(null);

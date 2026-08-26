@@ -4,7 +4,7 @@ main: com.shardedcore.ShardedCore
 api-version: '1.21'
 authors: [ShardedMC]
 description: Modular ShardedMC core
-softdepend: [LuckPerms, PlaceholderAPI, TAB, WorldGuard]
+softdepend: [LuckPerms, PlaceholderAPI, TAB, WorldGuard, eGlow]
 
 commands:
   shardedcore:
@@ -265,8 +265,22 @@ commands:
     permission: shardedcore.chatcolor.admin
   tag:
     description: Custom chat tags
-    aliases: [chattag, tags]
+    aliases: [chattag]
     permission: shardedcore.tag
+  tags:
+    description: Tags GUI
+    permission: shardedcore.tag
+  glows:
+    description: Glow cosmetics GUI
+    aliases: [glow]
+    permission: shardedcore.glow
+  team:
+    description: Teams
+    aliases: [teams]
+    permission: shardedcore.team
+  wipe:
+    description: Wipe a player
+    permission: shardedcore.wipe
   ec:
     description: Ender chest
     aliases: [enderchest, echest]
@@ -585,6 +599,86 @@ permissions:
     default: op
   shardedcore.crystal.shop:
     default: true
+  shardedcore.glow:
+    default: true
+  shardedcore.glow.admin:
+    default: op
+  shardedcore.team:
+    default: true
+  shardedcore.wipe:
+    default: op
+  shardedcore.commands.listed:
+    default: true
+    description: See the command whitelist
+  shardedcore.group.default:
+    default: true
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.booster:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.prism:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.crystal:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.amethyst:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.sharded:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.shardedplus:
+    default: false
+    description: sharded+
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.helper:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.srhelper:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.mod:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.srmod:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.admin:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.sradmin:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.dev:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.manager:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.director:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.owner:
+    default: false
+    children:
+      shardedcore.commands.listed: true
   shardedcore.leave:
     default: true
   shardedcore.internal.disabled:

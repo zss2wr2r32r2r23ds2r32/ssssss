@@ -36,7 +36,7 @@ tools:
   firework:
     material: FIREWORK_ROCKET
     name: "&#A370EE&lSHARDED FIREWORK"
-    expire: 7d
+    expire: infinite
     amount: 1
     unbreakable: false
     hide-enchants: false

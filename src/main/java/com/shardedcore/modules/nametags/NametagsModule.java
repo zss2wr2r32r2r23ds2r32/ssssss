@@ -175,9 +175,9 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
             entity.setViewRange(viewRange);
             entity.setInterpolationDuration(0);
             entity.setInterpolationDelay(0);
-            int teleport = config.getBoolean("display.ride", true)
+            int teleport = config.getBoolean("display.ride", false)
                     ? 0
-                    : Math.max(0, config.getInt("display.teleport-duration", 1));
+                    : Math.max(0, config.getInt("display.teleport-duration", 0));
             entity.setTeleportDuration(teleport);
             entity.setTransformation(new Transformation(
                     offset(player, top), new Quaternionf(), new Vector3f(scale, scale, scale), new Quaternionf()));
@@ -188,7 +188,7 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
         } else {
             player.showEntity(plugin, display);
         }
-        if (config.getBoolean("display.ride", true)) {
+        if (config.getBoolean("display.ride", false)) {
             player.addPassenger(display);
         }
         return display;
@@ -220,7 +220,7 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
             return;
         }
         display.setInvisible(hide);
-        if (config.getBoolean("display.ride", true)) {
+        if (config.getBoolean("display.ride", false)) {
             if (display.getVehicle() != player) player.addPassenger(display);
             if (heightChanged) {
                 display.setTransformation(new Transformation(
@@ -313,8 +313,9 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
                     .replace("%shardedcore_crystal_formatted%", formatted)
                     .replace("%shardedcore_crystals_formatted%", formatted);
         }
-        if (out.contains("%lifestealcore_team%")) {
-            out = out.replace("%lifestealcore_team%", "None");
+        if (out.contains("%lifestealcore_team%") || out.contains("%shardedcore_team%")) {
+            String team = teamName(player);
+            out = out.replace("%lifestealcore_team%", team).replace("%shardedcore_team%", team);
         }
         if (out.contains("%shards_value_formatted%")) {
             out = out.replace("%shards_value_formatted%", "0");
@@ -343,6 +344,18 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
             out = out.replace("%luckperms_prefix%", prefix).replace("%luckperms_suffix%", suffix);
         }
         return out;
+    }
+
+    private String teamName(Player player) {
+        try {
+            var teams = plugin.modules().get(com.shardedcore.modules.teams.TeamsModule.class);
+            if (teams != null) {
+                String name = teams.placeholder(player);
+                if (name != null && !name.isBlank()) return name;
+            }
+        } catch (Throwable ignored) {
+        }
+        return "N/A";
     }
 
     private String playtime(Player player) {

@@ -120,6 +120,16 @@ public final class OrdersModule extends Module implements CommandExecutor, TabCo
         cleanup();
     }
 
+    public void wipe(UUID uuid) {
+        if (uuid == null) return;
+        try {
+            sqlite.execute("DELETE FROM orders WHERE owner = ?", uuid.toString());
+            sqlite.execute("DELETE FROM order_stats WHERE uuid = ?", uuid.toString());
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.WARNING, "Failed to wipe orders", ex);
+        }
+    }
+
     @Override
     public void reload() {
         super.reload();

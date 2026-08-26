@@ -2,9 +2,11 @@ package com.shardedcore.modules.chatcolor;
 
 import com.shardedcore.ShardedCore;
 import com.shardedcore.database.Sqlite;
+import com.shardedcore.gui.CosmeticsMenus;
 import com.shardedcore.module.Module;
 import com.shardedcore.util.ColorUtil;
 import com.shardedcore.util.Configs;
+import com.shardedcore.util.Perms;
 import com.shardedcore.util.Tabs;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -62,6 +64,7 @@ public final class ChatColorModule extends Module implements CommandExecutor, Ta
         registerCommand("chatcolor", this);
         registerCommand("chatcolorgradient", this);
         registerListener(this);
+        registerAll();
     }
 
     @Override
@@ -150,7 +153,11 @@ public final class ChatColorModule extends Module implements CommandExecutor, Ta
                     : prepend(args, "create"));
         }
         if (args.length == 0) {
-            send(sender, "usage");
+            if (!(sender instanceof Player player)) {
+                send(sender, "players-only");
+                return true;
+            }
+            openGui(player, 0);
             return true;
         }
         return switch (args[0].toLowerCase(Locale.ROOT)) {
@@ -181,6 +188,7 @@ public final class ChatColorModule extends Module implements CommandExecutor, Ta
         config.set("colors." + name + ".type", "solid");
         config.set("colors." + name + ".hex", hex);
         Configs.save(config, new File(folder, "config.yml"));
+        Perms.ensure("shardedcore.chatcolor." + name);
         send(sender, "created", "color", name, "hex", "#" + hex);
         return true;
     }
@@ -213,6 +221,7 @@ public final class ChatColorModule extends Module implements CommandExecutor, Ta
         config.set("colors." + name + ".hex", hex1);
         config.set("colors." + name + ".hex2", hex2);
         Configs.save(config, new File(folder, "config.yml"));
+        Perms.ensure("shardedcore.chatcolor." + name);
         send(sender, "created-gradient", "color", name, "from", "#" + hex1, "to", "#" + hex2);
         return true;
     }
@@ -280,10 +289,51 @@ public final class ChatColorModule extends Module implements CommandExecutor, Ta
         return false;
     }
 
-    private boolean canUse(Player player, String name) {
+    public boolean canUse(Player player, String name) {
         if (player.hasPermission("shardedcore.chatcolor.admin")) return true;
         if (player.hasPermission("shardedcore.chatcolor." + name)) return true;
         return unlocked(player.getUniqueId()).contains(name.toLowerCase(Locale.ROOT));
+    }
+
+    public void wipe(UUID uuid) {
+        selected.remove(uuid);
+        unlocked.remove(uuid);
+        try {
+            sqlite.execute("DELETE FROM chatcolor_selected WHERE uuid = ?", uuid.toString());
+            sqlite.execute("DELETE FROM chatcolor_unlocks WHERE uuid = ?", uuid.toString());
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.WARNING, "Failed to wipe chatcolor", ex);
+        }
+    }
+
+    private void openGui(Player player, int page) {
+        List<CosmeticsMenus.Entry> entries = new ArrayList<>();
+        for (String id : names()) {
+            ColorDef def = definition(id);
+            if (def == null) continue;
+            String color = ColorUtil.colorCode(def.hex == null || def.hex.isBlank() ? "0083FF" : def.hex);
+            String title = CosmeticsMenus.pretty(def.id).toUpperCase(Locale.ROOT);
+            String display = title + " Colour";
+            entries.add(new CosmeticsMenus.Entry(def.id, title, display,
+                    cfg("gui.default-description", "&8Description"), color, canUse(player, def.id)));
+        }
+        CosmeticsMenus.open(plugin, player, config, cfg("gui.title", "&8Chat Colors"),
+                entries, page, "Colour", false,
+                next -> openGui(player, next),
+                null,
+                entry -> {
+                    if (!canUse(player, entry.id())) {
+                        send(player, "locked", "color", entry.id());
+                        return;
+                    }
+                    apply(player.getUniqueId(), entry.id());
+                    send(player, "set", "color", displayName(definition(entry.id())));
+                    openGui(player, page);
+                });
+    }
+
+    private void registerAll() {
+        for (String name : names()) Perms.ensure("shardedcore.chatcolor." + name);
     }
 
     private ColorDef definition(String name) {

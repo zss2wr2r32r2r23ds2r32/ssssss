@@ -191,9 +191,13 @@ public final class ShardedToolsModule extends Module implements CommandExecutor,
             return;
         }
         event.setShouldConsume(false);
+        Player player = event.getPlayer();
+        ItemStack clone = item.clone();
+        clone.setAmount(Math.max(1, config.getInt("tools.firework.amount", 1)));
+        Bukkit.getScheduler().runTask(plugin, () -> restoreFirework(player, clone));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onInteract(PlayerInteractEvent event) {
         if (event.getHand() != EquipmentSlot.HAND && event.getHand() != EquipmentSlot.OFF_HAND) return;
         ItemStack item = event.getItem();
@@ -203,15 +207,34 @@ public final class ShardedToolsModule extends Module implements CommandExecutor,
             event.setCancelled(true);
             return;
         }
-        Bukkit.getScheduler().runTask(plugin, () -> refillFirework(event.getPlayer(), event.getHand()));
+        ItemStack clone = item.clone();
+        clone.setAmount(Math.max(1, config.getInt("tools.firework.amount", 1)));
+        Bukkit.getScheduler().runTask(plugin, () -> restoreFirework(event.getPlayer(), clone));
+    }
+
+    private void restoreFirework(Player player, ItemStack clone) {
+        boolean found = false;
+        ItemStack[] contents = player.getInventory().getContents();
+        for (int i = 0; i < contents.length; i++) {
+            ItemStack held = contents[i];
+            if (isTool(held, "firework")) {
+                held.setAmount(Math.max(1, config.getInt("tools.firework.amount", 1)));
+                found = true;
+            }
+        }
+        ItemStack off = player.getInventory().getItemInOffHand();
+        if (isTool(off, "firework")) {
+            off.setAmount(Math.max(1, config.getInt("tools.firework.amount", 1)));
+            found = true;
+        }
+        if (!found && clone != null) {
+            player.getInventory().addItem(clone).values()
+                    .forEach(left -> player.getWorld().dropItemNaturally(player.getLocation(), left));
+        }
     }
 
     private void refillFirework(Player player, EquipmentSlot slot) {
-        ItemStack item = slot == EquipmentSlot.OFF_HAND
-                ? player.getInventory().getItemInOffHand()
-                : player.getInventory().getItemInMainHand();
-        if (!isTool(item, "firework")) return;
-        item.setAmount(Math.max(1, config.getInt("tools.firework.amount", 1)));
+        restoreFirework(player, null);
     }
 
     private void drill(Player player, Block origin, ItemStack item) {
@@ -375,6 +398,10 @@ public final class ShardedToolsModule extends Module implements CommandExecutor,
 
     private long expireAt(String configured, String override) {
         String raw = override == null || override.isBlank() ? configured : override;
+        if (raw == null || raw.isBlank() || raw.equalsIgnoreCase("infinite")
+                || raw.equalsIgnoreCase("never") || raw.equals("0")) {
+            return 0L;
+        }
         long duration = Amounts.durationMillis(raw);
         return duration <= 0 ? 0L : System.currentTimeMillis() + duration;
     }

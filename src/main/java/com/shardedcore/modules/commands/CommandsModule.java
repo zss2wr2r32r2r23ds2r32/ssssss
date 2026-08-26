@@ -190,7 +190,7 @@ public final class CommandsModule extends Module implements CommandExecutor, Lis
         if (allow.isEmpty()) return;
         event.getCommands().removeIf(command -> {
             String name = command.toLowerCase(Locale.ROOT);
-            if (name.contains(":")) name = name.substring(name.indexOf(':') + 1);
+            if (name.contains(":")) return true;
             return !allow.contains(name);
         });
     }

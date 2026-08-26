@@ -286,7 +286,7 @@ public final class GiveawayModule extends Module implements CommandExecutor, Tab
         Menus.Menu gui = plugin.menus().create(player, menu.getString("title", "&8Public Giveaways"), 6)
                 .editableSlots(area);
         renderCreateButtons(player, gui, area);
-        fill(gui);
+        fill(gui, area);
         gui.onClose(closed -> {
             if (closed.hasMetadata("shardedcore-giveaway-starting")) {
                 closed.removeMetadata("shardedcore-giveaway-starting", plugin);
@@ -686,7 +686,18 @@ public final class GiveawayModule extends Module implements CommandExecutor, Tab
     }
 
     private void fill(Menus.Menu gui) {
-        gui.fill(Items.fromSection(menu.getConfigurationSection("filler"), null));
+        fill(gui, List.of());
+    }
+
+    private void fill(Menus.Menu gui, List<Integer> skip) {
+        gui.fillExcept(Items.fromSection(menu.getConfigurationSection("filler"), null), skip);
+    }
+
+    private boolean filler(ItemStack item) {
+        if (item == null || item.getType().isAir()) return true;
+        Material material = Sounds.material(menu.getString("filler.material", "BLACK_STAINED_GLASS_PANE"),
+                Material.BLACK_STAINED_GLASS_PANE);
+        return item.getType() == material;
     }
 
     private List<ItemStack> contents(Menus.Menu gui, List<Integer> area) {
@@ -695,7 +706,7 @@ public final class GiveawayModule extends Module implements CommandExecutor, Tab
         for (int slot : area) {
             if (slot < 0 || slot >= contents.length) continue;
             ItemStack item = contents[slot];
-            if (item != null && !item.getType().isAir()) list.add(item.clone());
+            if (item != null && !filler(item)) list.add(item.clone());
         }
         return list;
     }
@@ -705,6 +716,7 @@ public final class GiveawayModule extends Module implements CommandExecutor, Tab
         Set<Integer> limit = area == null ? null : new HashSet<>(area);
         for (int i = 0; i < contents.length; i++) {
             if (limit != null && !limit.contains(i)) continue;
+            if (filler(contents[i])) continue;
             give(player, contents[i]);
         }
     }

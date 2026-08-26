@@ -25,12 +25,15 @@ blocked-materials: []
 menu:
   title: "&8Private Vaults"
   admin-title: "&8Private Vaults | %player%"
-  rows: 6
-  vault-slots: "0-44"
+  rows: 3
+  admin-rows: 6
+  vault-slots: "0-17"
+  admin-vault-slots: "0-44"
+  admin-close-slot: 49
 
   filler:
     enabled: true
-    material: GRAY_STAINED_GLASS_PANE
+    material: BLACK_STAINED_GLASS_PANE
     name: " "
     lore: []
     amount: 1
@@ -39,7 +42,7 @@ menu:
 
   close:
     enabled: true
-    slot: 49
+    slot: 22
     material: BARRIER
     amount: 1
     glow: false
@@ -53,6 +56,30 @@ menu:
       - "&#FF0000¦ &fclose the &#FF0000main menu&f!"
       - ""
       - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Close"
+
+  previous:
+    slot: 19
+    material: RED_DYE
+    name: "&ePrevious page"
+    lore:
+      - "&8Description"
+      - ""
+      - "&eInformation:"
+      - "&e| &fGo back a page."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
+
+  next:
+    slot: 25
+    material: LIME_DYE
+    name: "&eNext page"
+    lore:
+      - "&8Description"
+      - ""
+      - "&eInformation:"
+      - "&e| &fGo to the next page."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
 
   unlocked:
     material: PURPLE_SHULKER_BOX

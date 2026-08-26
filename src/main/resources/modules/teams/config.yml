@@ -1,0 +1,274 @@
+config-version: 8
+prefix: '&x&F&F&B&A&0&0&lTEAMS &8▷ '
+message-mode: chat
+
+creation:
+  min-name-length: 3
+  max-name-length: 16
+  max-members: 18
+  banned-keywords:
+  - fuck
+  - nazi
+
+invites:
+  lifetime-seconds: 120
+
+ally:
+  max-allies: 1
+  request-lifetime-seconds: 120
+
+emergency:
+  cooldown-seconds: 60
+
+leaderboard:
+  limit: 10
+  token-weight: 1
+  kill-weight: 100
+  playtime-hour-weight: 50
+
+chat:
+  team-format: '&x&F&F&B&A&0&0[TEAM] &f%player% &8» &7%message%'
+  ally-format: '&#ffb300[ALLY] &f%player% &8» &7%message%'
+
+placeholders:
+  not-in-team: N/A
+
+gui:
+  click-footer: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+  click-footer-create: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Create'
+  click-footer-confirm: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Confirm'
+  click-footer-cancel: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Cancel'
+  color: '&x&F&F&B&A&0&0'
+
+  create-title: '&8Create Team'
+  create-anvil-name: '&x&F&F&B&A&0&0&lCreate Team'
+  create-anvil-lore:
+  - '&8Descriptions'
+  - ''
+  - '&x&F&F&B&A&0&0Information:'
+  - '&x&F&F&B&A&0&0| &fClick here to type'
+  - '&x&F&F&B&A&0&0| &fyour team name in chat.'
+  - ''
+  - '%click_create%'
+
+  confirm-title: '&8Confirm &f%team%'
+  cancel-name: '&#FF2727&lCancel'
+  cancel-lore:
+  - '&8Descriptions'
+  - ''
+  - '&#FF2727Information:'
+  - '&#FF2727| &fGo back and cancel'
+  - '&#FF2727| &fteam creation.'
+  - ''
+  - '%click_cancel%'
+  confirm-name: '&#9FFF00&lConfirm'
+  confirm-lore:
+  - '&8Descriptions'
+  - ''
+  - '&#9FFF00Information:'
+  - '&#9FFF00| &fCreate this team'
+  - '&#9FFF00| &fwith the name shown.'
+  - ''
+  - '%click_confirm%'
+
+  main-title: '&8Team &f%team%'
+  members-name: '&#9FFF00&lMembers'
+  members-lore:
+  - '&8Descriptions'
+  - ''
+  - '&#9FFF00Information:'
+  - '&#9FFF00| &fView and manage'
+  - '&#9FFF00| &fall team members.'
+  - ''
+  - '%click%'
+  - ''
+  - '&7Total: &f%count%'
+
+  browse-name: '&#00D4FF&lBrowse Teams'
+  browse-lore:
+  - '&8Descriptions'
+  - ''
+  - '&#00D4FFInformation:'
+  - '&#00D4FF| &fView other teams'
+  - '&#00D4FF| &fand their statistics.'
+  - ''
+  - '%click%'
+
+  emergency-name: '&#FF2727&lEmergency'
+  emergency-lore:
+  - '&8Descriptions'
+  - ''
+  - '&#FF2727Information:'
+  - '&#FF2727| &fAlert your team members'
+  - '&#FF2727| &fwith your location.'
+  - ''
+  - '%click%'
+
+  chat-name: '&x&F&F&B&A&0&0&lTeam Chat'
+  chat-lore:
+  - '&8Descriptions'
+  - ''
+  - '&x&F&F&B&A&0&0Information:'
+  - '&x&F&F&B&A&0&0| &fToggle team chat mode.'
+  - ''
+  - '&x&F&F&B&A&0&0⚓ &fStatus: %status%'
+  - ''
+  - '%click%'
+
+  allies-name: '&#FFD700&lAllies'
+  allies-lore:
+  - '&8Descriptions'
+  - ''
+  - '&#FFD700Information:'
+  - '&#FFD700| &fView your team allies.'
+  - '&#FFD700| &fUse &f/team ally <team>'
+  - ''
+  - '&#FFD700Allies: &f%count%/%max%'
+  - ''
+  - '%click%'
+
+  leaderboard-name: '&#FFD700&lTeam Leaderboard'
+  leaderboard-lore:
+  - '&8Descriptions'
+  - ''
+  - '&#FFD700Information:'
+  - '&#FFD700| &fView the server'
+  - '&#FFD700| &fteam leaderboard.'
+  - ''
+  - '%click%'
+
+  disband-name: '&#FF2727&lDisband team'
+  disband-lore:
+  - '&8Descriptions'
+  - ''
+  - '&#FF2727Information:'
+  - '&#FF2727| &fPermanently disband'
+  - '&#FF2727| &fyour team.'
+  - ''
+  - '%click%'
+
+  leave-name: '&#FF2727&lLeave team'
+  leave-lore:
+  - '&8Descriptions'
+  - ''
+  - '&#FF2727Information:'
+  - '&#FF2727| &fLeave your current team.'
+  - ''
+  - '%click%'
+
+  disband-confirm-title: '&8Disband &f%team%?'
+  disband-confirm-name: '&#9FFF00&lConfirm disband'
+  disband-confirm-lore:
+  - '&8Descriptions'
+  - ''
+  - '&#9FFF00Information:'
+  - '&#9FFF00| &fThis cannot be undone!'
+  - '&#9FFF00| &fAll members will be removed.'
+  - ''
+  - '%click_confirm%'
+  disband-cancel-lore:
+  - '&8Descriptions'
+  - ''
+  - '&#FF2727Information:'
+  - '&#FF2727| &fGo back and cancel'
+  - '&#FF2727| &fthe disband.'
+  - ''
+  - '%click_cancel%'
+
+  back-name: '&#FFD700&lBack'
+  previous-name: '&ePrevious page'
+  next-name: '&eNext page'
+
+  navigation:
+    use-global: true
+
+  members-title: '&8Members &f%team%'
+  member-head-lore:
+  - '&8Descriptions'
+  - ''
+  - '&#9FFF00&l%role%'
+  - '&#9FFF00| &f%status%'
+  - ''
+  - '&7Leader click: promote/demote'
+  - '&7Officer click: kick member'
+  leader-head-lore:
+  - '&8Descriptions'
+  - ''
+  - '&#FFD700&lTeam leader'
+  - '&#FFD700| &f%status%'
+  - ''
+  - '&7This is your team owner.'
+
+  browse-title: '&8Browse Teams'
+  browse-entry-name: '&x&F&F&B&A&0&0&l%team%'
+  browse-entry-lore:
+  - '&8Descriptions'
+  - ''
+  - '&x&F&F&B&A&0&0Information:'
+  - '&x&F&F&B&A&0&0| &fMembers: &f%count%'
+  - '&x&F&F&B&A&0&0| &fLeaderboard: &f#%rank%'
+  - ''
+  - '%click%'
+
+  profile-title: '&8Team &f%team%'
+  profile-item-name: '&x&F&F&B&A&0&0&l%team%'
+  profile-item-lore:
+  - '&8Descriptions'
+  - ''
+  - '&x&F&F&B&A&0&0Information:'
+  - '&x&F&F&B&A&0&0| &fLeaderboard: &f#%rank%'
+  - '&x&F&F&B&A&0&0| &fMembers: &f%count%'
+  - '&x&F&F&B&A&0&0| &fKills: &f%kills%'
+  - '&x&F&F&B&A&0&0| &fTokens: &f%tokens%'
+  - '&x&F&F&B&A&0&0| &fPlaytime: &f%playtime%'
+  - '&x&F&F&B&A&0&0| &fScore: &f%score%'
+  - ''
+  - '%click%'
+
+  unranked: Unranked
+  browse-per-page: 21
+
+messages:
+  prefix: "&x&F&F&B&A&0&0&lTEAMS &8▷ "
+  usage: "&x&F&F&B&A&0&0&lTEAMS &8▷ &f/team accept|ally|chat|demote|disband|invite"
+  usage-accept: "&x&F&F&B&A&0&0&lTEAMS &8▷ &f/team accept <team>"
+  usage-ally: "&x&F&F&B&A&0&0&lTEAMS &8▷ &f/team ally <team>"
+  usage-demote: "&x&F&F&B&A&0&0&lTEAMS &8▷ &f/team demote <player>"
+  usage-promote: "&x&F&F&B&A&0&0&lTEAMS &8▷ &f/team promote <player>"
+  usage-invite: "&x&F&F&B&A&0&0&lTEAMS &8▷ &f/team invite <player>"
+  usage-kick: "&x&F&F&B&A&0&0&lTEAMS &8▷ &f/team kick <player>"
+  type-name: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fType your team name in chat."
+  created: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fCreated team &x&F&F&B&A&0&0%team%&f."
+  accepted: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fYou joined &x&F&F&B&A&0&0%team%&f."
+  invited: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fInvited &x&F&F&B&A&0&0%player%&f."
+  invite-received: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fYou were invited to &x&F&F&B&A&0&0%team%&f. /team accept %team%"
+  disbanded: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fDisbanded &x&F&F&B&A&0&0%team%&f."
+  left: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fYou left your team."
+  chat-on: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fTeam chat enabled."
+  chat-off: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fTeam chat disabled."
+  ally-sent: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fSent an ally request to &x&F&F&B&A&0&0%team%&f."
+  ally-accepted: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fYou are now allied with &x&F&F&B&A&0&0%team%&f."
+  promoted: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fPromoted &x&F&F&B&A&0&0%player%&f."
+  demoted: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fDemoted &x&F&F&B&A&0&0%player%&f."
+  kicked: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fKicked &x&F&F&B&A&0&0%player%&f."
+  kicked-target: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fYou were kicked from the team."
+  emergency: "&#FF2727&lEMERGENCY &8▷ &f%player% needs help at &f%location%"
+  emergency-cooldown: "&#FF0000&lERROR &7▷ &fEmergency is on cooldown."
+  already-in-team: "&#FF0000&lERROR &7▷ &fYou are already in a team."
+  not-in-team: "&#FF0000&lERROR &7▷ &fYou are not in a team."
+  not-leader: "&#FF0000&lERROR &7▷ &fOnly the team leader can do that."
+  not-officer: "&#FF0000&lERROR &7▷ &fOnly officers can do that."
+  not-member: "&#FF0000&lERROR &7▷ &fThat player is not on your team."
+  no-invite: "&#FF0000&lERROR &7▷ &fYou have no invite from that team."
+  team-full: "&#FF0000&lERROR &7▷ &fThat team is full."
+  unknown-team: "&#FF0000&lERROR &7▷ &fUnknown team."
+  already-allied: "&#FF0000&lERROR &7▷ &fYou are already allied."
+  ally-limit: "&#FF0000&lERROR &7▷ &fYou already have an ally."
+  invalid-name: "&#FF0000&lERROR &7▷ &fThat team name is not valid."
+  banned-name: "&#FF0000&lERROR &7▷ &fThat team name is not allowed."
+  name-taken: "&#FF0000&lERROR &7▷ &fThat team name is taken."
+  target-in-team: "&#FF0000&lERROR &7▷ &fThat player is already in a team."
+  leader-leave: "&#FF0000&lERROR &7▷ &fLeaders must disband the team."
+  player-missing: "&#FF0000&lERROR &7▷ &fThat player is not online."
+  failed: "&#FF0000&lERROR &7▷ &fCould not create that team."
+  players-only: "&#FF0000&lERROR &7▷ &fOnly a player can use that."
