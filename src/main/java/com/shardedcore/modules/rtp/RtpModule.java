@@ -10,8 +10,6 @@ import com.shardedcore.util.Items;
 import com.shardedcore.util.Sounds;
 import com.shardedcore.util.Tabs;
 import com.shardedcore.util.Text;
-import io.papermc.paper.event.player.AsyncChatEvent;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -23,7 +21,6 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -46,7 +43,6 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
     private final Map<UUID, BukkitTask> pending = new ConcurrentHashMap<>();
     private final Map<UUID, Long> cooldown = new ConcurrentHashMap<>();
     private final Map<UUID, Long> safeUntil = new ConcurrentHashMap<>();
-    private final Set<UUID> duelPrompt = ConcurrentHashMap.newKeySet();
     private final Set<UUID> queue = ConcurrentHashMap.newKeySet();
     private BukkitTask queueTask;
     private int queueDots;
@@ -62,6 +58,7 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
         pool.start();
         registerCommand("rtp", this);
         registerCommand("rtpqueue", this);
+        registerCommand("leave", this);
         registerListener(this);
         queueTask = Bukkit.getScheduler().runTaskTimer(plugin, this::tickQueue, 20L, 20L);
     }
@@ -75,7 +72,6 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
         pending.clear();
         cooldown.clear();
         safeUntil.clear();
-        duelPrompt.clear();
         cleanup();
     }
 
@@ -95,7 +91,12 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
             sendBar(sender, "players-only");
             return true;
         }
-        if (command.getName().equalsIgnoreCase("rtpqueue")) {
+        String name = command.getName().toLowerCase(Locale.ROOT);
+        if (name.equals("leave") || (name.equals("rtpqueue") && args.length > 0 && args[0].equalsIgnoreCase("leave"))) {
+            leaveQueue(player);
+            return true;
+        }
+        if (name.equals("rtpqueue")) {
             toggleQueue(player);
             return true;
         }
@@ -124,12 +125,13 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
                 });
             }
         }
-        ConfigurationSection duel = config.getConfigurationSection("menu.duel");
-        if (duel != null) {
-            menu.set(duel.getInt("slot", 15), Items.fromSection(duel, player), event -> {
+        ConfigurationSection queueButton = config.getConfigurationSection("menu.queue");
+        if (queueButton == null) queueButton = config.getConfigurationSection("menu.duel");
+        if (queueButton != null) {
+            menu.set(queueButton.getInt("slot", 15), Items.fromSection(queueButton, player), event -> {
                 event.setCancelled(true);
                 player.closeInventory();
-                startDuel(player);
+                toggleQueue(player);
             });
         }
         menu.fill(Items.named(
@@ -147,9 +149,9 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
         String border = "0";
         if (world != null) {
             players = world.getPlayers().size();
-            border = String.valueOf((int) (world.getWorldBorder().getSize() / 2));
+            border = Amounts.format(world.getWorldBorder().getSize() / 2);
         }
-        String radius = String.valueOf(dest.getInt("radius", 0));
+        String radius = Amounts.format(dest.getInt("radius", 0));
         String name = Text.apply(dest.getString("name", ""), "players", String.valueOf(players), "radius", radius, "border", border);
         List<String> lore = new ArrayList<>();
         for (String line : dest.getStringList("lore")) {
@@ -254,43 +256,12 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
         }));
     }
 
-    private void startDuel(Player player) {
-        if (commandExists("1v1")) {
-            player.performCommand("1v1");
+    private void leaveQueue(Player player) {
+        if (queue.remove(player.getUniqueId())) {
+            sendBar(player, "queue.cancelled");
             return;
         }
-        duelPrompt.add(player.getUniqueId());
-        sendBar(player, "duel-prompt");
-    }
-
-    private boolean commandExists(String name) {
-        return Bukkit.getCommandMap().getCommand(name) != null;
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onChat(AsyncChatEvent event) {
-        Player player = event.getPlayer();
-        if (!duelPrompt.remove(player.getUniqueId())) return;
-        event.setCancelled(true);
-        String typed = PlainTextComponentSerializer.plainText().serialize(event.message()).trim();
-        Bukkit.getScheduler().runTask(plugin, () -> {
-            if (typed.equalsIgnoreCase("cancel")) {
-                sendBar(player, "duel-cancelled");
-                return;
-            }
-            Player target = Bukkit.getPlayerExact(typed);
-            if (target == null) {
-                sendBar(player, "duel-unknown", "player", typed);
-                return;
-            }
-            if (commandExists("1v1")) {
-                player.performCommand("1v1 " + target.getName());
-            } else if (commandExists("duel")) {
-                player.performCommand("duel " + target.getName());
-            } else {
-                sendBar(player, "duel-missing");
-            }
-        });
+        sendBar(player, "queue.not-in");
     }
 
     @EventHandler
@@ -322,7 +293,6 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
     public void onQuit(PlayerQuitEvent event) {
         stop(event.getPlayer().getUniqueId());
         queue.remove(event.getPlayer().getUniqueId());
-        duelPrompt.remove(event.getPlayer().getUniqueId());
         safeUntil.remove(event.getPlayer().getUniqueId());
     }
 

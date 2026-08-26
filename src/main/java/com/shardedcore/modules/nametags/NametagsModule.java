@@ -300,6 +300,19 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
                     .replace("%shardedcore_money_formatted%", formatted)
                     .replace("%shardedcore_balance_formatted%", formatted);
         }
+        if (out.contains("%shardedcore_tag%")) {
+            com.shardedcore.modules.tags.TagsModule tags = plugin.modules().get(com.shardedcore.modules.tags.TagsModule.class);
+            String tag = tags == null ? "" : tags.display(player);
+            out = out.replace("%shardedcore_tag%", tag == null ? "" : tag);
+        }
+        if (out.contains("%shardedcore_crystal_formated%") || out.contains("%shardedcore_crystal_formatted%")
+                || out.contains("%shardedcore_crystals_formatted%")) {
+            com.shardedcore.modules.crystals.CrystalsModule crystals = plugin.modules().get(com.shardedcore.modules.crystals.CrystalsModule.class);
+            String formatted = crystals == null ? "0" : crystals.service().format(crystals.service().get(player.getUniqueId()));
+            out = out.replace("%shardedcore_crystal_formated%", formatted)
+                    .replace("%shardedcore_crystal_formatted%", formatted)
+                    .replace("%shardedcore_crystals_formatted%", formatted);
+        }
         if (out.contains("%lifestealcore_team%")) {
             out = out.replace("%lifestealcore_team%", "None");
         }

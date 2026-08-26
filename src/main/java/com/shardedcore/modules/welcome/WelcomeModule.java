@@ -45,6 +45,7 @@ public final class WelcomeModule extends Module implements CommandExecutor, TabC
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player joined = event.getPlayer();
+        if (joined.hasPlayedBefore()) return;
         window.put(joined.getUniqueId(), System.currentTimeMillis());
         welcomed.put(joined.getUniqueId(), ConcurrentHashMap.newKeySet());
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
@@ -118,6 +119,17 @@ public final class WelcomeModule extends Module implements CommandExecutor, TabC
 
     @Override
     public java.util.List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        return args.length == 1 ? Tabs.players(args[0]) : java.util.List.of();
+        if (args.length != 1) return java.util.List.of();
+        java.util.List<String> names = new java.util.ArrayList<>();
+        long life = config.getLong("window", 120) * 1000L;
+        long now = System.currentTimeMillis();
+        for (java.util.Map.Entry<UUID, Long> entry : window.entrySet()) {
+            if (now - entry.getValue() > life) continue;
+            Player target = Bukkit.getPlayer(entry.getKey());
+            if (target != null && (sender instanceof Player player ? !target.equals(player) : true)) {
+                names.add(target.getName());
+            }
+        }
+        return Tabs.filter(names, args[0]);
     }
 }

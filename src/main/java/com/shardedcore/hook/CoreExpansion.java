@@ -57,6 +57,23 @@ public final class CoreExpansion extends PlaceholderExpansion {
             case "kills" -> String.valueOf(player.getStatistic(Statistic.PLAYER_KILLS));
             case "deaths" -> String.valueOf(player.getStatistic(Statistic.DEATHS));
             case "playtime" -> playtime(player);
+            case "tag" -> {
+                var tags = plugin.modules().get(com.shardedcore.modules.tags.TagsModule.class);
+                yield tags == null ? "" : tags.display(player);
+            }
+            case "chatcolor" -> {
+                var colors = plugin.modules().get(com.shardedcore.modules.chatcolor.ChatColorModule.class);
+                yield colors == null ? "" : colors.display(player);
+            }
+            case "crystal", "crystals" -> {
+                var crystals = plugin.modules().get(com.shardedcore.modules.crystals.CrystalsModule.class);
+                yield crystals == null ? "0" : String.valueOf((long) crystals.service().get(player.getUniqueId()));
+            }
+            case "crystal_formated", "crystal_formatted", "crystals_formatted",
+                 "crystals_formated" -> {
+                var crystals = plugin.modules().get(com.shardedcore.modules.crystals.CrystalsModule.class);
+                yield crystals == null ? "0" : crystals.service().format(crystals.service().get(player.getUniqueId()));
+            }
             case "module_announce" -> plugin.modules().isEnabled("announce") ? "true" : "false";
             default -> {
                 if (key.startsWith("module_")) {

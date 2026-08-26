@@ -47,23 +47,23 @@ gui:
   # it names no slot of its own - that comes from the home standing there.
   locked:
     bed:
-      material: RED_BED
-      name: "&#FF0000&lNO PERMISSION"
+      material: PURPLE_BED
+      name: "&#A370EE&lNO PERMISSION"
       lore:
         - "&8Description"
         - ""
-        - "&#FF0000Information:"
-        - "&#FF0000¦ &fBuy a higher rank on"
-        - "&#FF0000¦ &four store for more homes."
+        - "&#A370EEInformation:"
+        - "&#A370EE¦ &fBuy a higher rank on"
+        - "&#A370EE¦ &four store for more homes."
     dye:
-      material: RED_DYE
-      name: "&#FF0000&lNO PERMISSION"
+      material: PURPLE_DYE
+      name: "&#A370EE&lNO PERMISSION"
       lore:
         - "&8Description"
         - ""
-        - "&#FF0000Information:"
-        - "&#FF0000¦ &fBuy a higher rank on"
-        - "&#FF0000¦ &four store for more homes."
+        - "&#A370EEInformation:"
+        - "&#A370EE¦ &fBuy a higher rank on"
+        - "&#A370EE¦ &four store for more homes."
 
   homes:
 

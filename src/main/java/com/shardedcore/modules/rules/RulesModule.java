@@ -39,7 +39,16 @@ public final class RulesModule extends Module implements CommandExecutor {
             for (String id : categories.getKeys(false)) {
                 ConfigurationSection category = categories.getConfigurationSection(id);
                 if (category == null || !category.getBoolean("enabled", true)) continue;
-                menu.set(category.getInt("slot", 0), Items.fromSection(category, player));
+                menu.set(category.getInt("slot", 0), Items.fromSection(category, player), event -> {
+                    event.setCancelled(true);
+                    if (category.getBoolean("close", config.getBoolean("click.close", true))) {
+                        player.closeInventory();
+                    }
+                    String commandName = category.getString("click-command", cfg("click-command", "discord"));
+                    if (commandName != null && !commandName.isBlank()) {
+                        player.performCommand(commandName.startsWith("/") ? commandName.substring(1) : commandName);
+                    }
+                });
             }
         }
         if (config.getBoolean("frame.enabled", false)) {

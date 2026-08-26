@@ -109,16 +109,29 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
     public boolean orders(Player player) { return on(player, ORDERS); }
 
     public boolean flipLive(Player player) {
-        return flip(player, LIVE, "live");
+        return flip(player, LIVE, "live", true);
     }
 
     public boolean flipCoinflip(Player player) {
-        return flip(player, CF, "cf");
+        return flip(player, CF, "cf", true);
     }
 
     private boolean flip(Player player, String key, String messageKey) {
+        return flip(player, key, messageKey, false);
+    }
+
+    private boolean flip(Player player, String key, String messageKey, boolean command) {
         boolean next = plugin.toggles().flip(player.getUniqueId(), key, config.getBoolean("defaults." + key, true));
-        send(player, "messages." + messageKey + (next ? "-on" : "-off"));
+        String suffix = next ? "-on" : "-off";
+        if (command) {
+            String text = config.getString("command-messages." + messageKey + suffix, "");
+            if (text == null || text.isBlank()) {
+                text = config.getString("messages." + messageKey + suffix, "");
+            }
+            sendRaw(player, Text.apply(text, "prefix", cfg("command-prefix", "&#FF0072&lSETTINGS &7▷")));
+        } else {
+            send(player, "messages." + messageKey + suffix);
+        }
         if (key.equals(NV)) applyNightVision(player);
         if (key.equals(BOSSBAR)) player.performCommand("tab bossbar toggle");
         if (key.equals(SCOREBOARD)) player.performCommand("tab scoreboard toggle");
@@ -185,7 +198,7 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
                 case CRYSTAL -> "crystal";
                 default -> key;
             };
-            flip(player, key, msgKey);
+            flip(player, key, msgKey, true);
         }
         return true;
     }

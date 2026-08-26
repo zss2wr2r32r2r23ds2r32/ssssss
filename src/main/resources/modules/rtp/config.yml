@@ -54,20 +54,21 @@ menu:
     name: " "
     lore: []
 
-  duel:
+  queue:
     slot: 15
     material: DIAMOND_SWORD
-    name: "&#22AFFB&l1V1"
+    name: "&#22AFFB&lRTP QUEUE"
     lore:
       - "&7[ʀᴀɴᴅᴏᴍ ᴛᴇʟᴇᴘᴏʀᴛ]"
       - ""
       - "&#22AFFBDescription:"
-      - "&#22AFFB¦ &fChallenge a player to"
-      - "&#22AFFB¦ &fa fight one on one."
+      - "&#22AFFB¦ &fQueue with another player"
+      - "&#22AFFB¦ &fand teleport together."
       - ""
-      - "&#22AFFB⚓ &fAccess: &#22AFFB/1v1"
+      - "&#22AFFB⚓ &fAccess: &#22AFFB/rtpqueue"
+      - "&#22AFFB⚓ &fLeave: &#22AFFB/leave"
       - ""
-      - "&#22AFFB▷ &n&lCLICK&r&#22AFFB To Start"
+      - "&#22AFFB▷ &n&lCLICK&r&#22AFFB To Queue"
 
 worlds:
   overworld:
@@ -182,14 +183,10 @@ messages:
   world-missing: "&#FF0000&lERROR &7▷ &fThat world does not exist on this server."
   players-only: "&#FF0000&lERROR &7▷ &fOnly a player can use that."
 
-  duel-prompt: "&#22AFFB&l1V1 &7▷ &fType a player name in the chat, or &#22AFFBcancel&f."
-  duel-cancelled: "&#22AFFB&l1V1 &7▷ &fYou stopped the challenge."
-  duel-unknown: "&#FF0000&lERROR &7▷ &#22AFFB%player% &fis not online."
-  duel-missing: "&#FF0000&lERROR &7▷ &fFights are switched off on this server."
-
 queue:
   countdown-seconds: 5
   offset: 8
   looking: "&#22AFFB&lRTP QUEUE &8▷ &fLooking for Player"
   found: "&#22AFFB&lRTP QUEUE &8▷ &fFound Player, Teleporting in &#22AFFB&n%seconds%s"
   cancelled: "&#22AFFB&lRTP QUEUE &8▷ &fYou left the queue."
+  not-in: "&#22AFFB&lRTP QUEUE &8▷ &fYou are not in the queue."

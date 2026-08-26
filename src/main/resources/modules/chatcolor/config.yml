@@ -1,0 +1,34 @@
+# Custom chat colors. Players set one with /chatcolor set <name>.
+# Admins create them with /chatcolor create <name> <hex>
+# Gradients: /chatcolor gradient create <name> <hex> <hex>
+#            /chatcolor:gradient create <hex> <hex>
+#            /chatcolor remove <name> deletes both solid and gradient colors.
+
+colors:
+  white:
+    type: solid
+    hex: "FFFFFF"
+  purple:
+    type: solid
+    hex: "A370EE"
+  sunset:
+    type: gradient
+    hex: "FF5F6D"
+    hex2: "FFC371"
+
+messages:
+  usage: "&#A370EE&lCHATCOLOR &7▷ &f/chatcolor create <name> <hex> &7| &fset <name> &7| &fremove <name>"
+  usage-create: "&#A370EE&lCHATCOLOR &7▷ &f/chatcolor create <name> <hex>"
+  usage-set: "&#A370EE&lCHATCOLOR &7▷ &f/chatcolor set <name>"
+  usage-remove: "&#A370EE&lCHATCOLOR &7▷ &f/chatcolor remove <name>"
+  usage-gradient: "&#A370EE&lCHATCOLOR &7▷ &f/chatcolor gradient create <name> <hex> <hex>"
+  created: "&#A370EE&lCHATCOLOR &7▷ &fCreated &#A370EE%color% &f(%hex%)."
+  created-gradient: "&#A370EE&lCHATCOLOR &7▷ &fCreated gradient &#A370EE%color% &f(%from% → %to%)."
+  set: "&#A370EE&lCHATCOLOR &7▷ &fYour chat color is now %color%&f."
+  removed: "&#A370EE&lCHATCOLOR &7▷ &fRemoved &#A370EE%color%&f."
+  cleared: "&#A370EE&lCHATCOLOR &7▷ &fYour chat color was cleared."
+  missing: "&#FF0000&lERROR &7▷ &fUnknown color &#A370EE%color%&f."
+  locked: "&#FF0000&lERROR &7▷ &fYou have not unlocked &#A370EE%color%&f."
+  invalid: "&#FF0000&lERROR &7▷ &fThat name or hex is not valid."
+  no-permission: "&#FF0000&lERROR &7▷ &fYou do not have permission."
+  players-only: "&#FF0000&lERROR &7▷ &fOnly a player can use that."

@@ -1,0 +1,57 @@
+expire-line: "&#A370EE⚓ &fExpires in: %expire%"
+expired-text: "Expired"
+time:
+  days: "d"
+  hours: "h"
+  minutes: "m"
+  seconds: "s"
+  units: 2
+
+tools:
+  drill:
+    material: NETHERITE_PICKAXE
+    name: "&#A370EE&lSHARDED DRILL"
+    expire: 7d
+    radius: 1
+    unbreakable: false
+    hide-enchants: false
+    enchants:
+      efficiency: 5
+      unbreaking: 3
+    lore: []
+    expire-line: "&#A370EE⚓ &fExpires in: %expire%"
+  chopper:
+    material: NETHERITE_AXE
+    name: "&#A370EE&lSHARDED CHOPPER"
+    expire: 7d
+    max-blocks: 512
+    break-leaves: true
+    unbreakable: false
+    hide-enchants: false
+    enchants:
+      efficiency: 5
+      unbreaking: 3
+    lore: []
+    expire-line: "&#A370EE⚓ &fExpires in: %expire%"
+  firework:
+    material: FIREWORK_ROCKET
+    name: "&#A370EE&lSHARDED FIREWORK"
+    expire: 7d
+    amount: 1
+    unbreakable: false
+    hide-enchants: false
+    lore: []
+    expire-line: "&#A370EE⚓ &fExpires in: %expire%"
+
+messages:
+  usage: "&#A370EE&lTOOLS &7▷ &f/shardedtool give <tool> [player] [expire] &7| &fremove <tool> <player>"
+  usage-give: "&#A370EE&lTOOLS &7▷ &f/shardedtool give <tool> [player] [expire]"
+  usage-remove: "&#A370EE&lTOOLS &7▷ &f/shardedtool remove <tool> <player>"
+  gave: "&#A370EE&lTOOLS &7▷ &fGave &#A370EE%tool% &fto &#A370EE%player%&f."
+  received: "&#A370EE&lTOOLS &7▷ &fYou received a &#A370EE%tool%&f."
+  removed: "&#A370EE&lTOOLS &7▷ &fRemoved &#A370EE%tool% &ffrom &#A370EE%player%&f."
+  none: "&#FF0000&lERROR &7▷ &#A370EE%player% &fdoes not have that tool."
+  expired: "&#A370EE&lTOOLS &7▷ &fYour &#A370EE%tool% &fexpired."
+  unknown-tool: "&#FF0000&lERROR &7▷ &fUnknown tool &#A370EE%tool%&f."
+  player-missing: "&#FF0000&lERROR &7▷ &fThat player is not online."
+  no-permission: "&#FF0000&lERROR &7▷ &fYou do not have permission."

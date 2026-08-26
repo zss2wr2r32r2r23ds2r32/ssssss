@@ -2,7 +2,9 @@ package com.shardedcore.modules.chatformat;
 
 import com.shardedcore.ShardedCore;
 import com.shardedcore.module.Module;
+import com.shardedcore.modules.chatcolor.ChatColorModule;
 import com.shardedcore.modules.settings.SettingsModule;
+import com.shardedcore.modules.tags.TagsModule;
 import com.shardedcore.util.ColorUtil;
 import com.shardedcore.util.Text;
 import io.papermc.paper.event.player.AsyncChatEvent;
@@ -45,12 +47,21 @@ public final class ChatFormatModule extends Module implements Listener {
             return false;
         });
         String raw = PlainTextComponentSerializer.plainText().serialize(event.message());
-        String format = cfg("format", "{prefix}{name} &8▷ &r{message}");
+        ChatColorModule colors = plugin.modules().get(ChatColorModule.class);
+        if (colors != null) raw = colors.color(player, raw);
+        TagsModule tags = plugin.modules().get(TagsModule.class);
+        String tag = tags == null ? "" : tags.chatPrefix(player);
+        if (tag == null || tag.isBlank()) {
+            tag = Text.applyPlaceholders(cfg("tag-placeholder", "%shardedcore_tag%"), player);
+            if (tag.contains("%shardedcore_tag%")) tag = "";
+        }
+        String format = cfg("format", "{prefix}{tag}{name} &8▷ &r{message}");
         String prefix = Text.applyPlaceholders(cfg("prefix-placeholder", "%luckperms_prefix%"), player);
         String suffix = Text.applyPlaceholders(cfg("suffix-placeholder", "%luckperms_suffix%"), player);
         String rendered = format
                 .replace("{prefix}", prefix)
                 .replace("{suffix}", suffix)
+                .replace("{tag}", tag)
                 .replace("{name}", player.getName())
                 .replace("{displayname}", player.getName())
                 .replace("{message}", raw);

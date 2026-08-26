@@ -1,0 +1,7 @@
+default-rows: 3
+allow-in-combat: false
+title: "&8Ender Chest"
+
+messages:
+  players-only: "&#FF0000&lERROR &7▷ &fOnly a player can use that."
+  in-combat: "&#FF0000&lERROR &7▷ &fYou cannot open your ender chest in combat."

@@ -145,22 +145,22 @@ sections:
 
   # command: runs as the player instead of opening a section, so this one
   # needs no folder next to this file.
-  gemsshop:
+  crystalshop:
     enabled: true
     slot: 21
     permission: ""
-    command: "gems shop"
+    command: "crystal shop"
     icon:
-      material: DIAMOND
-      name: "&#FF256E&lGEMS SHOP"
+      material: AMETHYST_SHARD
+      name: "&#A370EE&lCRYSTAL SHOP"
       lore:
         - "&8Description"
         - ""
-        - "&#FF256EInformation:"
-        - "&#FF256E¦ &fGems shop used to buy,"
-        - "&#FF256E¦ &fspecial and &#FF256Eunique items&f."
+        - "&#A370EEInformation:"
+        - "&#A370EE¦ &fCrystal shop used to buy,"
+        - "&#A370EE¦ &fspecial and &#A370EEunique items&f."
         - ""
-        - "&#FF256E▷ &n&lCLICK&r&#FF256E To Open"
+        - "&#A370EE▷ &n&lCLICK&r&#A370EE To Open"
 
   # Without this permission the section is not shown at all.
   premiumshop:

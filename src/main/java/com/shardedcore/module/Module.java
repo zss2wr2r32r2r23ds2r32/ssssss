@@ -182,17 +182,35 @@ public abstract class Module {
                 break;
             }
         }
+        String fallback = href(url);
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
             if (line == null) continue;
-            Component part = ColorUtil.parse(Text.apply(line, pairs));
-            if (i == last && url != null && !url.isBlank()) {
-                String href = url.startsWith("http") ? url : "https://" + url;
+            String rendered = Text.apply(line, pairs);
+            Component part = ColorUtil.parse(rendered);
+            String found = urlIn(rendered);
+            String href = found != null ? found : (i == last || !rendered.isBlank() ? fallback : null);
+            if (href != null && !href.isBlank() && !rendered.isBlank()) {
                 part = part.clickEvent(ClickEvent.openUrl(href))
                         .hoverEvent(HoverEvent.showText(ColorUtil.parse("&7Click to open")));
             }
             to.sendMessage(part);
         }
+    }
+
+    private static String href(String url) {
+        if (url == null || url.isBlank()) return "";
+        return url.startsWith("http") ? url : "https://" + url;
+    }
+
+    private static String urlIn(String line) {
+        if (line == null) return null;
+        java.util.regex.Matcher matcher = java.util.regex.Pattern.compile(
+                "(?i)(https?://\\S+)|((?:discord\\.gg|store\\.[\\w.-]+)/\\S*)"
+        ).matcher(line.replaceAll("(?i)&[0-9a-fk-orx#]", ""));
+        if (!matcher.find()) return null;
+        String found = matcher.group().replaceAll("[\\]\\)>.,]+$", "");
+        return found.startsWith("http") ? found : "https://" + found;
     }
 
     protected void sound(Player player, String path) {

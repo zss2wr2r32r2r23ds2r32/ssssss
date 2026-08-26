@@ -19,6 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -33,6 +34,8 @@ public final class KillRewardsModule extends Module implements CommandExecutor, 
 
     private Sqlite sqlite;
     private final Map<UUID, Set<String>> claimed = new ConcurrentHashMap<>();
+    private final Map<UUID, Integer> lastReady = new ConcurrentHashMap<>();
+    private BukkitTask notifyTask;
 
     public KillRewardsModule(ShardedCore plugin) {
         super(plugin, "killrewards");
@@ -57,12 +60,17 @@ public final class KillRewardsModule extends Module implements CommandExecutor, 
         registerListener(this);
         if (config.getBoolean("notify.enabled", true)) {
             int interval = Math.max(10, config.getInt("notify.interval-seconds", 60));
-            Bukkit.getScheduler().runTaskTimer(plugin, this::notifyReady, interval * 20L, interval * 20L);
+            notifyTask = Bukkit.getScheduler().runTaskTimer(plugin, this::notifyReady, interval * 20L, interval * 20L);
         }
     }
 
     @Override
     public void disable() {
+        if (notifyTask != null) {
+            notifyTask.cancel();
+            notifyTask = null;
+        }
+        lastReady.clear();
         cleanup();
     }
 
@@ -138,6 +146,7 @@ public final class KillRewardsModule extends Module implements CommandExecutor, 
         }
         send(player, "claimed", "required", String.valueOf(required));
         Sounds.play(player, config.getConfigurationSection("sounds.claim"));
+        lastReady.put(player.getUniqueId(), readyCount(player.getStatistic(Statistic.PLAYER_KILLS), claimed(player.getUniqueId()), rewardIds()));
         open(player);
     }
 
@@ -173,7 +182,13 @@ public final class KillRewardsModule extends Module implements CommandExecutor, 
 
     private void notify(Player player) {
         int ready = readyCount(player.getStatistic(Statistic.PLAYER_KILLS), claimed(player.getUniqueId()), rewardIds());
-        if (ready <= 0) return;
+        if (ready <= 0) {
+            lastReady.put(player.getUniqueId(), 0);
+            return;
+        }
+        Integer last = lastReady.get(player.getUniqueId());
+        if (last != null && last >= ready) return;
+        lastReady.put(player.getUniqueId(), ready);
         send(player, "ready", "amount", String.valueOf(ready));
         Sounds.play(player, config.getConfigurationSection("sounds.notify"));
     }

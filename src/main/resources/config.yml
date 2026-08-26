@@ -34,3 +34,11 @@ modules:
   orders: true
   giveaway: true
   vaults: true
+  chatcolor: true
+  tags: true
+  crystals: true
+  enderchest: true
+  fly: true
+  shardedtools: true
+  xpbottles: true
+  attributefixer: true

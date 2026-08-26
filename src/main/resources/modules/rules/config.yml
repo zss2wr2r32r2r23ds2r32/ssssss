@@ -7,6 +7,10 @@ menu:
     volume: 0.7
     pitch: 1.2
 
+click-command: discord
+click:
+  close: true
+
 frame:
   enabled: false
   slots: "auto"

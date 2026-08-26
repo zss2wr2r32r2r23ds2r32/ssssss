@@ -47,7 +47,7 @@ entries:
       - ''
       - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Create'
 
-  gems-shop:
+  crystal-shop:
     enabled: true
     slot: 12
     material: PRISMARINE_SHARD

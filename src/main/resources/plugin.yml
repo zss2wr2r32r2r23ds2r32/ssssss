@@ -253,6 +253,38 @@ commands:
   pvadmin:
     description: Vault admin
     permission: shardedcore.vault.admin
+  leave:
+    description: Leave the RTP queue
+    permission: shardedcore.rtp.queue
+  chatcolor:
+    description: Custom chat colors
+    aliases: [chatcolour, cc]
+    permission: shardedcore.chatcolor
+  chatcolorgradient:
+    description: Create a gradient chat color
+    permission: shardedcore.chatcolor.admin
+  tag:
+    description: Custom chat tags
+    aliases: [chattag, tags]
+    permission: shardedcore.tag
+  ec:
+    description: Ender chest
+    aliases: [enderchest, echest]
+    permission: shardedcore.ec
+  fly:
+    description: Toggle fly in the spawn region
+    permission: shardedcore.fly
+  shardedtool:
+    description: Give or remove sharded tools
+    aliases: [stool]
+    permission: shardedcore.shardedtool.admin
+  crystal:
+    description: Crystals currency
+    aliases: [crystals]
+    permission: shardedcore.crystal
+  crystalshop:
+    description: Crystal shop
+    permission: shardedcore.crystal.shop
 
 permissions:
   shardedcore.admin:
@@ -521,5 +553,39 @@ permissions:
     default: false
   shardedcore.vault.45:
     default: false
+  shardedcore.chatcolor:
+    default: true
+  shardedcore.chatcolor.admin:
+    default: op
+  shardedcore.tag:
+    default: true
+  shardedcore.tag.admin:
+    default: op
+  shardedcore.ec:
+    default: true
+  shardedcore.ec.3:
+    default: true
+  shardedcore.ec.4:
+    default: false
+  shardedcore.ec.5:
+    default: false
+  shardedcore.ec.6:
+    default: false
+  shardedcore.fly:
+    default: true
+  shardedcore.fly.admin:
+    default: op
+  shardedcore.fly.bypass:
+    default: op
+  shardedcore.shardedtool.admin:
+    default: op
+  shardedcore.crystal:
+    default: true
+  shardedcore.crystal.admin:
+    default: op
+  shardedcore.crystal.shop:
+    default: true
+  shardedcore.leave:
+    default: true
   shardedcore.internal.disabled:
     default: false

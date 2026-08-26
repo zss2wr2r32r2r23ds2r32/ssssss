@@ -66,223 +66,223 @@ rewards:
     playtime: 30m
     commands:
       - "ecogive %player% 100000"
-      - "gems give %player% 10"
+      - "crystal give %player% 10"
     display:
       - "&f- &#80EE0B$100,000"
-      - "&f- &#FC258D10x &lGEMS"
+      - "&f- &#FC258D10x &lCRYSTALS"
   "02":
     playtime: 1h
     commands:
       - "ecogive %player% 150000"
-      - "gems give %player% 12"
+      - "crystal give %player% 12"
     display:
       - "&f- &#80EE0B$150,000"
-      - "&f- &#FC258D12x &lGEMS"
+      - "&f- &#FC258D12x &lCRYSTALS"
   "03":
     playtime: 2h
     commands:
       - "ecogive %player% 250000"
-      - "gems give %player% 15"
+      - "crystal give %player% 15"
     display:
       - "&f- &#80EE0B$250,000"
-      - "&f- &#FC258D15x &lGEMS"
+      - "&f- &#FC258D15x &lCRYSTALS"
   "04":
     playtime: 3h
     commands:
       - "ecogive %player% 350000"
-      - "gems give %player% 18"
+      - "crystal give %player% 18"
     display:
       - "&f- &#80EE0B$350,000"
-      - "&f- &#FC258D18x &lGEMS"
+      - "&f- &#FC258D18x &lCRYSTALS"
   "05":
     playtime: 5h
     commands:
       - "ecogive %player% 500000"
-      - "gems give %player% 22"
+      - "crystal give %player% 22"
     display:
       - "&f- &#80EE0B$500,000"
-      - "&f- &#FC258D22x &lGEMS"
+      - "&f- &#FC258D22x &lCRYSTALS"
   "06":
     playtime: 8h
     commands:
       - "ecogive %player% 750000"
-      - "gems give %player% 26"
+      - "crystal give %player% 26"
     display:
       - "&f- &#80EE0B$750,000"
-      - "&f- &#FC258D26x &lGEMS"
+      - "&f- &#FC258D26x &lCRYSTALS"
   "07":
     playtime: 12h
     commands:
       - "ecogive %player% 1000000"
-      - "gems give %player% 30"
+      - "crystal give %player% 30"
     display:
       - "&f- &#80EE0B$1,000,000"
-      - "&f- &#FC258D30x &lGEMS"
+      - "&f- &#FC258D30x &lCRYSTALS"
   "08":
     playtime: 18h
     commands:
       - "ecogive %player% 1500000"
-      - "gems give %player% 35"
+      - "crystal give %player% 35"
     display:
       - "&f- &#80EE0B$1,500,000"
-      - "&f- &#FC258D35x &lGEMS"
+      - "&f- &#FC258D35x &lCRYSTALS"
   "09":
     playtime: 1d
     commands:
       - "ecogive %player% 2000000"
-      - "gems give %player% 40"
+      - "crystal give %player% 40"
     display:
       - "&f- &#80EE0B$2,000,000"
-      - "&f- &#FC258D40x &lGEMS"
+      - "&f- &#FC258D40x &lCRYSTALS"
   "10":
     playtime: 1d12h
     commands:
       - "ecogive %player% 2750000"
-      - "gems give %player% 45"
+      - "crystal give %player% 45"
     display:
       - "&f- &#80EE0B$2,750,000"
-      - "&f- &#FC258D45x &lGEMS"
+      - "&f- &#FC258D45x &lCRYSTALS"
   "11":
     playtime: 2d
     commands:
       - "ecogive %player% 3500000"
-      - "gems give %player% 50"
+      - "crystal give %player% 50"
     display:
       - "&f- &#80EE0B$3,500,000"
-      - "&f- &#FC258D50x &lGEMS"
+      - "&f- &#FC258D50x &lCRYSTALS"
   "12":
     playtime: 3d
     commands:
       - "ecogive %player% 5000000"
-      - "gems give %player% 60"
+      - "crystal give %player% 60"
     display:
       - "&f- &#80EE0B$5,000,000"
-      - "&f- &#FC258D60x &lGEMS"
+      - "&f- &#FC258D60x &lCRYSTALS"
   "13":
     playtime: 4d
     commands:
       - "ecogive %player% 6500000"
-      - "gems give %player% 70"
+      - "crystal give %player% 70"
     display:
       - "&f- &#80EE0B$6,500,000"
-      - "&f- &#FC258D70x &lGEMS"
+      - "&f- &#FC258D70x &lCRYSTALS"
   "14":
     playtime: 5d
     commands:
       - "ecogive %player% 8000000"
-      - "gems give %player% 80"
+      - "crystal give %player% 80"
     display:
       - "&f- &#80EE0B$8,000,000"
-      - "&f- &#FC258D80x &lGEMS"
+      - "&f- &#FC258D80x &lCRYSTALS"
   "15":
     playtime: 6d
     commands:
       - "ecogive %player% 10000000"
-      - "gems give %player% 90"
+      - "crystal give %player% 90"
     display:
       - "&f- &#80EE0B$10,000,000"
-      - "&f- &#FC258D90x &lGEMS"
+      - "&f- &#FC258D90x &lCRYSTALS"
   "16":
     playtime: 7d
     commands:
       - "ecogive %player% 12500000"
-      - "gems give %player% 100"
+      - "crystal give %player% 100"
     display:
       - "&f- &#80EE0B$12,500,000"
-      - "&f- &#FC258D100x &lGEMS"
+      - "&f- &#FC258D100x &lCRYSTALS"
   "17":
     playtime: 9d
     commands:
       - "ecogive %player% 15000000"
-      - "gems give %player% 115"
+      - "crystal give %player% 115"
     display:
       - "&f- &#80EE0B$15,000,000"
-      - "&f- &#FC258D115x &lGEMS"
+      - "&f- &#FC258D115x &lCRYSTALS"
   "18":
     playtime: 11d
     commands:
       - "ecogive %player% 18000000"
-      - "gems give %player% 130"
+      - "crystal give %player% 130"
     display:
       - "&f- &#80EE0B$18,000,000"
-      - "&f- &#FC258D130x &lGEMS"
+      - "&f- &#FC258D130x &lCRYSTALS"
   "19":
     playtime: 14d
     commands:
       - "ecogive %player% 22000000"
-      - "gems give %player% 150"
+      - "crystal give %player% 150"
     display:
       - "&f- &#80EE0B$22,000,000"
-      - "&f- &#FC258D150x &lGEMS"
+      - "&f- &#FC258D150x &lCRYSTALS"
   "20":
     playtime: 17d
     commands:
       - "ecogive %player% 26000000"
-      - "gems give %player% 170"
+      - "crystal give %player% 170"
     display:
       - "&f- &#80EE0B$26,000,000"
-      - "&f- &#FC258D170x &lGEMS"
+      - "&f- &#FC258D170x &lCRYSTALS"
   "21":
     playtime: 20d
     commands:
       - "ecogive %player% 30000000"
-      - "gems give %player% 190"
+      - "crystal give %player% 190"
     display:
       - "&f- &#80EE0B$30,000,000"
-      - "&f- &#FC258D190x &lGEMS"
+      - "&f- &#FC258D190x &lCRYSTALS"
   "22":
     playtime: 24d
     commands:
       - "ecogive %player% 36000000"
-      - "gems give %player% 215"
+      - "crystal give %player% 215"
     display:
       - "&f- &#80EE0B$36,000,000"
-      - "&f- &#FC258D215x &lGEMS"
+      - "&f- &#FC258D215x &lCRYSTALS"
   "23":
     playtime: 28d
     commands:
       - "ecogive %player% 42000000"
-      - "gems give %player% 240"
+      - "crystal give %player% 240"
     display:
       - "&f- &#80EE0B$42,000,000"
-      - "&f- &#FC258D240x &lGEMS"
+      - "&f- &#FC258D240x &lCRYSTALS"
   "24":
     playtime: 32d
     commands:
       - "ecogive %player% 50000000"
-      - "gems give %player% 270"
+      - "crystal give %player% 270"
     display:
       - "&f- &#80EE0B$50,000,000"
-      - "&f- &#FC258D270x &lGEMS"
+      - "&f- &#FC258D270x &lCRYSTALS"
   "25":
     playtime: 37d
     commands:
       - "ecogive %player% 60000000"
-      - "gems give %player% 300"
+      - "crystal give %player% 300"
     display:
       - "&f- &#80EE0B$60,000,000"
-      - "&f- &#FC258D300x &lGEMS"
+      - "&f- &#FC258D300x &lCRYSTALS"
   "26":
     playtime: 42d
     commands:
       - "ecogive %player% 72000000"
-      - "gems give %player% 340"
+      - "crystal give %player% 340"
     display:
       - "&f- &#80EE0B$72,000,000"
-      - "&f- &#FC258D340x &lGEMS"
+      - "&f- &#FC258D340x &lCRYSTALS"
   "27":
     playtime: 50d
     commands:
       - "ecogive %player% 90000000"
-      - "gems give %player% 380"
+      - "crystal give %player% 380"
     display:
       - "&f- &#80EE0B$90,000,000"
-      - "&f- &#FC258D380x &lGEMS"
+      - "&f- &#FC258D380x &lCRYSTALS"
   "28":
     playtime: 60d
     commands:
       - "ecogive %player% 120000000"
-      - "gems give %player% 450"
+      - "crystal give %player% 450"
     display:
       - "&f- &#80EE0B$120,000,000"
-      - "&f- &#FC258D450x &lGEMS"
+      - "&f- &#FC258D450x &lCRYSTALS"

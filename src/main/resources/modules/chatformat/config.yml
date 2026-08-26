@@ -1,5 +1,6 @@
-format: "{prefix}{name} &8▷ &r{message}"
+format: "{prefix}{tag}{name} &8▷ &r{message}"
 
-# What {prefix} and {suffix} stand for.
+# What {prefix}, {suffix}, and {tag} stand for.
 prefix-placeholder: "%luckperms_prefix%"
 suffix-placeholder: "%luckperms_suffix%"
+tag-placeholder: "%shardedcore_tag%"

@@ -75,4 +75,69 @@ public final class ColorUtil {
     private static String fixShortHex(String input) {
         return SHORT_HEX.matcher(input).replaceAll("&$1");
     }
+
+    public static String hex(String raw) {
+        if (raw == null) return "";
+        String value = raw.trim().replace("#", "").replace("&", "");
+        if (value.length() >= 7 && (value.charAt(0) == 'x' || value.charAt(0) == 'X')) {
+            value = value.substring(1).replace("&", "");
+        }
+        if (value.length() != 6) return "";
+        try {
+            Integer.parseInt(value, 16);
+            return value.toUpperCase(Locale.ROOT);
+        } catch (NumberFormatException ex) {
+            return "";
+        }
+    }
+
+    public static String gradient(String text, String fromHex, String toHex) {
+        if (text == null || text.isEmpty()) return "";
+        int[] from = rgb(hex(fromHex));
+        int[] to = rgb(hex(toHex));
+        if (from == null || to == null) return text;
+        String stripped = text.replaceAll("(?i)&x(?:&[0-9a-f]){6}", "")
+                .replaceAll("(?i)&#[0-9a-f]{6}", "")
+                .replaceAll("(?i)&[0-9a-fk-or]", "");
+        int visible = 0;
+        for (int i = 0; i < stripped.length(); i++) {
+            if (!Character.isWhitespace(stripped.charAt(i))) visible++;
+        }
+        if (visible == 0) return stripped;
+        StringBuilder out = new StringBuilder();
+        int index = 0;
+        for (int i = 0; i < stripped.length(); i++) {
+            char character = stripped.charAt(i);
+            if (Character.isWhitespace(character)) {
+                out.append(character);
+                continue;
+            }
+            double t = visible == 1 ? 0 : (double) index / (visible - 1);
+            int r = (int) Math.round(from[0] + (to[0] - from[0]) * t);
+            int g = (int) Math.round(from[1] + (to[1] - from[1]) * t);
+            int b = (int) Math.round(from[2] + (to[2] - from[2]) * t);
+            out.append(String.format(Locale.ROOT, "&#%02X%02X%02X", r, g, b)).append(character);
+            index++;
+        }
+        return out.toString();
+    }
+
+    public static String solid(String text, String hexCode) {
+        String value = hex(hexCode);
+        if (value.isEmpty() || text == null) return text == null ? "" : text;
+        return "&#" + value + text;
+    }
+
+    private static int[] rgb(String hex) {
+        if (hex == null || hex.length() != 6) return null;
+        try {
+            return new int[]{
+                    Integer.parseInt(hex.substring(0, 2), 16),
+                    Integer.parseInt(hex.substring(2, 4), 16),
+                    Integer.parseInt(hex.substring(4, 6), 16)
+            };
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+    }
 }

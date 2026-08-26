@@ -6,7 +6,7 @@ max-rewards: 0
 reward:
   amount: 1
   commands:
-    - "gems give %player% %amount%"
+    - "crystal give %player% %amount%"
 
 sound:
   enabled: true
@@ -27,7 +27,7 @@ sounds:
     pitch: 0.8
 
 messages:
-  rewarded: "&#FFE925&lWELCOME &7▷ &fYou welcomed &#FFE925%player% &fand earned &#FFE925%amount% Shard&f."
+  rewarded: "&#FFE925&lWELCOME &7▷ &fYou welcomed &#FFE925%player% &fand earned &#FFE925%amount% Crystal&f."
   already: "&#FF0000&lERROR &7▷ &fYou already welcomed &#FFE925%player%&f."
   self: "&#FF0000&lERROR &7▷ &fYou cannot welcome yourself."
   unknown: "&#FF0000&lERROR &7▷ &f&#FFE925%player% &fis not a new player right now."

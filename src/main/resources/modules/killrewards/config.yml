@@ -59,223 +59,223 @@ rewards:
     kills: 1
     commands:
       - "ecogive %player% 50000"
-      - "gems give %player% 5"
+      - "crystal give %player% 5"
     display:
       - "&f- &#80EE0B$50,000"
-      - "&f- &#FC258D5x &lGEMS"
+      - "&f- &#FC258D5x &lCRYSTALS"
   "02":
     kills: 5
     commands:
       - "ecogive %player% 100000"
-      - "gems give %player% 8"
+      - "crystal give %player% 8"
     display:
       - "&f- &#80EE0B$100,000"
-      - "&f- &#FC258D8x &lGEMS"
+      - "&f- &#FC258D8x &lCRYSTALS"
   "03":
     kills: 10
     commands:
       - "ecogive %player% 150000"
-      - "gems give %player% 10"
+      - "crystal give %player% 10"
     display:
       - "&f- &#80EE0B$150,000"
-      - "&f- &#FC258D10x &lGEMS"
+      - "&f- &#FC258D10x &lCRYSTALS"
   "04":
     kills: 20
     commands:
       - "ecogive %player% 250000"
-      - "gems give %player% 14"
+      - "crystal give %player% 14"
     display:
       - "&f- &#80EE0B$250,000"
-      - "&f- &#FC258D14x &lGEMS"
+      - "&f- &#FC258D14x &lCRYSTALS"
   "05":
     kills: 35
     commands:
       - "ecogive %player% 400000"
-      - "gems give %player% 18"
+      - "crystal give %player% 18"
     display:
       - "&f- &#80EE0B$400,000"
-      - "&f- &#FC258D18x &lGEMS"
+      - "&f- &#FC258D18x &lCRYSTALS"
   "06":
     kills: 50
     commands:
       - "ecogive %player% 600000"
-      - "gems give %player% 22"
+      - "crystal give %player% 22"
     display:
       - "&f- &#80EE0B$600,000"
-      - "&f- &#FC258D22x &lGEMS"
+      - "&f- &#FC258D22x &lCRYSTALS"
   "07":
     kills: 75
     commands:
       - "ecogive %player% 850000"
-      - "gems give %player% 26"
+      - "crystal give %player% 26"
     display:
       - "&f- &#80EE0B$850,000"
-      - "&f- &#FC258D26x &lGEMS"
+      - "&f- &#FC258D26x &lCRYSTALS"
   "08":
     kills: 100
     commands:
       - "ecogive %player% 1200000"
-      - "gems give %player% 30"
+      - "crystal give %player% 30"
     display:
       - "&f- &#80EE0B$1,200,000"
-      - "&f- &#FC258D30x &lGEMS"
+      - "&f- &#FC258D30x &lCRYSTALS"
   "09":
     kills: 140
     commands:
       - "ecogive %player% 1600000"
-      - "gems give %player% 35"
+      - "crystal give %player% 35"
     display:
       - "&f- &#80EE0B$1,600,000"
-      - "&f- &#FC258D35x &lGEMS"
+      - "&f- &#FC258D35x &lCRYSTALS"
   "10":
     kills: 180
     commands:
       - "ecogive %player% 2100000"
-      - "gems give %player% 40"
+      - "crystal give %player% 40"
     display:
       - "&f- &#80EE0B$2,100,000"
-      - "&f- &#FC258D40x &lGEMS"
+      - "&f- &#FC258D40x &lCRYSTALS"
   "11":
     kills: 230
     commands:
       - "ecogive %player% 2700000"
-      - "gems give %player% 46"
+      - "crystal give %player% 46"
     display:
       - "&f- &#80EE0B$2,700,000"
-      - "&f- &#FC258D46x &lGEMS"
+      - "&f- &#FC258D46x &lCRYSTALS"
   "12":
     kills: 290
     commands:
       - "ecogive %player% 3400000"
-      - "gems give %player% 52"
+      - "crystal give %player% 52"
     display:
       - "&f- &#80EE0B$3,400,000"
-      - "&f- &#FC258D52x &lGEMS"
+      - "&f- &#FC258D52x &lCRYSTALS"
   "13":
     kills: 360
     commands:
       - "ecogive %player% 4200000"
-      - "gems give %player% 58"
+      - "crystal give %player% 58"
     display:
       - "&f- &#80EE0B$4,200,000"
-      - "&f- &#FC258D58x &lGEMS"
+      - "&f- &#FC258D58x &lCRYSTALS"
   "14":
     kills: 440
     commands:
       - "ecogive %player% 5100000"
-      - "gems give %player% 65"
+      - "crystal give %player% 65"
     display:
       - "&f- &#80EE0B$5,100,000"
-      - "&f- &#FC258D65x &lGEMS"
+      - "&f- &#FC258D65x &lCRYSTALS"
   "15":
     kills: 530
     commands:
       - "ecogive %player% 6100000"
-      - "gems give %player% 72"
+      - "crystal give %player% 72"
     display:
       - "&f- &#80EE0B$6,100,000"
-      - "&f- &#FC258D72x &lGEMS"
+      - "&f- &#FC258D72x &lCRYSTALS"
   "16":
     kills: 630
     commands:
       - "ecogive %player% 7200000"
-      - "gems give %player% 80"
+      - "crystal give %player% 80"
     display:
       - "&f- &#80EE0B$7,200,000"
-      - "&f- &#FC258D80x &lGEMS"
+      - "&f- &#FC258D80x &lCRYSTALS"
   "17":
     kills: 740
     commands:
       - "ecogive %player% 8400000"
-      - "gems give %player% 88"
+      - "crystal give %player% 88"
     display:
       - "&f- &#80EE0B$8,400,000"
-      - "&f- &#FC258D88x &lGEMS"
+      - "&f- &#FC258D88x &lCRYSTALS"
   "18":
     kills: 860
     commands:
       - "ecogive %player% 9700000"
-      - "gems give %player% 96"
+      - "crystal give %player% 96"
     display:
       - "&f- &#80EE0B$9,700,000"
-      - "&f- &#FC258D96x &lGEMS"
+      - "&f- &#FC258D96x &lCRYSTALS"
   "19":
     kills: 1000
     commands:
       - "ecogive %player% 11000000"
-      - "gems give %player% 105"
+      - "crystal give %player% 105"
     display:
       - "&f- &#80EE0B$11,000,000"
-      - "&f- &#FC258D105x &lGEMS"
+      - "&f- &#FC258D105x &lCRYSTALS"
   "20":
     kills: 1150
     commands:
       - "ecogive %player% 12500000"
-      - "gems give %player% 115"
+      - "crystal give %player% 115"
     display:
       - "&f- &#80EE0B$12,500,000"
-      - "&f- &#FC258D115x &lGEMS"
+      - "&f- &#FC258D115x &lCRYSTALS"
   "21":
     kills: 1310
     commands:
       - "ecogive %player% 14000000"
-      - "gems give %player% 125"
+      - "crystal give %player% 125"
     display:
       - "&f- &#80EE0B$14,000,000"
-      - "&f- &#FC258D125x &lGEMS"
+      - "&f- &#FC258D125x &lCRYSTALS"
   "22":
     kills: 1480
     commands:
       - "ecogive %player% 16000000"
-      - "gems give %player% 136"
+      - "crystal give %player% 136"
     display:
       - "&f- &#80EE0B$16,000,000"
-      - "&f- &#FC258D136x &lGEMS"
+      - "&f- &#FC258D136x &lCRYSTALS"
   "23":
     kills: 1660
     commands:
       - "ecogive %player% 18000000"
-      - "gems give %player% 148"
+      - "crystal give %player% 148"
     display:
       - "&f- &#80EE0B$18,000,000"
-      - "&f- &#FC258D148x &lGEMS"
+      - "&f- &#FC258D148x &lCRYSTALS"
   "24":
     kills: 1850
     commands:
       - "ecogive %player% 20000000"
-      - "gems give %player% 160"
+      - "crystal give %player% 160"
     display:
       - "&f- &#80EE0B$20,000,000"
-      - "&f- &#FC258D160x &lGEMS"
+      - "&f- &#FC258D160x &lCRYSTALS"
   "25":
     kills: 2050
     commands:
       - "ecogive %player% 23000000"
-      - "gems give %player% 175"
+      - "crystal give %player% 175"
     display:
       - "&f- &#80EE0B$23,000,000"
-      - "&f- &#FC258D175x &lGEMS"
+      - "&f- &#FC258D175x &lCRYSTALS"
   "26":
     kills: 2200
     commands:
       - "ecogive %player% 26000000"
-      - "gems give %player% 190"
+      - "crystal give %player% 190"
     display:
       - "&f- &#80EE0B$26,000,000"
-      - "&f- &#FC258D190x &lGEMS"
+      - "&f- &#FC258D190x &lCRYSTALS"
   "27":
     kills: 2350
     commands:
       - "ecogive %player% 29000000"
-      - "gems give %player% 205"
+      - "crystal give %player% 205"
     display:
       - "&f- &#80EE0B$29,000,000"
-      - "&f- &#FC258D205x &lGEMS"
+      - "&f- &#FC258D205x &lCRYSTALS"
   "28":
     kills: 2500
     commands:
       - "ecogive %player% 35000000"
-      - "gems give %player% 225"
+      - "crystal give %player% 225"
     display:
       - "&f- &#80EE0B$35,000,000"
-      - "&f- &#FC258D225x &lGEMS"
+      - "&f- &#FC258D225x &lCRYSTALS"

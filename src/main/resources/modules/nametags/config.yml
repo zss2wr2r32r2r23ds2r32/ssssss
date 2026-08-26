@@ -30,7 +30,7 @@ lines:
     interval: 0
     refresh: 100
     frames:
-      - '%luckperms_prefix%&f%player_name% %luckperms_suffix%'
+      - '%shardedcore_tag%%luckperms_prefix%&f%player_name% %luckperms_suffix%'
 
   bottom:
     enabled: true

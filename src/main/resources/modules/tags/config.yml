@@ -1,0 +1,32 @@
+# Chat tags. Shown in chat, above the nametag, and in TAB.
+# /tag create <name> <tag>
+# /tag set <name>
+# /tag remove <name>
+# Placeholder: %shardedcore_tag%
+
+tab:
+  enabled: true
+
+chat-format: "%tag% "
+tab-format: "%tag% "
+
+tags:
+  sharded:
+    tag: "&#A370EE&lSHARDED"
+  og:
+    tag: "&#FFD900&lOG"
+
+messages:
+  usage: "&#A370EE&lTAG &7▷ &f/tag create <name> <tag> &7| &fset <name> &7| &fremove <name>"
+  usage-create: "&#A370EE&lTAG &7▷ &f/tag create <name> <tag>"
+  usage-set: "&#A370EE&lTAG &7▷ &f/tag set <name>"
+  usage-remove: "&#A370EE&lTAG &7▷ &f/tag remove <name>"
+  created: "&#A370EE&lTAG &7▷ &fCreated &#A370EE%name% &fas %tag%&f."
+  set: "&#A370EE&lTAG &7▷ &fYour tag is now %tag%&f."
+  removed: "&#A370EE&lTAG &7▷ &fRemoved &#A370EE%name%&f."
+  cleared: "&#A370EE&lTAG &7▷ &fYour tag was cleared."
+  missing: "&#FF0000&lERROR &7▷ &fUnknown tag &#A370EE%name%&f."
+  locked: "&#FF0000&lERROR &7▷ &fYou have not unlocked &#A370EE%name%&f."
+  invalid: "&#FF0000&lERROR &7▷ &fThat tag is not valid."
+  no-permission: "&#FF0000&lERROR &7▷ &fYou do not have permission."
+  players-only: "&#FF0000&lERROR &7▷ &fOnly a player can use that."

@@ -1,0 +1,8 @@
+# When XP orbs clump past this amount they turn into bottles.
+convert-merges: true
+convert-spawns: true
+experience-per-bottle: 7
+min-bottles: 8
+min-experience: 56
+max-bottles: 64
+keep-leftover-orb: true
