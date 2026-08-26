@@ -235,6 +235,24 @@ commands:
   playtime:
     description: Show playtime
     permission: shardedcore.playtimerewards
+  order:
+    description: Player order board
+    aliases: [orders]
+    permission: shardedcore.orders
+  orderadmin:
+    description: Orders admin
+    permission: shardedcore.orders.admin
+  giveaway:
+    description: Public giveaways
+    aliases: [gws, gw, giveaways]
+    permission: shardedcore.giveaway
+  vault:
+    description: Private vaults
+    aliases: [vaults, pv]
+    permission: shardedcore.vault
+  pvadmin:
+    description: Vault admin
+    permission: shardedcore.vault.admin
 
 permissions:
   shardedcore.admin:
@@ -401,5 +419,107 @@ permissions:
     default: true
   shardedcore.playtimerewards:
     default: true
+  shardedcore.orders:
+    default: true
+  shardedcore.orders.admin:
+    default: op
+  shardedcore.giveaway:
+    default: true
+  shardedcore.giveaway.admin:
+    default: op
+  shardedcore.vault:
+    default: true
+  shardedcore.vault.admin:
+    default: op
+  shardedcore.vault.1:
+    default: false
+  shardedcore.vault.2:
+    default: false
+  shardedcore.vault.3:
+    default: false
+  shardedcore.vault.4:
+    default: false
+  shardedcore.vault.5:
+    default: false
+  shardedcore.vault.6:
+    default: false
+  shardedcore.vault.7:
+    default: false
+  shardedcore.vault.8:
+    default: false
+  shardedcore.vault.9:
+    default: false
+  shardedcore.vault.10:
+    default: false
+  shardedcore.vault.11:
+    default: false
+  shardedcore.vault.12:
+    default: false
+  shardedcore.vault.13:
+    default: false
+  shardedcore.vault.14:
+    default: false
+  shardedcore.vault.15:
+    default: false
+  shardedcore.vault.16:
+    default: false
+  shardedcore.vault.17:
+    default: false
+  shardedcore.vault.18:
+    default: false
+  shardedcore.vault.19:
+    default: false
+  shardedcore.vault.20:
+    default: false
+  shardedcore.vault.21:
+    default: false
+  shardedcore.vault.22:
+    default: false
+  shardedcore.vault.23:
+    default: false
+  shardedcore.vault.24:
+    default: false
+  shardedcore.vault.25:
+    default: false
+  shardedcore.vault.26:
+    default: false
+  shardedcore.vault.27:
+    default: false
+  shardedcore.vault.28:
+    default: false
+  shardedcore.vault.29:
+    default: false
+  shardedcore.vault.30:
+    default: false
+  shardedcore.vault.31:
+    default: false
+  shardedcore.vault.32:
+    default: false
+  shardedcore.vault.33:
+    default: false
+  shardedcore.vault.34:
+    default: false
+  shardedcore.vault.35:
+    default: false
+  shardedcore.vault.36:
+    default: false
+  shardedcore.vault.37:
+    default: false
+  shardedcore.vault.38:
+    default: false
+  shardedcore.vault.39:
+    default: false
+  shardedcore.vault.40:
+    default: false
+  shardedcore.vault.41:
+    default: false
+  shardedcore.vault.42:
+    default: false
+  shardedcore.vault.43:
+    default: false
+  shardedcore.vault.44:
+    default: false
+  shardedcore.vault.45:
+    default: false
   shardedcore.internal.disabled:
     default: false

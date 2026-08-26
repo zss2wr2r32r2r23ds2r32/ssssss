@@ -6,6 +6,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -35,6 +36,24 @@ public final class Items {
             return texturedHead(raw.substring("basehead-".length()));
         }
         return new ItemStack(Sounds.material(raw, Material.STONE));
+    }
+
+    public static String serialize(ItemStack item) {
+        if (item == null || item.getType().isAir()) return "";
+        YamlConfiguration yaml = new YamlConfiguration();
+        yaml.set("i", item);
+        return yaml.saveToString();
+    }
+
+    public static ItemStack deserialize(String raw) {
+        if (raw == null || raw.isBlank()) return null;
+        YamlConfiguration yaml = new YamlConfiguration();
+        try {
+            yaml.loadFromString(raw);
+        } catch (Exception ex) {
+            return null;
+        }
+        return yaml.getItemStack("i");
     }
 
     public static ItemStack fromSection(ConfigurationSection section, Player player, String... pairs) {

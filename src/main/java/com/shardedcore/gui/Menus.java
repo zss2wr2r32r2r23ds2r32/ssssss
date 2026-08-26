@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -14,8 +15,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -56,10 +60,18 @@ public final class Menus implements Listener {
         if (menu.locked) event.setCancelled(true);
         if (event.getClickedInventory() != menu.inventory) {
             if (menu.locked) event.setCancelled(true);
+            if (menu.editable != null && (event.isShiftClick() || event.getClick() == ClickType.NUMBER_KEY
+                    || event.getClick() == ClickType.DOUBLE_CLICK)) {
+                event.setCancelled(true);
+            }
             if (menu.bottomClick != null && event.getClickedInventory() == player.getInventory()) {
                 menu.bottomClick.accept(event);
             }
             return;
+        }
+        if (menu.editable != null && !menu.editable.contains(event.getRawSlot())
+                && !menu.clicks.containsKey(event.getRawSlot())) {
+            event.setCancelled(true);
         }
         Consumer<InventoryClickEvent> handler = menu.clicks.get(event.getRawSlot());
         if (handler != null) handler.accept(event);
@@ -72,6 +84,15 @@ public final class Menus implements Listener {
         Menu menu = open.get(player.getUniqueId());
         if (menu == null || event.getInventory() != menu.inventory) return;
         if (menu.locked) event.setCancelled(true);
+        if (menu.editable != null) {
+            int size = menu.inventory.getSize();
+            for (int slot : event.getRawSlots()) {
+                if (slot >= 0 && slot < size && !menu.editable.contains(slot) && !menu.clicks.containsKey(slot)) {
+                    event.setCancelled(true);
+                    return;
+                }
+            }
+        }
     }
 
     @EventHandler
@@ -87,6 +108,7 @@ public final class Menus implements Listener {
         private final Inventory inventory;
         private final Map<Integer, Consumer<InventoryClickEvent>> clicks = new HashMap<>();
         private boolean locked = true;
+        private Set<Integer> editable;
         private Consumer<InventoryClickEvent> anyClick;
         private Consumer<InventoryClickEvent> bottomClick;
         private Consumer<Player> close;
@@ -101,6 +123,12 @@ public final class Menus implements Listener {
 
         public Menu unlocked() {
             this.locked = false;
+            return this;
+        }
+
+        public Menu editableSlots(Collection<Integer> slots) {
+            this.locked = false;
+            this.editable = new HashSet<>(slots);
             return this;
         }
 

@@ -25,6 +25,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
@@ -133,6 +134,13 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
         spawn(event.getPlayer());
     }
 
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent event) {
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            if (event.getPlayer().isOnline()) spawn(event.getPlayer());
+        });
+    }
+
     private void tick() {
         ticks += Math.max(1, config.getInt("refresh", 10));
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -195,11 +203,13 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
         }
         boolean hide = (config.getBoolean("display.hide-when-sneaking", true) && player.isSneaking())
                 || (config.getBoolean("display.hide-when-invisible", true) && invisible(player));
-        refreshLine(player, tag, true, hide);
-        refreshLine(player, tag, false, hide);
+        boolean heightChanged = player.getHeight() != tag.lastHeight;
+        refreshLine(player, tag, true, hide, heightChanged);
+        refreshLine(player, tag, false, hide, heightChanged);
+        tag.lastHeight = player.getHeight();
     }
 
-    private void refreshLine(Player player, Tag tag, boolean top, boolean hide) {
+    private void refreshLine(Player player, Tag tag, boolean top, boolean hide, boolean heightChanged) {
         TextDisplay display = top ? tag.top : tag.bottom;
         if (display == null || !display.isValid()) {
             spawn(player);
@@ -211,10 +221,12 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
         }
         display.setInvisible(hide);
         if (config.getBoolean("display.ride", true)) {
-            if (!player.getPassengers().contains(display)) player.addPassenger(display);
-            display.setTransformation(new Transformation(
-                    offset(player, top), new Quaternionf(), new Vector3f(scale, scale, scale), new Quaternionf()));
-        } else {
+            if (display.getVehicle() != player) player.addPassenger(display);
+            if (heightChanged) {
+                display.setTransformation(new Transformation(
+                        offset(player, top), new Quaternionf(), new Vector3f(scale, scale, scale), new Quaternionf()));
+            }
+        } else if (heightChanged || ticks % Math.max(1, config.getInt("refresh", 5)) == 0) {
             display.teleport(anchor(player, top));
         }
         String path = top ? "lines.top" : "lines.bottom";
@@ -279,10 +291,14 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
 
     private String placeholders(Player player, String input) {
         String out = Text.applyPlaceholders(input, player);
-        if (out.contains("%lifestealcore_balance_formatted%")) {
+        if (out.contains("%lifestealcore_balance_formatted%")
+                || out.contains("%shardedcore_money_formatted%")
+                || out.contains("%shardedcore_balance_formatted%")) {
             EconomyModule economy = plugin.modules().get(EconomyModule.class);
             String formatted = economy == null ? "0" : economy.service().format(economy.service().get(player.getUniqueId()));
-            out = out.replace("%lifestealcore_balance_formatted%", formatted);
+            out = out.replace("%lifestealcore_balance_formatted%", formatted)
+                    .replace("%shardedcore_money_formatted%", formatted)
+                    .replace("%shardedcore_balance_formatted%", formatted);
         }
         if (out.contains("%lifestealcore_team%")) {
             out = out.replace("%lifestealcore_team%", "None");
@@ -374,5 +390,6 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
         private TextDisplay bottom;
         private String topSerial = "";
         private String bottomSerial = "";
+        private double lastHeight;
     }
 }

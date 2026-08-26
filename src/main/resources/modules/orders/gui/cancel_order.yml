@@ -1,0 +1,44 @@
+# Asked before an order is called off, because it moves money.
+title: '&8🔥 Orders | Cancel Order'
+size: 27
+no-extras: '-'
+none: '-'
+'no':
+  material: RED_STAINED_GLASS_PANE
+  slot: 10
+  name: '&#FF0000&lCANCEL'
+  lore:
+  - '&8Description'
+  - ''
+  - '&#FF0000Information:'
+  - '&fClick here, to return'
+  - '&fto the your orders section.'
+  - ''
+  - '&#FFD900▶ &n&lCLICK&#FFD900 To Cancel'
+'yes':
+  material: LIME_STAINED_GLASS_PANE
+  slot: 16
+  name: '&#45FF17&lCONFIRM'
+  lore:
+  - '&8Description'
+  - ''
+  - '&#45FF17Information:'
+  - '&fClick here, to confirm'
+  - '&fthe cancel of the order.'
+  - ''
+  - '&#FFD900▶ &n&lCLICK&#FFD900 To Confirm'
+order-slot: 13
+order:
+  name: '&#45FF17%player_name%''s &fOrder'
+  glow: false
+  lore:
+  - '&8Description'
+  - ''
+  - '&#45FF17Information:'
+  - '&#019BEE⚑ &fItem: &#019BEE%total_amount% %item_name%'
+  - '&#45FF17&l$ &fPrice: &#45FF17$%price_per_item% each'
+  - ''
+  - '&#F90EC2🌊 &fDelivered: &#F90EC2%total_delivered%&7/&#F90EC2%total_amount%'
+  - '&#45FF17&l$ &fPaid: &#45FF17%total_paid%&7/&#45FF17$%total_price%'
+  - ''
+  - '&#FFF300⌛ %time_remaining% Until Order expires'

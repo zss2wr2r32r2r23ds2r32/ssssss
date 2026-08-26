@@ -1,0 +1,84 @@
+# How a giveaway runs. The three menus live in menu.yml.
+# A player puts items in, they go straight into the database, and the winner
+# picks them up again from Your Items. Nothing is ever held in memory only.
+
+# Right-click on the start button walks through this list.
+durations: ["1h", "6h", "12h", "24h"]
+
+rules:
+  # The create area is four rows, so 36 stacks.
+  min-items: 1
+  max-items: 36
+  # How many giveaways one player may have running at the same time.
+  max-running: 1
+  # Wait between two giveaways from the same player. 0 turns it off.
+  cooldown-seconds: 0
+  # Whether the owner may enter their own giveaway.
+  owner-can-enter: false
+  # Items that are never accepted.
+  blocked-materials: []
+
+# How often the timer looks for giveaways that ended.
+tick-seconds: 10
+# The chat warning goes out this long before the end. 0 turns it off.
+warn-seconds: 300
+# Claimed wins and finished giveaways older than this are deleted. 0 keeps everything.
+keep-days: 30
+
+sounds:
+  open:
+    enabled: true
+    sound: "block.barrel.open"
+    volume: 0.7
+    pitch: 1.2
+  click:
+    enabled: true
+    sound: "ui.button.click"
+    volume: 1.0
+    pitch: 1.2
+  enter:
+    enabled: true
+    sound: "entity.experience_orb.pickup"
+    volume: 1.0
+    pitch: 1.4
+  claim:
+    enabled: true
+    sound: "entity.player.levelup"
+    volume: 1.0
+    pitch: 1.4
+  start:
+    enabled: true
+    sound: "ui.toast.challenge_complete"
+    volume: 0.8
+    pitch: 1.0
+  error:
+    enabled: true
+    sound: "block.note_block.bass"
+    volume: 0.8
+    pitch: 0.8
+
+# Goes to everyone. The start line carries the prize list on hover and runs /giveaway on click.
+broadcast:
+  started: "&#FFB02E&lGIVEAWAY &7▷ &f%player% is giving away &#FFB02E%items% items&f. &#FFB02E/gws &fto enter."
+  ending: "&#FFB02E&lGIVEAWAY &7▷ &f%player%'s giveaway ends in &#FFB02E%time%&f."
+  winner: "&#FFB02E&lGIVEAWAY &7▷ &#FFB02E%winner% &fwon %player%'s giveaway. &7(%entries% entries)"
+
+messages:
+  actionbar: true
+  entered: "&#97F900&lENTERED &7▷ &fYou are in %player%'s giveaway."
+  already-entered: "&#FF0000&lERROR &7▷ &fYou already entered that one."
+  own-giveaway: "&#FF0000&lERROR &7▷ &fYou cannot enter your own giveaway."
+  claimed: "&#97F900&lCLAIMED &7▷ &f%amount% items went to your inventory."
+  no-space: "&#FF0000&lERROR &7▷ &fMake &#FF0000%slots% slots &ffree first."
+  already-running: "&#FF0000&lERROR &7▷ &fYou already have a giveaway running."
+  cooldown: "&#FF0000&lERROR &7▷ &fWait &#FF0000%time% &fbefore the next one."
+  too-few-items: "&#FF0000&lERROR &7▷ &fPut at least &#FF0000%min% items &fin first."
+  too-many-items: "&#FF0000&lERROR &7▷ &fA giveaway holds &#FF0000%max% stacks&f."
+  blocked-item: "&#FF0000&lERROR &7▷ &fThat item cannot be given away."
+  start-failed: "&#FF0000&lERROR &7▷ &fThe giveaway could not be saved, your items came back."
+  returned: "&#FFB02E&lGIVEAWAY &7▷ &fNobody entered, your items are waiting in /gws."
+  cancelled: "&#FFB02E&lGIVEAWAY &7▷ &fGiveaway &#FFB02E%id% &fof %player% was cancelled."
+  not-found: "&#FF0000&lERROR &7▷ &fNo running giveaway with that id."
+  usage-cancel: "&#FF0000&lERROR &7▷ &fUse &#FF0000/giveaway cancel <id>&f."
+  players-only: "&#FF0000&lERROR &7▷ &fOnly players can do that."
+  no-permission: "&#FF0000&lERROR &7▷ &fYou do not have permission."

@@ -1,0 +1,281 @@
+# The three giveaway menus. All of them are six rows.
+# Entries sit in the inner window, the border stays empty.
+
+title: "&8Public Giveaways"
+time-format: "dd.MM.yyyy HH:mm"
+
+# 28 places per page. Filled from the top left.
+area: [10, 11, 12, 13, 14, 15, 16,
+       19, 20, 21, 22, 23, 24, 25,
+       28, 29, 30, 31, 32, 33, 34,
+       37, 38, 39, 40, 41, 42, 43]
+
+# Everything that is not an entry and not a button.
+filler:
+  material: BLACK_STAINED_GLASS_PANE
+  name: " "
+  lore: []
+
+# How many prize lines fit in a lore before it cuts off.
+prize-lines: 10
+prize-format: "&#FFB02E¦ &f%amount%x &#FFB02E%item%"
+prize-more: "&#FFB02E¦ &fand %rest% more"
+
+main:
+
+  entry:
+    material: CHEST_MINECART
+    name: "&#FFB02E&l%player%'S GIVEAWAY"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFB02EInformation:"
+      - "&#FFB02E¦ &fEnter %player%'s"
+      - "&#FFB02E¦ &fongoing &#FFB02Egiveaway&f."
+      - ""
+      - "&#FFB02EPrizes:"
+      - "&#FFB02E¦ &f%items%"
+      - ""
+      - "&#22AFFBℹ &fEntries &7▷ &#22AFFB%entries%"
+      - "&#FFD900⌛ &fEnds In &7▷ &#FFD900%time%"
+      - ""
+      - "&#FFB02E▷ &n&lLEFT-CLICK&r&#FFB02E To Enter"
+      - "&#FFB02E▷ &n&lRIGHT-CLICK&r&#FFB02E To View"
+    state-marker: "LEFT-CLICK"
+    state-entered: "&#97F900▷ &fYou are entered"
+    state-own: "&#7F7F7F▷ &fThis is yours"
+
+  your-items:
+    slot: 45
+    material: MINECART
+    name: "&#B219CB&lYOUR ITEMS"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#B219CBInformation:"
+      - "&#B219CB¦ &fEverything you"
+      - "&#B219CB¦ &fhave &#B219CBwon&f."
+      - ""
+      - "&#22AFFBℹ &fWaiting &7▷ &#22AFFB%wins%"
+      - ""
+      - "&#B219CB▷ &n&lCLICK&r&#B219CB To Open"
+
+  previous:
+    slot: 48
+    material: RED_STAINED_GLASS_PANE
+    name: "&#FF0000&lPREVIOUS PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000¦ &fGo one page back."
+      - ""
+      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Navigate"
+
+  refresh:
+    slot: 49
+    material: CLOCK
+    name: "&#FFD900&lREFRESH"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFD900Information:"
+      - "&#FFD900¦ &fLoad the newest"
+      - "&#FFD900¦ &fentries &#FFD900again&f."
+      - ""
+      - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Refresh"
+
+  next:
+    slot: 50
+    material: LIME_STAINED_GLASS_PANE
+    name: "&#97F900&lUPCOMING PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#97F900Information:"
+      - "&#97F900¦ &fGo one page forward."
+      - ""
+      - "&#97F900▷ &n&lCLICK&r&#97F900 To Navigate"
+
+  create:
+    slot: 53
+    material: BELL
+    name: "&#FFB02E&lCREATE GIVEAWAY"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFB02EInformation:"
+      - "&#FFB02E¦ &fPut up your own"
+      - "&#FFB02E¦ &fpublic &#FFB02Egiveaway&f."
+      - ""
+      - "&#22AFFBℹ &fYours Running &7▷ &#22AFFB%running%&8/&#22AFFB%max%"
+      - ""
+      - "&#FFB02E▷ &n&lCLICK&r&#FFB02E To Create"
+
+  empty:
+    slot: 22
+    material: BARRIER
+    name: "&#FF0000&lNOTHING HERE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000¦ &fNo giveaway is"
+      - "&#FF0000¦ &frunning &#FF0000right now&f."
+
+wins:
+
+  entry:
+    material: CHEST_MINECART
+    name: "&#97F900&l%amount%x FROM %player%"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#97F900Information:"
+      - "&#97F900¦ &fYou won this from"
+      - "&#97F900¦ &f%player%'s &#97F900giveaway&f."
+      - ""
+      - "&#97F900Prizes:"
+      - "&#97F900¦ &f%items%"
+      - ""
+      - "&#FFD900⌛ &fWon &7▷ &#FFD900%time%"
+      - ""
+      - "&#97F900▷ &n&lCLICK&r&#97F900 To Claim"
+
+  returned:
+    material: CHEST_MINECART
+    name: "&#97F900&l%amount%x RETURNED"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#97F900Information:"
+      - "&#97F900¦ &fNobody entered your"
+      - "&#97F900¦ &fgiveaway, take it &#97F900back&f."
+      - ""
+      - "&#97F900Prizes:"
+      - "&#97F900¦ &f%items%"
+      - ""
+      - "&#FFD900⌛ &fEnded &7▷ &#FFD900%time%"
+      - ""
+      - "&#97F900▷ &n&lCLICK&r&#97F900 To Claim"
+
+  previous:
+    slot: 48
+    material: RED_STAINED_GLASS_PANE
+    name: "&#FF0000&lPREVIOUS PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000¦ &fGo one page back."
+      - ""
+      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Navigate"
+
+  refresh:
+    slot: 49
+    material: CLOCK
+    name: "&#FFD900&lREFRESH"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFD900Information:"
+      - "&#FFD900¦ &fLoad your won"
+      - "&#FFD900¦ &fitems &#FFD900again&f."
+      - ""
+      - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Refresh"
+
+  next:
+    slot: 50
+    material: LIME_STAINED_GLASS_PANE
+    name: "&#97F900&lUPCOMING PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#97F900Information:"
+      - "&#97F900¦ &fGo one page forward."
+      - ""
+      - "&#97F900▷ &n&lCLICK&r&#97F900 To Navigate"
+
+  return:
+    slot: 53
+    material: RED_DYE
+    name: "&#FF0000&lRETURN"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000¦ &fBack to the main"
+      - "&#FF0000¦ &fgiveaway &#FF0000menu&f."
+      - ""
+      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Return"
+
+  empty:
+    slot: 22
+    material: BARRIER
+    name: "&#FF0000&lNOTHING HERE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000¦ &fYou have not won"
+      - "&#FF0000¦ &fanything &#FF0000yet&f."
+
+create:
+
+  cancel:
+    slot: 45
+    material: BARRIER
+    name: "&#FF0000&lCANCEL"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000¦ &fClose and take"
+      - "&#FF0000¦ &fyour items &#FF0000back&f."
+      - ""
+      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Cancel"
+
+  preview:
+    slot: 49
+    material: CLOCK
+    name: "&#B219CB&lPREVIEW"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#B219CBInformation:"
+      - "&#B219CB¦ &fDrop items above"
+      - "&#B219CB¦ &fto &#B219CBadd them&f."
+      - ""
+      - "&#22AFFBℹ &fItems &7▷ &#22AFFB%items%&8/&#22AFFB%max%"
+
+  start:
+    slot: 53
+    material: LIME_DYE
+    name: "&#97F900&lSTART GIVEAWAY"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#97F900Information:"
+      - "&#97F900¦ &fPut it up for"
+      - "&#97F900¦ &feveryone to &#97F900enter&f."
+      - ""
+      - "&#22AFFBℹ &fItems &7▷ &#22AFFB%items%"
+      - "&#FFD900⌛ &fDuration &7▷ &#FFD900%duration%"
+      - ""
+      - "&#97F900▷ &n&lLEFT-CLICK&r&#97F900 To Start"
+      - "&#97F900▷ &n&lRIGHT-CLICK&r&#97F900 To Change Time"
+
+view:
+
+  return:
+    slot: 53
+    material: RED_DYE
+    name: "&#FF0000&lRETURN"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000¦ &fThese are %player%'s"
+      - "&#FF0000¦ &fgiveaway &#FF0000items&f."
+      - ""
+      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Return"

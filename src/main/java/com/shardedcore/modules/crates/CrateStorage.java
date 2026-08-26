@@ -74,7 +74,7 @@ public final class CrateStorage {
     public Crate create(String rawName) {
         String id = sanitize(rawName);
         if (id.isEmpty() || crates.containsKey(id)) return null;
-        Crate crate = new Crate(id, rawName, 3);
+        Crate crate = new Crate(id, rawName, 6);
         crates.put(id, crate);
         save(crate);
         return crate;
@@ -145,7 +145,7 @@ public final class CrateStorage {
         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
         String id = file.getName().substring(0, file.getName().length() - 4).toLowerCase(Locale.ROOT);
         String display = yaml.getString("display-name", id);
-        int rows = Math.max(1, Math.min(6, yaml.getInt("rows", 3)));
+        int rows = Math.max(1, Math.min(6, yaml.getInt("rows", 6)));
         Crate crate = new Crate(id, display, rows);
         ConfigurationSection rewards = yaml.getConfigurationSection("rewards");
         if (rewards != null) {

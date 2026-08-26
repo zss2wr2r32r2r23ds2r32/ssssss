@@ -1,0 +1,135 @@
+# How many vaults exist in total. 45 is the maximum, that is how many
+# permissions the plugin.yml declares.
+vaults: 45
+
+# Vaults every player owns without any permission at all.
+default-vaults: 0
+
+# Permissions work the same way as homes: shardedcore.vault.10 unlocks vault 1 to 10.
+# Losing the permission never deletes anything, the vault just locks again and the
+# items wait inside until the rank comes back.
+#
+# NEVER give out shardedcore.vault.* to a rank. That wildcard also covers
+# shardedcore.vault.admin, which opens and edits the vaults of every other player.
+# Always give the exact number instead, for example shardedcore.vault.10
+
+# Opening a vault while combat tagged is refused, and a vault that is already open
+# closes itself the moment the tag lands.
+# shardedcore.combat.bypass ignores both.
+block-in-combat: true
+
+# Items that may not be put into a vault. Empty means everything is allowed.
+# Only checked when an item goes in, so nothing already stored is ever thrown out.
+blocked-materials: []
+
+menu:
+  title: "&8Private Vaults"
+  admin-title: "&8Private Vaults | %player%"
+  rows: 6
+  vault-slots: "0-44"
+
+  filler:
+    enabled: true
+    material: GRAY_STAINED_GLASS_PANE
+    name: " "
+    lore: []
+    amount: 1
+    glow: false
+    custom-model-data: 0
+
+  close:
+    enabled: true
+    slot: 49
+    material: BARRIER
+    amount: 1
+    glow: false
+    custom-model-data: 0
+    name: "&#FF0000&lCLOSE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000¦ &fClick on me to"
+      - "&#FF0000¦ &fclose the &#FF0000main menu&f!"
+      - ""
+      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Close"
+
+  unlocked:
+    material: PURPLE_SHULKER_BOX
+    amount: 1
+    glow: false
+    custom-model-data: 0
+    name: "&#00E1FF&lVAULT #%number%"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#00E1FFInformation:"
+      - "&#00E1FF¦ &fThis vault is &#00E1FFunlocked"
+      - "&#00E1FF¦ &fand available to access"
+      - ""
+      - "&#00E1FF¦ &fSlots Used: &#00E1FF%used%"
+      - "&#00E1FF¦ &fMax Slots: &#00E1FF%max%"
+      - ""
+      - "&#00E1FF▷ &n&lCLICK&r&#00E1FF To View"
+
+  locked:
+    material: RED_DYE
+    amount: 1
+    glow: false
+    custom-model-data: 0
+    name: "&#FF0000&lVAULT #%number%"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000¦ &fThis vault has not"
+      - "&#FF0000¦ &fbeen unlocked yet."
+      - ""
+      - "&#FF0000¦ &fStatus: &#FF0000Locked"
+      - ""
+      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Unlock"
+
+vault:
+  title: "&8Vault #%number%"
+  admin-title: "&8Vault #%number% | %player%"
+  rows: 6
+
+sounds:
+  open:
+    enabled: true
+    sound: "block.chest.open"
+    volume: 0.7
+    pitch: 1.2
+  vault:
+    enabled: true
+    sound: "block.barrel.open"
+    volume: 0.7
+    pitch: 1.2
+  close:
+    enabled: true
+    sound: "block.barrel.close"
+    volume: 0.7
+    pitch: 0.8
+  click:
+    enabled: true
+    sound: "ui.button.click"
+    volume: 1.0
+    pitch: 1.2
+  error:
+    enabled: true
+    sound: "block.note_block.bass"
+    volume: 0.8
+    pitch: 0.8
+
+messages:
+  locked: "&#FF0000&lERROR &7▷ &fVault &#FF0000#%number% &fis not unlocked yet."
+  in-combat: "&#FF0000&lERROR &7▷ &fYou cannot open a vault while you are in combat."
+  in-use: "&#FF0000&lERROR &7▷ &fVault &#FF0000#%number% &fis already open."
+  blocked-item: "&#FF0000&lERROR &7▷ &fThat item cannot be stored in a vault."
+  load-failed: "&#FF0000&lERROR &7▷ &fVault &#FF0000#%number% &fcould not be opened, try again."
+  too-small: "&#FF0000&lERROR &7▷ &fVault &#FF0000#%number% &fholds more than it is allowed to right now."
+  unknown-vault: "&#FF0000&lERROR &7▷ &fThat vault does not exist."
+  unknown-player: "&#FF0000&lERROR &7▷ &f&#00E1FF%player% &fhas never joined this server."
+  players-only: "&#FF0000&lERROR &7▷ &fOnly players can open a vault."
+  usage: "&#00E1FF&lVAULT &7▷ &f/vault"
+  no-permission: "&#FF0000&lERROR &7▷ &fYou do not have permission."

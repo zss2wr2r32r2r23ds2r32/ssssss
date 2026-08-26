@@ -1,5 +1,7 @@
 package com.shardedcore.util;
 
+import org.bukkit.configuration.ConfigurationSection;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,5 +33,20 @@ public final class Slots {
             }
         }
         return slots;
+    }
+
+    public static List<Integer> of(ConfigurationSection section, String path) {
+        if (section == null) return List.of();
+        if (section.isList(path)) {
+            List<Integer> slots = new ArrayList<>();
+            List<?> raw = section.getList(path);
+            if (raw == null) return slots;
+            for (Object value : raw) {
+                if (value instanceof Number number) slots.add(number.intValue());
+                else slots.addAll(parse(String.valueOf(value)));
+            }
+            return slots;
+        }
+        return parse(section.getString(path, ""));
     }
 }

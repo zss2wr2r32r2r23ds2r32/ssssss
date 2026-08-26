@@ -39,7 +39,6 @@ public final class AnnounceModule extends Module implements CommandExecutor, Tab
             return true;
         }
         if (args.length == 0) {
-            send(sender, "messages.usage");
             return true;
         }
         String color = cfg("color", "&#A370EE");
@@ -58,7 +57,6 @@ public final class AnnounceModule extends Module implements CommandExecutor, Tab
             player.showTitle(title);
             Sounds.play(player, config.getConfigurationSection("sound"));
         }
-        send(sender, "messages.sent");
         return true;
     }
 

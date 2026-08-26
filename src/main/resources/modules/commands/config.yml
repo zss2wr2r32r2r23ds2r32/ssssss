@@ -217,4 +217,15 @@ whitelist:
     - sc
     - sharded
     - modules
+    - order
+    - orders
+    - orderadmin
+    - giveaway
+    - gws
+    - gw
+    - giveaways
+    - vault
+    - vaults
+    - pv
+    - pvadmin
 

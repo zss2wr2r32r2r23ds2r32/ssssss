@@ -93,14 +93,30 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0 || command.getName().equalsIgnoreCase("kits")) {
-            if (!(sender instanceof Player player)) {
-                send(sender, "players-only");
+            if (command.getName().equalsIgnoreCase("kits")) {
+                if (!(sender instanceof Player player)) {
+                    send(sender, "players-only");
+                    return true;
+                }
+                openGui(player);
                 return true;
             }
-            openGui(player);
+            send(sender, "usage-claim");
             return true;
         }
         return switch (args[0].toLowerCase(Locale.ROOT)) {
+            case "claim" -> {
+                if (!(sender instanceof Player player)) {
+                    send(sender, "players-only");
+                    yield true;
+                }
+                if (args.length < 2) {
+                    send(player, "usage-claim");
+                    yield true;
+                }
+                claim(player, args[1]);
+                yield true;
+            }
             case "create" -> create(sender, args);
             case "delete" -> delete(sender, args);
             case "give" -> giveCommand(sender, args);
@@ -110,8 +126,7 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
                 yield true;
             }
             default -> {
-                if (sender instanceof Player player) claim(player, args[0]);
-                else send(sender, "players-only");
+                send(sender, "usage-claim");
                 yield true;
             }
         };
@@ -505,13 +520,14 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
         if (command.getName().equalsIgnoreCase("kits")) return List.of();
         List<String> names = kitIds();
         if (args.length == 1) {
-            List<String> options = new ArrayList<>(names);
+            List<String> options = new ArrayList<>(List.of("claim"));
+            options.addAll(names);
             if (sender.hasPermission(ADMIN)) options.addAll(0, List.of("create", "delete", "give", "list", "help"));
             return Tabs.filter(options, args[0]);
         }
         if (args.length == 2) {
             return switch (args[0].toLowerCase(Locale.ROOT)) {
-                case "delete" -> Tabs.filter(names, args[1]);
+                case "claim", "delete" -> Tabs.filter(names, args[1]);
                 case "give" -> Tabs.players(args[1]);
                 default -> List.of();
             };

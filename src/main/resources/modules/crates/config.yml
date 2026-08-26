@@ -8,6 +8,16 @@ preview-title: "&8Preview %crate%"
 open-title: "&8%crate%"
 punch-expire-seconds: 15
 
+# Reward items only sit in this inner window. The border stays empty / filler.
+area: [10, 11, 12, 13, 14, 15, 16,
+       19, 20, 21, 22, 23, 24, 25,
+       28, 29, 30, 31, 32, 33, 34]
+filler:
+  enabled: true
+  material: BLACK_STAINED_GLASS_PANE
+  name: " "
+  lore: []
+
 selected:
   material: LIME_STAINED_GLASS_PANE
   name: "&#94FF00&lSELECTED"
@@ -18,7 +28,8 @@ selected:
     - "&#94FF00| &fYou Have selected"
     - "&#94FF00| &fThis item"
     - ""
-    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Confirm"
+    - "&#94FF00▷ &n&lCLICK&r&#94FF00 To Unselect"
+    - "&#94FF00▷ &n&lCLOSE&r&#94FF00 To Claim"
 
 claimed:
   material: GRAY_STAINED_GLASS_PANE
@@ -127,6 +138,6 @@ messages:
   no-rewards: "&#FF0000&lERROR &7▷ &fCrate &#FF0000%crate% &fhas no rewards."
   open-start: "&#94FF00&lCRATES &7▷ &fSelect &#94FF00%amount% &freward(s) from &#94FF00%crate%&f."
   select-limit: "&#FF0000&lERROR &7▷ &fYou can only select &#FF0000%amount% &freward(s)."
-  confirmed: "&#94FF00&lCRATES &7▷ &fClaimed &#94FF00%item%&f. &#94FF00%amount% &fleft."
+  confirmed: "&#94FF00&lCRATES &7▷ &fClaimed &#94FF00%item% &freward(s). Keys left: &#94FF00%amount%&f."
   open-done: "&#94FF00&lCRATES &7▷ &fFinished opening &#94FF00%crate%&f."
   keyall-won: "&#94FF00&lCRATES &7▷ &fYou won &#94FF00%item% &ffrom &#94FF00%crate%&f. Keys left: &#94FF00%amount%"

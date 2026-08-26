@@ -9,6 +9,7 @@ import com.shardedcore.modules.crates.CrateStorage.Crate;
 import com.shardedcore.util.Amounts;
 import com.shardedcore.util.Items;
 import com.shardedcore.util.Players;
+import com.shardedcore.util.Slots;
 import com.shardedcore.util.Sounds;
 import com.shardedcore.util.Tabs;
 import com.shardedcore.util.Text;
@@ -336,12 +337,12 @@ public final class CratesModule extends Module implements CommandExecutor, TabCo
     }
 
     private void openEdit(Player player, Crate crate) {
-        Menus.Menu menu = plugin.menus().create(player, title("edit-title", crate), crate.rows).unlocked();
-        int size = crate.size();
-        for (int slot = 0; slot < size; slot++) {
-            ItemStack reward = crate.rewards.get(slot);
-            if (!CrateStorage.isAir(reward)) menu.set(slot, reward.clone());
+        List<Integer> area = area(crate.size());
+        Menus.Menu menu = plugin.menus().create(player, title("edit-title", crate), crate.rows).editableSlots(area);
+        for (Map.Entry<Integer, ItemStack> entry : laidOut(crate).entrySet()) {
+            menu.set(entry.getKey(), entry.getValue().clone());
         }
+        frame(menu, crate.size(), area);
         menu.onClose(closed -> {
             Crate current = storage.get(crate.id);
             if (current == null) {
@@ -351,7 +352,8 @@ public final class CratesModule extends Module implements CommandExecutor, TabCo
             current.rewards.clear();
             ItemStack[] contents = menu.inventory().getContents();
             int saved = 0;
-            for (int slot = 0; slot < contents.length && slot < current.size(); slot++) {
+            for (int slot : area) {
+                if (slot < 0 || slot >= contents.length) continue;
                 ItemStack item = contents[slot];
                 if (CrateStorage.isAir(item)) continue;
                 current.rewards.put(slot, item.clone());
@@ -366,11 +368,12 @@ public final class CratesModule extends Module implements CommandExecutor, TabCo
     }
 
     private void openPreview(Player player, Crate crate) {
+        List<Integer> area = area(crate.size());
         Menus.Menu menu = plugin.menus().create(player, title("preview-title", crate), crate.rows);
-        for (Map.Entry<Integer, ItemStack> entry : crate.rewards.entrySet()) {
-            if (entry.getKey() < 0 || entry.getKey() >= crate.size()) continue;
-            if (!CrateStorage.isAir(entry.getValue())) menu.set(entry.getKey(), entry.getValue().clone());
+        for (Map.Entry<Integer, ItemStack> entry : laidOut(crate).entrySet()) {
+            menu.set(entry.getKey(), entry.getValue().clone());
         }
+        frame(menu, crate.size(), area);
         menu.onAny(event -> event.setCancelled(true));
         plugin.menus().open(player, menu);
         sound(player, "sounds.preview");
@@ -393,7 +396,7 @@ public final class CratesModule extends Module implements CommandExecutor, TabCo
             return;
         }
         int picks = Math.min(held, pool.size());
-        OpenSession session = new OpenSession(picks, snapshot(crate));
+        OpenSession session = new OpenSession(crate.id, picks, laidOut(crate));
         sessions.put(player.getUniqueId(), session);
         renderOpen(player, crate, session);
         send(player, "open-start", "crate", crate.displayName, "amount", String.valueOf(picks));
@@ -413,9 +416,9 @@ public final class CratesModule extends Module implements CommandExecutor, TabCo
     }
 
     private void renderOpen(Player player, Crate crate, OpenSession session) {
+        List<Integer> area = area(crate.size());
         Menus.Menu menu = plugin.menus().create(player, title("open-title", crate), crate.rows);
-        int size = crate.size();
-        for (int slot = 0; slot < size; slot++) {
+        for (int slot : area) {
             int captured = slot;
             if (session.claimed.contains(slot)) {
                 menu.set(slot, claimedPane());
@@ -426,13 +429,9 @@ public final class CratesModule extends Module implements CommandExecutor, TabCo
             if (session.selected.contains(slot)) {
                 menu.set(slot, selectedPane(), event -> {
                     event.setCancelled(true);
-                    if (event.isShiftClick()) {
-                        session.selected.remove(captured);
-                        sound(player, "sounds.remove");
-                        renderOpen(player, crate, session);
-                        return;
-                    }
-                    confirm(player, crate, session, captured);
+                    session.selected.remove(captured);
+                    sound(player, "sounds.remove");
+                    renderOpen(player, crate, session);
                 });
             } else {
                 menu.set(slot, reward.clone(), event -> {
@@ -442,12 +441,17 @@ public final class CratesModule extends Module implements CommandExecutor, TabCo
                 });
             }
         }
+        frame(menu, crate.size(), area);
         menu.onAny(event -> event.setCancelled(true));
         menu.onClose(closed -> {
+            if (session.redraw) return;
             OpenSession current = sessions.get(closed.getUniqueId());
-            if (current == session) sessions.remove(closed.getUniqueId());
+            if (current != session) return;
+            claimSelected(closed, crate, session);
         });
+        session.redraw = true;
         plugin.menus().open(player, menu);
+        session.redraw = false;
     }
 
     private void select(Player player, Crate crate, OpenSession session, int slot) {
@@ -462,30 +466,30 @@ public final class CratesModule extends Module implements CommandExecutor, TabCo
         renderOpen(player, crate, session);
     }
 
-    private void confirm(Player player, Crate crate, OpenSession session, int slot) {
-        if (!session.selected.contains(slot) || session.claimed.contains(slot)) return;
-        ItemStack reward = session.rewards.get(slot);
-        if (CrateStorage.isAir(reward)) return;
-        if (!takeKeys(player.getUniqueId(), crate.id, 1)) {
+    private void claimSelected(Player player, Crate crate, OpenSession session) {
+        sessions.remove(player.getUniqueId());
+        List<Integer> picks = new ArrayList<>(session.selected);
+        if (picks.isEmpty()) return;
+        int take = Math.min(picks.size(), keys(player.getUniqueId(), crate.id));
+        if (take <= 0) {
             send(player, "no-keys", "crate", crate.displayName);
             sound(player, "sounds.deny");
-            player.closeInventory();
-            sessions.remove(player.getUniqueId());
             return;
         }
-        session.selected.remove(slot);
-        session.claimed.add(slot);
-        session.remaining--;
-        give(player, reward.clone());
-        send(player, "confirmed", "item", itemName(reward), "amount", String.valueOf(session.remaining));
+        if (!takeKeys(player.getUniqueId(), crate.id, take)) {
+            send(player, "no-keys", "crate", crate.displayName);
+            return;
+        }
+        int given = 0;
+        for (int i = 0; i < take; i++) {
+            ItemStack reward = session.rewards.get(picks.get(i));
+            if (CrateStorage.isAir(reward)) continue;
+            give(player, reward.clone());
+            given++;
+        }
+        send(player, "confirmed", "item", String.valueOf(given), "amount", String.valueOf(keys(player.getUniqueId(), crate.id)));
+        send(player, "open-done", "crate", crate.displayName);
         sound(player, "sounds.confirm");
-        if (session.remaining <= 0) {
-            sessions.remove(player.getUniqueId());
-            player.closeInventory();
-            send(player, "open-done", "crate", crate.displayName);
-            return;
-        }
-        renderOpen(player, crate, session);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -575,7 +579,11 @@ public final class CratesModule extends Module implements CommandExecutor, TabCo
     public void onQuit(PlayerQuitEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
         pending.remove(uuid);
-        sessions.remove(uuid);
+        OpenSession session = sessions.remove(uuid);
+        if (session != null && !session.selected.isEmpty()) {
+            Crate crate = storage.get(session.crateId);
+            if (crate != null) claimSelected(event.getPlayer(), crate, session);
+        }
         keys.remove(uuid);
     }
 
@@ -685,12 +693,59 @@ public final class CratesModule extends Module implements CommandExecutor, TabCo
         );
     }
 
-    private Map<Integer, ItemStack> snapshot(Crate crate) {
-        Map<Integer, ItemStack> copy = new HashMap<>();
-        for (Map.Entry<Integer, ItemStack> entry : crate.rewards.entrySet()) {
-            if (!CrateStorage.isAir(entry.getValue())) copy.put(entry.getKey(), entry.getValue().clone());
+    private List<Integer> area(int size) {
+        List<Integer> slots = new ArrayList<>();
+        for (int slot : Slots.of(config, "area")) {
+            if (slot >= 0 && slot < size) slots.add(slot);
         }
-        return copy;
+        if (slots.isEmpty()) {
+            for (int slot : Slots.parse("10-16,19-25,28-34")) {
+                if (slot >= 0 && slot < size) slots.add(slot);
+            }
+        }
+        return slots;
+    }
+
+    private Map<Integer, ItemStack> laidOut(Crate crate) {
+        List<Integer> area = area(crate.size());
+        Map<Integer, ItemStack> laid = new java.util.LinkedHashMap<>();
+        boolean inArea = false;
+        for (int slot : crate.rewards.keySet()) {
+            if (area.contains(slot)) {
+                inArea = true;
+                break;
+            }
+        }
+        if (inArea) {
+            for (Map.Entry<Integer, ItemStack> entry : crate.rewards.entrySet()) {
+                if (area.contains(entry.getKey()) && !CrateStorage.isAir(entry.getValue())) {
+                    laid.put(entry.getKey(), entry.getValue().clone());
+                }
+            }
+            return laid;
+        }
+        int index = 0;
+        for (ItemStack item : crate.rewards.values()) {
+            if (CrateStorage.isAir(item) || index >= area.size()) continue;
+            laid.put(area.get(index++), item.clone());
+        }
+        return laid;
+    }
+
+    private void frame(Menus.Menu menu, int size, List<Integer> area) {
+        if (!config.getBoolean("filler.enabled", true)) return;
+        ItemStack fill = Items.named(
+                Sounds.material(cfg("filler.material", "BLACK_STAINED_GLASS_PANE"), Material.BLACK_STAINED_GLASS_PANE),
+                cfg("filler.name", " "),
+                config.getStringList("filler.lore")
+        );
+        for (int slot = 0; slot < size; slot++) {
+            if (!area.contains(slot) && menu.inventory().getItem(slot) == null) menu.set(slot, fill);
+        }
+    }
+
+    private Map<Integer, ItemStack> snapshot(Crate crate) {
+        return laidOut(crate);
     }
 
     private void give(Player player, ItemStack item) {
@@ -753,12 +808,15 @@ public final class CratesModule extends Module implements CommandExecutor, TabCo
     }
 
     private static final class OpenSession {
+        private final String crateId;
         private int remaining;
         private final Map<Integer, ItemStack> rewards;
         private final Set<Integer> selected = new HashSet<>();
         private final Set<Integer> claimed = new HashSet<>();
+        private boolean redraw;
 
-        private OpenSession(int remaining, Map<Integer, ItemStack> rewards) {
+        private OpenSession(String crateId, int remaining, Map<Integer, ItemStack> rewards) {
+            this.crateId = crateId;
             this.remaining = remaining;
             this.rewards = rewards;
         }

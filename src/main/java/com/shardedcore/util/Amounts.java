@@ -44,10 +44,10 @@ public final class Amounts {
 
     public static String format(double value) {
         double abs = Math.abs(value);
-        if (abs >= 1_000_000_000_000D) return trim(value / 1_000_000_000_000D) + "t";
-        if (abs >= 1_000_000_000D) return trim(value / 1_000_000_000D) + "b";
-        if (abs >= 1_000_000D) return trim(value / 1_000_000D) + "m";
-        if (abs >= 1_000D) return trim(value / 1_000D) + "k";
+        if (abs >= 1_000_000_000_000D) return trim(value / 1_000_000_000_000D) + "T";
+        if (abs >= 1_000_000_000D) return trim(value / 1_000_000_000D) + "B";
+        if (abs >= 1_000_000D) return trim(value / 1_000_000D) + "M";
+        if (abs >= 1_000D) return trim(value / 1_000D) + "K";
         return COMMA.format(value);
     }
 

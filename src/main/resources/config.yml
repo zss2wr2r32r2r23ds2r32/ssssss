@@ -31,3 +31,6 @@ modules:
   welcome: true
   killrewards: true
   playtimerewards: true
+  orders: true
+  giveaway: true
+  vaults: true

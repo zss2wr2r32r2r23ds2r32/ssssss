@@ -11,7 +11,4 @@ sound:
   volume: 1.0
   pitch: 1.0
 
-messages:
-  usage: "&#FF0000&lERROR &8▷ &fUse /announce <message>"
-  sent: "&#FF0000&lERROR &8▷ &fAnnouncement sent."
-  no-permission: "&#FF0000&lERROR &8▷ &fYou do not have permission."
+messages: {}
