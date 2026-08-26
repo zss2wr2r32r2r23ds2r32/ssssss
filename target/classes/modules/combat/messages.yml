@@ -1,4 +1,0 @@
-config-version: 1
-prefix: '&#FF0000&lCOMBAT &8▷ &r'
-
-no-commands: '%prefix%&#FF2727You cannot use commands while in combat!'

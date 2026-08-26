@@ -76,6 +76,10 @@ public final class ShardedCoreCommand implements CommandExecutor, TabCompleter {
     private void sendPlaceholders(CommandSender sender) {
         MessageUtil.send(sender, plugin, "<aqua>Core Placeholders</aqua>");
         MessageUtil.send(sender, plugin, "<gray>%shardedcore_prefix%</gray>");
+        MessageUtil.send(sender, plugin, "<gray>%shardedcore_balance%</gray>");
+        MessageUtil.send(sender, plugin, "<gray>%shardedcore_balance_formatted%</gray>");
+        MessageUtil.send(sender, plugin, "<gray>%shardedcore_ping%</gray>");
+        MessageUtil.send(sender, plugin, "<gray>%shardedcore_join_counter%</gray>");
         MessageUtil.send(sender, plugin, "<gray>%shardedcore_module_<id>%</gray>");
         if (plugin.hasPlaceholderApi()) {
             MessageUtil.send(sender, plugin, "<green>PlaceholderAPI detected.</green>");

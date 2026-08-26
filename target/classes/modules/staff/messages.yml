@@ -1,7 +1,0 @@
-config-version: 1
-prefix: '<red>Staff</red> '
-players-only: '%prefix%&cOnly players can use this.'
-no-permission: '%prefix%&cNo permission.'
-usage: '%prefix%&cUsage: /tp <player>'
-player-not-found: '%prefix%&cPlayer &f%player%&c not found.'
-teleported: '%prefix%&aTeleported to &f%player%&a.'

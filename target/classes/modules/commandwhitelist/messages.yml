@@ -1,4 +1,0 @@
-config-version: 1
-prefix: '%prefix%'
-
-blocked: '%prefix%&#FF2727Unknown command. Type &f/help &#FF2727for help.'

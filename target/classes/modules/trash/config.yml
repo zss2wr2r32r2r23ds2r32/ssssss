@@ -1,5 +1,0 @@
-config-version: 1
-message-mode: chat
-title: '&8Trash &7(closes = deletes)'
-rows: 4
-play-sound: true

@@ -1,9 +1,0 @@
-config-version: 1
-message-mode: chat
-
-display-mode: title
-title-text: '&#00A2FF&lANNOUNCEMENT'
-title-fade-in: 10
-title-stay: 70
-title-fade-out: 20
-format: '%prefix%&#00A2FF&lANNOUNCEMENT &8▷ &r%message%'

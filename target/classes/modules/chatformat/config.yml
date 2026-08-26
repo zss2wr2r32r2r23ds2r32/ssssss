@@ -1,5 +1,0 @@
-config-version: 1
-message-mode: chat
-
-format: '{prefix}{name} &7▷ &r{message}'
-prefix-placeholder: '%luckperms_prefix%'

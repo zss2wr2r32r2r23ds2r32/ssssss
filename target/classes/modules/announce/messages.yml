@@ -1,7 +1,0 @@
-config-version: 1
-prefix: '&#00A2FF&lANNOUNCE &8▷ &r'
-
-no-permission: '%prefix%&#FF2727You don''t have permission to announce.'
-usage: '%prefix%&#FF2727Usage: &f/announce <message>'
-sent: '%prefix%&#9FFF00Announcement sent.'
-format: '%prefix%&#00A2FF&lANNOUNCEMENT &8▷ &r%message%'

@@ -2,6 +2,7 @@ package com.shardedcore;
 
 import com.shardedcore.command.ShardedCoreCommand;
 import com.shardedcore.command.StubCommand;
+import com.shardedcore.hook.ShardedCoreExpansion;
 import com.shardedcore.module.ModuleManager;
 import com.shardedcore.util.ConfigUtil;
 import com.shardedcore.util.MessageUtil;
@@ -21,6 +22,7 @@ public final class ShardedCore extends JavaPlugin {
     private ModuleManager moduleManager;
     private PlayerStateStore stateStore;
     private FileConfiguration config;
+    private ShardedCoreExpansion placeholderExpansion;
 
     @Override
     public void onEnable() {
@@ -35,11 +37,13 @@ public final class ShardedCore extends JavaPlugin {
 
         moduleManager = new ModuleManager(this);
         moduleManager.loadAll();
+        registerPlaceholderExpansion();
         getLogger().info("ShardedCore enabled.");
     }
 
     @Override
     public void onDisable() {
+        unregisterPlaceholderExpansion();
         if (moduleManager != null) {
             moduleManager.disableAll();
         }
@@ -63,6 +67,23 @@ public final class ShardedCore extends JavaPlugin {
         }
         if (moduleManager != null) {
             moduleManager.reloadAll();
+        }
+    }
+
+    private void registerPlaceholderExpansion() {
+        if (!hasPlaceholderApi()) {
+            return;
+        }
+        placeholderExpansion = new ShardedCoreExpansion(this);
+        if (placeholderExpansion.register()) {
+            getLogger().info("Registered PlaceholderAPI expansion.");
+        }
+    }
+
+    private void unregisterPlaceholderExpansion() {
+        if (placeholderExpansion != null) {
+            placeholderExpansion.unregister();
+            placeholderExpansion = null;
         }
     }
 

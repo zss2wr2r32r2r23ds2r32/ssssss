@@ -1,3 +1,0 @@
-config-version: 3
-prefix: '%prefix%'
-# Death message formats live in config.yml (formats section).
