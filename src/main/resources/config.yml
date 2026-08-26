@@ -1,0 +1,34 @@
+config-version: 1
+
+prefix: "<gradient:#5b8cff:#9b59ff>ShardedCore</gradient> <dark_gray>»</dark_gray> "
+message-mode: chat
+
+modules:
+  discord: true
+  store: true
+  apply: true
+  live: true
+  ping: true
+  economy: true
+  trash: true
+  spawn: true
+  homes: true
+  tpa: true
+  rules: true
+  guide: true
+  announce: true
+  virtual-inventories: true
+  settings: true
+  coinflip: true
+  orders: true
+  sell: true
+  shop: true
+  kits: true
+  kill-rewards: true
+  playtime-rewards: true
+  rtp: true
+  team: true
+  crates: true
+  media: true
+  join-counter: true
+  staff: true
