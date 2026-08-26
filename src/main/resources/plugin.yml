@@ -361,6 +361,42 @@ commands:
     description: Teleport to a player
     usage: /gotoplayer <player>
     permission: sharded.staff.teleport
+  homes:
+    description: Open your homes menu
+    usage: /homes
+  sethome:
+    description: Set a home slot
+    usage: /sethome <1-14>
+  delhome:
+    description: Delete a home slot
+    usage: /delhome <1-14>
+  home:
+    description: Teleport to a home
+    usage: /home <1-14>
+  tpa:
+    description: Request to teleport to a player
+    usage: /tpa <player>
+  tpahere:
+    description: Request a player teleport to you
+    usage: /tpahere <player>
+  tpaccept:
+    description: Accept a teleport request
+    usage: /tpaccept
+  tpacancel:
+    description: Cancel all pending teleport requests
+    usage: /tpacancel
+  tpatoggle:
+    description: Toggle incoming TPA or TPAHERE requests
+    usage: /tpatoggle <tpa|tpahere>
+  tpauto:
+    description: Toggle auto-accept for teleport requests
+    usage: /tpauto
+  cf:
+    description: Coinflip menu and commands
+    usage: /cf [create|delete|toggle|history|stats]
+  coinflip:
+    description: Coinflip menu and commands
+    usage: /coinflip [create|delete|toggle|history|stats]
   pay:
     description: Pay another player
     usage: /pay <player> <amount>
@@ -784,6 +820,46 @@ permissions:
     default: true
   sharded.combat.admin:
     description: Setup combat region
+    default: op
+  sharded.homes.use:
+    description: Use homes commands and GUI
+    default: true
+  sharded.homes.1:
+    default: true
+  sharded.homes.2:
+    default: true
+  sharded.homes.3:
+    default: true
+  sharded.homes.4:
+    default: false
+  sharded.homes.5:
+    default: false
+  sharded.homes.6:
+    default: false
+  sharded.homes.7:
+    default: false
+  sharded.homes.8:
+    default: false
+  sharded.homes.9:
+    default: false
+  sharded.homes.10:
+    default: false
+  sharded.homes.11:
+    default: false
+  sharded.homes.12:
+    default: false
+  sharded.homes.13:
+    default: false
+  sharded.homes.14:
+    default: false
+  sharded.tpa.use:
+    description: Use teleport request commands
+    default: true
+  sharded.coinflip.use:
+    description: Use coinflip commands and GUI
+    default: true
+  sharded.coinflip.history.others:
+    description: View other players' coinflip history
     default: op
   sharded.live.use:
     description: Announce live streams and toggle live messages

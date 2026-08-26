@@ -59,6 +59,9 @@ import com.sharded.core.modules.coreprotect.CoreProtectModule;
 import com.sharded.core.modules.duel.DuelModule;
 import com.sharded.core.modules.economy.EconomyModule;
 import com.sharded.core.modules.economy.EconomyService;
+import com.sharded.core.modules.homes.HomesModule;
+import com.sharded.core.modules.tpa.TpaModule;
+import com.sharded.core.modules.coinflip.CoinflipModule;
 import com.sharded.core.modules.roles.RolesModule;
 import com.sharded.core.modules.teams.TeamsModule;
 
@@ -133,6 +136,9 @@ public final class ModuleManager {
         register(new LiveModule(plugin));
         register(new PingModule(plugin));
         register(new CommandWhitelistModule(plugin));
+        register(new HomesModule(plugin));
+        register(new TpaModule(plugin));
+        register(new CoinflipModule(plugin));
     }
 
     private void register(Module module) {

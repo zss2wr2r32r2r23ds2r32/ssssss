@@ -65,6 +65,10 @@ modules:
   coreprotect: true
   duel: true
   combat: true
+  economy: true
+  homes: true
+  tpa: true
+  coinflip: true
   live: true
   ping: true
   commandwhitelist: true
