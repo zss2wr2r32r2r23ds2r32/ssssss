@@ -1,0 +1,185 @@
+# The sell multiplier. false hides the button, the last row of the
+# sell menu is then only filler and everybody sells at 1.0x.
+enabled: true
+
+# BASE counts the plain worth of what you sold, PAID counts the money you got.
+# BASE means the goals below are exactly the goods you have to sell.
+progress-counts: BASE
+
+menu:
+  title: "&8Sell Menu | Sell Multi"
+  rows: 6
+
+info:
+  slot: 1
+  material: EMERALD
+  name: "&#80ee0b&lSELL MULTIPLIER"
+  lore:
+    - "&8Description"
+    - ""
+    - "&#80ee0bInformation:"
+    - "&#80ee0b¦ &fSell items to level"
+    - "&#80ee0b¦ &fyour own &#80ee0bmultiplier&f."
+    - ""
+    - "&#80ee0b✓ &fYours: &#80ee0b%multi%x"
+    - "&#80ee0b✓ &fSold: &#80ee0b$%total%"
+    - ""
+    - "&#80ee0b▷ &n&lCLICK&r&#80ee0b For Prices"
+
+return:
+  slot: 45
+  material: RED_STAINED_GLASS_PANE
+  name: "&#FF0000&lRETURN"
+  lore:
+    - "&8Description"
+    - ""
+    - "&#FF0000Information:"
+    - "&#FF0000¦ &fGo back to the"
+    - "&#FF0000¦ &fsell &#FF0000menu&f."
+    - ""
+    - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Return"
+
+states:
+
+  unlocked:
+    material: HOPPER_MINECART
+    name: "&#80ee0b&lUNLOCKED"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#80ee0bInformation:"
+      - "&#80ee0b¦ &fYou already own this"
+      - "&#80ee0b¦ &fsell &#80ee0bmultiplier&f."
+      - ""
+      - "&#80ee0b✓ &fSell Multi: &#80ee0b%multi%x"
+      - "&#80ee0b✓ &fUnlocked at: &#80ee0b$%goal%"
+
+  current:
+    material: MINECART
+    name: "&#FFD900&lSELL PROGRESS"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFD900Information:"
+      - "&#FFD900¦ &fYou are leveling this"
+      - "&#FFD900¦ &fmulti, it unlocks &#FFD900soon&f."
+      - ""
+      - "&#FFD900★ &fSell Multi: &#FFD900%multi%x"
+      - "&#FFD900☀ &fPercentage: &#FFD900%percent%%"
+      - "&#FFD900☀ &fProgress: &#FFD900$%total%&7/&#FFD900$%goal%"
+
+  locked:
+    material: MINECART
+    name: "&#FF0000&lNOT REACHED"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000¦ &fBelow you can find the"
+      - "&#FF0000¦ &frequirements to &#FF0000unlock&f."
+      - ""
+      - "&#FF0000★ &fSell Multi: &#FF0000%multi%x"
+      - "&#FF0000☀ &fProgress: &#FF0000$%total%&7/&#FF0000$%goal%"
+
+# goal is the worth of everything sold over the whole account life.
+tiers:
+
+  '1':
+    multiplier: 1.1
+    goal: 400000
+    slot: 10
+
+  '2':
+    multiplier: 1.2
+    goal: 1000000
+    slot: 19
+
+  '3':
+    multiplier: 1.3
+    goal: 2000000
+    slot: 28
+
+  '4':
+    multiplier: 1.4
+    goal: 4000000
+    slot: 37
+
+  '5':
+    multiplier: 1.5
+    goal: 7000000
+    slot: 38
+
+  '6':
+    multiplier: 1.6
+    goal: 11000000
+    slot: 39
+
+  '7':
+    multiplier: 1.7
+    goal: 17000000
+    slot: 30
+
+  '8':
+    multiplier: 1.8
+    goal: 25000000
+    slot: 21
+
+  '9':
+    multiplier: 1.9
+    goal: 35000000
+    slot: 12
+
+  '10':
+    multiplier: 2.0
+    goal: 50000000
+    slot: 13
+
+  '11':
+    multiplier: 2.5
+    goal: 80000000
+    slot: 14
+
+  '12':
+    multiplier: 3.0
+    goal: 130000000
+    slot: 23
+
+  '13':
+    multiplier: 3.5
+    goal: 200000000
+    slot: 32
+
+  '14':
+    multiplier: 4.0
+    goal: 300000000
+    slot: 41
+
+  '15':
+    multiplier: 4.5
+    goal: 450000000
+    slot: 42
+
+  '16':
+    multiplier: 5.0
+    goal: 650000000
+    slot: 43
+
+  '17':
+    multiplier: 5.5
+    goal: 900000000
+    slot: 34
+
+  '18':
+    multiplier: 6.0
+    goal: 1200000000
+    slot: 25
+
+  '19':
+    multiplier: 6.5
+    goal: 1600000000
+    slot: 16
+
+  '20':
+    multiplier: 7.0
+    goal: 2000000000
+    slot: 7

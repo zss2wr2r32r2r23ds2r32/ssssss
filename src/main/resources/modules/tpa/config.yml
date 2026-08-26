@@ -1,0 +1,24 @@
+expire-seconds: 60
+countdown-seconds: 5
+cancel-on-move: true
+title: "&8Teleport Request"
+filler:
+  material: BLACK_STAINED_GLASS_PANE
+  name: " "
+messages:
+  sent: "&#00A2FF&lTPA &7▷ &fRequest sent to &#00A2FF%player%&f."
+  received: "&#00A2FF&lTPA &7▷ &#00A2FF%player% &fwants to teleport to you. /tpaccept"
+  here-received: "&#00A2FF&lTPA &7▷ &#00A2FF%player% &fwants you to teleport to them. /tpaccept"
+  accepted: "&#00A2FF&lTPA &7▷ &fTeleport accepted."
+  denied: "&#00A2FF&lTPA &7▷ &fTeleport cancelled."
+  none: "&#FF0000&lERROR &7▷ &fYou have no pending requests."
+  expired: "&#FF0000&lERROR &7▷ &fThat request expired."
+  disabled: "&#FF0000&lERROR &7▷ &fThat player is not accepting teleport requests."
+  self: "&#FF0000&lERROR &7▷ &fYou cannot teleport to yourself."
+  offline: "&#FF0000&lERROR &7▷ &fThat player is not online."
+  usage: "&#00A2FF&lTPA &7▷ &fUse /tpa <player>"
+  usage-here: "&#00A2FF&lTPA &7▷ &fUse /tpahere <player>"
+  teleporting: "&#00A2FF&lTPA &7▷ &fTeleporting in &#00A2FF%seconds%s"
+  cancelled-move: "&#00A2FF&lTPA &7▷ &fTeleport cancelled, you moved."
+  combat: "&#FF0000&lERROR &7▷ &fYou cannot teleport in combat."
+  players-only: "&#FF0000&lERROR &7▷ &fOnly a player can use that."

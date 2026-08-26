@@ -1,0 +1,31 @@
+# /live <url> tells everyone that you are streaming. /live toggle hides these messages for you.
+
+# Seconds between two broadcasts of the same player.
+cooldown-seconds: 600
+
+# Only links from these domains are accepted.
+platforms:
+  - twitch.tv
+  - youtube.com
+  - youtu.be
+  - tiktok.com
+  - kick.com
+  - rumble.com
+
+# The line holding %link% becomes clickable.
+message:
+  - ""
+  - "&#FF256E🎥 &lLIVESTREAM&r &#FF256E🎥"
+  - "&7[ɪɴғᴏʀᴍᴀᴛɪᴏɴ]"
+  - ""
+  - "&#FF256E¦ &#FF256E%player% &fis streaming right now!"
+  - "&#FF256E¦ &fClick the link to watch."
+  - ""
+  - "&#FF256E▷ &fWatch: &#FF256E&n%link%"
+
+messages:
+  usage: "&#FF256E&lLIVE &7▷ &fUse /live <link>"
+  invalid-platform: "&#FF0000&lERROR &7▷ &fThat platform is not allowed."
+  cooldown: "&#FF0000&lERROR &7▷ &fWait &#FF256E%seconds%s &fbefore posting again."
+  toggle-off: "&#FF256E&lLIVE &7▷ &fLivestream messages are now hidden."
+  toggle-on: "&#FF256E&lLIVE &7▷ &fLivestream messages are now shown."

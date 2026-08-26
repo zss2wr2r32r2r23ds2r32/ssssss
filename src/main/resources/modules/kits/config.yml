@@ -1,0 +1,69 @@
+# /kit and /kits GUI plus per-kit folders under modules/kits/kits/<name>/.
+gui:
+  title: "&8Kits"
+  rows: 4
+  previous:
+    slot: 27
+    material: RED_STAINED_GLASS_PANE
+    name: "&#FF0000&lPREVIOUS PAGE"
+  next:
+    slot: 35
+    material: LIME_STAINED_GLASS_PANE
+    name: "&#80ee0b&lNEXT PAGE"
+  filler:
+    material: BLACK_STAINED_GLASS_PANE
+    name: " "
+
+layout-title: "&8%kit%"
+
+defaults:
+  material: CHEST
+  name: "&f%kit%"
+  lore:
+    - "&8Description"
+    - ""
+    - "&#FF9D00Information:"
+    - "&#FF9D00| &fClick to claim"
+    - "&#FF9D00| &fthis kit"
+    - ""
+    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Claim"
+
+sounds:
+  open:
+    enabled: true
+    sound: "block.chest.open"
+    volume: 1.0
+    pitch: 1.1
+  create:
+    enabled: true
+    sound: "entity.player.levelup"
+    volume: 0.7
+    pitch: 1.3
+  claim:
+    enabled: true
+    sound: "entity.item.pickup"
+    volume: 1.0
+    pitch: 1.2
+
+messages:
+  actionbar: false
+  usage: "&#FF9D00&lKITS &7▷ &f/kit create|delete|give|claim <name>  &8or  /kits"
+  usage-create: "&#FF9D00&lKITS &7▷ &fUse /kit create <name>"
+  usage-delete: "&#FF9D00&lKITS &7▷ &fUse /kit delete <name>"
+  usage-give: "&#FF9D00&lKITS &7▷ &fUse /kit give <player> <name>"
+  usage-claim: "&#FF9D00&lKITS &7▷ &fUse /kit claim <name>"
+  players-only: "&#FF0000&lERROR &7▷ &fOnly a player can use that."
+  no-permission: "&#FF0000&lERROR &7▷ &fYou do not have permission."
+  no-kit-permission: "&#FF0000&lERROR &7▷ &fYou cannot claim &#FF0000%kit%&f."
+  player-offline: "&#FF0000&lERROR &7▷ &fThat player is not online."
+  invalid-name: "&#FF0000&lERROR &7▷ &fThat kit name is invalid."
+  empty-inventory: "&#FF0000&lERROR &7▷ &fYour inventory is empty."
+  empty-kit: "&#FF0000&lERROR &7▷ &fKit &#FF0000%kit% &fhas no items."
+  missing: "&#FF0000&lERROR &7▷ &fUnknown kit &#FF0000%kit%&f."
+  created: "&#FF9D00&lKITS &7▷ &fSaved kit &#FF9D00%kit% &ffrom your inventory."
+  deleted: "&#FF9D00&lKITS &7▷ &fDeleted kit &#FF9D00%kit%&f."
+  gave: "&#FF9D00&lKITS &7▷ &fGave &#FF9D00%kit% &fto &#FF9D00%player%&f."
+  received: "&#FF9D00&lKITS &7▷ &fYou received kit &#FF9D00%kit%&f."
+  claimed: "&#FF9D00&lKITS &7▷ &fClaimed kit &#FF9D00%kit%&f."
+  layout-hint: "&#FF9D00&lKITS &7▷ &fRearrange &#FF9D00%kit% &fthen close to claim. Your layout is saved."
+  none: "&#FF9D00&lKITS &7▷ &fThere are no kits."

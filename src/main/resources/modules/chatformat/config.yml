@@ -1,0 +1,5 @@
+format: "{prefix}{name} &8▷ &r{message}"
+
+# What {prefix} and {suffix} stand for.
+prefix-placeholder: "%luckperms_prefix%"
+suffix-placeholder: "%luckperms_suffix%"

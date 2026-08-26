@@ -1,0 +1,10 @@
+countdown-seconds: 5
+cancel-on-move: true
+prefix: "&#FF005D&lSPAWN &8▷ &fTeleport Comensing in &#FF005D&n%seconds%s"
+teleported: "&#FF005D&lSPAWN &7▷ &fTeleported to spawn."
+cancelled: "&#FF005D&lSPAWN &7▷ &fTeleport cancelled, you moved."
+set: "&#FF005D&lSPAWN &7▷ &fSpawn has been set."
+missing: "&#FF0000&lERROR &7▷ &fSpawn is not set."
+already: "&#FF0000&lERROR &7▷ &fYou are already teleporting."
+players-only: "&#FF0000&lERROR &7▷ &fOnly a player can use that."
+sound: "entity.enderman.teleport"

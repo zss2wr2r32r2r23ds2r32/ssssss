@@ -1,0 +1,50 @@
+Apply:
+message:
+  - ""
+  - "&#D66BFC✎ &lSTAFF APPLICATIONS&r &#D66BFC✎"
+  - "&7[ɪɴғᴏʀᴍᴀᴛɪᴏɴ]"
+  - ""
+  - "&#D66BFC¦ &fWant to join the &#D66BFCstaff team&f?"
+  - "&#D66BFC¦ &fApply on our &#D66BFCDiscord &fserver!"
+  - ""
+  - "&#D66BFC▷ &fLink: &#D66BFC&ndiscord.gg/shardedmc"
+
+# Opened when the last non-empty message line is clicked.
+url: "https://discord.gg/shardedmc"
+
+# Empty string disables the sound.
+sound: "block.note_block.pling"
+
+Discord:
+message:
+  - ""
+  - "&#00BDF9✉ &lDISCORD SERVER&r &#00BDF9✉"
+  - "&7[ɪɴғᴏʀᴍᴀᴛɪᴏɴ]"
+  - ""
+  - "&#00BDF9¦ &fEverything happens on our &#00BDF9Discord&f,"
+  - "&#00BDF9¦ &ffrom &#00BDF9giveaways &fto &#00BDF9season news&f!"
+  - ""
+  - "&#00BDF9▷ &fLink: &#00BDF9&ndiscord.gg/shardedmc"
+
+# Opened when the last non-empty message line is clicked.
+url: "https://discord.gg/shardedmc"
+
+# Empty string disables the sound.
+sound: "block.note_block.pling"
+
+Store:
+message:
+  - ""
+  - "&#97F900&l$ SERVER WEBSTORE $"
+  - "&7[ɪɴғᴏʀᴍᴀᴛɪᴏɴ]"
+  - ""
+  - "&#97F900¦ &fKeep the server alive and grab"
+  - "&#97F900¦ &#97F900ranks&f, &#97F900gems &fand &#97F900keys &fin return!"
+  - ""
+  - "&#97F900▷ &fLink: &#97F900&nstore.shardedmc.net"
+
+# Opened when the last non-empty message line is clicked.
+url: "https://store.shardedmc.net"
+
+# Empty string disables the sound.
+sound: "block.note_block.pling"

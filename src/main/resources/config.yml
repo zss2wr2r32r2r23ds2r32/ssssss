@@ -1,0 +1,28 @@
+prefix: "&#A370EE&lCORE &8▷ &r"
+disabled-command: "&#FF0000&lERROR &7▷ &fThat command is &#FF0000disabled &fbecause its module is off."
+
+# Flip any module off here or with /modules. Disabled commands show red in-game.
+modules:
+  announce: true
+  commands: true
+  chatfilter: true
+  chatformat: true
+  settings: true
+  coinflip: true
+  combat: true
+  crates: true
+  deathmessages: true
+  dropfix: true
+  economy: true
+  guide: true
+  homes: true
+  joinmessages: true
+  kits: true
+  live: true
+  nametags: true
+  ping: true
+  rtp: true
+  sell: true
+  spawn: true
+  tpa: true
+  workstations: true

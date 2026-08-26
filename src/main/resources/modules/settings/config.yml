@@ -1,0 +1,160 @@
+title: "&8Settings"
+rows: 3
+items-per-page: 7
+
+enabled:
+  text: "&#A9FF00&lENABLED"
+  material: LIME_DYE
+disabled:
+  text: "&#FF0000&lDISABLED"
+  material: GRAY_DYE
+
+lore-color: "&#FF0072"
+click-line: "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle"
+
+previous:
+  slot: 18
+  material: RED_STAINED_GLASS_PANE
+  name: "&#FF0000&lPREVIOUS PAGE"
+next:
+  slot: 26
+  material: LIME_STAINED_GLASS_PANE
+  name: "&#80ee0b&lNEXT PAGE"
+filler:
+  material: BLACK_STAINED_GLASS_PANE
+  name: " "
+
+defaults:
+  chat: true
+  msg: true
+  live: true
+  tpa: true
+  tpahere: true
+  joinleave: true
+  mobs: true
+  death: true
+  pay: true
+  nightvision: false
+  orders: true
+  bossbar: true
+  scoreboard: true
+  tpauto: false
+  coinflip: true
+
+mob-radius: 50
+
+entries:
+  chat:
+    command: "/chattoggle"
+    material: PAPER
+    name: "&#FF0072&lPUBLIC CHAT"
+    description: "Toggle Public Chat"
+  msg:
+    command: "/msgtoggle"
+    material: WRITABLE_BOOK
+    name: "&#FF0072&lPRIVATE MESSAGES"
+    description: "Toggle Private Messages"
+  live:
+    command: "/livetoggle"
+    material: SPYGLASS
+    name: "&#FF0072&lLIVE MESSAGES"
+    description: "Toggle Live Messages"
+  tpa:
+    command: "/tpatoggle"
+    material: ENDER_PEARL
+    name: "&#FF0072&lTPA REQUESTS"
+    description: "Toggle TPA Requests"
+  tpahere:
+    command: "/tpaheretoggle"
+    material: CHORUS_FRUIT
+    name: "&#FF0072&lTPA HERE"
+    description: "Toggle TPA Here Requests"
+  joinleave:
+    command: "/joinleavetoggle"
+    material: OAK_DOOR
+    name: "&#FF0072&lJOIN / LEAVE"
+    description: "Toggle Join And Leave Messages"
+  mobs:
+    command: "/mobspawning"
+    material: ZOMBIE_HEAD
+    name: "&#FF0072&lMOB SPAWNING"
+    description: "Toggle Mobs Near You"
+  death:
+    command: "/deathtoggle"
+    material: SKELETON_SKULL
+    name: "&#FF0072&lDEATH MESSAGES"
+    description: "Toggle Death Messages"
+  pay:
+    command: "/paytoggle"
+    material: GOLD_INGOT
+    name: "&#FF0072&lPAYMENTS"
+    description: "Toggle Incoming Payments"
+  nightvision:
+    command: "/nvtoggle"
+    material: GOLDEN_CARROT
+    name: "&#FF0072&lNIGHT VISION"
+    description: "Toggle Night Vision"
+  orders:
+    command: "/ordertoggle"
+    material: CHEST
+    name: "&#FF0072&lORDER MESSAGES"
+    description: "Toggle Order Messages"
+  bossbar:
+    command: "/tab bossbar toggle"
+    material: DRAGON_HEAD
+    name: "&#FF0072&lTAB BOSSBAR"
+    description: "Toggle The TAB Bossbar"
+  scoreboard:
+    command: "/tab scoreboard toggle"
+    material: PAINTING
+    name: "&#FF0072&lTAB SCOREBOARD"
+    description: "Toggle The TAB Scoreboard"
+  tpauto:
+    command: "/tpauto"
+    material: RECOVERY_COMPASS
+    name: "&#FF0072&lTPA AUTO ACCEPT"
+    description: "Automatically Accept TPA"
+  coinflip:
+    command: "/cf toggle"
+    material: SUNFLOWER
+    name: "&#FF0072&lCOINFLIP MESSAGES"
+    description: "Toggle Coinflip Messages"
+
+messages:
+  chat-on: "&#FF0072&lSETTINGS &7▷ &fPublic chat is now shown."
+  chat-off: "&#FF0072&lSETTINGS &7▷ &fPublic chat is now hidden."
+  msg-on: "&#FF0072&lSETTINGS &7▷ &fPrivate messages are now shown."
+  msg-off: "&#FF0072&lSETTINGS &7▷ &fPrivate messages are now hidden."
+  live-on: "&#FF256E&lLIVE &7▷ &fLivestream messages are now shown."
+  live-off: "&#FF256E&lLIVE &7▷ &fLivestream messages are now hidden."
+  tpa-on: "&#FF0072&lSETTINGS &7▷ &fTPA requests are now allowed."
+  tpa-off: "&#FF0072&lSETTINGS &7▷ &fTPA requests are now blocked."
+  tpahere-on: "&#FF0072&lSETTINGS &7▷ &fTPA here requests are now allowed."
+  tpahere-off: "&#FF0072&lSETTINGS &7▷ &fTPA here requests are now blocked."
+  join-on: "&#FF0072&lSETTINGS &7▷ &fJoin and leave messages are now shown."
+  join-off: "&#FF0072&lSETTINGS &7▷ &fJoin and leave messages are now hidden."
+  mobs-on: "&#FF0072&lSETTINGS &7▷ &fMobs can spawn near you again."
+  mobs-off: "&#FF0072&lSETTINGS &7▷ &fMobs will no longer spawn near you."
+  death-on: "&#FF256E&lDEATH &7▷ &fDeath messages are now shown."
+  death-off: "&#FF256E&lDEATH &7▷ &fDeath messages are now hidden."
+  pay-on: "&#94FF00&lMONEY &7▷ &fYou are accepting payments."
+  pay-off: "&#94FF00&lMONEY &7▷ &fYou are no longer accepting payments."
+  nv-on: "&#FF0072&lSETTINGS &7▷ &fNight vision enabled."
+  nv-off: "&#FF0072&lSETTINGS &7▷ &fNight vision disabled."
+  orders-on: "&#FF0072&lSETTINGS &7▷ &fOrder messages are now shown."
+  orders-off: "&#FF0072&lSETTINGS &7▷ &fOrder messages are now hidden."
+  bossbar-on: "&#FF0072&lSETTINGS &7▷ &fTAB bossbar shown."
+  bossbar-off: "&#FF0072&lSETTINGS &7▷ &fTAB bossbar hidden."
+  scoreboard-on: "&#FF0072&lSETTINGS &7▷ &fTAB scoreboard shown."
+  scoreboard-off: "&#FF0072&lSETTINGS &7▷ &fTAB scoreboard hidden."
+  tpauto-on: "&#FF0072&lSETTINGS &7▷ &fTPA auto-accept enabled."
+  tpauto-off: "&#FF0072&lSETTINGS &7▷ &fTPA auto-accept disabled."
+  cf-on: "&#FFE925&lCOINFLIP &7▷ &fYou can see Coinflip messages again."
+  cf-off: "&#FFE925&lCOINFLIP &7▷ &fYou will no longer see Coinflip messages."
+  msg-usage: "&#FF0072&lMSG &7▷ &fUse /msg <player> <message>"
+  msg-ignored: "&#FF0072&lMSG &7▷ &fThat player is not accepting messages."
+  msg-self: "&#FF0072&lMSG &7▷ &fYou cannot message yourself."
+  msg-format-to: "&#FF0072&lMSG &7▷ &fTo &#FF0072%player%&f: &7%message%"
+  msg-format-from: "&#FF0072&lMSG &7▷ &fFrom &#FF0072%player%&f: &7%message%"
+  reply-none: "&#FF0072&lMSG &7▷ &fYou have nobody to reply to."
+  players-only: "&#FF0000&lERROR &7▷ &fOnly a player can use that."

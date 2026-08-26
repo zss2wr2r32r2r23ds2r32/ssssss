@@ -1,0 +1,82 @@
+# Every message runs through the checks below, in this order.
+# The first one that blocks ends it. Word lists live in blocked.yml.
+
+# Where the checks run. A command entry scans everything behind the label,
+# for example "nick" scans /nick something. Private messages, staff chat and
+# team chat are already covered and are ignored here.
+scan:
+  chat: true
+  private-messages: true
+  commands: []
+
+# Pause between two messages from the same player.
+slowmode:
+  enabled: true
+  seconds: 3
+
+# Message size and single character spam like "aaaaaaaa".
+length:
+  enabled: true
+  max-characters: 128
+  max-same-in-a-row: 5
+
+# Blocks a message that is too close to the one the player sent before.
+repeat:
+  enabled: true
+  remember-seconds: 30
+  match-percent: 80
+
+# LOWERCASE rewrites the message, CANCEL drops it.
+shouting:
+  enabled: true
+  max-uppercase: 8
+  action: LOWERCASE
+
+# The blocked.yml rules. Masked hits are replaced by this.
+words:
+  enabled: true
+  mask: "***"
+
+# Goes to everyone with shardedcore.chatfilter.alerts and to the console.
+# checks: true also reports slowmode, length, repeat and shouting.
+alerts:
+  enabled: true
+  checks: false
+  format: "&#FF0000&lFILTER &7▷ &f%player% &7» &f%message% &8(%rule% %action%)"
+
+# What /chathistory reads. rules-only: false also stores the four checks.
+log:
+  enabled: true
+  rules-only: true
+  keep-days: 14
+
+sounds:
+  blocked:
+    enabled: true
+    sound: "block.note_block.bass"
+    volume: 0.8
+    pitch: 0.8
+  click:
+    enabled: true
+    sound: "ui.button.click"
+    volume: 1.0
+    pitch: 1.2
+
+messages:
+  actionbar: false
+  slowmode: "&#FF0000&lCHAT &7▷ &fWait &#FF0000%seconds%s &fbefore your next message."
+  too-long: "&#FF0000&lCHAT &7▷ &fKeep it under &#FF0000%max% &fcharacters."
+  spamming: "&#FF0000&lCHAT &7▷ &fStop repeating the same character."
+  repeating: "&#FF0000&lCHAT &7▷ &fYou just said that."
+  shouting: "&#FF0000&lCHAT &7▷ &fThat is a lot of caps."
+  blocked: "&#FF0000&lCHAT &7▷ &fThat message is not allowed here."
+  history-empty: "&#FF0000&lCHAT &7▷ &fNothing was caught yet."
+  usage-regex: "&#FF0000&lCHAT &7▷ &fUse &#FF0000/chatfilter regex <word>&f."
+  usage-similar: "&#FF0000&lCHAT &7▷ &fUse &#FF0000/chatfilter similar <first> <second>&f."
+  usage-test: "&#FF0000&lCHAT &7▷ &fUse &#FF0000/chatfilter test <message>&f."
+  regex-added: "&#97F900&lCHAT &7▷ &fAdded &#97F900%word% &fto the rule &#97F900%rule%&f."
+  regex-known: "&#FF0000&lCHAT &7▷ &f%word% is already in &#FF0000%rule%&f."
+  regex-invalid: "&#FF0000&lCHAT &7▷ &fUse a word with at least three different letters."
+  similar: "&#2BD6FF&lCHAT &7▷ &f%first% &7and &f%second% &7match &#2BD6FF%percent%%&7."
+  test-clean: "&#97F900&lCHAT &7▷ &fNo rule catches that message."
+  test-hit: "&#FF0000&lCHAT &7▷ &fRule &#FF0000%rule% &8(%action%) &7» &f%result%"
