@@ -9,10 +9,21 @@ import com.shardedcore.modules.commands.spawn.SpawnModule;
 import com.shardedcore.modules.commands.tpa.TpaModule;
 import com.shardedcore.modules.commands.trash.TrashModule;
 import com.shardedcore.modules.commands.workstations.WorkstationsModule;
+import com.shardedcore.modules.crates.CratesModule;
+import com.shardedcore.modules.deathmessages.DeathMessagesModule;
+import com.shardedcore.modules.dropfix.DropfixModule;
 import com.shardedcore.modules.economy.EconomyModule;
+import com.shardedcore.modules.joincounter.JoinCounterModule;
+import com.shardedcore.modules.killrewards.KillRewardsModule;
 import com.shardedcore.modules.links.LinksModule;
 import com.shardedcore.modules.live.LiveModule;
+import com.shardedcore.modules.media.MediaModule;
+import com.shardedcore.modules.nametags.NametagsModule;
 import com.shardedcore.modules.ping.PingModule;
+import com.shardedcore.modules.playtimerewards.PlaytimeRewardsModule;
+import com.shardedcore.modules.rtp.RtpModule;
+import com.shardedcore.modules.staff.StaffModule;
+import com.shardedcore.modules.team.TeamsModule;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,6 +53,17 @@ public final class ModuleManager {
         register(new GuideModule(plugin));
         register(new WorkstationsModule(plugin));
         register(new AnnounceModule(plugin));
+        register(new TeamsModule(plugin));
+        register(new RtpModule(plugin));
+        register(new KillRewardsModule(plugin));
+        register(new PlaytimeRewardsModule(plugin));
+        register(new JoinCounterModule(plugin));
+        register(new MediaModule(plugin));
+        register(new CratesModule(plugin));
+        register(new DeathMessagesModule(plugin));
+        register(new DropfixModule(plugin));
+        register(new NametagsModule(plugin));
+        register(new StaffModule(plugin));
     }
 
     public void register(Module module) {

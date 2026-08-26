@@ -4,6 +4,8 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public final class Text {
@@ -59,6 +61,21 @@ public final class Text {
             result = result.replace(pairs[i], pairs[i + 1] == null ? "" : pairs[i + 1]);
         }
         return result;
+    }
+
+    public static String formatPlaytime(long minutes) {
+        if (minutes < 60) return minutes + "m";
+        long hours = minutes / 60, mins = minutes % 60;
+        if (hours < 24) return mins == 0 ? hours + "h" : hours + "h " + mins + "m";
+        return (hours / 24) + "d " + (hours % 24) + "h";
+    }
+
+    public static long ticksToMinutes(int ticks) { return ticks / 1200L; }
+
+    public static List<String> applyPlaceholderList(Player player, List<String> lines) {
+        List<String> out = new ArrayList<>();
+        for (String line : lines) out.add(applyPlaceholders(line, player));
+        return out;
     }
 
     public static String time(long seconds) {

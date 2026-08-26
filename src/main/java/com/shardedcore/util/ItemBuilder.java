@@ -15,7 +15,67 @@ import java.util.Map;
 
 public final class ItemBuilder {
 
-    private ItemBuilder() {
+    private final ItemStack item;
+    private boolean glowing;
+
+    public ItemBuilder(Material material) {
+        this(new ItemStack(material == null ? Material.STONE : material));
+    }
+
+    public ItemBuilder(ItemStack base) {
+        this.item = base == null ? new ItemStack(Material.STONE) : base.clone();
+    }
+
+    public ItemBuilder name(String name) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null && name != null) {
+            meta.displayName(ColorUtil.parse(name));
+            item.setItemMeta(meta);
+        }
+        return this;
+    }
+
+    public ItemBuilder lore(List<String> lines) {
+        if (lines == null || lines.isEmpty()) {
+            return this;
+        }
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) {
+            return this;
+        }
+        List<Component> lore = new ArrayList<>(lines.size());
+        for (String line : lines) {
+            lore.add(ColorUtil.parse(line));
+        }
+        meta.lore(lore);
+        item.setItemMeta(meta);
+        return this;
+    }
+
+    public ItemBuilder glow(boolean glow) {
+        this.glowing = glow;
+        return this;
+    }
+
+    public ItemBuilder hideAll() {
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            meta.addItemFlags(ItemFlag.values());
+            item.setItemMeta(meta);
+        }
+        return this;
+    }
+
+    public ItemStack build() {
+        if (glowing) {
+            ItemMeta meta = item.getItemMeta();
+            if (meta != null) {
+                meta.addEnchant(Enchantment.UNBREAKING, 1, true);
+                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                item.setItemMeta(meta);
+            }
+        }
+        return item.clone();
     }
 
     public static ItemStack fromSection(ConfigurationSection section) {
