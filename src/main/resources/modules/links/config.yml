@@ -1,0 +1,26 @@
+config-version: 1
+message-mode: chat
+
+discord:
+  url: 'https://discord.gg/shardedmc'
+  sound: ENTITY_EXPERIENCE_ORB_PICKUP
+  message:
+    - '&#55FFFF&lDISCORD'
+    - '&fJoin our community server!'
+    - '&b&nClick here to open Discord'
+
+store:
+  url: 'https://store.shardedmc.com'
+  sound: ENTITY_EXPERIENCE_ORB_PICKUP
+  message:
+    - '&#FFD700&lWEBSTORE'
+    - '&fSupport the server and unlock perks!'
+    - '&e&nClick here to visit the store'
+
+apply:
+  url: 'https://shardedmc.com/apply'
+  sound: ENTITY_EXPERIENCE_ORB_PICKUP
+  message:
+    - '&#9FFF00&lSTAFF APPLICATION'
+    - '&fInterested in joining the team?'
+    - '&a&nClick here to apply'

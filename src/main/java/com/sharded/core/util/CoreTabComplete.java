@@ -45,6 +45,7 @@ public final class CoreTabComplete implements TabCompleter {
                 case "tag", "tags" -> TabCompleteHelper.filter(args[0], "custom");
                 case "chattoggle", "msgtoggle", "deathtoggle", "jointoggle", "mobtoggle" ->
                         TabCompleteHelper.filter(args[0], "toggle");
+                case "joincounter" -> TabCompleteHelper.filter(args[0], "reset", "clear", "set");
                 case "live" -> TabCompleteHelper.filter(args[0], "toggle");
                 case "killstreak" -> TabCompleteHelper.filter(args[0], "best", "player");
                 case "graves" -> TabCompleteHelper.filter(args[0], "reload", "clear", "list");

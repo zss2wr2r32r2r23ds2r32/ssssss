@@ -261,6 +261,28 @@ commands:
     description: Show the webstore link
     usage: /store
     aliases: [webstore]
+  apply:
+    description: Show the staff application link
+    usage: /apply
+  joincounter:
+    description: View or manage the unique join counter
+    usage: /joincounter [reset|clear|set <number>]
+  anvil:
+    description: Open a portable anvil
+    usage: /anvil
+  grindstone:
+    description: Open a portable grindstone
+    usage: /grindstone
+  smithingtable:
+    description: Open a portable smithing table
+    usage: /smithingtable
+    aliases: [smithing, smith]
+  killrewards:
+    description: Open the kill milestone rewards menu
+    usage: /killrewards
+  playtimerewards:
+    description: Open the playtime milestone rewards menu
+    usage: /playtimerewards
   headtokens:
     description: Convert a player head to tokens
     usage: /headtokens
@@ -426,6 +448,32 @@ commands:
     description: Take money from a player
     usage: /ecotake <player> <amount>
     permission: sharded.economy.admin
+  order:
+    description: Open the order board
+    usage: /order [mine|new|stats|toggle|help]
+  orderadmin:
+    description: Orders admin commands
+    usage: /orderadmin [list|remove|migrate]
+    permission: sharded.orders.admin
+  sell:
+    description: Open the sell menu
+    usage: /sell
+  worth:
+    description: View item sell prices
+    usage: /worth
+  sellmulti:
+    description: View sell multipliers
+    usage: /sellmulti
+    aliases: [sellmultiplier]
+  shop:
+    description: Open the server shop
+    usage: /shop
+  kits:
+    description: Open the kits menu
+    usage: /kits
+  kit:
+    description: Kit admin and preview commands
+    usage: /kit <create|delete|give|list|layout> [args]
 
 permissions:
   sharded.leaderboards.use:
@@ -550,6 +598,24 @@ permissions:
     default: false
   sharded.guide.use:
     description: Open the server guide and rules menus
+    default: true
+  sharded.joincounter.admin:
+    description: Reset or set the unique join counter
+    default: op
+  sharded.workstations.anvil:
+    description: Open portable anvil
+    default: false
+  sharded.workstations.grindstone:
+    description: Open portable grindstone
+    default: false
+  sharded.workstations.smithingtable:
+    description: Open portable smithing table
+    default: false
+  sharded.killrewards.use:
+    description: Open kill milestone rewards GUI
+    default: true
+  sharded.playtimerewards.use:
+    description: Open playtime milestone rewards GUI
     default: true
   sharded.teams.use:
     description: Use team commands and GUI
@@ -882,3 +948,39 @@ permissions:
   sharded.commandwhitelist.media:
     description: Access media-tier whitelisted commands
     default: false
+  sharded.orders.use:
+    description: Use the order board
+    default: true
+  sharded.orders.admin:
+    description: Administer orders
+    default: op
+  sharded.sell.use:
+    description: Use sell commands
+    default: true
+  sharded.sell.multiplier.vip:
+    default: false
+  sharded.sell.multiplier.mvp:
+    default: false
+  sharded.sell.multiplier.premium:
+    default: false
+  sharded.shop.use:
+    description: Open the shop
+    default: true
+  sharded.shop.premium:
+    description: Access premium shop section
+    default: false
+  sharded.shop.fastbuy:
+    description: Faster shop purchase cooldown
+    default: false
+  sharded.kits.use:
+    description: Open kits menu
+    default: true
+  sharded.kits.admin:
+    description: Manage kits
+    default: op
+  sharded.kits.starter:
+    default: true
+  sharded.kits.tools:
+    default: false
+  sharded.kits.food:
+    default: true

@@ -2,7 +2,7 @@
 #  ShardedCore - main configuration
 # ---------------------------------------------------------
 
-config-version: 19
+config-version: 20
 
 # Edit plugins/ShardedCore/gui-navigation.yml for global back/previous/next/close button styles.
 
@@ -19,6 +19,14 @@ modules:
   nightvision: true
   deathmessages: true
   joinmessages: true
+  joincounter: true
+  nametags: true
+  chatformat: true
+  links: true
+  dropfix: true
+  workstations: true
+  killrewards: true
+  playtimerewards: true
   backpack: true
   graves: true
   armortrims: true
@@ -72,3 +80,7 @@ modules:
   live: true
   ping: true
   commandwhitelist: true
+  orders: true
+  sell: true
+  shop: true
+  kits: true

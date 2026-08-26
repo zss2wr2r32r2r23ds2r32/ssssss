@@ -34,7 +34,6 @@ public final class SettingsModule extends Module implements CommandExecutor {
 
         registerCommand("settings", this);
         registerCommand("deathtoggle", this);
-        registerCommand("jointoggle", this);
         registerCommand("mobtoggle", this);
         registerCommand("eventsoundstoggle", this);
     }
@@ -90,7 +89,6 @@ public final class SettingsModule extends Module implements CommandExecutor {
         }
         switch (cmd) {
             case "deathtoggle", "deathmessages", "dtoggle" -> toggleDeath(player);
-            case "jointoggle", "joinmessages", "joinleave", "jtoggle" -> toggleJoin(player);
             case "mobtoggle", "mobspawn", "mtoggle" -> toggleMobSpawn(player);
             case "eventsoundstoggle", "eventsounds" -> toggleEventSounds(player);
         }

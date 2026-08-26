@@ -31,8 +31,6 @@ public final class GuideModule extends Module implements CommandExecutor, org.bu
         }
         registerCommand("guide", this);
         registerCommand("rules", this);
-        registerCommand("discord", this);
-        registerCommand("store", this);
     }
 
     private void loadMenus() {
@@ -46,19 +44,11 @@ public final class GuideModule extends Module implements CommandExecutor, org.bu
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        String cmd = command.getName().toLowerCase();
-        if (cmd.equals("discord")) {
-            send(sender, "discord-link", "%discord%", config.getString("discord", "discord.gg/shardedmc"));
-            return true;
-        }
-        if (cmd.equals("store")) {
-            send(sender, "store-link", "%webstore%", config.getString("webstore", "store.shardedmc.com"));
-            return true;
-        }
         if (!(sender instanceof Player player)) {
             send(sender, "players-only");
             return true;
         }
+        String cmd = command.getName().toLowerCase();
         if (cmd.equals("rules")) {
             plugin.gui().open(player, "guide_rules");
             return true;
