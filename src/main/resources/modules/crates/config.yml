@@ -1,0 +1,127 @@
+# Crate GUIs, keys, and messages.
+edit-title: "&8Edit %crate%"
+preview-title: "&8Preview %crate%"
+open-title: "&8%crate%"
+punch-expire-seconds: 15
+
+selected:
+  material: LIME_STAINED_GLASS_PANE
+  name: "&#94FF00&lSELECTED"
+  lore:
+    - "&8Description"
+    - ""
+    - "&#94FF00Information:"
+    - "&#94FF00| &fYou Have selected"
+    - "&#94FF00| &fThis item"
+    - ""
+    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Confirm"
+
+claimed:
+  material: GRAY_STAINED_GLASS_PANE
+  name: "&#8B8B8B&lCLAIMED"
+  lore:
+    - "&8Description"
+    - ""
+    - "&#8B8B8BInformation:"
+    - "&#8B8B8B| &fYou already claimed"
+    - "&#8B8B8B| &fThis item"
+
+sounds:
+  edit:
+    enabled: true
+    sound: "block.chest.open"
+    volume: 1.0
+    pitch: 1.2
+  preview:
+    enabled: true
+    sound: "block.ender_chest.open"
+    volume: 1.0
+    pitch: 1.0
+  open:
+    enabled: true
+    sound: "block.chest.open"
+    volume: 1.0
+    pitch: 1.0
+  select:
+    enabled: true
+    sound: "ui.button.click"
+    volume: 1.0
+    pitch: 1.4
+  confirm:
+    enabled: true
+    sound: "entity.player.levelup"
+    volume: 0.8
+    pitch: 1.4
+  add:
+    enabled: true
+    sound: "entity.item.pickup"
+    volume: 1.0
+    pitch: 1.2
+  remove:
+    enabled: true
+    sound: "entity.item.break"
+    volume: 0.6
+    pitch: 1.4
+  place:
+    enabled: true
+    sound: "block.stone.place"
+    volume: 1.0
+    pitch: 1.0
+  unplace:
+    enabled: true
+    sound: "block.stone.break"
+    volume: 1.0
+    pitch: 1.0
+  deny:
+    enabled: true
+    sound: "entity.villager.no"
+    volume: 1.0
+    pitch: 1.0
+
+messages:
+  actionbar: false
+  usage: "&#94FF00&lCRATES &7▷ &f/crate create|edit|key|place|unplace|delete|list"
+  usage-create: "&#94FF00&lCRATES &7▷ &fUse /crate create <name>"
+  usage-edit: "&#94FF00&lCRATES &7▷ &fUse /crate edit <name>"
+  usage-key: "&#94FF00&lCRATES &7▷ &fUse /crate key give|giveall|set|inspect"
+  usage-key-give: "&#94FF00&lCRATES &7▷ &fUse /crate key give <player> <crate> <amount>"
+  usage-key-set: "&#94FF00&lCRATES &7▷ &fUse /crate key set <player> <crate> <amount>"
+  usage-key-giveall: "&#94FF00&lCRATES &7▷ &fUse /crate key giveall <crate> <amount>"
+  usage-key-inspect: "&#94FF00&lCRATES &7▷ &fUse /crate key inspect <player>"
+  usage-place: "&#94FF00&lCRATES &7▷ &fUse /crate place <name>"
+  usage-delete: "&#94FF00&lCRATES &7▷ &fUse /crate delete <crate>"
+  players-only: "&#FF0000&lERROR &7▷ &fOnly a player can use that."
+  no-permission: "&#FF0000&lERROR &7▷ &fYou do not have permission."
+  player-missing: "&#FF0000&lERROR &7▷ &fUnknown player."
+  invalid-amount: "&#FF0000&lERROR &7▷ &fThat is not a valid amount."
+  invalid-name: "&#FF0000&lERROR &7▷ &fThat crate name is invalid."
+  already-exists: "&#FF0000&lERROR &7▷ &fCrate &#FF0000%crate% &falready exists."
+  missing: "&#FF0000&lERROR &7▷ &fUnknown crate &#FF0000%crate%&f."
+  created: "&#94FF00&lCRATES &7▷ &fCreated crate &#94FF00%crate%&f."
+  deleted: "&#94FF00&lCRATES &7▷ &fDeleted crate &#94FF00%crate%&f."
+  list-empty: "&#94FF00&lCRATES &7▷ &fThere are no crates."
+  list-header: "&#94FF00&lCRATES"
+  list-line: "&#94FF00● &f%crate% &8(%id%) &7- &#94FF00%rewards% &frewards, &#94FF00%placed% &fplaced"
+  key-give: "&#94FF00&lCRATES &7▷ &fGave &#94FF00%amount% %crate% &fkey(s) to &#94FF00%player%&f."
+  key-set: "&#94FF00&lCRATES &7▷ &fSet &#94FF00%player%&f's &#94FF00%crate% &fkeys to &#94FF00%amount%&f."
+  key-giveall: "&#94FF00&lCRATES &7▷ &fGave &#94FF00%amount% %crate% &fkey(s) to &#94FF00%count% &fonline player(s)."
+  key-give-target: "&#94FF00&lCRATES &7▷ &fYou received &#94FF00%amount% %crate% &fkey(s)."
+  key-set-target: "&#94FF00&lCRATES &7▷ &fYour &#94FF00%crate% &fkeys were set to &#94FF00%amount%&f."
+  inspect-header: "&#94FF00&lCRATES &7▷ &fKeys for &#94FF00%player%"
+  inspect-line: "&#94FF00● &f%crate%&7: &#94FF00%amount%"
+  inspect-empty: "&#94FF00&lCRATES &7▷ &f%player% has no crate keys."
+  place-ready: "&#94FF00&lCRATES &7▷ &fPunch a block to place &#94FF00%crate%&f."
+  unplace-ready: "&#94FF00&lCRATES &7▷ &fPunch a crate block to unplace it."
+  placed: "&#94FF00&lCRATES &7▷ &fPlaced &#94FF00%crate% &fat that block."
+  unplaced: "&#94FF00&lCRATES &7▷ &fUnplaced &#94FF00%crate% &ffrom that block."
+  already-placed: "&#FF0000&lERROR &7▷ &fThat block is already &#FF0000%crate%&f."
+  not-a-crate: "&#FF0000&lERROR &7▷ &fThat block is not a crate."
+  punch-expired: "&#FF0000&lERROR &7▷ &fCrate punch expired. Run the command again."
+  cannot-break: "&#FF0000&lERROR &7▷ &fYou cannot break &#FF0000%crate%&f. Use /crate unplace."
+  no-keys: "&#FF0000&lERROR &7▷ &fYou have no &#FF0000%crate% &fkeys."
+  no-rewards: "&#FF0000&lERROR &7▷ &fCrate &#FF0000%crate% &fhas no rewards."
+  open-start: "&#94FF00&lCRATES &7▷ &fSelect &#94FF00%amount% &freward(s) from &#94FF00%crate%&f."
+  select-limit: "&#FF0000&lERROR &7▷ &fYou can only select &#FF0000%amount% &freward(s)."
+  confirmed: "&#94FF00&lCRATES &7▷ &fClaimed &#94FF00%item%&f. &#94FF00%amount% &fleft."
+  open-done: "&#94FF00&lCRATES &7▷ &fFinished opening &#94FF00%crate%&f."
+  keyall-won: "&#94FF00&lCRATES &7▷ &fYou won &#94FF00%item% &ffrom &#94FF00%crate%&f. Keys left: &#94FF00%amount%"
