@@ -94,6 +94,7 @@ public final class ModuleManager {
                 module.markDisabled();
             }
         }
+        plugin.refreshCommands();
     }
 
     public void disableAll() {
@@ -116,8 +117,12 @@ public final class ModuleManager {
         FileConfiguration config = plugin.getConfig();
         config.set("modules." + id, on);
         plugin.saveConfig();
+        boolean ok = true;
         if (on) {
-            if (enabled.containsKey(id)) return true;
+            if (enabled.containsKey(id)) {
+                plugin.refreshCommands();
+                return true;
+            }
             try {
                 module.loadFiles();
                 module.enable();
@@ -125,7 +130,7 @@ public final class ModuleManager {
             } catch (Exception ex) {
                 plugin.getLogger().log(Level.SEVERE, "Failed to enable " + id, ex);
                 module.markDisabled();
-                return false;
+                ok = false;
             }
         } else {
             if (enabled.containsKey(id)) {
@@ -138,7 +143,8 @@ public final class ModuleManager {
             }
             module.markDisabled();
         }
-        return true;
+        plugin.refreshCommands();
+        return ok;
     }
 
     public void openGui(Player player, int page) {

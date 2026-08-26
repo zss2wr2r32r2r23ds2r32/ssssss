@@ -8,7 +8,6 @@ import com.shardedcore.util.Text;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -21,9 +20,7 @@ import org.bukkit.event.Listener;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public abstract class Module {
 
@@ -35,7 +32,6 @@ public abstract class Module {
     protected FileConfiguration config;
     private final List<String> commands = new ArrayList<>();
     private final List<Listener> listeners = new ArrayList<>();
-    private final Map<String, String> originalPermissions = new LinkedHashMap<>();
 
     protected Module(ShardedCore plugin, String id) {
         this.plugin = plugin;
@@ -90,8 +86,7 @@ public abstract class Module {
             plugin.getLogger().warning("[" + id + "] missing command '" + name + "' in plugin.yml");
             return;
         }
-        originalPermissions.putIfAbsent(name, command.getPermission());
-        command.setPermission(originalPermissions.get(name));
+        plugin.restoreCommandPermission(command);
         command.setExecutor(executor);
         if (executor instanceof TabCompleter completer) {
             command.setTabCompleter(completer);
@@ -109,40 +104,27 @@ public abstract class Module {
     }
 
     public void markDisabled() {
-        for (String name : new ArrayList<>(commands)) {
-            PluginCommand command = plugin.getCommand(name);
-            if (command == null) continue;
-            originalPermissions.putIfAbsent(name, command.getPermission());
-            command.setPermission(DISABLED_PERMISSION);
-            command.setExecutor(plugin.disabledCommands());
-            command.setTabCompleter(plugin.disabledCommands());
-            command.setPermissionMessage(null);
-        }
+        hideBoundCommands();
         cleanupListeners();
-        commands.clear();
-        refreshCommandTree();
     }
 
     protected void cleanup() {
+        hideBoundCommands();
+        cleanupListeners();
+    }
+
+    private void hideBoundCommands() {
         for (String name : commands) {
             PluginCommand command = plugin.getCommand(name);
             if (command == null) continue;
-            command.setExecutor(plugin.disabledCommands());
-            command.setTabCompleter(plugin.disabledCommands());
-            command.setPermission(DISABLED_PERMISSION);
+            plugin.hideCommand(command);
         }
         commands.clear();
-        cleanupListeners();
-        refreshCommandTree();
     }
 
     private void cleanupListeners() {
         for (Listener listener : listeners) HandlerList.unregisterAll(listener);
         listeners.clear();
-    }
-
-    private void refreshCommandTree() {
-        Bukkit.getOnlinePlayers().forEach(Player::updateCommands);
     }
 
     protected String cfg(String path, String fallback) {

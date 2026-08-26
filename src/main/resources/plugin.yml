@@ -230,6 +230,49 @@ permissions:
     default: op
   shardedcore.settings:
     default: true
+    children:
+      shardedcore.settings.chat: true
+      shardedcore.settings.msg: true
+      shardedcore.settings.live: true
+      shardedcore.settings.tpa: true
+      shardedcore.settings.tpahere: true
+      shardedcore.settings.joinleave: true
+      shardedcore.settings.mobs: true
+      shardedcore.settings.death: true
+      shardedcore.settings.pay: true
+      shardedcore.settings.nightvision: true
+      shardedcore.settings.orders: true
+      shardedcore.settings.bossbar: true
+      shardedcore.settings.scoreboard: true
+      shardedcore.settings.tpauto: true
+  shardedcore.settings.chat:
+    default: true
+  shardedcore.settings.msg:
+    default: true
+  shardedcore.settings.live:
+    default: true
+  shardedcore.settings.tpa:
+    default: true
+  shardedcore.settings.tpahere:
+    default: true
+  shardedcore.settings.joinleave:
+    default: true
+  shardedcore.settings.mobs:
+    default: true
+  shardedcore.settings.death:
+    default: true
+  shardedcore.settings.pay:
+    default: true
+  shardedcore.settings.nightvision:
+    default: true
+  shardedcore.settings.orders:
+    default: true
+  shardedcore.settings.bossbar:
+    default: true
+  shardedcore.settings.scoreboard:
+    default: true
+  shardedcore.settings.tpauto:
+    default: true
   shardedcore.coinflip:
     default: true
   shardedcore.crates:
