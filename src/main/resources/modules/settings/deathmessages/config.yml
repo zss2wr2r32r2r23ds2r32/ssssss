@@ -1,0 +1,30 @@
+# Death messages module.
+# Each format has a permission node you give through LuckPerms, for example:
+#   /lp group vip permission set sharded.deathmessages.vip true
+# The highest 'priority' format the dying player has permission for is used.
+#
+# Placeholders:
+#   %player%      - the player who died
+#   %rank%        - LuckPerms prefix of the player who died
+#   %group%       - LuckPerms primary group
+#   %killer%      - the killer's name (killed-by-player only)
+#   %killer_rank% - LuckPerms prefix of the killer
+
+config-version: 3
+message-mode: chat
+formats:
+  default:
+    permission: '' # empty = everyone
+    priority: 0
+    death: '&8☠ &7%rank%&f%player% &7died.'
+    killed-by-player: '&8☠ &7%rank%&f%player% &7was slain by %killer_rank%&f%killer%&7.'
+  vip:
+    permission: sharded.deathmessages.vip
+    priority: 10
+    death: '&8☠ &6%rank%&e%player% &7met an unfortunate end.'
+    killed-by-player: '&8☠ &6%rank%&e%player% &7was destroyed by %killer_rank%&f%killer%&7!'
+  admin:
+    permission: sharded.deathmessages.admin
+    priority: 100
+    death: '&8☠ &c%rank%&c%player% &7has fallen!'
+    killed-by-player: '&8☠ &c%rank%&c%player% &7was eliminated by %killer_rank%&f%killer%&7!'

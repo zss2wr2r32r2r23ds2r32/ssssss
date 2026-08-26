@@ -1,0 +1,116 @@
+config-version: 7
+prefix: '&x&5&C&9&4&F&C&lTOKENS &8▷ &r'
+message-mode: chat
+
+gui:
+  title: '&8Token Methods'
+  click-footer: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+  methods:
+    koth:
+      order: 1
+      material: NETHERITE_SWORD
+      name: '&x&F&F&0&0&5&D&lKOTH'
+      color: '&x&F&F&0&0&5&D'
+      lore:
+      - '&8Descriptions'
+      - ''
+      - '&x&F&F&0&0&5&DInformation:'
+      - '&x&F&F&0&0&5&D| &fFight in the hill for points.'
+      - '&x&F&F&0&0&5&D| &fTop 3 win tokens.'
+      - '&x&F&F&0&0&5&D| &fNext: &f%shardedcore_koth_time%'
+      - ''
+      - '%click%'
+      command: /koth
+    outpost:
+      order: 2
+      material: BEACON
+      name: '&x&9&4&F&F&0&0&lOutpost'
+      color: '&x&9&4&F&F&0&0'
+      lore:
+      - '&8Descriptions'
+      - ''
+      - '&x&9&4&F&F&0&0Information:'
+      - '&x&9&4&F&F&0&0| &fCapture the outpost solo'
+      - '&x&9&4&F&F&0&0| &ffor token rewards.'
+      - '&x&9&4&F&F&0&0| &fNext: &f%shardedcore_outpost_time%'
+      - ''
+      - '%click%'
+      command: /outpost
+    killstreaks:
+      order: 3
+      material: NETHERITE_SWORD
+      name: '&x&F&F&0&0&0&0&lKillstreaks'
+      color: '&x&F&F&0&0&0&0'
+      lore:
+      - '&8Descriptions'
+      - ''
+      - '&x&F&F&0&0&0&0Information:'
+      - '&x&F&F&0&0&0&0| &fGet kill streak milestones'
+      - '&x&F&F&0&0&0&0| &ffor tokens and crate keys.'
+      - ''
+      - '%click%'
+      command: /killstreak
+    pvp_heads:
+      order: 4
+      material: PLAYER_HEAD
+      name: '&x&F&F&2&7&2&7&lPvp head drops'
+      color: '&x&F&F&2&7&2&7'
+      lore:
+      - '&8Descriptions'
+      - ''
+      - '&x&F&F&2&7&2&7Information:'
+      - '&x&F&F&2&7&2&7| &fPlayer heads drop on kills.'
+      - '&x&F&F&2&7&2&7| &fTrade them with &f/headtokens'
+      - ''
+      - '%click%'
+      command: /headtokens
+    daily:
+      order: 5
+      material: CHEST
+      name: '&x&9&F&F&F&0&0&lDaily Rewards'
+      color: '&x&9&F&F&F&0&0'
+      lore:
+      - '&8Descriptions'
+      - ''
+      - '&x&9&F&F&F&0&0Information:'
+      - '&x&9&F&F&F&0&0| &fSpin the daily reward wheel'
+      - '&x&9&F&F&F&0&0| &fevery 24 hours for tokens and keys.'
+      - ''
+      - '%click%'
+      command: /daily
+    weekly:
+      order: 6
+      material: ENDER_CHEST
+      name: '&x&F&F&D&7&0&0&lWeekly Rewards'
+      color: '&x&F&F&D&7&0&0'
+      lore:
+      - '&8Descriptions'
+      - ''
+      - '&x&F&F&D&7&0&0Information:'
+      - '&x&F&F&D&7&0&0| &fSpin the weekly reward wheel'
+      - '&x&F&F&D&7&0&0| &fevery 7 days for bigger prizes.'
+      - ''
+      - '%click%'
+      command: /weekly
+    playtime:
+      order: 7
+      material: CLOCK
+      name: '&x&F&F&E&E&0&0&lHourly Playtime'
+      color: '&x&F&F&E&E&0&0'
+      lore:
+      - '&8Descriptions'
+      - ''
+      - '&x&F&F&E&E&0&0Information:'
+      - '&x&F&F&E&E&0&0| &fEarn &x&F&F&E&E&0&0%amount% tokens &fevery hour'
+      - '&x&F&F&E&E&0&0| &fjust for playing on the server.'
+      - ''
+      - '%click%'
+      amount: 50
+
+playtime-reward:
+  enabled: true
+  amount: 50
+  interval-minutes: 60
+  check-interval-seconds: 60
+
+main-menu: mainmenu

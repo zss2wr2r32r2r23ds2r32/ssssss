@@ -1,0 +1,9 @@
+config-version: 4
+message-mode: chat
+
+anti-swear:
+  enabled: true
+
+swear-words:
+  - badword1
+  - badword2

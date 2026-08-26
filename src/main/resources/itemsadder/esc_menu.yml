@@ -1,0 +1,13 @@
+# Copy this file to: plugins/ItemsAdder/contents/shardedcore/configs/esc_menu.yml
+# ShardedCore auto-installs this when ItemsAdder is present (see modules/client/config.yml).
+# Then run /iareload or /iazip once.
+
+info:
+  namespace: shardedcore
+
+minecraft_lang_overwrite:
+  shardedcore_esc_menu:
+    entries:
+      "menu.disconnect": "&x&A&D&4&E&F&FDisconnect from ShardedMC"
+    languages:
+      - ALL

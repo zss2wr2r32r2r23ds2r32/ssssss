@@ -1,0 +1,132 @@
+config-version: 1
+menu_title: 'Token Shop | Abilities'
+open_command: abilities
+size: 27
+open_permission: tokenshop.use
+
+items:
+
+  back_button:
+    nav-override: true
+    slot: 26
+    left_click_commands:
+      - '[openguimenu] mainmenu'
+
+  autosmelt:
+    material: BLAST_FURNACE
+    slot: 10
+    display_name: '&x&F&F&6&7&0&0&lAUTO SMELT &7(7 Days)'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&6&7&0&0Information:'
+      - '&x&F&F&6&7&0&0| &fAutomatically smelt ores'
+      - '&x&F&F&6&7&0&0| &fwhile mining for &f7 days'
+      - ''
+      - '&x&F&F&6&7&0&0⚓ &fCost: &x&F&F&6&7&0&04000 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[ability_buy] sharded.autosmelt.use 7 4000'
+
+  spawner_pickup:
+    material: SPAWNER
+    slot: 11
+    display_name: '&x&9&4&0&0&F&F&lSILK SPAWNERS &7(7 Days)'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&9&4&0&0&F&FInformation:'
+      - '&x&9&4&0&0&F&F| &fPick up spawners with'
+      - '&x&9&4&0&0&F&F| &fsilk touch for &f7 days'
+      - ''
+      - '&x&9&4&0&0&F&F⚓ &fCost: &x&9&4&0&0&F&F6000 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[ability_buy] sharded.spawners.pickup 7 6000'
+
+  craft:
+    material: CRAFTING_TABLE
+    slot: 12
+    display_name: '&x&B&3&F&F&0&0&l/CRAFT &7(7 Days)'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&B&3&F&F&0&0Information:'
+      - '&x&B&3&F&F&0&0| &fPortable crafting table'
+      - '&x&B&3&F&F&0&0| &fUse &f/craft &7for &f7 days'
+      - ''
+      - '&x&B&3&F&F&0&0⚓ &fCost: &x&B&3&F&F&0&02500 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[ability_buy] sharded.craft.use 7 2500'
+
+  fix:
+    material: ANVIL
+    slot: 13
+    display_name: '&x&C&0&C&0&C&0&l/FIX &7(7 Days)'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&C&0&C&0&C&0Information:'
+      - '&x&C&0&C&0&C&0| &fRepair held items'
+      - '&x&C&0&C&0&C&0| &fUse &f/fix &7for &f7 days'
+      - ''
+      - '&x&C&0&C&0&C&0⚓ &fCost: &x&C&0&C&0&C&03000 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[ability_buy] sharded.fix.use 7 3000'
+
+  trash:
+    material: LAVA_BUCKET
+    slot: 14
+    display_name: '&x&F&F&2&7&2&7&l/TRASH &7(7 Days)'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&2&7&2&7Information:'
+      - '&x&F&F&2&7&2&7| &fOpen a trash bin GUI'
+      - '&x&F&F&2&7&2&7| &fUse &f/trash &7for &f7 days'
+      - ''
+      - '&x&F&F&2&7&2&7⚓ &fCost: &x&F&F&2&7&2&72000 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[ability_buy] sharded.trash.use 7 2000'
+
+  fly:
+    material: ELYTRA
+    slot: 15
+    display_name: '&x&0&0&B&7&F&F&l/FLY &7(7 Days)'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&0&0&B&7&F&FInformation:'
+      - '&x&0&0&B&7&F&F| &fToggle flight in spawn'
+      - '&x&0&0&B&7&F&F| &fUse &f/fly &7for &f7 days'
+      - ''
+      - '&x&0&0&B&7&F&F⚓ &fCost: &x&0&0&B&7&F&F7500 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[ability_buy] sharded.fly.use 7 7500'
+
+  pickup_mobs:
+    material: LEAD
+    slot: 16
+    display_name: '&x&9&F&F&F&0&0&lPICKUP MOBS &7(7 Days)'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&9&F&F&F&0&0Information:'
+      - '&x&9&F&F&F&0&0| &fPick up passive mobs'
+      - '&x&9&F&F&F&0&0| &fShift-right-click for &f7 days'
+      - ''
+      - '&x&9&F&F&F&0&0⚓ &fCost: &x&9&F&F&F&0&04500 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[ability_buy] sharded.pickupmobs.use 7 4500'

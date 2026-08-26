@@ -1,0 +1,5 @@
+config-version: 1
+
+disable-player-collisions: true
+disable-pet-collisions: true
+refresh-interval-ticks: 20

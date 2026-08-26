@@ -1,0 +1,51 @@
+# Portal RTP
+config-version: 12
+message-mode: chat
+portal-world: spawn
+require-portal-world: true
+default-destination: overworld
+target-world: world
+radius-label: 1K x 1K
+border-label: 5k x 5k
+gui-cooldown-ms: 2000
+countdown-seconds: 5
+cooldown-seconds: 30
+countdown-actionbar: '&#9FFF00&lRTP &8▷ &fTeleporting in &#9FFF00&n%seconds%&r&#9FFF00s'
+teleport-cancelled-actionbar: '&#9FFF00&lRTP &8▷ &fYou moved &8— &7teleport cancelled.'
+countdown-sound: BLOCK_NOTE_BLOCK_PLING
+cancel-sound: BLOCK_NOTE_BLOCK_BASS
+
+unlocked-by-default:
+  - overworld
+
+center-x: 0
+center-z: 0
+min-radius: 100
+max-radius: 500
+max-attempts: 25
+
+duels:
+  command: queue
+
+destinations:
+  overworld:
+    display-name: Overworld
+    world: world
+    locked: false
+    countdown-actionbar: '&#9FFF00&lRTP &8▷ &fTeleporting to &#9FFF00Overworld &fin &#9FFF00&n%seconds%&r&#9FFF00s'
+    success-actionbar: '&#9FFF00&lRTP &8▷ &fWelcome to the &#9FFF00Overworld&r!'
+    success-sound: ENTITY_ENDERMAN_TELEPORT
+  nether:
+    display-name: Nether
+    world: world_nether
+    locked: true
+    countdown-actionbar: '&#FF4D00&lRTP &8▷ &fTeleporting to &#FF4D00Nether &fin &#FF4D00&n%seconds%&r&#FF4D00s'
+    success-actionbar: '&#FF4D00&lRTP &8▷ &fWelcome to the &#FF4D00Nether&r!'
+    success-sound: ENTITY_ENDERMAN_TELEPORT
+  end:
+    display-name: End
+    world: world_the_end
+    locked: true
+    countdown-actionbar: '&#D896FF&lRTP &8▷ &fTeleporting to the &#D896FFEnd &fin &#D896FF&n%seconds%&r&#D896FFs'
+    success-actionbar: '&#D896FF&lRTP &8▷ &fWelcome to the &#D896FFEnd&r!'
+    success-sound: ENTITY_ENDERMAN_TELEPORT

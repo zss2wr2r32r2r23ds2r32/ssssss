@@ -1,0 +1,6 @@
+config-version: 3
+prefix: "%prefix%"
+players-only: "%prefix%&cOnly players can use this command."
+no-permission: "%prefix%&cYou don't have permission to use /hide."
+hidden: "%prefix%&7Your identity is now &khidden&7."
+unhidden: "%prefix%&7Your identity has been &arestored&7."

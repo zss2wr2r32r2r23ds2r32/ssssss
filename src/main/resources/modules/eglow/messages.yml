@@ -1,0 +1,12 @@
+config-version: 1
+prefix: '%prefix%'
+
+players-only: '%prefix%&#FF2727Only players can use this command.'
+no-permission: '%prefix%&#FF2727You do not have permission to open the glow menu!'
+no-color-permission: '%prefix%&#FF2727You do not have permission for %color% Glow!'
+applied: '%prefix%&#9FFF00Glow applied!'
+disabled: '%prefix%&#9FFF00Glow disabled.'
+
+message-modes:
+  applied: actionbar
+  disabled: actionbar

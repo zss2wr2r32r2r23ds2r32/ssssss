@@ -1,0 +1,20 @@
+config-version: 4
+prefix: '%prefix%'
+
+players-only: '%prefix%&#FF2727Only players can use this command.'
+no-permission: '%prefix%&#FF2727You don''t have permission.'
+wrong-world: '%prefix%&#FF2727RTP only works in the &f%world% &#FF2727world.'
+world-not-found: '%prefix%&#FF2727World &f%world% &#FF2727is not loaded.'
+no-safe-location: '%prefix%&#FF2727Couldn''t find a safe location.'
+on-cooldown: '%prefix%&#FF2727Wait &f%time% &#FF2727before teleporting again.'
+countdown: '%prefix%&7Teleporting in &f%seconds%&7... &#FF2727Don''t move!'
+countdown-cancelled: '%prefix%&#FF2727Teleport cancelled — you moved!'
+teleport-failed: '%prefix%&#FF2727Teleport failed — try again.'
+teleported: '%prefix%&#9FFF00Teleported to &f%x%, %y%, %z% &#9FFF00in &f%world%&#9FFF00!'
+wand-given: '%prefix%&#9FFF00Portal wand given. Right-click any block to register
+  an RTP trigger.'
+wand-set: '%prefix%&#9FFF00RTP trigger set on &f%block%&#9FFF00! &7(&f%count% &7registered)'
+wand-removed: '%prefix%&#FF2727RTP trigger removed from &f%block%&#FF2727. &7(&f%count%
+  &7remaining)'
+wand-name: '&5&lPortal Wand'
+wand-lore: '&7Right-click any block|&7to register an RTP trigger location'

@@ -1,0 +1,59 @@
+# Armor Trims — /trims, /armortrims, /trimstation
+config-version: 5
+message-mode: chat
+
+title: '&8Armor Trim Station'
+permission: sharded.armortrims.use
+
+gui:
+  size: 27
+  filler:
+    material: BLACK_STAINED_GLASS_PANE
+    name: '&r'
+  slots:
+    pattern: 10
+    armor: 13
+    material: 16
+    confirm: 22
+  pattern-item:
+    use-template-icon: true
+    display-name: '&#0083FF&l%pattern%'
+    glow: true
+  material-item:
+    display-name: '&#0083FF&l%material%'
+    glow: true
+  confirm:
+    material: LIME_DYE
+
+sounds:
+  open: BLOCK_SMITHING_TABLE_USE
+  open-volume: 0.6
+  open-pitch: 1.2
+  cycle: UI_BUTTON_CLICK
+  cycle-volume: 0.5
+  pattern-pitch: 1.4
+  material-pitch: 1.7
+  confirm: BLOCK_SMITHING_TABLE_USE
+  confirm-volume: 1.0
+  confirm-pitch: 1.0
+
+filters:
+  exclude-netherite: true
+  excluded-patterns:
+    - silence
+  excluded-materials: []
+
+material-icons:
+  quartz: QUARTZ
+  iron: IRON_INGOT
+  gold: GOLD_INGOT
+  copper: COPPER_INGOT
+  emerald: EMERALD
+  diamond: DIAMOND
+  redstone: REDSTONE
+  lapis: LAPIS_LAZULI
+  amethyst: AMETHYST_SHARD
+
+pattern-icons: {}
+pattern-icon-fallback: PAPER
+material-icon-fallback: GOLD_INGOT

@@ -1,0 +1,94 @@
+config-version: 1
+message-mode: chat
+
+size: 27
+title: '&8Media | Applications'
+click-sound: UI_BUTTON_CLICK
+
+message:
+  - ''
+  - '&#F64B92☀ &lMEDIA&r &#F64B92☀'
+  - '&7[ɪɴғᴏʀᴍᴀᴛɪᴏɴ]'
+  - ''
+  - '&#F64B92¦ &fYou are applying with &#F64B92%platform%&f.'
+  - '&#F64B92¦ &fBring your channel and your numbers.'
+  - ''
+  - '&#F64B92▷ &fLink: &#F64B92&n%link%'
+
+entries:
+  youtube:
+    slot: 11
+    material: RED_DYE
+    display-name: '&#FF3B30&lYOUTUBE'
+    url: 'https://discord.gg/shardedmc'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF3B30Information:'
+      - '&#FF3B30¦ &fApply for the &#F64B92☀ &lMEDIA&r &frank'
+      - '&#FF3B30¦ &fwith your YouTube channel'
+      - ''
+      - '&#FF3B30⚑ &fRequirements'
+      - '&#FF3B30¦ &f2.000 views per video'
+      - '&#FF3B30¦ &f100 likes per video'
+      - '&#FF3B30¦ &f250 subscribers'
+      - '&#FF3B30¦ &f15 average viewers &7(live)'
+      - '&#FF3B30¦ &f2 hours of stream &7(live)'
+      - ''
+      - '&#FF3B30⭐ &fRewards'
+      - '&#FF3B30¦ &fThe &#F64B92☀ &lMEDIA&r &frank'
+      - '&#FF3B30¦ &fAccess to &#FF3B30/live'
+      - ''
+      - '&#ffd51c▶ &#ffd51c&l&nCLICK&r &#ffd51cto apply'
+
+  tiktok:
+    slot: 13
+    material: PINK_DYE
+    display-name: '&#FF44AA&lTIKTOK'
+    url: 'https://discord.gg/shardedmc'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF44AAInformation:'
+      - '&#FF44AA¦ &fApply for the &#F64B92☀ &lMEDIA&r &frank'
+      - '&#FF44AA¦ &fwith your TikTok account'
+      - ''
+      - '&#FF44AA⚑ &fRequirements'
+      - '&#FF44AA¦ &f5.000 views per clip'
+      - '&#FF44AA¦ &f200 likes per clip'
+      - '&#FF44AA¦ &f500 followers'
+      - '&#FF44AA¦ &f15 average viewers &7(live)'
+      - '&#FF44AA¦ &f2 hours of stream &7(live)'
+      - ''
+      - '&#FF44AA⭐ &fRewards'
+      - '&#FF44AA¦ &fThe &#F64B92☀ &lMEDIA&r &frank'
+      - '&#FF44AA¦ &fAccess to &#FF44AA/live'
+      - ''
+      - '&#ffd51c▶ &#ffd51c&l&nCLICK&r &#ffd51cto apply'
+
+  twitch:
+    slot: 15
+    material: PURPLE_DYE
+    display-name: '&#9146FF&lTWITCH'
+    url: 'https://discord.gg/shardedmc'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#9146FFInformation:'
+      - '&#9146FF¦ &fApply for the &#F64B92☀ &lMEDIA&r &frank'
+      - '&#9146FF¦ &fwith your Twitch channel'
+      - ''
+      - '&#9146FF⚑ &fRequirements'
+      - '&#9146FF¦ &f15 average viewers'
+      - '&#9146FF¦ &f2 hours of stream per week'
+      - '&#9146FF¦ &fActive community'
+      - ''
+      - '&#9146FF⭐ &fRewards'
+      - '&#9146FF¦ &fThe &#F64B92☀ &lMEDIA&r &frank'
+      - '&#9146FF¦ &fAccess to &#9146FF/live'
+      - ''
+      - '&#ffd51c▶ &#ffd51c&l&nCLICK&r &#ffd51cto apply'
+
+messages:
+  players-only: '&#FF0000&lERROR &7▷ &fOnly players can open the menu.'
+  no-entries: '&#FF0000&lERROR &7▷ &fThere is nothing to apply for yet.'

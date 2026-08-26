@@ -1,0 +1,112 @@
+config-version: 6
+message-mode: chat
+menu-rows: 4
+filler-material: BLACK_STAINED_GLASS_PANE
+show-all-hats: true
+
+enchantments:
+  protection: 4
+  unbreaking: 3
+
+# Armor bar on HUD (3.0 = diamond helmet, 3.0 toughness = netherite)
+attributes:
+  armor: 3.0
+  armor-toughness: 0.0
+
+placeholders:
+  owned-yes: '&#9FFF00&nYes'
+  owned-no: '&#FF2727&nNo'
+  none: '&7None'
+
+remove:
+  slot: 4
+  display-name: '&c&lREMOVE HAT'
+  lore:
+    - '&8Description'
+    - ''
+    - '&7Information:'
+    - '&7| &fTake off your cosmetic hat'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Remove'
+
+hats:
+  tophat:
+    slot: 11
+    permission: sharded.wardrobe.tophat
+    itemsadder-id: 'HATS:TOPHAT'
+    material: 'HATS:TOPHAT'
+    display-name: '&x&F&F&0&0&5&3&lTOP &x&F&F&0&0&5&3Hat'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&0&5&3Information:'
+      - '&x&F&F&0&0&5&3| &fEquip as your helmet'
+      - '&x&F&F&0&0&5&3| &fProt IV · Unb III · Mending'
+      - ''
+      - '&x&F&F&0&0&5&3| ⚓ &fOwned: %wardrobe_owned_tophat%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip'
+  crown:
+    slot: 12
+    permission: sharded.wardrobe.crown
+    itemsadder-id: 'HATS:CROWN'
+    material: 'HATS:CROWN'
+    display-name: '&x&F&F&E&3&0&0&lCROWN'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&E&3&0&0Information:'
+      - '&x&F&F&E&3&0&0| &fEquip as your helmet'
+      - '&x&F&F&E&3&0&0| &fProt IV · Unb III · Mending'
+      - ''
+      - '&x&F&F&E&3&0&0| ⚓ &fOwned: %wardrobe_owned_crown%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip'
+  propeller_hat:
+    slot: 13
+    permission: sharded.wardrobe.propeller_hat
+    itemsadder-id: 'HATS:PROPELLER_HAT'
+    material: 'HATS:PROPELLER_HAT'
+    display-name: '&x&0&0&8&D&F&F&lPROPELLER &x&0&0&8&D&F&FHat'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&0&0&8&D&F&FInformation:'
+      - '&x&0&0&8&D&F&F| &fEquip as your helmet'
+      - '&x&0&0&8&D&F&F| &fProt IV · Unb III · Mending'
+      - ''
+      - '&x&0&0&8&D&F&F| ⚓ &fOwned: %wardrobe_owned_propeller_hat%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip'
+  clown_mask:
+    slot: 14
+    permission: sharded.wardrobe.clown_mask
+    itemsadder-id: 'HATS:CLOWN_MASK'
+    material: 'HATS:CLOWN_MASK'
+    display-name: '&x&F&F&0&0&0&0&lCLOWN &x&F&F&0&0&0&0Mask'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&0&0&0Information:'
+      - '&x&F&F&0&0&0&0| &fEquip as your helmet'
+      - '&x&F&F&0&0&0&0| &fProt IV · Unb III · Mending'
+      - ''
+      - '&x&F&F&0&0&0&0| ⚓ &fOwned: %wardrobe_owned_clown_mask%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip'
+  sstraw_hat:
+    slot: 15
+    permission: sharded.wardrobe.sstraw_hat
+    itemsadder-id: 'HATS:SSTRAW_HAT'
+    material: 'HATS:SSTRAW_HAT'
+    display-name: '&x&B&3&F&F&0&0&lSTRAW &x&B&3&F&F&0&0Hat'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&B&3&F&F&0&0Information:'
+      - '&x&B&3&F&F&0&0| &fEquip as your helmet'
+      - '&x&B&3&F&F&0&0| &fProt IV · Unb III · Mending'
+      - ''
+      - '&x&B&3&F&F&0&0| ⚓ &fOwned: %wardrobe_owned_sstraw_hat%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip'
