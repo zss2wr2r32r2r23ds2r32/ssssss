@@ -42,6 +42,9 @@ public final class CommandHelp {
         list.add(new CommandInfo("/pet equip|remove|rename", "Manage cosmetic pet", "sharded.pets.use"));
         list.add(new CommandInfo("/settings", "Personal settings menu", "sharded.settings.use"));
         list.add(new CommandInfo("/killstreak [best|player]", "View killstreak stats", "sharded.killstreak.use"));
+        list.add(new CommandInfo("/live <url>", "Announce your live stream", "sharded.live.use"));
+        list.add(new CommandInfo("/live toggle", "Toggle live announcements", "sharded.live.use"));
+        list.add(new CommandInfo("/ping [player]", "Check connection ping", "sharded.ping.use"));
         list.add(new CommandInfo("/bal (/balance)", "Check token balance", null));
         list.add(new CommandInfo("/tokenshop", "Open token shop", "sharded.tokenshop.use"));
         list.add(new CommandInfo("/temprank shop", "Temporary rank shop", "sharded.tempranks.use"));
@@ -128,6 +131,8 @@ public final class CommandHelp {
             case "pets", "pet" -> "pets";
             case "settings", "setting" -> "settings";
             case "killstreak" -> "killstreaks";
+            case "live" -> "live";
+            case "ping" -> "ping";
             case "bal", "balance", "tokens", "tokenshop", "temprank", "rankshop", "temprankshop" -> "tokens";
             case "toolname" -> "toolname";
             case "requeststaff" -> "requeststaff";

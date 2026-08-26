@@ -122,6 +122,12 @@ commands:
   killstreak:
     description: View killstreak stats
     usage: /killstreak [best|player] [best]
+  live:
+    description: Announce your live stream or toggle live announcements
+    usage: /live <url> | /live toggle
+  ping:
+    description: Check your connection ping
+    usage: /ping [player]
   toolname:
     description: Rename the item you are holding
     usage: /toolname [name]
@@ -738,3 +744,24 @@ permissions:
   sharded.combat.admin:
     description: Setup combat region
     default: op
+  sharded.live.use:
+    description: Announce live streams and toggle live messages
+    default: true
+  sharded.ping.use:
+    description: Check your ping
+    default: true
+  sharded.ping.others:
+    description: Check another player's ping
+    default: op
+  shardedcore.commandwhitelist.bypass:
+    description: Bypass command whitelist restrictions
+    default: op
+  sharded.commandwhitelist.ranks:
+    description: Access rank-tier whitelisted commands
+    default: false
+  sharded.commandwhitelist.immortal:
+    description: Access immortal-tier whitelisted commands
+    default: false
+  sharded.commandwhitelist.media:
+    description: Access media-tier whitelisted commands
+    default: false

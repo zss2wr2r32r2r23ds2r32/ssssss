@@ -50,6 +50,9 @@ import com.sharded.core.modules.leaderboards.LeaderboardsModule;
 import com.sharded.core.modules.media.MediaModule;
 import com.sharded.core.modules.crates.CratesModule;
 import com.sharded.core.modules.combat.CombatModule;
+import com.sharded.core.modules.commandwhitelist.CommandWhitelistModule;
+import com.sharded.core.modules.live.LiveModule;
+import com.sharded.core.modules.ping.PingModule;
 import com.sharded.core.modules.koth.KothModule;
 import com.sharded.core.modules.outpost.OutpostModule;
 import com.sharded.core.modules.coreprotect.CoreProtectModule;
@@ -124,6 +127,9 @@ public final class ModuleManager {
         register(new CoreProtectModule(plugin));
         register(new DuelModule(plugin));
         register(new CombatModule(plugin));
+        register(new LiveModule(plugin));
+        register(new PingModule(plugin));
+        register(new CommandWhitelistModule(plugin));
     }
 
     private void register(Module module) {

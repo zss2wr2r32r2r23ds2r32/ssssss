@@ -45,6 +45,7 @@ public final class CoreTabComplete implements TabCompleter {
                 case "tag", "tags" -> TabCompleteHelper.filter(args[0], "custom");
                 case "chattoggle", "msgtoggle", "deathtoggle", "jointoggle", "mobtoggle" ->
                         TabCompleteHelper.filter(args[0], "toggle");
+                case "live" -> TabCompleteHelper.filter(args[0], "toggle");
                 case "killstreak" -> TabCompleteHelper.filter(args[0], "best", "player");
                 case "graves" -> TabCompleteHelper.filter(args[0], "reload", "clear", "list");
                 default -> List.of();
@@ -53,7 +54,7 @@ public final class CoreTabComplete implements TabCompleter {
         if (args.length == 2) {
             return switch (name) {
                 case "msg", "tell", "whisper", "w", "pm" -> TabCompleteHelper.onlinePlayers(args[1]);
-                case "backpack" -> TabCompleteHelper.onlinePlayers(args[1]);
+                case "backpack", "ping" -> TabCompleteHelper.onlinePlayers(args[1]);
                 case "fly" -> {
                     if (args[0].equalsIgnoreCase("speed")) {
                         yield TabCompleteHelper.filter(args[1], "1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
