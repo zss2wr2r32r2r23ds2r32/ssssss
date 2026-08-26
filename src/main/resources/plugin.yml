@@ -138,9 +138,9 @@ commands:
     description: Pay to pick up spawners
     usage: /spawners pay [amount]
   bal:
-    description: Check token balance
+    description: Check money balance
     usage: /bal [player]
-    aliases: [balance]
+    aliases: [balance, money]
   tokens:
     description: Token admin commands
     usage: /tokens <give|set|remove|reset|giveall>
@@ -361,6 +361,35 @@ commands:
     description: Teleport to a player
     usage: /gotoplayer <player>
     permission: sharded.staff.teleport
+  pay:
+    description: Pay another player
+    usage: /pay <player> <amount>
+    permission: sharded.economy.pay
+  baltop:
+    description: View top money balances
+    usage: /baltop [limit]
+    aliases: [moneytop]
+    permission: sharded.economy.baltop
+  ecofreeze:
+    description: Freeze or unfreeze a player's economy account
+    usage: /ecofreeze <player> [true|false]
+    permission: sharded.economy.admin
+  ecogive:
+    description: Give money to a player
+    usage: /ecogive <player> <amount>
+    permission: sharded.economy.admin
+  ecoset:
+    description: Set a player's money balance
+    usage: /ecoset <player> <amount>
+    permission: sharded.economy.admin
+  ecoreset:
+    description: Reset a player's money balance
+    usage: /ecoreset <player>
+    permission: sharded.economy.admin
+  ecotake:
+    description: Take money from a player
+    usage: /ecotake <player> <amount>
+    permission: sharded.economy.admin
 
 permissions:
   sharded.leaderboards.use:
@@ -566,6 +595,18 @@ permissions:
     default: false
   sharded.tokens.admin:
     default: op
+  sharded.economy.admin:
+    description: Economy admin commands
+    default: op
+  sharded.economy.pay:
+    description: Pay other players
+    default: true
+  sharded.economy.balance:
+    description: Check money balance
+    default: true
+  sharded.economy.baltop:
+    description: View money leaderboard
+    default: true
   sharded.tokenshop.use:
     default: true
   sharded.pets.use:

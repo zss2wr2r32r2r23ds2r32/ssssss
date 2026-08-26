@@ -57,6 +57,8 @@ import com.sharded.core.modules.koth.KothModule;
 import com.sharded.core.modules.outpost.OutpostModule;
 import com.sharded.core.modules.coreprotect.CoreProtectModule;
 import com.sharded.core.modules.duel.DuelModule;
+import com.sharded.core.modules.economy.EconomyModule;
+import com.sharded.core.modules.economy.EconomyService;
 import com.sharded.core.modules.roles.RolesModule;
 import com.sharded.core.modules.teams.TeamsModule;
 
@@ -96,6 +98,7 @@ public final class ModuleManager {
         register(new PickupMobsModule(plugin));
         register(new PickupSpawnersModule(plugin));
         register(new TokensModule(plugin));
+        register(new EconomyModule(plugin));
         register(new EGlowModule(plugin));
         register(new TagsModule(plugin));
         register(new ChatColorModule(plugin));
@@ -187,6 +190,11 @@ public final class ModuleManager {
 
     public TokenService tokens() {
         TokensModule module = get(TokensModule.class);
+        return module == null ? null : module.service();
+    }
+
+    public EconomyService economy() {
+        EconomyModule module = get(EconomyModule.class);
         return module == null ? null : module.service();
     }
 

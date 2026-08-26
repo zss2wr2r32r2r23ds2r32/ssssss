@@ -9,6 +9,7 @@ import com.sharded.core.modules.teams.TeamDatabase;
 import com.sharded.core.modules.teams.TeamsModule;
 import com.sharded.core.modules.tokens.TokenDatabase;
 import com.sharded.core.modules.tokens.TokensModule;
+import com.sharded.core.modules.economy.EconomyModule;
 import com.sharded.core.modules.killstreaks.KillstreakDatabase;
 import com.sharded.core.util.ColorUtil;
 import com.sharded.core.util.TagDisplayUtil;
@@ -53,6 +54,7 @@ public final class PlaceholderHook implements Listener {
     private final ShardedCore plugin;
     private final List<PlaceholderExpansion> expansions = new ArrayList<>();
     private volatile TokensModule cachedTokens;
+    private volatile EconomyModule cachedEconomy;
     private volatile TeamsModule cachedTeams;
     private volatile KillstreaksModule cachedKillstreaks;
     private volatile OutpostModule cachedOutpost;
@@ -93,6 +95,7 @@ public final class PlaceholderHook implements Listener {
 
     private void refreshModuleCache() {
         cachedTokens = plugin.modules().get(TokensModule.class);
+        cachedEconomy = plugin.modules().get(EconomyModule.class);
         cachedTeams = plugin.modules().get(TeamsModule.class);
         cachedKillstreaks = plugin.modules().get(KillstreaksModule.class);
         cachedOutpost = plugin.modules().get(OutpostModule.class);
@@ -103,6 +106,11 @@ public final class PlaceholderHook implements Listener {
     private TokensModule tokensModule() {
         TokensModule module = cachedTokens;
         return module != null ? module : plugin.modules().get(TokensModule.class);
+    }
+
+    private EconomyModule economyModule() {
+        EconomyModule module = cachedEconomy;
+        return module != null ? module : plugin.modules().get(EconomyModule.class);
     }
 
     private TeamsModule teamsModule() {
@@ -149,6 +157,16 @@ public final class PlaceholderHook implements Listener {
             String p = params.toLowerCase(Locale.ROOT);
 
             if (player != null) {
+                EconomyModule economy = economyModule();
+                if (economy != null && economy.service() != null) {
+                    if (p.equals("balance") || p.equals("economy_balance")) {
+                        return String.valueOf(economy.service().getBalance(player.getUniqueId()));
+                    }
+                    if (p.equals("balance_formatted") || p.equals("economy_balance_formatted")) {
+                        return economy.formatBalance(economy.service().getBalance(player.getUniqueId()));
+                    }
+                }
+
                 TokensModule tokens = tokensModule();
                 if (tokens != null && tokens.service() != null) {
                     if (p.equals("tokens") || p.equals("tokens_amount")) {
