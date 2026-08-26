@@ -1,0 +1,118 @@
+config-version: 1
+message-mode: chat
+play-open-sound: true
+
+discord: 'discord.gg/shardedmc'
+webstore: 'store.shardedmc.com'
+
+gui:
+  main:
+    title: '&8Server Guide'
+    size: 27
+    filler:
+      material: BLACK_STAINED_GLASS_PANE
+      name: ' '
+    items:
+      server_guide:
+        material: COMPASS
+        slot: 10
+        name: '&#9FFF00&lSERVER GUIDE'
+        lore:
+          - '&8Item Description'
+          - ''
+          - '&#9FFF00Information:'
+          - '&#9FFF00| &fHere you can find all important'
+          - '&#9FFF00| &finformation about the server!'
+      server_shop:
+        material: EMERALD
+        slot: 11
+        name: '&#9FFF00&lSERVER SHOP'
+        lore:
+          - '&8Item Description'
+          - ''
+          - '&#9FFF00Information:'
+          - '&#9FFF00| &fVisit our server shop!'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
+        action: 'command:shop'
+      server_info:
+        material: BOOK
+        slot: 12
+        name: '&#FF69B4&lSERVER INFORMATION'
+        lore:
+          - '&8Item Description'
+          - ''
+          - '&#FF69B4Information:'
+          - '&#FF69B4| &fRead server info and rules!'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
+        action: 'menu:info'
+      random_location:
+        material: GRASS_BLOCK
+        slot: 13
+        name: '&#9FFF00&lRANDOM LOCATION'
+        lore:
+          - '&8Item Description'
+          - ''
+          - '&#9FFF00Information:'
+          - '&#9FFF00| &fTeleport to a random location!'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
+        action: 'command:rtp'
+      teams:
+        material: WHITE_BANNER
+        slot: 14
+        name: '&#FF3399&lTEAMS'
+        lore:
+          - '&8Item Description'
+          - ''
+          - '&#FF3399Information:'
+          - '&#FF3399| &fCreate or manage your team!'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
+        action: 'command:team'
+      discord:
+        material: PAPER
+        slot: 15
+        name: '&#55FFFF&lDISCORD SERVER'
+        lore:
+          - '&8Item Description'
+          - ''
+          - '&#55FFFFInformation:'
+          - '&#55FFFF| &fJoin our Discord: &f%discord%'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
+        action: 'command:discord'
+      webstore:
+        material: GOLD_INGOT
+        slot: 16
+        name: '&#FFD700&lSERVER WEBSTORE'
+        lore:
+          - '&8Item Description'
+          - ''
+          - '&#FFD700Information:'
+          - '&#FFD700| &fVisit: &f%webstore%'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue'
+        action: 'command:store'
+  info:
+    title: '&8Server Information'
+    size: 27
+    filler:
+      material: BLACK_STAINED_GLASS_PANE
+      name: ' '
+    items:
+      rules:
+        material: WRITABLE_BOOK
+        slot: 12
+        name: '&#FF69B4&lSERVER RULES'
+        lore:
+          - '&7View the server rules.'
+        action: 'command:rules'
+      back:
+        material: ARROW
+        slot: 22
+        name: '&#FF2727&lBack'
+        lore:
+          - '&7Return to the guide.'
+        action: 'menu:main'

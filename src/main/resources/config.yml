@@ -15,7 +15,7 @@ modules:
   rules: true
   guide: true
   announce: true
-  virtual-inventories: true
+  workstations: true
   settings: true
   coinflip: true
   orders: true

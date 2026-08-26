@@ -1,6 +1,14 @@
 package com.shardedcore.module;
 
 import com.shardedcore.ShardedCore;
+import com.shardedcore.modules.commands.announce.AnnounceModule;
+import com.shardedcore.modules.commands.guide.GuideModule;
+import com.shardedcore.modules.commands.homes.HomesModule;
+import com.shardedcore.modules.commands.rules.RulesModule;
+import com.shardedcore.modules.commands.spawn.SpawnModule;
+import com.shardedcore.modules.commands.tpa.TpaModule;
+import com.shardedcore.modules.commands.trash.TrashModule;
+import com.shardedcore.modules.commands.workstations.WorkstationsModule;
 import com.shardedcore.modules.economy.EconomyModule;
 import com.shardedcore.modules.links.LinksModule;
 import com.shardedcore.modules.live.LiveModule;
@@ -26,6 +34,14 @@ public final class ModuleManager {
         register(new LiveModule(plugin));
         register(new LinksModule(plugin));
         register(new PingModule(plugin));
+        register(new TrashModule(plugin));
+        register(new SpawnModule(plugin));
+        register(new HomesModule(plugin));
+        register(new TpaModule(plugin));
+        register(new RulesModule(plugin));
+        register(new GuideModule(plugin));
+        register(new WorkstationsModule(plugin));
+        register(new AnnounceModule(plugin));
     }
 
     public void register(Module module) {
@@ -89,9 +105,7 @@ public final class ModuleManager {
     @SuppressWarnings("unchecked")
     public <T extends Module> T get(Class<T> type) {
         for (Module module : enabled.values()) {
-            if (type.isInstance(module)) {
-                return (T) module;
-            }
+            if (type.isInstance(module)) return (T) module;
         }
         return null;
     }

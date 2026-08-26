@@ -119,6 +119,18 @@ public abstract class Module {
         return message;
     }
 
+    public FileConfiguration config() {
+        return config;
+    }
+
+    public FileConfiguration messages() {
+        return messages;
+    }
+
+    public void sendMessage(CommandSender to, String key, String... replacements) {
+        send(to, key, replacements);
+    }
+
     protected void send(CommandSender to, String key, String... replacements) {
         String message = raw(key, replacements);
         if (message.isEmpty()) {

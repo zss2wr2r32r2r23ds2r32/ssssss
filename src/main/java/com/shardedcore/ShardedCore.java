@@ -71,11 +71,6 @@ public final class ShardedCore extends JavaPlugin {
 
         StubCommand stub = new StubCommand(this);
         List<String> stubCommands = List.of(
-                "trash", "spawn", "setspawn", "delspawn",
-                "home", "homes", "sethome", "delhome",
-                "tpa", "tpahere", "tpaccept", "tpacancel", "tpatoggle", "tpauto",
-                "rules", "guide", "announce",
-                "craft", "anvil", "grindstone", "smithingtable",
                 "settings", "chattoggle", "msgtoggle", "jointoggle", "deathtoggle",
                 "mobtoggle", "paytoggle", "nightvision",
                 "cf", "order", "orderadmin",
