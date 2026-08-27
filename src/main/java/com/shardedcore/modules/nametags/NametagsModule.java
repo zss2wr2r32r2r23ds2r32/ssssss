@@ -142,8 +142,12 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
     }
 
     private void tick() {
-        ticks += Math.max(1, config.getInt("refresh", 10));
+        ticks += Math.max(1, config.getInt("refresh", 1));
         for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.isInvisible()) {
+                remove(player.getUniqueId());
+                continue;
+            }
             if (!tags.containsKey(player.getUniqueId())) spawn(player);
             else update(player);
         }
@@ -177,8 +181,9 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
             entity.setInterpolationDelay(0);
             int teleport = config.getBoolean("display.ride", false)
                     ? 0
-                    : Math.max(0, config.getInt("display.teleport-duration", 0));
+                    : Math.max(1, config.getInt("display.teleport-duration", 1));
             entity.setTeleportDuration(teleport);
+            entity.setInterpolationDuration(teleport);
             boolean ride = config.getBoolean("display.ride", false);
             entity.setTransformation(new Transformation(
                     ride ? offset(player, top) : new Vector3f(),
@@ -229,9 +234,12 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
                         offset(player, top), new Quaternionf(), new Vector3f(scale, scale, scale), new Quaternionf()));
             }
         } else {
-            display.setTransformation(new Transformation(
-                    new Vector3f(), new Quaternionf(), new Vector3f(scale, scale, scale), new Quaternionf()));
-            display.teleport(anchor(player, top));
+            org.bukkit.Location dest = anchor(player, top);
+            dest.setYaw(player.getLocation().getYaw());
+            dest.setPitch(player.getLocation().getPitch());
+            if (display.getLocation().distanceSquared(dest) > 0.0001) {
+                display.teleport(dest);
+            }
         }
         String path = top ? "lines.top" : "lines.bottom";
         if (!config.getBoolean(path + ".enabled", true)) {

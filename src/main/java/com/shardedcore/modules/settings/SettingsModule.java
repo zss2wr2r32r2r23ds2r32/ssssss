@@ -16,6 +16,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Monster;
+import org.bukkit.entity.Phantom;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -407,7 +408,7 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
 
     @EventHandler
     public void onSpawn(CreatureSpawnEvent event) {
-        if (!(event.getEntity() instanceof Monster)) return;
+        if (!(event.getEntity() instanceof Monster) && !(event.getEntity() instanceof Phantom)) return;
         int radius = config.getInt("mob-radius", 50);
         for (Entity nearby : event.getEntity().getNearbyEntities(radius, radius, radius)) {
             if (nearby instanceof Player player && !on(player, MOBS)) {

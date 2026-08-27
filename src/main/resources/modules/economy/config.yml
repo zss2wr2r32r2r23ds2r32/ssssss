@@ -25,3 +25,18 @@ usage-pay: "%prefix%Use /pay <player> <amount>"
 usage-admin: "%prefix%Use /eco<give|take|set> <player> <amount>"
 players-only: "%prefix%&#FF0000Only a player can do that."
 no-permission: "%prefix%&#FF0000You do not have permission."
+baltop-empty: "%prefix%&#FF0000Nobody is on the money leaderboard yet."
+
+baltop:
+  title: "Money Leaderboard"
+  rows: 6
+  limit: 28
+  name: "%rank%&#94FF00&l%player%"
+  lore:
+    - "&8Description"
+    - ""
+    - "&#94FF00&lINFORMATION:"
+    - "&#94FF00| &f&lPLACE: &#94FF00#%place%"
+    - "&#94FF00| &f&lBALANCE: &#94FF00$%amount%"
+    - ""
+    - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO VIEW"

@@ -41,11 +41,9 @@ public final class CosmeticsMenus {
         int current = Math.max(0, Math.min(page, pages - 1));
         String guide = config.getString("gui.guide", kind == null || kind.isBlank() ? "Guide" : kind);
         String preview = config.getString("gui.preview-name", ColorUtil.strip(title));
-        String resolved = Text.apply(config.getString("gui.title", title),
+        String resolved = Text.apply(config.getString("gui.title", preview),
                 "guide", guide, "name", preview, "page", String.valueOf(current + 1));
-        if (!resolved.contains("☀")) {
-            resolved = GuiButtons.title(guide, preview);
-        }
+        if (resolved == null || resolved.isBlank()) resolved = preview;
         Menus.Menu menu = plugin.menus().create(player, resolved, rows);
         int start = current * per;
         boolean bundles = config.getBoolean("gui.colored-bundles", true);
@@ -53,8 +51,9 @@ public final class CosmeticsMenus {
         for (int i = 0; i < per && start + i < entries.size(); i++) {
             Entry entry = entries.get(start + i);
             List<String> lore = lore(config, entry, kind);
-            String name = Text.apply(config.getString("gui.item-name", "%color%☀  %color%&l%name%"),
-                    "color", entry.color(), "name", entry.title(), "kind", kind, "display", entry.display());
+            String prettyName = entry.title() == null ? "" : ColorUtil.strip(entry.title()).toUpperCase(Locale.ROOT);
+            String name = Text.apply(config.getString("gui.item-name", "%color%☀%color%&l%name%"),
+                    "color", entry.color(), "name", prettyName, "kind", kind, "display", entry.display());
             Material icon = bundles ? GuiButtons.bundleMaterial(entry.color()) : fallback;
             menu.set(area[i], Items.named(icon, name, lore), event -> {
                 event.setCancelled(true);
@@ -87,7 +86,7 @@ public final class CosmeticsMenus {
             });
         }
         if (limitedPage && backClick != null) {
-            int slot = config.getInt("gui.back.slot", GuiButtons.slot("back", lastRow(rows) + 4));
+            int slot = config.getInt("gui.limited-back.slot", config.getInt("gui.back.slot", 49));
             menu.set(slot, GuiButtons.back(player), event -> {
                 event.setCancelled(true);
                 GuiButtons.play(player, "click");
@@ -129,8 +128,8 @@ public final class CosmeticsMenus {
     }
 
     public static List<String> lore(FileConfiguration config, Entry entry, String kind) {
-        String owned = config.getString("gui.status-owned", "%color%☀ &fStatus: &#94FF00&l&nOWNED");
-        String locked = config.getString("gui.status-locked", "%color%☀ &fStatus: &#FF2727&l&nLOCKED");
+        String owned = config.getString("gui.status-owned", "%color%☀%color%&lSTATUS: &#94FF00&l&nOWNED");
+        String locked = config.getString("gui.status-locked", "%color%☀%color%&lSTATUS: &#FF2727&l&nLOCKED");
         List<String> template = config.getStringList("gui.lore");
         if (template.isEmpty()) {
             template = List.of(
@@ -146,7 +145,7 @@ public final class CosmeticsMenus {
             );
         }
         String click = config.getString("gui.click-footer",
-                "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip");
+                "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO EQUIP");
         return Text.applyList(new ArrayList<>(template),
                 "color", entry.color(),
                 "name", entry.title(),

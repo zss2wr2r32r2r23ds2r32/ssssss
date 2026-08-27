@@ -2,6 +2,7 @@ package com.shardedcore.modules.shop;
 
 import com.shardedcore.ShardedCore;
 import com.shardedcore.database.Sqlite;
+import com.shardedcore.gui.GuiButtons;
 import com.shardedcore.gui.Menus;
 import com.shardedcore.module.Module;
 import com.shardedcore.modules.economy.EconomyModule;
@@ -133,7 +134,7 @@ public final class ShopModule extends Module implements CommandExecutor {
                 openSection(player, id, 1);
             });
         }
-        if (config.getBoolean("frame.enabled", false)) {
+        if (config.getBoolean("frame.enabled", true)) {
             menu.fill(Items.fromSection(config.getConfigurationSection("frame"), player));
         }
         plugin.menus().open(player, menu);
@@ -167,25 +168,29 @@ public final class ShopModule extends Module implements CommandExecutor {
         }
         ConfigurationSection buttons = data.getConfigurationSection("buttons");
         if (buttons != null) {
-            if (current > 1 && buttons.isConfigurationSection("previous")) {
-                menu.set(buttons.getInt("previous.slot", 48), Items.fromSection(buttons.getConfigurationSection("previous"), player), event -> {
-                    event.setCancelled(true);
-                    openSection(player, id, current - 1);
-                });
-            }
             if (buttons.isConfigurationSection("return")) {
-                menu.set(buttons.getInt("return.slot", 49), Items.fromSection(buttons.getConfigurationSection("return"), player), event -> {
+                menu.set(buttons.getInt("return.slot", GuiButtons.slot("back", 49)),
+                        GuiButtons.back(player), event -> {
                     event.setCancelled(true);
                     openMain(player);
                 });
             }
+            if (current > 1 && buttons.isConfigurationSection("previous")) {
+                menu.set(buttons.getInt("previous.slot", GuiButtons.slot("previous", 48)),
+                        GuiButtons.previous(player), event -> {
+                    event.setCancelled(true);
+                    openSection(player, id, current - 1);
+                });
+            }
             if (current < pages && buttons.isConfigurationSection("next")) {
-                menu.set(buttons.getInt("next.slot", 50), Items.fromSection(buttons.getConfigurationSection("next"), player), event -> {
+                menu.set(buttons.getInt("next.slot", GuiButtons.slot("next", 50)),
+                        GuiButtons.next(player), event -> {
                     event.setCancelled(true);
                     openSection(player, id, current + 1);
                 });
             }
         }
+        GuiButtons.fill(menu);
         plugin.menus().open(player, menu);
         Sounds.play(player, config.getConfigurationSection("sounds.click"));
     }
@@ -205,9 +210,16 @@ public final class ShopModule extends Module implements CommandExecutor {
             button(menu, buttons, "add-1", player, current, price, label, event -> openBuy(player, sectionId, itemId, item, current + 1));
             button(menu, buttons, "add-10", player, current, price, label, event -> openBuy(player, sectionId, itemId, item, current + 10));
             button(menu, buttons, "set-max", player, current, price, label, event -> openBuy(player, sectionId, itemId, item, max));
-            button(menu, buttons, "cancel", player, current, price, label, event -> openSection(player, sectionId, item.getInt("page", 1)));
-            button(menu, buttons, "confirm", player, current, price, label, event -> buy(player, sectionId, item, current));
+            menu.set(buttons.getInt("cancel.slot", GuiButtons.slot("cancel", 11)), GuiButtons.cancel(player), event -> {
+                event.setCancelled(true);
+                openSection(player, sectionId, item.getInt("page", 1));
+            });
+            menu.set(buttons.getInt("confirm.slot", GuiButtons.slot("confirm", 15)), GuiButtons.confirm(player), event -> {
+                event.setCancelled(true);
+                buy(player, sectionId, item, current);
+            });
         }
+        GuiButtons.fill(menu);
         plugin.menus().open(player, menu);
     }
 
@@ -239,10 +251,21 @@ public final class ShopModule extends Module implements CommandExecutor {
             Sounds.play(player, config.getConfigurationSection("sounds.error"));
             return;
         }
-        ItemStack stack = new ItemStack(Sounds.material(item.getString("material", "STONE"), Material.STONE), amount);
-        HashMap<Integer, ItemStack> leftover = player.getInventory().addItem(stack);
-        if (!leftover.isEmpty()) {
-            leftover.values().forEach(drop -> player.getWorld().dropItemNaturally(player.getLocation(), drop));
+        List<String> commands = new ArrayList<>(item.getStringList("commands"));
+        if (item.isString("command") && item.getString("command") != null && !item.getString("command").isBlank()) {
+            commands.add(item.getString("command"));
+        }
+        if (!commands.isEmpty()) {
+            for (String line : commands) {
+                org.bukkit.Bukkit.dispatchCommand(org.bukkit.Bukkit.getConsoleSender(),
+                        line.replace("%player%", player.getName()));
+            }
+        } else {
+            ItemStack stack = new ItemStack(Sounds.material(item.getString("material", "STONE"), Material.STONE), amount);
+            HashMap<Integer, ItemStack> leftover = player.getInventory().addItem(stack);
+            if (!leftover.isEmpty()) {
+                leftover.values().forEach(drop -> player.getWorld().dropItemNaturally(player.getLocation(), drop));
+            }
         }
         send(player, "bought", "amount", String.valueOf(amount), "item", itemName(item), "total", Amounts.commas(total));
         Sounds.play(player, config.getConfigurationSection("sounds.buy"));

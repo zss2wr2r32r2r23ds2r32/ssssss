@@ -1,13 +1,19 @@
-prefix: "&#00A2FF&lCORE &8▷ &r"
-staff-chat-format: "&#AD4EFF&lSTAFF &8▷ &f%player%&7: &f%message%"
-staff-permission: shardedcore.staff
+prefix: "&#FF0000☄ &#FF0000&lSTAFF &8▷ &r"
+staff-chat-format: "&#FF0000☄ &#FF0000&lSTAFF &8▷ &f%player%&7: &f%message%"
+staff-permission: shardedcore.staff.mode
+stafflist-permission: shardedcore.staff.mode
 see-vanished: shardedcore.staff.seevanished
+audit-permission: shardedcore.staff.audit
 discord: discord.gg/shardedmc
 repeat-offender-threshold: 3
 request-cooldown-seconds: 30
 screenshare-seconds: 120
 screenshare-ban-reason: Refusing to SS
 screenshare-ban-duration: 7d
+screenshare:
+  title: "&#FF0000&lSCREENSHARE"
+  subtitle: "&fPlease Do not log out"
+  actionbar: "&fJoin #Screenshare @ discord.gg/shardedmc"
 offend-reason: Ban-Evasion
 offend-duration: permanent
 default-reason: Unfair Modifications
@@ -21,6 +27,25 @@ vanish:
 staffmode:
   vanish-on-enter: true
   disable-eglow-command: eglow:eglow disable
+  items:
+    vanish-slot: 0
+    freeze-slot: 1
+    punish-slot: 2
+    randomtp-slot: 3
+    exit-slot: 8
+
+audit:
+  enabled: true
+  permission: shardedcore.staff.audit
+
+reasons:
+  X-Ray: 7d
+  Fly-Hack: 30d
+  Killaura: 30d
+  Chat-Behavior: 1d
+  Advertising: 7d
+  Ban-Evasion: permanent
+  Doxxing: 30d
 
 ban-screen:
   - "&#AD4EFF&lSHARDEDMC"
@@ -38,14 +63,6 @@ mute-commands:
   - reply
   - tell
   - whisper
-
-reasons:
-  X-Ray: 7d
-  Fly-Hack: 30d
-  Killaura: 30d
-  Chat-Behavior: 1d
-  Advertising: 7d
-  Ban-Evasion: permanent
 
 mute-reasons:
   Spam: 1h
@@ -118,5 +135,8 @@ messages:
   alts-entry: "%prefix% &7- &f%name% &8(%status%)"
   broadcast: "%prefix%&#FF2727%action% &f%player% &7by &f%staff% &7— &f%reason%"
   staff-header: "%prefix%&#00A2FFStaff Commands:"
-  punish-title: "☀ Staff ☀ Previewing | Punish"
-  rollback-title: "☀ Staff ☀ Previewing | Rollback"
+  punish-title: "Punish"
+  rollback-title: "Rollback"
+  alts-title: "%players% Alts"
+  revoke-title: "Revoke Punishments"
+  audit: "%prefix%&#FF8300%player% &fused &f%command%"

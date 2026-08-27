@@ -1,5 +1,6 @@
 package com.shardedcore.modules.enderchest;
 
+import com.shardedcore.data.TimedPerks;
 import com.shardedcore.ShardedCore;
 import com.shardedcore.database.Sqlite;
 import com.shardedcore.gui.Menus;
@@ -60,6 +61,10 @@ public final class EnderchestModule extends Module implements CommandExecutor {
         CombatModule combat = plugin.modules().get(CombatModule.class);
         if (combat != null && combat.tagged(player) && !config.getBoolean("allow-in-combat", false)) {
             send(player, "in-combat");
+            return true;
+        }
+        if (!player.hasPermission("shardedcore.ec") && !TimedPerks.has(player.getUniqueId(), "ec")) {
+            send(player, "no-permission");
             return true;
         }
         open(player);

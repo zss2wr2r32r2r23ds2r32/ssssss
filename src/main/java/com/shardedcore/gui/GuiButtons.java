@@ -37,8 +37,10 @@ public final class GuiButtons {
     }
 
     public static String title(String guide, String name) {
-        String format = value("title-format", "☀ %guide% ☀ Previewing | %name%");
-        return Text.apply(format, "guide", guide == null ? "" : guide, "name", name == null ? "" : name);
+        String format = value("title-format", "%name%");
+        String resolved = Text.apply(format, "guide", guide == null ? "" : guide, "name", name == null ? "" : name);
+        if (resolved == null || resolved.isBlank()) return name == null || name.isBlank() ? (guide == null ? "" : guide) : name;
+        return resolved;
     }
 
     public static ItemStack filler() {
@@ -114,6 +116,23 @@ public final class GuiButtons {
         return Items.named(bundleMaterial(hex), name, lore);
     }
 
+    public static void fill(Menus.Menu menu) {
+        menu.fill(filler());
+    }
+
+    public static void glass(Menus.Menu menu, boolean borderOnly) {
+        if (borderOnly) border(menu);
+        else fill(menu);
+    }
+
+    public static void placeBack(Menus.Menu menu, Player player, int fallbackSlot, Runnable back) {
+        place(menu, "back", fallbackSlot, back(player), event -> {
+            event.setCancelled(true);
+            play(player, "click");
+            if (back != null) back.run();
+        });
+    }
+
     public static Material bundleMaterial(String hex) {
         String value = ColorUtil.hex(hex);
         if (value.isEmpty()) return Material.BUNDLE;
@@ -126,35 +145,32 @@ public final class GuiButtons {
         int r = (rgb >> 16) & 255;
         int g = (rgb >> 8) & 255;
         int b = rgb & 255;
-        String nearest = nearest(r, g, b);
+        float[] hsb = java.awt.Color.RGBtoHSB(r, g, b, null);
+        String nearest = nearest(r, g, b, hsb[0], hsb[1], hsb[2]);
         Material matched = Material.matchMaterial(nearest);
         return matched == null ? Material.BUNDLE : matched;
     }
 
-    private static String nearest(int r, int g, int b) {
-        String[] names = {
-                "RED_BUNDLE", "ORANGE_BUNDLE", "YELLOW_BUNDLE", "LIME_BUNDLE", "GREEN_BUNDLE",
-                "CYAN_BUNDLE", "LIGHT_BLUE_BUNDLE", "BLUE_BUNDLE", "PURPLE_BUNDLE", "MAGENTA_BUNDLE",
-                "PINK_BUNDLE", "BROWN_BUNDLE", "BLACK_BUNDLE", "GRAY_BUNDLE", "LIGHT_GRAY_BUNDLE"
-        };
-        int[][] colors = {
-                {255, 0, 0}, {255, 140, 0}, {255, 248, 0}, {138, 255, 0}, {90, 165, 0},
-                {0, 255, 224}, {0, 193, 255}, {0, 59, 255}, {128, 0, 255}, {255, 0, 200},
-                {255, 116, 223}, {120, 70, 40}, {26, 26, 26}, {128, 128, 128}, {180, 180, 180}
-        };
-        int best = 0;
-        int distance = Integer.MAX_VALUE;
-        for (int i = 0; i < colors.length; i++) {
-            int dr = r - colors[i][0];
-            int dg = g - colors[i][1];
-            int db = b - colors[i][2];
-            int d = dr * dr + dg * dg + db * db;
-            if (d < distance) {
-                distance = d;
-                best = i;
-            }
+    private static String nearest(int r, int g, int b, float hue, float sat, float bright) {
+        if (sat < 0.22f) {
+            if (bright < 0.18f) return "BLACK_BUNDLE";
+            if (bright < 0.45f) return "GRAY_BUNDLE";
+            if (bright < 0.75f) return "LIGHT_GRAY_BUNDLE";
+            return "BUNDLE";
         }
-        return names[best];
+        float deg = hue * 360f;
+        if (bright < 0.28f) return "BLACK_BUNDLE";
+        if (deg < 18 || deg >= 345) return "RED_BUNDLE";
+        if (deg < 40) return "ORANGE_BUNDLE";
+        if (deg < 70) return "YELLOW_BUNDLE";
+        if (deg < 100) return "LIME_BUNDLE";
+        if (deg < 150) return "GREEN_BUNDLE";
+        if (deg < 175) return "CYAN_BUNDLE";
+        if (deg < 205) return "LIGHT_BLUE_BUNDLE";
+        if (deg < 245) return "BLUE_BUNDLE";
+        if (deg < 285) return "PURPLE_BUNDLE";
+        if (deg < 320) return "MAGENTA_BUNDLE";
+        return "PINK_BUNDLE";
     }
 
     private static String value(String path, String fallback) {

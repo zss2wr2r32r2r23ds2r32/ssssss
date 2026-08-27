@@ -71,7 +71,7 @@ gui:
   - ''
   - '%click_confirm%'
 
-  main-title: '☀ Team ☀ Previewing | %team%'
+  main-title: 'Team | %team%'
   home-name: '&#00A2FF&lTEAM HOME'
   home-lore:
   - '&8Description'
@@ -99,7 +99,7 @@ gui:
   - '&#FFBA00| &fthe settings menu.'
   - ''
   - '%click%'
-  settings-title: '☀ Team ☀ Previewing | Settings'
+  settings-title: 'Team Settings'
   tag-name: '&#FFBA00&lTEAM NAME'
   tag-lore:
   - '&8Description'
@@ -127,8 +127,8 @@ gui:
   - '&#FF0000| &fClick to toggle.'
   - ''
   - '%click%'
-  enderchest-title: '☀ Team ☀ Previewing | Enderchest'
-  members-name: '&#9FFF00&lMembers'
+  enderchest-title: 'Enderchest'
+  members-name: '&#9FFF00&lMEMBERS'
   members-lore:
   - '&8Descriptions'
   - ''
@@ -140,7 +140,7 @@ gui:
   - ''
   - '&7Total: &f%count%'
 
-  browse-name: '&#00D4FF&lBrowse Teams'
+  browse-name: '&#00D4FF&lBROWSE TEAMS'
   browse-lore:
   - '&8Descriptions'
   - ''
@@ -160,7 +160,7 @@ gui:
   - ''
   - '%click%'
 
-  chat-name: '&x&F&F&B&A&0&0&lTeam Chat'
+  chat-name: '&x&F&F&B&A&0&0&lTEAM CHAT'
   chat-lore:
   - '&8Descriptions'
   - ''
@@ -171,7 +171,7 @@ gui:
   - ''
   - '%click%'
 
-  allies-name: '&#FFD700&lAllies'
+  allies-name: '&#FFD700&lALLIES'
   allies-lore:
   - '&8Descriptions'
   - ''
@@ -183,7 +183,7 @@ gui:
   - ''
   - '%click%'
 
-  leaderboard-name: '&#FFD700&lTeam Leaderboard'
+  leaderboard-name: '&#FFD700&lTEAM LEADERBOARD'
   leaderboard-lore:
   - '&8Descriptions'
   - ''
@@ -193,7 +193,7 @@ gui:
   - ''
   - '%click%'
 
-  disband-name: '&#FF2727&lDisband team'
+  disband-name: '&#FF2727&lDISBAND TEAM'
   disband-lore:
   - '&8Descriptions'
   - ''
@@ -203,7 +203,7 @@ gui:
   - ''
   - '%click%'
 
-  leave-name: '&#FF2727&lLeave team'
+  leave-name: '&#FF2727&lLEAVE TEAM'
   leave-lore:
   - '&8Descriptions'
   - ''

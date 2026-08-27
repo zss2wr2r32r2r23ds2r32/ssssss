@@ -7,7 +7,7 @@
 fast-buy-millis: 50
 
 menu:
-  title: "&8Shop Menu"
+  title: "Shop"
   rows: 4
   open-sound:
     enabled: true
@@ -17,7 +17,7 @@ menu:
 
 # Off by default, the sections sit on plain slots.
 frame:
-  enabled: false
+  enabled: true
   slots: "auto"
   material: BLACK_STAINED_GLASS_PANE
   name: " "

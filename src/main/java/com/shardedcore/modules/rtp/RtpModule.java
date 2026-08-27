@@ -44,6 +44,8 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
     private final Map<UUID, Long> cooldown = new ConcurrentHashMap<>();
     private final Map<UUID, Long> safeUntil = new ConcurrentHashMap<>();
     private final Set<UUID> queue = ConcurrentHashMap.newKeySet();
+    private final Set<UUID> searching = ConcurrentHashMap.newKeySet();
+    private final Map<UUID, UUID> partners = new ConcurrentHashMap<>();
     private BukkitTask queueTask;
     private int queueDots;
     private RtpSafeSpotPool pool;
@@ -68,6 +70,8 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
         if (pool != null) pool.shutdown();
         if (queueTask != null) queueTask.cancel();
         queue.clear();
+        searching.clear();
+        partners.clear();
         pending.values().forEach(BukkitTask::cancel);
         pending.clear();
         cooldown.clear();
@@ -92,7 +96,8 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
             return true;
         }
         String name = command.getName().toLowerCase(Locale.ROOT);
-        if (name.equals("leave") || (name.equals("rtpqueue") && args.length > 0 && args[0].equalsIgnoreCase("leave"))) {
+        if (name.equals("leave") || label.equalsIgnoreCase("leave")
+                || (name.equals("rtpqueue") && args.length > 0 && args[0].equalsIgnoreCase("leave"))) {
             leaveQueue(player);
             return true;
         }
@@ -198,9 +203,11 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
         }
         if (dest == null) dest = destFor(world);
         sendBar(player, "searching");
+        searching.add(player.getUniqueId());
         ConfigurationSection destination = dest;
         pool.request(world, destination, spot -> {
             if (!player.isOnline()) return;
+            if (!searching.remove(player.getUniqueId())) return;
             if (spot == null) {
                 sendBar(player, "not-found");
                 sound(player, "sounds.error");
@@ -257,10 +264,21 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
     }
 
     private void leaveQueue(Player player) {
-        boolean queued = queue.remove(player.getUniqueId());
-        boolean searching = pending.containsKey(player.getUniqueId());
-        stop(player.getUniqueId());
-        if (queued || searching) {
+        UUID uuid = player.getUniqueId();
+        UUID partner = partners.remove(uuid);
+        boolean queued = queue.remove(uuid);
+        boolean looking = searching.remove(uuid);
+        boolean teleporting = pending.containsKey(uuid);
+        stop(uuid);
+        if (partner != null) {
+            partners.remove(partner);
+            searching.remove(partner);
+            queue.remove(partner);
+            stop(partner);
+            Player other = Bukkit.getPlayer(partner);
+            if (other != null) sendBar(other, "queue.cancelled");
+        }
+        if (queued || looking || teleporting || partner != null) {
             sendBar(player, "queue.cancelled");
             return;
         }
@@ -296,6 +314,13 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
     public void onQuit(PlayerQuitEvent event) {
         stop(event.getPlayer().getUniqueId());
         queue.remove(event.getPlayer().getUniqueId());
+        searching.remove(event.getPlayer().getUniqueId());
+        UUID partner = partners.remove(event.getPlayer().getUniqueId());
+        if (partner != null) {
+            partners.remove(partner);
+            searching.remove(partner);
+            stop(partner);
+        }
         safeUntil.remove(event.getPlayer().getUniqueId());
     }
 
@@ -318,8 +343,13 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
             queue.remove(second);
             Player a = Bukkit.getPlayer(first);
             Player b = Bukkit.getPlayer(second);
-            if (a != null && b != null) pairQueue(a, b);
-            return;
+            if (a != null && b != null) {
+                partners.put(first, second);
+                partners.put(second, first);
+                searching.add(first);
+                searching.add(second);
+                pairQueue(a, b);
+            }
         }
         queueDots = queueDots % 3 + 1;
         String text = lookingText(queueDots);
@@ -341,7 +371,12 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
         if (world == null) world = a.getWorld();
         if (dest == null) dest = destFor(world);
         pool.request(world, dest, first -> {
+            if (!partners.containsKey(a.getUniqueId()) || !partners.containsKey(b.getUniqueId())) return;
+            searching.remove(a.getUniqueId());
+            searching.remove(b.getUniqueId());
             if (first == null) {
+                partners.remove(a.getUniqueId());
+                partners.remove(b.getUniqueId());
                 sendBar(a, "not-found");
                 sendBar(b, "not-found");
                 return;

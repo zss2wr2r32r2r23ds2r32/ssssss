@@ -71,7 +71,7 @@ menu:
       - "&#22AFFB▷ &n&lCLICK&r&#22AFFB To Queue"
 
 worlds:
-    overworld:
+  overworld:
     display: "Overworld"
     world: world
     mv-command: "mv tp %player% world"
@@ -95,7 +95,7 @@ worlds:
       - ""
       - "&#97F900▷ &n&lCLICK&r&#97F900 To Teleport"
 
-    nether:
+  nether:
     display: "Nether"
     world: world_nether
     mv-command: "mv tp %player% world_nether"
@@ -104,8 +104,6 @@ worlds:
     radius: 10000
     center-x: 0
     center-z: 0
-    # Above the lava sea and below the bedrock roof. The highest block in the
-    # nether is that roof, so the search walks down from max-y instead.
     min-y: 32
     max-y: 120
     name: "&#FF0000&lNETHER"
@@ -122,7 +120,7 @@ worlds:
       - ""
       - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Teleport"
 
-    end:
+  end:
     display: "The End"
     world: world_end
     mv-command: "mv tp %player% world_end"
@@ -131,8 +129,6 @@ worlds:
     radius: 20000
     center-x: 0
     center-z: 0
-    # Most of the end is void. A column whose highest block sits below this is
-    # refused, otherwise the teleport would drop the player into nothing.
     min-y: 40
     name: "&#D66BFC&lTHE END"
     lore:

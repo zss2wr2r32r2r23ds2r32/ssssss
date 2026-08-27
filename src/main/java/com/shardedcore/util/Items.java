@@ -9,6 +9,10 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
+import io.papermc.paper.datacomponent.DataComponentTypes;
+import io.papermc.paper.datacomponent.item.BundleContents;
+import io.papermc.paper.datacomponent.item.TooltipDisplay;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -86,10 +90,14 @@ public final class Items {
     }
 
     public static ItemStack head(Player player, String name, List<String> lore) {
+        return head((OfflinePlayer) player, name, lore);
+    }
+
+    public static ItemStack head(OfflinePlayer player, String name, List<String> lore) {
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
         ItemMeta meta = item.getItemMeta();
-        if (meta instanceof SkullMeta skull && player != null) {
-            skull.setOwningPlayer(player);
+        if (meta instanceof SkullMeta skull) {
+            if (player != null) skull.setOwningPlayer(player);
             skull.displayName(ColorUtil.parse(name));
             if (lore != null && !lore.isEmpty()) {
                 List<Component> components = new ArrayList<>();
@@ -119,34 +127,22 @@ public final class Items {
     public static ItemStack hideBundleBits(ItemStack item) {
         if (item == null || item.getType().isAir()) return item;
         try {
-            Class<?> types = Class.forName("io.papermc.paper.datacomponent.DataComponentTypes");
-            Object bundle = types.getField("BUNDLE_CONTENTS").get(null);
-            Object tooltipType = types.getField("TOOLTIP_DISPLAY").get(null);
-            Class<?> display = Class.forName("io.papermc.paper.datacomponent.item.TooltipDisplay");
-            Object builder = display.getMethod("tooltipDisplay").invoke(null);
-            boolean applied = false;
-            for (java.lang.reflect.Method method : builder.getClass().getMethods()) {
-                if (method.getParameterCount() != 1) continue;
-                if (method.getName().equals("hiddenComponents") || method.getName().equals("hide")) {
-                    Class<?> param = method.getParameterTypes()[0];
-                    if (java.util.Set.class.isAssignableFrom(param)) {
-                        method.invoke(builder, java.util.Set.of(bundle));
-                        applied = true;
-                        break;
-                    }
-                    if (param.isInstance(bundle)) {
-                        method.invoke(builder, bundle);
-                        applied = true;
-                        break;
-                    }
-                }
-            }
-            if (applied) {
-                Object built = builder.getClass().getMethod("build").invoke(builder);
-                item.getClass().getMethod("setData", Class.forName("io.papermc.paper.datacomponent.DataComponentType"), Object.class)
-                        .invoke(item, tooltipType, built);
+            if (item.getType().name().contains("BUNDLE")) {
+                item.setData(DataComponentTypes.BUNDLE_CONTENTS, BundleContents.bundleContents(List.of()));
+                item.setData(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplay.tooltipDisplay()
+                        .hiddenComponents(java.util.Set.of(DataComponentTypes.BUNDLE_CONTENTS))
+                        .build());
             }
         } catch (Throwable ignored) {
+        }
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            try {
+                meta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
+            } catch (Throwable ignored) {
+            }
+            meta.addItemFlags(ItemFlag.values());
+            item.setItemMeta(meta);
         }
         return item;
     }

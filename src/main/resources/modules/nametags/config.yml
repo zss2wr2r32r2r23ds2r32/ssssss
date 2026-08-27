@@ -1,12 +1,12 @@
 # ticks between updates. Ride keeps the tag glued, so this only refreshes text.
-refresh: 5
+refresh: 1
 
 display:
   background: '#00000000'
   brightness: 15
   view-distance: 64
   scale: 1.0
-  y-offset: 0.18
+  y-offset: 0.22
   line-gap: 0.24
   line-width: 1000
   text-opacity: 255
@@ -15,9 +15,8 @@ display:
   hide-when-sneaking: true
   hide-when-invisible: true
   hide-own: false
-  # Keep this off so the hologram sits above the head instead of the body.
   ride: false
-  teleport-duration: 0
+  teleport-duration: 1
 
 disabled-worlds: []
 

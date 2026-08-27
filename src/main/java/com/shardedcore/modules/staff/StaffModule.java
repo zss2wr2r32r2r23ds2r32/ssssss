@@ -12,6 +12,7 @@ import com.shardedcore.util.Players;
 import com.shardedcore.util.Tabs;
 import com.shardedcore.util.Text;
 import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.title.Title;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
@@ -27,6 +28,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
@@ -35,6 +37,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -57,7 +60,7 @@ import java.util.logging.Level;
 public final class StaffModule extends Module implements CommandExecutor, TabCompleter, Listener {
 
     private static final List<String> COMMANDS = List.of(
-            "staff", "staffmode", "vanish", "freeze", "stafflist", "randomtp", "staffchat",
+            "staff", "staffmode", "vanish", "freeze", "unfreeze", "stafflist", "randomtp", "staffchat",
             "gmc", "gms", "gmsp", "gma", "punish", "ban", "mute", "kick", "offend", "banip",
             "unban", "unbanip", "unmute", "pardon", "alts", "screenshare", "invrollback",
             "revokepunishment", "requeststaff"
@@ -113,6 +116,22 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
                     )
                     """);
             sqlite.run("""
+                    CREATE TABLE IF NOT EXISTS staff_state (
+                        uuid TEXT PRIMARY KEY,
+                        vanished INTEGER NOT NULL DEFAULT 0,
+                        frozen INTEGER NOT NULL DEFAULT 0
+                    )
+                    """);
+            sqlite.run("""
+                    CREATE TABLE IF NOT EXISTS staff_audit (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        uuid TEXT NOT NULL,
+                        name TEXT NOT NULL,
+                        command TEXT NOT NULL,
+                        created INTEGER NOT NULL
+                    )
+                    """);
+            sqlite.run("""
                     CREATE TABLE IF NOT EXISTS staff_mode (
                         uuid TEXT PRIMARY KEY,
                         contents TEXT NOT NULL,
@@ -156,6 +175,7 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
             case "staffmode" -> staffMode(sender);
             case "vanish" -> vanish(sender);
             case "freeze" -> freeze(sender, args);
+            case "unfreeze" -> unfreeze(sender, args);
             case "stafflist" -> staffList(sender);
             case "randomtp" -> randomTp(sender);
             case "staffchat" -> staffChat(sender);
@@ -189,6 +209,7 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
                 "&f- /staffmode (/sfmode) &7– Toggle staff mode",
                 "&f- /vanish &7– Toggle vanish",
                 "&f- /freeze <player> &7– Freeze a player",
+                "&f- /unfreeze <player> &7– Unfreeze a player",
                 "&f- /stafflist &7– List online staff",
                 "&f- /randomtp &7– Teleport to random player",
                 "&f- /staffchat (/sc) &7– Toggle staff chat",
@@ -235,10 +256,17 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         if (config.getBoolean("staffmode.vanish-on-enter", true)) setVanish(player, true);
         String disable = cfg("staffmode.disable-eglow-command", "eglow:eglow disable");
         if (disable != null && !disable.isBlank()) player.performCommand(disable.startsWith("/") ? disable.substring(1) : disable);
-        inventory.setItem(0, Items.named(Material.LIME_DYE, "&#FF8300&lVANISH", List.of("&7Toggle vanish")));
-        inventory.setItem(1, Items.named(Material.PACKED_ICE, "&#00C1FF&lFREEZE", List.of("&7Freeze a player")));
-        inventory.setItem(2, Items.named(Material.NETHERITE_AXE, "&#FF0000&lPUNISH", List.of("&7Open punish menu")));
-        inventory.setItem(8, Items.named(Material.BARRIER, "&#FF0000&lEXIT STAFF", List.of("&7Leave staff mode")));
+        inventory.setItem(config.getInt("staffmode.items.vanish-slot", 0),
+                Items.named(vanished.contains(player.getUniqueId()) ? Material.GRAY_DYE : Material.LIME_DYE,
+                        "&#FF8300&lVANISH", List.of("&7Toggle vanish")));
+        inventory.setItem(config.getInt("staffmode.items.freeze-slot", 1),
+                Items.named(Material.PACKED_ICE, "&#00C1FF&lFREEZE", List.of("&7Right click a player")));
+        inventory.setItem(config.getInt("staffmode.items.punish-slot", 2),
+                Items.named(Material.NETHERITE_AXE, "&#FF0000&lPUNISH", List.of("&7Right click a player")));
+        inventory.setItem(config.getInt("staffmode.items.randomtp-slot", 3),
+                Items.named(Material.ENDER_PEARL, "&#00A2FF&lRANDOM TP", List.of("&7Teleport to a random player")));
+        inventory.setItem(config.getInt("staffmode.items.exit-slot", 8),
+                Items.named(Material.BARRIER, "&#FF0000&lEXIT STAFF", List.of("&7Leave staff mode")));
     }
 
     private void exitStaff(Player player, boolean restore) {
@@ -302,18 +330,49 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
     private void setVanish(Player player, boolean on) {
         if (on) {
             vanished.add(player.getUniqueId());
-            if (config.getBoolean("vanish.fly", true)) {
+            player.setInvisible(true);
+            player.setCollidable(false);
+            try {
+                player.setVisibleByDefault(false);
+            } catch (Throwable ignored) {
+            }
+            if (config.getBoolean("vanish.fly", true) && player.getGameMode() != GameMode.SPECTATOR) {
                 player.setAllowFlight(true);
                 player.setFlying(true);
             }
             for (Player other : Bukkit.getOnlinePlayers()) {
-                if (!other.hasPermission(cfg("see-vanished", "shardedcore.staff.seevanished"))) {
+                if (other.equals(player)) continue;
+                if (other.hasPermission(cfg("see-vanished", "shardedcore.staff.seevanished"))) {
+                    other.showPlayer(plugin, player);
+                } else {
                     other.hidePlayer(plugin, player);
                 }
             }
         } else {
             vanished.remove(player.getUniqueId());
+            player.setInvisible(false);
+            player.setCollidable(true);
+            try {
+                player.setVisibleByDefault(true);
+            } catch (Throwable ignored) {
+            }
             for (Player other : Bukkit.getOnlinePlayers()) other.showPlayer(plugin, player);
+        }
+        saveState(player.getUniqueId(), "vanished", on);
+        if (staffMode.contains(player.getUniqueId())) {
+            int slot = config.getInt("staffmode.items.vanish-slot", 0);
+            player.getInventory().setItem(slot, Items.named(on ? Material.GRAY_DYE : Material.LIME_DYE,
+                    "&#FF8300&lVANISH", List.of("&7Toggle vanish")));
+        }
+    }
+
+    private void saveState(UUID uuid, String column, boolean value) {
+        try {
+            sqlite.execute("INSERT INTO staff_state (uuid, vanished, frozen) VALUES (?, ?, ?) ON CONFLICT(uuid) DO UPDATE SET "
+                            + column + " = excluded." + column,
+                    uuid.toString(), "vanished".equals(column) && value ? 1 : 0, "frozen".equals(column) && value ? 1 : 0);
+            sqlite.execute("UPDATE staff_state SET " + column + " = ? WHERE uuid = ?", value ? 1 : 0, uuid.toString());
+        } catch (SQLException ignored) {
         }
     }
 
@@ -322,21 +381,38 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         Player target = player(sender, args, 0);
         if (target == null) return true;
         if (frozen.remove(target.getUniqueId())) {
+            saveState(target.getUniqueId(), "frozen", false);
             send(sender, "freeze-off", "player", target.getName());
             send(target, "unfrozen");
             return true;
         }
         frozen.add(target.getUniqueId());
+        saveState(target.getUniqueId(), "frozen", true);
         send(sender, "freeze-on", "player", target.getName());
         send(target, "frozen");
+        return true;
+    }
+
+    private boolean unfreeze(CommandSender sender, String[] args) {
+        if (!staff(sender, "shardedcore.staff.freeze")) return true;
+        Player target = player(sender, args, 0);
+        if (target == null) return true;
+        frozen.remove(target.getUniqueId());
+        saveState(target.getUniqueId(), "frozen", false);
+        send(sender, "freeze-off", "player", target.getName());
+        send(target, "unfrozen");
         return true;
     }
 
     private boolean staffList(CommandSender sender) {
         if (!staff(sender, "shardedcore.staff.list")) return true;
         List<Player> list = new ArrayList<>();
+        String perm = cfg("stafflist-permission", "shardedcore.staff.mode");
+        boolean see = sender.hasPermission(cfg("see-vanished", "shardedcore.staff.seevanished"));
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.hasPermission(cfg("staff-permission", "shardedcore.staff"))) list.add(player);
+            if (!player.hasPermission(perm) || !player.hasPermission("shardedcore.staff.mode")) continue;
+            if (vanished.contains(player.getUniqueId()) && !see) continue;
+            list.add(player);
         }
         if (list.isEmpty()) {
             send(sender, "stafflist-empty");
@@ -385,6 +461,9 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
             return true;
         }
         target.setGameMode(mode);
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            if (target.isOnline() && target.getGameMode() != mode) target.setGameMode(mode);
+        });
         send(sender, "gamemode", "mode", mode.name().toLowerCase(Locale.ROOT));
         return true;
     }
@@ -582,6 +661,10 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
             send(sender, "alts-none");
             return true;
         }
+        if (sender instanceof Player viewer) {
+            openAlts(viewer, target, names);
+            return true;
+        }
         send(sender, "alts-header", "player", Players.name(target));
         for (String row : names) {
             String[] parts = row.split(":", 2);
@@ -589,6 +672,42 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
             send(sender, "alts-entry", "name", parts[0], "status", Bukkit.getPlayer(uuid) != null ? "online" : "offline");
         }
         return true;
+    }
+
+    private void openAlts(Player staff, OfflinePlayer target, List<String> names) {
+        Menus.Menu menu = plugin.menus().create(staff, Text.apply(cfg("messages.alts-title", "%players% Alts"),
+                "players", String.valueOf(names.size()), "player", Players.name(target)), 4);
+        int slot = 10;
+        for (String row : names) {
+            if (slot % 9 == 8) slot += 2;
+            if (slot >= 35) break;
+            String[] parts = row.split(":", 2);
+            String name = parts[0];
+            UUID uuid = parts.length == 2 ? UUID.fromString(parts[1]) : target.getUniqueId();
+            Player online = Bukkit.getPlayer(uuid);
+            ItemStack head = online != null
+                    ? Items.head(online, "&#00A2FF&l" + name.toUpperCase(Locale.ROOT),
+                    List.of("&8Description", "", "&7Left click to teleport", "&7Right click to punish"))
+                    : Items.named(Material.PLAYER_HEAD, "&#00A2FF&l" + name.toUpperCase(Locale.ROOT),
+                    List.of("&7Offline"));
+            menu.set(slot, head, event -> {
+                event.setCancelled(true);
+                Player live = Bukkit.getPlayer(uuid);
+                if (event.isRightClick()) {
+                    if (live != null) openPunish(staff, live);
+                    return;
+                }
+                if (live != null) {
+                    staff.teleport(live);
+                    send(staff, "randomtp", "player", live.getName());
+                } else {
+                    send(staff, "player-not-found");
+                }
+            });
+            slot++;
+        }
+        GuiButtons.border(menu);
+        plugin.menus().open(staff, menu);
     }
 
     private boolean screenshare(CommandSender sender, String[] args) {
@@ -605,6 +724,18 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         frozen.add(target.getUniqueId());
         send(sender, "screenshare-start", "player", target.getName());
         send(target, "screenshare-target");
+        target.showTitle(Title.title(
+                ColorUtil.parse(cfg("screenshare.title", "&#FF0000&lSCREENSHARE")),
+                ColorUtil.parse(cfg("screenshare.subtitle", "&fPlease Do not log out")),
+                Title.Times.times(java.time.Duration.ofMillis(200), java.time.Duration.ofSeconds(4), java.time.Duration.ofMillis(200))));
+        target.sendActionBar(ColorUtil.parse(cfg("screenshare.actionbar", "&fJoin #Screenshare @ discord.gg/shardedmc")));
+        Bukkit.getScheduler().runTaskTimer(plugin, task -> {
+            if (!target.isOnline() || !screenshare.containsKey(target.getUniqueId())) {
+                task.cancel();
+                return;
+            }
+            target.sendActionBar(ColorUtil.parse(cfg("screenshare.actionbar", "&fJoin #Screenshare @ discord.gg/shardedmc")));
+        }, 20L, 40L);
         return true;
     }
 
@@ -655,13 +786,43 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
     }
 
     private boolean revoke(CommandSender sender) {
-        if (!staff(sender, "shardedcore.staff.revoke")) return true;
-        try {
-            sqlite.execute("UPDATE staff_punishments SET active = 0 WHERE active = 1");
-        } catch (SQLException ignored) {
+        if (!(sender instanceof Player player) || !staff(player, "shardedcore.staff.revoke")) return true;
+        Menus.Menu menu = plugin.menus().create(player, cfg("messages.revoke-title", "Revoke Punishments"), 4);
+        int slot = 10;
+        List<String> reasons = new ArrayList<>();
+        ConfigurationSection section = config.getConfigurationSection("reasons");
+        if (section != null) reasons.addAll(section.getKeys(false));
+        if (reasons.stream().noneMatch(reason -> reason.equalsIgnoreCase("doxxing"))) reasons.add("Doxxing");
+        reasons.add("All");
+        for (String reason : reasons) {
+            if (slot % 9 == 8) slot += 2;
+            if (slot >= 35) break;
+            menu.set(slot, Items.named(Material.PAPER, "&#FF0000&l" + reason.toUpperCase(Locale.ROOT),
+                    List.of("&7Revoke matching punishments")), event -> {
+                event.setCancelled(true);
+                int count = revokeReason(reason);
+                send(player, "revoke-done", "count", String.valueOf(count));
+                player.closeInventory();
+            });
+            slot++;
         }
-        send(sender, "revoke-done", "count", "all");
+        GuiButtons.border(menu);
+        plugin.menus().open(player, menu);
         return true;
+    }
+
+    private int revokeReason(String reason) {
+        try {
+            if (reason.equalsIgnoreCase("all")) {
+                sqlite.execute("UPDATE staff_punishments SET active = 0 WHERE active = 1");
+                return 1;
+            }
+            sqlite.execute("UPDATE staff_punishments SET active = 0 WHERE active = 1 AND lower(reason) LIKE ?",
+                    "%" + reason.toLowerCase(Locale.ROOT) + "%");
+            return 1;
+        } catch (SQLException ex) {
+            return 0;
+        }
     }
 
     private boolean request(CommandSender sender) {
@@ -693,7 +854,9 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         hideVanished(player);
         snapshot(player, "join");
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            if (player.isOnline()) hideVanished(player);
+            if (!player.isOnline()) return;
+            hideVanished(player);
+            restoreVanish(player);
         }, 10L);
     }
 
@@ -710,8 +873,7 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
             }
         }
         if (staffMode.contains(player.getUniqueId())) exitStaff(player, true);
-        vanished.remove(player.getUniqueId());
-        frozen.remove(player.getUniqueId());
+        // vanish/frozen persist in sqlite
         staffChat.remove(player.getUniqueId());
     }
 
@@ -753,6 +915,29 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         }
     }
 
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onAudit(PlayerCommandPreprocessEvent event) {
+        Player player = event.getPlayer();
+        if (!config.getBoolean("audit.enabled", true)) return;
+        if (!player.isOp() && !player.hasPermission("shardedcore.staff.mode")
+                && !player.hasPermission("shardedcore.staff.gamemode")) return;
+        String command = event.getMessage();
+        String line = Text.apply(cfg("messages.audit", "%prefix%&#FF8300%player% &fused &f%command%")
+                        .replace("%prefix%", cfg("prefix", "")),
+                "player", player.getName(), "command", command);
+        for (Player staff : Bukkit.getOnlinePlayers()) {
+            if (staff.equals(player)) continue;
+            if (staff.hasPermission(cfg("audit-permission", "shardedcore.staff.audit"))) {
+                staff.sendMessage(ColorUtil.parse(line));
+            }
+        }
+        try {
+            sqlite.execute("INSERT INTO staff_audit (uuid, name, command, created) VALUES (?, ?, ?, ?)",
+                    player.getUniqueId().toString(), player.getName(), command, System.currentTimeMillis());
+        } catch (SQLException ignored) {
+        }
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onCommand(PlayerCommandPreprocessEvent event) {
         Punishment mute = active(event.getPlayer().getUniqueId(), "mute");
@@ -790,19 +975,42 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
     @EventHandler(ignoreCancelled = true)
     public void onInteract(PlayerInteractEvent event) {
         if (!staffMode.contains(event.getPlayer().getUniqueId())) return;
+        if (event.getPlayer().getGameMode() == GameMode.SPECTATOR) return;
+        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            event.setCancelled(true);
+            return;
+        }
         ItemStack item = event.getItem();
         if (item == null) {
             event.setCancelled(true);
             return;
         }
+        event.setCancelled(true);
+        Player player = event.getPlayer();
         if (item.getType() == Material.BARRIER) {
-            event.setCancelled(true);
-            event.getPlayer().performCommand("staffmode");
+            player.performCommand("staffmode");
             return;
         }
         if (item.getType() == Material.LIME_DYE || item.getType() == Material.GRAY_DYE) {
-            event.setCancelled(true);
-            event.getPlayer().performCommand("vanish");
+            player.performCommand("vanish");
+            return;
+        }
+        if (item.getType() == Material.ENDER_PEARL) {
+            player.performCommand("randomtp");
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onEntity(PlayerInteractEntityEvent event) {
+        if (!staffMode.contains(event.getPlayer().getUniqueId())) return;
+        if (event.getPlayer().getGameMode() == GameMode.SPECTATOR) return;
+        if (!(event.getRightClicked() instanceof Player target)) return;
+        ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
+        event.setCancelled(true);
+        if (item.getType() == Material.PACKED_ICE) {
+            event.getPlayer().performCommand("freeze " + target.getName());
+        } else if (item.getType() == Material.NETHERITE_AXE) {
+            event.getPlayer().performCommand("punish " + target.getName());
         }
     }
 
@@ -819,6 +1027,20 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         if (!(event.getWhoClicked() instanceof Player player)) return;
         if (staffMode.contains(player.getUniqueId()) && event.getClickedInventory() == player.getInventory()) {
             event.setCancelled(true);
+        }
+    }
+
+    private void restoreVanish(Player player) {
+        try {
+            Integer stored = sqlite.query("SELECT vanished FROM staff_state WHERE uuid = ?", rs -> {
+                try {
+                    return rs.next() ? rs.getInt("vanished") : 0;
+                } catch (SQLException ex) {
+                    return 0;
+                }
+            }, player.getUniqueId().toString());
+            if (stored != null && stored == 1) setVanish(player, true);
+        } catch (SQLException ignored) {
         }
     }
 
@@ -1046,8 +1268,9 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         String name = command.getName().toLowerCase(Locale.ROOT);
         if (args.length == 1) {
             return switch (name) {
-                case "freeze", "punish", "ban", "mute", "kick", "offend", "banip", "unban", "unmute",
-                     "pardon", "alts", "screenshare", "invrollback", "gmc", "gms", "gmsp", "gma" -> Tabs.players(args[0]);
+                case "freeze", "unfreeze", "punish", "ban", "mute", "kick", "offend", "banip", "unmute",
+                     "alts", "screenshare", "invrollback", "gmc", "gms", "gmsp", "gma" -> Tabs.players(args[0]);
+                case "unban", "pardon" -> bannedNames(args[0]);
                 case "unbanip" -> {
                     List<String> options = new ArrayList<>(List.of("list"));
                     options.addAll(Tabs.players(args[0]));
@@ -1064,6 +1287,21 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
             return Tabs.filter(List.of("1h", "6h", "1d", "7d", "30d", "permanent"), args[2]);
         }
         return List.of();
+    }
+
+    private List<String> bannedNames(String prefix) {
+        List<String> names = new ArrayList<>();
+        try {
+            sqlite.query("SELECT DISTINCT name FROM staff_punishments WHERE active = 1 AND type IN ('ban','banip')", rs -> {
+                try {
+                    while (rs.next()) names.add(rs.getString("name"));
+                } catch (SQLException ignored) {
+                }
+                return null;
+            });
+        } catch (SQLException ignored) {
+        }
+        return Tabs.filter(names, prefix);
     }
 
     private record Punishment(String reason, String staff, long expires) {

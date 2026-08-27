@@ -132,7 +132,8 @@ public abstract class Module {
     }
 
     protected String message(String path, String... pairs) {
-        return Text.apply(cfg("messages." + path, cfg(path, "")), pairs);
+        String prefix = cfg("prefix", plugin.prefix());
+        return Text.apply(cfg("messages." + path, cfg(path, "")).replace("%prefix%", prefix == null ? "" : prefix), pairs);
     }
 
     protected void send(CommandSender to, String path, String... pairs) {

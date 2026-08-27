@@ -1,6 +1,7 @@
 package com.shardedcore.modules.workstations;
 
 import com.shardedcore.ShardedCore;
+import com.shardedcore.data.TimedPerks;
 import com.shardedcore.gui.Menus;
 import com.shardedcore.module.Module;
 import com.shardedcore.util.Items;
@@ -52,7 +53,13 @@ public final class WorkstationsModule extends Module implements CommandExecutor 
                 menu.fill(Items.named(Material.AIR, " ", List.of()));
                 plugin.menus().open(player, menu);
             }
-            case "craft", "wb", "workbench" -> player.openWorkbench(null, true);
+            case "craft", "wb", "workbench" -> {
+                if (!player.hasPermission("shardedcore.craft") && !TimedPerks.has(player.getUniqueId(), "craft")) {
+                    send(player, "no-permission");
+                    return true;
+                }
+                player.openWorkbench(null, true);
+            }
             case "anvil" -> player.openInventory(Bukkit.createInventory(player, InventoryType.ANVIL));
             case "toolsmith", "smithing", "smithingtable" ->
                     player.openInventory(Bukkit.createInventory(player, InventoryType.SMITHING));

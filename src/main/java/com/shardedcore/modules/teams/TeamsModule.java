@@ -186,34 +186,34 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
         }
         String name = teamName(player.getUniqueId());
         Menus.Menu menu = plugin.menus().create(player,
-                Text.apply(cfg("gui.main-title", "☀ Team ☀ Previewing | %team%"), "team", name), 4);
+                Text.apply(cfg("gui.main-title", "Team | %team%"), "team", name), 4);
         button(menu, config.getInt("gui.home-slot", 10), Material.RED_BED, cfg("gui.home-name", "&#00A2FF&lTEAM HOME"),
-                lore("gui.home-lore", "%click%", click("click-footer")),
+                lore("gui.home-lore", "click", click("click-footer")),
                 event -> home(player));
-        button(menu, 11, Material.PLAYER_HEAD, cfg("gui.members-name", "&#9FFF00&lMembers"),
-                lore("gui.members-lore", "%click%", click("click-footer"), "count", String.valueOf(members(team).size())),
+        button(menu, 11, Material.ARMOR_STAND, cfg("gui.members-name", "&#9FFF00&lMEMBERS"),
+                lore("gui.members-lore", "click", click("click-footer"), "count", String.valueOf(members(team).size())),
                 event -> openMembers(player, team));
-        button(menu, 12, Material.COMPASS, cfg("gui.browse-name", "&#00D4FF&lBrowse Teams"),
-                lore("gui.browse-lore", "%click%", click("click-footer")),
+        button(menu, 12, Material.SPYGLASS, cfg("gui.browse-name", "&#00D4FF&lBROWSE TEAMS"),
+                lore("gui.browse-lore", "click", click("click-footer")),
                 event -> openBrowse(player, 0));
-        button(menu, 13, Material.REDSTONE, cfg("gui.emergency-name", "&#FF2727&lEmergency"),
-                lore("gui.emergency-lore", "%click%", click("click-footer")),
+        button(menu, 13, Material.TOTEM_OF_UNDYING, cfg("gui.emergency-name", "&#FF2727&lEMERGENCY"),
+                lore("gui.emergency-lore", "click", click("click-footer")),
                 event -> emergency(player));
         boolean chatting = team.equals(teamChat.get(player.getUniqueId()));
-        button(menu, 14, Material.GOAT_HORN, cfg("gui.chat-name", "&x&F&F&B&A&0&0&lTeam Chat"),
-                lore("gui.chat-lore", "%click%", click("click-footer"),
+        button(menu, 14, Material.GOAT_HORN, cfg("gui.chat-name", "&x&F&F&B&A&0&0&lTEAM CHAT"),
+                lore("gui.chat-lore", "click", click("click-footer"),
                         "status", chatting ? "&#A9FF00&lENABLED" : "&#FF0000&lDISABLED"),
                 event -> {
                     chat(player);
                     openMain(player);
                 });
-        button(menu, 15, Material.GOLDEN_HELMET, cfg("gui.allies-name", "&#FFD700&lAllies"),
-                lore("gui.allies-lore", "%click%", click("click-footer"),
+        button(menu, 15, Material.SHIELD, cfg("gui.allies-name", "&#FFD700&lALLIES"),
+                lore("gui.allies-lore", "click", click("click-footer"),
                         "count", String.valueOf(allies(team).size()),
                         "max", String.valueOf(config.getInt("ally.max-allies", 1))),
                 event -> openAllies(player, team));
-        button(menu, 16, Material.GOLD_BLOCK, cfg("gui.leaderboard-name", "&#FFD700&lTeam Leaderboard"),
-                lore("gui.leaderboard-lore", "%click%", click("click-footer")),
+        button(menu, 16, Material.GOLD_BLOCK, cfg("gui.leaderboard-name", "&#FFD700&lTEAM LEADERBOARD"),
+                lore("gui.leaderboard-lore", "click", click("click-footer")),
                 event -> openBrowse(player, 0));
         button(menu, config.getInt("gui.enderchest-slot", 19), Material.ENDER_CHEST,
                 cfg("gui.enderchest-name", "&#A370EE&lTEAM ENDERCHEST"),
@@ -224,18 +224,18 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
                 lore("gui.settings-lore", "%click%", click("click-footer")),
                 event -> openSettings(player));
         if ("LEADER".equals(role(player.getUniqueId()))) {
-            button(menu, 22, Material.BARRIER, cfg("gui.disband-name", "&#FF2727&lDisband team"),
-                    lore("gui.disband-lore", "%click%", click("click-footer")),
+            button(menu, 22, Material.BARRIER, cfg("gui.disband-name", "&#FF2727&lDISBAND TEAM"),
+                    lore("gui.disband-lore", "click", click("click-footer")),
                     event -> openDisband(player));
         } else {
-            button(menu, 22, Material.OAK_DOOR, cfg("gui.leave-name", "&#FF2727&lLeave team"),
-                    lore("gui.leave-lore", "%click%", click("click-footer")),
-                    event -> {
-                        player.closeInventory();
-                        leave(player);
-                    });
+            List<String> leaveLore = lore("gui.leave-lore", "click", click("click-footer"));
+            menu.set(22, Items.head(player, cfg("gui.leave-name", "&#FF2727&lLEAVE TEAM"), leaveLore), event -> {
+                event.setCancelled(true);
+                player.closeInventory();
+                leave(player);
+            });
         }
-        GuiButtons.border(menu);
+        GuiButtons.fill(menu);
         plugin.menus().open(player, menu);
     }
 
@@ -263,20 +263,16 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
     private void confirmCreate(Player player, String raw) {
         Menus.Menu menu = plugin.menus().create(player,
                 Text.apply(cfg("gui.confirm-title", "&8Confirm &f%team%"), "team", raw), 3);
-        button(menu, 11, Material.RED_DYE, cfg("gui.cancel-name", "&#FF2727&lCancel"),
-                lore("gui.cancel-lore", "%click_cancel%", click("click-footer-cancel")),
-                event -> {
+        button(menu, 11, GuiButtons.cancel(player), event -> {
                     creating.remove(player.getUniqueId());
                     openCreate(player);
                 });
-        button(menu, 15, Material.LIME_DYE, cfg("gui.confirm-name", "&#9FFF00&lConfirm"),
-                lore("gui.confirm-lore", "%click_confirm%", click("click-footer-confirm")),
-                event -> {
+        button(menu, 15, GuiButtons.confirm(player), event -> {
                     creating.remove(player.getUniqueId());
                     createTeam(player, raw);
                     openMain(player);
                 });
-        GuiButtons.border(menu);
+        GuiButtons.fill(menu);
         plugin.menus().open(player, menu);
     }
 
@@ -289,17 +285,13 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
         String name = teamName(player.getUniqueId());
         Menus.Menu menu = plugin.menus().create(player,
                 Text.apply(cfg("gui.disband-confirm-title", "&8Disband &f%team%?"), "team", name), 3);
-        button(menu, 11, Material.RED_DYE, cfg("gui.cancel-name", "&#FF2727&lCancel"),
-                lore("gui.disband-cancel-lore", "%click_cancel%", click("click-footer-cancel")),
-                event -> openMain(player));
-        button(menu, 15, Material.LIME_DYE, cfg("gui.disband-confirm-name", "&#9FFF00&lConfirm disband"),
-                lore("gui.disband-confirm-lore", "%click_confirm%", click("click-footer-confirm")),
-                event -> {
+        button(menu, 11, GuiButtons.cancel(player), event -> openMain(player));
+        button(menu, 15, GuiButtons.confirm(player), event -> {
                     player.closeInventory();
                     disband(team);
                     send(player, "disbanded", "team", name);
                 });
-        GuiButtons.border(menu);
+        GuiButtons.fill(menu);
         plugin.menus().open(player, menu);
     }
 
@@ -333,8 +325,8 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
             });
             slot++;
         }
-        button(menu, 49, Material.ARROW, cfg("gui.back-name", "&#FFD700&lBack"), List.of(), event -> openMain(player));
-        GuiButtons.border(menu);
+        button(menu, 49, GuiButtons.back(player), event -> openMain(player));
+        GuiButtons.fill(menu);
         plugin.menus().open(player, menu);
     }
 
@@ -361,15 +353,13 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
                     });
         }
         if (current > 0) {
-            button(menu, 48, Material.RED_DYE, cfg("gui.previous-name", "&ePrevious page"), List.of(),
-                    event -> openBrowse(player, current - 1));
+            button(menu, 48, GuiButtons.previous(player), event -> openBrowse(player, current - 1));
         }
         if (current + 1 < pages) {
-            button(menu, 50, Material.LIME_DYE, cfg("gui.next-name", "&eNext page"), List.of(),
-                    event -> openBrowse(player, current + 1));
+            button(menu, 50, GuiButtons.next(player), event -> openBrowse(player, current + 1));
         }
-        button(menu, 49, Material.ARROW, cfg("gui.back-name", "&#FFD700&lBack"), List.of(), event -> openMain(player));
-        GuiButtons.border(menu);
+        button(menu, 49, GuiButtons.back(player), event -> openMain(player));
+        GuiButtons.fill(menu);
         plugin.menus().open(player, menu);
     }
 
@@ -387,8 +377,8 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
                         "tokens", Amounts.format(stats.tokens),
                         "playtime", stats.playtime,
                         "score", String.valueOf(stats.score))));
-        button(menu, 22, Material.ARROW, cfg("gui.back-name", "&#FFD700&lBack"), List.of(), event -> openBrowse(player, 0));
-        GuiButtons.border(menu);
+        button(menu, 22, GuiButtons.back(player), event -> openBrowse(player, 0));
+        GuiButtons.fill(menu);
         plugin.menus().open(player, menu);
     }
 
@@ -398,8 +388,8 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
         for (String ally : allies(team)) {
             menu.set(slot++, Items.named(Material.GOLDEN_HELMET, "&#FFD700&l" + displayName(ally), List.of("&7Ally")));
         }
-        button(menu, 22, Material.ARROW, cfg("gui.back-name", "&#FFD700&lBack"), List.of(), event -> openMain(player));
-        GuiButtons.border(menu);
+        button(menu, 22, GuiButtons.back(player), event -> openMain(player));
+        GuiButtons.fill(menu);
         plugin.menus().open(player, menu);
     }
 
@@ -760,7 +750,7 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
             return;
         }
         Menus.Menu menu = plugin.menus().create(player,
-                cfg("gui.enderchest-title", "☀ Team ☀ Previewing | Enderchest"), 3).unlocked();
+                cfg("gui.enderchest-title", "Enderchest"), 3).unlocked();
         try {
             sqlite.query("SELECT slot, item FROM team_enderchest WHERE team_id = ?", rs -> {
                 try {
@@ -886,18 +876,32 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
         return null;
     }
 
-    private void button(Menus.Menu menu, int slot, Material material, String name, List<String> lore,
+    private void button(Menus.Menu menu, int slot, ItemStack item,
                         java.util.function.Consumer<org.bukkit.event.inventory.InventoryClickEvent> click) {
-        menu.set(slot, Items.named(material, name, lore), event -> {
+        menu.set(slot, item, event -> {
             event.setCancelled(true);
             click.accept(event);
         });
     }
 
+    private void button(Menus.Menu menu, int slot, Material material, String name, List<String> lore,
+                        java.util.function.Consumer<org.bukkit.event.inventory.InventoryClickEvent> click) {
+        button(menu, slot, Items.named(material, name, lore), click);
+    }
+
     private List<String> lore(String path, String... pairs) {
         List<String> lines = config.getStringList(path);
         if (lines.isEmpty()) return List.of();
-        return Text.applyList(new ArrayList<>(lines), pairs);
+        String[] extras = {
+                "click", click("click-footer"),
+                "click_confirm", click("click-footer-confirm"),
+                "click_create", click("click-footer-create"),
+                "click_cancel", click("click-footer-cancel")
+        };
+        String[] merged = new String[extras.length + pairs.length];
+        System.arraycopy(extras, 0, merged, 0, extras.length);
+        System.arraycopy(pairs, 0, merged, extras.length, pairs.length);
+        return Text.applyList(new ArrayList<>(lines), merged);
     }
 
     private String click(String key) {

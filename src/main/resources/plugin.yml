@@ -9,7 +9,7 @@ softdepend: [LuckPerms, PlaceholderAPI, TAB, WorldGuard, eGlow, Multiverse-Core]
 commands:
   shardedcore:
     description: ShardedCore admin
-    aliases: [sc, sharded]
+    aliases: [sharded]
     permission: shardedcore.admin
   modules:
     description: Toggle modules
@@ -308,6 +308,9 @@ commands:
     permission: shardedcore.staff.vanish
   freeze:
     description: Freeze a player
+    permission: shardedcore.staff.freeze
+  unfreeze:
+    description: Unfreeze a player
     permission: shardedcore.staff.freeze
   stafflist:
     description: List online staff
@@ -716,6 +719,7 @@ permissions:
       shardedcore.staff.revoke: true
       shardedcore.staff.request: true
       shardedcore.staff.seevanished: true
+      shardedcore.staff.audit: true
   shardedcore.staff.mode:
     default: op
   shardedcore.staff.vanish:
@@ -761,6 +765,8 @@ permissions:
   shardedcore.staff.request:
     default: true
   shardedcore.staff.seevanished:
+    default: op
+  shardedcore.staff.audit:
     default: op
   shardedcore.commands.listed:
     default: true

@@ -1,5 +1,6 @@
 package com.shardedcore.modules.crystals;
 
+import com.shardedcore.data.TimedPerks;
 import com.shardedcore.ShardedCore;
 import com.shardedcore.gui.GuiButtons;
 import com.shardedcore.gui.Menus;
@@ -28,6 +29,9 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -38,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public final class CrystalsModule extends Module implements CommandExecutor, TabCompleter {
+public final class CrystalsModule extends Module implements CommandExecutor, TabCompleter, Listener {
 
     private CrystalService service;
 
@@ -53,13 +57,21 @@ public final class CrystalsModule extends Module implements CommandExecutor, Tab
     @Override
     public void enable() {
         service = new CrystalService(plugin, plugin.toggles().sqlite(), config.getDouble("starting-balance", 0));
+        TimedPerks.ensureTable(plugin.toggles().sqlite());
         registerCommand("crystal", this);
         registerCommand("crystalshop", this);
+        registerListener(this);
+        for (Player player : Bukkit.getOnlinePlayers()) TimedPerks.apply(player);
     }
 
     @Override
     public void disable() {
         cleanup();
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        TimedPerks.apply(event.getPlayer());
     }
 
     @Override
@@ -161,7 +173,7 @@ public final class CrystalsModule extends Module implements CommandExecutor, Tab
     }
 
     private void openMain(Player player) {
-        Menus.Menu menu = plugin.menus().create(player, cfg("menu.title", GuiButtons.title("Shop", "Crystals")), config.getInt("menu.rows", 4));
+        Menus.Menu menu = plugin.menus().create(player, cfg("menu.title", "Crystal Shop"), config.getInt("menu.rows", 4));
         ConfigurationSection sections = config.getConfigurationSection("sections");
         if (sections != null) {
             for (String id : sections.getKeys(false)) {
@@ -176,11 +188,25 @@ public final class CrystalsModule extends Module implements CommandExecutor, Tab
                 });
             }
         }
+        ConfigurationSection info = config.getConfigurationSection("menu.info");
+        if (info != null) {
+            menu.set(info.getInt("slot", 13), headOrItem(player, info));
+        }
         if (config.getBoolean("menu.filler.enabled", true)) {
-            GuiButtons.border(menu);
+            GuiButtons.glass(menu, config.getBoolean("menu.filler.border-only", true));
         }
         plugin.menus().open(player, menu);
         Sounds.play(player, config.getConfigurationSection("sounds.open"));
+    }
+
+    private ItemStack headOrItem(Player player, ConfigurationSection info) {
+        if ("PLAYER_HEAD".equalsIgnoreCase(info.getString("material", ""))) {
+            return Items.head(player, Text.apply(info.getString("name", "&#00A2FF&lCRYSTALS"),
+                    "crystals", service.format(service.get(player.getUniqueId()))),
+                    Text.applyList(new ArrayList<>(info.getStringList("lore")),
+                            "crystals", service.format(service.get(player.getUniqueId()))));
+        }
+        return Items.fromSection(info, player, "crystals", service.format(service.get(player.getUniqueId())));
     }
 
     private void openSection(Player player, String sectionId) {
@@ -204,24 +230,22 @@ public final class CrystalsModule extends Module implements CommandExecutor, Tab
         }
         ConfigurationSection info = section.getConfigurationSection("info");
         if (info != null) {
-            ItemStack head = "PLAYER_HEAD".equalsIgnoreCase(info.getString("material", ""))
-                    ? Items.head(player, Text.apply(info.getString("name", "&#00A2FF&lCRYSTALS"),
-                    "crystals", service.format(service.get(player.getUniqueId()))),
-                    Text.applyList(new ArrayList<>(info.getStringList("lore")),
-                            "crystals", service.format(service.get(player.getUniqueId()))))
-                    : Items.fromSection(info, player, "crystals", service.format(service.get(player.getUniqueId())));
-            menu.set(info.getInt("slot", 22), head);
+            menu.set(info.getInt("slot", 22), headOrItem(player, info));
         }
-        ConfigurationSection back = section.getConfigurationSection("back");
-        if (back != null) {
-            menu.set(back.getInt("slot", GuiButtons.slot("back", 31)),
-                    Items.fromSection(back, player), event -> {
-                event.setCancelled(true);
-                openMain(player);
-            });
+        if (section.isConfigurationSection("back")) {
+            GuiButtons.placeBack(menu, player, section.getInt("back.slot", GuiButtons.slot("back", 31)),
+                    () -> openMain(player));
         }
-        GuiButtons.border(menu);
+        GuiButtons.glass(menu, section.getBoolean("border-only",
+                idEqualsAny(sectionId, "tags", "chatcolors", "glows", "keys")));
         plugin.menus().open(player, menu);
+    }
+
+    private boolean idEqualsAny(String id, String... options) {
+        for (String option : options) {
+            if (option.equalsIgnoreCase(id)) return true;
+        }
+        return false;
     }
 
     private void openConfirm(Player player, String sectionId, String itemId, ConfigurationSection item) {
@@ -237,18 +261,14 @@ public final class CrystalsModule extends Module implements CommandExecutor, Tab
         ConfigurationSection yes = confirm == null ? null : confirm.getConfigurationSection("confirm");
         ConfigurationSection no = confirm == null ? null : confirm.getConfigurationSection("cancel");
         menu.set(yes == null ? 11 : yes.getInt("slot", 11),
-                yes == null ? Items.named(Material.LIME_DYE, "&#9FFF00&lConfirm", List.of(
-                        "&8Description", "", "&#9FFF00Information:", "&#9FFF00| &fBuy this item.", "",
-                        cfg("confirm.click-confirm", "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Confirm")))
+                yes == null ? GuiButtons.confirm(player, "item", name, "price", price)
                         : Items.fromSection(yes, player, "item", name, "price", price),
                 event -> {
                     event.setCancelled(true);
                     buy(player, sectionId, itemId, item);
                 });
         menu.set(no == null ? 15 : no.getInt("slot", 15),
-                no == null ? Items.named(Material.RED_DYE, "&#FF2727&lCancel", List.of(
-                        "&8Description", "", "&#FF2727Information:", "&#FF2727| &fGo back.", "",
-                        cfg("confirm.click-cancel", "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Cancel")))
+                no == null ? GuiButtons.cancel(player, "item", name, "price", price)
                         : Items.fromSection(no, player, "item", name, "price", price),
                 event -> {
                     event.setCancelled(true);
@@ -286,18 +306,13 @@ public final class CrystalsModule extends Module implements CommandExecutor, Tab
             case "tag" -> {
                 TagsModule tags = plugin.modules().get(TagsModule.class);
                 if (tags == null) yield false;
-                String name = item.getString("tag", "");
-                tags.unlock(player.getUniqueId(), name);
-                tags.apply(player, name);
-                yield true;
+                yield tags.unlock(player.getUniqueId(), item.getString("tag", ""));
             }
             case "chatcolor", "color" -> {
                 ChatColorModule colors = plugin.modules().get(ChatColorModule.class);
                 if (colors == null) yield false;
                 String name = item.getString("color", item.getString("chatcolor", ""));
-                colors.unlock(player.getUniqueId(), name);
-                colors.apply(player.getUniqueId(), name);
-                yield true;
+                yield colors.unlock(player.getUniqueId(), name);
             }
             case "tool", "drill", "chopper", "firework" -> {
                 ShardedToolsModule tools = plugin.modules().get(ShardedToolsModule.class);
@@ -324,9 +339,10 @@ public final class CrystalsModule extends Module implements CommandExecutor, Tab
                 }
                 GlowsModule glows = plugin.modules().get(GlowsModule.class);
                 if (glows == null) yield false;
-                glows.unlock(player.getUniqueId(), glow);
-                yield glows.apply(player, glow);
+                yield glows.unlock(player.getUniqueId(), glow);
             }
+            case "perk" -> TimedPerks.grant(player, item.getString("perk", ""),
+                    item.getString("duration", "7d"), item.getString("permission", ""));
             case "spawner" -> {
                 give(player, spawner(item));
                 yield true;

@@ -1,7 +1,7 @@
 # Shared buttons used by every ShardedCore GUI.
 # Change materials, names, lores, and slots here — modules read this file.
 
-title-format: "☀ %guide% ☀ Previewing | %name%"
+title-format: "%name%"
 
 filler:
   material: BLACK_STAINED_GLASS_PANE

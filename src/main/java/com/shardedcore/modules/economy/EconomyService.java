@@ -4,6 +4,8 @@ import com.shardedcore.data.Toggles;
 import com.shardedcore.database.Sqlite;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -101,6 +103,31 @@ public final class EconomyService {
 
     public String format(double amount) {
         return com.shardedcore.util.Amounts.format(amount);
+    }
+
+    public List<Map.Entry<UUID, Double>> top(int limit) {
+        List<Map.Entry<UUID, Double>> list = new ArrayList<>();
+        try {
+            sqlite.query("SELECT uuid, balance FROM economy ORDER BY balance DESC LIMIT ?", rs -> {
+                try {
+                    while (rs.next()) {
+                        try {
+                            list.add(Map.entry(UUID.fromString(rs.getString("uuid")), rs.getDouble("balance")));
+                        } catch (IllegalArgumentException ignored) {
+                        }
+                    }
+                } catch (SQLException ignored) {
+                }
+                return null;
+            }, Math.max(1, limit));
+        } catch (SQLException ignored) {
+        }
+        return list;
+    }
+
+    public void ensure(UUID uuid) {
+        get(uuid);
+        save(uuid);
     }
 
     private double load(UUID uuid) {

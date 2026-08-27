@@ -769,14 +769,7 @@ public final class CratesModule extends Module implements CommandExecutor, TabCo
 
     private void frame(Menus.Menu menu, int size, List<Integer> area) {
         if (!config.getBoolean("filler.enabled", true)) return;
-        ItemStack fill = Items.named(
-                Sounds.material(cfg("filler.material", "BLACK_STAINED_GLASS_PANE"), Material.BLACK_STAINED_GLASS_PANE),
-                cfg("filler.name", " "),
-                config.getStringList("filler.lore")
-        );
-        for (int slot = 0; slot < size; slot++) {
-            if (!area.contains(slot) && menu.inventory().getItem(slot) == null) menu.set(slot, fill);
-        }
+        GuiButtons.border(menu);
     }
 
     private Map<Integer, ItemStack> snapshot(Crate crate) {

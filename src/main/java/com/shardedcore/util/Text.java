@@ -53,7 +53,11 @@ public final class Text {
         if (input == null) return "";
         String out = input;
         for (int i = 0; i + 1 < pairs.length; i += 2) {
-            out = out.replace("%" + pairs[i] + "%", pairs[i + 1] == null ? "" : pairs[i + 1]);
+            String key = pairs[i] == null ? "" : pairs[i];
+            if (key.startsWith("%") && key.endsWith("%") && key.length() > 2) {
+                key = key.substring(1, key.length() - 1);
+            }
+            out = out.replace("%" + key + "%", pairs[i + 1] == null ? "" : pairs[i + 1]);
         }
         return out;
     }
