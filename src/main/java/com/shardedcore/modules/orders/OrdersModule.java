@@ -262,11 +262,11 @@ public final class OrdersModule extends Module implements CommandExecutor, TabCo
         nav(menu, gui, "sort", player, true, event -> {
             sort.put(player.getUniqueId(), next(sorted, List.of("newest", "most-paid", "best-per-item", "most-delivered")));
             openBoard(player, 0);
-        });
+        }, "sort", sorted, "filter", filtered);
         nav(menu, gui, "filter", player, true, event -> {
             filter.put(player.getUniqueId(), next(filtered, List.of("all", "blocks", "tools", "combat", "food", "potions", "books", "ingredients", "other")));
             openBoard(player, 0);
-        });
+        }, "sort", sorted, "filter", filtered);
         plugin.menus().open(player, menu);
         play(player, "click");
     }
@@ -306,6 +306,11 @@ public final class OrdersModule extends Module implements CommandExecutor, TabCo
         String none = gui.getString("none", "-");
         nav(menu, gui, "back", player, true, event -> openBoard(player, 0));
         nav(menu, gui, "item", player, true, "item_name", draft.material == null ? none : Text.pretty(draft.material.name()), event -> openSelect(player, 0));
+        if (draft.material != null) {
+            int itemSlot = gui.getInt("item.slot", 12);
+            ItemStack chosen = menu.inventory().getItem(itemSlot);
+            if (chosen != null) chosen.setType(draft.material);
+        }
         nav(menu, gui, "amount", player, true, "current_amount", draft.amount <= 0 ? none : String.valueOf(draft.amount), event -> {
             prompts.put(player.getUniqueId(), Prompt.AMOUNT);
             player.closeInventory();
@@ -361,6 +366,15 @@ public final class OrdersModule extends Module implements CommandExecutor, TabCo
             player.closeInventory();
             msg(player, "search-prompt");
         });
+        String sorted = sort.getOrDefault(player.getUniqueId(), "newest");
+        nav(menu, gui, "sort", player, true, event -> {
+            sort.put(player.getUniqueId(), next(sorted, List.of("newest", "most-paid", "best-per-item", "most-delivered", "alphabetical_az", "alphabetical_za")));
+            openSelect(player, 0);
+        }, "sort", sorted, "filter", filtered);
+        nav(menu, gui, "filter", player, true, event -> {
+            filter.put(player.getUniqueId(), next(filtered, List.of("all", "blocks", "tools", "combat", "food", "potions", "books", "ingredients", "other")));
+            openSelect(player, 0);
+        }, "sort", sorted, "filter", filtered);
         plugin.menus().open(player, menu);
     }
 

@@ -386,8 +386,10 @@ public final class ShardedToolsModule extends Module implements CommandExecutor,
         for (String line : section.getStringList("lore")) {
             lore.add(Text.apply(line, "expire", expire));
         }
-        String expireLine = section.getString("expire-line", cfg("expire-line", "&#A370EE⚓ &fExpires in: %expire%"));
-        lore.add(Text.apply(expireLine, "expire", expire));
+        if (left != Long.MAX_VALUE) {
+            String expireLine = section.getString("expire-line", cfg("expire-line", "&#A370EE⚓ &fExpires in: %expire%"));
+            lore.add(Text.apply(expireLine, "expire", expire));
+        }
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
         List<Component> components = new ArrayList<>();

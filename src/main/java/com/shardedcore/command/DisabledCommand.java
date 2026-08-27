@@ -25,7 +25,7 @@ public final class DisabledCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
                              @NotNull String label, @NotNull String[] args) {
         String message = plugin.getConfig().getString("disabled-command",
-                "&#FF0000&lERROR &7▷ &fThat module is currently &#FF0000disabled&f.");
+                "&#FF0000&lERROR &8▷ &fThat module is currently &#FF0000disabled&f.");
         sender.sendMessage(ColorUtil.parse(message.replace("%command%", label)));
         return true;
     }

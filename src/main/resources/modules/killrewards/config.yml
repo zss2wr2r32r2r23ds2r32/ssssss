@@ -50,10 +50,10 @@ sounds:
   notify: {enabled: true, sound: "entity.experience_orb.pickup", volume: 1.0, pitch: 1.2}
   error: {enabled: true, sound: "block.note_block.bass", volume: 1.0, pitch: 0.8}
 messages:
-  claimed: "&#FFEE00&lKILLS &7▷ &fThe &#FFEE00%required% &fkill reward is yours."
-  already-claimed: "&#FF0000&lERROR &7▷ &fYou already took that reward."
-  players-only: "&#FF0000&lERROR &7▷ &fOnly players can have kills."
-  ready: "&#FFEE00&lKILLS &7▷ &f&#FFEE00%amount% &freward(s) are ready. Use &#FFEE00/killrewards"
+  claimed: "&#FFEE00&lKILLS &8▷ &fThe &#FFEE00%required% &fkill reward is yours."
+  already-claimed: "&#FF0000&lERROR &8▷ &fYou already took that reward."
+  players-only: "&#FF0000&lERROR &8▷ &fOnly players can have kills."
+  ready: "&#FFEE00&lKILLS &8▷ &f&#FFEE00%amount% &freward(s) are ready. Use &#FFEE00/killrewards"
 rewards:
   "01":
     kills: 1

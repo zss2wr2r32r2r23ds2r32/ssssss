@@ -6,8 +6,8 @@ display:
   brightness: 15
   view-distance: 64
   scale: 1.0
-  y-offset: 0.55
-  line-gap: 0.28
+  y-offset: 0.18
+  line-gap: 0.24
   line-width: 1000
   text-opacity: 255
   see-through: false
@@ -41,6 +41,6 @@ lines:
       - '&#FF0000🗡 &#FF0000%statistic_player_kills% &7| &#FB7B0B☠ &#FB7B0B%statistic_deaths% &7| &#FFF300⌛ &#FFF300%statistic_time_played%'
 
 messages:
-  info: '&#FF256E&lNAMETAGS &7▷ &fLines &#FF256E%lines% &7| &fOffset &#FF256E%offset% &7| &fGap &#FF256E%gap% &7| &fRefresh &#FF256E%refresh%'
-  usage: '&#FF256E&lNAMETAGS &7▷ &fUse &#FF256E/nametags reload &fafter changing the file.'
-  reloaded: '&#FF256E&lNAMETAGS &7▷ &fReloaded, &#FF256E%count% &ftags rebuilt.'
+  info: '&#FF256E&lNAMETAGS &8▷ &fLines &#FF256E%lines% &7| &fOffset &#FF256E%offset% &7| &fGap &#FF256E%gap% &7| &fRefresh &#FF256E%refresh%'
+  usage: '&#FF256E&lNAMETAGS &8▷ &fUse &#FF256E/nametags reload &fafter changing the file.'
+  reloaded: '&#FF256E&lNAMETAGS &8▷ &fReloaded, &#FF256E%count% &ftags rebuilt.'

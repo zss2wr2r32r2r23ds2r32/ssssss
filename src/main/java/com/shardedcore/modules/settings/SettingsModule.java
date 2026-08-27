@@ -140,7 +140,7 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
     private String commandPrefix(String messageKey) {
         String specific = config.getString("command-prefixes." + messageKey, "");
         if (specific != null && !specific.isBlank()) return specific;
-        return cfg("command-prefix", "&#FF0072&lSETTINGS &7▷");
+        return cfg("command-prefix", "&#FF0072&lSETTINGS &8▷");
     }
 
     private void syncTab(Player player, String key, boolean on) {
@@ -334,7 +334,7 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
         }
         Player target = Bukkit.getPlayerExact(args[0]);
         if (target == null) {
-            sendRaw(player, "&#FF0000&lERROR &7▷ &fThat player is not online.");
+            sendRaw(player, "&#FF0000&lERROR &8▷ &fThat player is not online.");
             return true;
         }
         if (target.equals(player)) {
@@ -388,14 +388,8 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
         applyNightVision(player);
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (!player.isOnline()) return;
-            if (on(player, BOSSBAR)) {
-                syncTab(player, BOSSBAR, true);
-                send(player, "messages.bossbar-on");
-            }
-            if (on(player, SCOREBOARD)) {
-                syncTab(player, SCOREBOARD, true);
-                send(player, "messages.scoreboard-on");
-            }
+            if (on(player, BOSSBAR)) syncTab(player, BOSSBAR, true);
+            if (on(player, SCOREBOARD)) syncTab(player, SCOREBOARD, true);
         }, 20L);
     }
 

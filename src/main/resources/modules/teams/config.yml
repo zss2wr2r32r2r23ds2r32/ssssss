@@ -71,7 +71,63 @@ gui:
   - ''
   - '%click_confirm%'
 
-  main-title: '&8Team &f%team%'
+  main-title: '☀ Team ☀ Previewing | %team%'
+  home-name: '&#00A2FF&lTEAM HOME'
+  home-lore:
+  - '&8Description'
+  - ''
+  - '&#00A2FFInformation:'
+  - '&#00A2FF| &fClick here to teleport'
+  - '&#00A2FF| &fto the team home.'
+  - ''
+  - '%click%'
+  enderchest-name: '&#A370EE&lTEAM ENDERCHEST'
+  enderchest-lore:
+  - '&8Description'
+  - ''
+  - '&#A370EEInformation:'
+  - '&#A370EE| &fClick here to access'
+  - '&#A370EE| &fthe team enderchest.'
+  - ''
+  - '%click%'
+  settings-name: '&#FFBA00&lTEAM SETTINGS'
+  settings-lore:
+  - '&8Description'
+  - ''
+  - '&#FFBA00Information:'
+  - '&#FFBA00| &fClick here to open'
+  - '&#FFBA00| &fthe settings menu.'
+  - ''
+  - '%click%'
+  settings-title: '☀ Team ☀ Previewing | Settings'
+  tag-name: '&#FFBA00&lTEAM NAME'
+  tag-lore:
+  - '&8Description'
+  - ''
+  - '&#FFBA00Information:'
+  - '&#FFBA00| &fYour name: %tag%'
+  - '&#FFBA00| &fUse /team name <name>'
+  - ''
+  - '%click%'
+  home-set-name: '&#00A2FF&lSET HOME'
+  home-set-lore:
+  - '&8Description'
+  - ''
+  - '&#00A2FFInformation:'
+  - '&#00A2FF| &fSet the team home'
+  - '&#00A2FF| &fto your location.'
+  - ''
+  - '%click%'
+  pvp-name: '&#FF0000&lFRIENDLY FIRE'
+  pvp-lore:
+  - '&8Description'
+  - ''
+  - '&#FF0000Information:'
+  - '&#FF0000| &fFriendly fire: %status%'
+  - '&#FF0000| &fClick to toggle.'
+  - ''
+  - '%click%'
+  enderchest-title: '☀ Team ☀ Previewing | Enderchest'
   members-name: '&#9FFF00&lMembers'
   members-lore:
   - '&8Descriptions'
@@ -230,7 +286,8 @@ gui:
 
 messages:
   prefix: "&x&F&F&B&A&0&0&lTEAMS &8▷ "
-  usage: "&x&F&F&B&A&0&0&lTEAMS &8▷ &f/team accept|ally|chat|demote|disband|invite"
+  usage: "&x&F&F&B&A&0&0&lTEAMS &8▷ &f/team accept|ally|chat|pvp|name|home|sethome|enderchest"
+  usage-name: "&x&F&F&B&A&0&0&lTEAMS &8▷ &f/team name <name>"
   usage-accept: "&x&F&F&B&A&0&0&lTEAMS &8▷ &f/team accept <team>"
   usage-ally: "&x&F&F&B&A&0&0&lTEAMS &8▷ &f/team ally <team>"
   usage-demote: "&x&F&F&B&A&0&0&lTEAMS &8▷ &f/team demote <player>"
@@ -246,6 +303,12 @@ messages:
   left: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fYou left your team."
   chat-on: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fTeam chat enabled."
   chat-off: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fTeam chat disabled."
+  pvp-on: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fFriendly fire is now &#94FF00on&f."
+  pvp-off: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fFriendly fire is now &#FF0000off&f."
+  renamed: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fTeam name is now &x&F&F&B&A&0&0%team%&f."
+  home-set: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fTeam home set."
+  home-teleport: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fTeleported to the team home."
+  no-home: "&#FF0000&lERROR &8▷ &fYour team has no home set."
   ally-sent: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fSent an ally request to &x&F&F&B&A&0&0%team%&f."
   ally-accepted: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fYou are now allied with &x&F&F&B&A&0&0%team%&f."
   promoted: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fPromoted &x&F&F&B&A&0&0%player%&f."
@@ -253,22 +316,22 @@ messages:
   kicked: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fKicked &x&F&F&B&A&0&0%player%&f."
   kicked-target: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fYou were kicked from the team."
   emergency: "&#FF2727&lEMERGENCY &8▷ &f%player% needs help at &f%location%"
-  emergency-cooldown: "&#FF0000&lERROR &7▷ &fEmergency is on cooldown."
-  already-in-team: "&#FF0000&lERROR &7▷ &fYou are already in a team."
-  not-in-team: "&#FF0000&lERROR &7▷ &fYou are not in a team."
-  not-leader: "&#FF0000&lERROR &7▷ &fOnly the team leader can do that."
-  not-officer: "&#FF0000&lERROR &7▷ &fOnly officers can do that."
-  not-member: "&#FF0000&lERROR &7▷ &fThat player is not on your team."
-  no-invite: "&#FF0000&lERROR &7▷ &fYou have no invite from that team."
-  team-full: "&#FF0000&lERROR &7▷ &fThat team is full."
-  unknown-team: "&#FF0000&lERROR &7▷ &fUnknown team."
-  already-allied: "&#FF0000&lERROR &7▷ &fYou are already allied."
-  ally-limit: "&#FF0000&lERROR &7▷ &fYou already have an ally."
-  invalid-name: "&#FF0000&lERROR &7▷ &fThat team name is not valid."
-  banned-name: "&#FF0000&lERROR &7▷ &fThat team name is not allowed."
-  name-taken: "&#FF0000&lERROR &7▷ &fThat team name is taken."
-  target-in-team: "&#FF0000&lERROR &7▷ &fThat player is already in a team."
-  leader-leave: "&#FF0000&lERROR &7▷ &fLeaders must disband the team."
-  player-missing: "&#FF0000&lERROR &7▷ &fThat player is not online."
-  failed: "&#FF0000&lERROR &7▷ &fCould not create that team."
-  players-only: "&#FF0000&lERROR &7▷ &fOnly a player can use that."
+  emergency-cooldown: "&#FF0000&lERROR &8▷ &fEmergency is on cooldown."
+  already-in-team: "&#FF0000&lERROR &8▷ &fYou are already in a team."
+  not-in-team: "&#FF0000&lERROR &8▷ &fYou are not in a team."
+  not-leader: "&#FF0000&lERROR &8▷ &fOnly the team leader can do that."
+  not-officer: "&#FF0000&lERROR &8▷ &fOnly officers can do that."
+  not-member: "&#FF0000&lERROR &8▷ &fThat player is not on your team."
+  no-invite: "&#FF0000&lERROR &8▷ &fYou have no invite from that team."
+  team-full: "&#FF0000&lERROR &8▷ &fThat team is full."
+  unknown-team: "&#FF0000&lERROR &8▷ &fUnknown team."
+  already-allied: "&#FF0000&lERROR &8▷ &fYou are already allied."
+  ally-limit: "&#FF0000&lERROR &8▷ &fYou already have an ally."
+  invalid-name: "&#FF0000&lERROR &8▷ &fThat team name is not valid."
+  banned-name: "&#FF0000&lERROR &8▷ &fThat team name is not allowed."
+  name-taken: "&#FF0000&lERROR &8▷ &fThat team name is taken."
+  target-in-team: "&#FF0000&lERROR &8▷ &fThat player is already in a team."
+  leader-leave: "&#FF0000&lERROR &8▷ &fLeaders must disband the team."
+  player-missing: "&#FF0000&lERROR &8▷ &fThat player is not online."
+  failed: "&#FF0000&lERROR &8▷ &fCould not create that team."
+  players-only: "&#FF0000&lERROR &8▷ &fOnly a player can use that."

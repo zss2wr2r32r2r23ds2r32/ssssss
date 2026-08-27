@@ -1,5 +1,5 @@
-prefix: "&#A370EE&lCORE &8▷ &r"
-disabled-command: "&#FF0000&lERROR &7▷ &fThat command is &#FF0000disabled &fbecause its module is off."
+prefix: "&#00A2FF&lCORE &8▷ &r"
+disabled-command: "&#FF0000&lERROR &8▷ &fThat command is &#FF0000disabled &fbecause its module is off."
 
 # Flip any module off here or with /modules. Disabled commands show red in-game.
 modules:
@@ -45,3 +45,4 @@ modules:
   shardedtools: true
   xpbottles: true
   attributefixer: true
+  staff: true

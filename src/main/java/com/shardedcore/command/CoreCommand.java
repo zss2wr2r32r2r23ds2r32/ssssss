@@ -28,7 +28,7 @@ public final class CoreCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
                              @NotNull String label, @NotNull String[] args) {
         if (!sender.hasPermission("shardedcore.admin")) {
-            sender.sendMessage(ColorUtil.parse("&#FF0000&lERROR &7▷ &fYou do not have permission."));
+            sender.sendMessage(ColorUtil.parse("&#FF0000&lERROR &8▷ &fYou do not have permission."));
             return true;
         }
         if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
@@ -38,7 +38,7 @@ public final class CoreCommand implements CommandExecutor, TabCompleter {
         switch (args[0].toLowerCase(Locale.ROOT)) {
             case "reload" -> {
                 plugin.reloadPlugin();
-                sender.sendMessage(ColorUtil.parse("&#97F900&lCORE &7▷ &fShardedCore reloaded."));
+                sender.sendMessage(ColorUtil.parse("&#97F900&lCORE &8▷ &fShardedCore reloaded."));
             }
             case "modules", "features" -> {
                 if (args.length >= 3) {
@@ -46,10 +46,10 @@ public final class CoreCommand implements CommandExecutor, TabCompleter {
                     boolean on = args[2].equalsIgnoreCase("on") || args[2].equalsIgnoreCase("enable")
                             || args[2].equalsIgnoreCase("true");
                     if (plugin.modules().setEnabled(id, on)) {
-                        sender.sendMessage(ColorUtil.parse("&#97F900&lCORE &7▷ &fModule &#97F900" + id
+                        sender.sendMessage(ColorUtil.parse("&#97F900&lCORE &8▷ &fModule &#97F900" + id
                                 + " &fis now " + (on ? "&#97F900enabled" : "&#FF0000disabled") + "&f."));
                     } else {
-                        sender.sendMessage(ColorUtil.parse("&#FF0000&lERROR &7▷ &fUnknown module &#FF0000" + id + "&f."));
+                        sender.sendMessage(ColorUtil.parse("&#FF0000&lERROR &8▷ &fUnknown module &#FF0000" + id + "&f."));
                     }
                     return true;
                 }

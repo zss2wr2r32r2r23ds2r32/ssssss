@@ -30,7 +30,7 @@ public final class RulesModule extends Module implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            sendRaw(sender, "&#FF0000&lERROR &7▷ &fOnly a player can open the rules menu.");
+            sendRaw(sender, "&#FF0000&lERROR &8▷ &fOnly a player can open the rules menu.");
             return true;
         }
         Menus.Menu menu = plugin.menus().create(player, cfg("menu.title", "&8Rules | Dashboard"), config.getInt("menu.rows", 3));

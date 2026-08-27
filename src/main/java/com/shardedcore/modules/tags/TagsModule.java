@@ -209,17 +209,25 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
                     def.description, color, canUse(player, def.id)));
         }
         CosmeticsMenus.open(plugin, player, config,
-                limited ? cfg("gui.limited-title", "&8Limited Tags") : cfg("gui.title", "&8Tags"),
-                entries, page, "", limited,
+                limited ? cfg("gui.limited-title", "☀ Tag ☀ Previewing | Limited Tags") : cfg("gui.title", "☀ Tag ☀ Previewing | Tags"),
+                entries, page, "tag", limited,
                 next -> openGui(player, next, limited),
                 limited ? null : () -> openGui(player, 0, true),
                 entry -> {
                     if (!canUse(player, entry.id())) {
                         send(player, "locked", "name", entry.id());
+                        sound(player, "sounds.error");
                         return;
                     }
                     apply(player, entry.id());
-                    send(player, "set", "tag", definition(entry.id(), limited) == null ? entry.title() : definition(entry.id(), limited).text);
+                    TagDef applied = definition(entry.id(), limited);
+                    send(player, "set", "tag", applied == null ? entry.title() : applied.text);
+                    sound(player, "sounds.equip");
+                    openGui(player, page, limited);
+                },
+                limited ? () -> openGui(player, 0, false) : null,
+                () -> {
+                    clear(player);
                     openGui(player, page, limited);
                 });
     }

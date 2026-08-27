@@ -31,11 +31,29 @@ sort:
   material: CAULDRON
   name: '&#F90EC2&lSORTING'
   lore:
-  - '&8Description'
+    - '&8Description'
+    - ''
+    - '&#F90EC2Information:'
+    - '&fClick to change how'
+    - '&forders are sorted.'
+    - ''
+    - '&#F90EC2| &fCurrent: &#F90EC2%sort%'
+    - ''
+    - '&#FFD900▶ &n&lCLICK&#FFD900 To Sort'
 filter:
   slot: 53
   material: HOPPER
   name: '&#019BEE&lFILTER'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#019BEEInformation:'
+    - '&fClick to filter which'
+    - '&forders are shown.'
+    - ''
+    - '&#019BEE| &fCurrent: &#019BEE%filter%'
+    - ''
+    - '&#FFD900▶ &n&lCLICK&#FFD900 To Filter'
 refresh:
   slot: 49
   material: BELL

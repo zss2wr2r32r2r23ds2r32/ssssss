@@ -257,7 +257,10 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
     }
 
     private void leaveQueue(Player player) {
-        if (queue.remove(player.getUniqueId())) {
+        boolean queued = queue.remove(player.getUniqueId());
+        boolean searching = pending.containsKey(player.getUniqueId());
+        stop(player.getUniqueId());
+        if (queued || searching) {
             sendBar(player, "queue.cancelled");
             return;
         }
@@ -333,9 +336,10 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
 
     private void pairQueue(Player a, Player b) {
         int seconds = Math.max(1, config.getInt("queue.countdown-seconds", 5));
-        World world = a.getWorld();
-        ConfigurationSection dest = destFor(world);
-        if (dest == null) dest = config.getConfigurationSection("worlds.overworld");
+        ConfigurationSection dest = config.getConfigurationSection("worlds.overworld");
+        World world = dest == null ? a.getWorld() : resolveWorld("overworld", dest);
+        if (world == null) world = a.getWorld();
+        if (dest == null) dest = destFor(world);
         pool.request(world, dest, first -> {
             if (first == null) {
                 sendBar(a, "not-found");
@@ -380,6 +384,9 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
         String named = dest.getString("world", "");
         if (named != null && !named.isBlank()) {
             World world = Bukkit.getWorld(named);
+            if (world != null) return world;
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "mv load " + named);
+            world = Bukkit.getWorld(named);
             if (world != null) return world;
         }
         World.Environment env = environment(id);

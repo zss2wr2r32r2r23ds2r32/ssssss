@@ -23,8 +23,8 @@ multiplier-button:
     - "&#80ee0b¦ &fSell items to level"
     - "&#80ee0b¦ &fyour own &#80ee0bmultiplier&f."
     - ""
-    - "&#80ee0b☀ &fProgress &7▷ &#80ee0b%percent%%"
-    - "&#FFD900★ &fNext &7▷ &#FFD900%next%x"
+    - "&#80ee0b☀ &fProgress &8▷ &#80ee0b%percent%%"
+    - "&#FFD900★ &fNext &8▷ &#FFD900%next%x"
     - ""
     - "&#80ee0b▷ &n&lCLICK&r&#80ee0b To Open"
 
@@ -84,9 +84,9 @@ history:
       - "&#80ee0b¦ &fsell &#80ee0bmenu&f."
       - ""
       - "&#22AFFBℹ &fPlayer: &#22AFFB%player%"
-      - "&#80ee0b&l$&r &fWorth &7▷ &#80ee0b$%base%"
+      - "&#80ee0b&l$&r &fWorth &8▷ &#80ee0b$%base%"
       - "&#FFD900★ &fMulti: &#FFD900%multi%x"
-      - "&#80ee0b&l$&r &fPaid &7▷ &#80ee0b$%total%"
+      - "&#80ee0b&l$&r &fPaid &8▷ &#80ee0b$%total%"
       - "&#FFD900⌛ &fWhen: &#FFD900%time%"
 
   previous:
@@ -114,18 +114,18 @@ history:
       - "&#80ee0b▷ &n&lCLICK&r&#80ee0b To Navigate"
 
 messages:
-  sold: "&#80ee0b&lSELL &7▷ &fSold &#80ee0b%items% items &ffor &#80ee0b$%total%&f."
-  sold-multiplied: "&#80ee0b&lSELL &7▷ &fSold &#80ee0b%items% items &ffor &#80ee0b$%total% &7(&#FFD900%multi%x&7)"
+  sold: "&#80ee0b&lSELL &8▷ &fSold &#80ee0b%items% items &ffor &#80ee0b$%total%&f."
+  sold-multiplied: "&#80ee0b&lSELL &8▷ &fSold &#80ee0b%items% items &ffor &#80ee0b$%total% &7(&#FFD900%multi%x&7)"
   # Sent on top of the chat line. Leave empty to only use the chat.
-  sold-bar: "&#80ee0b&lSELL &7▷ &f+$%total%"
-  sold-multiplied-bar: "&#80ee0b&lSELL &7▷ &f+$%total% &7(&#FFD900%multi%x&7)"
+  sold-bar: "&#80ee0b&lSELL &8▷ &f+$%total%"
+  sold-multiplied-bar: "&#80ee0b&lSELL &8▷ &f+$%total% &7(&#FFD900%multi%x&7)"
   # Left empty on purpose, closing an empty menu says nothing.
   nothing-sold: ""
-  not-sellable: "&#FF0000&lERROR &7▷ &fThat item cannot be sold."
-  no-economy: "&#FF0000&lERROR &7▷ &fThe sell system is not ready yet."
-  too-much: "&#FF0000&lERROR &7▷ &fYou cannot sell more than &#80ee0b$%total% &fat once."
-  sell-failed: "&#FF0000&lERROR &7▷ &fYour balance could not take that."
-  no-prices: "&#FF0000&lERROR &7▷ &fNothing can be sold yet."
-  no-multiplier: "&#FF0000&lERROR &7▷ &fThe sell multiplier is turned off."
-  players-only: "&#FF0000&lERROR &7▷ &fOnly players can do that."
-  history-empty: "&#80ee0b&lSELL &7▷ &fNothing has been sold yet."
+  not-sellable: "&#FF0000&lERROR &8▷ &fThat item cannot be sold."
+  no-economy: "&#FF0000&lERROR &8▷ &fThe sell system is not ready yet."
+  too-much: "&#FF0000&lERROR &8▷ &fYou cannot sell more than &#80ee0b$%total% &fat once."
+  sell-failed: "&#FF0000&lERROR &8▷ &fYour balance could not take that."
+  no-prices: "&#FF0000&lERROR &8▷ &fNothing can be sold yet."
+  no-multiplier: "&#FF0000&lERROR &8▷ &fThe sell multiplier is turned off."
+  players-only: "&#FF0000&lERROR &8▷ &fOnly players can do that."
+  history-empty: "&#80ee0b&lSELL &8▷ &fNothing has been sold yet."

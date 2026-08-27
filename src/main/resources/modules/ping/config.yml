@@ -1,5 +1,5 @@
 self: "&#008DFF&lPING &8▷ &rYour Ping is &#008DFF&n%ping%"
 other: "&#008DFF&lPING &8▷ %player% Ping is &#008DFF&n%ping%"
 actionbar: true
-offline: "&#FF0000&lERROR &7▷ &fThat player is not online."
-players-only: "&#FF0000&lERROR &7▷ &fOnly a player can check their own ping."
+offline: "&#FF0000&lERROR &8▷ &fThat player is not online."
+players-only: "&#FF0000&lERROR &8▷ &fOnly a player can check their own ping."

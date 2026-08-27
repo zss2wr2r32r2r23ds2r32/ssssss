@@ -10,8 +10,8 @@ combat-tag-seconds: 10
 # /deathtoggle
 toggle:
   actionbar: false
-  shown: "&#FF256E&lDEATH &7▷ &fDeath messages are now shown."
-  hidden: "&#FF256E&lDEATH &7▷ &fDeath messages are now hidden."
+  shown: "&#FF256E&lDEATH &8▷ &fDeath messages are now shown."
+  hidden: "&#FF256E&lDEATH &8▷ &fDeath messages are now hidden."
 
 # %player% = the dead player, %killer% = the player or mob that killed them.
 # An empty line means no message for that cause. Missing causes fall back to default.

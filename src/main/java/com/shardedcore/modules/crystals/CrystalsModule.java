@@ -1,11 +1,13 @@
 package com.shardedcore.modules.crystals;
 
 import com.shardedcore.ShardedCore;
+import com.shardedcore.gui.GuiButtons;
 import com.shardedcore.gui.Menus;
 import com.shardedcore.module.Module;
 import com.shardedcore.modules.chatcolor.ChatColorModule;
 import com.shardedcore.modules.crates.CratesModule;
 import com.shardedcore.modules.economy.EconomyModule;
+import com.shardedcore.modules.glows.GlowsModule;
 import com.shardedcore.modules.shardedtools.ShardedToolsModule;
 import com.shardedcore.modules.tags.TagsModule;
 import com.shardedcore.util.Amounts;
@@ -32,6 +34,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -158,7 +161,7 @@ public final class CrystalsModule extends Module implements CommandExecutor, Tab
     }
 
     private void openMain(Player player) {
-        Menus.Menu menu = plugin.menus().create(player, cfg("menu.title", "&8Crystal Shop"), config.getInt("menu.rows", 4));
+        Menus.Menu menu = plugin.menus().create(player, cfg("menu.title", GuiButtons.title("Shop", "Crystals")), config.getInt("menu.rows", 4));
         ConfigurationSection sections = config.getConfigurationSection("sections");
         if (sections != null) {
             for (String id : sections.getKeys(false)) {
@@ -174,7 +177,7 @@ public final class CrystalsModule extends Module implements CommandExecutor, Tab
             }
         }
         if (config.getBoolean("menu.filler.enabled", true)) {
-            menu.fill(Items.fromSection(config.getConfigurationSection("menu.filler"), player));
+            GuiButtons.border(menu);
         }
         plugin.menus().open(player, menu);
         Sounds.play(player, config.getConfigurationSection("sounds.open"));
@@ -199,20 +202,25 @@ public final class CrystalsModule extends Module implements CommandExecutor, Tab
                 });
             }
         }
+        ConfigurationSection info = section.getConfigurationSection("info");
+        if (info != null) {
+            ItemStack head = "PLAYER_HEAD".equalsIgnoreCase(info.getString("material", ""))
+                    ? Items.head(player, Text.apply(info.getString("name", "&#00A2FF&lCRYSTALS"),
+                    "crystals", service.format(service.get(player.getUniqueId()))),
+                    Text.applyList(new ArrayList<>(info.getStringList("lore")),
+                            "crystals", service.format(service.get(player.getUniqueId()))))
+                    : Items.fromSection(info, player, "crystals", service.format(service.get(player.getUniqueId())));
+            menu.set(info.getInt("slot", 22), head);
+        }
         ConfigurationSection back = section.getConfigurationSection("back");
         if (back != null) {
-            menu.set(back.getInt("slot", 31), Items.fromSection(back, player), event -> {
+            menu.set(back.getInt("slot", GuiButtons.slot("back", 31)),
+                    Items.fromSection(back, player), event -> {
                 event.setCancelled(true);
                 openMain(player);
             });
         }
-        if (section.getBoolean("filler.enabled", config.getBoolean("menu.filler.enabled", true))) {
-            ConfigurationSection filler = section.getConfigurationSection("filler");
-            if (filler == null) filler = config.getConfigurationSection("menu.filler");
-            menu.fill(filler == null
-                    ? Items.named(Material.BLACK_STAINED_GLASS_PANE, " ", List.of())
-                    : Items.fromSection(filler, player));
-        }
+        GuiButtons.border(menu);
         plugin.menus().open(player, menu);
     }
 
@@ -307,10 +315,17 @@ public final class CrystalsModule extends Module implements CommandExecutor, Tab
                 if (economy == null) yield false;
                 yield economy.service().add(player.getUniqueId(), Amounts.parse(String.valueOf(item.get("money", 0))));
             }
-            case "glow" -> {
-                int seconds = Math.max(1, item.getInt("duration-seconds", 60));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, seconds * 20, 0, false, false, true));
-                yield true;
+            case "glow", "eglow" -> {
+                String glow = item.getString("glow", "");
+                if (glow == null || glow.isBlank()) {
+                    int seconds = Math.max(1, item.getInt("duration-seconds", 60));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, seconds * 20, 0, false, false, true));
+                    yield true;
+                }
+                GlowsModule glows = plugin.modules().get(GlowsModule.class);
+                if (glows == null) yield false;
+                glows.unlock(player.getUniqueId(), glow);
+                yield glows.apply(player, glow);
             }
             case "spawner" -> {
                 give(player, spawner(item));

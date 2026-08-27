@@ -2,6 +2,7 @@ package com.shardedcore.modules.teams;
 
 import com.shardedcore.ShardedCore;
 import com.shardedcore.database.Sqlite;
+import com.shardedcore.gui.GuiButtons;
 import com.shardedcore.gui.Menus;
 import com.shardedcore.module.Module;
 import com.shardedcore.util.Amounts;
@@ -12,9 +13,11 @@ import com.shardedcore.util.Text;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,7 +26,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
@@ -81,6 +87,16 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
                         PRIMARY KEY (a, b)
                     )
                     """);
+            sqlite.run("""
+                    CREATE TABLE IF NOT EXISTS team_enderchest (
+                        team_id TEXT NOT NULL,
+                        slot INTEGER NOT NULL,
+                        item TEXT NOT NULL,
+                        PRIMARY KEY (team_id, slot)
+                    )
+                    """);
+            try { sqlite.run("ALTER TABLE teams ADD COLUMN pvp INTEGER NOT NULL DEFAULT 0"); } catch (SQLException ignored) {}
+            try { sqlite.run("ALTER TABLE teams ADD COLUMN home TEXT"); } catch (SQLException ignored) {}
         } catch (SQLException ex) {
             plugin.getLogger().log(Level.SEVERE, "Failed to create team tables", ex);
         }
@@ -143,6 +159,18 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
                 startCreate(player);
                 yield true;
             }
+            case "pvp", "friendlyfire", "ff" -> togglePvp(player);
+            case "name", "rename" -> rename(player, args);
+            case "home" -> home(player);
+            case "sethome" -> setHome(player);
+            case "enderchest", "ec" -> {
+                openEnderchest(player);
+                yield true;
+            }
+            case "settings" -> {
+                openSettings(player);
+                yield true;
+            }
             default -> {
                 send(player, "usage");
                 yield true;
@@ -158,7 +186,10 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
         }
         String name = teamName(player.getUniqueId());
         Menus.Menu menu = plugin.menus().create(player,
-                Text.apply(cfg("gui.main-title", "&8Team &f%team%"), "team", name), 4);
+                Text.apply(cfg("gui.main-title", "☀ Team ☀ Previewing | %team%"), "team", name), 4);
+        button(menu, config.getInt("gui.home-slot", 10), Material.RED_BED, cfg("gui.home-name", "&#00A2FF&lTEAM HOME"),
+                lore("gui.home-lore", "%click%", click("click-footer")),
+                event -> home(player));
         button(menu, 11, Material.PLAYER_HEAD, cfg("gui.members-name", "&#9FFF00&lMembers"),
                 lore("gui.members-lore", "%click%", click("click-footer"), "count", String.valueOf(members(team).size())),
                 event -> openMembers(player, team));
@@ -184,6 +215,14 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
         button(menu, 16, Material.GOLD_BLOCK, cfg("gui.leaderboard-name", "&#FFD700&lTeam Leaderboard"),
                 lore("gui.leaderboard-lore", "%click%", click("click-footer")),
                 event -> openBrowse(player, 0));
+        button(menu, config.getInt("gui.enderchest-slot", 19), Material.ENDER_CHEST,
+                cfg("gui.enderchest-name", "&#A370EE&lTEAM ENDERCHEST"),
+                lore("gui.enderchest-lore", "%click%", click("click-footer")),
+                event -> openEnderchest(player));
+        button(menu, config.getInt("gui.settings-slot", 20), Material.REPEATER,
+                cfg("gui.settings-name", "&#FFBA00&lTEAM SETTINGS"),
+                lore("gui.settings-lore", "%click%", click("click-footer")),
+                event -> openSettings(player));
         if ("LEADER".equals(role(player.getUniqueId()))) {
             button(menu, 22, Material.BARRIER, cfg("gui.disband-name", "&#FF2727&lDisband team"),
                     lore("gui.disband-lore", "%click%", click("click-footer")),
@@ -196,7 +235,7 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
                         leave(player);
                     });
         }
-        menu.fill(glass());
+        GuiButtons.border(menu);
         plugin.menus().open(player, menu);
     }
 
@@ -208,7 +247,7 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
                     player.closeInventory();
                     startCreate(player);
                 });
-        menu.fill(glass());
+        GuiButtons.border(menu);
         plugin.menus().open(player, menu);
     }
 
@@ -237,7 +276,7 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
                     createTeam(player, raw);
                     openMain(player);
                 });
-        menu.fill(glass());
+        GuiButtons.border(menu);
         plugin.menus().open(player, menu);
     }
 
@@ -260,7 +299,7 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
                     disband(team);
                     send(player, "disbanded", "team", name);
                 });
-        menu.fill(glass());
+        GuiButtons.border(menu);
         plugin.menus().open(player, menu);
     }
 
@@ -295,7 +334,7 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
             slot++;
         }
         button(menu, 49, Material.ARROW, cfg("gui.back-name", "&#FFD700&lBack"), List.of(), event -> openMain(player));
-        menu.fill(glass());
+        GuiButtons.border(menu);
         plugin.menus().open(player, menu);
     }
 
@@ -330,7 +369,7 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
                     event -> openBrowse(player, current + 1));
         }
         button(menu, 49, Material.ARROW, cfg("gui.back-name", "&#FFD700&lBack"), List.of(), event -> openMain(player));
-        menu.fill(glass());
+        GuiButtons.border(menu);
         plugin.menus().open(player, menu);
     }
 
@@ -349,7 +388,7 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
                         "playtime", stats.playtime,
                         "score", String.valueOf(stats.score))));
         button(menu, 22, Material.ARROW, cfg("gui.back-name", "&#FFD700&lBack"), List.of(), event -> openBrowse(player, 0));
-        menu.fill(glass());
+        GuiButtons.border(menu);
         plugin.menus().open(player, menu);
     }
 
@@ -360,7 +399,7 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
             menu.set(slot++, Items.named(Material.GOLDEN_HELMET, "&#FFD700&l" + displayName(ally), List.of("&7Ally")));
         }
         button(menu, 22, Material.ARROW, cfg("gui.back-name", "&#FFD700&lBack"), List.of(), event -> openMain(player));
-        menu.fill(glass());
+        GuiButtons.border(menu);
         plugin.menus().open(player, menu);
     }
 
@@ -624,6 +663,227 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         creating.remove(event.getPlayer().getUniqueId());
+    }
+
+    private boolean togglePvp(Player player) {
+        String team = teamId(player.getUniqueId());
+        if (team == null) {
+            send(player, "not-in-team");
+            return true;
+        }
+        if (!"LEADER".equals(role(player.getUniqueId())) && !"OFFICER".equals(role(player.getUniqueId()))) {
+            send(player, "not-officer");
+            return true;
+        }
+        boolean next = !pvp(team);
+        try {
+            sqlite.execute("UPDATE teams SET pvp = ? WHERE id = ?", next ? 1 : 0, team);
+        } catch (SQLException ignored) {
+        }
+        send(player, next ? "pvp-on" : "pvp-off");
+        return true;
+    }
+
+    private boolean rename(Player player, String[] args) {
+        if (!"LEADER".equals(role(player.getUniqueId()))) {
+            send(player, "not-leader");
+            return true;
+        }
+        if (args.length < 2) {
+            send(player, "usage-name");
+            return true;
+        }
+        String name = String.join(" ", java.util.Arrays.copyOfRange(args, 1, args.length)).trim();
+        int min = config.getInt("creation.min-name-length", 3);
+        int max = config.getInt("creation.max-name-length", 16);
+        if (name.length() < min || name.length() > max) {
+            send(player, "invalid-name");
+            return true;
+        }
+        if (nameTaken(name) && !name.equalsIgnoreCase(teamName(player.getUniqueId()))) {
+            send(player, "name-taken");
+            return true;
+        }
+        String team = teamId(player.getUniqueId());
+        try {
+            sqlite.execute("UPDATE teams SET name = ? WHERE id = ?", name, team);
+        } catch (SQLException ex) {
+            send(player, "failed");
+            return true;
+        }
+        send(player, "renamed", "team", name);
+        return true;
+    }
+
+    private boolean home(Player player) {
+        String team = teamId(player.getUniqueId());
+        if (team == null) {
+            send(player, "not-in-team");
+            return true;
+        }
+        Location location = homeOf(team);
+        if (location == null) {
+            send(player, "no-home");
+            return true;
+        }
+        player.closeInventory();
+        player.teleportAsync(location);
+        send(player, "home-teleport");
+        return true;
+    }
+
+    private boolean setHome(Player player) {
+        if (!"LEADER".equals(role(player.getUniqueId())) && !"OFFICER".equals(role(player.getUniqueId()))) {
+            send(player, "not-officer");
+            return true;
+        }
+        String team = teamId(player.getUniqueId());
+        if (team == null) {
+            send(player, "not-in-team");
+            return true;
+        }
+        Location loc = player.getLocation();
+        String raw = loc.getWorld().getName() + ";" + loc.getX() + ";" + loc.getY() + ";" + loc.getZ()
+                + ";" + loc.getYaw() + ";" + loc.getPitch();
+        try {
+            sqlite.execute("UPDATE teams SET home = ? WHERE id = ?", raw, team);
+        } catch (SQLException ignored) {
+        }
+        send(player, "home-set");
+        return true;
+    }
+
+    private void openEnderchest(Player player) {
+        String team = teamId(player.getUniqueId());
+        if (team == null) {
+            send(player, "not-in-team");
+            return;
+        }
+        Menus.Menu menu = plugin.menus().create(player,
+                cfg("gui.enderchest-title", "☀ Team ☀ Previewing | Enderchest"), 3).unlocked();
+        try {
+            sqlite.query("SELECT slot, item FROM team_enderchest WHERE team_id = ?", rs -> {
+                try {
+                    while (rs.next()) {
+                        ItemStack item = Items.deserialize(rs.getString("item"));
+                        if (item != null) menu.inventory().setItem(rs.getInt("slot"), item);
+                    }
+                } catch (SQLException ignored) {
+                }
+                return null;
+            }, team);
+        } catch (SQLException ignored) {
+        }
+        menu.onClose(closed -> saveEnderchest(team, closed.getOpenInventory().getTopInventory()));
+        plugin.menus().open(player, menu);
+    }
+
+    private void saveEnderchest(String team, Inventory inventory) {
+        try {
+            sqlite.execute("DELETE FROM team_enderchest WHERE team_id = ?", team);
+            for (int slot = 0; slot < inventory.getSize(); slot++) {
+                ItemStack item = inventory.getItem(slot);
+                if (item == null || item.getType().isAir()) continue;
+                sqlite.execute("INSERT INTO team_enderchest (team_id, slot, item) VALUES (?, ?, ?)",
+                        team, slot, Items.serialize(item));
+            }
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.WARNING, "Failed to save team enderchest", ex);
+        }
+    }
+
+    private void openSettings(Player player) {
+        String team = teamId(player.getUniqueId());
+        if (team == null) {
+            send(player, "not-in-team");
+            return;
+        }
+        boolean friendly = pvp(team);
+        Menus.Menu menu = plugin.menus().create(player, cfg("gui.settings-title", "☀ Team ☀ Previewing | Settings"), 3);
+        button(menu, 11, Material.NAME_TAG, cfg("gui.tag-name", "&#FFBA00&lTEAM NAME"),
+                lore("gui.tag-lore", "%click%", click("click-footer"), "tag", displayName(team)),
+                event -> {
+                    player.closeInventory();
+                    send(player, "usage-name");
+                });
+        button(menu, 13, Material.RED_BANNER, cfg("gui.home-set-name", "&#00A2FF&lSET HOME"),
+                lore("gui.home-set-lore", "%click%", click("click-footer")),
+                event -> {
+                    player.closeInventory();
+                    setHome(player);
+                });
+        button(menu, 15, friendly ? Material.LIME_WOOL : Material.RED_WOOL,
+                cfg("gui.pvp-name", "&#FF0000&lFRIENDLY FIRE"),
+                lore("gui.pvp-lore", "%click%", click("click-footer"),
+                        "status", friendly ? "&#94FF00&lON" : "&#FF0000&lOFF"),
+                event -> {
+                    togglePvp(player);
+                    openSettings(player);
+                });
+        menu.set(GuiButtons.slot("back", 22), GuiButtons.back(player), event -> {
+            event.setCancelled(true);
+            openMain(player);
+        });
+        GuiButtons.border(menu);
+        plugin.menus().open(player, menu);
+    }
+
+    private boolean pvp(String team) {
+        try {
+            return Boolean.TRUE.equals(sqlite.query("SELECT pvp FROM teams WHERE id = ?", rs -> {
+                try {
+                    return rs.next() && rs.getInt("pvp") == 1;
+                } catch (SQLException ex) {
+                    return false;
+                }
+            }, team));
+        } catch (SQLException ex) {
+            return false;
+        }
+    }
+
+    private Location homeOf(String team) {
+        try {
+            return sqlite.query("SELECT home FROM teams WHERE id = ?", rs -> {
+                try {
+                    if (!rs.next()) return null;
+                    String raw = rs.getString("home");
+                    if (raw == null || raw.isBlank()) return null;
+                    String[] parts = raw.split(";");
+                    if (parts.length < 4) return null;
+                    World world = Bukkit.getWorld(parts[0]);
+                    if (world == null) return null;
+                    Location loc = new Location(world, Double.parseDouble(parts[1]), Double.parseDouble(parts[2]), Double.parseDouble(parts[3]));
+                    if (parts.length >= 6) {
+                        loc.setYaw(Float.parseFloat(parts[4]));
+                        loc.setPitch(Float.parseFloat(parts[5]));
+                    }
+                    return loc;
+                } catch (Exception ex) {
+                    return null;
+                }
+            }, team);
+        } catch (SQLException ex) {
+            return null;
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onFriendlyFire(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof Player victim)) return;
+        Player damager = damager(event.getDamager());
+        if (damager == null) return;
+        String team = teamId(victim.getUniqueId());
+        if (team == null || !team.equals(teamId(damager.getUniqueId()))) return;
+        if (!pvp(team)) event.setCancelled(true);
+    }
+
+    private static Player damager(org.bukkit.entity.Entity entity) {
+        if (entity instanceof Player player) return player;
+        if (entity instanceof org.bukkit.entity.Projectile projectile && projectile.getShooter() instanceof Player player) {
+            return player;
+        }
+        return null;
     }
 
     private void button(Menus.Menu menu, int slot, Material material, String name, List<String> lore,
@@ -938,7 +1198,8 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            return Tabs.filter(List.of("accept", "ally", "chat", "demote", "disband", "invite", "leave", "promote", "kick", "create"), args[0]);
+            return Tabs.filter(List.of("accept", "ally", "chat", "demote", "disband", "invite", "leave",
+                    "promote", "kick", "create", "pvp", "name", "home", "sethome", "enderchest", "settings"), args[0]);
         }
         if (!(sender instanceof Player player)) return List.of();
         if (args.length == 2 && args[0].equalsIgnoreCase("accept")) {

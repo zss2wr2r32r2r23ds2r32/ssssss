@@ -42,10 +42,24 @@ sort:
   slot: 48
   material: CAULDRON
   name: '&#F90EC2&lSORTING'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#F90EC2Information:'
+    - '&fClick to change sorting.'
+    - ''
+    - '&#F90EC2| &fCurrent: &#F90EC2%sort%'
 filter:
   slot: 49
   material: HOPPER
   name: '&#019BEE&lFILTER'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#019BEEInformation:'
+    - '&fClick to filter items.'
+    - ''
+    - '&#019BEE| &fCurrent: &#019BEE%filter%'
 search:
   slot: 50
   material: OAK_SIGN

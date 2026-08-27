@@ -59,7 +59,7 @@ public final class Items {
     public static ItemStack fromSection(ConfigurationSection section, Player player, String... pairs) {
         if (section == null) return new ItemStack(Material.STONE);
         ItemBuilder builder = new ItemBuilder(fromMaterial(section.getString("material", "STONE")));
-        String name = section.getString("name", section.getString("display_name"));
+        String name = section.getString("name", section.getString("display-name", section.getString("display_name")));
         if (name != null) {
             name = Text.apply(name, pairs);
             if (player != null) name = Text.applyPlaceholders(name, player);

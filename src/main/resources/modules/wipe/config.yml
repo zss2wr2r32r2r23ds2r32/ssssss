@@ -42,7 +42,7 @@ gui:
 kick: "&cYou was kicked due to being Wiped."
 
 messages:
-  usage: "&#FF2727&lWIPE &7▷ &f/wipe <player>"
-  wiped: "&#FF2727&lWIPE &7▷ &fWiped &#FF2727%player%&f."
-  unknown-player: "&#FF0000&lERROR &7▷ &fUnknown player &#FF0000%player%&f."
-  no-permission: "&#FF0000&lERROR &7▷ &fYou do not have permission."
+  usage: "&#FF2727&lWIPE &8▷ &f/wipe <player>"
+  wiped: "&#FF2727&lWIPE &8▷ &fWiped &#FF2727%player%&f."
+  unknown-player: "&#FF0000&lERROR &8▷ &fUnknown player &#FF0000%player%&f."
+  no-permission: "&#FF0000&lERROR &8▷ &fYou do not have permission."

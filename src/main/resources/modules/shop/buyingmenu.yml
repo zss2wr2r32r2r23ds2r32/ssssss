@@ -12,8 +12,8 @@ item:
     - "&#99ff00¦ &fYou are buying"
     - "&#99ff00¦ &#99ff00%amount%x %item%&f."
     - ""
-    - "&#99ff00&l$&r &fEach &7▷ &#99ff00$%price%"
-    - "&#99ff00&l$&r &fTotal &7▷ &#99ff00$%total%"
+    - "&#99ff00&l$&r &fEach &8▷ &#99ff00$%price%"
+    - "&#99ff00&l$&r &fTotal &8▷ &#99ff00$%total%"
     - ""
     - "&#99ff00▷ &fUse the panes to change it"
 
@@ -131,6 +131,6 @@ buttons:
       - "&#99ff00¦ &fClick here, to confirm"
       - "&#99ff00¦ &fthe current purchase."
       - ""
-      - "&#99ff00&l$&r &fTotal &7▷ &#99ff00$%total%"
+      - "&#99ff00&l$&r &fTotal &8▷ &#99ff00$%total%"
       - ""
       - "&#99ff00▷ &n&lCLICK&r&#99ff00 To Buy"

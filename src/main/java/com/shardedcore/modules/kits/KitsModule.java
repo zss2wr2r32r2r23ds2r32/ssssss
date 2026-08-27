@@ -277,7 +277,14 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
             send(player, "empty-kit", "kit", name);
             return;
         }
-        giveMapped(player, items, loadLayout(player.getUniqueId(), id));
+        Map<Integer, ItemStack> layout = loadLayout(player.getUniqueId(), id);
+        Map<Integer, ItemStack> use = layout != null && sameItems(flat(layout), flat(items)) ? layout : items;
+        if (!com.shardedcore.util.Inventories.hasSpace(player, use)) {
+            send(player, "no-space", "kit", name);
+            sound(player, "sounds.denied");
+            return;
+        }
+        giveMapped(player, items, layout);
         long wait = Amounts.durationMillis(section == null ? "1h" : section.getString("cooldown", "1h"));
         setCooldown(player.getUniqueId(), id, System.currentTimeMillis() + wait);
         send(player, "claimed", "kit", name);
@@ -346,7 +353,7 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
                 inventory.setItem(slot, item);
             } else {
                 HashMap<Integer, ItemStack> leftover = inventory.addItem(item);
-                leftover.values().forEach(stack -> player.getWorld().dropItemNaturally(player.getLocation(), stack));
+                leftover.values().forEach(stack -> inventory.addItem(stack));
             }
         }
     }

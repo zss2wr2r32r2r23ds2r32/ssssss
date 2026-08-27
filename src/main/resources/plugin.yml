@@ -4,7 +4,7 @@ main: com.shardedcore.ShardedCore
 api-version: '1.21'
 authors: [ShardedMC]
 description: Modular ShardedMC core
-softdepend: [LuckPerms, PlaceholderAPI, TAB, WorldGuard, eGlow]
+softdepend: [LuckPerms, PlaceholderAPI, TAB, WorldGuard, eGlow, Multiverse-Core]
 
 commands:
   shardedcore:
@@ -299,6 +299,89 @@ commands:
   crystalshop:
     description: Crystal shop
     permission: shardedcore.crystal.shop
+  staffmode:
+    description: Toggle staff mode
+    aliases: [sfmode]
+    permission: shardedcore.staff.mode
+  vanish:
+    description: Toggle vanish
+    permission: shardedcore.staff.vanish
+  freeze:
+    description: Freeze a player
+    permission: shardedcore.staff.freeze
+  stafflist:
+    description: List online staff
+    permission: shardedcore.staff.list
+  randomtp:
+    description: Teleport to a random player
+    permission: shardedcore.staff.randomtp
+  staffchat:
+    description: Toggle staff chat
+    aliases: [sc]
+    permission: shardedcore.staff.chat
+  gmc:
+    description: Creative gamemode
+    aliases: [gmcs]
+    permission: shardedcore.staff.gamemode
+  gms:
+    description: Survival gamemode
+    permission: shardedcore.staff.gamemode
+  gmsp:
+    description: Spectator gamemode
+    permission: shardedcore.staff.gamemode
+  gma:
+    description: Adventure gamemode
+    permission: shardedcore.staff.gamemode
+  punish:
+    description: Open punish menu
+    permission: shardedcore.staff.punish
+  ban:
+    description: Ban a player
+    permission: shardedcore.staff.ban
+  mute:
+    description: Mute a player
+    permission: shardedcore.staff.mute
+  kick:
+    description: Kick a player
+    permission: shardedcore.staff.kick
+  offend:
+    description: Ban a repeat offender
+    permission: shardedcore.staff.offend
+  banip:
+    description: IP ban a player
+    permission: shardedcore.staff.banip
+  unban:
+    description: Unban a player
+    permission: shardedcore.staff.unban
+  unbanip:
+    description: Remove an IP ban
+    aliases: [unban-ip]
+    permission: shardedcore.staff.unbanip
+  unmute:
+    description: Unmute a player
+    permission: shardedcore.staff.unmute
+  pardon:
+    description: Unban and unmute
+    permission: shardedcore.staff.pardon
+  alts:
+    description: Show linked alts
+    permission: shardedcore.staff.alts
+  screenshare:
+    description: Screenshare a player
+    aliases: [ss]
+    permission: shardedcore.staff.screenshare
+  invrollback:
+    description: Inventory rollback
+    permission: shardedcore.staff.invrollback
+  revokepunishment:
+    description: Mass revoke punishments
+    permission: shardedcore.staff.revoke
+  requeststaff:
+    description: Request staff help
+    permission: shardedcore.staff.request
+  staff:
+    description: Staff command list
+    permission: shardedcore.staff
 
 permissions:
   shardedcore.admin:
@@ -606,6 +689,78 @@ permissions:
   shardedcore.team:
     default: true
   shardedcore.wipe:
+    default: op
+  shardedcore.staff:
+    default: op
+    children:
+      shardedcore.staff.mode: true
+      shardedcore.staff.vanish: true
+      shardedcore.staff.freeze: true
+      shardedcore.staff.list: true
+      shardedcore.staff.randomtp: true
+      shardedcore.staff.chat: true
+      shardedcore.staff.gamemode: true
+      shardedcore.staff.punish: true
+      shardedcore.staff.ban: true
+      shardedcore.staff.mute: true
+      shardedcore.staff.kick: true
+      shardedcore.staff.offend: true
+      shardedcore.staff.banip: true
+      shardedcore.staff.unban: true
+      shardedcore.staff.unbanip: true
+      shardedcore.staff.unmute: true
+      shardedcore.staff.pardon: true
+      shardedcore.staff.alts: true
+      shardedcore.staff.screenshare: true
+      shardedcore.staff.invrollback: true
+      shardedcore.staff.revoke: true
+      shardedcore.staff.request: true
+      shardedcore.staff.seevanished: true
+  shardedcore.staff.mode:
+    default: op
+  shardedcore.staff.vanish:
+    default: op
+  shardedcore.staff.freeze:
+    default: op
+  shardedcore.staff.list:
+    default: op
+  shardedcore.staff.randomtp:
+    default: op
+  shardedcore.staff.chat:
+    default: op
+  shardedcore.staff.gamemode:
+    default: op
+  shardedcore.staff.punish:
+    default: op
+  shardedcore.staff.ban:
+    default: op
+  shardedcore.staff.mute:
+    default: op
+  shardedcore.staff.kick:
+    default: op
+  shardedcore.staff.offend:
+    default: op
+  shardedcore.staff.banip:
+    default: op
+  shardedcore.staff.unban:
+    default: op
+  shardedcore.staff.unbanip:
+    default: op
+  shardedcore.staff.unmute:
+    default: op
+  shardedcore.staff.pardon:
+    default: op
+  shardedcore.staff.alts:
+    default: op
+  shardedcore.staff.screenshare:
+    default: op
+  shardedcore.staff.invrollback:
+    default: op
+  shardedcore.staff.revoke:
+    default: op
+  shardedcore.staff.request:
+    default: true
+  shardedcore.staff.seevanished:
     default: op
   shardedcore.commands.listed:
     default: true

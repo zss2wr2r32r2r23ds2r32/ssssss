@@ -1,4 +1,4 @@
-message: "&#FFE925&lWELCOME &7▷ &fType &#FFE925/w %player% &fin chat to &#80ee0bwelcome &fthem and earn a &#FFE925reward"
+message: "&#FFE925&lWELCOME &8▷ &fType &#FFE925/w %player% &fin chat to &#80ee0bwelcome &fthem and earn a &#FFE925reward"
 window: 120
 chat-line: "welcome %player%"
 max-rewards: 0
@@ -27,10 +27,10 @@ sounds:
     pitch: 0.8
 
 messages:
-  rewarded: "&#FFE925&lWELCOME &7▷ &fYou welcomed &#FFE925%player% &fand earned &#FFE925%amount% Crystal&f."
-  already: "&#FF0000&lERROR &7▷ &fYou already welcomed &#FFE925%player%&f."
-  self: "&#FF0000&lERROR &7▷ &fYou cannot welcome yourself."
-  unknown: "&#FF0000&lERROR &7▷ &f&#FFE925%player% &fis not a new player right now."
-  full: "&#FF0000&lERROR &7▷ &fToo many players welcomed &#FFE925%player% &falready."
-  usage: "&#FFE925&lWELCOME &7▷ &f/w <player>"
-  players-only: "&#FF0000&lERROR &7▷ &fOnly players can do that."
+  rewarded: "&#FFE925&lWELCOME &8▷ &fYou welcomed &#FFE925%player% &fand earned &#FFE925%amount% Crystal&f."
+  already: "&#FF0000&lERROR &8▷ &fYou already welcomed &#FFE925%player%&f."
+  self: "&#FF0000&lERROR &8▷ &fYou cannot welcome yourself."
+  unknown: "&#FF0000&lERROR &8▷ &f&#FFE925%player% &fis not a new player right now."
+  full: "&#FF0000&lERROR &8▷ &fToo many players welcomed &#FFE925%player% &falready."
+  usage: "&#FFE925&lWELCOME &8▷ &f/w <player>"
+  players-only: "&#FF0000&lERROR &8▷ &fOnly players can do that."

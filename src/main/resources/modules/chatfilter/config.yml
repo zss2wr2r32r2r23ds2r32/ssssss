@@ -42,7 +42,7 @@ words:
 alerts:
   enabled: true
   checks: false
-  format: "&#FF0000&lFILTER &7▷ &f%player% &7» &f%message% &8(%rule% %action%)"
+  format: "&#FF0000&lFILTER &8▷ &f%player% &7» &f%message% &8(%rule% %action%)"
 
 # What /chathistory reads. rules-only: false also stores the four checks.
 log:

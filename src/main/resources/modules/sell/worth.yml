@@ -7,7 +7,7 @@ menu:
 entry:
   name: "&f%item%"
   lore:
-    - "&#80ee0b&l$&r &fWorth &7▷ &#80ee0b$%price%"
+    - "&#80ee0b&l$&r &fWorth &8▷ &#80ee0b$%price%"
 
 buttons:
 

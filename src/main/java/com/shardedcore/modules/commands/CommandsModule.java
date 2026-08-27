@@ -93,7 +93,7 @@ public final class CommandsModule extends Module implements CommandExecutor, Lis
     private void show(CommandSender sender, String key) {
         ConfigurationSection section = section(key);
         if (section == null) {
-            sendRaw(sender, "&#FF0000&lERROR &7▷ &fMissing " + key + " in commands/config.yml");
+            sendRaw(sender, "&#FF0000&lERROR &8▷ &fMissing " + key + " in commands/config.yml");
             return;
         }
         sendLines(sender, section.getStringList("message"), section.getString("url", ""));

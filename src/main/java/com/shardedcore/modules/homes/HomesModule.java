@@ -102,7 +102,7 @@ public final class HomesModule extends Module implements CommandExecutor, TabCom
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage(ColorUtil.parse("&#FF0000&lERROR &7▷ &fOnly a player can use that."));
+            sender.sendMessage(ColorUtil.parse("&#FF0000&lERROR &8▷ &fOnly a player can use that."));
             return true;
         }
         return switch (command.getName().toLowerCase(Locale.ROOT)) {

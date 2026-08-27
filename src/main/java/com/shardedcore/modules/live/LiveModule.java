@@ -39,7 +39,7 @@ public final class LiveModule extends Module implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            sendRaw(sender, "&#FF0000&lERROR &7▷ &fOnly a player can use that.");
+            sendRaw(sender, "&#FF0000&lERROR &8▷ &fOnly a player can use that.");
             return true;
         }
         if (command.getName().equalsIgnoreCase("livetoggle")
@@ -51,7 +51,7 @@ public final class LiveModule extends Module implements CommandExecutor {
             return true;
         }
         if (!player.hasPermission("shardedcore.live")) {
-            sendRaw(player, "&#FF0000&lERROR &7▷ &fYou do not have permission.");
+            sendRaw(player, "&#FF0000&lERROR &8▷ &fYou do not have permission.");
             return true;
         }
         if (args.length == 0) {

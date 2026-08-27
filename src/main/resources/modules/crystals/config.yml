@@ -1,7 +1,7 @@
 starting-balance: 0
 
 menu:
-  title: "&8Crystal Shop"
+  title: "☀ Shop ☀ Previewing | Crystals"
   rows: 4
   filler:
     enabled: true
@@ -61,24 +61,24 @@ confirm:
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Cancel"
 
 messages:
-  self: "&#A370EE&lCRYSTALS &7▷ &fYou have &#A370EE%amount% &fcrystals."
-  other: "&#A370EE&lCRYSTALS &7▷ &#A370EE%player% &fhas &#A370EE%amount% &fcrystals."
-  gave: "&#A370EE&lCRYSTALS &7▷ &fGave &#A370EE%amount% &fto &#A370EE%player%&f."
-  removed: "&#A370EE&lCRYSTALS &7▷ &fRemoved &#A370EE%amount% &ffrom &#A370EE%player%&f."
-  received: "&#A370EE&lCRYSTALS &7▷ &fYou received &#A370EE%amount% &fcrystals."
-  lost: "&#A370EE&lCRYSTALS &7▷ &fYou lost &#A370EE%amount% &fcrystals."
-  set: "&#A370EE&lCRYSTALS &7▷ &#A370EE%player% &fnow has &#A370EE%amount%&f."
-  bought: "&#A370EE&lCRYSTALS &7▷ &fBought %item% &ffor &#A370EE%amount%&f."
-  cannot-afford: "&#FF0000&lERROR &7▷ &fYou need &#A370EE%amount% &fcrystals."
-  failed: "&#FF0000&lERROR &7▷ &fThat item could not be given."
-  invalid-amount: "&#FF0000&lERROR &7▷ &fThat amount is not valid."
-  player-missing: "&#FF0000&lERROR &7▷ &fThat player was not found."
-  no-permission: "&#FF0000&lERROR &7▷ &fYou do not have permission."
-  players-only: "&#FF0000&lERROR &7▷ &fOnly a player can use that."
-  usage: "&#A370EE&lCRYSTALS &7▷ &f/crystal shop &7| &fgive <player> <amount> &7| &fremove <player> <amount>"
-  usage-give: "&#A370EE&lCRYSTALS &7▷ &f/crystal give <player> <amount>"
-  usage-remove: "&#A370EE&lCRYSTALS &7▷ &f/crystal remove <player> <amount>"
-  usage-set: "&#A370EE&lCRYSTALS &7▷ &f/crystal set <player> <amount>"
+  self: "&#A370EE&lCRYSTALS &8▷ &fYou have &#A370EE%amount% &fcrystals."
+  other: "&#A370EE&lCRYSTALS &8▷ &#A370EE%player% &fhas &#A370EE%amount% &fcrystals."
+  gave: "&#A370EE&lCRYSTALS &8▷ &fGave &#A370EE%amount% &fto &#A370EE%player%&f."
+  removed: "&#A370EE&lCRYSTALS &8▷ &fRemoved &#A370EE%amount% &ffrom &#A370EE%player%&f."
+  received: "&#A370EE&lCRYSTALS &8▷ &fYou received &#A370EE%amount% &fcrystals."
+  lost: "&#A370EE&lCRYSTALS &8▷ &fYou lost &#A370EE%amount% &fcrystals."
+  set: "&#A370EE&lCRYSTALS &8▷ &#A370EE%player% &fnow has &#A370EE%amount%&f."
+  bought: "&#A370EE&lCRYSTALS &8▷ &fBought %item% &ffor &#A370EE%amount%&f."
+  cannot-afford: "&#FF0000&lERROR &8▷ &fYou need &#A370EE%amount% &fcrystals."
+  failed: "&#FF0000&lERROR &8▷ &fThat item could not be given."
+  invalid-amount: "&#FF0000&lERROR &8▷ &fThat amount is not valid."
+  player-missing: "&#FF0000&lERROR &8▷ &fThat player was not found."
+  no-permission: "&#FF0000&lERROR &8▷ &fYou do not have permission."
+  players-only: "&#FF0000&lERROR &8▷ &fOnly a player can use that."
+  usage: "&#A370EE&lCRYSTALS &8▷ &f/crystal shop &7| &fgive <player> <amount> &7| &fremove <player> <amount>"
+  usage-give: "&#A370EE&lCRYSTALS &8▷ &f/crystal give <player> <amount>"
+  usage-remove: "&#A370EE&lCRYSTALS &8▷ &f/crystal remove <player> <amount>"
+  usage-set: "&#A370EE&lCRYSTALS &8▷ &f/crystal set <player> <amount>"
 
 sections:
   tags:
@@ -93,7 +93,7 @@ sections:
       - "&#A370EE¦ &fBuy chat and TAB tags."
       - ""
       - "&#A370EE▷ &n&lCLICK&r&#A370EE To Open"
-    title: "&8Crystal Shop | Tags"
+    title: "☀ Shop ☀ Previewing | Tags"
     rows: 4
     back:
       slot: 31
@@ -147,7 +147,7 @@ sections:
       - "&#A370EE¦ &fColor your chat messages."
       - ""
       - "&#A370EE▷ &n&lCLICK&r&#A370EE To Open"
-    title: "&8Crystal Shop | Chatcolors"
+    title: "☀ Shop ☀ Previewing | Chatcolors"
     rows: 4
     back:
       slot: 31
@@ -182,6 +182,45 @@ sections:
           - "&#FFC371⚓ &fPrice: &#FFC371%price%"
           - ""
           - "&#FFC371▷ &n&lCLICK&r&#FFC371 To Buy"
+      red:
+        slot: 10
+        type: chatcolor
+        color: red
+        price: 150
+        material: RED_BUNDLE
+        name: "&#FF0000&lRED"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#FF0000⚓ &fPrice: &#FF0000%price%"
+          - ""
+          - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Buy"
+      blossom:
+        slot: 15
+        type: chatcolor
+        color: blossom
+        price: 350
+        material: PINK_BUNDLE
+        name: "&#FF74DF&lBLOSSOM"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#FF74DF⚓ &fPrice: &#FF74DF%price%"
+          - ""
+          - "&#FF74DF▷ &n&lCLICK&r&#FF74DF To Buy"
+      amethyst:
+        slot: 16
+        type: chatcolor
+        color: amethyst
+        price: 350
+        material: PURPLE_BUNDLE
+        name: "&#9B59B6&lAMETHYST"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#9B59B6⚓ &fPrice: &#9B59B6%price%"
+          - ""
+          - "&#9B59B6▷ &n&lCLICK&r&#9B59B6 To Buy"
 
   drills:
     enabled: true
@@ -268,14 +307,32 @@ sections:
       - "&#A370EE¦ &fBuy mob spawners."
       - ""
       - "&#A370EE▷ &n&lCLICK&r&#A370EE To Open"
-    title: "&8Crystal Shop | Spawners"
+    title: "☀ Shop ☀ Previewing | Spawners"
     rows: 4
     back:
       slot: 31
-      material: ARROW
+      material: FLOWER_BANNER_PATTERN
       name: "&#FF0000&lBACK"
       lore:
-        - "&7Return to the crystal shop."
+        - "&8Description"
+        - ""
+        - "&#FF0000Information:"
+        - "&#FF0000| &fClick To"
+        - "&#FF0000| &fGo Back"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Return"
+    info:
+      slot: 22
+      material: PLAYER_HEAD
+      name: "&#00A2FF&lYOUR CRYSTALS"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#00A2FFInformation:"
+        - "&#00A2FF| &fCrystals buy tags, colors,"
+        - "&#00A2FF| &fglows, spawners and more."
+        - ""
+        - "&#00A2FF⚓ &fBalance: &#00A2FF%crystals%"
     items:
       zombie:
         slot: 11
@@ -316,28 +373,95 @@ sections:
       - "&#A370EE¦ &fGlow for a short time."
       - ""
       - "&#A370EE▷ &n&lCLICK&r&#A370EE To Open"
-    title: "&8Crystal Shop | Glows"
-    rows: 3
+    title: "☀ Shop ☀ Previewing | Glows"
+    rows: 4
     back:
-      slot: 22
-      material: ARROW
+      slot: 31
+      material: FLOWER_BANNER_PATTERN
       name: "&#FF0000&lBACK"
       lore:
-        - "&7Return to the crystal shop."
+        - "&8Description"
+        - ""
+        - "&#FF0000| &fGo Back"
     items:
-      glow:
-        slot: 13
+      red:
+        slot: 10
         type: glow
-        duration-seconds: 300
-        price: 25
-        material: GLOWSTONE_DUST
-        name: "&#FFF300&lGLOW 5M"
+        glow: red
+        price: 80
+        material: RED_BUNDLE
+        name: "&#FF0000&lRED GLOW"
         lore:
           - "&8Description"
           - ""
-          - "&#FFF300⚓ &fPrice: &#FFF300%price%"
+          - "&#FF0000⚓ &fPrice: &#FF0000%price%"
           - ""
-          - "&#FFF300▷ &n&lCLICK&r&#FFF300 To Buy"
+          - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Buy"
+      yellow:
+        slot: 12
+        type: glow
+        glow: yellow
+        price: 80
+        material: YELLOW_BUNDLE
+        name: "&#FFF800&lYELLOW GLOW"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#FFF800⚓ &fPrice: &#FFF800%price%"
+          - ""
+          - "&#FFF800▷ &n&lCLICK&r&#FFF800 To Buy"
+      green:
+        slot: 14
+        type: glow
+        glow: green
+        price: 80
+        material: LIME_BUNDLE
+        name: "&#8AFF00&lGREEN GLOW"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#8AFF00⚓ &fPrice: &#8AFF00%price%"
+          - ""
+          - "&#8AFF00▷ &n&lCLICK&r&#8AFF00 To Buy"
+      blue:
+        slot: 16
+        type: glow
+        glow: blue
+        price: 80
+        material: LIGHT_BLUE_BUNDLE
+        name: "&#00C1FF&lBLUE GLOW"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#00C1FF⚓ &fPrice: &#00C1FF%price%"
+          - ""
+          - "&#00C1FF▷ &n&lCLICK&r&#00C1FF To Buy"
+      pink:
+        slot: 19
+        type: glow
+        glow: pink
+        price: 80
+        material: PINK_BUNDLE
+        name: "&#FF74DF&lPINK GLOW"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#FF74DF⚓ &fPrice: &#FF74DF%price%"
+          - ""
+          - "&#FF74DF▷ &n&lCLICK&r&#FF74DF To Buy"
+      purple:
+        slot: 21
+        type: glow
+        glow: purple
+        price: 80
+        material: PURPLE_BUNDLE
+        name: "&#8000FF&lPURPLE GLOW"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#8000FF⚓ &fPrice: &#8000FF%price%"
+          - ""
+          - "&#8000FF▷ &n&lCLICK&r&#8000FF To Buy"
 
   money:
     enabled: true

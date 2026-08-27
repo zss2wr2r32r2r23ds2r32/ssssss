@@ -92,6 +92,7 @@ public final class ChatColorModule extends Module implements CommandExecutor, Ta
     public String color(Player player, String text) {
         ColorDef def = definition(selected(player.getUniqueId()));
         if (def == null || text == null || text.isEmpty()) return text == null ? "" : text;
+        if ("default".equals(def.id) || "clear".equals(def.id)) return text;
         if ("gradient".equals(def.type)) return ColorUtil.gradient(text, def.hex, def.hex2);
         return ColorUtil.solid(text, def.hex);
     }
@@ -290,6 +291,7 @@ public final class ChatColorModule extends Module implements CommandExecutor, Ta
     }
 
     public boolean canUse(Player player, String name) {
+        if (name != null && name.equalsIgnoreCase("default")) return true;
         if (player.hasPermission("shardedcore.chatcolor.admin")) return true;
         if (player.hasPermission("shardedcore.chatcolor." + name)) return true;
         return unlocked(player.getUniqueId()).contains(name.toLowerCase(Locale.ROOT));
@@ -317,17 +319,29 @@ public final class ChatColorModule extends Module implements CommandExecutor, Ta
             entries.add(new CosmeticsMenus.Entry(def.id, title, display,
                     cfg("gui.default-description", "&8Description"), color, canUse(player, def.id)));
         }
-        CosmeticsMenus.open(plugin, player, config, cfg("gui.title", "&8Chat Colors"),
-                entries, page, "Colour", false,
+        CosmeticsMenus.open(plugin, player, config, cfg("gui.title", "☀ Chatcolors ☀ Previewing | Colors"),
+                entries, page, "color", false,
                 next -> openGui(player, next),
                 null,
                 entry -> {
+                    if ("default".equalsIgnoreCase(entry.id()) || "clear".equalsIgnoreCase(entry.id())) {
+                        clear(player);
+                        openGui(player, page);
+                        return;
+                    }
                     if (!canUse(player, entry.id())) {
                         send(player, "locked", "color", entry.id());
+                        sound(player, "sounds.error");
                         return;
                     }
                     apply(player.getUniqueId(), entry.id());
                     send(player, "set", "color", displayName(definition(entry.id())));
+                    sound(player, "sounds.equip");
+                    openGui(player, page);
+                },
+                null,
+                () -> {
+                    clear(player);
                     openGui(player, page);
                 });
     }

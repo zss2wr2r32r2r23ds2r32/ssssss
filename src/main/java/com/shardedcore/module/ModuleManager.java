@@ -36,6 +36,7 @@ import com.shardedcore.modules.settings.SettingsModule;
 import com.shardedcore.modules.shardedtools.ShardedToolsModule;
 import com.shardedcore.modules.shop.ShopModule;
 import com.shardedcore.modules.spawn.SpawnModule;
+import com.shardedcore.modules.staff.StaffModule;
 import com.shardedcore.modules.tags.TagsModule;
 import com.shardedcore.modules.teams.TeamsModule;
 import com.shardedcore.modules.tpa.TpaModule;
@@ -106,6 +107,7 @@ public final class ModuleManager {
         register(new XpBottlesModule(plugin));
         register(new AttributeFixerModule(plugin));
         register(new SpawnModule(plugin));
+        register(new StaffModule(plugin));
         register(new TpaModule(plugin));
         register(new WorkstationsModule(plugin));
     }
@@ -230,7 +232,7 @@ public final class ModuleManager {
         });
         menu.fill(Items.named(Material.BLACK_STAINED_GLASS_PANE, " ", List.of()));
         plugin.menus().open(player, menu);
-        player.sendMessage(ColorUtil.parse("&#A370EE&lMODULES &7▷ &fPage &#A370EE" + (current + 1) + "&7/&#A370EE" + pages));
+        player.sendMessage(ColorUtil.parse("&#A370EE&lMODULES &8▷ &fPage &#A370EE" + (current + 1) + "&7/&#A370EE" + pages));
     }
 
     public Collection<Module> registered() {

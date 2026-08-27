@@ -1,38 +1,60 @@
 # Custom chat colors. Players set one with /chatcolor set <name>.
 # Admins create them with /chatcolor create <name> <hex>
 # Gradients: /chatcolor gradient create <name> <hex> <hex>
-#            /chatcolor:gradient create <hex> <hex>
-#            /chatcolor remove <name> deletes both solid and gradient colors.
 
 colors:
-  white:
+  default:
     type: solid
-    hex: "FFFFFF"
+    hex: "AAAAAA"
+  red:
+    type: solid
+    hex: "FF0000"
+  yellow:
+    type: solid
+    hex: "FFF800"
+  green:
+    type: solid
+    hex: "8AFF00"
+  blue:
+    type: solid
+    hex: "00C1FF"
+  light_blue:
+    type: solid
+    hex: "7EE8FF"
   purple:
     type: solid
-    hex: "A370EE"
-  sunset:
+    hex: "8000FF"
+  pink:
+    type: solid
+    hex: "FF74DF"
+  blossom:
     type: gradient
-    hex: "FF5F6D"
-    hex2: "FFC371"
+    hex: "FF74DF"
+    hex2: "FFB6C1"
+  amethyst:
+    type: gradient
+    hex: "9B59B6"
+    hex2: "E0B0FF"
 
 gui:
-  title: "&8Chat Colors"
-  rows: 6
+  title: "☀ Chatcolors ☀ Previewing | Colors"
+  guide: "Chatcolors"
+  preview-name: "Colors"
+  rows: 4
   default-color: "0083FF"
   default-description: "&8Description"
-  item-material: NAME_TAG
-  item-name: "%color%&l%name% %color%Colour"
-  status-owned: "%color% ☀︎ &fStatus: &#94FF00&nOWNED"
-  status-locked: "%color% ☀︎ &fStatus: &#94FF00&nUNLOCK"
+  colored-bundles: true
+  item-material: BUNDLE
+  item-name: "%color%☀  %color%&l%name%"
+  status-owned: "%color%☀ &fStatus: &#94FF00&l&nOWNED"
+  status-locked: "%color%☀ &fStatus: &#FF2727&l&nLOCKED"
   click-footer: "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip"
   lore:
-    - "%color%&l%name% %color%Colour"
-    - "%description%"
+    - "&8Description"
     - ""
     - "%color%Information:"
-    - "%color%| &fClick to"
-    - "%color%| &fEquip %color%%display%"
+    - "%color%| &fClick to equip"
+    - "%color%| &fthis color."
     - ""
     - "%status%"
     - ""
@@ -42,37 +64,72 @@ gui:
     name: " "
     lore: []
   previous:
-    slot: 48
-    material: RED_DYE
-    name: "&cPrevious page"
-    lore:
-      - "&7Page %page%"
+    slot: 30
   next:
-    slot: 50
-    material: LIME_DYE
-    name: "&aNext page"
+    slot: 32
+  close:
+    enabled: true
+    slot: 31
+    material: RED_STAINED_GLASS_PANE
+    name: "&#FF0000&lCLOSE"
     lore:
-      - "&7Page %page%"
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000| &fClick To"
+      - "&#FF0000| &fClose this GUI"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Close"
   extra:
     enabled: false
-    slot: 49
-    material: CLOCK
-    name: "&#FFBA00&lClose"
-    lore: []
+  clear:
+    enabled: true
+    slot: 4
+    material: BARRIER
+    name: "&#FF0000&lCLEAR CHATCOLOR"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000| &fDont want a chat color?"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Remove"
+
+sounds:
+  open:
+    enabled: true
+    sound: "ui.button.click"
+    volume: 0.6
+    pitch: 1.2
+  click:
+    enabled: true
+    sound: "ui.button.click"
+    volume: 0.5
+    pitch: 1.0
+  equip:
+    enabled: true
+    sound: "item.armor.equip_leather"
+    volume: 0.8
+    pitch: 1.2
+  error:
+    enabled: true
+    sound: "block.note_block.bass"
+    volume: 0.7
+    pitch: 0.8
 
 messages:
-  usage: "&#A370EE&lCHATCOLOR &7▷ &f/chatcolor create <name> <hex> &7| &fset <name> &7| &fremove <name>"
-  usage-create: "&#A370EE&lCHATCOLOR &7▷ &f/chatcolor create <name> <hex>"
-  usage-set: "&#A370EE&lCHATCOLOR &7▷ &f/chatcolor set <name>"
-  usage-remove: "&#A370EE&lCHATCOLOR &7▷ &f/chatcolor remove <name>"
-  usage-gradient: "&#A370EE&lCHATCOLOR &7▷ &f/chatcolor gradient create <name> <hex> <hex>"
-  created: "&#A370EE&lCHATCOLOR &7▷ &fCreated &#A370EE%color% &f(%hex%)."
-  created-gradient: "&#A370EE&lCHATCOLOR &7▷ &fCreated gradient &#A370EE%color% &f(%from% → %to%)."
-  set: "&#A370EE&lCHATCOLOR &7▷ &fYour chat color is now %color%&f."
-  removed: "&#A370EE&lCHATCOLOR &7▷ &fRemoved &#A370EE%color%&f."
-  cleared: "&#A370EE&lCHATCOLOR &7▷ &fYour chat color was cleared."
-  missing: "&#FF0000&lERROR &7▷ &fUnknown color &#A370EE%color%&f."
-  locked: "&#FF0000&lERROR &7▷ &fYou have not unlocked &#A370EE%color%&f."
-  invalid: "&#FF0000&lERROR &7▷ &fThat name or hex is not valid."
-  no-permission: "&#FF0000&lERROR &7▷ &fYou do not have permission."
-  players-only: "&#FF0000&lERROR &7▷ &fOnly a player can use that."
+  usage: "&#00A2FF&lCORE &8▷ &f/chatcolor create <name> <hex> &8| &fset <name> &8| &fremove <name>"
+  usage-create: "&#00A2FF&lCORE &8▷ &f/chatcolor create <name> <hex>"
+  usage-set: "&#00A2FF&lCORE &8▷ &f/chatcolor set <name>"
+  usage-remove: "&#00A2FF&lCORE &8▷ &f/chatcolor remove <name>"
+  usage-gradient: "&#00A2FF&lCORE &8▷ &f/chatcolor gradient create <name> <hex> <hex>"
+  created: "&#00A2FF&lCORE &8▷ &fCreated &#00A2FF%color% &f(%hex%)."
+  created-gradient: "&#00A2FF&lCORE &8▷ &fCreated gradient &#00A2FF%color% &f(%from% → %to%)."
+  set: "&#00A2FF&lCORE &8▷ &fYour chat color is now %color%&f."
+  removed: "&#00A2FF&lCORE &8▷ &fRemoved &#00A2FF%color%&f."
+  cleared: "&#00A2FF&lCORE &8▷ &fYour chat color was cleared."
+  missing: "&#FF0000&lERROR &8▷ &fUnknown color &#00A2FF%color%&f."
+  locked: "&#FF0000&lERROR &8▷ &fYou have not unlocked &#00A2FF%color%&f."
+  invalid: "&#FF0000&lERROR &8▷ &fThat name or hex is not valid."
+  no-permission: "&#FF0000&lERROR &8▷ &fYou do not have permission."
+  players-only: "&#FF0000&lERROR &8▷ &fOnly a player can use that."

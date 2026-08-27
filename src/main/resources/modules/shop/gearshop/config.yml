@@ -13,7 +13,7 @@ item-template:
   name: ""
   lore:
     - ""
-    - "&#99ff00&l$&r &fPrice &7▷ &#99ff00$&r&#99ff00%price%"
+    - "&#99ff00&l$&r &fPrice &8▷ &#99ff00$&r&#99ff00%price%"
     - ""
     - "&#99ff00▷ &n&lCLICK&r&#99ff00 To Buy"
 

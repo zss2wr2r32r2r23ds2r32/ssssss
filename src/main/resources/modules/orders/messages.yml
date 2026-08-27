@@ -56,12 +56,12 @@ stats:
 - ''
 - '&#FF3DE0&lYOUR ORDERS'
 - ''
-- '&#FF3DE0✎ &fPlaced &7▷ &#FF3DE0%placed%'
-- '&#FF3DE0⛨ &fOpen &7▷ &#FF3DE0%open%&7/&#FF3DE0%limit%'
-- '&#FF3DE0⚑ &fDelivered &7▷ &#FF3DE0%deliveries%'
+- '&#FF3DE0✎ &fPlaced &8▷ &#FF3DE0%placed%'
+- '&#FF3DE0⛨ &fOpen &8▷ &#FF3DE0%open%&7/&#FF3DE0%limit%'
+- '&#FF3DE0⚑ &fDelivered &8▷ &#FF3DE0%deliveries%'
 - ''
-- '&#FF7BE9⭐ &fEarned &7▷ &#FF7BE9%earned%'
-- '&#FF7BE9⌛ &fSpent &7▷ &#FF7BE9%spent%'
+- '&#FF7BE9⭐ &fEarned &8▷ &#FF7BE9%earned%'
+- '&#FF7BE9⌛ &fSpent &8▷ &#FF7BE9%spent%'
 - ''
 
 help:

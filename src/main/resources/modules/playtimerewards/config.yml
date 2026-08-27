@@ -56,11 +56,11 @@ sounds:
   notify: {enabled: true, sound: "entity.experience_orb.pickup", volume: 1.0, pitch: 1.2}
   error: {enabled: true, sound: "block.note_block.bass", volume: 1.0, pitch: 0.8}
 messages:
-  playtime: "&#FFEE00&lPLAYTIME &7▷ &fYou played &#FFEE00%playtime% &fon this server."
-  claimed: "&#FFEE00&lPLAYTIME &7▷ &fThe &#FFEE00%required% &freward is yours."
-  players-only: "&#FF0000&lERROR &7▷ &fOnly players have a playtime."
-  already-claimed: "&#FF0000&lERROR &7▷ &fYou already took that reward."
-  ready: "&#FFEE00&lPLAYTIME &7▷ &f&#FFEE00%amount% &freward(s) are ready. Use &#FFEE00/playtimerewards"
+  playtime: "&#FFEE00&lPLAYTIME &8▷ &fYou played &#FFEE00%playtime% &fon this server."
+  claimed: "&#FFEE00&lPLAYTIME &8▷ &fThe &#FFEE00%required% &freward is yours."
+  players-only: "&#FF0000&lERROR &8▷ &fOnly players have a playtime."
+  already-claimed: "&#FF0000&lERROR &8▷ &fYou already took that reward."
+  ready: "&#FFEE00&lPLAYTIME &8▷ &f&#FFEE00%amount% &freward(s) are ready. Use &#FFEE00/playtimerewards"
 rewards:
   "01":
     playtime: 30m

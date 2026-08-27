@@ -3,6 +3,7 @@ package com.shardedcore;
 import com.shardedcore.command.CoreCommand;
 import com.shardedcore.command.DisabledCommand;
 import com.shardedcore.data.Toggles;
+import com.shardedcore.gui.GuiButtons;
 import com.shardedcore.gui.Menus;
 import com.shardedcore.hook.CoreExpansion;
 import com.shardedcore.module.Module;
@@ -33,6 +34,7 @@ public final class ShardedCore extends JavaPlugin {
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
+        GuiButtons.load(this);
         disabledCommands = new DisabledCommand(this);
         snapshotCommandPermissions();
         bindAllDisabled();
@@ -86,6 +88,7 @@ public final class ShardedCore extends JavaPlugin {
 
     public void reloadPlugin() {
         reloadConfig();
+        GuiButtons.load(this);
         if (modules != null) modules.loadAll();
         refreshCommands();
     }
@@ -158,7 +161,7 @@ public final class ShardedCore extends JavaPlugin {
     public void hideCommand(PluginCommand command) {
         command.setPermission(Module.DISABLED_PERMISSION);
         String raw = getConfig().getString("disabled-command",
-                "&#FF0000&lERROR &7▷ &fThat module is currently &#FF0000disabled&f.");
+                "&#FF0000&lERROR &8▷ &fThat module is currently &#FF0000disabled&f.");
         command.permissionMessage(ColorUtil.parse(raw.replace("%command%", command.getName())));
         command.setExecutor(disabledCommands);
         command.setTabCompleter(disabledCommands);
@@ -214,6 +217,6 @@ public final class ShardedCore extends JavaPlugin {
     }
 
     public String prefix() {
-        return getConfig().getString("prefix", "&#A370EE&lCORE &8▷ &r");
+        return getConfig().getString("prefix", "&#00A2FF&lCORE &8▷ &r");
     }
 }

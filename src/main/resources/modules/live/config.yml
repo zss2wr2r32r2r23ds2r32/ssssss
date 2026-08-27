@@ -24,8 +24,8 @@ message:
   - "&#FF256E▷ &fWatch: &#FF256E&n%link%"
 
 messages:
-  usage: "&#FF256E&lLIVE &7▷ &fUse /live <link>"
-  invalid-platform: "&#FF0000&lERROR &7▷ &fThat platform is not allowed."
-  cooldown: "&#FF0000&lERROR &7▷ &fWait &#FF256E%seconds%s &fbefore posting again."
-  toggle-off: "&#FF256E&lLIVE &7▷ &fLivestream messages are now hidden."
-  toggle-on: "&#FF256E&lLIVE &7▷ &fLivestream messages are now shown."
+  usage: "&#FF256E&lLIVE &8▷ &fUse /live <link>"
+  invalid-platform: "&#FF0000&lERROR &8▷ &fThat platform is not allowed."
+  cooldown: "&#FF0000&lERROR &8▷ &fWait &#FF256E%seconds%s &fbefore posting again."
+  toggle-off: "&#FF256E&lLIVE &8▷ &fLivestream messages are now hidden."
+  toggle-on: "&#FF256E&lLIVE &8▷ &fLivestream messages are now shown."

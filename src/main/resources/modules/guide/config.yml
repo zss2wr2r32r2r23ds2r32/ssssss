@@ -22,9 +22,9 @@ sounds:
     pitch: 1.2
 
 messages:
-  empty: "&#FF0000&lERROR &7▷ &fThe guide has nothing in it yet."
-  players-only: "&#FF0000&lERROR &7▷ &fOnly players can open the guide."
-  blocked: "&#FF0000&lERROR &7▷ &fYou cannot use that right now."
+  empty: "&#FF0000&lERROR &8▷ &fThe guide has nothing in it yet."
+  players-only: "&#FF0000&lERROR &8▷ &fOnly players can open the guide."
+  blocked: "&#FF0000&lERROR &8▷ &fYou cannot use that right now."
 
 # command runs as the player. permission empty means everyone sees the entry.
 entries:

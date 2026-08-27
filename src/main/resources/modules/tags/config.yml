@@ -11,32 +11,37 @@ tab-format: " %tag%"
 
 tags:
   sharded:
-    tag: "&#A370EE&lSHARDED"
+    tag: "&#A370EE☀  &#A370EE&lSHARDED"
+    description: "&8Description"
+  summer:
+    tag: "&#FCFF00☀  &#FCFF00&lSUMMER"
     description: "&8Description"
   og:
-    tag: "&#FFD900&lOG"
+    tag: "&#FFD900☀  &#FFD900&lOG"
     description: "&8Description"
 
 limited: {}
 
 gui:
-  title: "&8Tags"
-  limited-title: "&8Limited Tags"
+  title: "☀ Tag ☀ Previewing | Tags"
+  limited-title: "☀ Tag ☀ Previewing | Limited Tags"
+  guide: "Tag"
+  preview-name: "Tags"
   rows: 6
-  default-color: "0083FF"
+  default-color: "FCFF00"
   default-description: "&8Description"
-  item-material: NAME_TAG
-  item-name: "%color%&l%name%"
-  status-owned: "%color% ☀︎ &fStatus: &#94FF00&nOWNED"
-  status-locked: "%color% ☀︎ &fStatus: &#94FF00&nUNLOCK"
+  colored-bundles: true
+  item-material: BUNDLE
+  item-name: "%color%☀  %color%&l%name%"
+  status-owned: "%color%☀ &fStatus: &#94FF00&l&nOWNED"
+  status-locked: "%color%☀ &fStatus: &#FF2727&l&nLOCKED"
   click-footer: "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip"
   lore:
-    - "%color%&l%name%"
-    - "%description%"
+    - "&8Description"
     - ""
     - "%color%Information:"
-    - "%color%| &fClick to"
-    - "%color%| &fEquip %color%%display%"
+    - "%color%| &fClick to equip"
+    - "%color%| &fthis tag."
     - ""
     - "%status%"
     - ""
@@ -47,21 +52,15 @@ gui:
     lore: []
   previous:
     slot: 48
-    material: RED_DYE
-    name: "&cPrevious page"
-    lore:
-      - "&7Page %page%"
   next:
     slot: 50
-    material: LIME_DYE
-    name: "&aNext page"
-    lore:
-      - "&7Page %page%"
+  back:
+    slot: 31
   extra:
     enabled: true
     slot: 49
     material: CLOCK
-    name: "&#FFBA00&lLimited Tags"
+    name: "&#FFBA00&lLIMITED TAGS"
     lore:
       - "&8Description"
       - ""
@@ -70,20 +69,54 @@ gui:
       - "&#FFBA00| &ftime tags."
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
+  clear:
+    enabled: true
+    slot: 4
+    material: BARRIER
+    name: "&#FF0000&lCLEAR TAG"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000| &fDont want a tag?"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Remove"
+
+sounds:
+  open:
+    enabled: true
+    sound: "ui.button.click"
+    volume: 0.6
+    pitch: 1.2
+  click:
+    enabled: true
+    sound: "ui.button.click"
+    volume: 0.5
+    pitch: 1.0
+  equip:
+    enabled: true
+    sound: "item.armor.equip_leather"
+    volume: 0.8
+    pitch: 1.2
+  error:
+    enabled: true
+    sound: "block.note_block.bass"
+    volume: 0.7
+    pitch: 0.8
 
 messages:
-  usage: "&#A370EE&lTAG &7▷ &f/tag create <name> <tag> &7| &fset <name> &7| &fremove <name>"
-  usage-create: "&#A370EE&lTAG &7▷ &f/tag create <name> <tag>"
-  usage-set: "&#A370EE&lTAG &7▷ &f/tag set <name>"
-  usage-remove: "&#A370EE&lTAG &7▷ &f/tag remove <name>"
-  usage-limited: "&#A370EE&lTAG &7▷ &f/tags limited <name> <tag>"
-  created: "&#A370EE&lTAG &7▷ &fCreated &#A370EE%name% &fas %tag%&f."
-  created-limited: "&#A370EE&lTAG &7▷ &fAdded limited tag &#A370EE%name% &fas %tag%&f."
-  set: "&#A370EE&lTAG &7▷ &fYour tag is now %tag%&f."
-  removed: "&#A370EE&lTAG &7▷ &fRemoved &#A370EE%name%&f."
-  cleared: "&#A370EE&lTAG &7▷ &fYour tag was cleared."
-  missing: "&#FF0000&lERROR &7▷ &fUnknown tag &#A370EE%name%&f."
-  locked: "&#FF0000&lERROR &7▷ &fYou have not unlocked &#A370EE%name%&f."
-  invalid: "&#FF0000&lERROR &7▷ &fThat tag is not valid."
-  no-permission: "&#FF0000&lERROR &7▷ &fYou do not have permission."
-  players-only: "&#FF0000&lERROR &7▷ &fOnly a player can use that."
+  usage: "&#00A2FF&lCORE &8▷ &f/tag create <name> <tag> &8| &fset <name> &8| &fremove <name>"
+  usage-create: "&#00A2FF&lCORE &8▷ &f/tag create <name> <tag>"
+  usage-set: "&#00A2FF&lCORE &8▷ &f/tag set <name>"
+  usage-remove: "&#00A2FF&lCORE &8▷ &f/tag remove <name>"
+  usage-limited: "&#00A2FF&lCORE &8▷ &f/tags limited <name> <tag>"
+  created: "&#00A2FF&lCORE &8▷ &fCreated &#00A2FF%name% &fas %tag%&f."
+  created-limited: "&#00A2FF&lCORE &8▷ &fAdded limited tag &#00A2FF%name% &fas %tag%&f."
+  set: "&#00A2FF&lCORE &8▷ &fYour tag is now %tag%&f."
+  removed: "&#00A2FF&lCORE &8▷ &fRemoved &#00A2FF%name%&f."
+  cleared: "&#00A2FF&lCORE &8▷ &fYour tag was cleared."
+  missing: "&#FF0000&lERROR &8▷ &fUnknown tag &#00A2FF%name%&f."
+  locked: "&#FF0000&lERROR &8▷ &fYou have not unlocked &#00A2FF%name%&f."
+  invalid: "&#FF0000&lERROR &8▷ &fThat tag is not valid."
+  no-permission: "&#FF0000&lERROR &8▷ &fYou do not have permission."
+  players-only: "&#FF0000&lERROR &8▷ &fOnly a player can use that."

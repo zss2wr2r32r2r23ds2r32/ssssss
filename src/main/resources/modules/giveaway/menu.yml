@@ -36,8 +36,8 @@ main:
       - "&#FFB02EPrizes:"
       - "&#FFB02E¦ &f%items%"
       - ""
-      - "&#22AFFBℹ &fEntries &7▷ &#22AFFB%entries%"
-      - "&#FFD900⌛ &fEnds In &7▷ &#FFD900%time%"
+      - "&#22AFFBℹ &fEntries &8▷ &#22AFFB%entries%"
+      - "&#FFD900⌛ &fEnds In &8▷ &#FFD900%time%"
       - ""
       - "&#FFB02E▷ &n&lLEFT-CLICK&r&#FFB02E To Enter"
       - "&#FFB02E▷ &n&lRIGHT-CLICK&r&#FFB02E To View"
@@ -56,7 +56,7 @@ main:
       - "&#B219CB¦ &fEverything you"
       - "&#B219CB¦ &fhave &#B219CBwon&f."
       - ""
-      - "&#22AFFBℹ &fWaiting &7▷ &#22AFFB%wins%"
+      - "&#22AFFBℹ &fWaiting &8▷ &#22AFFB%wins%"
       - ""
       - "&#B219CB▷ &n&lCLICK&r&#B219CB To Open"
 
@@ -108,7 +108,7 @@ main:
       - "&#FFB02E¦ &fPut up your own"
       - "&#FFB02E¦ &fpublic &#FFB02Egiveaway&f."
       - ""
-      - "&#22AFFBℹ &fYours Running &7▷ &#22AFFB%running%&8/&#22AFFB%max%"
+      - "&#22AFFBℹ &fYours Running &8▷ &#22AFFB%running%&8/&#22AFFB%max%"
       - ""
       - "&#FFB02E▷ &n&lCLICK&r&#FFB02E To Create"
 
@@ -138,7 +138,7 @@ wins:
       - "&#97F900Prizes:"
       - "&#97F900¦ &f%items%"
       - ""
-      - "&#FFD900⌛ &fWon &7▷ &#FFD900%time%"
+      - "&#FFD900⌛ &fWon &8▷ &#FFD900%time%"
       - ""
       - "&#97F900▷ &n&lCLICK&r&#97F900 To Claim"
 
@@ -155,7 +155,7 @@ wins:
       - "&#97F900Prizes:"
       - "&#97F900¦ &f%items%"
       - ""
-      - "&#FFD900⌛ &fEnded &7▷ &#FFD900%time%"
+      - "&#FFD900⌛ &fEnded &8▷ &#FFD900%time%"
       - ""
       - "&#97F900▷ &n&lCLICK&r&#97F900 To Claim"
 
@@ -246,7 +246,7 @@ create:
       - "&#B219CB¦ &fDrop items above"
       - "&#B219CB¦ &fto &#B219CBadd them&f."
       - ""
-      - "&#22AFFBℹ &fItems &7▷ &#22AFFB%items%&8/&#22AFFB%max%"
+      - "&#22AFFBℹ &fItems &8▷ &#22AFFB%items%&8/&#22AFFB%max%"
 
   start:
     slot: 53
@@ -259,8 +259,8 @@ create:
       - "&#97F900¦ &fPut it up for"
       - "&#97F900¦ &feveryone to &#97F900enter&f."
       - ""
-      - "&#22AFFBℹ &fItems &7▷ &#22AFFB%items%"
-      - "&#FFD900⌛ &fDuration &7▷ &#FFD900%duration%"
+      - "&#22AFFBℹ &fItems &8▷ &#22AFFB%items%"
+      - "&#FFD900⌛ &fDuration &8▷ &#FFD900%duration%"
       - ""
       - "&#97F900▷ &n&lLEFT-CLICK&r&#97F900 To Start"
       - "&#97F900▷ &n&lRIGHT-CLICK&r&#97F900 To Change Time"

@@ -69,7 +69,7 @@ public final class SpawnModule extends Module implements CommandExecutor, Listen
         }
         if (command.getName().equalsIgnoreCase("setspawn")) {
             if (!player.hasPermission("shardedcore.spawn.admin")) {
-                sendRaw(player, "&#FF0000&lERROR &7▷ &fYou do not have permission.");
+                sendRaw(player, "&#FF0000&lERROR &8▷ &fYou do not have permission.");
                 return true;
             }
             spawn = player.getLocation();

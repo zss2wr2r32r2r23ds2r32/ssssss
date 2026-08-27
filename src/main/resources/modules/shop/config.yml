@@ -56,7 +56,7 @@ item-template:
     - "&#99ff00¦ &fBuy this item straight"
     - "&#99ff00¦ &ffrom the &#99ff00shop&f."
     - ""
-    - "&#99ff00&l$&r &fPrice &7▷ &#99ff00$&r&#99ff00%price%"
+    - "&#99ff00&l$&r &fPrice &8▷ &#99ff00$&r&#99ff00%price%"
     - ""
     - "&#99ff00▷ &n&lCLICK&r&#99ff00 To Buy"
 
@@ -211,7 +211,7 @@ history:
       - "&#99ff00¦ &f&#99ff00%section% &fsection."
       - ""
       - "&#22AFFBℹ &fPlayer: &#22AFFB%player%"
-      - "&#99ff00&l$&r &fPaid &7▷ &#99ff00$%price%"
+      - "&#99ff00&l$&r &fPaid &8▷ &#99ff00$%price%"
       - "&#FFD900⌛ &fWhen: &#FFD900%time%"
 
   previous:
@@ -239,10 +239,10 @@ history:
       - "&#99ff00▷ &n&lCLICK&r&#99ff00 To Navigate"
 
 messages:
-  bought: "&#99ff00&lSHOP &7▷ &fYou bought &#99ff00%amount%x %item% &ffor &#99ff00$%total%&f."
-  cannot-afford: "&#FF0000&lERROR &7▷ &fYou need &#99ff00$%total% &ffor that."
-  no-space: "&#FF0000&lERROR &7▷ &fYour inventory has no room for that."
-  no-economy: "&#FF0000&lERROR &7▷ &fThe shop is not ready yet."
-  no-sections: "&#FF0000&lERROR &7▷ &fThe shop has nothing in it yet."
-  players-only: "&#FF0000&lERROR &7▷ &fOnly players can open the shop."
-  history-empty: "&#99ff00&lSHOP &7▷ &fNothing has been bought yet."
+  bought: "&#99ff00&lSHOP &8▷ &fYou bought &#99ff00%amount%x %item% &ffor &#99ff00$%total%&f."
+  cannot-afford: "&#FF0000&lERROR &8▷ &fYou need &#99ff00$%total% &ffor that."
+  no-space: "&#FF0000&lERROR &8▷ &fYour inventory has no room for that."
+  no-economy: "&#FF0000&lERROR &8▷ &fThe shop is not ready yet."
+  no-sections: "&#FF0000&lERROR &8▷ &fThe shop has nothing in it yet."
+  players-only: "&#FF0000&lERROR &8▷ &fOnly players can open the shop."
+  history-empty: "&#99ff00&lSHOP &8▷ &fNothing has been bought yet."

@@ -2,11 +2,13 @@ package com.shardedcore.modules.crates;
 
 import com.shardedcore.ShardedCore;
 import com.shardedcore.database.Sqlite;
+import com.shardedcore.gui.GuiButtons;
 import com.shardedcore.gui.Menus;
 import com.shardedcore.module.Module;
 import com.shardedcore.modules.crates.CrateStorage.BlockLoc;
 import com.shardedcore.modules.crates.CrateStorage.Crate;
 import com.shardedcore.util.Amounts;
+import com.shardedcore.util.Inventories;
 import com.shardedcore.util.Items;
 import com.shardedcore.util.Players;
 import com.shardedcore.util.Slots;
@@ -374,6 +376,10 @@ public final class CratesModule extends Module implements CommandExecutor, TabCo
             menu.set(entry.getKey(), entry.getValue().clone());
         }
         frame(menu, crate.size(), area);
+        menu.set(config.getInt("preview.close-slot", crate.size() - 5), GuiButtons.close(player), event -> {
+            event.setCancelled(true);
+            player.closeInventory();
+        });
         menu.onAny(event -> event.setCancelled(true));
         plugin.menus().open(player, menu);
         sound(player, "sounds.preview");
@@ -442,12 +448,18 @@ public final class CratesModule extends Module implements CommandExecutor, TabCo
             }
         }
         frame(menu, crate.size(), area);
+        menu.set(config.getInt("open.confirm-slot", crate.size() - 5), GuiButtons.confirm(player), event -> {
+            event.setCancelled(true);
+            session.confirmed = true;
+            player.closeInventory();
+            claimSelected(player, crate, session);
+        });
         menu.onAny(event -> event.setCancelled(true));
         menu.onClose(closed -> {
             if (session.redraw) return;
             OpenSession current = sessions.get(closed.getUniqueId());
             if (current != session) return;
-            claimSelected(closed, crate, session);
+            if (!session.confirmed) sessions.remove(closed.getUniqueId());
         });
         session.redraw = true;
         plugin.menus().open(player, menu);
@@ -456,6 +468,18 @@ public final class CratesModule extends Module implements CommandExecutor, TabCo
 
     private void select(Player player, Crate crate, OpenSession session, int slot) {
         if (session.claimed.contains(slot) || session.selected.contains(slot)) return;
+        ItemStack reward = session.rewards.get(slot);
+        List<ItemStack> needed = new ArrayList<>();
+        for (int selected : session.selected) {
+            ItemStack item = session.rewards.get(selected);
+            if (!CrateStorage.isAir(item)) needed.add(item);
+        }
+        if (!CrateStorage.isAir(reward)) needed.add(reward);
+        if (!Inventories.hasSpace(player, needed)) {
+            send(player, "no-space");
+            sound(player, "sounds.deny");
+            return;
+        }
         if (session.selected.size() >= session.remaining) {
             send(player, "select-limit", "amount", String.valueOf(session.remaining));
             sound(player, "sounds.deny");
@@ -825,6 +849,7 @@ public final class CratesModule extends Module implements CommandExecutor, TabCo
         private final Set<Integer> selected = new HashSet<>();
         private final Set<Integer> claimed = new HashSet<>();
         private boolean redraw;
+        private boolean confirmed;
 
         private OpenSession(String crateId, int remaining, Map<Integer, ItemStack> rewards) {
             this.crateId = crateId;

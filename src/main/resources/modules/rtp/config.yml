@@ -71,10 +71,10 @@ menu:
       - "&#22AFFB▷ &n&lCLICK&r&#22AFFB To Queue"
 
 worlds:
-  overworld:
+    overworld:
     display: "Overworld"
-    # Empty picks the first matching world on the server.
-    world: ""
+    world: world
+    mv-command: "mv tp %player% world"
     slot: 11
     material: MOSS_BLOCK
     radius: 50000
@@ -95,9 +95,10 @@ worlds:
       - ""
       - "&#97F900▷ &n&lCLICK&r&#97F900 To Teleport"
 
-  nether:
+    nether:
     display: "Nether"
-    world: ""
+    world: world_nether
+    mv-command: "mv tp %player% world_nether"
     slot: 12
     material: NETHER_WART_BLOCK
     radius: 10000
@@ -121,9 +122,10 @@ worlds:
       - ""
       - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Teleport"
 
-  end:
+    end:
     display: "The End"
-    world: ""
+    world: world_end
+    mv-command: "mv tp %player% world_end"
     slot: 13
     material: END_STONE
     radius: 20000
@@ -170,18 +172,18 @@ sounds:
 
 messages:
   actionbar: true
-  countdown: "&#97F900&lRTP &7▷ &fTeleporting you away in &#97F900%seconds%&f."
-  teleported: "&#97F900&lRTP &7▷ &fYou have been &#22AFFBteleported &faway to &#97F900%coordinates%!"
-  searching: "&#97F900&lRTP &7▷ &fLooking for a safe spot..."
-  cancelled: "&#97F900&lRTP &7▷ &fYou moved, the teleport was stopped."
+  countdown: "&#97F900&lRTP &8▷ &fTeleporting you away in &#97F900%seconds%&f."
+  teleported: "&#97F900&lRTP &8▷ &fYou have been &#22AFFBteleported &faway to &#97F900%coordinates%!"
+  searching: "&#97F900&lRTP &8▷ &fLooking for a safe spot..."
+  cancelled: "&#97F900&lRTP &8▷ &fYou moved, the teleport was stopped."
 
-  cooldown: "&#FF0000&lERROR &7▷ &fWait &#97F900%time%s &fbefore the next teleport."
-  already-teleporting: "&#FF0000&lERROR &7▷ &fYou are already being teleported."
-  restricted: "&#FF0000&lERROR &7▷ &fYou cannot teleport right now."
-  cannot-afford: "&#FF0000&lERROR &7▷ &fA teleport costs &#97F900%amount%&f."
-  not-found: "&#FF0000&lERROR &7▷ &fNo safe spot was found, try again."
-  world-missing: "&#FF0000&lERROR &7▷ &fThat world does not exist on this server."
-  players-only: "&#FF0000&lERROR &7▷ &fOnly a player can use that."
+  cooldown: "&#FF0000&lERROR &8▷ &fWait &#97F900%time%s &fbefore the next teleport."
+  already-teleporting: "&#FF0000&lERROR &8▷ &fYou are already being teleported."
+  restricted: "&#FF0000&lERROR &8▷ &fYou cannot teleport right now."
+  cannot-afford: "&#FF0000&lERROR &8▷ &fA teleport costs &#97F900%amount%&f."
+  not-found: "&#FF0000&lERROR &8▷ &fNo safe spot was found, try again."
+  world-missing: "&#FF0000&lERROR &8▷ &fThat world does not exist on this server."
+  players-only: "&#FF0000&lERROR &8▷ &fOnly a player can use that."
 
 queue:
   countdown-seconds: 5

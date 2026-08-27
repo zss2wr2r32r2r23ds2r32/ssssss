@@ -287,13 +287,13 @@ public final class ChatFilterModule extends Module implements Listener, CommandE
             return true;
         }
         if (args.length == 0) {
-            sendRaw(sender, "&#FF0000&lCHAT &7▷ &f/chatfilter <regex|similar|test|reload>");
+            sendRaw(sender, "&#FF0000&lCHAT &8▷ &f/chatfilter <regex|similar|test|reload>");
             return true;
         }
         switch (args[0].toLowerCase(Locale.ROOT)) {
             case "reload" -> {
                 reload();
-                sendRaw(sender, "&#97F900&lCHAT &7▷ &fReloaded.");
+                sendRaw(sender, "&#97F900&lCHAT &8▷ &fReloaded.");
             }
             case "regex" -> regex(sender, args);
             case "similar" -> {
@@ -316,7 +316,7 @@ public final class ChatFilterModule extends Module implements Listener, CommandE
                 else send(sender, "messages.test-hit", "rule", result.rule, "action", result.action,
                         "result", result.rewritten == null ? text : result.rewritten);
             }
-            default -> sendRaw(sender, "&#FF0000&lCHAT &7▷ &f/chatfilter <regex|similar|test|reload>");
+            default -> sendRaw(sender, "&#FF0000&lCHAT &8▷ &f/chatfilter <regex|similar|test|reload>");
         }
         return true;
     }

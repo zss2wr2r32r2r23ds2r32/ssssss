@@ -37,7 +37,7 @@ public final class ChatFormatModule extends Module implements Listener {
         SettingsModule settings = plugin.modules().get(SettingsModule.class);
         if (settings != null && !settings.publicChat(player)) {
             event.setCancelled(true);
-            player.sendMessage(ColorUtil.parse("&#FF0000&lCHAT &7▷ &fPublic chat is disabled for you. /chattoggle"));
+            player.sendMessage(ColorUtil.parse("&#FF0000&lCHAT &8▷ &fPublic chat is disabled for you. /chattoggle"));
             return;
         }
         event.viewers().removeIf(audience -> {

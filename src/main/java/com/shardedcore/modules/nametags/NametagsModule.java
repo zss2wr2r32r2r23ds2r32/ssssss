@@ -100,7 +100,7 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
             return true;
         }
         if (!sender.hasPermission("shardedcore.nametags.admin")) {
-            sendRaw(sender, "&#FF0000&lERROR &7▷ &fYou do not have permission.");
+            sendRaw(sender, "&#FF0000&lERROR &8▷ &fYou do not have permission.");
             return true;
         }
         loadFiles();
@@ -179,8 +179,10 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
                     ? 0
                     : Math.max(0, config.getInt("display.teleport-duration", 0));
             entity.setTeleportDuration(teleport);
+            boolean ride = config.getBoolean("display.ride", false);
             entity.setTransformation(new Transformation(
-                    offset(player, top), new Quaternionf(), new Vector3f(scale, scale, scale), new Quaternionf()));
+                    ride ? offset(player, top) : new Vector3f(),
+                    new Quaternionf(), new Vector3f(scale, scale, scale), new Quaternionf()));
             entity.getPersistentDataContainer().set(key, PersistentDataType.STRING, player.getUniqueId().toString());
         });
         if (config.getBoolean("display.hide-own", false)) {
@@ -226,7 +228,9 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
                 display.setTransformation(new Transformation(
                         offset(player, top), new Quaternionf(), new Vector3f(scale, scale, scale), new Quaternionf()));
             }
-        } else if (heightChanged || ticks % Math.max(1, config.getInt("refresh", 5)) == 0) {
+        } else {
+            display.setTransformation(new Transformation(
+                    new Vector3f(), new Quaternionf(), new Vector3f(scale, scale, scale), new Quaternionf()));
             display.teleport(anchor(player, top));
         }
         String path = top ? "lines.top" : "lines.bottom";
