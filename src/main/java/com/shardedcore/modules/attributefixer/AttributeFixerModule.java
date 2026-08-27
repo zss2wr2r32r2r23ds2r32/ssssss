@@ -10,8 +10,10 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -20,6 +22,7 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Collection;
@@ -55,10 +58,12 @@ public final class AttributeFixerModule extends Module implements Listener {
     public void onClick(InventoryClickEvent event) {
         if (!config.getBoolean("fix-on-click", true)) return;
         if (!(event.getWhoClicked() instanceof Player player)) return;
+        boolean swapOff = event.getClick() == ClickType.SWAP_OFFHAND;
         Bukkit.getScheduler().runTask(plugin, () -> {
             fix(event.getCurrentItem());
             fix(event.getCursor());
-            fixPlayer(player);
+            if (swapOff) refreshHands(player);
+            else fixPlayer(player);
         });
     }
 
@@ -69,14 +74,10 @@ public final class AttributeFixerModule extends Module implements Listener {
         Bukkit.getScheduler().runTask(plugin, () -> fixPlayer(player));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onSwap(PlayerSwapHandItemsEvent event) {
-        if (!config.getBoolean("fix-on-click", true)) return;
-        Bukkit.getScheduler().runTask(plugin, () -> {
-            fix(event.getMainHandItem());
-            fix(event.getOffHandItem());
-            fixPlayer(event.getPlayer());
-        });
+        if (!config.getBoolean("fix-on-click", true) && !config.getBoolean("fix-on-swap", true)) return;
+        Bukkit.getScheduler().runTask(plugin, () -> refreshHands(event.getPlayer()));
     }
 
     @EventHandler
@@ -90,6 +91,18 @@ public final class AttributeFixerModule extends Module implements Listener {
         if (!config.getBoolean("fix-on-pickup", true)) return;
         if (!(event.getEntity() instanceof Player)) return;
         fix(event.getItem().getItemStack());
+    }
+
+    private void refreshHands(Player player) {
+        PlayerInventory inventory = player.getInventory();
+        ItemStack main = inventory.getItemInMainHand();
+        ItemStack off = inventory.getItemInOffHand();
+        fix(main);
+        fix(off);
+        inventory.setItemInMainHand(main);
+        inventory.setItemInOffHand(off);
+        player.updateInventory();
+        fixPlayer(player);
     }
 
     private void fixPlayer(Player player) {

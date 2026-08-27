@@ -1,6 +1,7 @@
-# When XP orbs clump past this amount they turn into bottles.
-convert-merges: true
-convert-spawns: true
+# Combine nearby XP orbs into one clump. Bottle conversion is off unless you turn it on.
+combine-orbs: true
+convert-merges: false
+convert-spawns: false
 experience-per-bottle: 7
 min-bottles: 2
 min-experience: 14

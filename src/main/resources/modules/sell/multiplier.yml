@@ -24,7 +24,7 @@ info:
     - "&#80ee0b✓ &fYours: &#80ee0b%multi%x"
     - "&#80ee0b✓ &fSold: &#80ee0b$%total%"
     - ""
-    - "&#80ee0b▷ &n&lCLICK&r&#80ee0b For Prices"
+    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0For Prices"
 
 return:
   slot: 45
@@ -37,7 +37,7 @@ return:
     - "&#FF0000¦ &fGo back to the"
     - "&#FF0000¦ &fsell &#FF0000menu&f."
     - ""
-    - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Return"
+    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Return"
 
 states:
 

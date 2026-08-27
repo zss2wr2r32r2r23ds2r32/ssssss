@@ -26,6 +26,7 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
@@ -141,6 +142,16 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
         });
     }
 
+    @EventHandler
+    public void onSneak(PlayerToggleSneakEvent event) {
+        Player player = event.getPlayer();
+        if (tags.containsKey(player.getUniqueId())) {
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                if (player.isOnline()) update(player);
+            });
+        }
+    }
+
     private void tick() {
         ticks += Math.max(1, config.getInt("refresh", 1));
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -165,7 +176,8 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
     }
 
     private TextDisplay spawnLine(Player player, boolean top) {
-        TextDisplay display = player.getWorld().spawn(anchor(player, top), TextDisplay.class, entity -> {
+        org.bukkit.Location spawnAt = config.getBoolean("display.ride", true) ? player.getLocation() : anchor(player, top);
+        TextDisplay display = player.getWorld().spawn(spawnAt, TextDisplay.class, entity -> {
             entity.setPersistent(false);
             entity.setInvulnerable(true);
             entity.setGravity(false);
@@ -180,11 +192,11 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
             entity.setViewRange(viewRange);
             entity.setInterpolationDuration(0);
             entity.setInterpolationDelay(0);
-            int teleport = config.getBoolean("display.ride", false)
+            int teleport = config.getBoolean("display.ride", true)
                     ? 0
-                    : Math.max(0, config.getInt("display.teleport-duration", 0));
+                    : Math.max(1, config.getInt("display.teleport-duration", 2));
             entity.setTeleportDuration(teleport);
-            boolean ride = config.getBoolean("display.ride", false);
+            boolean ride = config.getBoolean("display.ride", true);
             entity.setTransformation(new Transformation(
                     ride ? offset(player, top) : new Vector3f(),
                     new Quaternionf(), new Vector3f(scale, scale, scale), new Quaternionf()));
@@ -195,7 +207,7 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
         } else {
             player.showEntity(plugin, display);
         }
-        if (config.getBoolean("display.ride", false)) {
+        if (config.getBoolean("display.ride", true)) {
             player.addPassenger(display);
         }
         return display;
@@ -227,8 +239,11 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
             return;
         }
         display.setInvisible(hide);
-        if (config.getBoolean("display.ride", false)) {
-            if (display.getVehicle() != player) player.addPassenger(display);
+        if (config.getBoolean("display.ride", true)) {
+            if (display.getVehicle() != player) {
+                display.leaveVehicle();
+                player.addPassenger(display);
+            }
             if (heightChanged) {
                 display.setTransformation(new Transformation(
                         offset(player, top), new Quaternionf(), new Vector3f(scale, scale, scale), new Quaternionf()));
@@ -237,9 +252,8 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
             org.bukkit.Location dest = anchor(player, top);
             dest.setYaw(player.getLocation().getYaw());
             dest.setPitch(player.getLocation().getPitch());
-            if (display.getLocation().distanceSquared(dest) > 0.0001) {
-                display.teleport(dest);
-            }
+            display.setTeleportDuration(Math.max(1, config.getInt("display.teleport-duration", 2)));
+            display.teleport(dest);
         }
         String path = top ? "lines.top" : "lines.bottom";
         if (!config.getBoolean(path + ".enabled", true)) {

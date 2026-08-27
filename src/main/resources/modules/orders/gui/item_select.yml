@@ -13,7 +13,7 @@ previous:
   - '&fClick here, to go'
   - '&fto the previous page.'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Navigate'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
 next:
   slot: 53
   material: LIME_STAINED_GLASS_PANE
@@ -25,7 +25,7 @@ next:
   - '&fClick here, to go'
   - '&fto the next page.'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Navigate'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
 back:
   material: RED_DYE
   slot: 46
@@ -37,7 +37,7 @@ back:
   - '&fClick here, to go'
   - '&fone step back.'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Return'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Return'
 sort:
   slot: 48
   material: CAULDRON
@@ -71,7 +71,7 @@ search:
   - '&fClick to search for'
   - '&fa specific order.'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Search'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Search'
 item:
   name: '&f%item%'
   lore: &id001

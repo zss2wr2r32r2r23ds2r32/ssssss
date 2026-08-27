@@ -2,5 +2,6 @@ fix-on-enable: true
 fix-on-join: true
 fix-on-click: true
 fix-on-pickup: true
+fix-on-swap: true
 # Also strip every custom attribute modifier, even when the slot looks right.
 reset-all-custom: false

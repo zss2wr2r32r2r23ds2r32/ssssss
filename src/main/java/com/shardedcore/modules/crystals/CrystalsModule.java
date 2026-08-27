@@ -39,8 +39,10 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public final class CrystalsModule extends Module implements CommandExecutor, TabCompleter, Listener {
 
@@ -184,6 +186,7 @@ public final class CrystalsModule extends Module implements CommandExecutor, Tab
                 menu.set(section.getInt("slot", 0), Items.fromSection(section, player,
                         "crystals", service.format(service.get(player.getUniqueId()))), event -> {
                     event.setCancelled(true);
+                    GuiButtons.play(player, "click");
                     openSection(player, id);
                 });
             }
@@ -213,27 +216,41 @@ public final class CrystalsModule extends Module implements CommandExecutor, Tab
         ConfigurationSection section = config.getConfigurationSection("sections." + sectionId);
         if (section == null) return;
         ConfigurationSection items = section.getConfigurationSection("items");
+        int rows = section.getInt("rows", 4);
         Menus.Menu menu = plugin.menus().create(player,
-                section.getString("title", cfg("menu.title", "&8Crystal Shop")),
-                section.getInt("rows", 4));
+                section.getString("title", cfg("menu.title", "&8Crystal Shop")), rows);
+        int[] area = GuiButtons.inner(Math.max(3, Math.min(6, rows)));
+        Set<Integer> used = new HashSet<>();
+        ConfigurationSection info = section.getConfigurationSection("info");
+        if (info != null) used.add(info.getInt("slot", 22));
+        int backSlot = section.contains("back.slot") ? section.getInt("back.slot")
+                : section.getInt("back-slot", Math.max(0, menu.inventory().getSize() - 5));
+        used.add(backSlot);
+        int nextFree = 0;
         if (items != null) {
             for (String id : items.getKeys(false)) {
                 ConfigurationSection item = items.getConfigurationSection(id);
                 if (item == null) continue;
-                menu.set(item.getInt("slot", 0), Items.fromSection(item, player,
+                int slot;
+                if (item.contains("slot")) {
+                    slot = item.getInt("slot");
+                } else {
+                    while (nextFree < area.length && used.contains(area[nextFree])) nextFree++;
+                    slot = nextFree < area.length ? area[nextFree++] : 0;
+                }
+                used.add(slot);
+                menu.set(slot, Items.fromSection(item, player,
                         "price", service.format(item.getDouble("price", 0)),
                         "crystals", service.format(service.get(player.getUniqueId()))), event -> {
                     event.setCancelled(true);
+                    GuiButtons.play(player, "click");
                     openConfirm(player, sectionId, id, item);
                 });
             }
         }
-        ConfigurationSection info = section.getConfigurationSection("info");
         if (info != null) {
             menu.set(info.getInt("slot", 22), headOrItem(player, info));
         }
-        int backSlot = section.contains("back.slot") ? section.getInt("back.slot")
-                : section.getInt("back-slot", Math.max(0, menu.inventory().getSize() - 5));
         GuiButtons.placeBack(menu, player, backSlot, () -> openMain(player));
         GuiButtons.glass(menu, section.getBoolean("border-only",
                 idEqualsAny(sectionId, "tags", "chatcolors", "glows", "keys")));
@@ -264,6 +281,7 @@ public final class CrystalsModule extends Module implements CommandExecutor, Tab
                         : Items.fromSection(yes, player, "item", name, "price", price),
                 event -> {
                     event.setCancelled(true);
+                    GuiButtons.play(player, "click");
                     buy(player, sectionId, itemId, item);
                 });
         menu.set(no == null ? 15 : no.getInt("slot", 15),
@@ -271,6 +289,7 @@ public final class CrystalsModule extends Module implements CommandExecutor, Tab
                         : Items.fromSection(no, player, "item", name, "price", price),
                 event -> {
                     event.setCancelled(true);
+                    GuiButtons.play(player, "click");
                     openSection(player, sectionId);
                 });
         if (confirm == null || confirm.getBoolean("filler.enabled", true)) {
@@ -283,6 +302,13 @@ public final class CrystalsModule extends Module implements CommandExecutor, Tab
     }
 
     private void buy(Player player, String sectionId, String itemId, ConfigurationSection item) {
+        if (alreadyOwned(player, item)) {
+            send(player, "already-owned", "item", item.getString("name", itemId));
+            Sounds.play(player, config.getConfigurationSection("sounds.error"));
+            GuiButtons.play(player, "error");
+            openSection(player, sectionId);
+            return;
+        }
         double price = item.getDouble("price", 0);
         if (!service.take(player.getUniqueId(), price)) {
             send(player, "cannot-afford", "amount", service.format(price));
@@ -297,6 +323,28 @@ public final class CrystalsModule extends Module implements CommandExecutor, Tab
         send(player, "bought", "item", item.getString("name", itemId), "amount", service.format(price));
         Sounds.play(player, config.getConfigurationSection("sounds.buy"));
         openSection(player, sectionId);
+    }
+
+    private boolean alreadyOwned(Player player, ConfigurationSection item) {
+        String type = item.getString("type", "item").toLowerCase(Locale.ROOT);
+        return switch (type) {
+            case "tag" -> {
+                TagsModule tags = plugin.modules().get(TagsModule.class);
+                yield tags != null && tags.canUse(player, item.getString("tag", ""));
+            }
+            case "chatcolor", "color" -> {
+                ChatColorModule colors = plugin.modules().get(ChatColorModule.class);
+                yield colors != null && colors.canUse(player, item.getString("color", item.getString("chatcolor", "")));
+            }
+            case "glow", "eglow" -> {
+                String glow = item.getString("glow", "");
+                if (glow == null || glow.isBlank()) yield false;
+                GlowsModule glows = plugin.modules().get(GlowsModule.class);
+                yield glows != null && glows.canUse(player, glow);
+            }
+            case "perk" -> TimedPerks.has(player.getUniqueId(), item.getString("perk", ""));
+            default -> false;
+        };
     }
 
     private boolean grant(Player player, ConfigurationSection item) {

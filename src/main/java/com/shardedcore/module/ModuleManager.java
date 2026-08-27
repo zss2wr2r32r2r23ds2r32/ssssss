@@ -10,6 +10,7 @@ import com.shardedcore.modules.chatformat.ChatFormatModule;
 import com.shardedcore.modules.coinflip.CoinflipModule;
 import com.shardedcore.modules.combat.CombatModule;
 import com.shardedcore.modules.commands.CommandsModule;
+import com.shardedcore.modules.cosmetics.CosmeticsModule;
 import com.shardedcore.modules.crates.CratesModule;
 import com.shardedcore.modules.crystals.CrystalsModule;
 import com.shardedcore.modules.deathmessages.DeathMessagesModule;
@@ -74,6 +75,7 @@ public final class ModuleManager {
         register(new ChatColorModule(plugin));
         register(new TagsModule(plugin));
         register(new GlowsModule(plugin));
+        register(new CosmeticsModule(plugin));
         register(new TeamsModule(plugin));
         register(new WipeModule(plugin));
         register(new SettingsModule(plugin));

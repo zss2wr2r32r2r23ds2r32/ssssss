@@ -196,6 +196,10 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         };
     }
 
+    public void open(Player player) {
+        openGui(player, 0, false);
+    }
+
     private void openGui(Player player, int page, boolean limited) {
         List<String> ids = limited ? limitedNames() : names();
         List<CosmeticsMenus.Entry> entries = new ArrayList<>();
@@ -240,20 +244,23 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
             send(sender, limited ? "usage-limited" : "usage-create");
             return true;
         }
-        String name = sanitize(args[1]);
+        String id = sanitize(args[1]);
         String tag = String.join(" ", java.util.Arrays.copyOfRange(args, 2, args.length));
-        if (name.isEmpty() || tag.isBlank()) {
+        if (id.isEmpty() || tag.isBlank()) {
             send(sender, "invalid");
             return true;
         }
-        String path = (limited ? "limited." : "tags.") + name;
+        String display = ColorUtil.strip(args[1]).toUpperCase(Locale.ROOT);
+        if (display.isBlank()) display = id.toUpperCase(Locale.ROOT);
+        String path = (limited ? "limited." : "tags.") + id;
         config.set(path + ".tag", tag);
+        config.set(path + ".name", display);
         if (config.getString(path + ".description") == null) {
             config.set(path + ".description", cfg("gui.default-description", "&8Description"));
         }
         Configs.save(config, new File(folder, "config.yml"));
-        Perms.ensure("shardedcore.tag." + name);
-        send(sender, limited ? "created-limited" : "created", "name", name, "tag", tag);
+        Perms.ensure("shardedcore.tag." + id);
+        send(sender, limited ? "created-limited" : "created", "name", display, "tag", tag);
         return true;
     }
 

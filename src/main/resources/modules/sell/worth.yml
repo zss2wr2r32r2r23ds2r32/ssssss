@@ -21,7 +21,7 @@ buttons:
       - "&#FF0000Information:"
       - "&#FF0000¦ &fGo one page back."
       - ""
-      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Navigate"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
 
   next:
     slot: 53
@@ -33,7 +33,7 @@ buttons:
       - "&#80ee0bInformation:"
       - "&#80ee0b¦ &fGo one page forward."
       - ""
-      - "&#80ee0b▷ &n&lCLICK&r&#80ee0b To Navigate"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
 
   refresh:
     slot: 49
@@ -45,7 +45,7 @@ buttons:
       - "&#FFD900Information:"
       - "&#FFD900¦ &fLoad this page again."
       - ""
-      - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Refresh"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Refresh"
 
   # Left click steps forward, right click steps back.
   sorting:

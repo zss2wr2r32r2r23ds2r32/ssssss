@@ -27,7 +27,7 @@ menu:
       - ""
       - "&#80ee0b&l$&r &fAmount: &#80ee0b%amount%"
       - ""
-      - "&#FFE925▷ &n&lCLICK&r&#FFE925 To Play"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Play"
 
   stats:
     slot: 4
@@ -69,7 +69,7 @@ menu:
       - "&#FFE925¦ &fClick here to reload"
       - "&#FFE925¦ &fthe current page."
       - ""
-      - "&#FFE925▷ &n&lCLICK&r&#FFE925 To Refresh"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Refresh"
 
   previous:
     slot: 39
@@ -82,7 +82,7 @@ menu:
       - "&#FF0000¦ &fClick here to return"
       - "&#FF0000¦ &fto page &#FF0000%page%&f."
       - ""
-      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Continue"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue"
 
   next:
     slot: 41
@@ -95,7 +95,7 @@ menu:
       - "&#80ee0b¦ &fClick here to open"
       - "&#80ee0b¦ &fpage &#80ee0b%page%&f."
       - ""
-      - "&#80ee0b▷ &n&lCLICK&r&#80ee0b To Continue"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue"
 
 history:
   title: "&8Coinflip History [%page%]"
@@ -128,7 +128,7 @@ history:
       - "&#FF0000¦ &fClick here to return"
       - "&#FF0000¦ &fto page &#FF0000%page%&f."
       - ""
-      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Continue"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue"
 
   search:
     slot: 49
@@ -141,7 +141,7 @@ history:
       - "&#FFD900¦ &fLook for the games"
       - "&#FFD900¦ &fof one player."
       - ""
-      - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Search"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Search"
 
   next:
     slot: 50
@@ -154,7 +154,7 @@ history:
       - "&#80ee0b¦ &fClick here to open"
       - "&#80ee0b¦ &fpage &#80ee0b%page%&f."
       - ""
-      - "&#80ee0b▷ &n&lCLICK&r&#80ee0b To Continue"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue"
 
 animation:
   title: "&8Flipping Coin..."

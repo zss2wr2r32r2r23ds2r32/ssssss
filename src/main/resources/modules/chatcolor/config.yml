@@ -48,9 +48,9 @@ gui:
   colored-bundles: true
   item-material: BUNDLE
   item-name: "%color%&l%name%"
-  status-owned: "%color%Status: &#94FF00&nOwned"
-  status-locked: "%color%Status: &#FF2727&nLocked"
-  click-footer: "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Equip"
+  status-owned: "&f&lOWNED"
+  status-locked: "&f&lLOCKED"
+  click-footer: "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip"
   lore:
     - "&8Description"
     - ""
@@ -58,7 +58,7 @@ gui:
     - "%color%| &fClick to equip"
     - "%color%| &fthis color"
     - ""
-    - "%status%"
+    - "%color%⚓ &fStatus: %status%"
     - ""
     - "%click%"
   filler:

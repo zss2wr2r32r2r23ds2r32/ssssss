@@ -137,6 +137,15 @@ public final class GlowsModule extends Module implements CommandExecutor, TabCom
         return names;
     }
 
+    public boolean canUse(Player player, String id) {
+        GlowDef def = effect(id);
+        return def != null && canUse(player, def);
+    }
+
+    public void open(Player player) {
+        openGui(player);
+    }
+
     private void openGui(Player player) {
         int rows = Math.max(3, Math.min(6, config.getInt("menu-rows", config.getInt("gui.rows", 4))));
         String title = cfg("gui.title", GuiButtons.title(cfg("gui.guide", "Glows"), cfg("gui.preview-name", "Glows")));
@@ -147,8 +156,8 @@ public final class GlowsModule extends Module implements CommandExecutor, TabCom
                     ? cfg("placeholders.owned-yes", "&#9FFF00&nYes")
                     : cfg("placeholders.owned-no", "&#FF2727&nNo");
             String status = Text.apply(owned
-                            ? cfg("gui.status-owned", "%color%Status: &#94FF00&nOwned")
-                            : cfg("gui.status-locked", "%color%Status: &#FF2727&nLocked"),
+                            ? cfg("gui.status-owned", "&f&lOWNED")
+                            : cfg("gui.status-locked", "&f&lLOCKED"),
                     "color", CosmeticsMenus.colorOf(def.color, def.color), "name", def.displayName);
             List<String> template = config.getStringList("gui.lore");
             List<String> lore = Text.applyList(new ArrayList<>(template.isEmpty() ? def.lore : template),
@@ -156,11 +165,15 @@ public final class GlowsModule extends Module implements CommandExecutor, TabCom
                     "owned", ownedText,
                     "color", CosmeticsMenus.colorOf(def.color, def.color),
                     "status", status,
-                    "click", cfg("gui.click-footer", "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO APPLY"),
+                    "click", cfg("gui.click-footer", GuiButtons.clickFooter("To Apply")),
                     "name", ColorUtil.strip(def.displayName));
-            ItemStack item = GuiButtons.coloredBundle(def.color, def.displayName, lore);
+            boolean harnesses = config.getBoolean("gui.colored-harnesses", true);
+            ItemStack item = harnesses
+                    ? GuiButtons.coloredHarness(def.color, def.displayName, lore)
+                    : GuiButtons.coloredBundle(def.color, def.displayName, lore);
             menu.set(def.slot, item, event -> {
                 event.setCancelled(true);
+                GuiButtons.play(player, "click");
                 if (!canUse(player, def)) {
                     send(player, "locked", "name", ColorUtil.strip(def.displayName));
                     sound(player, "sounds.error");
@@ -179,6 +192,7 @@ public final class GlowsModule extends Module implements CommandExecutor, TabCom
         if (disable != null) {
             menu.set(disable.getInt("slot", 4), Items.fromSection(disable, player), event -> {
                 event.setCancelled(true);
+                GuiButtons.play(player, "click");
                 clear(player);
                 send(player, "cleared");
                 sound(player, "sounds.click");
@@ -187,6 +201,7 @@ public final class GlowsModule extends Module implements CommandExecutor, TabCom
         }
         menu.set(config.getInt("close.slot", GuiButtons.slot("close", 31)), GuiButtons.close(player), event -> {
             event.setCancelled(true);
+            GuiButtons.play(player, "click");
             player.closeInventory();
         });
         GuiButtons.glass(menu, !config.getBoolean("gui.fill", true));

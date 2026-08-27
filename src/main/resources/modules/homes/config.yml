@@ -80,7 +80,7 @@ gui:
             - "&#16D223¦ &fClick to teleport"
             - "&#16D223¦ &fto your &#16D223home 1&f."
             - ""
-            - "&#16D223▷ &n&lCLICK&r&#16D223 To Teleport"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
           slot: 10
           material: LIGHT_GRAY_BED
@@ -92,7 +92,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
       dye:
         set:
           slot: 19
@@ -105,7 +105,7 @@ gui:
             - "&#16D223¦ &fClick to delete"
             - "&#16D223¦ &fthis &#16D223home&f."
             - ""
-            - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Delete"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
           slot: 19
           material: GRAY_DYE
@@ -117,7 +117,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
 
     home-2:
       bed:
@@ -132,7 +132,7 @@ gui:
             - "&#16D223¦ &fClick to teleport"
             - "&#16D223¦ &fto your &#16D223home 2&f."
             - ""
-            - "&#16D223▷ &n&lCLICK&r&#16D223 To Teleport"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
           slot: 11
           material: LIGHT_GRAY_BED
@@ -144,7 +144,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
       dye:
         set:
           slot: 20
@@ -157,7 +157,7 @@ gui:
             - "&#16D223¦ &fClick to delete"
             - "&#16D223¦ &fthis &#16D223home&f."
             - ""
-            - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Delete"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
           slot: 20
           material: GRAY_DYE
@@ -169,7 +169,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
 
     home-3:
       bed:
@@ -184,7 +184,7 @@ gui:
             - "&#16D223¦ &fClick to teleport"
             - "&#16D223¦ &fto your &#16D223home 3&f."
             - ""
-            - "&#16D223▷ &n&lCLICK&r&#16D223 To Teleport"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
           slot: 12
           material: LIGHT_GRAY_BED
@@ -196,7 +196,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
       dye:
         set:
           slot: 21
@@ -209,7 +209,7 @@ gui:
             - "&#16D223¦ &fClick to delete"
             - "&#16D223¦ &fthis &#16D223home&f."
             - ""
-            - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Delete"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
           slot: 21
           material: GRAY_DYE
@@ -221,7 +221,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
 
     home-4:
       bed:
@@ -236,7 +236,7 @@ gui:
             - "&#16D223¦ &fClick to teleport"
             - "&#16D223¦ &fto your &#16D223home 4&f."
             - ""
-            - "&#16D223▷ &n&lCLICK&r&#16D223 To Teleport"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
           slot: 13
           material: LIGHT_GRAY_BED
@@ -248,7 +248,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
       dye:
         set:
           slot: 22
@@ -261,7 +261,7 @@ gui:
             - "&#16D223¦ &fClick to delete"
             - "&#16D223¦ &fthis &#16D223home&f."
             - ""
-            - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Delete"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
           slot: 22
           material: GRAY_DYE
@@ -273,7 +273,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
 
     home-5:
       bed:
@@ -288,7 +288,7 @@ gui:
             - "&#16D223¦ &fClick to teleport"
             - "&#16D223¦ &fto your &#16D223home 5&f."
             - ""
-            - "&#16D223▷ &n&lCLICK&r&#16D223 To Teleport"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
           slot: 14
           material: LIGHT_GRAY_BED
@@ -300,7 +300,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
       dye:
         set:
           slot: 23
@@ -313,7 +313,7 @@ gui:
             - "&#16D223¦ &fClick to delete"
             - "&#16D223¦ &fthis &#16D223home&f."
             - ""
-            - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Delete"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
           slot: 23
           material: GRAY_DYE
@@ -325,7 +325,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
 
     home-6:
       bed:
@@ -340,7 +340,7 @@ gui:
             - "&#16D223¦ &fClick to teleport"
             - "&#16D223¦ &fto your &#16D223home 6&f."
             - ""
-            - "&#16D223▷ &n&lCLICK&r&#16D223 To Teleport"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
           slot: 15
           material: LIGHT_GRAY_BED
@@ -352,7 +352,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
       dye:
         set:
           slot: 24
@@ -365,7 +365,7 @@ gui:
             - "&#16D223¦ &fClick to delete"
             - "&#16D223¦ &fthis &#16D223home&f."
             - ""
-            - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Delete"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
           slot: 24
           material: GRAY_DYE
@@ -377,7 +377,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
 
     home-7:
       bed:
@@ -392,7 +392,7 @@ gui:
             - "&#16D223¦ &fClick to teleport"
             - "&#16D223¦ &fto your &#16D223home 7&f."
             - ""
-            - "&#16D223▷ &n&lCLICK&r&#16D223 To Teleport"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
           slot: 16
           material: LIGHT_GRAY_BED
@@ -404,7 +404,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
       dye:
         set:
           slot: 25
@@ -417,7 +417,7 @@ gui:
             - "&#16D223¦ &fClick to delete"
             - "&#16D223¦ &fthis &#16D223home&f."
             - ""
-            - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Delete"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
           slot: 25
           material: GRAY_DYE
@@ -429,7 +429,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
 
     home-8:
       bed:
@@ -444,7 +444,7 @@ gui:
             - "&#16D223¦ &fClick to teleport"
             - "&#16D223¦ &fto your &#16D223home 8&f."
             - ""
-            - "&#16D223▷ &n&lCLICK&r&#16D223 To Teleport"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
           slot: 28
           material: LIGHT_GRAY_BED
@@ -456,7 +456,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
       dye:
         set:
           slot: 37
@@ -469,7 +469,7 @@ gui:
             - "&#16D223¦ &fClick to delete"
             - "&#16D223¦ &fthis &#16D223home&f."
             - ""
-            - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Delete"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
           slot: 37
           material: GRAY_DYE
@@ -481,7 +481,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
 
     home-9:
       bed:
@@ -496,7 +496,7 @@ gui:
             - "&#16D223¦ &fClick to teleport"
             - "&#16D223¦ &fto your &#16D223home 9&f."
             - ""
-            - "&#16D223▷ &n&lCLICK&r&#16D223 To Teleport"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
           slot: 29
           material: LIGHT_GRAY_BED
@@ -508,7 +508,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
       dye:
         set:
           slot: 38
@@ -521,7 +521,7 @@ gui:
             - "&#16D223¦ &fClick to delete"
             - "&#16D223¦ &fthis &#16D223home&f."
             - ""
-            - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Delete"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
           slot: 38
           material: GRAY_DYE
@@ -533,7 +533,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
 
     home-10:
       bed:
@@ -548,7 +548,7 @@ gui:
             - "&#16D223¦ &fClick to teleport"
             - "&#16D223¦ &fto your &#16D223home 10&f."
             - ""
-            - "&#16D223▷ &n&lCLICK&r&#16D223 To Teleport"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
           slot: 30
           material: LIGHT_GRAY_BED
@@ -560,7 +560,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
       dye:
         set:
           slot: 39
@@ -573,7 +573,7 @@ gui:
             - "&#16D223¦ &fClick to delete"
             - "&#16D223¦ &fthis &#16D223home&f."
             - ""
-            - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Delete"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
           slot: 39
           material: GRAY_DYE
@@ -585,7 +585,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
 
     home-11:
       bed:
@@ -600,7 +600,7 @@ gui:
             - "&#16D223¦ &fClick to teleport"
             - "&#16D223¦ &fto your &#16D223home 11&f."
             - ""
-            - "&#16D223▷ &n&lCLICK&r&#16D223 To Teleport"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
           slot: 31
           material: LIGHT_GRAY_BED
@@ -612,7 +612,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
       dye:
         set:
           slot: 40
@@ -625,7 +625,7 @@ gui:
             - "&#16D223¦ &fClick to delete"
             - "&#16D223¦ &fthis &#16D223home&f."
             - ""
-            - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Delete"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
           slot: 40
           material: GRAY_DYE
@@ -637,7 +637,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
 
     home-12:
       bed:
@@ -652,7 +652,7 @@ gui:
             - "&#16D223¦ &fClick to teleport"
             - "&#16D223¦ &fto your &#16D223home 12&f."
             - ""
-            - "&#16D223▷ &n&lCLICK&r&#16D223 To Teleport"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
           slot: 32
           material: LIGHT_GRAY_BED
@@ -664,7 +664,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
       dye:
         set:
           slot: 41
@@ -677,7 +677,7 @@ gui:
             - "&#16D223¦ &fClick to delete"
             - "&#16D223¦ &fthis &#16D223home&f."
             - ""
-            - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Delete"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
           slot: 41
           material: GRAY_DYE
@@ -689,7 +689,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
 
     home-13:
       bed:
@@ -704,7 +704,7 @@ gui:
             - "&#16D223¦ &fClick to teleport"
             - "&#16D223¦ &fto your &#16D223home 13&f."
             - ""
-            - "&#16D223▷ &n&lCLICK&r&#16D223 To Teleport"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
           slot: 33
           material: LIGHT_GRAY_BED
@@ -716,7 +716,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
       dye:
         set:
           slot: 42
@@ -729,7 +729,7 @@ gui:
             - "&#16D223¦ &fClick to delete"
             - "&#16D223¦ &fthis &#16D223home&f."
             - ""
-            - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Delete"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
           slot: 42
           material: GRAY_DYE
@@ -741,7 +741,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
 
     home-14:
       bed:
@@ -756,7 +756,7 @@ gui:
             - "&#16D223¦ &fClick to teleport"
             - "&#16D223¦ &fto your &#16D223home 14&f."
             - ""
-            - "&#16D223▷ &n&lCLICK&r&#16D223 To Teleport"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
           slot: 34
           material: LIGHT_GRAY_BED
@@ -768,7 +768,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
       dye:
         set:
           slot: 43
@@ -781,7 +781,7 @@ gui:
             - "&#16D223¦ &fClick to delete"
             - "&#16D223¦ &fthis &#16D223home&f."
             - ""
-            - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Delete"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
           slot: 43
           material: GRAY_DYE
@@ -793,7 +793,7 @@ gui:
             - "&#D1D1D1¦ &fClick to save your"
             - "&#D1D1D1¦ &fcurrent location here."
             - ""
-            - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Save"
+            - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Save"
 
 confirm:
   title: "&8Delete Home"
@@ -810,7 +810,7 @@ confirm:
       - "&#FF0000¦ &fClick to keep"
       - "&#FF0000¦ &fthis home."
       - ""
-      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Cancel"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Cancel"
 
   info:
     slot: 13
@@ -834,7 +834,7 @@ confirm:
       - "&#16D223¦ &fClick to delete"
       - "&#16D223¦ &fthis home for good."
       - ""
-      - "&#16D223▷ &n&lCLICK&r&#16D223 To Confirm"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Confirm"
 
 messages:
   teleport: "&#16D223&lHOMES &8▷ &fTeleport in &#16D223%number%"

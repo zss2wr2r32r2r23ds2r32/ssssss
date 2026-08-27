@@ -17,7 +17,7 @@ buttons:
       - "&#94FF00Information:"
       - "&#94FF00| &fGo one page back"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Navigate"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
 
   return:
     slot: 22
@@ -30,7 +30,7 @@ buttons:
       - "&#FF0000| &fGo back to the"
       - "&#FF0000| &fshop menu"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Return"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Return"
 
   next:
     slot: 23
@@ -42,7 +42,7 @@ buttons:
       - "&#94FF00Information:"
       - "&#94FF00| &fGo one page forward"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Navigate"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
 
 items:
   pig:
@@ -60,7 +60,7 @@ items:
       - ""
       - "&#FFB6C1⚓ &fPrice: &#FFB6C1$%price%"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
   cow:
     page: 1
     slot: 11
@@ -76,7 +76,7 @@ items:
       - ""
       - "&#C4A484⚓ &fPrice: &#C4A484$%price%"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
   zombie:
     page: 1
     slot: 12
@@ -92,7 +92,7 @@ items:
       - ""
       - "&#80EE0B⚓ &fPrice: &#80EE0B$%price%"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
   skeleton:
     page: 1
     slot: 13
@@ -108,7 +108,7 @@ items:
       - ""
       - "&#E3E3E3⚓ &fPrice: &#E3E3E3$%price%"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
   creeper:
     page: 1
     slot: 14
@@ -124,7 +124,7 @@ items:
       - ""
       - "&#007E20⚓ &fPrice: &#007E20$%price%"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
   blaze:
     page: 1
     slot: 15
@@ -140,7 +140,7 @@ items:
       - ""
       - "&#FFBA00⚓ &fPrice: &#FFBA00$%price%"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
   irongolem:
     page: 1
     slot: 16
@@ -156,4 +156,4 @@ items:
       - ""
       - "&7⚓ &fPrice: &7$%price%"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"

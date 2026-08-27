@@ -13,7 +13,7 @@ cancel:
   - '&fClick here, to cancel'
   - '&fthis order'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Cancel'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Cancel'
 collect:
   material: BARREL
   slot: 15
@@ -25,7 +25,7 @@ collect:
   - '&fClick here, to'
   - '&fcollect your items.'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Collect'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Collect'
 back:
   material: RED_DYE
   slot: 22
@@ -37,7 +37,7 @@ back:
   - '&fClick here, to go'
   - '&fback to your orders.'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Return'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Return'
 filler:
   material: GRAY_STAINED_GLASS_PANE
   name: ' '

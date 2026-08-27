@@ -12,7 +12,7 @@ item-template:
     - ""
     - "&#99ff00&l$&r &fPrice &8▷ &#99ff00$&r&#99ff00%price%"
     - ""
-    - "&#99ff00▷ &n&lCLICK&r&#99ff00 To Buy"
+    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
 
 buttons:
 
@@ -26,7 +26,7 @@ buttons:
       - "&#FF0000Information:"
       - "&#FF0000¦ &fGo one page back."
       - ""
-      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Navigate"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
 
   return:
     slot: 31
@@ -39,7 +39,7 @@ buttons:
       - "&#FFD900¦ &fGo back to the"
       - "&#FFD900¦ &f&#FFD900shop menu&f."
       - ""
-      - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Return"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Return"
 
   next:
     slot: 32
@@ -51,7 +51,7 @@ buttons:
       - "&#99ff00Information:"
       - "&#99ff00¦ &fGo one page forward."
       - ""
-      - "&#99ff00▷ &n&lCLICK&r&#99ff00 To Navigate"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
 
 items:
 

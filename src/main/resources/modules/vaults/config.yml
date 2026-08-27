@@ -55,7 +55,7 @@ menu:
       - "&#FF0000¦ &fClick on me to"
       - "&#FF0000¦ &fclose the &#FF0000main menu&f!"
       - ""
-      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Close"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Close"
 
   previous:
     slot: 19
@@ -97,7 +97,7 @@ menu:
       - "&#00E1FF¦ &fSlots Used: &#00E1FF%used%"
       - "&#00E1FF¦ &fMax Slots: &#00E1FF%max%"
       - ""
-      - "&#00E1FF▷ &n&lCLICK&r&#00E1FF To View"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
 
   locked:
     material: RED_DYE
@@ -114,7 +114,7 @@ menu:
       - ""
       - "&#FF0000¦ &fStatus: &#FF0000Locked"
       - ""
-      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Unlock"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Unlock"
 
 vault:
   title: "&8Vault #%number%"

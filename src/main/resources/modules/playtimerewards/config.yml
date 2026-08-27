@@ -34,18 +34,18 @@ menu:
       - "&#FFEE00¦ &fReady to claim: &#FFEE00%ready%"
       - "&#FFEE00¦ &fNext reward in: &#FFEE00%next%"
       - ""
-      - "&#FFEE00▷ &n&lCLICK&r&#FFEE00 To Refresh"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Refresh"
 icons:
   no-rewards: "&f- &7none"
   locked:
     material: RED_DYE
     name: "&#FF0000&lIN PROGRESS &r&#FF0000(%required%)"
-    lore: ["&8Description","","&#FF0000Information:","&#FF0000¦ &fYou need &#FF0000%left% &fmore","&#FF0000¦ &fplaytime for this &#FF0000reward&f!","","&#FF0000Rewards:","%rewards%","","&#FF0000▷ &n&lCLICK&r&#FF0000 To Refresh"]
+    lore: ["&8Description","","&#FF0000Information:","&#FF0000¦ &fYou need &#FF0000%left% &fmore","&#FF0000¦ &fplaytime for this &#FF0000reward&f!","","&#FF0000Rewards:","%rewards%","","&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Refresh"]
   ready:
     material: YELLOW_DYE
     glow: true
     name: "&#FFEE00&lREADY &r&#FFEE00(%required%)"
-    lore: ["&8Description","","&#FFEE00Information:","&#FFEE00¦ &fYou played &#FFEE00%required%&f,","&#FFEE00¦ &fthis &#FFEE00reward &fis yours!","","&#FFEE00Rewards:","%rewards%","","&#FFEE00▷ &n&lCLICK&r&#FFEE00 To Claim"]
+    lore: ["&8Description","","&#FFEE00Information:","&#FFEE00¦ &fYou played &#FFEE00%required%&f,","&#FFEE00¦ &fthis &#FFEE00reward &fis yours!","","&#FFEE00Rewards:","%rewards%","","&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Claim"]
   claimed:
     material: LIME_DYE
     name: "&#80EE0B&lCLAIMED &r&#80EE0B(%required%)"

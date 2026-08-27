@@ -16,12 +16,13 @@ gui:
     - "%color%Information:"
     - "%color%| &fClick to apply this glow"
     - ""
-    - "%status%"
+    - "%color%⚓ &fStatus: %status%"
     - ""
     - "%click%"
-  status-owned: "%color%Status: &#94FF00&nOwned"
-  status-locked: "%color%Status: &#FF2727&nLocked"
-  click-footer: "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Apply"
+  status-owned: "&f&lOWNED"
+  status-locked: "&f&lLOCKED"
+  click-footer: "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply"
+  colored-harnesses: true
   fill: true
 
 placeholders:
@@ -38,7 +39,7 @@ disable:
     - '&#FF0000Information:'
     - '&#FF0000| &fDont want a glow?'
     - ''
-    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Remove'
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Remove'
 
 close:
   slot: 31
@@ -251,7 +252,7 @@ glows:
       - ''
       - '&8| ⚓ &fOwned: %glow_owned_black%'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO APPLY'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
   rainbow:
     slot: 25
     permission: eglow.color.rainbow
@@ -267,7 +268,7 @@ glows:
       - ''
       - '&#FF00AA⚓ &fOwned: %glow_owned_rainbow%'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Apply'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
 
 sounds:
   open:

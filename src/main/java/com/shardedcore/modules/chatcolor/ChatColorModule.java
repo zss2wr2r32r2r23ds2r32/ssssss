@@ -308,6 +308,10 @@ public final class ChatColorModule extends Module implements CommandExecutor, Ta
         }
     }
 
+    public void open(Player player) {
+        openGui(player, 0);
+    }
+
     private void openGui(Player player, int page) {
         List<CosmeticsMenus.Entry> entries = new ArrayList<>();
         for (String id : names()) {

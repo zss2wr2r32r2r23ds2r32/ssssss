@@ -37,6 +37,7 @@ modules:
   chatcolor: true
   tags: true
   glows: true
+  cosmetics: true
   teams: true
   wipe: true
   crystals: true

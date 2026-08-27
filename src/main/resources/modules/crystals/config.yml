@@ -23,7 +23,7 @@ menu:
       - ""
       - "&#00A2FF⚓ &fBalance: &#00A2FF%crystals%"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK For Store"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0For Store"
 
 sounds:
   open:
@@ -62,7 +62,7 @@ confirm:
       - "&#94FF00| &fBuy %item%"
       - "&#94FF00| &ffor &#94FF00%price% &fcrystals"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Confirm"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Confirm"
   cancel:
     slot: 15
     material: RED_STAINED_GLASS_PANE
@@ -74,7 +74,7 @@ confirm:
       - "&#FF0000| &fGo back and cancel"
       - "&#FF0000| &fthis purchase"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Cancel"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Cancel"
 
 messages:
   self: "%prefix%&fYou have &#A370EE%amount% &fcrystals."
@@ -86,6 +86,7 @@ messages:
   set: "%prefix%&#A370EE%player% &fnow has &#A370EE%amount%&f."
   bought: "%prefix%&fBought %item% &ffor &#A370EE%amount%&f."
   cannot-afford: "&#FF0000&lERROR &8▷ &fYou need &#A370EE%amount% &fcrystals."
+  already-owned: "&#FF0000&lERROR &8▷ &fYou already own that."
   failed: "&#FF0000&lERROR &8▷ &fThat item could not be given."
   invalid-amount: "&#FF0000&lERROR &8▷ &fThat amount is not valid."
   player-missing: "&#FF0000&lERROR &8▷ &fThat player was not found."
@@ -97,6 +98,8 @@ messages:
   usage-set: "%prefix%&f/crystal set <player> <amount>"
 
 sections:
+  # Copy any item under items: to add more. type is tag, chatcolor, glow, perk, money, key, spawner, tool or command.
+  # slot is optional — the next free inner slot is used when you leave it out.
   tags:
     enabled: true
     slot: 10
@@ -108,7 +111,7 @@ sections:
       - "&#A370EEInformation:"
       - "&#A370EE| &fBuy chat and tab tags"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
     title: "Tags"
     rows: 4
     border-only: false
@@ -130,7 +133,7 @@ sections:
           - ""
           - "&#00A2FF⚓ &fPrice: &#00A2FF%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       mummy:
         slot: 11
         type: tag
@@ -146,23 +149,23 @@ sections:
           - ""
           - "&#FF0086⚓ &fPrice: &#FF0086%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       swordmummy:
         slot: 12
         type: tag
         tag: swordmummy
         price: 250
         material: YELLOW_BUNDLE
-        name: "&#FFEE00&lMUMMY"
+        name: "&#FFEE00&lGOAT"
         lore:
           - "&8Description"
           - ""
           - "&#FFEE00Information:"
-          - "&#FFEE00| &fShows &#FFEE00&lMUMMY &fin chat"
+          - "&#FFEE00| &fShows &#FFEE00&lGOAT &fin chat"
           - ""
           - "&#FFEE00⚓ &fPrice: &#FFEE00%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       sharded:
         slot: 13
         type: tag
@@ -178,7 +181,7 @@ sections:
           - ""
           - "&#A370EE⚓ &fPrice: &#A370EE%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       one:
         slot: 14
         type: tag
@@ -194,7 +197,7 @@ sections:
           - ""
           - "&#A9FF00⚓ &fPrice: &#A9FF00%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       p2w:
         slot: 15
         type: tag
@@ -210,7 +213,7 @@ sections:
           - ""
           - "&#FCFF00⚓ &fPrice: &#FCFF00%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       goty:
         slot: 16
         type: tag
@@ -226,7 +229,7 @@ sections:
           - ""
           - "&#FF2F2F⚓ &fPrice: &#FF2F2F%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       hacker:
         slot: 19
         type: tag
@@ -242,7 +245,7 @@ sections:
           - ""
           - "&#FF0000⚓ &fPrice: &#FF0000%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
 
   chatcolors:
     enabled: true
@@ -255,7 +258,7 @@ sections:
       - "&#A370EEInformation:"
       - "&#A370EE| &fColor your chat messages"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
     title: "Chat Colors"
     rows: 4
     border-only: false
@@ -277,7 +280,7 @@ sections:
           - ""
           - "&#FF0000⚓ &fPrice: &#FF0000%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       yellow:
         slot: 11
         type: chatcolor
@@ -293,7 +296,7 @@ sections:
           - ""
           - "&#FFF800⚓ &fPrice: &#FFF800%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       green:
         slot: 12
         type: chatcolor
@@ -309,7 +312,7 @@ sections:
           - ""
           - "&#8AFF00⚓ &fPrice: &#8AFF00%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       blue:
         slot: 13
         type: chatcolor
@@ -325,7 +328,7 @@ sections:
           - ""
           - "&#00C1FF⚓ &fPrice: &#00C1FF%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       light_blue:
         slot: 14
         type: chatcolor
@@ -341,7 +344,7 @@ sections:
           - ""
           - "&#7EE8FF⚓ &fPrice: &#7EE8FF%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       purple:
         slot: 15
         type: chatcolor
@@ -357,7 +360,7 @@ sections:
           - ""
           - "&#8000FF⚓ &fPrice: &#8000FF%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       pink:
         slot: 16
         type: chatcolor
@@ -373,7 +376,7 @@ sections:
           - ""
           - "&#FF74DF⚓ &fPrice: &#FF74DF%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       blossom:
         slot: 19
         type: chatcolor
@@ -389,9 +392,9 @@ sections:
           - ""
           - "&#FF74DF⚓ &fPrice: &#FF74DF%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       amethyst:
-        slot: 22
+        slot: 20
         type: chatcolor
         color: amethyst
         price: 350
@@ -405,7 +408,7 @@ sections:
           - ""
           - "&#9B59B6⚓ &fPrice: &#9B59B6%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
 
   glows:
     enabled: true
@@ -418,7 +421,7 @@ sections:
       - "&#A370EEInformation:"
       - "&#A370EE| &fUnlock player glows"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
     title: "Glows"
     rows: 4
     border-only: false
@@ -440,7 +443,7 @@ sections:
           - ""
           - "&#FF0000⚓ &fPrice: &#FF0000%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       yellow:
         slot: 11
         type: glow
@@ -456,7 +459,7 @@ sections:
           - ""
           - "&#FFF800⚓ &fPrice: &#FFF800%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       green:
         slot: 12
         type: glow
@@ -472,7 +475,7 @@ sections:
           - ""
           - "&#8AFF00⚓ &fPrice: &#8AFF00%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       blue:
         slot: 14
         type: glow
@@ -488,7 +491,7 @@ sections:
           - ""
           - "&#00C1FF⚓ &fPrice: &#00C1FF%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       purple:
         slot: 15
         type: glow
@@ -504,7 +507,7 @@ sections:
           - ""
           - "&#8000FF⚓ &fPrice: &#8000FF%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       pink:
         slot: 16
         type: glow
@@ -520,7 +523,7 @@ sections:
           - ""
           - "&#FF74DF⚓ &fPrice: &#FF74DF%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       rainbow:
         slot: 22
         type: glow
@@ -536,7 +539,7 @@ sections:
           - ""
           - "&#FF00AA⚓ &fPrice: &#FF00AA%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
 
   drills:
     enabled: true
@@ -549,7 +552,7 @@ sections:
       - "&#A370EEInformation:"
       - "&#A370EE| &fSharded tools with an expire time"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
     title: "Tools"
     rows: 4
     border-only: false
@@ -573,7 +576,7 @@ sections:
           - "&#A370EE⚓ &fPrice: &#A370EE%price%"
           - "&#A370EE⚓ &fExpires in: 7d"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       drill-14:
         slot: 19
         type: tool
@@ -591,7 +594,7 @@ sections:
           - "&#A370EE⚓ &fPrice: &#A370EE%price%"
           - "&#A370EE⚓ &fExpires in: 14d"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       chopper:
         slot: 13
         type: tool
@@ -609,7 +612,7 @@ sections:
           - "&#A370EE⚓ &fPrice: &#A370EE%price%"
           - "&#A370EE⚓ &fExpires in: 7d"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       chopper-14:
         slot: 22
         type: tool
@@ -627,7 +630,7 @@ sections:
           - "&#A370EE⚓ &fPrice: &#A370EE%price%"
           - "&#A370EE⚓ &fExpires in: 14d"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       firework:
         slot: 16
         type: tool
@@ -645,7 +648,7 @@ sections:
           - "&#A370EE⚓ &fPrice: &#A370EE%price%"
           - "&#A370EE⚓ &fExpires in: 7d"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       firework-14:
         slot: 25
         type: tool
@@ -663,7 +666,7 @@ sections:
           - "&#A370EE⚓ &fPrice: &#A370EE%price%"
           - "&#A370EE⚓ &fExpires in: 14d"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
 
   perks:
     enabled: true
@@ -677,7 +680,7 @@ sections:
       - "&#FFD900| &fUnlock /ec /craft /fly"
       - "&#FFD900| &ffor 7 days"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
     title: "Perks"
     rows: 3
     border-only: false
@@ -701,7 +704,7 @@ sections:
           - ""
           - "&#A370EE⚓ &fPrice: &#A370EE%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       craft:
         slot: 13
         type: perk
@@ -719,7 +722,7 @@ sections:
           - ""
           - "&#FFBA00⚓ &fPrice: &#FFBA00%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       fly:
         slot: 15
         type: perk
@@ -737,7 +740,7 @@ sections:
           - ""
           - "&#00C1FF⚓ &fPrice: &#00C1FF%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
 
   sellwands:
     enabled: true
@@ -750,7 +753,7 @@ sections:
       - "&#80EE0BInformation:"
       - "&#80EE0B| &fBuy timed sell wands"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
     title: "Sell Wands"
     rows: 3
     border-only: false
@@ -774,7 +777,7 @@ sections:
           - ""
           - "&#80EE0B⚓ &fPrice: &#80EE0B%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       wand-3d:
         slot: 13
         type: tool
@@ -792,7 +795,7 @@ sections:
           - ""
           - "&#80EE0B⚓ &fPrice: &#80EE0B%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       wand-7d:
         slot: 15
         type: tool
@@ -810,7 +813,7 @@ sections:
           - ""
           - "&#80EE0B⚓ &fPrice: &#80EE0B%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
 
   spawners:
     enabled: true
@@ -823,7 +826,7 @@ sections:
       - "&#00BDF9Information:"
       - "&#00BDF9| &fBuy mob spawners"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
     title: "Spawners"
     rows: 3
     border-only: false
@@ -845,7 +848,7 @@ sections:
           - ""
           - "&#FFB6C1⚓ &fPrice: &#FFB6C1%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
         commands:
           - "spawner give spawner %player% pig"
       cow:
@@ -863,7 +866,7 @@ sections:
           - ""
           - "&#C4A484⚓ &fPrice: &#C4A484%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
         commands:
           - "spawner give spawner %player% cow"
       zombie:
@@ -881,7 +884,7 @@ sections:
           - ""
           - "&#80EE0B⚓ &fPrice: &#80EE0B%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
         commands:
           - "spawner give spawner %player% zombie"
       skeleton:
@@ -899,7 +902,7 @@ sections:
           - ""
           - "&#D1D1D1⚓ &fPrice: &#D1D1D1%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
         commands:
           - "spawner give spawner %player% skeleton"
       creeper:
@@ -917,7 +920,7 @@ sections:
           - ""
           - "&#007E20⚓ &fPrice: &#007E20%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
         commands:
           - "spawner give spawner %player% creeper"
       blaze:
@@ -935,7 +938,7 @@ sections:
           - ""
           - "&#FFBA00⚓ &fPrice: &#FFBA00%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
         commands:
           - "spawner give spawner %player% blaze"
       irongolem:
@@ -953,13 +956,13 @@ sections:
           - ""
           - "&7⚓ &fPrice: &7%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
         commands:
           - "spawner give spawner %player% iron_golem"
 
   money:
     enabled: true
-    slot: 19
+    slot: 23
     material: GOLD_INGOT
     name: "&#80EE0B&lMONEY"
     lore:
@@ -968,7 +971,7 @@ sections:
       - "&#80EE0BInformation:"
       - "&#80EE0B| &fTrade crystals for money"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
     title: "Money"
     rows: 3
     border-only: false
@@ -990,7 +993,7 @@ sections:
           - ""
           - "&#80EE0B⚓ &fPrice: &#80EE0B%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       500k:
         slot: 11
         type: money
@@ -1006,7 +1009,7 @@ sections:
           - ""
           - "&#80EE0B⚓ &fPrice: &#80EE0B%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       1m:
         slot: 13
         type: money
@@ -1022,7 +1025,7 @@ sections:
           - ""
           - "&#80EE0B⚓ &fPrice: &#80EE0B%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       10m:
         slot: 15
         type: money
@@ -1038,7 +1041,7 @@ sections:
           - ""
           - "&#80EE0B⚓ &fPrice: &#80EE0B%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       25m:
         slot: 16
         type: money
@@ -1054,7 +1057,7 @@ sections:
           - ""
           - "&#80EE0B⚓ &fPrice: &#80EE0B%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
 
   keys:
     enabled: true
@@ -1067,7 +1070,7 @@ sections:
       - "&#A370EEInformation:"
       - "&#A370EE| &fBuy crate keys with crystals"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
     title: "Crate Keys"
     rows: 4
     border-only: false
@@ -1090,7 +1093,7 @@ sections:
           - ""
           - "&#A370EE⚓ &fPrice: &#A370EE%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       test-3:
         slot: 13
         type: key
@@ -1107,4 +1110,4 @@ sections:
           - ""
           - "&#A370EE⚓ &fPrice: &#A370EE%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"

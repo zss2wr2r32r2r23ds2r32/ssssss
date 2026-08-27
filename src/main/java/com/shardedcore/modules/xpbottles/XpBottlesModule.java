@@ -28,7 +28,8 @@ public final class XpBottlesModule extends Module implements Listener {
 
     @EventHandler
     public void onMerge(ExperienceOrbMergeEvent event) {
-        if (!config.getBoolean("convert-merges", true)) return;
+        if (config.getBoolean("combine-orbs", true)) return;
+        if (!config.getBoolean("convert-merges", false)) return;
         ExperienceOrb target = event.getMergeTarget();
         ExperienceOrb source = event.getMergeSource();
         int total = xp(target) + xp(source);
@@ -42,7 +43,8 @@ public final class XpBottlesModule extends Module implements Listener {
 
     @EventHandler
     public void onSpawn(EntitySpawnEvent event) {
-        if (!config.getBoolean("convert-spawns", true)) return;
+        if (config.getBoolean("combine-orbs", true)) return;
+        if (!config.getBoolean("convert-spawns", false)) return;
         if (!(event.getEntity() instanceof ExperienceOrb orb)) return;
         int per = Math.max(1, config.getInt("experience-per-bottle", 7));
         int min = config.getInt("min-experience", per * config.getInt("min-bottles", 2));

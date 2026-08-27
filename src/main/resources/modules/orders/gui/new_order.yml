@@ -14,7 +14,7 @@ back:
   - '&fClick here, to go back'
   - '&fto the main page.'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To go Back'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Go Back'
 item:
   slot: 12
   material: STONE
@@ -28,7 +28,7 @@ item:
   - ''
   - '&#F90EC2&l● &fItem: &#F90EC2%item_name%'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Choose'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Choose'
 amount:
   slot: 13
   material: CHEST
@@ -42,7 +42,7 @@ amount:
   - ''
   - '&#FB7B0B&l● &fAmount: &#FB7B0B%current_amount%'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Choose an Amount'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Choose An Amount'
 price:
   slot: 14
   material: EMERALD
@@ -56,7 +56,7 @@ price:
   - ''
   - '&#45FF17&l● &fPrice: &#45FF17$%current_price%'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Set'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Set'
 confirm:
   slot: 16
   material: LIME_STAINED_GLASS_PANE
@@ -70,7 +70,7 @@ confirm:
   - ''
   - '&#45FF17&l● &fTotal: &#45FF17$%total_price%'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Confirm'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Confirm'
 extra:
   slot: 15
   material: ENCHANTING_TABLE
@@ -82,7 +82,7 @@ extra:
   - '&fClick to choose what'
   - '&fthe item has to carry.'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Choose'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Choose'
 incomplete:
   slot: 16
   material: GRAY_STAINED_GLASS_PANE

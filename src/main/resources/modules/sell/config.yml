@@ -26,7 +26,7 @@ multiplier-button:
     - "&#80ee0b☀ &fProgress &8▷ &#80ee0b%percent%%"
     - "&#FFD900★ &fNext &8▷ &#FFD900%next%x"
     - ""
-    - "&#80ee0b▷ &n&lCLICK&r&#80ee0b To Open"
+    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
 
 rules:
   # Only untouched items are sold. Enchanted, renamed, damaged and filled
@@ -99,7 +99,7 @@ history:
       - "&#FF0000Information:"
       - "&#FF0000¦ &fGo one page back."
       - ""
-      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Navigate"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
 
   next:
     slot: 50
@@ -111,7 +111,7 @@ history:
       - "&#80ee0bInformation:"
       - "&#80ee0b¦ &fGo one page forward."
       - ""
-      - "&#80ee0b▷ &n&lCLICK&r&#80ee0b To Navigate"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
 
 messages:
   sold: "&#80ee0b&lSELL &8▷ &fSold &#80ee0b%items% items &ffor &#80ee0b$%total%&f."

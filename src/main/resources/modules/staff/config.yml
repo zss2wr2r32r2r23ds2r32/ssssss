@@ -51,7 +51,7 @@ staffmode:
         - "&#FF8300| &fHide yourself from"
         - "&#FF8300| &fplayers on the server"
         - ""
-        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Toggle"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle"
       vanished-lore:
         - "&8Description"
         - ""
@@ -59,7 +59,7 @@ staffmode:
         - "&#8B8B8B| &fYou are currently vanished"
         - "&#8B8B8B| &fClick to show yourself"
         - ""
-        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Toggle"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle"
     freeze:
       slot: 1
       material: PACKED_ICE
@@ -71,7 +71,7 @@ staffmode:
         - "&#00C1FF| &fRight click a player"
         - "&#00C1FF| &fto freeze them"
         - ""
-        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Use"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Use"
     punish:
       slot: 2
       material: NETHERITE_AXE
@@ -80,10 +80,10 @@ staffmode:
         - "&8Description"
         - ""
         - "&#FF0000Information:"
-        - "&#FF0000| &fRight click a player"
+        - "&#FF0000| &fHit a player"
         - "&#FF0000| &fto open ban mute kick"
         - ""
-        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Use"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Use"
     randomtp:
       slot: 3
       material: COMPASS
@@ -95,7 +95,7 @@ staffmode:
         - "&#00A2FF| &fTeleport to a random"
         - "&#00A2FF| &fonline player"
         - ""
-        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Teleport"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
     exit:
       slot: 8
       material: BARRIER
@@ -107,7 +107,7 @@ staffmode:
         - "&#FF0000| &fLeave staff mode and"
         - "&#FF0000| &frestore your inventory"
         - ""
-        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Exit"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Exit"
 
 punish:
   title: "Punish"
@@ -123,7 +123,7 @@ punish:
       - "&#FF0000| &fChoose a ban reason"
       - "&#FF0000| &ffor %player%"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
   mute:
     slot: 13
     material: BOOK
@@ -135,7 +135,7 @@ punish:
       - "&#FFBA00| &fChoose a mute reason"
       - "&#FFBA00| &ffor %player%"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
   kick:
     slot: 15
     material: LEATHER_BOOTS
@@ -147,9 +147,9 @@ punish:
       - "&#FF8300| &fChoose a kick reason"
       - "&#FF8300| &ffor %player%"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
   close:
-    slot: 22
+    slot: 26
 
 # Add more reasons here. A list opens a duration picker. A single value bans/mutes immediately.
 reasons:
@@ -174,6 +174,7 @@ reasons:
   Ban-Evasion: permanent
   Duping: permanent
   Doxxing: permanent
+  doxxing: permanent
 
 mute-reasons:
   Spam:

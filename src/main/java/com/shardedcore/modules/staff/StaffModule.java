@@ -33,6 +33,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
@@ -333,11 +334,11 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
 
     private static List<String> defaultLore(String id) {
         return switch (id) {
-            case "vanish" -> List.of("&8Description", "", "&#FF8300&lINFORMATION:", "&#FF8300| &f&lTOGGLE VANISH", "", "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO TOGGLE");
-            case "freeze" -> List.of("&8Description", "", "&#00C1FF&lINFORMATION:", "&#00C1FF| &f&lRIGHT CLICK A PLAYER", "&#00C1FF| &f&lTO FREEZE THEM", "", "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO USE");
-            case "punish" -> List.of("&8Description", "", "&#FF0000&lINFORMATION:", "&#FF0000| &f&lRIGHT CLICK A PLAYER", "&#FF0000| &f&lTO OPEN PUNISH", "", "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO USE");
-            case "randomtp" -> List.of("&8Description", "", "&#00A2FF&lINFORMATION:", "&#00A2FF| &f&lTELEPORT TO A", "&#00A2FF| &f&lRANDOM PLAYER", "", "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO TELEPORT");
-            case "exit" -> List.of("&8Description", "", "&#FF0000&lINFORMATION:", "&#FF0000| &f&lLEAVE STAFF MODE", "", "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO EXIT");
+            case "vanish" -> List.of("&8Description", "", "&#FF8300Information:", "&#FF8300| &fToggle vanish", "", GuiButtons.clickFooter("To Toggle"));
+            case "freeze" -> List.of("&8Description", "", "&#00C1FFInformation:", "&#00C1FF| &fRight click a player", "&#00C1FF| &fto freeze them", "", GuiButtons.clickFooter("To Use"));
+            case "punish" -> List.of("&8Description", "", "&#FF0000Information:", "&#FF0000| &fHit a player", "&#FF0000| &fto open punish", "", GuiButtons.clickFooter("To Use"));
+            case "randomtp" -> List.of("&8Description", "", "&#00A2FFInformation:", "&#00A2FF| &fTeleport to a", "&#00A2FF| &frandom player", "", GuiButtons.clickFooter("To Teleport"));
+            case "exit" -> List.of("&8Description", "", "&#FF0000Information:", "&#FF0000| &fLeave staff mode", "", GuiButtons.clickFooter("To Exit"));
             default -> List.of();
         };
     }
@@ -571,10 +572,12 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         placePunishButton(menu, staff, target, "ban", 11, Material.IRON_BARS, "&#FF0000&lBAN");
         placePunishButton(menu, staff, target, "mute", 13, Material.BOOK, "&#FFBA00&lMUTE");
         placePunishButton(menu, staff, target, "kick", 15, Material.LEATHER_BOOTS, "&#FF8300&lKICK");
-        int closeSlot = punish == null ? GuiButtons.slot("close", 22) : punish.getInt("close.slot", 22);
+        int closeSlot = punish == null ? Math.max(0, menu.inventory().getSize() - 1)
+                : punish.getInt("close.slot", Math.max(0, menu.inventory().getSize() - 1));
         if (closeSlot >= 0 && closeSlot < menu.inventory().getSize()) {
             menu.set(closeSlot, GuiButtons.close(staff), event -> {
                 event.setCancelled(true);
+                GuiButtons.play(staff, "click");
                 staff.closeInventory();
             });
         }
@@ -593,6 +596,7 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
                 : Items.fromSection(section, staff, "player", target.getName());
         menu.set(slot, item, event -> {
             event.setCancelled(true);
+            GuiButtons.play(staff, "click");
             openReasons(staff, target, type);
         });
     }
@@ -628,10 +632,12 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
                                 color + "| &fPlayer: &f" + target.getName(),
                                 color + "| &fDuration: &f" + durationLabel,
                                 "",
-                                "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To " + (choice.durations.size() > 1 ? "Open" : type.substring(0, 1).toUpperCase(Locale.ROOT) + type.substring(1))));
+                                GuiButtons.clickFooter(choice.durations.size() > 1 ? "To Open"
+                                        : "To " + type.substring(0, 1).toUpperCase(Locale.ROOT) + type.substring(1))));
             }
             menu.set(slots[index++], item, event -> {
                 event.setCancelled(true);
+                GuiButtons.play(staff, "click");
                 if (choice.durations.size() > 1) {
                     openDurations(staff, target, type, choice);
                     return;
@@ -639,7 +645,7 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
                 applyReason(staff, target, type, choice.reason, choice.durations.get(0));
             });
         }
-        GuiButtons.placeBack(menu, staff, GuiButtons.slot("back", Math.max(0, menu.inventory().getSize() - 5)),
+        GuiButtons.placeBack(menu, staff, Math.max(0, menu.inventory().getSize() - 1),
                 () -> openPunish(staff, target));
         GuiButtons.border(menu);
         plugin.menus().open(staff, menu);
@@ -659,12 +665,13 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
                             color + "| &f" + choice.reason,
                             color + "| &fPlayer: " + target.getName(),
                             "",
-                            "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Apply")), event -> {
+                            GuiButtons.clickFooter("To Apply"))), event -> {
                 event.setCancelled(true);
+                GuiButtons.play(staff, "click");
                 applyReason(staff, target, type, choice.reason, duration);
             });
         }
-        GuiButtons.placeBack(menu, staff, GuiButtons.slot("back", Math.max(0, menu.inventory().getSize() - 5)),
+        GuiButtons.placeBack(menu, staff, Math.max(0, menu.inventory().getSize() - 1),
                 () -> openReasons(staff, target, type));
         GuiButtons.border(menu);
         plugin.menus().open(staff, menu);
@@ -1251,7 +1258,19 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         String id = toolId(player.getInventory().getItemInMainHand());
         if (id.isEmpty() || tooSoon(player)) return;
         if (id.equals("freeze")) player.performCommand("freeze " + target.getName());
-        else if (id.equals("punish")) player.performCommand("punish " + target.getName());
+        else if (id.equals("punish")) openPunish(player, target);
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onHit(EntityDamageByEntityEvent event) {
+        if (!(event.getDamager() instanceof Player player)) return;
+        if (!staffMode.contains(player.getUniqueId())) return;
+        event.setCancelled(true);
+        if (player.getGameMode() == GameMode.SPECTATOR) return;
+        if (!(event.getEntity() instanceof Player target)) return;
+        String id = toolId(player.getInventory().getItemInMainHand());
+        if (!id.equals("punish") || tooSoon(player)) return;
+        if (player.hasPermission("shardedcore.staff.punish")) openPunish(player, target);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

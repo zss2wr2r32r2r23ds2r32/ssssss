@@ -58,7 +58,7 @@ main:
       - ""
       - "&#22AFFBℹ &fWaiting &8▷ &#22AFFB%wins%"
       - ""
-      - "&#B219CB▷ &n&lCLICK&r&#B219CB To Open"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
 
   previous:
     slot: 48
@@ -70,7 +70,7 @@ main:
       - "&#FF0000Information:"
       - "&#FF0000¦ &fGo one page back."
       - ""
-      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Navigate"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
 
   refresh:
     slot: 49
@@ -83,7 +83,7 @@ main:
       - "&#FFD900¦ &fLoad the newest"
       - "&#FFD900¦ &fentries &#FFD900again&f."
       - ""
-      - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Refresh"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Refresh"
 
   next:
     slot: 50
@@ -95,7 +95,7 @@ main:
       - "&#97F900Information:"
       - "&#97F900¦ &fGo one page forward."
       - ""
-      - "&#97F900▷ &n&lCLICK&r&#97F900 To Navigate"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
 
   create:
     slot: 53
@@ -110,7 +110,7 @@ main:
       - ""
       - "&#22AFFBℹ &fYours Running &8▷ &#22AFFB%running%&8/&#22AFFB%max%"
       - ""
-      - "&#FFB02E▷ &n&lCLICK&r&#FFB02E To Create"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Create"
 
   empty:
     slot: 22
@@ -140,7 +140,7 @@ wins:
       - ""
       - "&#FFD900⌛ &fWon &8▷ &#FFD900%time%"
       - ""
-      - "&#97F900▷ &n&lCLICK&r&#97F900 To Claim"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Claim"
 
   returned:
     material: CHEST_MINECART
@@ -157,7 +157,7 @@ wins:
       - ""
       - "&#FFD900⌛ &fEnded &8▷ &#FFD900%time%"
       - ""
-      - "&#97F900▷ &n&lCLICK&r&#97F900 To Claim"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Claim"
 
   previous:
     slot: 48
@@ -169,7 +169,7 @@ wins:
       - "&#FF0000Information:"
       - "&#FF0000¦ &fGo one page back."
       - ""
-      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Navigate"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
 
   refresh:
     slot: 49
@@ -182,7 +182,7 @@ wins:
       - "&#FFD900¦ &fLoad your won"
       - "&#FFD900¦ &fitems &#FFD900again&f."
       - ""
-      - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Refresh"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Refresh"
 
   next:
     slot: 50
@@ -194,7 +194,7 @@ wins:
       - "&#97F900Information:"
       - "&#97F900¦ &fGo one page forward."
       - ""
-      - "&#97F900▷ &n&lCLICK&r&#97F900 To Navigate"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
 
   return:
     slot: 53
@@ -207,7 +207,7 @@ wins:
       - "&#FF0000¦ &fBack to the main"
       - "&#FF0000¦ &fgiveaway &#FF0000menu&f."
       - ""
-      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Return"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Return"
 
   empty:
     slot: 22
@@ -233,7 +233,7 @@ create:
       - "&#FF0000¦ &fClose and take"
       - "&#FF0000¦ &fyour items &#FF0000back&f."
       - ""
-      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Cancel"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Cancel"
 
   preview:
     slot: 49
@@ -278,4 +278,4 @@ view:
       - "&#FF0000¦ &fThese are %player%'s"
       - "&#FF0000¦ &fgiveaway &#FF0000items&f."
       - ""
-      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Return"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Return"

@@ -1,5 +1,5 @@
 config-version: 8
-prefix: '&x&F&F&B&A&0&0&lTEAMS &8▷ '
+prefix: '&#00A2FF&lTEAMS &8▷ '
 message-mode: chat
 
 creation:
@@ -7,8 +7,27 @@ creation:
   max-name-length: 16
   max-members: 18
   banned-keywords:
-  - fuck
-  - nazi
+    - fuck
+    - shit
+    - bitch
+    - nigger
+    - nigga
+    - nazi
+    - hitler
+    - rape
+    - porn
+    - faggot
+    - retard
+  blacklisted-names:
+    - admin
+    - staff
+    - owner
+    - console
+    - moderator
+    - sharded
+    - shardedmc
+    - nazi
+    - hitler
 
 invites:
   lifetime-seconds: 120
@@ -27,7 +46,7 @@ leaderboard:
   playtime-hour-weight: 50
 
 chat:
-  team-format: '&x&F&F&B&A&0&0[TEAM] &f%player% &8» &7%message%'
+  team-format: '&#00A2FF[TEAM] &f%player% &8» &7%message%'
   ally-format: '&#ffb300[ALLY] &f%player% &8» &7%message%'
 
 placeholders:
@@ -38,16 +57,16 @@ gui:
   click-footer-create: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Create'
   click-footer-confirm: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Confirm'
   click-footer-cancel: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Cancel'
-  color: '&x&F&F&B&A&0&0'
+  color: '&#00A2FF'
 
   create-title: '&8Create Team'
-  create-anvil-name: '&x&F&F&B&A&0&0&lCreate Team'
+  create-anvil-name: '&#94FF00&lCREATE TEAM'
   create-anvil-lore:
   - '&8Descriptions'
   - ''
-  - '&x&F&F&B&A&0&0Information:'
-  - '&x&F&F&B&A&0&0| &fClick here to type'
-  - '&x&F&F&B&A&0&0| &fyour team name in chat.'
+  - '&#94FF00Information:'
+  - '&#94FF00| &fClick here to type'
+  - '&#94FF00| &fyour team name in chat.'
   - ''
   - '%click_create%'
 
@@ -160,14 +179,14 @@ gui:
   - ''
   - '%click%'
 
-  chat-name: '&x&F&F&B&A&0&0&lTEAM CHAT'
+  chat-name: '&#FF6B9D&lTEAM CHAT'
   chat-lore:
   - '&8Descriptions'
   - ''
-  - '&x&F&F&B&A&0&0Information:'
-  - '&x&F&F&B&A&0&0| &fToggle team chat mode.'
+  - '&#FF6B9DInformation:'
+  - '&#FF6B9D| &fToggle team chat mode.'
   - ''
-  - '&x&F&F&B&A&0&0⚓ &fStatus: %status%'
+  - '&#FF6B9D⚓ &fStatus: %status%'
   - ''
   - '%click%'
 
@@ -256,28 +275,28 @@ gui:
   - '&7This is your team owner.'
 
   browse-title: '&8Browse Teams'
-  browse-entry-name: '&x&F&F&B&A&0&0&l%team%'
+  browse-entry-name: '&#A370EE&l%team%'
   browse-entry-lore:
   - '&8Descriptions'
   - ''
-  - '&x&F&F&B&A&0&0Information:'
-  - '&x&F&F&B&A&0&0| &fMembers: &f%count%'
-  - '&x&F&F&B&A&0&0| &fLeaderboard: &f#%rank%'
+  - '&#A370EEInformation:'
+  - '&#A370EE| &fMembers: &f%count%'
+  - '&#A370EE| &fLeaderboard: &f#%rank%'
   - ''
   - '%click%'
 
   profile-title: '&8Team &f%team%'
-  profile-item-name: '&x&F&F&B&A&0&0&l%team%'
+  profile-item-name: '&#94FF00&l%team%'
   profile-item-lore:
   - '&8Descriptions'
   - ''
-  - '&x&F&F&B&A&0&0Information:'
-  - '&x&F&F&B&A&0&0| &fLeaderboard: &f#%rank%'
-  - '&x&F&F&B&A&0&0| &fMembers: &f%count%'
-  - '&x&F&F&B&A&0&0| &fKills: &f%kills%'
-  - '&x&F&F&B&A&0&0| &fTokens: &f%tokens%'
-  - '&x&F&F&B&A&0&0| &fPlaytime: &f%playtime%'
-  - '&x&F&F&B&A&0&0| &fScore: &f%score%'
+  - '&#94FF00Information:'
+  - '&#94FF00| &fLeaderboard: &f#%rank%'
+  - '&#94FF00| &fMembers: &f%count%'
+  - '&#94FF00| &fKills: &f%kills%'
+  - '&#94FF00| &fTokens: &f%tokens%'
+  - '&#94FF00| &fPlaytime: &f%playtime%'
+  - '&#94FF00| &fScore: &f%score%'
   - ''
   - '%click%'
 
@@ -285,36 +304,36 @@ gui:
   browse-per-page: 21
 
 messages:
-  prefix: "&x&F&F&B&A&0&0&lTEAMS &8▷ "
-  usage: "&x&F&F&B&A&0&0&lTEAMS &8▷ &f/team accept|ally|chat|pvp|name|home|sethome|enderchest"
-  usage-name: "&x&F&F&B&A&0&0&lTEAMS &8▷ &f/team name <name>"
-  usage-accept: "&x&F&F&B&A&0&0&lTEAMS &8▷ &f/team accept <team>"
-  usage-ally: "&x&F&F&B&A&0&0&lTEAMS &8▷ &f/team ally <team>"
-  usage-demote: "&x&F&F&B&A&0&0&lTEAMS &8▷ &f/team demote <player>"
-  usage-promote: "&x&F&F&B&A&0&0&lTEAMS &8▷ &f/team promote <player>"
-  usage-invite: "&x&F&F&B&A&0&0&lTEAMS &8▷ &f/team invite <player>"
-  usage-kick: "&x&F&F&B&A&0&0&lTEAMS &8▷ &f/team kick <player>"
-  type-name: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fType your team name in chat."
-  created: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fCreated team &x&F&F&B&A&0&0%team%&f."
-  accepted: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fYou joined &x&F&F&B&A&0&0%team%&f."
-  invited: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fInvited &x&F&F&B&A&0&0%player%&f."
-  invite-received: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fYou were invited to &x&F&F&B&A&0&0%team%&f. /team accept %team%"
-  disbanded: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fDisbanded &x&F&F&B&A&0&0%team%&f."
-  left: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fYou left your team."
-  chat-on: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fTeam chat enabled."
-  chat-off: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fTeam chat disabled."
-  pvp-on: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fFriendly fire is now &#94FF00on&f."
-  pvp-off: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fFriendly fire is now &#FF0000off&f."
-  renamed: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fTeam name is now &x&F&F&B&A&0&0%team%&f."
-  home-set: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fTeam home set."
-  home-teleport: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fTeleported to the team home."
+  prefix: "&#00A2FF&lTEAMS &8▷ "
+  usage: "&#00A2FF&lTEAMS &8▷ &f/team accept|ally|chat|pvp|name|home|sethome|enderchest"
+  usage-name: "&#00A2FF&lTEAMS &8▷ &f/team name <name>"
+  usage-accept: "&#00A2FF&lTEAMS &8▷ &f/team accept <team>"
+  usage-ally: "&#00A2FF&lTEAMS &8▷ &f/team ally <team>"
+  usage-demote: "&#00A2FF&lTEAMS &8▷ &f/team demote <player>"
+  usage-promote: "&#00A2FF&lTEAMS &8▷ &f/team promote <player>"
+  usage-invite: "&#00A2FF&lTEAMS &8▷ &f/team invite <player>"
+  usage-kick: "&#00A2FF&lTEAMS &8▷ &f/team kick <player>"
+  type-name: "&#00A2FF&lTEAMS &8▷ &fType your team name in chat."
+  created: "&#00A2FF&lTEAMS &8▷ &fCreated team &x&F&F&B&A&0&0%team%&f."
+  accepted: "&#00A2FF&lTEAMS &8▷ &fYou joined &x&F&F&B&A&0&0%team%&f."
+  invited: "&#00A2FF&lTEAMS &8▷ &fInvited &x&F&F&B&A&0&0%player%&f."
+  invite-received: "&#00A2FF&lTEAMS &8▷ &fYou were invited to &x&F&F&B&A&0&0%team%&f. /team accept %team%"
+  disbanded: "&#00A2FF&lTEAMS &8▷ &fDisbanded &x&F&F&B&A&0&0%team%&f."
+  left: "&#00A2FF&lTEAMS &8▷ &fYou left your team."
+  chat-on: "&#00A2FF&lTEAMS &8▷ &fTeam chat enabled."
+  chat-off: "&#00A2FF&lTEAMS &8▷ &fTeam chat disabled."
+  pvp-on: "&#00A2FF&lTEAMS &8▷ &fFriendly fire is now &#94FF00on&f."
+  pvp-off: "&#00A2FF&lTEAMS &8▷ &fFriendly fire is now &#FF0000off&f."
+  renamed: "&#00A2FF&lTEAMS &8▷ &fTeam name is now &x&F&F&B&A&0&0%team%&f."
+  home-set: "&#00A2FF&lTEAMS &8▷ &fTeam home set."
+  home-teleport: "&#00A2FF&lTEAMS &8▷ &fTeleported to the team home."
   no-home: "&#FF0000&lERROR &8▷ &fYour team has no home set."
-  ally-sent: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fSent an ally request to &x&F&F&B&A&0&0%team%&f."
-  ally-accepted: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fYou are now allied with &x&F&F&B&A&0&0%team%&f."
-  promoted: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fPromoted &x&F&F&B&A&0&0%player%&f."
-  demoted: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fDemoted &x&F&F&B&A&0&0%player%&f."
-  kicked: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fKicked &x&F&F&B&A&0&0%player%&f."
-  kicked-target: "&x&F&F&B&A&0&0&lTEAMS &8▷ &fYou were kicked from the team."
+  ally-sent: "&#00A2FF&lTEAMS &8▷ &fSent an ally request to &x&F&F&B&A&0&0%team%&f."
+  ally-accepted: "&#00A2FF&lTEAMS &8▷ &fYou are now allied with &x&F&F&B&A&0&0%team%&f."
+  promoted: "&#00A2FF&lTEAMS &8▷ &fPromoted &x&F&F&B&A&0&0%player%&f."
+  demoted: "&#00A2FF&lTEAMS &8▷ &fDemoted &x&F&F&B&A&0&0%player%&f."
+  kicked: "&#00A2FF&lTEAMS &8▷ &fKicked &x&F&F&B&A&0&0%player%&f."
+  kicked-target: "&#00A2FF&lTEAMS &8▷ &fYou were kicked from the team."
   emergency: "&#FF2727&lEMERGENCY &8▷ &f%player% needs help at &f%location%"
   emergency-cooldown: "&#FF0000&lERROR &8▷ &fEmergency is on cooldown."
   already-in-team: "&#FF0000&lERROR &8▷ &fYou are already in a team."

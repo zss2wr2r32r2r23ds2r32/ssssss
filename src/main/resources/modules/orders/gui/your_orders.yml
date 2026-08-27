@@ -12,7 +12,7 @@ new:
   - '&fClick here, to create'
   - '&fa new order.'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Create'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Create'
 open:
   name: '&7%item_name%'
   glow: false
@@ -25,7 +25,7 @@ open:
   - '&#F90EC2🌊 &fDelivered: &#F90EC2%total_delivered%&7/&#F90EC2%total_amount%'
   - '&#45FF17&l$ &fPaid: &#45FF17%total_paid%&7/&#45FF17$%total_price%'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Deliver'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Deliver'
 ready:
   name: '&7%item_name%'
   glow: true
@@ -52,7 +52,7 @@ previous:
   - '&#FF0000Information:'
   - '&fGo one page back.'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Navigate'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
 back:
   material: RED_DYE
   slot: 18
@@ -64,7 +64,7 @@ back:
   - '&fClick here, to go'
   - '&fback to the board.'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Return'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Return'
 next:
   material: ARROW
   slot: 23
@@ -75,7 +75,7 @@ next:
   - '&#45FF17Information:'
   - '&fGo one page forward.'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Navigate'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
 filler:
   material: GRAY_STAINED_GLASS_PANE
   name: ' '

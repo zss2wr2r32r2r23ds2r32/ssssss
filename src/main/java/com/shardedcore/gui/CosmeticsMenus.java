@@ -51,10 +51,13 @@ public final class CosmeticsMenus {
         for (int i = 0; i < per && start + i < entries.size(); i++) {
             Entry entry = entries.get(start + i);
             List<String> lore = lore(config, entry, kind);
-            String prettyName = entry.title() == null ? "" : ColorUtil.strip(entry.title());
-            String name = Text.apply(config.getString("gui.item-name", "%color%&l%name%"),
+            String format = config.getString("gui.item-name", "%color%&l%name%");
+            String prettyName = GuiButtons.boldTitle(format, entry.title());
+            String name = Text.apply(format,
                     "color", entry.color(), "name", prettyName, "kind", kind, "display", entry.display());
-            Material icon = bundles ? GuiButtons.bundleMaterial(entry.color()) : fallback;
+            boolean harnesses = config.getBoolean("gui.colored-harnesses", false);
+            Material icon = harnesses ? GuiButtons.harnessMaterial(entry.color())
+                    : bundles ? GuiButtons.bundleMaterial(entry.color()) : fallback;
             menu.set(area[i], Items.named(icon, name, lore), event -> {
                 event.setCancelled(true);
                 GuiButtons.play(player, "click");
@@ -108,6 +111,7 @@ public final class CosmeticsMenus {
             menu.set(close.getInt("slot", GuiButtons.slot("close", lastRow(rows) + 4)),
                     Items.fromSection(close, player), event -> {
                         event.setCancelled(true);
+                        GuiButtons.play(player, "click");
                         player.closeInventory();
                     });
         } else if (!limitedPage && extraClick == null && (extra == null || !extra.getBoolean("enabled", true))) {
@@ -115,6 +119,7 @@ public final class CosmeticsMenus {
             if (config.getBoolean("gui.close.enabled", kind != null && kind.toLowerCase(Locale.ROOT).contains("colour"))) {
                 menu.set(slot, GuiButtons.close(player), event -> {
                     event.setCancelled(true);
+                    GuiButtons.play(player, "click");
                     player.closeInventory();
                 });
             }
@@ -128,8 +133,8 @@ public final class CosmeticsMenus {
     }
 
     public static List<String> lore(FileConfiguration config, Entry entry, String kind) {
-        String owned = config.getString("gui.status-owned", "%color%Status: &#94FF00&nOwned");
-        String locked = config.getString("gui.status-locked", "%color%Status: &#FF2727&nLocked");
+        String owned = config.getString("gui.status-owned", "&f&lOWNED");
+        String locked = config.getString("gui.status-locked", "&f&lLOCKED");
         List<String> template = config.getStringList("gui.lore");
         if (template.isEmpty()) {
             template = List.of(
@@ -139,13 +144,12 @@ public final class CosmeticsMenus {
                     "%color%| &fClick to equip",
                     "%color%| &fthis %kind%.",
                     "",
-                    "%status%",
+                    "%color%⚓ &fStatus: %status%",
                     "",
                     "%click%"
             );
         }
-        String click = config.getString("gui.click-footer",
-                "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Equip");
+        String click = config.getString("gui.click-footer", GuiButtons.clickFooter("To Equip"));
         return Text.applyList(new ArrayList<>(template),
                 "color", entry.color(),
                 "name", entry.title(),

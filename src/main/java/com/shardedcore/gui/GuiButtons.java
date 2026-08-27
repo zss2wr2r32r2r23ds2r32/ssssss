@@ -116,6 +116,26 @@ public final class GuiButtons {
         return Items.named(bundleMaterial(hex), name, lore);
     }
 
+    public static ItemStack coloredHarness(String hex, String name, List<String> lore) {
+        return Items.named(harnessMaterial(hex), name, lore);
+    }
+
+    public static String clickFooter(String action) {
+        String text = action == null ? "" : action.trim();
+        String lower = text.toLowerCase(Locale.ROOT);
+        if (text.isEmpty()) text = "To Confirm";
+        else if (!lower.startsWith("to ") && !lower.startsWith("for ")) text = "To " + text;
+        return "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0" + text;
+    }
+
+    public static String boldTitle(String format, String name) {
+        String stripped = ColorUtil.strip(name == null ? "" : name);
+        if (format != null && format.toLowerCase(Locale.ROOT).contains("&l")) {
+            stripped = stripped.toUpperCase(Locale.ROOT);
+        }
+        return stripped;
+    }
+
     public static void fill(Menus.Menu menu) {
         menu.fill(filler());
     }
@@ -153,6 +173,15 @@ public final class GuiButtons {
         String nearest = nearest(r, g, b, hsb[0], hsb[1], hsb[2]);
         Material matched = Material.matchMaterial(nearest);
         return matched == null ? Material.BUNDLE : matched;
+    }
+
+    public static Material harnessMaterial(String hex) {
+        Material bundle = bundleMaterial(hex);
+        String name = bundle.name();
+        if ("BUNDLE".equals(name)) name = "WHITE_HARNESS";
+        else name = name.replace("_BUNDLE", "_HARNESS");
+        Material matched = Material.matchMaterial(name);
+        return matched == null ? bundle : matched;
     }
 
     private static String nearest(int r, int g, int b, float hue, float sat, float bright) {

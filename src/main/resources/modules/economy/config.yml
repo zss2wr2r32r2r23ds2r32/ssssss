@@ -26,17 +26,41 @@ usage-admin: "%prefix%Use /eco<give|take|set> <player> <amount>"
 players-only: "%prefix%&#FF0000Only a player can do that."
 no-permission: "%prefix%&#FF0000You do not have permission."
 baltop-empty: "%prefix%&#FF0000Nobody is on the money leaderboard yet."
+money-methods-empty: "%prefix%&#FF0000No money methods are configured."
+
+# /moneymethods — edit these lines anytime.
+money-methods:
+  - "&#94FF00&lMONEY METHODS &8▷ &fBest ways to make money"
+  - "&7(#1) &#94FF00Sugar Cane &7- farm it and /sell"
+  - "&7(#2) &#94FF00Cactus &7- AFK farm and /sell"
+  - "&7(#3) &#94FF00Nether Wart &7- nether farm and /sell"
+  - "&7(#4) &#94FF00Bamboo &7- grow it fast and /sell"
+  - "&7(#5) &#94FF00Melons &7- harvest and /sell"
 
 baltop:
   title: "Money Leaderboard"
   rows: 6
-  limit: 28
+  limit: 100
   name: "%rank%&#94FF00&l%player%"
   lore:
     - "&8Description"
     - ""
-    - "&#94FF00&lINFORMATION:"
-    - "&#94FF00| &f&lPLACE: &#94FF00#%place%"
-    - "&#94FF00| &f&lBALANCE: &#94FF00$%amount%"
+    - "&#94FF00Information:"
+    - "&#94FF00| &fPlace: &#94FF00#%place%"
+    - "&#94FF00| &fBalance: &#94FF00$%amount%"
     - ""
-    - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO VIEW"
+    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
+  previous:
+    slot: 48
+  self:
+    slot: 49
+    name: "&#94FF00&lYOUR PLACE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#94FF00Information:"
+      - "&#94FF00| &fYou are place &#94FF00#%place%"
+      - "&#94FF00| &fBalance: &#94FF00$%amount%"
+      - ""
+  next:
+    slot: 50

@@ -58,7 +58,7 @@ item-template:
     - ""
     - "&#99ff00&l$&r &fPrice &8▷ &#99ff00$&r&#99ff00%price%"
     - ""
-    - "&#99ff00▷ &n&lCLICK&r&#99ff00 To Buy"
+    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
 
 # The key is the folder name. blockshop reads features/shop/blockshop/config.yml
 sections:
@@ -77,7 +77,7 @@ sections:
         - "&#99ff00¦ &fBlock shop is used, to"
         - "&#99ff00¦ &fgain &#99ff00blocks &fto build."
         - ""
-        - "&#99ff00▷ &n&lCLICK&r&#99ff00 To Open"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
 
   farmshop:
     enabled: true
@@ -93,7 +93,7 @@ sections:
         - "&#99ff00¦ &fFarm shop can be used,"
         - "&#99ff00¦ &fto build your own &#99ff00farms&f."
         - ""
-        - "&#99ff00▷ &n&lCLICK&r&#99ff00 To Open"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
 
   gearshop:
     enabled: true
@@ -109,7 +109,7 @@ sections:
         - "&#22AFFB¦ &fGear shop can be used,"
         - "&#22AFFB¦ &fto purchase &#22AFFBfight stuff&f."
         - ""
-        - "&#22AFFB▷ &n&lCLICK&r&#22AFFB To Open"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
 
   mobdrops:
     enabled: true
@@ -125,7 +125,7 @@ sections:
         - "&#ABABAB¦ &fMob drops can be used,"
         - "&#ABABAB¦ &fto skip the &#ABABABgrinding&f."
         - ""
-        - "&#ABABAB▷ &n&lCLICK&r&#ABABAB To Open"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
 
   redstoneshop:
     enabled: true
@@ -141,7 +141,7 @@ sections:
         - "&#FF0000¦ &fRedstone shop is used,"
         - "&#FF0000¦ &fto build your own &#FF0000farms&f."
         - ""
-        - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Open"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
 
   # command: runs as the player instead of opening a section, so this one
   # needs no folder next to this file.
@@ -160,7 +160,7 @@ sections:
         - "&#A370EE¦ &fCrystal shop used to buy,"
         - "&#A370EE¦ &fspecial and &#A370EEunique items&f."
         - ""
-        - "&#A370EE▷ &n&lCLICK&r&#A370EE To Open"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
 
   # Without this permission the section is not shown at all.
   premiumshop:
@@ -177,7 +177,7 @@ sections:
         - "&#FFD900¦ &fPurchase premium items,"
         - "&#FFD900¦ &fnobody else can &#FFD900get&f."
         - ""
-        - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Open"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
 
   spawnershop:
     enabled: true
@@ -193,7 +193,7 @@ sections:
         - "&#00BDF9¦ &fSpawner shop used,"
         - "&#00BDF9¦ &fto obtain &#00BDF9spawners&f."
         - ""
-        - "&#00BDF9▷ &n&lCLICK&r&#00BDF9 To Open"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
 
 history:
   title: "&8Shop History [%page%]"
@@ -224,7 +224,7 @@ history:
       - "&#FF0000Information:"
       - "&#FF0000¦ &fGo one page back."
       - ""
-      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Navigate"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
 
   next:
     slot: 50
@@ -236,7 +236,7 @@ history:
       - "&#99ff00Information:"
       - "&#99ff00¦ &fGo one page forward."
       - ""
-      - "&#99ff00▷ &n&lCLICK&r&#99ff00 To Navigate"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
 
 messages:
   bought: "&#99ff00&lSHOP &8▷ &fYou bought &#99ff00%amount%x %item% &ffor &#99ff00$%total%&f."

@@ -13,7 +13,7 @@ previous:
   - '&fClick here, to go'
   - '&fto the previous page.'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Navigate'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
 next:
   slot: 50
   material: LIME_STAINED_GLASS_PANE
@@ -25,7 +25,7 @@ next:
   - '&fClick here, to go'
   - '&fto the next page.'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Navigate'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
 sort:
   slot: 45
   material: CAULDRON
@@ -39,7 +39,7 @@ sort:
     - ''
     - '&#F90EC2| &fCurrent: &#F90EC2%sort%'
     - ''
-    - '&#FFD900▶ &n&lCLICK&#FFD900 To Sort'
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Sort'
 filter:
   slot: 53
   material: HOPPER
@@ -53,7 +53,7 @@ filter:
     - ''
     - '&#019BEE| &fCurrent: &#019BEE%filter%'
     - ''
-    - '&#FFD900▶ &n&lCLICK&#FFD900 To Filter'
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Filter'
 refresh:
   slot: 49
   material: BELL
@@ -65,7 +65,7 @@ refresh:
   - '&fClick to refresh the'
   - '&flist of orders.'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Refresh'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Refresh'
 search:
   slot: 47
   material: OAK_SIGN
@@ -77,7 +77,7 @@ search:
   - '&fClick to search for'
   - '&fa specific order.'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Search'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Search'
 new:
   slot: 46
   material: PAPER
@@ -89,7 +89,7 @@ new:
   - '&fClick here, to create'
   - '&fa new order.'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Create'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Create'
 mine-button:
   slot: 51
   material: BEACON
@@ -101,7 +101,7 @@ mine-button:
   - '&fClick to view'
   - '&fyour orders.'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To View'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
 active: '&#F90EC2● '
 inactive: '&f● '
 filter-active: '&#019BEE● '
@@ -135,4 +135,4 @@ order:
   - '&#F90EC2🌊 &fDelivered: &#F90EC2%total_delivered%&7/&#F90EC2%total_amount%'
   - '&#45FF17&l$ &fPaid: &#45FF17%total_paid%&7/&#45FF17$%total_price%'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Deliver'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Deliver'

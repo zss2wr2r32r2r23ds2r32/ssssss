@@ -99,7 +99,7 @@ menu:
       - "&#22AFFB⚓ &fAccess: &#22AFFB/rtpqueue"
       - "&#22AFFB⚓ &fLeave: &#22AFFB/leave"
       - ""
-      - "&#22AFFB▷ &n&lCLICK&r&#22AFFB To Queue"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Queue"
 
 worlds:
   overworld:
@@ -124,7 +124,7 @@ worlds:
       - "&#97F900⚡ &fRadius: &#97F900%radius%"
       - "&#97F900✉ &fBorder: &#97F900%border%"
       - ""
-      - "&#97F900▷ &n&lCLICK&r&#97F900 To Teleport"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
 
   nether:
     display: "Nether"
@@ -149,7 +149,7 @@ worlds:
       - "&#FF0000⚡ &fRadius: &#FF0000%radius%"
       - "&#FF0000✉ &fBorder: &#FF0000%border%"
       - ""
-      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Teleport"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
 
   end:
     display: "The End"
@@ -173,7 +173,7 @@ worlds:
       - "&#D66BFC⚡ &fRadius: &#D66BFC%radius%"
       - "&#D66BFC✉ &fBorder: &#D66BFC%border%"
       - ""
-      - "&#D66BFC▷ &n&lCLICK&r&#D66BFC To Teleport"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
 
 sounds:
   menu-open:

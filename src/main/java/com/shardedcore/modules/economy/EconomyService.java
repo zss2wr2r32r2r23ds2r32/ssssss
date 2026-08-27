@@ -125,6 +125,22 @@ public final class EconomyService {
         return list;
     }
 
+    public int rank(UUID uuid) {
+        double balance = get(uuid);
+        try {
+            Integer rank = sqlite.query("SELECT COUNT(*) AS n FROM economy WHERE balance > ?", rs -> {
+                try {
+                    return rs.next() ? rs.getInt("n") + 1 : 1;
+                } catch (SQLException ex) {
+                    return 1;
+                }
+            }, balance);
+            return rank == null ? 0 : rank;
+        } catch (SQLException ex) {
+            return 0;
+        }
+    }
+
     public void ensure(UUID uuid) {
         get(uuid);
         save(uuid);

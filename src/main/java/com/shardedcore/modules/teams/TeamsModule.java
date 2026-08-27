@@ -594,7 +594,13 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
             return;
         }
         for (String banned : config.getStringList("creation.banned-keywords")) {
-            if (name.toLowerCase(Locale.ROOT).contains(banned.toLowerCase(Locale.ROOT))) {
+            if (!banned.isBlank() && name.toLowerCase(Locale.ROOT).contains(banned.toLowerCase(Locale.ROOT))) {
+                send(player, "banned-name");
+                return;
+            }
+        }
+        for (String banned : config.getStringList("creation.blacklisted-names")) {
+            if (name.equalsIgnoreCase(banned.trim())) {
                 send(player, "banned-name");
                 return;
             }

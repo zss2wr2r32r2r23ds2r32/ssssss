@@ -16,7 +16,7 @@ menu:
       - "&#FF0000Information:"
       - "&#FF0000¦ &fGo one page back."
       - ""
-      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Navigate"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
   next:
     slot: 26
     material: LIME_STAINED_GLASS_PANE
@@ -27,7 +27,7 @@ menu:
       - "&#80ee0bInformation:"
       - "&#80ee0b¦ &fGo one page forward."
       - ""
-      - "&#80ee0b▷ &n&lCLICK&r&#80ee0b To Navigate"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
 
 layout:
   title: '&8☀ Kits | Preview'
@@ -48,7 +48,7 @@ layout:
       - '&#fc0052Click here, &fto return'
       - '&fback to the &#fc0052main &fpage'
       - ''
-      - '&#FFD900▶ &n&lCLICK&#FFD900 To Return'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Return'
 
 ready: '&#019BEEReady'
 no-cooldown: '&#019BEENone'

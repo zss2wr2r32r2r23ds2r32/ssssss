@@ -276,6 +276,14 @@ commands:
     description: Glow cosmetics GUI
     aliases: [glow]
     permission: shardedcore.glow
+  cosmetics:
+    description: Cosmetics hub for tags, chat colors, and glows
+    aliases: [cosmetic]
+    permission: shardedcore.cosmetics
+  moneymethods:
+    description: Best ways to make money
+    aliases: [moneymethod, howtomakemoney]
+    permission: shardedcore.economy.balance
   team:
     description: Teams
     aliases: [teams]
@@ -691,6 +699,8 @@ permissions:
     default: true
   shardedcore.glow.admin:
     default: op
+  shardedcore.cosmetics:
+    default: true
   shardedcore.team:
     default: true
   shardedcore.wipe:

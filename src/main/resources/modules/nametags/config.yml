@@ -1,4 +1,4 @@
-# ticks between updates. Ride keeps the tag glued, so this only refreshes text.
+# ticks between updates. Ride keeps the tag glued to the player.
 refresh: 1
 
 display:
@@ -15,8 +15,9 @@ display:
   hide-when-sneaking: true
   hide-when-invisible: true
   hide-own: false
-  ride: false
-  teleport-duration: 0
+  # Passenger follow is the smooth option. teleport-duration is used only when ride is false.
+  ride: true
+  teleport-duration: 2
 
 disabled-worlds: []
 

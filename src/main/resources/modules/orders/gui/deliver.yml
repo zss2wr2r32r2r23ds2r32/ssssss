@@ -12,7 +12,7 @@ confirm:
   - '&fClick here, to hand in'
   - '&fthe items above.'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Confirm'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Confirm'
 info:
   slot: 22
   name: '&#019BEE&l%player_name%''s ORDER'
@@ -36,7 +36,7 @@ back:
   - '&fClick here, to go'
   - '&fone step back.'
   - ''
-  - '&#FFD900▶ &n&lCLICK&#FFD900 To Return'
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Return'
 filler:
   material: GRAY_STAINED_GLASS_PANE
   name: ' '

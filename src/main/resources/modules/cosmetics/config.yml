@@ -1,0 +1,48 @@
+prefix: "&#A370EE&lCOSMETICS &8▷ &r"
+players-only: "&#FF0000&lERROR &8▷ &fOnly a player can use that."
+unavailable: "&#FF0000&lERROR &8▷ &fThat cosmetic menu is not available."
+
+menu:
+  title: "Cosmetics"
+  rows: 3
+  filler:
+    enabled: true
+    border-only: false
+
+entries:
+  tags:
+    enabled: true
+    slot: 11
+    material: NAME_TAG
+    name: "&#A370EE&lTAGS"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#A370EEInformation:"
+      - "&#A370EE| &fEquip chat and nametag tags"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
+  chatcolors:
+    enabled: true
+    slot: 13
+    material: PINK_BUNDLE
+    name: "&#FF74DF&lCHAT COLORS"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF74DFInformation:"
+      - "&#FF74DF| &fEquip a chat color"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
+  glows:
+    enabled: true
+    slot: 15
+    material: RED_HARNESS
+    name: "&#FF6B9D&lGLOWS"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF6B9DInformation:"
+      - "&#FF6B9D| &fEquip a colored glow"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
