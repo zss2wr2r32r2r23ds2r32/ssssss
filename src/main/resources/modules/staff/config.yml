@@ -28,11 +28,248 @@ staffmode:
   vanish-on-enter: true
   disable-eglow-command: eglow:eglow disable
   items:
-    vanish-slot: 0
-    freeze-slot: 1
-    punish-slot: 2
-    randomtp-slot: 3
-    exit-slot: 8
+    vanish:
+      slot: 0
+      material: LIME_DYE
+      vanished-material: GRAY_DYE
+      name: "&#FF8300&lVANISH"
+      vanished-name: "&#8B8B8B&lVANISHED"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#FF8300&lINFORMATION:"
+        - "&#FF8300| &f&lHIDE YOURSELF FROM"
+        - "&#FF8300| &f&lPLAYERS ON THE SERVER"
+        - ""
+        - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO TOGGLE"
+      vanished-lore:
+        - "&8Description"
+        - ""
+        - "&#8B8B8B&lINFORMATION:"
+        - "&#8B8B8B| &f&lYOU ARE CURRENTLY VANISHED"
+        - "&#8B8B8B| &f&lCLICK TO SHOW YOURSELF"
+        - ""
+        - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO TOGGLE"
+    freeze:
+      slot: 1
+      material: PACKED_ICE
+      name: "&#00C1FF&lFREEZE"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#00C1FF&lINFORMATION:"
+        - "&#00C1FF| &f&lRIGHT CLICK A PLAYER"
+        - "&#00C1FF| &f&lTO FREEZE THEM"
+        - ""
+        - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO USE"
+    punish:
+      slot: 2
+      material: NETHERITE_AXE
+      name: "&#FF0000&lPUNISH"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#FF0000&lINFORMATION:"
+        - "&#FF0000| &f&lRIGHT CLICK A PLAYER"
+        - "&#FF0000| &f&lTO OPEN BAN MUTE KICK"
+        - ""
+        - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO USE"
+    randomtp:
+      slot: 3
+      material: COMPASS
+      name: "&#00A2FF&lRANDOM TP"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#00A2FF&lINFORMATION:"
+        - "&#00A2FF| &f&lTELEPORT TO A RANDOM"
+        - "&#00A2FF| &f&lONLINE PLAYER"
+        - ""
+        - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO TELEPORT"
+    exit:
+      slot: 8
+      material: BARRIER
+      name: "&#FF0000&lEXIT STAFF"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#FF0000&lINFORMATION:"
+        - "&#FF0000| &f&lLEAVE STAFF MODE AND"
+        - "&#FF0000| &f&lRESTORE YOUR INVENTORY"
+        - ""
+        - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO EXIT"
+
+punish:
+  title: "Punish"
+  rows: 3
+  ban:
+    slot: 11
+    material: IRON_BARS
+    name: "&#FF0000&lBAN"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000&lINFORMATION:"
+      - "&#FF0000| &f&lCHOOSE A BAN REASON"
+      - "&#FF0000| &f&lFOR %player%"
+      - ""
+      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO OPEN"
+  mute:
+    slot: 13
+    material: BOOK
+    name: "&#FFBA00&lMUTE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFBA00&lINFORMATION:"
+      - "&#FFBA00| &f&lCHOOSE A MUTE REASON"
+      - "&#FFBA00| &f&lFOR %player%"
+      - ""
+      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO OPEN"
+  kick:
+    slot: 15
+    material: LEATHER_BOOTS
+    name: "&#FF8300&lKICK"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF8300&lINFORMATION:"
+      - "&#FF8300| &f&lCHOOSE A KICK REASON"
+      - "&#FF8300| &f&lFOR %player%"
+      - ""
+      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO OPEN"
+  close:
+    slot: 22
+
+# Add, rename, or remove any reason. duration can be 1h, 7d, 30d, or permanent.
+ban-reasons:
+  x-ray:
+    slot: 10
+    reason: X-Ray
+    duration: 7d
+    material: DIAMOND_ORE
+    name: "&#FF0000&lX-RAY"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000&lINFORMATION:"
+      - "&#FF0000| &f&lDURATION: 7D"
+      - "&#FF0000| &f&lPLAYER: %player%"
+      - ""
+      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO BAN"
+  fly-hack:
+    reason: Fly-Hack
+    duration: 30d
+    material: FEATHER
+    name: "&#FF0000&lFLY HACK"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000&lINFORMATION:"
+      - "&#FF0000| &f&lDURATION: 30D"
+      - "&#FF0000| &f&lPLAYER: %player%"
+      - ""
+      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO BAN"
+  killaura:
+    reason: Killaura
+    duration: 30d
+    material: DIAMOND_SWORD
+    name: "&#FF0000&lKILLAURA"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000&lINFORMATION:"
+      - "&#FF0000| &f&lDURATION: 30D"
+      - "&#FF0000| &f&lPLAYER: %player%"
+      - ""
+      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO BAN"
+  chat-behavior:
+    reason: Chat-Behavior
+    duration: 1d
+    material: PAPER
+    name: "&#FF0000&lCHAT BEHAVIOR"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000&lINFORMATION:"
+      - "&#FF0000| &f&lDURATION: 1D"
+      - "&#FF0000| &f&lPLAYER: %player%"
+      - ""
+      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO BAN"
+  advertising:
+    reason: Advertising
+    duration: 7d
+    material: OAK_SIGN
+    name: "&#FF0000&lADVERTISING"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000&lINFORMATION:"
+      - "&#FF0000| &f&lDURATION: 7D"
+      - "&#FF0000| &f&lPLAYER: %player%"
+      - ""
+      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO BAN"
+  ban-evasion:
+    reason: Ban-Evasion
+    duration: permanent
+    material: BARRIER
+    name: "&#FF0000&lBAN EVASION"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000&lINFORMATION:"
+      - "&#FF0000| &f&lDURATION: PERMANENT"
+      - "&#FF0000| &f&lPLAYER: %player%"
+      - ""
+      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO BAN"
+  doxxing:
+    reason: Doxxing
+    duration: 30d
+    material: WRITABLE_BOOK
+    name: "&#FF0000&lDOXXING"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000&lINFORMATION:"
+      - "&#FF0000| &f&lDURATION: 30D"
+      - "&#FF0000| &f&lPLAYER: %player%"
+      - ""
+      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO BAN"
+
+kick-reasons:
+  cheating:
+    reason: Cheating
+    material: IRON_SWORD
+    name: "&#FF8300&lCHEATING"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF8300&lINFORMATION:"
+      - "&#FF8300| &f&lKICK %player%"
+      - ""
+      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO KICK"
+  toxicity:
+    reason: Toxicity
+    material: TNT
+    name: "&#FF8300&lTOXICITY"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF8300&lINFORMATION:"
+      - "&#FF8300| &f&lKICK %player%"
+      - ""
+      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO KICK"
+  advertising:
+    reason: Advertising
+    material: OAK_SIGN
+    name: "&#FF8300&lADVERTISING"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF8300&lINFORMATION:"
+      - "&#FF8300| &f&lKICK %player%"
+      - ""
+      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO KICK"
 
 audit:
   enabled: true
@@ -65,9 +302,45 @@ mute-commands:
   - whisper
 
 mute-reasons:
-  Spam: 1h
-  Toxicity: 6h
-  Advertising: 1d
+  spam:
+    reason: Spam
+    duration: 1h
+    material: PAPER
+    name: "&#FFBA00&lSPAM"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFBA00&lINFORMATION:"
+      - "&#FFBA00| &f&lDURATION: 1H"
+      - "&#FFBA00| &f&lPLAYER: %player%"
+      - ""
+      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO MUTE"
+  toxicity:
+    reason: Toxicity
+    duration: 6h
+    material: TNT
+    name: "&#FFBA00&lTOXICITY"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFBA00&lINFORMATION:"
+      - "&#FFBA00| &f&lDURATION: 6H"
+      - "&#FFBA00| &f&lPLAYER: %player%"
+      - ""
+      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO MUTE"
+  advertising:
+    reason: Advertising
+    duration: 1d
+    material: OAK_SIGN
+    name: "&#FFBA00&lADVERTISING"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFBA00&lINFORMATION:"
+      - "&#FFBA00| &f&lDURATION: 1D"
+      - "&#FFBA00| &f&lPLAYER: %player%"
+      - ""
+      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO MUTE"
 
 sounds:
   open:
@@ -136,6 +409,7 @@ messages:
   broadcast: "%prefix%&#FF2727%action% &f%player% &7by &f%staff% &7— &f%reason%"
   staff-header: "%prefix%&#00A2FFStaff Commands:"
   punish-title: "Punish"
+  reason-title: "%type% Reasons"
   rollback-title: "Rollback"
   alts-title: "%players% Alts"
   revoke-title: "Revoke Punishments"

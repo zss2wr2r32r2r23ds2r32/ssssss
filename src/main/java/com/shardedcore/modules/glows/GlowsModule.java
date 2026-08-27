@@ -2,6 +2,7 @@ package com.shardedcore.modules.glows;
 
 import com.shardedcore.ShardedCore;
 import com.shardedcore.database.Sqlite;
+import com.shardedcore.gui.CosmeticsMenus;
 import com.shardedcore.gui.GuiButtons;
 import com.shardedcore.gui.Menus;
 import com.shardedcore.module.Module;
@@ -145,9 +146,18 @@ public final class GlowsModule extends Module implements CommandExecutor, TabCom
             String ownedText = owned
                     ? cfg("placeholders.owned-yes", "&#9FFF00&nYes")
                     : cfg("placeholders.owned-no", "&#FF2727&nNo");
-            List<String> lore = Text.applyList(new ArrayList<>(def.lore),
+            String status = Text.apply(owned
+                            ? cfg("gui.status-owned", "%color%☀%color%&lSTATUS: &#94FF00&l&nOWNED")
+                            : cfg("gui.status-locked", "%color%☀%color%&lSTATUS: &#FF2727&l&nLOCKED"),
+                    "color", CosmeticsMenus.colorOf(def.color, def.color), "name", def.displayName);
+            List<String> template = config.getStringList("gui.lore");
+            List<String> lore = Text.applyList(new ArrayList<>(template.isEmpty() ? def.lore : template),
                     "glow_owned_" + def.id, ownedText,
-                    "owned", ownedText);
+                    "owned", ownedText,
+                    "color", CosmeticsMenus.colorOf(def.color, def.color),
+                    "status", status,
+                    "click", cfg("gui.click-footer", "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO APPLY"),
+                    "name", ColorUtil.strip(def.displayName));
             ItemStack item = GuiButtons.coloredBundle(def.color, def.displayName, lore);
             menu.set(def.slot, item, event -> {
                 event.setCancelled(true);

@@ -167,14 +167,9 @@ public final class ShopModule extends Module implements CommandExecutor {
             }
         }
         ConfigurationSection buttons = data.getConfigurationSection("buttons");
+        int backSlot = buttons == null ? 22 : buttons.getInt("return.slot", 22);
+        GuiButtons.placeBack(menu, player, backSlot, () -> openMain(player));
         if (buttons != null) {
-            if (buttons.isConfigurationSection("return")) {
-                menu.set(buttons.getInt("return.slot", GuiButtons.slot("back", 49)),
-                        GuiButtons.back(player), event -> {
-                    event.setCancelled(true);
-                    openMain(player);
-                });
-            }
             if (current > 1 && buttons.isConfigurationSection("previous")) {
                 menu.set(buttons.getInt("previous.slot", GuiButtons.slot("previous", 48)),
                         GuiButtons.previous(player), event -> {

@@ -9,6 +9,7 @@ import com.shardedcore.util.Amounts;
 import com.shardedcore.util.ColorUtil;
 import com.shardedcore.util.Items;
 import com.shardedcore.util.Players;
+import com.shardedcore.util.Sounds;
 import com.shardedcore.util.Tabs;
 import com.shardedcore.util.Text;
 import io.papermc.paper.event.player.AsyncChatEvent;
@@ -18,6 +19,7 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -33,6 +35,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -42,8 +45,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.sql.SQLException;
@@ -67,12 +72,14 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
     );
 
     private Sqlite sqlite;
+    private NamespacedKey toolKey;
     private final Set<UUID> staffMode = ConcurrentHashMap.newKeySet();
     private final Set<UUID> vanished = ConcurrentHashMap.newKeySet();
     private final Set<UUID> frozen = ConcurrentHashMap.newKeySet();
     private final Set<UUID> staffChat = ConcurrentHashMap.newKeySet();
     private final Map<UUID, Long> screenshare = new ConcurrentHashMap<>();
     private final Map<UUID, Long> requests = new ConcurrentHashMap<>();
+    private final Map<UUID, Long> toolClicks = new ConcurrentHashMap<>();
     private BukkitTask snapshotTask;
 
     public StaffModule(ShardedCore plugin) {
@@ -82,6 +89,7 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
     @Override
     public void enable() {
         sqlite = plugin.toggles().sqlite();
+        toolKey = new NamespacedKey(plugin, "staff_tool");
         try {
             sqlite.run("""
                     CREATE TABLE IF NOT EXISTS staff_punishments (
@@ -256,17 +264,104 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         if (config.getBoolean("staffmode.vanish-on-enter", true)) setVanish(player, true);
         String disable = cfg("staffmode.disable-eglow-command", "eglow:eglow disable");
         if (disable != null && !disable.isBlank()) player.performCommand(disable.startsWith("/") ? disable.substring(1) : disable);
-        inventory.setItem(config.getInt("staffmode.items.vanish-slot", 0),
-                Items.named(vanished.contains(player.getUniqueId()) ? Material.GRAY_DYE : Material.LIME_DYE,
-                        "&#FF8300&lVANISH", List.of("&7Toggle vanish")));
-        inventory.setItem(config.getInt("staffmode.items.freeze-slot", 1),
-                Items.named(Material.PACKED_ICE, "&#00C1FF&lFREEZE", List.of("&7Right click a player")));
-        inventory.setItem(config.getInt("staffmode.items.punish-slot", 2),
-                Items.named(Material.NETHERITE_AXE, "&#FF0000&lPUNISH", List.of("&7Right click a player")));
-        inventory.setItem(config.getInt("staffmode.items.randomtp-slot", 3),
-                Items.named(Material.ENDER_PEARL, "&#00A2FF&lRANDOM TP", List.of("&7Teleport to a random player")));
-        inventory.setItem(config.getInt("staffmode.items.exit-slot", 8),
-                Items.named(Material.BARRIER, "&#FF0000&lEXIT STAFF", List.of("&7Leave staff mode")));
+        giveStaffItems(player);
+    }
+
+    private void giveStaffItems(Player player) {
+        PlayerInventory inventory = player.getInventory();
+        boolean hidden = vanished.contains(player.getUniqueId());
+        setStaffItem(inventory, "vanish", hidden);
+        setStaffItem(inventory, "freeze", false);
+        setStaffItem(inventory, "punish", false);
+        setStaffItem(inventory, "randomtp", false);
+        setStaffItem(inventory, "exit", false);
+    }
+
+    private void setStaffItem(PlayerInventory inventory, String id, boolean vanishedState) {
+        int slot = staffItemSlot(id);
+        if (slot < 0 || slot > 8) return;
+        inventory.setItem(slot, staffItem(id, vanishedState));
+    }
+
+    private int staffItemSlot(String id) {
+        ConfigurationSection section = config.getConfigurationSection("staffmode.items." + id);
+        if (section != null) return section.getInt("slot", fallbackSlot(id));
+        return config.getInt("staffmode.items." + id + "-slot", fallbackSlot(id));
+    }
+
+    private static int fallbackSlot(String id) {
+        return switch (id) {
+            case "vanish" -> 0;
+            case "freeze" -> 1;
+            case "punish" -> 2;
+            case "randomtp" -> 3;
+            case "exit" -> 8;
+            default -> 4;
+        };
+    }
+
+    private ItemStack staffItem(String id, boolean vanishedState) {
+        ConfigurationSection section = config.getConfigurationSection("staffmode.items." + id);
+        String namePath = vanishedState && "vanish".equals(id) ? "vanished-name" : "name";
+        String lorePath = vanishedState && "vanish".equals(id) ? "vanished-lore" : "lore";
+        String materialPath = vanishedState && "vanish".equals(id) ? "vanished-material" : "material";
+        String rawMaterial = section == null ? defaultMaterial(id, vanishedState)
+                : section.getString(materialPath, section.getString("material", defaultMaterial(id, vanishedState)));
+        Material fallback = Material.matchMaterial(defaultMaterial(id, vanishedState));
+        Material material = Sounds.material(rawMaterial, fallback == null ? Material.STONE : fallback);
+        String name = section == null ? defaultName(id, vanishedState)
+                : section.getString(namePath, section.getString("name", defaultName(id, vanishedState)));
+        List<String> lore = section == null || section.getStringList(lorePath).isEmpty()
+                ? (section == null ? defaultLore(id) : (section.getStringList("lore").isEmpty() ? defaultLore(id) : section.getStringList("lore")))
+                : section.getStringList(lorePath);
+        ItemStack item = Items.named(material == null ? Material.STONE : material, name, lore);
+        item.editMeta(meta -> meta.getPersistentDataContainer().set(toolKey, PersistentDataType.STRING, id));
+        return item;
+    }
+
+    private static String defaultMaterial(String id, boolean vanishedState) {
+        return switch (id) {
+            case "vanish" -> vanishedState ? "GRAY_DYE" : "LIME_DYE";
+            case "freeze" -> "PACKED_ICE";
+            case "punish" -> "NETHERITE_AXE";
+            case "randomtp" -> "COMPASS";
+            case "exit" -> "BARRIER";
+            default -> "STONE";
+        };
+    }
+
+    private static String defaultName(String id, boolean vanishedState) {
+        return switch (id) {
+            case "vanish" -> vanishedState ? "&#8B8B8B&lVANISHED" : "&#FF8300&lVANISH";
+            case "freeze" -> "&#00C1FF&lFREEZE";
+            case "punish" -> "&#FF0000&lPUNISH";
+            case "randomtp" -> "&#00A2FF&lRANDOM TP";
+            case "exit" -> "&#FF0000&lEXIT STAFF";
+            default -> "&f&lITEM";
+        };
+    }
+
+    private static List<String> defaultLore(String id) {
+        return switch (id) {
+            case "vanish" -> List.of("&8Description", "", "&#FF8300&lINFORMATION:", "&#FF8300| &f&lTOGGLE VANISH", "", "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO TOGGLE");
+            case "freeze" -> List.of("&8Description", "", "&#00C1FF&lINFORMATION:", "&#00C1FF| &f&lRIGHT CLICK A PLAYER", "&#00C1FF| &f&lTO FREEZE THEM", "", "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO USE");
+            case "punish" -> List.of("&8Description", "", "&#FF0000&lINFORMATION:", "&#FF0000| &f&lRIGHT CLICK A PLAYER", "&#FF0000| &f&lTO OPEN PUNISH", "", "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO USE");
+            case "randomtp" -> List.of("&8Description", "", "&#00A2FF&lINFORMATION:", "&#00A2FF| &f&lTELEPORT TO A", "&#00A2FF| &f&lRANDOM PLAYER", "", "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO TELEPORT");
+            case "exit" -> List.of("&8Description", "", "&#FF0000&lINFORMATION:", "&#FF0000| &f&lLEAVE STAFF MODE", "", "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO EXIT");
+            default -> List.of();
+        };
+    }
+
+    private String toolId(ItemStack item) {
+        if (item == null || item.getType().isAir() || !item.hasItemMeta()) return "";
+        String id = item.getItemMeta().getPersistentDataContainer().get(toolKey, PersistentDataType.STRING);
+        return id == null ? "" : id;
+    }
+
+    private boolean tooSoon(Player player) {
+        long now = System.currentTimeMillis();
+        Long last = toolClicks.put(player.getUniqueId(), now);
+        return last != null && now - last < 250L;
     }
 
     private void exitStaff(Player player, boolean restore) {
@@ -360,9 +455,7 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         }
         saveState(player.getUniqueId(), "vanished", on);
         if (staffMode.contains(player.getUniqueId())) {
-            int slot = config.getInt("staffmode.items.vanish-slot", 0);
-            player.getInventory().setItem(slot, Items.named(on ? Material.GRAY_DYE : Material.LIME_DYE,
-                    "&#FF8300&lVANISH", List.of("&7Toggle vanish")));
+            setStaffItem(player.getInventory(), "vanish", on);
         }
     }
 
@@ -380,10 +473,8 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         if (!staff(sender, "shardedcore.staff.freeze")) return true;
         Player target = player(sender, args, 0);
         if (target == null) return true;
-        if (frozen.remove(target.getUniqueId())) {
-            saveState(target.getUniqueId(), "frozen", false);
-            send(sender, "freeze-off", "player", target.getName());
-            send(target, "unfrozen");
+        if (frozen.contains(target.getUniqueId())) {
+            send(sender, "freeze-on", "player", target.getName());
             return true;
         }
         frozen.add(target.getUniqueId());
@@ -477,30 +568,97 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
     }
 
     private void openPunish(Player staff, Player target) {
-        Menus.Menu menu = plugin.menus().create(staff, cfg("messages.punish-title", "☀ Staff ☀ Previewing | Punish"), 3);
-        menu.set(11, Items.named(Material.IRON_BARS, "&#FF0000&lBAN", List.of("&7Ban " + target.getName())), event -> {
-            event.setCancelled(true);
-            apply(staff, target, "ban", cfg("default-reason", "Unfair Modifications"), "7d", false);
-            staff.closeInventory();
-        });
-        menu.set(13, Items.named(Material.BOOK, "&#FFBA00&lMUTE", List.of("&7Mute " + target.getName())), event -> {
-            event.setCancelled(true);
-            apply(staff, target, "mute", "Chat-Behavior", "1d", false);
-            staff.closeInventory();
-        });
-        menu.set(15, Items.named(Material.LEATHER_BOOTS, "&#FF8300&lKICK", List.of("&7Kick " + target.getName())), event -> {
-            event.setCancelled(true);
-            target.kick(ColorUtil.parse("&cKicked by staff."));
-            send(staff, "kicked", "player", target.getName(), "reason", "Kicked");
-            staff.closeInventory();
-        });
-        menu.set(GuiButtons.slot("close", 22), GuiButtons.close(staff), event -> {
-            event.setCancelled(true);
-            staff.closeInventory();
-        });
+        ConfigurationSection punish = config.getConfigurationSection("punish");
+        int rows = punish == null ? 3 : punish.getInt("rows", 3);
+        Menus.Menu menu = plugin.menus().create(staff,
+                punish == null ? cfg("messages.punish-title", "Punish") : punish.getString("title", cfg("messages.punish-title", "Punish")),
+                rows);
+        placePunishButton(menu, staff, target, "ban", 11, Material.IRON_BARS, "&#FF0000&lBAN");
+        placePunishButton(menu, staff, target, "mute", 13, Material.BOOK, "&#FFBA00&lMUTE");
+        placePunishButton(menu, staff, target, "kick", 15, Material.LEATHER_BOOTS, "&#FF8300&lKICK");
+        int closeSlot = punish == null ? GuiButtons.slot("close", 22) : punish.getInt("close.slot", 22);
+        if (closeSlot >= 0 && closeSlot < menu.inventory().getSize()) {
+            menu.set(closeSlot, GuiButtons.close(staff), event -> {
+                event.setCancelled(true);
+                staff.closeInventory();
+            });
+        }
         GuiButtons.border(menu);
         plugin.menus().open(staff, menu);
         GuiButtons.play(staff, "open");
+    }
+
+    private void placePunishButton(Menus.Menu menu, Player staff, Player target, String type, int fallbackSlot,
+                                   Material fallbackMaterial, String fallbackName) {
+        ConfigurationSection section = config.getConfigurationSection("punish." + type);
+        int slot = section == null ? fallbackSlot : section.getInt("slot", fallbackSlot);
+        ItemStack item = section == null
+                ? Items.named(fallbackMaterial, fallbackName, List.of("&8Description", "",
+                "&7Click to choose a " + type + " reason for &f" + target.getName()))
+                : Items.fromSection(section, staff, "player", target.getName());
+        menu.set(slot, item, event -> {
+            event.setCancelled(true);
+            openReasons(staff, target, type);
+        });
+    }
+
+    private void openReasons(Player staff, Player target, String type) {
+        String path = type.equals("mute") ? "mute-reasons" : type.equals("kick") ? "kick-reasons" : "ban-reasons";
+        ConfigurationSection section = config.getConfigurationSection(path);
+        List<String> keys = new ArrayList<>();
+        if (section != null) keys.addAll(section.getKeys(false));
+        if (keys.isEmpty() && (type.equals("ban") || type.equals("mute"))) {
+            ConfigurationSection legacy = config.getConfigurationSection(type.equals("mute") ? "mute-reasons" : "reasons");
+            if (legacy != null) keys.addAll(legacy.getKeys(false));
+        }
+        if (keys.isEmpty()) {
+            keys.add("Unfair Modifications");
+        }
+        int rows = Math.max(3, Math.min(6, (keys.size() + 16) / 7 + 2));
+        Menus.Menu menu = plugin.menus().create(staff, Text.apply(cfg("messages.reason-title", "%type% Reasons"),
+                "type", type.toUpperCase(Locale.ROOT), "player", target.getName()), rows);
+        int[] slots = GuiButtons.inner(rows);
+        int index = 0;
+        for (String key : keys) {
+            if (index >= slots.length) break;
+            ConfigurationSection reason = section == null ? null : section.getConfigurationSection(key);
+            String label = reason == null ? key : reason.getString("reason", reason.getString("name", key));
+            String duration = "7d";
+            if (reason != null) duration = reason.getString("duration", type.equals("kick") ? "kick" : "7d");
+            else if (section != null && section.isString(key)) duration = section.getString(key, "7d");
+            else if (config.isString("reasons." + key)) duration = config.getString("reasons." + key, "7d");
+            ItemStack item;
+            if (reason != null) {
+                item = Items.fromSection(reason, staff, "player", target.getName(), "reason", ColorUtil.strip(label),
+                        "duration", duration, "type", type.toUpperCase(Locale.ROOT));
+            } else {
+                item = Items.named(Material.PAPER, "&#FF0000&l" + ColorUtil.strip(label).toUpperCase(Locale.ROOT),
+                        List.of("&8Description", "",
+                                "&#FF0000&lINFORMATION:",
+                                "&#FF0000| &f&lPLAYER: &f" + target.getName(),
+                                "&#FF0000| &f&lDURATION: &f" + duration.toUpperCase(Locale.ROOT),
+                                "",
+                                "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO APPLY"));
+            }
+            String appliedReason = ColorUtil.strip(label);
+            String appliedDuration = duration;
+            menu.set(slots[index++], item, event -> {
+                event.setCancelled(true);
+                if (type.equals("kick")) {
+                    Player live = target.getPlayer();
+                    if (live != null) live.kick(ColorUtil.parse("&c" + appliedReason));
+                    send(staff, "kicked", "player", target.getName(), "reason", appliedReason);
+                    broadcast("Kick", target.getName(), staff.getName(), appliedReason);
+                } else {
+                    apply(staff, target, type, appliedReason, appliedDuration, false);
+                }
+                staff.closeInventory();
+            });
+        }
+        GuiButtons.placeBack(menu, staff, GuiButtons.slot("back", Math.max(0, menu.inventory().getSize() - 5)),
+                () -> openPunish(staff, target));
+        GuiButtons.border(menu);
+        plugin.menus().open(staff, menu);
     }
 
     private boolean punishCmd(CommandSender sender, String[] args, String type, boolean ip) {
@@ -972,45 +1130,47 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         if (staffMode.contains(event.getPlayer().getUniqueId())) event.setCancelled(true);
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onInteract(PlayerInteractEvent event) {
         if (!staffMode.contains(event.getPlayer().getUniqueId())) return;
+        if (event.getHand() != null && event.getHand() != EquipmentSlot.HAND) return;
         if (event.getPlayer().getGameMode() == GameMode.SPECTATOR) return;
-        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
-            event.setCancelled(true);
-            return;
-        }
-        ItemStack item = event.getItem();
-        if (item == null) {
-            event.setCancelled(true);
-            return;
-        }
         event.setCancelled(true);
+        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK
+                && event.getAction() != Action.LEFT_CLICK_AIR && event.getAction() != Action.LEFT_CLICK_BLOCK) {
+            return;
+        }
         Player player = event.getPlayer();
-        if (item.getType() == Material.BARRIER) {
-            player.performCommand("staffmode");
-            return;
-        }
-        if (item.getType() == Material.LIME_DYE || item.getType() == Material.GRAY_DYE) {
-            player.performCommand("vanish");
-            return;
-        }
-        if (item.getType() == Material.ENDER_PEARL) {
-            player.performCommand("randomtp");
+        String id = toolId(event.getItem());
+        if (id.isEmpty() || id.equals("freeze") || id.equals("punish")) return;
+        if (tooSoon(player)) return;
+        switch (id) {
+            case "vanish" -> player.performCommand("vanish");
+            case "randomtp" -> player.performCommand("randomtp");
+            case "exit" -> player.performCommand("staffmode");
+            default -> {
+            }
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onEntity(PlayerInteractEntityEvent event) {
         if (!staffMode.contains(event.getPlayer().getUniqueId())) return;
+        if (event.getHand() != EquipmentSlot.HAND) return;
         if (event.getPlayer().getGameMode() == GameMode.SPECTATOR) return;
-        if (!(event.getRightClicked() instanceof Player target)) return;
-        ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
         event.setCancelled(true);
-        if (item.getType() == Material.PACKED_ICE) {
-            event.getPlayer().performCommand("freeze " + target.getName());
-        } else if (item.getType() == Material.NETHERITE_AXE) {
-            event.getPlayer().performCommand("punish " + target.getName());
+        if (!(event.getRightClicked() instanceof Player target)) return;
+        Player player = event.getPlayer();
+        String id = toolId(player.getInventory().getItemInMainHand());
+        if (id.isEmpty() || tooSoon(player)) return;
+        if (id.equals("freeze")) player.performCommand("freeze " + target.getName());
+        else if (id.equals("punish")) player.performCommand("punish " + target.getName());
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onLaunch(ProjectileLaunchEvent event) {
+        if (event.getEntity().getShooter() instanceof Player player && staffMode.contains(player.getUniqueId())) {
+            event.setCancelled(true);
         }
     }
 

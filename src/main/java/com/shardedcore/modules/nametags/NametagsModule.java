@@ -181,9 +181,8 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
             entity.setInterpolationDelay(0);
             int teleport = config.getBoolean("display.ride", false)
                     ? 0
-                    : Math.max(1, config.getInt("display.teleport-duration", 1));
+                    : Math.max(0, config.getInt("display.teleport-duration", 0));
             entity.setTeleportDuration(teleport);
-            entity.setInterpolationDuration(teleport);
             boolean ride = config.getBoolean("display.ride", false);
             entity.setTransformation(new Transformation(
                     ride ? offset(player, top) : new Vector3f(),

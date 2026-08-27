@@ -16,7 +16,7 @@ display:
   hide-when-invisible: true
   hide-own: false
   ride: false
-  teleport-duration: 1
+  teleport-duration: 0
 
 disabled-worlds: []
 

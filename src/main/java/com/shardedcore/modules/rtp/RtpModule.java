@@ -21,8 +21,10 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
@@ -111,6 +113,25 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
         }
         begin(player, args[0]);
         return true;
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onLeaveCommand(PlayerCommandPreprocessEvent event) {
+        String raw = event.getMessage().substring(1).trim().toLowerCase(Locale.ROOT);
+        String command = raw.split(" ")[0];
+        if (command.contains(":")) command = command.substring(command.indexOf(':') + 1);
+        boolean leave = command.equals("leave") || command.equals("leavequeue")
+                || command.equals("rtpleave") || command.equals("unqueue")
+                || (command.equals("rtpqueue") || command.equals("rtpq")) && raw.contains(" leave");
+        if (!leave) return;
+        Player player = event.getPlayer();
+        boolean queued = queue.contains(player.getUniqueId())
+                || searching.contains(player.getUniqueId())
+                || pending.containsKey(player.getUniqueId())
+                || partners.containsKey(player.getUniqueId());
+        if (!queued) return;
+        event.setCancelled(true);
+        leaveQueue(player);
     }
 
     private void openMenu(Player player) {

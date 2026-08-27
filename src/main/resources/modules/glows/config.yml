@@ -10,6 +10,18 @@ gui:
   title: "Glows"
   guide: "Glows"
   preview-name: "Glows"
+  lore:
+    - "&8Description"
+    - ""
+    - "%color%&lINFORMATION:"
+    - "%color%| &f&lCLICK TO APPLY THIS GLOW"
+    - ""
+    - "%status%"
+    - ""
+    - "%click%"
+  status-owned: "%color%☀%color%&lSTATUS: &#94FF00&l&nOWNED"
+  status-locked: "%color%☀%color%&lSTATUS: &#FF2727&l&nLOCKED"
+  click-footer: "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO APPLY"
 
 placeholders:
   owned-yes: '&#9FFF00&nYes'

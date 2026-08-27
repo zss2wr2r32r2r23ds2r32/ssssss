@@ -255,6 +255,7 @@ commands:
     permission: shardedcore.vault.admin
   leave:
     description: Leave the RTP queue
+    aliases: [leavequeue, rtpleave, unqueue]
     permission: shardedcore.rtp.queue
   chatcolor:
     description: Custom chat colors

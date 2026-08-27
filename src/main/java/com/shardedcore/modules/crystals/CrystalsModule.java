@@ -232,10 +232,9 @@ public final class CrystalsModule extends Module implements CommandExecutor, Tab
         if (info != null) {
             menu.set(info.getInt("slot", 22), headOrItem(player, info));
         }
-        if (section.isConfigurationSection("back")) {
-            GuiButtons.placeBack(menu, player, section.getInt("back.slot", GuiButtons.slot("back", 31)),
-                    () -> openMain(player));
-        }
+        int backSlot = section.contains("back.slot") ? section.getInt("back.slot")
+                : section.getInt("back-slot", Math.max(0, menu.inventory().getSize() - 5));
+        GuiButtons.placeBack(menu, player, backSlot, () -> openMain(player));
         GuiButtons.glass(menu, section.getBoolean("border-only",
                 idEqualsAny(sectionId, "tags", "chatcolors", "glows", "keys")));
         plugin.menus().open(player, menu);

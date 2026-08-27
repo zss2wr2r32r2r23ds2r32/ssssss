@@ -17,7 +17,7 @@ buttons:
       - "&#94FF00&lINFORMATION:"
       - "&#94FF00| &f&lGO ONE PAGE BACK"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO NAVIGATE"
+      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO NAVIGATE"
 
   return:
     slot: 22
@@ -30,7 +30,7 @@ buttons:
       - "&#FF0000| &f&lGO BACK TO THE"
       - "&#FF0000| &f&lSHOP MENU"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO RETURN"
+      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO RETURN"
 
   next:
     slot: 23
@@ -42,10 +42,10 @@ buttons:
       - "&#94FF00&lINFORMATION:"
       - "&#94FF00| &f&lGO ONE PAGE FORWARD"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO NAVIGATE"
+      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO NAVIGATE"
 
 items:
-    pig:
+  pig:
     page: 1
     slot: 10
     name: "&#FFB6C1&lPIG SPAWNER"
@@ -61,12 +61,44 @@ items:
       - "&#FFB6C1⚓ &f&lPRICE: &#FFB6C1$%price%"
       - ""
       - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO BUY"
-  skeleton:
+  cow:
     page: 1
     slot: 11
+    name: "&#C4A484&lCOW SPAWNER"
+    material: SPAWNER
+    price: 900
+    command: "spawner give spawner %player% cow"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#C4A484&lINFORMATION:"
+      - "&#C4A484| &f&lGIVES A COW SPAWNER"
+      - ""
+      - "&#C4A484⚓ &f&lPRICE: &#C4A484$%price%"
+      - ""
+      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO BUY"
+  zombie:
+    page: 1
+    slot: 12
+    name: "&#80EE0B&lZOMBIE SPAWNER"
+    material: SPAWNER
+    price: 1000
+    command: "spawner give spawner %player% zombie"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#80EE0B&lINFORMATION:"
+      - "&#80EE0B| &f&lGIVES A ZOMBIE SPAWNER"
+      - ""
+      - "&#80EE0B⚓ &f&lPRICE: &#80EE0B$%price%"
+      - ""
+      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO BUY"
+  skeleton:
+    page: 1
+    slot: 13
     name: "&#E3E3E3&lSKELETON SPAWNER"
     material: SPAWNER
-    price: 350
+    price: 1200
     command: "spawner give spawner %player% skeleton"
     lore:
       - "&8Description"
@@ -79,10 +111,10 @@ items:
       - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO BUY"
   creeper:
     page: 1
+    slot: 14
     name: "&#007E20&lCREEPER SPAWNER"
-    slot: 12
     material: SPAWNER
-    price: 700
+    price: 1400
     command: "spawner give spawner %player% creeper"
     lore:
       - "&8Description"
@@ -93,28 +125,12 @@ items:
       - "&#007E20⚓ &f&lPRICE: &#007E20$%price%"
       - ""
       - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO BUY"
-  zombie:
-    page: 1
-    name: "&#80ee0b&lZOMBIE SPAWNER"
-    slot: 14
-    material: SPAWNER
-    price: 2800
-    command: "spawner give spawner %player% zombie"
-    lore:
-      - "&8Description"
-      - ""
-      - "&#80EE0B&lINFORMATION:"
-      - "&#80EE0B| &f&lGIVES A ZOMBIE SPAWNER"
-      - ""
-      - "&#80EE0B⚓ &f&lPRICE: &#80EE0B$%price%"
-      - ""
-      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO BUY"
   irongolem:
     page: 1
-    name: "&7&lIRON GOLEM SPAWNER"
     slot: 15
+    name: "&7&lIRON GOLEM SPAWNER"
     material: SPAWNER
-    price: 5000
+    price: 2500
     command: "spawner give spawner %player% iron_golem"
     lore:
       - "&8Description"

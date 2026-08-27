@@ -554,8 +554,26 @@ sections:
           - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
         commands:
           - "spawner give spawner %player% pig"
-      zombie:
+      cow:
         slot: 11
+        type: command
+        entity: cow
+        price: 900
+        material: SPAWNER
+        name: "&#C4A484&lCOW SPAWNER"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#C4A484&lINFORMATION:"
+          - "&#C4A484| &f&lGIVES A COW SPAWNER"
+          - ""
+          - "&#C4A484⚓ &f&lPRICE: &#C4A484%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+        commands:
+          - "spawner give spawner %player% cow"
+      zombie:
+        slot: 12
         type: command
         entity: zombie
         price: 1000
@@ -573,7 +591,7 @@ sections:
         commands:
           - "spawner give spawner %player% zombie"
       skeleton:
-        slot: 12
+        slot: 13
         type: command
         entity: skeleton
         price: 1200

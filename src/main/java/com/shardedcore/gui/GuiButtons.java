@@ -125,8 +125,12 @@ public final class GuiButtons {
         else fill(menu);
     }
 
-    public static void placeBack(Menus.Menu menu, Player player, int fallbackSlot, Runnable back) {
-        place(menu, "back", fallbackSlot, back(player), event -> {
+    public static void placeBack(Menus.Menu menu, Player player, int slot, Runnable back) {
+        if (menu == null) return;
+        int size = menu.inventory().getSize();
+        int resolved = slot;
+        if (resolved < 0 || resolved >= size) resolved = Math.max(0, ((size / 9) - 1) * 9 + 4);
+        menu.set(resolved, back(player), event -> {
             event.setCancelled(true);
             play(player, "click");
             if (back != null) back.run();
