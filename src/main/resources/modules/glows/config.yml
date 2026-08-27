@@ -13,15 +13,16 @@ gui:
   lore:
     - "&8Description"
     - ""
-    - "%color%&lINFORMATION:"
-    - "%color%| &f&lCLICK TO APPLY THIS GLOW"
+    - "%color%Information:"
+    - "%color%| &fClick to apply this glow"
     - ""
     - "%status%"
     - ""
     - "%click%"
-  status-owned: "%color%☀%color%&lSTATUS: &#94FF00&l&nOWNED"
-  status-locked: "%color%☀%color%&lSTATUS: &#FF2727&l&nLOCKED"
-  click-footer: "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO APPLY"
+  status-owned: "%color%Status: &#94FF00&nOwned"
+  status-locked: "%color%Status: &#FF2727&nLocked"
+  click-footer: "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Apply"
+  fill: true
 
 placeholders:
   owned-yes: '&#9FFF00&nYes'
@@ -34,10 +35,10 @@ disable:
   lore:
     - '&8Description'
     - ''
-    - '&#FF0000&lINFORMATION:'
-    - '&#FF0000| &f&lDONT WANT A GLOW?'
+    - '&#FF0000Information:'
+    - '&#FF0000| &fDont want a glow?'
     - ''
-    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO REMOVE'
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Remove'
 
 close:
   slot: 31
@@ -254,19 +255,19 @@ glows:
   rainbow:
     slot: 25
     permission: eglow.color.rainbow
-    command: eglow:eglow rainbow
+    command: eglow:eglow rainbow slow
     color: '#FF00AA'
     display-name: '&#FF00AA&lRAINBOW GLOW'
     lore:
-      - '&8GLOWS'
+      - '&8Description'
       - ''
-      - '&#FF00AA&lINFORMATION:'
-      - '&#FF00AA| &f&lCLICK TO GLOW AND'
-      - '&#FF00AA| &f&lENHANCE YOUR LOOKS'
+      - '&#FF00AAInformation:'
+      - '&#FF00AA| &fClick to glow and'
+      - '&#FF00AA| &fenhance your looks'
       - ''
-      - '&#FF00AA| ⚓ &fOwned: %glow_owned_rainbow%'
+      - '&#FF00AA⚓ &fOwned: %glow_owned_rainbow%'
       - ''
-      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO APPLY'
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Apply'
 
 sounds:
   open:

@@ -12,14 +12,37 @@ chat-format: " %tag%"
 tab-format: " %tag%"
 
 tags:
+  sigma:
+    tag: "&7[&#00A2FF⚓ &#00A2FF&lSIGMA&7]"
+    name: "Sigma"
+    description: "&8Description"
+  mummy:
+    tag: "&7[&#FF0086♡ &#FF0086&lMUMMY&7]"
+    name: "Mummy"
+    description: "&8Description"
+  swordmummy:
+    tag: "&7[&#FFEE00🗡 &#FFEE00&lMUMMY&7]"
+    name: "Mummy"
+    description: "&8Description"
   sharded:
-    tag: "&#A370EE☀&#A370EE&lSHARDED"
+    tag: "&7[&#A370EE📜 &#A370EE&lSHARDED&7]"
+    name: "Sharded"
     description: "&8Description"
-  summer:
-    tag: "&#FCFF00☀&#FCFF00&lSUMMER"
+  one:
+    tag: "&7[&#A9FF00#&#A9FF00&l1&7]"
+    name: "#1"
     description: "&8Description"
-  og:
-    tag: "&#FFD900☀&#FFD900&lOG"
+  p2w:
+    tag: "&7[&#FCFF00$ &#FCFF00&lP2W&7]"
+    name: "P2W"
+    description: "&8Description"
+  goty:
+    tag: "&7[&#FF2F2F☄ &#FF2F2F&lGOTY&7]"
+    name: "Goty"
+    description: "&8Description"
+  hacker:
+    tag: "&7[&#FF0000☆ &#FF0000&lHACKER&7]"
+    name: "Hacker"
     description: "&8Description"
 
 limited: {}
@@ -34,16 +57,16 @@ gui:
   default-description: "&8Description"
   colored-bundles: true
   item-material: BUNDLE
-  item-name: "%color%☀%color%&l%name%"
-  status-owned: "%color%☀%color%&lSTATUS: &#94FF00&l&nOWNED"
-  status-locked: "%color%☀%color%&lSTATUS: &#FF2727&l&nLOCKED"
-  click-footer: "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO EQUIP"
+  item-name: "%color%&l%name%"
+  status-owned: "%color%Status: &#94FF00&nOwned"
+  status-locked: "%color%Status: &#FF2727&nLocked"
+  click-footer: "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Equip"
   lore:
     - "&8Description"
     - ""
-    - "%color%&lINFORMATION:"
-    - "%color%| &f&lCLICK TO EQUIP"
-    - "%color%| &f&lTHIS TAG"
+    - "%color%Information:"
+    - "%color%| &fClick to equip"
+    - "%color%| &fthis tag"
     - ""
     - "%status%"
     - ""
@@ -68,11 +91,11 @@ gui:
     lore:
       - "&8Description"
       - ""
-      - "&#FFBA00&lINFORMATION:"
-      - "&#FFBA00| &f&lVIEW LIMITED"
-      - "&#FFBA00| &f&lTIME TAGS"
+      - "&#FFBA00Information:"
+      - "&#FFBA00| &fView limited"
+      - "&#FFBA00| &ftime tags"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO VIEW"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To View"
   clear:
     enabled: true
     slot: 4
@@ -81,10 +104,10 @@ gui:
     lore:
       - "&8Description"
       - ""
-      - "&#FF0000&lINFORMATION:"
-      - "&#FF0000| &f&lDONT WANT A TAG?"
+      - "&#FF0000Information:"
+      - "&#FF0000| &fDont want a tag?"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO REMOVE"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Remove"
 
 sounds:
   open:

@@ -15,14 +15,43 @@ public final class Sqlite implements AutoCloseable {
 
     private final ShardedCore plugin;
     private final File file;
+    private final String url;
+    private final String username;
+    private final String password;
+    private final boolean mysql;
     private Connection connection;
 
     public Sqlite(ShardedCore plugin, File file) {
         this.plugin = plugin;
         this.file = file;
+        this.url = null;
+        this.username = null;
+        this.password = null;
+        this.mysql = false;
+    }
+
+    public Sqlite(ShardedCore plugin, String url, String username, String password) {
+        this.plugin = plugin;
+        this.file = null;
+        this.url = url;
+        this.username = username;
+        this.password = password;
+        this.mysql = true;
+    }
+
+    public boolean mysql() {
+        return mysql;
     }
 
     public void open() throws SQLException {
+        if (mysql) {
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+            } catch (ClassNotFoundException ignored) {
+            }
+            connection = DriverManager.getConnection(url, username == null ? "" : username, password == null ? "" : password);
+            return;
+        }
         File parent = file.getParentFile();
         if (parent != null && !parent.exists()) parent.mkdirs();
         try {
@@ -75,7 +104,7 @@ public final class Sqlite implements AutoCloseable {
             try {
                 connection.close();
             } catch (SQLException ex) {
-                plugin.getLogger().warning("Failed to close SQLite: " + ex.getMessage());
+                plugin.getLogger().warning("Failed to close SQL: " + ex.getMessage());
             }
         }
     }

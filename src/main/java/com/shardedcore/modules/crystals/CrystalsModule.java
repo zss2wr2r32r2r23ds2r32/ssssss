@@ -313,7 +313,7 @@ public final class CrystalsModule extends Module implements CommandExecutor, Tab
                 String name = item.getString("color", item.getString("chatcolor", ""));
                 yield colors.unlock(player.getUniqueId(), name);
             }
-            case "tool", "drill", "chopper", "firework" -> {
+            case "tool", "drill", "chopper", "firework", "sellwand" -> {
                 ShardedToolsModule tools = plugin.modules().get(ShardedToolsModule.class);
                 if (tools == null) yield false;
                 yield tools.give(player, item.getString("tool", type), item.getString("expire", null));

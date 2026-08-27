@@ -48,6 +48,7 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
     private final Set<UUID> queue = ConcurrentHashMap.newKeySet();
     private final Set<UUID> searching = ConcurrentHashMap.newKeySet();
     private final Map<UUID, UUID> partners = new ConcurrentHashMap<>();
+    private final Map<UUID, UUID> challenges = new ConcurrentHashMap<>();
     private BukkitTask queueTask;
     private int queueDots;
     private RtpSafeSpotPool pool;
@@ -98,12 +99,21 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
             return true;
         }
         String name = command.getName().toLowerCase(Locale.ROOT);
-        if (name.equals("leave") || label.equalsIgnoreCase("leave")
+        if (name.equals("leave") || label.equalsIgnoreCase("leave") || label.equalsIgnoreCase("leavequeue")
+                || label.equalsIgnoreCase("rtpleave") || label.equalsIgnoreCase("unqueue")
                 || (name.equals("rtpqueue") && args.length > 0 && args[0].equalsIgnoreCase("leave"))) {
             leaveQueue(player);
             return true;
         }
         if (name.equals("rtpqueue")) {
+            if (args.length > 0 && args[0].equalsIgnoreCase("accept")) {
+                acceptChallenge(player);
+                return true;
+            }
+            if (args.length > 0) {
+                challenge(player, args[0]);
+                return true;
+            }
             toggleQueue(player);
             return true;
         }
@@ -115,23 +125,41 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
         return true;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
     public void onLeaveCommand(PlayerCommandPreprocessEvent event) {
         String raw = event.getMessage().substring(1).trim().toLowerCase(Locale.ROOT);
         String command = raw.split(" ")[0];
         if (command.contains(":")) command = command.substring(command.indexOf(':') + 1);
         boolean leave = command.equals("leave") || command.equals("leavequeue")
                 || command.equals("rtpleave") || command.equals("unqueue")
-                || (command.equals("rtpqueue") || command.equals("rtpq")) && raw.contains(" leave");
+                || ((command.equals("rtpqueue") || command.equals("rtpq")) && (raw.contains(" leave") || raw.endsWith("leave")));
         if (!leave) return;
         Player player = event.getPlayer();
-        boolean queued = queue.contains(player.getUniqueId())
-                || searching.contains(player.getUniqueId())
-                || pending.containsKey(player.getUniqueId())
-                || partners.containsKey(player.getUniqueId());
-        if (!queued) return;
+        if (!inRtp(player) && challenges.remove(player.getUniqueId()) == null
+                && !challenges.containsValue(player.getUniqueId())) {
+            return;
+        }
         event.setCancelled(true);
         leaveQueue(player);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+    public void onLeaveCommandLate(PlayerCommandPreprocessEvent event) {
+        String raw = event.getMessage().substring(1).trim().toLowerCase(Locale.ROOT);
+        String command = raw.split(" ")[0];
+        if (command.contains(":")) command = command.substring(command.indexOf(':') + 1);
+        if (!command.equals("leave") && !command.equals("leavequeue") && !command.equals("rtpleave") && !command.equals("unqueue")) {
+            return;
+        }
+        Player player = event.getPlayer();
+        if (!inRtp(player)) return;
+        event.setCancelled(true);
+        leaveQueue(player);
+    }
+
+    private boolean inRtp(Player player) {
+        UUID uuid = player.getUniqueId();
+        return queue.contains(uuid) || searching.contains(uuid) || pending.containsKey(uuid) || partners.containsKey(uuid);
     }
 
     private void openMenu(Player player) {
@@ -287,23 +315,93 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
     private void leaveQueue(Player player) {
         UUID uuid = player.getUniqueId();
         UUID partner = partners.remove(uuid);
+        UUID asked = challenges.remove(uuid);
         boolean queued = queue.remove(uuid);
         boolean looking = searching.remove(uuid);
         boolean teleporting = pending.containsKey(uuid);
         stop(uuid);
+        challenges.values().removeIf(value -> value.equals(uuid));
+        if (asked != null) {
+            Player other = Bukkit.getPlayer(asked);
+            if (other != null) sendBar(other, "queue.cancelled");
+        }
         if (partner != null) {
             partners.remove(partner);
             searching.remove(partner);
             queue.remove(partner);
             stop(partner);
             Player other = Bukkit.getPlayer(partner);
-            if (other != null) sendBar(other, "queue.cancelled");
+            if (other != null) {
+                sendBar(other, "queue.cancelled");
+                sendRaw(other, cfg("queue.cancelled", "&#22AFFB&lRTP QUEUE &8▷ &fYou left the queue."));
+            }
         }
-        if (queued || looking || teleporting || partner != null) {
+        player.sendActionBar(net.kyori.adventure.text.Component.empty());
+        if (queued || looking || teleporting || partner != null || asked != null) {
             sendBar(player, "queue.cancelled");
+            sendRaw(player, cfg("queue.cancelled", "&#22AFFB&lRTP QUEUE &8▷ &fYou left the queue."));
             return;
         }
         sendBar(player, "queue.not-in");
+        sendRaw(player, cfg("queue.not-in", "&#22AFFB&lRTP QUEUE &8▷ &fYou are not in the queue."));
+    }
+
+    private void challenge(Player player, String name) {
+        Player target = Bukkit.getPlayerExact(name);
+        if (target == null || !target.isOnline()) {
+            sendBar(player, "queue.offline");
+            send(player, "queue.offline");
+            return;
+        }
+        if (target.getUniqueId().equals(player.getUniqueId())) {
+            sendBar(player, "queue.self");
+            send(player, "queue.self");
+            return;
+        }
+        if (queue.contains(target.getUniqueId()) || partners.containsKey(target.getUniqueId())) {
+            queue.remove(player.getUniqueId());
+            queue.remove(target.getUniqueId());
+            partners.put(player.getUniqueId(), target.getUniqueId());
+            partners.put(target.getUniqueId(), player.getUniqueId());
+            searching.add(player.getUniqueId());
+            searching.add(target.getUniqueId());
+            pairQueue(player, target);
+            return;
+        }
+        challenges.put(player.getUniqueId(), target.getUniqueId());
+        sendBar(player, "queue.requested", "player", target.getName());
+        send(player, "queue.requested", "player", target.getName());
+        sendBar(target, "queue.incoming", "player", player.getName());
+        send(target, "queue.incoming", "player", player.getName());
+    }
+
+    private void acceptChallenge(Player player) {
+        UUID from = null;
+        for (Map.Entry<UUID, UUID> entry : challenges.entrySet()) {
+            if (entry.getValue().equals(player.getUniqueId())) {
+                from = entry.getKey();
+                break;
+            }
+        }
+        if (from == null) {
+            sendBar(player, "queue.no-request");
+            send(player, "queue.no-request");
+            return;
+        }
+        challenges.remove(from);
+        Player other = Bukkit.getPlayer(from);
+        if (other == null || !other.isOnline()) {
+            sendBar(player, "queue.offline");
+            send(player, "queue.offline");
+            return;
+        }
+        queue.remove(player.getUniqueId());
+        queue.remove(other.getUniqueId());
+        partners.put(player.getUniqueId(), other.getUniqueId());
+        partners.put(other.getUniqueId(), player.getUniqueId());
+        searching.add(player.getUniqueId());
+        searching.add(other.getUniqueId());
+        pairQueue(player, other);
     }
 
     @EventHandler
@@ -337,6 +435,8 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
         queue.remove(event.getPlayer().getUniqueId());
         searching.remove(event.getPlayer().getUniqueId());
         UUID partner = partners.remove(event.getPlayer().getUniqueId());
+        challenges.remove(event.getPlayer().getUniqueId());
+        challenges.values().removeIf(value -> value.equals(event.getPlayer().getUniqueId()));
         if (partner != null) {
             partners.remove(partner);
             searching.remove(partner);
@@ -487,6 +587,13 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length != 1) return List.of();
+        String name = command.getName().toLowerCase(Locale.ROOT);
+        if (name.equals("rtpqueue") || alias.equalsIgnoreCase("rtpq")) {
+            List<String> options = new ArrayList<>(List.of("leave", "accept"));
+            options.addAll(Tabs.players(args[0]));
+            return Tabs.filter(options, args[0]);
+        }
+        if (name.equals("leave")) return List.of();
         List<String> options = new ArrayList<>();
         ConfigurationSection worlds = config.getConfigurationSection("worlds");
         if (worlds != null) options.addAll(worlds.getKeys(false));

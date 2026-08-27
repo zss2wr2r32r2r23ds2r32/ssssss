@@ -47,16 +47,16 @@ gui:
   default-description: "&8Description"
   colored-bundles: true
   item-material: BUNDLE
-  item-name: "%color%☀%color%&l%name%"
-  status-owned: "%color%☀%color%&lSTATUS: &#94FF00&l&nOWNED"
-  status-locked: "%color%☀%color%&lSTATUS: &#FF2727&l&nLOCKED"
-  click-footer: "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO EQUIP"
+  item-name: "%color%&l%name%"
+  status-owned: "%color%Status: &#94FF00&nOwned"
+  status-locked: "%color%Status: &#FF2727&nLocked"
+  click-footer: "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Equip"
   lore:
     - "&8Description"
     - ""
-    - "%color%&lINFORMATION:"
-    - "%color%| &f&lCLICK TO EQUIP"
-    - "%color%| &f&lTHIS COLOR"
+    - "%color%Information:"
+    - "%color%| &fClick to equip"
+    - "%color%| &fthis color"
     - ""
     - "%status%"
     - ""

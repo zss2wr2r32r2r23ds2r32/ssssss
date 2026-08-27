@@ -144,10 +144,11 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
     private void tick() {
         ticks += Math.max(1, config.getInt("refresh", 1));
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.isInvisible()) {
-                remove(player.getUniqueId());
-                continue;
-            }
+        if (player.isInvisible() || player.getGameMode() == org.bukkit.GameMode.SPECTATOR) {
+            Tag existing = tags.get(player.getUniqueId());
+            if (existing != null) remove(player.getUniqueId());
+            continue;
+        }
             if (!tags.containsKey(player.getUniqueId())) spawn(player);
             else update(player);
         }

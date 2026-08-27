@@ -72,6 +72,7 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
     );
 
     private Sqlite sqlite;
+    private boolean remoteSql;
     private NamespacedKey toolKey;
     private final Set<UUID> staffMode = ConcurrentHashMap.newKeySet();
     private final Set<UUID> vanished = ConcurrentHashMap.newKeySet();
@@ -89,67 +90,54 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
     @Override
     public void enable() {
         sqlite = plugin.toggles().sqlite();
+        if ("mysql".equalsIgnoreCase(config.getString("database.type", "sqlite"))) {
+            ConfigurationSection mysql = config.getConfigurationSection("database.mysql");
+            if (mysql != null) {
+                String host = mysql.getString("host", "localhost");
+                int port = mysql.getInt("port", 3306);
+                String database = mysql.getString("database", "shardedcore");
+                String user = mysql.getString("username", "root");
+                String pass = mysql.getString("password", "");
+                String url = "jdbc:mysql://" + host + ":" + port + "/" + database
+                        + "?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8";
+                try {
+                    Sqlite remote = new Sqlite(plugin, url, user, pass);
+                    remote.open();
+                    sqlite = remote;
+                    remoteSql = true;
+                    plugin.getLogger().info("Staff database is using MySQL.");
+                } catch (SQLException ex) {
+                    plugin.getLogger().log(Level.SEVERE, "MySQL failed, staff is using SQLite instead", ex);
+                }
+            }
+        }
         toolKey = new NamespacedKey(plugin, "staff_tool");
         try {
-            sqlite.run("""
-                    CREATE TABLE IF NOT EXISTS staff_punishments (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        uuid TEXT NOT NULL,
-                        name TEXT NOT NULL,
-                        type TEXT NOT NULL,
-                        reason TEXT NOT NULL,
-                        staff TEXT NOT NULL,
-                        created INTEGER NOT NULL,
-                        expires INTEGER NOT NULL,
-                        ip TEXT,
-                        active INTEGER NOT NULL DEFAULT 1
-                    )
-                    """);
-            sqlite.run("""
-                    CREATE TABLE IF NOT EXISTS staff_alts (
-                        uuid TEXT NOT NULL,
-                        name TEXT NOT NULL,
-                        ip TEXT NOT NULL,
-                        last_seen INTEGER NOT NULL,
-                        PRIMARY KEY (uuid, ip)
-                    )
-                    """);
-            sqlite.run("""
-                    CREATE TABLE IF NOT EXISTS staff_snapshots (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        uuid TEXT NOT NULL,
-                        category TEXT NOT NULL,
-                        created INTEGER NOT NULL,
-                        contents TEXT NOT NULL
-                    )
-                    """);
-            sqlite.run("""
-                    CREATE TABLE IF NOT EXISTS staff_state (
-                        uuid TEXT PRIMARY KEY,
-                        vanished INTEGER NOT NULL DEFAULT 0,
-                        frozen INTEGER NOT NULL DEFAULT 0
-                    )
-                    """);
-            sqlite.run("""
-                    CREATE TABLE IF NOT EXISTS staff_audit (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        uuid TEXT NOT NULL,
-                        name TEXT NOT NULL,
-                        command TEXT NOT NULL,
-                        created INTEGER NOT NULL
-                    )
-                    """);
-            sqlite.run("""
-                    CREATE TABLE IF NOT EXISTS staff_mode (
-                        uuid TEXT PRIMARY KEY,
-                        contents TEXT NOT NULL,
-                        armor TEXT NOT NULL,
-                        extra TEXT NOT NULL,
-                        gamemode TEXT NOT NULL,
-                        xp REAL NOT NULL,
-                        level INTEGER NOT NULL
-                    )
-                    """);
+            boolean mysql = sqlite.mysql();
+            String id = mysql ? "INT NOT NULL AUTO_INCREMENT PRIMARY KEY" : "INTEGER PRIMARY KEY AUTOINCREMENT";
+            String text = mysql ? "VARCHAR(255)" : "TEXT";
+            String longText = mysql ? "LONGTEXT" : "TEXT";
+            String integer = mysql ? "BIGINT" : "INTEGER";
+            sqlite.run("CREATE TABLE IF NOT EXISTS staff_punishments ("
+                    + "id " + id + ", uuid " + text + " NOT NULL, name " + text + " NOT NULL, type " + text + " NOT NULL, "
+                    + "reason " + text + " NOT NULL, staff " + text + " NOT NULL, created " + integer + " NOT NULL, "
+                    + "expires " + integer + " NOT NULL, ip " + text + ", active " + integer + " NOT NULL DEFAULT 1)");
+            sqlite.run("CREATE TABLE IF NOT EXISTS staff_alts ("
+                    + "uuid " + text + " NOT NULL, name " + text + " NOT NULL, ip " + text + " NOT NULL, "
+                    + "last_seen " + integer + " NOT NULL, PRIMARY KEY (uuid, ip))");
+            sqlite.run("CREATE TABLE IF NOT EXISTS staff_snapshots ("
+                    + "id " + id + ", uuid " + text + " NOT NULL, category " + text + " NOT NULL, "
+                    + "created " + integer + " NOT NULL, contents " + longText + " NOT NULL)");
+            sqlite.run("CREATE TABLE IF NOT EXISTS staff_state ("
+                    + "uuid " + text + " PRIMARY KEY, vanished " + integer + " NOT NULL DEFAULT 0, "
+                    + "frozen " + integer + " NOT NULL DEFAULT 0)");
+            sqlite.run("CREATE TABLE IF NOT EXISTS staff_audit ("
+                    + "id " + id + ", uuid " + text + " NOT NULL, name " + text + " NOT NULL, "
+                    + "command " + longText + " NOT NULL, created " + integer + " NOT NULL)");
+            sqlite.run("CREATE TABLE IF NOT EXISTS staff_mode ("
+                    + "uuid " + text + " PRIMARY KEY, contents " + longText + " NOT NULL, armor " + longText + " NOT NULL, "
+                    + "extra " + longText + " NOT NULL, gamemode " + text + " NOT NULL, xp DOUBLE NOT NULL, "
+                    + "level " + integer + " NOT NULL)");
         } catch (SQLException ex) {
             plugin.getLogger().log(Level.SEVERE, "Failed to create staff tables", ex);
         }
@@ -172,6 +160,7 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         frozen.clear();
         staffChat.clear();
         screenshare.clear();
+        if (remoteSql && sqlite != null) sqlite.close();
         cleanup();
     }
 
@@ -262,6 +251,7 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         inventory.clear();
         player.setGameMode(GameMode.CREATIVE);
         if (config.getBoolean("staffmode.vanish-on-enter", true)) setVanish(player, true);
+        else hideFromPlayers(player);
         String disable = cfg("staffmode.disable-eglow-command", "eglow:eglow disable");
         if (disable != null && !disable.isBlank()) player.performCommand(disable.startsWith("/") ? disable.substring(1) : disable);
         giveStaffItems(player);
@@ -373,12 +363,11 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
     private void saveMode(Player player) {
         PlayerInventory inventory = player.getInventory();
         try {
-                    sqlite.execute("""
-                    INSERT INTO staff_mode (uuid, contents, armor, extra, gamemode, xp, level)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                    ON CONFLICT(uuid) DO UPDATE SET contents = excluded.contents, armor = excluded.armor,
-                    extra = excluded.extra, gamemode = excluded.gamemode, xp = excluded.xp, level = excluded.level
-                    """, player.getUniqueId().toString(), serializeInv(inventory.getStorageContents()),
+            sqlite.execute("INSERT INTO staff_mode (uuid, contents, armor, extra, gamemode, xp, level) VALUES (?, ?, ?, ?, ?, ?, ?)"
+                    + (sqlite.mysql()
+                    ? " ON DUPLICATE KEY UPDATE contents = VALUES(contents), armor = VALUES(armor), extra = VALUES(extra), gamemode = VALUES(gamemode), xp = VALUES(xp), level = VALUES(level)"
+                    : " ON CONFLICT(uuid) DO UPDATE SET contents = excluded.contents, armor = excluded.armor, extra = excluded.extra, gamemode = excluded.gamemode, xp = excluded.xp, level = excluded.level"),
+                    player.getUniqueId().toString(), serializeInv(inventory.getStorageContents()),
                     serializeInv(inventory.getArmorContents()),
                     serializeInv(new ItemStack[]{inventory.getItemInOffHand()}),
                     player.getGameMode().name(), (double) player.getExp(), player.getLevel());
@@ -452,6 +441,7 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
             } catch (Throwable ignored) {
             }
             for (Player other : Bukkit.getOnlinePlayers()) other.showPlayer(plugin, player);
+            if (staffMode.contains(player.getUniqueId())) hideFromPlayers(player);
         }
         saveState(player.getUniqueId(), "vanished", on);
         if (staffMode.contains(player.getUniqueId())) {
@@ -461,8 +451,10 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
 
     private void saveState(UUID uuid, String column, boolean value) {
         try {
-            sqlite.execute("INSERT INTO staff_state (uuid, vanished, frozen) VALUES (?, ?, ?) ON CONFLICT(uuid) DO UPDATE SET "
-                            + column + " = excluded." + column,
+            sqlite.execute("INSERT INTO staff_state (uuid, vanished, frozen) VALUES (?, ?, ?) "
+                            + (sqlite.mysql()
+                            ? "ON DUPLICATE KEY UPDATE " + column + " = VALUES(" + column + ")"
+                            : "ON CONFLICT(uuid) DO UPDATE SET " + column + " = excluded." + column),
                     uuid.toString(), "vanished".equals(column) && value ? 1 : 0, "frozen".equals(column) && value ? 1 : 0);
             sqlite.execute("UPDATE staff_state SET " + column + " = ? WHERE uuid = ?", value ? 1 : 0, uuid.toString());
         } catch (SQLException ignored) {
@@ -552,9 +544,12 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
             return true;
         }
         target.setGameMode(mode);
-        Bukkit.getScheduler().runTask(plugin, () -> {
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (target.isOnline() && target.getGameMode() != mode) target.setGameMode(mode);
-        });
+        }, 1L);
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (target.isOnline() && target.getGameMode() != mode) target.setGameMode(mode);
+        }, 3L);
         send(sender, "gamemode", "mode", mode.name().toLowerCase(Locale.ROOT));
         return true;
     }
@@ -603,62 +598,114 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
     }
 
     private void openReasons(Player staff, Player target, String type) {
-        String path = type.equals("mute") ? "mute-reasons" : type.equals("kick") ? "kick-reasons" : "ban-reasons";
-        ConfigurationSection section = config.getConfigurationSection(path);
-        List<String> keys = new ArrayList<>();
-        if (section != null) keys.addAll(section.getKeys(false));
-        if (keys.isEmpty() && (type.equals("ban") || type.equals("mute"))) {
-            ConfigurationSection legacy = config.getConfigurationSection(type.equals("mute") ? "mute-reasons" : "reasons");
-            if (legacy != null) keys.addAll(legacy.getKeys(false));
+        String path = type.equals("mute") ? "mute-reasons" : type.equals("kick") ? "kick-reasons" : "reasons";
+        List<ReasonChoice> choices = loadReasons(path, type);
+        if (choices.isEmpty() && type.equals("ban")) choices = loadReasons("ban-reasons", type);
+        if (choices.isEmpty()) {
+            choices.add(new ReasonChoice("Unfair Modifications", List.of(type.equals("kick") ? "kick" : "7d"), null));
         }
-        if (keys.isEmpty()) {
-            keys.add("Unfair Modifications");
-        }
-        int rows = Math.max(3, Math.min(6, (keys.size() + 16) / 7 + 2));
+        int rows = Math.max(3, Math.min(6, (choices.size() + 16) / 7 + 2));
         Menus.Menu menu = plugin.menus().create(staff, Text.apply(cfg("messages.reason-title", "%type% Reasons"),
-                "type", type.toUpperCase(Locale.ROOT), "player", target.getName()), rows);
+                "type", type.substring(0, 1).toUpperCase(Locale.ROOT) + type.substring(1), "player", target.getName()), rows);
         int[] slots = GuiButtons.inner(rows);
         int index = 0;
-        for (String key : keys) {
+        for (ReasonChoice choice : choices) {
             if (index >= slots.length) break;
-            ConfigurationSection reason = section == null ? null : section.getConfigurationSection(key);
-            String label = reason == null ? key : reason.getString("reason", reason.getString("name", key));
-            String duration = "7d";
-            if (reason != null) duration = reason.getString("duration", type.equals("kick") ? "kick" : "7d");
-            else if (section != null && section.isString(key)) duration = section.getString(key, "7d");
-            else if (config.isString("reasons." + key)) duration = config.getString("reasons." + key, "7d");
+            String durationLabel = choice.durations.size() == 1 ? choice.durations.get(0) : choice.durations.size() + " options";
             ItemStack item;
-            if (reason != null) {
-                item = Items.fromSection(reason, staff, "player", target.getName(), "reason", ColorUtil.strip(label),
-                        "duration", duration, "type", type.toUpperCase(Locale.ROOT));
+            if (choice.section != null && !choice.section.getStringList("lore").isEmpty()) {
+                item = Items.fromSection(choice.section, staff, "player", target.getName(), "reason", choice.reason,
+                        "duration", durationLabel, "type", type);
             } else {
-                item = Items.named(Material.PAPER, "&#FF0000&l" + ColorUtil.strip(label).toUpperCase(Locale.ROOT),
+                String color = type.equals("mute") ? "&#FFBA00" : type.equals("kick") ? "&#FF8300" : "&#FF0000";
+                Material material = type.equals("mute") ? Material.PAPER : type.equals("kick") ? Material.LEATHER_BOOTS : Material.IRON_BARS;
+                if (choice.section != null) {
+                    material = Sounds.material(choice.section.getString("material", material.name()), material);
+                }
+                item = Items.named(material, color + "&l" + choice.reason,
                         List.of("&8Description", "",
-                                "&#FF0000&lINFORMATION:",
-                                "&#FF0000| &f&lPLAYER: &f" + target.getName(),
-                                "&#FF0000| &f&lDURATION: &f" + duration.toUpperCase(Locale.ROOT),
+                                color + "Information:",
+                                color + "| &fPlayer: &f" + target.getName(),
+                                color + "| &fDuration: &f" + durationLabel,
                                 "",
-                                "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO APPLY"));
+                                "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To " + (choice.durations.size() > 1 ? "Open" : type.substring(0, 1).toUpperCase(Locale.ROOT) + type.substring(1))));
             }
-            String appliedReason = ColorUtil.strip(label);
-            String appliedDuration = duration;
             menu.set(slots[index++], item, event -> {
                 event.setCancelled(true);
-                if (type.equals("kick")) {
-                    Player live = target.getPlayer();
-                    if (live != null) live.kick(ColorUtil.parse("&c" + appliedReason));
-                    send(staff, "kicked", "player", target.getName(), "reason", appliedReason);
-                    broadcast("Kick", target.getName(), staff.getName(), appliedReason);
-                } else {
-                    apply(staff, target, type, appliedReason, appliedDuration, false);
+                if (choice.durations.size() > 1) {
+                    openDurations(staff, target, type, choice);
+                    return;
                 }
-                staff.closeInventory();
+                applyReason(staff, target, type, choice.reason, choice.durations.get(0));
             });
         }
         GuiButtons.placeBack(menu, staff, GuiButtons.slot("back", Math.max(0, menu.inventory().getSize() - 5)),
                 () -> openPunish(staff, target));
         GuiButtons.border(menu);
         plugin.menus().open(staff, menu);
+    }
+
+    private void openDurations(Player staff, Player target, String type, ReasonChoice choice) {
+        int rows = Math.max(3, Math.min(6, (choice.durations.size() + 16) / 7 + 2));
+        Menus.Menu menu = plugin.menus().create(staff, choice.reason, rows);
+        int[] slots = GuiButtons.inner(rows);
+        int index = 0;
+        String color = type.equals("mute") ? "&#FFBA00" : "&#FF0000";
+        for (String duration : choice.durations) {
+            if (index >= slots.length) break;
+            menu.set(slots[index++], Items.named(Material.CLOCK, color + "&l" + duration,
+                    List.of("&8Description", "",
+                            color + "Information:",
+                            color + "| &f" + choice.reason,
+                            color + "| &fPlayer: " + target.getName(),
+                            "",
+                            "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Apply")), event -> {
+                event.setCancelled(true);
+                applyReason(staff, target, type, choice.reason, duration);
+            });
+        }
+        GuiButtons.placeBack(menu, staff, GuiButtons.slot("back", Math.max(0, menu.inventory().getSize() - 5)),
+                () -> openReasons(staff, target, type));
+        GuiButtons.border(menu);
+        plugin.menus().open(staff, menu);
+    }
+
+    private void applyReason(Player staff, Player target, String type, String reason, String duration) {
+        if (type.equals("kick")) {
+            Player live = target.getPlayer();
+            if (live != null) live.kick(ColorUtil.parse("&c" + reason));
+            send(staff, "kicked", "player", target.getName(), "reason", reason);
+            broadcast("Kick", target.getName(), staff.getName(), reason);
+        } else {
+            apply(staff, target, type, reason, duration, false);
+        }
+        staff.closeInventory();
+    }
+
+    private List<ReasonChoice> loadReasons(String path, String type) {
+        List<ReasonChoice> list = new ArrayList<>();
+        ConfigurationSection section = config.getConfigurationSection(path);
+        if (section == null) return list;
+        for (String key : section.getKeys(false)) {
+            ConfigurationSection nested = section.getConfigurationSection(key);
+            if (nested != null) {
+                String reason = nested.getString("reason", nested.getString("name", key));
+                List<String> durations = nested.getStringList("durations");
+                if (durations.isEmpty() && nested.isList("duration")) durations = nested.getStringList("duration");
+                if (durations.isEmpty()) {
+                    String one = nested.getString("duration", type.equals("kick") ? "kick" : "7d");
+                    durations = List.of(one);
+                }
+                list.add(new ReasonChoice(ColorUtil.strip(reason), durations, nested));
+                continue;
+            }
+            if (section.isList(key)) {
+                list.add(new ReasonChoice(key, section.getStringList(key), null));
+            } else {
+                list.add(new ReasonChoice(key, List.of(section.getString(key, type.equals("kick") ? "kick" : "7d")), null));
+            }
+        }
+        return list;
     }
 
     private boolean punishCmd(CommandSender sender, String[] args, String type, boolean ip) {
@@ -1073,13 +1120,53 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         }
     }
 
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onGamemodeCommand(PlayerCommandPreprocessEvent event) {
+        String raw = event.getMessage().substring(1).trim();
+        if (raw.isEmpty()) return;
+        String[] parts = raw.split("\\s+");
+        String command = parts[0].toLowerCase(Locale.ROOT);
+        if (command.contains(":")) command = command.substring(command.indexOf(':') + 1);
+        GameMode mode = switch (command) {
+            case "gmsp", "gm3" -> GameMode.SPECTATOR;
+            case "gmc", "gm1", "gmcs" -> GameMode.CREATIVE;
+            case "gms", "gm0" -> GameMode.SURVIVAL;
+            case "gma", "gm2" -> GameMode.ADVENTURE;
+            default -> null;
+        };
+        if (mode == null) return;
+        Player player = event.getPlayer();
+        if (!player.hasPermission("shardedcore.staff.gamemode")) return;
+        event.setCancelled(true);
+        if (parts.length >= 2) {
+            gamemode(player, mode, new String[]{parts[1]});
+        } else {
+            gamemode(player, mode, new String[0]);
+        }
+    }
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onAudit(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
         if (!config.getBoolean("audit.enabled", true)) return;
-        if (!player.isOp() && !player.hasPermission("shardedcore.staff.mode")
-                && !player.hasPermission("shardedcore.staff.gamemode")) return;
+        if (config.getBoolean("audit.staff-only", true)
+                && !player.hasPermission(cfg("staff-permission", "shardedcore.staff.mode"))) {
+            return;
+        }
         String command = event.getMessage();
+        String name = command.substring(1).trim().split("\\s+")[0].toLowerCase(Locale.ROOT);
+        if (name.contains(":")) name = name.substring(name.indexOf(':') + 1);
+        List<String> watched = config.getStringList("audit.commands");
+        if (!watched.isEmpty()) {
+            boolean match = false;
+            for (String allowed : watched) {
+                if (allowed.equalsIgnoreCase(name)) {
+                    match = true;
+                    break;
+                }
+            }
+            if (!match) return;
+        }
         String line = Text.apply(cfg("messages.audit", "%prefix%&#FF8300%player% &fused &f%command%")
                         .replace("%prefix%", cfg("prefix", "")),
                 "player", player.getName(), "command", command);
@@ -1204,12 +1291,31 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         }
     }
 
+    private void hideFromPlayers(Player player) {
+        for (Player other : Bukkit.getOnlinePlayers()) {
+            if (other.equals(player)) continue;
+            if (other.hasPermission(cfg("staff-permission", "shardedcore.staff.mode"))) {
+                other.showPlayer(plugin, player);
+            } else {
+                other.hidePlayer(plugin, player);
+            }
+        }
+    }
+
     private void hideVanished(Player viewer) {
+        boolean staff = viewer.hasPermission(cfg("staff-permission", "shardedcore.staff.mode"));
         boolean see = viewer.hasPermission(cfg("see-vanished", "shardedcore.staff.seevanished"));
         for (UUID uuid : vanished) {
             Player other = Bukkit.getPlayer(uuid);
             if (other == null || other.equals(viewer)) continue;
             if (see) viewer.showPlayer(plugin, other);
+            else viewer.hidePlayer(plugin, other);
+        }
+        for (UUID uuid : staffMode) {
+            if (vanished.contains(uuid)) continue;
+            Player other = Bukkit.getPlayer(uuid);
+            if (other == null || other.equals(viewer)) continue;
+            if (staff) viewer.showPlayer(plugin, other);
             else viewer.hidePlayer(plugin, other);
         }
         if (vanished.contains(viewer.getUniqueId())) {
@@ -1218,16 +1324,19 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
                     other.hidePlayer(plugin, viewer);
                 }
             }
+        } else if (staffMode.contains(viewer.getUniqueId())) {
+            hideFromPlayers(viewer);
         }
     }
 
     private void rememberAlt(Player player) {
         String ip = player.getAddress() == null ? "" : player.getAddress().getAddress().getHostAddress();
         try {
-            sqlite.execute("""
-                    INSERT INTO staff_alts (uuid, name, ip, last_seen) VALUES (?, ?, ?, ?)
-                    ON CONFLICT(uuid, ip) DO UPDATE SET name = excluded.name, last_seen = excluded.last_seen
-                    """, player.getUniqueId().toString(), player.getName(), ip, System.currentTimeMillis());
+            sqlite.execute("INSERT INTO staff_alts (uuid, name, ip, last_seen) VALUES (?, ?, ?, ?)"
+                    + (sqlite.mysql()
+                    ? " ON DUPLICATE KEY UPDATE name = VALUES(name), last_seen = VALUES(last_seen)"
+                    : " ON CONFLICT(uuid, ip) DO UPDATE SET name = excluded.name, last_seen = excluded.last_seen"),
+                    player.getUniqueId().toString(), player.getName(), ip, System.currentTimeMillis());
         } catch (SQLException ignored) {
         }
     }
@@ -1440,7 +1549,8 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
             };
         }
         if (args.length == 2 && (name.equals("ban") || name.equals("mute") || name.equals("banip") || name.equals("kick"))) {
-            ConfigurationSection section = config.getConfigurationSection(name.equals("mute") ? "mute-reasons" : "reasons");
+            String path = name.equals("mute") ? "mute-reasons" : name.equals("kick") ? "kick-reasons" : "reasons";
+            ConfigurationSection section = config.getConfigurationSection(path);
             return section == null ? List.of() : Tabs.filter(new ArrayList<>(section.getKeys(false)), args[1]);
         }
         if (args.length == 3 && (name.equals("ban") || name.equals("mute") || name.equals("banip"))) {
@@ -1468,5 +1578,8 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
     }
 
     private record Snap(int id, String category, long created, String contents) {
+    }
+
+    private record ReasonChoice(String reason, List<String> durations, ConfigurationSection section) {
     }
 }

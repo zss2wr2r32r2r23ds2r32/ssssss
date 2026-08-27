@@ -20,6 +20,16 @@ default-reason: Unfair Modifications
 snapshot-interval-minutes: 5
 max-snapshots: 20
 
+# sqlite keeps working if mysql is off. Fill these in to store punishments in MySQL.
+database:
+  type: sqlite
+  mysql:
+    host: localhost
+    port: 3306
+    database: shardedcore
+    username: root
+    password: ""
+
 vanish:
   fly: true
   disable-pickup: true
@@ -37,19 +47,19 @@ staffmode:
       lore:
         - "&8Description"
         - ""
-        - "&#FF8300&lINFORMATION:"
-        - "&#FF8300| &f&lHIDE YOURSELF FROM"
-        - "&#FF8300| &f&lPLAYERS ON THE SERVER"
+        - "&#FF8300Information:"
+        - "&#FF8300| &fHide yourself from"
+        - "&#FF8300| &fplayers on the server"
         - ""
-        - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO TOGGLE"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Toggle"
       vanished-lore:
         - "&8Description"
         - ""
-        - "&#8B8B8B&lINFORMATION:"
-        - "&#8B8B8B| &f&lYOU ARE CURRENTLY VANISHED"
-        - "&#8B8B8B| &f&lCLICK TO SHOW YOURSELF"
+        - "&#8B8B8BInformation:"
+        - "&#8B8B8B| &fYou are currently vanished"
+        - "&#8B8B8B| &fClick to show yourself"
         - ""
-        - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO TOGGLE"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Toggle"
     freeze:
       slot: 1
       material: PACKED_ICE
@@ -57,11 +67,11 @@ staffmode:
       lore:
         - "&8Description"
         - ""
-        - "&#00C1FF&lINFORMATION:"
-        - "&#00C1FF| &f&lRIGHT CLICK A PLAYER"
-        - "&#00C1FF| &f&lTO FREEZE THEM"
+        - "&#00C1FFInformation:"
+        - "&#00C1FF| &fRight click a player"
+        - "&#00C1FF| &fto freeze them"
         - ""
-        - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO USE"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Use"
     punish:
       slot: 2
       material: NETHERITE_AXE
@@ -69,11 +79,11 @@ staffmode:
       lore:
         - "&8Description"
         - ""
-        - "&#FF0000&lINFORMATION:"
-        - "&#FF0000| &f&lRIGHT CLICK A PLAYER"
-        - "&#FF0000| &f&lTO OPEN BAN MUTE KICK"
+        - "&#FF0000Information:"
+        - "&#FF0000| &fRight click a player"
+        - "&#FF0000| &fto open ban mute kick"
         - ""
-        - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO USE"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Use"
     randomtp:
       slot: 3
       material: COMPASS
@@ -81,11 +91,11 @@ staffmode:
       lore:
         - "&8Description"
         - ""
-        - "&#00A2FF&lINFORMATION:"
-        - "&#00A2FF| &f&lTELEPORT TO A RANDOM"
-        - "&#00A2FF| &f&lONLINE PLAYER"
+        - "&#00A2FFInformation:"
+        - "&#00A2FF| &fTeleport to a random"
+        - "&#00A2FF| &fonline player"
         - ""
-        - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO TELEPORT"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Teleport"
     exit:
       slot: 8
       material: BARRIER
@@ -93,11 +103,11 @@ staffmode:
       lore:
         - "&8Description"
         - ""
-        - "&#FF0000&lINFORMATION:"
-        - "&#FF0000| &f&lLEAVE STAFF MODE AND"
-        - "&#FF0000| &f&lRESTORE YOUR INVENTORY"
+        - "&#FF0000Information:"
+        - "&#FF0000| &fLeave staff mode and"
+        - "&#FF0000| &frestore your inventory"
         - ""
-        - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO EXIT"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Exit"
 
 punish:
   title: "Punish"
@@ -109,11 +119,11 @@ punish:
     lore:
       - "&8Description"
       - ""
-      - "&#FF0000&lINFORMATION:"
-      - "&#FF0000| &f&lCHOOSE A BAN REASON"
-      - "&#FF0000| &f&lFOR %player%"
+      - "&#FF0000Information:"
+      - "&#FF0000| &fChoose a ban reason"
+      - "&#FF0000| &ffor %player%"
       - ""
-      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO OPEN"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
   mute:
     slot: 13
     material: BOOK
@@ -121,11 +131,11 @@ punish:
     lore:
       - "&8Description"
       - ""
-      - "&#FFBA00&lINFORMATION:"
-      - "&#FFBA00| &f&lCHOOSE A MUTE REASON"
-      - "&#FFBA00| &f&lFOR %player%"
+      - "&#FFBA00Information:"
+      - "&#FFBA00| &fChoose a mute reason"
+      - "&#FFBA00| &ffor %player%"
       - ""
-      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO OPEN"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
   kick:
     slot: 15
     material: LEATHER_BOOTS
@@ -133,156 +143,92 @@ punish:
     lore:
       - "&8Description"
       - ""
-      - "&#FF8300&lINFORMATION:"
-      - "&#FF8300| &f&lCHOOSE A KICK REASON"
-      - "&#FF8300| &f&lFOR %player%"
+      - "&#FF8300Information:"
+      - "&#FF8300| &fChoose a kick reason"
+      - "&#FF8300| &ffor %player%"
       - ""
-      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO OPEN"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
   close:
     slot: 22
 
-# Add, rename, or remove any reason. duration can be 1h, 7d, 30d, or permanent.
-ban-reasons:
-  x-ray:
-    slot: 10
-    reason: X-Ray
-    duration: 7d
-    material: DIAMOND_ORE
-    name: "&#FF0000&lX-RAY"
-    lore:
-      - "&8Description"
-      - ""
-      - "&#FF0000&lINFORMATION:"
-      - "&#FF0000| &f&lDURATION: 7D"
-      - "&#FF0000| &f&lPLAYER: %player%"
-      - ""
-      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO BAN"
-  fly-hack:
-    reason: Fly-Hack
-    duration: 30d
-    material: FEATHER
-    name: "&#FF0000&lFLY HACK"
-    lore:
-      - "&8Description"
-      - ""
-      - "&#FF0000&lINFORMATION:"
-      - "&#FF0000| &f&lDURATION: 30D"
-      - "&#FF0000| &f&lPLAYER: %player%"
-      - ""
-      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO BAN"
-  killaura:
-    reason: Killaura
-    duration: 30d
-    material: DIAMOND_SWORD
-    name: "&#FF0000&lKILLAURA"
-    lore:
-      - "&8Description"
-      - ""
-      - "&#FF0000&lINFORMATION:"
-      - "&#FF0000| &f&lDURATION: 30D"
-      - "&#FF0000| &f&lPLAYER: %player%"
-      - ""
-      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO BAN"
-  chat-behavior:
-    reason: Chat-Behavior
-    duration: 1d
-    material: PAPER
-    name: "&#FF0000&lCHAT BEHAVIOR"
-    lore:
-      - "&8Description"
-      - ""
-      - "&#FF0000&lINFORMATION:"
-      - "&#FF0000| &f&lDURATION: 1D"
-      - "&#FF0000| &f&lPLAYER: %player%"
-      - ""
-      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO BAN"
-  advertising:
-    reason: Advertising
-    duration: 7d
-    material: OAK_SIGN
-    name: "&#FF0000&lADVERTISING"
-    lore:
-      - "&8Description"
-      - ""
-      - "&#FF0000&lINFORMATION:"
-      - "&#FF0000| &f&lDURATION: 7D"
-      - "&#FF0000| &f&lPLAYER: %player%"
-      - ""
-      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO BAN"
-  ban-evasion:
-    reason: Ban-Evasion
-    duration: permanent
-    material: BARRIER
-    name: "&#FF0000&lBAN EVASION"
-    lore:
-      - "&8Description"
-      - ""
-      - "&#FF0000&lINFORMATION:"
-      - "&#FF0000| &f&lDURATION: PERMANENT"
-      - "&#FF0000| &f&lPLAYER: %player%"
-      - ""
-      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO BAN"
-  doxxing:
-    reason: Doxxing
-    duration: 30d
-    material: WRITABLE_BOOK
-    name: "&#FF0000&lDOXXING"
-    lore:
-      - "&8Description"
-      - ""
-      - "&#FF0000&lINFORMATION:"
-      - "&#FF0000| &f&lDURATION: 30D"
-      - "&#FF0000| &f&lPLAYER: %player%"
-      - ""
-      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO BAN"
+# Add more reasons here. A list opens a duration picker. A single value bans/mutes immediately.
+reasons:
+  X-Ray:
+    - 7d
+    - 14d
+    - 30d
+  Fly-Hack: 30d
+  Killaura: 30d
+  ESP: 14d
+  Reach: 14d
+  Scaffold: 30d
+  AutoClicker: 14d
+  Anti-Knockback: 30d
+  Nuker: 30d
+  Chat-Behavior: 1d
+  Advertising: 7d
+  Hate-Speech: 30d
+  Scamming: 7d
+  Griefing: 7d
+  Bug-Abuse: 7d
+  Ban-Evasion: permanent
+  Duping: permanent
+  Doxxing: permanent
+
+mute-reasons:
+  Spam:
+    - 1h
+    - 6h
+    - 1d
+  Caps-Spam: 30m
+  Chat-Behavior: 3h
+  Disrespect: 3h
+  Toxicity: 6h
+  Advertising: 1d
+  Filter-Bypass: 1d
+  Inappropriate: 1d
+  Hate-Speech: 7d
+  Spoiler: 1h
 
 kick-reasons:
-  cheating:
-    reason: Cheating
-    material: IRON_SWORD
-    name: "&#FF8300&lCHEATING"
-    lore:
-      - "&8Description"
-      - ""
-      - "&#FF8300&lINFORMATION:"
-      - "&#FF8300| &f&lKICK %player%"
-      - ""
-      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO KICK"
-  toxicity:
-    reason: Toxicity
-    material: TNT
-    name: "&#FF8300&lTOXICITY"
-    lore:
-      - "&8Description"
-      - ""
-      - "&#FF8300&lINFORMATION:"
-      - "&#FF8300| &f&lKICK %player%"
-      - ""
-      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO KICK"
-  advertising:
-    reason: Advertising
-    material: OAK_SIGN
-    name: "&#FF8300&lADVERTISING"
-    lore:
-      - "&8Description"
-      - ""
-      - "&#FF8300&lINFORMATION:"
-      - "&#FF8300| &f&lKICK %player%"
-      - ""
-      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO KICK"
+  Cheating: kick
+  Toxicity: kick
+  Advertising: kick
 
 audit:
   enabled: true
   permission: shardedcore.staff.audit
-
-reasons:
-  X-Ray: 7d
-  Fly-Hack: 30d
-  Killaura: 30d
-  Chat-Behavior: 1d
-  Advertising: 7d
-  Ban-Evasion: permanent
-  Doxxing: 30d
+  staff-only: true
+  commands:
+    - staffmode
+    - sfmode
+    - vanish
+    - freeze
+    - unfreeze
+    - punish
+    - ban
+    - mute
+    - kick
+    - offend
+    - banip
+    - unban
+    - unbanip
+    - unmute
+    - pardon
+    - alts
+    - screenshare
+    - ss
+    - invrollback
+    - revokepunishment
+    - gmc
+    - gms
+    - gmsp
+    - gma
+    - staffchat
+    - sc
+    - randomtp
+    - stafflist
+    - staff
 
 ban-screen:
   - "&#AD4EFF&lSHARDEDMC"
@@ -300,47 +246,6 @@ mute-commands:
   - reply
   - tell
   - whisper
-
-mute-reasons:
-  spam:
-    reason: Spam
-    duration: 1h
-    material: PAPER
-    name: "&#FFBA00&lSPAM"
-    lore:
-      - "&8Description"
-      - ""
-      - "&#FFBA00&lINFORMATION:"
-      - "&#FFBA00| &f&lDURATION: 1H"
-      - "&#FFBA00| &f&lPLAYER: %player%"
-      - ""
-      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO MUTE"
-  toxicity:
-    reason: Toxicity
-    duration: 6h
-    material: TNT
-    name: "&#FFBA00&lTOXICITY"
-    lore:
-      - "&8Description"
-      - ""
-      - "&#FFBA00&lINFORMATION:"
-      - "&#FFBA00| &f&lDURATION: 6H"
-      - "&#FFBA00| &f&lPLAYER: %player%"
-      - ""
-      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO MUTE"
-  advertising:
-    reason: Advertising
-    duration: 1d
-    material: OAK_SIGN
-    name: "&#FFBA00&lADVERTISING"
-    lore:
-      - "&8Description"
-      - ""
-      - "&#FFBA00&lINFORMATION:"
-      - "&#FFBA00| &f&lDURATION: 1D"
-      - "&#FFBA00| &f&lPLAYER: %player%"
-      - ""
-      - "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO MUTE"
 
 sounds:
   open:

@@ -27,7 +27,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.block.Container;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
@@ -195,6 +198,26 @@ public final class ShardedToolsModule extends Module implements CommandExecutor,
         ItemStack clone = item.clone();
         clone.setAmount(Math.max(1, config.getInt("tools.firework.amount", 1)));
         Bukkit.getScheduler().runTask(plugin, () -> restoreFirework(player, clone));
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onWand(PlayerInteractEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        ItemStack item = event.getItem();
+        if (!isTool(item, "sellwand")) return;
+        if (expired(item)) {
+            expire(event.getPlayer(), item, EquipmentSlot.HAND);
+            event.setCancelled(true);
+            return;
+        }
+        Block block = event.getClickedBlock();
+        if (block == null || !(block.getState() instanceof InventoryHolder holder)) return;
+        event.setCancelled(true);
+        org.bukkit.inventory.Inventory inventory = holder instanceof Container container
+                ? container.getInventory() : holder.getInventory();
+        com.shardedcore.modules.sell.SellModule sell = plugin.modules().get(com.shardedcore.modules.sell.SellModule.class);
+        if (sell != null) sell.sellInventory(event.getPlayer(), inventory);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

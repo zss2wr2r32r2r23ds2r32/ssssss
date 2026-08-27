@@ -188,7 +188,7 @@ final class RtpSafeSpotPool {
 
     private Location standing(World world, int x, int groundY, int z) {
         Block ground = world.getBlockAt(x, groundY, z);
-        if (ground.isPassable()) {
+        if (ground.isPassable() || ground.isLiquid()) {
             ground = world.getBlockAt(x, groundY - 1, z);
             groundY = ground.getY();
         }
@@ -196,22 +196,56 @@ final class RtpSafeSpotPool {
         Block feet = ground.getRelative(BlockFace.UP);
         Block head = feet.getRelative(BlockFace.UP);
         if (!passable(feet) || !passable(head)) return null;
+        if (wet(feet) || wet(head) || wet(ground.getRelative(BlockFace.UP))) return null;
         Biome biome = world.getBiome(x, groundY, z);
         if (blocked.contains(biome)) return null;
+        if (oceanNearby(world, x, groundY, z)) return null;
         Location loc = feet.getLocation().add(0.5, 0, 0.5);
         loc.setYaw(ThreadLocalRandom.current().nextFloat() * 360f);
         loc.setPitch(0f);
         return loc;
     }
 
+    private boolean oceanNearby(World world, int x, int y, int z) {
+        for (int dx = -2; dx <= 2; dx++) {
+            for (int dz = -2; dz <= 2; dz++) {
+                Block block = world.getBlockAt(x + dx, y, z + dz);
+                if (wet(block) || blocked.contains(world.getBiome(x + dx, y, z + dz))) return true;
+                if (wet(block.getRelative(BlockFace.UP))) return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean wet(Block block) {
+        if (block == null) return true;
+        if (block.isLiquid()) return true;
+        Material type = block.getType();
+        if (type == Material.WATER || type == Material.LAVA || type == Material.KELP || type == Material.KELP_PLANT
+                || type == Material.SEAGRASS || type == Material.TALL_SEAGRASS || type == Material.SEA_PICKLE) {
+            return true;
+        }
+        return block.getBlockData() instanceof org.bukkit.block.data.Waterlogged waterlogged && waterlogged.isWaterlogged();
+    }
+
     private boolean safeGround(Block ground) {
         Material type = ground.getType();
-        if (!type.isSolid() || ground.isLiquid()) return false;
+        if (!type.isSolid() || ground.isLiquid() || wet(ground)) return false;
+        String name = type.name();
+        if (name.contains("LEAVES") || name.contains("LOG") || name.contains("WOOD") || name.contains("STEM")
+                || name.contains("HYPHAE") || name.contains("FENCE") || name.contains("WALL") || name.contains("SLAB")
+                || name.contains("STAIRS") || name.contains("CARPET") || name.contains("GLASS_PANE")
+                || name.contains("SIGN") || name.endsWith("_ICE")) {
+            return false;
+        }
+        for (String blockedName : module.config().getStringList("blocked-blocks")) {
+            if (name.equals(blockedName) || name.contains(blockedName)) return false;
+        }
         return switch (type) {
             case LAVA, MAGMA_BLOCK, CACTUS, FIRE, SOUL_FIRE, CAMPFIRE, SOUL_CAMPFIRE,
                  SWEET_BERRY_BUSH, POWDER_SNOW, WITHER_ROSE, COBWEB, END_PORTAL,
-                 NETHER_PORTAL, KELP, KELP_PLANT -> false;
-            default -> true;
+                 NETHER_PORTAL, KELP, KELP_PLANT, ICE, PACKED_ICE, BLUE_ICE -> false;
+            default -> type.isOccluding();
         };
     }
 

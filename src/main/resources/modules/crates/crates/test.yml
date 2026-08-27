@@ -1,0 +1,7 @@
+display-name: test
+rows: 3
+locations:
+- world: spawn
+  x: 100
+  y: 120
+  z: 115

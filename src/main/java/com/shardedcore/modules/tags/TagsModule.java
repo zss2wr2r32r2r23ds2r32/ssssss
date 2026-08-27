@@ -203,8 +203,10 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
             TagDef def = definition(id, limited);
             if (def == null) continue;
             String color = CosmeticsMenus.colorOf(def.text, cfg("gui.default-color", "0083FF"));
-            String title = CosmeticsMenus.pretty(ColorUtil.strip(def.text).isBlank() ? def.id : ColorUtil.strip(def.text));
-            entries.add(new CosmeticsMenus.Entry(def.id, title.toUpperCase(Locale.ROOT),
+            String title = def.name == null || def.name.isBlank()
+                    ? CosmeticsMenus.pretty(def.id)
+                    : def.name;
+            entries.add(new CosmeticsMenus.Entry(def.id, title,
                     ColorUtil.strip(def.text).isBlank() ? title : ColorUtil.strip(def.text),
                     def.description, color, canUse(player, def.id)));
         }
@@ -362,6 +364,7 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         }
         if (section == null) return null;
         return new TagDef(id, section.getString("tag", section.getString("text", "")),
+                section.getString("name", CosmeticsMenus.pretty(id)),
                 section.getString("description", cfg("gui.default-description", "&8Description")));
     }
 
@@ -430,6 +433,6 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
         return List.of();
     }
 
-    private record TagDef(String id, String text, String description) {
+    private record TagDef(String id, String text, String name, String description) {
     }
 }

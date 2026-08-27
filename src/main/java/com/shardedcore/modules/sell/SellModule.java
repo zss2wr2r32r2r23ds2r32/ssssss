@@ -501,6 +501,11 @@ public final class SellModule extends Module implements CommandExecutor, TabComp
                 .build();
     }
 
+    public void sellInventory(Player player, Inventory inventory) {
+        if (player == null || inventory == null) return;
+        sellFrom(player, inventory, inventory.getSize());
+    }
+
     private void sellFrom(Player player, Inventory inventory, int last) {
         List<ItemStack> leftover = new ArrayList<>();
         List<ItemStack> taken = new ArrayList<>();

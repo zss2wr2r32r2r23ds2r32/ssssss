@@ -6,22 +6,24 @@ menu:
   rows: 4
   filler:
     enabled: true
-    border-only: true
+    border-only: false
     material: BLACK_STAINED_GLASS_PANE
     name: " "
     lore: []
   info:
-    slot: 13
+    slot: 22
     material: PLAYER_HEAD
     name: "&#00A2FF&lYOUR CRYSTALS"
     lore:
       - "&8Description"
       - ""
-      - "&#00A2FF&lINFORMATION:"
-      - "&#00A2FF| &f&lCRYSTALS BUY TAGS, COLORS,"
-      - "&#00A2FF| &f&lGLOWS, SPAWNERS AND MORE"
+      - "&#00A2FFInformation:"
+      - "&#00A2FF| &fCrystals Is A currency to Buy"
+      - "&#00A2FF| &fCosmetics Such as Chatcolors, Chat tags and much more!"
       - ""
-      - "&#00A2FF⚓ &f&lBALANCE: &#00A2FF%crystals%"
+      - "&#00A2FF⚓ &fBalance: &#00A2FF%crystals%"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK For Store"
 
 sounds:
   open:
@@ -56,11 +58,11 @@ confirm:
     lore:
       - "&8Description"
       - ""
-      - "&#94FF00&lINFORMATION:"
-      - "&#94FF00| &f&lBUY %item%"
-      - "&#94FF00| &f&lFOR &#94FF00%price% &f&lCRYSTALS"
+      - "&#94FF00Information:"
+      - "&#94FF00| &fBuy %item%"
+      - "&#94FF00| &ffor &#94FF00%price% &fcrystals"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO CONFIRM"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Confirm"
   cancel:
     slot: 15
     material: RED_STAINED_GLASS_PANE
@@ -68,11 +70,11 @@ confirm:
     lore:
       - "&8Description"
       - ""
-      - "&#FF0000&lINFORMATION:"
-      - "&#FF0000| &f&lGO BACK AND CANCEL"
-      - "&#FF0000| &f&lTHIS PURCHASE"
+      - "&#FF0000Information:"
+      - "&#FF0000| &fGo back and cancel"
+      - "&#FF0000| &fthis purchase"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO CANCEL"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Cancel"
 
 messages:
   self: "%prefix%&fYou have &#A370EE%amount% &fcrystals."
@@ -103,64 +105,144 @@ sections:
     lore:
       - "&8Description"
       - ""
-      - "&#A370EE&lINFORMATION:"
-      - "&#A370EE| &f&lBUY CHAT AND TAB TAGS"
+      - "&#A370EEInformation:"
+      - "&#A370EE| &fBuy chat and tab tags"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO OPEN"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
     title: "Tags"
     rows: 4
-    border-only: true
+    border-only: false
     back:
       slot: 31
     items:
-      sharded:
+      sigma:
+        slot: 10
+        type: tag
+        tag: sigma
+        price: 250
+        material: LIGHT_BLUE_BUNDLE
+        name: "&#00A2FF&lSIGMA"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#00A2FFInformation:"
+          - "&#00A2FF| &fShows &#00A2FF&lSIGMA &fin chat"
+          - ""
+          - "&#00A2FF⚓ &fPrice: &#00A2FF%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+      mummy:
         slot: 11
+        type: tag
+        tag: mummy
+        price: 250
+        material: PINK_BUNDLE
+        name: "&#FF0086&lMUMMY"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#FF0086Information:"
+          - "&#FF0086| &fShows &#FF0086&lMUMMY &fin chat"
+          - ""
+          - "&#FF0086⚓ &fPrice: &#FF0086%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+      swordmummy:
+        slot: 12
+        type: tag
+        tag: swordmummy
+        price: 250
+        material: YELLOW_BUNDLE
+        name: "&#FFEE00&lMUMMY"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#FFEE00Information:"
+          - "&#FFEE00| &fShows &#FFEE00&lMUMMY &fin chat"
+          - ""
+          - "&#FFEE00⚓ &fPrice: &#FFEE00%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+      sharded:
+        slot: 13
         type: tag
         tag: sharded
         price: 250
         material: PURPLE_BUNDLE
-        name: "&#A370EE☀ &#A370EE&lSHARDED"
+        name: "&#A370EE&lSHARDED"
         lore:
           - "&8Description"
           - ""
-          - "&#A370EE&lINFORMATION:"
-          - "&#A370EE| &f&lSHOWS &#A370EE&lSHARDED &f&lIN CHAT"
+          - "&#A370EEInformation:"
+          - "&#A370EE| &fShows &#A370EE&lSHARDED &fin chat"
           - ""
-          - "&#A370EE⚓ &f&lPRICE: &#A370EE%price%"
+          - "&#A370EE⚓ &fPrice: &#A370EE%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
-      summer:
-        slot: 13
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+      one:
+        slot: 14
         type: tag
-        tag: summer
-        price: 250
-        material: YELLOW_BUNDLE
-        name: "&#FCFF00☀ &#FCFF00&lSUMMER"
+        tag: one
+        price: 500
+        material: LIME_BUNDLE
+        name: "&#A9FF00&l#1"
         lore:
           - "&8Description"
           - ""
-          - "&#FCFF00&lINFORMATION:"
-          - "&#FCFF00| &f&lSHOWS &#FCFF00&lSUMMER &f&lIN CHAT"
+          - "&#A9FF00Information:"
+          - "&#A9FF00| &fShows &#A9FF00&l#1 &fin chat"
           - ""
-          - "&#FCFF00⚓ &f&lPRICE: &#FCFF00%price%"
+          - "&#A9FF00⚓ &fPrice: &#A9FF00%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
-      og:
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+      p2w:
         slot: 15
         type: tag
-        tag: og
+        tag: p2w
         price: 500
         material: YELLOW_BUNDLE
-        name: "&#FFD900☀ &#FFD900&lOG"
+        name: "&#FCFF00&lP2W"
         lore:
           - "&8Description"
           - ""
-          - "&#FFD900&lINFORMATION:"
-          - "&#FFD900| &f&lSHOWS &#FFD900&lOG &f&lIN CHAT"
+          - "&#FCFF00Information:"
+          - "&#FCFF00| &fShows &#FCFF00&lP2W &fin chat"
           - ""
-          - "&#FFD900⚓ &f&lPRICE: &#FFD900%price%"
+          - "&#FCFF00⚓ &fPrice: &#FCFF00%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+      goty:
+        slot: 16
+        type: tag
+        tag: goty
+        price: 500
+        material: RED_BUNDLE
+        name: "&#FF2F2F&lGOTY"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#FF2F2FInformation:"
+          - "&#FF2F2F| &fShows &#FF2F2F&lGOTY &fin chat"
+          - ""
+          - "&#FF2F2F⚓ &fPrice: &#FF2F2F%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+      hacker:
+        slot: 19
+        type: tag
+        tag: hacker
+        price: 500
+        material: RED_BUNDLE
+        name: "&#FF0000&lHACKER"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#FF0000Information:"
+          - "&#FF0000| &fShows &#FF0000&lHACKER &fin chat"
+          - ""
+          - "&#FF0000⚓ &fPrice: &#FF0000%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
 
   chatcolors:
     enabled: true
@@ -170,13 +252,13 @@ sections:
     lore:
       - "&8Description"
       - ""
-      - "&#A370EE&lINFORMATION:"
-      - "&#A370EE| &f&lCOLOR YOUR CHAT MESSAGES"
+      - "&#A370EEInformation:"
+      - "&#A370EE| &fColor your chat messages"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO OPEN"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
     title: "Chat Colors"
     rows: 4
-    border-only: true
+    border-only: false
     back:
       slot: 31
     items:
@@ -190,9 +272,12 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#FF0000⚓ &f&lPRICE: &#FF0000%price%"
+          - "&#FF0000Information:"
+          - "&#FF0000| &fUnlock this chat color"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&#FF0000⚓ &fPrice: &#FF0000%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
       yellow:
         slot: 11
         type: chatcolor
@@ -203,9 +288,12 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#FFF800⚓ &f&lPRICE: &#FFF800%price%"
+          - "&#FFF800Information:"
+          - "&#FFF800| &fUnlock this chat color"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&#FFF800⚓ &fPrice: &#FFF800%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
       green:
         slot: 12
         type: chatcolor
@@ -216,9 +304,12 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#8AFF00⚓ &f&lPRICE: &#8AFF00%price%"
+          - "&#8AFF00Information:"
+          - "&#8AFF00| &fUnlock this chat color"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&#8AFF00⚓ &fPrice: &#8AFF00%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
       blue:
         slot: 13
         type: chatcolor
@@ -229,9 +320,12 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#00C1FF⚓ &f&lPRICE: &#00C1FF%price%"
+          - "&#00C1FFInformation:"
+          - "&#00C1FF| &fUnlock this chat color"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&#00C1FF⚓ &fPrice: &#00C1FF%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
       light_blue:
         slot: 14
         type: chatcolor
@@ -242,9 +336,12 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#7EE8FF⚓ &f&lPRICE: &#7EE8FF%price%"
+          - "&#7EE8FFInformation:"
+          - "&#7EE8FF| &fUnlock this chat color"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&#7EE8FF⚓ &fPrice: &#7EE8FF%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
       purple:
         slot: 15
         type: chatcolor
@@ -255,9 +352,12 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#8000FF⚓ &f&lPRICE: &#8000FF%price%"
+          - "&#8000FFInformation:"
+          - "&#8000FF| &fUnlock this chat color"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&#8000FF⚓ &fPrice: &#8000FF%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
       pink:
         slot: 16
         type: chatcolor
@@ -268,9 +368,12 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#FF74DF⚓ &f&lPRICE: &#FF74DF%price%"
+          - "&#FF74DFInformation:"
+          - "&#FF74DF| &fUnlock this chat color"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&#FF74DF⚓ &fPrice: &#FF74DF%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
       blossom:
         slot: 19
         type: chatcolor
@@ -281,11 +384,14 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#FF74DF⚓ &f&lPRICE: &#FF74DF%price%"
+          - "&#FF74DFInformation:"
+          - "&#FF74DF| &fUnlock this gradient color"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&#FF74DF⚓ &fPrice: &#FF74DF%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
       amethyst:
-        slot: 21
+        slot: 22
         type: chatcolor
         color: amethyst
         price: 350
@@ -294,9 +400,12 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#9B59B6⚓ &f&lPRICE: &#9B59B6%price%"
+          - "&#9B59B6Information:"
+          - "&#9B59B6| &fUnlock this gradient color"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&#9B59B6⚓ &fPrice: &#9B59B6%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
 
   glows:
     enabled: true
@@ -306,13 +415,13 @@ sections:
     lore:
       - "&8Description"
       - ""
-      - "&#A370EE&lINFORMATION:"
-      - "&#A370EE| &f&lUNLOCK PLAYER GLOWS"
+      - "&#A370EEInformation:"
+      - "&#A370EE| &fUnlock player glows"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO OPEN"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
     title: "Glows"
     rows: 4
-    border-only: true
+    border-only: false
     back:
       slot: 31
     items:
@@ -326,9 +435,12 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#FF0000⚓ &f&lPRICE: &#FF0000%price%"
+          - "&#FF0000Information:"
+          - "&#FF0000| &fUnlock this player glow"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&#FF0000⚓ &fPrice: &#FF0000%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
       yellow:
         slot: 11
         type: glow
@@ -339,9 +451,12 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#FFF800⚓ &f&lPRICE: &#FFF800%price%"
+          - "&#FFF800Information:"
+          - "&#FFF800| &fUnlock this player glow"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&#FFF800⚓ &fPrice: &#FFF800%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
       green:
         slot: 12
         type: glow
@@ -352,9 +467,12 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#8AFF00⚓ &f&lPRICE: &#8AFF00%price%"
+          - "&#8AFF00Information:"
+          - "&#8AFF00| &fUnlock this player glow"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&#8AFF00⚓ &fPrice: &#8AFF00%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
       blue:
         slot: 14
         type: glow
@@ -365,9 +483,12 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#00C1FF⚓ &f&lPRICE: &#00C1FF%price%"
+          - "&#00C1FFInformation:"
+          - "&#00C1FF| &fUnlock this player glow"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&#00C1FF⚓ &fPrice: &#00C1FF%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
       purple:
         slot: 15
         type: glow
@@ -378,9 +499,12 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#8000FF⚓ &f&lPRICE: &#8000FF%price%"
+          - "&#8000FFInformation:"
+          - "&#8000FF| &fUnlock this player glow"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&#8000FF⚓ &fPrice: &#8000FF%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
       pink:
         slot: 16
         type: glow
@@ -391,9 +515,12 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#FF74DF⚓ &f&lPRICE: &#FF74DF%price%"
+          - "&#FF74DFInformation:"
+          - "&#FF74DF| &fUnlock this player glow"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&#FF74DF⚓ &fPrice: &#FF74DF%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
       rainbow:
         slot: 22
         type: glow
@@ -404,9 +531,139 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#FF00AA⚓ &f&lPRICE: &#FF00AA%price%"
+          - "&#FF00AAInformation:"
+          - "&#FF00AA| &fUnlock rainbow slow glow"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&#FF00AA⚓ &fPrice: &#FF00AA%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+
+  drills:
+    enabled: true
+    slot: 13
+    material: NETHERITE_PICKAXE
+    name: "&#A370EE&lDRILLS"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#A370EEInformation:"
+      - "&#A370EE| &fSharded tools with an expire time"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
+    title: "Tools"
+    rows: 4
+    border-only: false
+    back:
+      slot: 31
+    items:
+      drill:
+        slot: 10
+        type: tool
+        tool: drill
+        expire: 7d
+        price: 750
+        material: NETHERITE_PICKAXE
+        name: "&#A370EE&lSHARDED DRILL &7(7d)"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#A370EEInformation:"
+          - "&#A370EE| &fMines a 3x3 in the direction you look"
+          - ""
+          - "&#A370EE⚓ &fPrice: &#A370EE%price%"
+          - "&#A370EE⚓ &fExpires in: 7d"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+      drill-14:
+        slot: 19
+        type: tool
+        tool: drill
+        expire: 14d
+        price: 1200
+        material: NETHERITE_PICKAXE
+        name: "&#A370EE&lSHARDED DRILL &7(14d)"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#A370EEInformation:"
+          - "&#A370EE| &fMines a 3x3 in the direction you look"
+          - ""
+          - "&#A370EE⚓ &fPrice: &#A370EE%price%"
+          - "&#A370EE⚓ &fExpires in: 14d"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+      chopper:
+        slot: 13
+        type: tool
+        tool: chopper
+        expire: 7d
+        price: 750
+        material: NETHERITE_AXE
+        name: "&#A370EE&lSHARDED CHOPPER &7(7d)"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#A370EEInformation:"
+          - "&#A370EE| &fChops a whole tree in one hit"
+          - ""
+          - "&#A370EE⚓ &fPrice: &#A370EE%price%"
+          - "&#A370EE⚓ &fExpires in: 7d"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+      chopper-14:
+        slot: 22
+        type: tool
+        tool: chopper
+        expire: 14d
+        price: 1200
+        material: NETHERITE_AXE
+        name: "&#A370EE&lSHARDED CHOPPER &7(14d)"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#A370EEInformation:"
+          - "&#A370EE| &fChops a whole tree in one hit"
+          - ""
+          - "&#A370EE⚓ &fPrice: &#A370EE%price%"
+          - "&#A370EE⚓ &fExpires in: 14d"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+      firework:
+        slot: 16
+        type: tool
+        tool: firework
+        expire: 7d
+        price: 400
+        material: FIREWORK_ROCKET
+        name: "&#A370EE&lSHARDED FIREWORK &7(7d)"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#A370EEInformation:"
+          - "&#A370EE| &fInfinite firework rocket"
+          - ""
+          - "&#A370EE⚓ &fPrice: &#A370EE%price%"
+          - "&#A370EE⚓ &fExpires in: 7d"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+      firework-14:
+        slot: 25
+        type: tool
+        tool: firework
+        expire: 14d
+        price: 650
+        material: FIREWORK_ROCKET
+        name: "&#A370EE&lSHARDED FIREWORK &7(14d)"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#A370EEInformation:"
+          - "&#A370EE| &fInfinite firework rocket"
+          - ""
+          - "&#A370EE⚓ &fPrice: &#A370EE%price%"
+          - "&#A370EE⚓ &fExpires in: 14d"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
 
   perks:
     enabled: true
@@ -416,11 +673,11 @@ sections:
     lore:
       - "&8Description"
       - ""
-      - "&#FFD900&lINFORMATION:"
-      - "&#FFD900| &f&lUNLOCK /EC /CRAFT /FLY"
-      - "&#FFD900| &f&lFOR 7 DAYS"
+      - "&#FFD900Information:"
+      - "&#FFD900| &fUnlock /ec /craft /fly"
+      - "&#FFD900| &ffor 7 days"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO OPEN"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
     title: "Perks"
     rows: 3
     border-only: false
@@ -435,16 +692,16 @@ sections:
         permission: shardedcore.ec
         price: 200
         material: ENDER_CHEST
-        name: "&#A370EE&l/EC &7(7D)"
+        name: "&#A370EE&l/EC &7(7d)"
         lore:
           - "&8Description"
           - ""
-          - "&#A370EE&lINFORMATION:"
-          - "&#A370EE| &f&lUNLOCK /EC FOR 7 DAYS"
+          - "&#A370EEInformation:"
+          - "&#A370EE| &fUnlock /ec for 7 days"
           - ""
-          - "&#A370EE⚓ &f&lPRICE: &#A370EE%price%"
+          - "&#A370EE⚓ &fPrice: &#A370EE%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
       craft:
         slot: 13
         type: perk
@@ -453,16 +710,16 @@ sections:
         permission: shardedcore.craft
         price: 200
         material: CRAFTING_TABLE
-        name: "&#FFBA00&l/CRAFT &7(7D)"
+        name: "&#FFBA00&l/CRAFT &7(7d)"
         lore:
           - "&8Description"
           - ""
-          - "&#FFBA00&lINFORMATION:"
-          - "&#FFBA00| &f&lUNLOCK /CRAFT FOR 7 DAYS"
+          - "&#FFBA00Information:"
+          - "&#FFBA00| &fUnlock /craft for 7 days"
           - ""
-          - "&#FFBA00⚓ &f&lPRICE: &#FFBA00%price%"
+          - "&#FFBA00⚓ &fPrice: &#FFBA00%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
       fly:
         slot: 15
         type: perk
@@ -471,52 +728,89 @@ sections:
         permission: shardedcore.fly.bypass
         price: 400
         material: FEATHER
-        name: "&#00C1FF&l/FLY &7(7D)"
+        name: "&#00C1FF&l/FLY &7(7d)"
         lore:
           - "&8Description"
           - ""
-          - "&#00C1FF&lINFORMATION:"
-          - "&#00C1FF| &f&lUNLOCK /FLY FOR 7 DAYS"
+          - "&#00C1FFInformation:"
+          - "&#00C1FF| &fUnlock /fly for 7 days"
           - ""
-          - "&#00C1FF⚓ &f&lPRICE: &#00C1FF%price%"
+          - "&#00C1FF⚓ &fPrice: &#00C1FF%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
 
   sellwands:
     enabled: true
     slot: 15
-    material: GOLDEN_HOE
+    material: BLAZE_ROD
     name: "&#80EE0B&lSELL WANDS"
     lore:
       - "&8Description"
       - ""
-      - "&#80EE0B&lINFORMATION:"
-      - "&#80EE0B| &f&lBUY SELL WANDS"
+      - "&#80EE0BInformation:"
+      - "&#80EE0B| &fBuy timed sell wands"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO OPEN"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
     title: "Sell Wands"
     rows: 3
     border-only: false
     back:
       slot: 22
     items:
-      wand:
-        slot: 13
-        type: command
-        price: 300
-        material: GOLDEN_HOE
-        name: "&#80EE0B&lSELL WAND"
+      wand-1d:
+        slot: 11
+        type: tool
+        tool: sellwand
+        expire: 1d
+        price: 150
+        material: BLAZE_ROD
+        name: "&#80EE0B&lSELL WAND &7(1d)"
         lore:
           - "&8Description"
           - ""
-          - "&#80EE0B&lINFORMATION:"
-          - "&#80EE0B| &f&lGIVES YOU A SELL WAND"
+          - "&#80EE0BInformation:"
+          - "&#80EE0B| &fRight click a chest to sell"
+          - "&#80EE0B| &fExpires in 1 day"
           - ""
-          - "&#80EE0B⚓ &f&lPRICE: &#80EE0B%price%"
+          - "&#80EE0B⚓ &fPrice: &#80EE0B%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
-        commands:
-          - "sellwand give %player% 1"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+      wand-3d:
+        slot: 13
+        type: tool
+        tool: sellwand
+        expire: 3d
+        price: 300
+        material: BLAZE_ROD
+        name: "&#80EE0B&lSELL WAND &7(3d)"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#80EE0BInformation:"
+          - "&#80EE0B| &fRight click a chest to sell"
+          - "&#80EE0B| &fExpires in 3 days"
+          - ""
+          - "&#80EE0B⚓ &fPrice: &#80EE0B%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+      wand-7d:
+        slot: 15
+        type: tool
+        tool: sellwand
+        expire: 7d
+        price: 500
+        material: BLAZE_ROD
+        name: "&#80EE0B&lSELL WAND &7(7d)"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#80EE0BInformation:"
+          - "&#80EE0B| &fRight click a chest to sell"
+          - "&#80EE0B| &fExpires in 7 days"
+          - ""
+          - "&#80EE0B⚓ &fPrice: &#80EE0B%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
 
   spawners:
     enabled: true
@@ -526,10 +820,10 @@ sections:
     lore:
       - "&8Description"
       - ""
-      - "&#00BDF9&lINFORMATION:"
-      - "&#00BDF9| &f&lBUY MOB SPAWNERS"
+      - "&#00BDF9Information:"
+      - "&#00BDF9| &fBuy mob spawners"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO OPEN"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
     title: "Spawners"
     rows: 3
     border-only: false
@@ -546,12 +840,12 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#FFB6C1&lINFORMATION:"
-          - "&#FFB6C1| &f&lGIVES A PIG SPAWNER"
+          - "&#FFB6C1Information:"
+          - "&#FFB6C1| &fGives a pig spawner"
           - ""
-          - "&#FFB6C1⚓ &f&lPRICE: &#FFB6C1%price%"
+          - "&#FFB6C1⚓ &fPrice: &#FFB6C1%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
         commands:
           - "spawner give spawner %player% pig"
       cow:
@@ -564,12 +858,12 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#C4A484&lINFORMATION:"
-          - "&#C4A484| &f&lGIVES A COW SPAWNER"
+          - "&#C4A484Information:"
+          - "&#C4A484| &fGives a cow spawner"
           - ""
-          - "&#C4A484⚓ &f&lPRICE: &#C4A484%price%"
+          - "&#C4A484⚓ &fPrice: &#C4A484%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
         commands:
           - "spawner give spawner %player% cow"
       zombie:
@@ -582,12 +876,12 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#80EE0B&lINFORMATION:"
-          - "&#80EE0B| &f&lGIVES A ZOMBIE SPAWNER"
+          - "&#80EE0BInformation:"
+          - "&#80EE0B| &fGives a zombie spawner"
           - ""
-          - "&#80EE0B⚓ &f&lPRICE: &#80EE0B%price%"
+          - "&#80EE0B⚓ &fPrice: &#80EE0B%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
         commands:
           - "spawner give spawner %player% zombie"
       skeleton:
@@ -600,12 +894,12 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#D1D1D1&lINFORMATION:"
-          - "&#D1D1D1| &f&lGIVES A SKELETON SPAWNER"
+          - "&#D1D1D1Information:"
+          - "&#D1D1D1| &fGives a skeleton spawner"
           - ""
-          - "&#D1D1D1⚓ &f&lPRICE: &#D1D1D1%price%"
+          - "&#D1D1D1⚓ &fPrice: &#D1D1D1%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
         commands:
           - "spawner give spawner %player% skeleton"
       creeper:
@@ -618,16 +912,34 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#007E20&lINFORMATION:"
-          - "&#007E20| &f&lGIVES A CREEPER SPAWNER"
+          - "&#007E20Information:"
+          - "&#007E20| &fGives a creeper spawner"
           - ""
-          - "&#007E20⚓ &f&lPRICE: &#007E20%price%"
+          - "&#007E20⚓ &fPrice: &#007E20%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
         commands:
           - "spawner give spawner %player% creeper"
-      irongolem:
+      blaze:
         slot: 15
+        type: command
+        entity: blaze
+        price: 1800
+        material: SPAWNER
+        name: "&#FFBA00&lBLAZE SPAWNER"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#FFBA00Information:"
+          - "&#FFBA00| &fGives a blaze spawner"
+          - ""
+          - "&#FFBA00⚓ &fPrice: &#FFBA00%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
+        commands:
+          - "spawner give spawner %player% blaze"
+      irongolem:
+        slot: 16
         type: command
         entity: iron_golem
         price: 2500
@@ -636,148 +948,27 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&7&lINFORMATION:"
-          - "&7| &f&lGIVES AN IRON GOLEM SPAWNER"
+          - "&7Information:"
+          - "&7| &fGives an iron golem spawner"
           - ""
-          - "&7⚓ &f&lPRICE: &7%price%"
+          - "&7⚓ &fPrice: &7%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
         commands:
           - "spawner give spawner %player% iron_golem"
 
-  drills:
-    enabled: true
-    slot: 19
-    material: NETHERITE_PICKAXE
-    name: "&#A370EE&lDRILLS"
-    lore:
-      - "&8Description"
-      - ""
-      - "&#A370EE&lINFORMATION:"
-      - "&#A370EE| &f&lSHARDED TOOLS WITH AN EXPIRE TIME"
-      - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO OPEN"
-    title: "Tools"
-    rows: 4
-    border-only: false
-    back:
-      slot: 31
-    items:
-      drill:
-        slot: 10
-        type: tool
-        tool: drill
-        expire: 7d
-        price: 750
-        material: NETHERITE_PICKAXE
-        name: "&#A370EE&lSHARDED DRILL &7(7D)"
-        lore:
-          - "&8Description"
-          - ""
-          - "&#A370EE| &f&lMINES A 3X3 IN THE DIRECTION YOU LOOK"
-          - ""
-          - "&#A370EE⚓ &f&lPRICE: &#A370EE%price%"
-          - "&#A370EE⚓ &f&lEXPIRES IN: 7D"
-          - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
-      drill-14:
-        slot: 11
-        type: tool
-        tool: drill
-        expire: 14d
-        price: 1200
-        material: NETHERITE_PICKAXE
-        name: "&#A370EE&lSHARDED DRILL &7(14D)"
-        lore:
-          - "&8Description"
-          - ""
-          - "&#A370EE| &f&lMINES A 3X3 IN THE DIRECTION YOU LOOK"
-          - ""
-          - "&#A370EE⚓ &f&lPRICE: &#A370EE%price%"
-          - "&#A370EE⚓ &f&lEXPIRES IN: 14D"
-          - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
-      chopper:
-        slot: 13
-        type: tool
-        tool: chopper
-        expire: 7d
-        price: 750
-        material: NETHERITE_AXE
-        name: "&#A370EE&lSHARDED CHOPPER &7(7D)"
-        lore:
-          - "&8Description"
-          - ""
-          - "&#A370EE| &f&lCHOPS A WHOLE TREE IN ONE HIT"
-          - ""
-          - "&#A370EE⚓ &f&lPRICE: &#A370EE%price%"
-          - "&#A370EE⚓ &f&lEXPIRES IN: 7D"
-          - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
-      chopper-14:
-        slot: 14
-        type: tool
-        tool: chopper
-        expire: 14d
-        price: 1200
-        material: NETHERITE_AXE
-        name: "&#A370EE&lSHARDED CHOPPER &7(14D)"
-        lore:
-          - "&8Description"
-          - ""
-          - "&#A370EE| &f&lCHOPS A WHOLE TREE IN ONE HIT"
-          - ""
-          - "&#A370EE⚓ &f&lPRICE: &#A370EE%price%"
-          - "&#A370EE⚓ &f&lEXPIRES IN: 14D"
-          - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
-      firework:
-        slot: 16
-        type: tool
-        tool: firework
-        expire: 7d
-        price: 400
-        material: FIREWORK_ROCKET
-        name: "&#A370EE&lSHARDED FIREWORK &7(7D)"
-        lore:
-          - "&8Description"
-          - ""
-          - "&#A370EE| &f&lINFINITE FIREWORK ROCKET"
-          - ""
-          - "&#A370EE⚓ &f&lPRICE: &#A370EE%price%"
-          - "&#A370EE⚓ &f&lEXPIRES IN: 7D"
-          - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
-      firework-14:
-        slot: 22
-        type: tool
-        tool: firework
-        expire: 14d
-        price: 650
-        material: FIREWORK_ROCKET
-        name: "&#A370EE&lSHARDED FIREWORK &7(14D)"
-        lore:
-          - "&8Description"
-          - ""
-          - "&#A370EE| &f&lINFINITE FIREWORK ROCKET"
-          - ""
-          - "&#A370EE⚓ &f&lPRICE: &#A370EE%price%"
-          - "&#A370EE⚓ &f&lEXPIRES IN: 14D"
-          - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
-
   money:
     enabled: true
-    slot: 21
+    slot: 19
     material: GOLD_INGOT
     name: "&#80EE0B&lMONEY"
     lore:
       - "&8Description"
       - ""
-      - "&#80EE0B&lINFORMATION:"
-      - "&#80EE0B| &f&lTRADE CRYSTALS FOR MONEY"
+      - "&#80EE0BInformation:"
+      - "&#80EE0B| &fTrade crystals for money"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO OPEN"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
     title: "Money"
     rows: 3
     border-only: false
@@ -794,12 +985,12 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#80EE0B&lINFORMATION:"
-          - "&#80EE0B| &f&lADDS $100,000 TO YOUR BALANCE"
+          - "&#80EE0BInformation:"
+          - "&#80EE0B| &fAdds $100,000 to your balance"
           - ""
-          - "&#80EE0B⚓ &f&lPRICE: &#80EE0B%price%"
+          - "&#80EE0B⚓ &fPrice: &#80EE0B%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
       500k:
         slot: 11
         type: money
@@ -810,12 +1001,12 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#80EE0B&lINFORMATION:"
-          - "&#80EE0B| &f&lADDS $500,000 TO YOUR BALANCE"
+          - "&#80EE0BInformation:"
+          - "&#80EE0B| &fAdds $500,000 to your balance"
           - ""
-          - "&#80EE0B⚓ &f&lPRICE: &#80EE0B%price%"
+          - "&#80EE0B⚓ &fPrice: &#80EE0B%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
       1m:
         slot: 13
         type: money
@@ -826,12 +1017,12 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#80EE0B&lINFORMATION:"
-          - "&#80EE0B| &f&lADDS $1,000,000 TO YOUR BALANCE"
+          - "&#80EE0BInformation:"
+          - "&#80EE0B| &fAdds $1,000,000 to your balance"
           - ""
-          - "&#80EE0B⚓ &f&lPRICE: &#80EE0B%price%"
+          - "&#80EE0B⚓ &fPrice: &#80EE0B%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
       10m:
         slot: 15
         type: money
@@ -842,12 +1033,12 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#80EE0B&lINFORMATION:"
-          - "&#80EE0B| &f&lADDS $10,000,000 TO YOUR BALANCE"
+          - "&#80EE0BInformation:"
+          - "&#80EE0B| &fAdds $10,000,000 to your balance"
           - ""
-          - "&#80EE0B⚓ &f&lPRICE: &#80EE0B%price%"
+          - "&#80EE0B⚓ &fPrice: &#80EE0B%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
       25m:
         slot: 16
         type: money
@@ -858,28 +1049,28 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#80EE0B&lINFORMATION:"
-          - "&#80EE0B| &f&lADDS $25,000,000 TO YOUR BALANCE"
+          - "&#80EE0BInformation:"
+          - "&#80EE0B| &fAdds $25,000,000 to your balance"
           - ""
-          - "&#80EE0B⚓ &f&lPRICE: &#80EE0B%price%"
+          - "&#80EE0B⚓ &fPrice: &#80EE0B%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
 
   keys:
     enabled: true
-    slot: 23
+    slot: 21
     material: TRIPWIRE_HOOK
     name: "&#A370EE&lCRATE KEYS"
     lore:
       - "&8Description"
       - ""
-      - "&#A370EE&lINFORMATION:"
-      - "&#A370EE| &f&lBUY CRATE KEYS WITH CRYSTALS"
+      - "&#A370EEInformation:"
+      - "&#A370EE| &fBuy crate keys with crystals"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO OPEN"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Open"
     title: "Crate Keys"
     rows: 4
-    border-only: true
+    border-only: false
     back:
       slot: 31
     items:
@@ -894,11 +1085,12 @@ sections:
         lore:
           - "&8Description"
           - ""
-          - "&#A370EE| &f&l1X TEST CRATE KEY"
+          - "&#A370EEInformation:"
+          - "&#A370EE| &f1x Test crate key"
           - ""
-          - "&#A370EE⚓ &f&lPRICE: &#A370EE%price%"
+          - "&#A370EE⚓ &fPrice: &#A370EE%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"
       test-3:
         slot: 13
         type: key
@@ -906,12 +1098,13 @@ sections:
         amount: 3
         price: 200
         material: TRIPWIRE_HOOK
-        name: "&#A370EE&lTEST KEY &7X3"
+        name: "&#A370EE&lTEST KEY &7x3"
         lore:
           - "&8Description"
           - ""
-          - "&#A370EE| &f&l3X TEST CRATE KEYS"
+          - "&#A370EEInformation:"
+          - "&#A370EE| &f3x Test crate keys"
           - ""
-          - "&#A370EE⚓ &f&lPRICE: &#A370EE%price%"
+          - "&#A370EE⚓ &fPrice: &#A370EE%price%"
           - ""
-          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK TO BUY"
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Buy"

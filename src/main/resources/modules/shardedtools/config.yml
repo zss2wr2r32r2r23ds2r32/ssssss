@@ -36,12 +36,20 @@ tools:
   firework:
     material: FIREWORK_ROCKET
     name: "&#A370EE&lSHARDED FIREWORK"
-    expire: infinite
+    expire: 7d
     amount: 1
     unbreakable: false
     hide-enchants: false
     lore: []
     expire-line: "&#A370EE⚓ &fExpires in: %expire%"
+  sellwand:
+    material: BLAZE_ROD
+    name: "&#80EE0B&lSELL WAND"
+    expire: 1d
+    unbreakable: false
+    hide-enchants: false
+    lore: []
+    expire-line: "&#80EE0B⚓ &fExpires in: %expire%"
 
 messages:
   usage: "&#A370EE&lTOOLS &8▷ &f/shardedtool give <tool> [player] [expire] &7| &fremove <tool> <player>"

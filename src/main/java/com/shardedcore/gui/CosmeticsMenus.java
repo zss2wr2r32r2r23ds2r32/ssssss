@@ -51,8 +51,8 @@ public final class CosmeticsMenus {
         for (int i = 0; i < per && start + i < entries.size(); i++) {
             Entry entry = entries.get(start + i);
             List<String> lore = lore(config, entry, kind);
-            String prettyName = entry.title() == null ? "" : ColorUtil.strip(entry.title()).toUpperCase(Locale.ROOT);
-            String name = Text.apply(config.getString("gui.item-name", "%color%☀%color%&l%name%"),
+            String prettyName = entry.title() == null ? "" : ColorUtil.strip(entry.title());
+            String name = Text.apply(config.getString("gui.item-name", "%color%&l%name%"),
                     "color", entry.color(), "name", prettyName, "kind", kind, "display", entry.display());
             Material icon = bundles ? GuiButtons.bundleMaterial(entry.color()) : fallback;
             menu.set(area[i], Items.named(icon, name, lore), event -> {
@@ -128,8 +128,8 @@ public final class CosmeticsMenus {
     }
 
     public static List<String> lore(FileConfiguration config, Entry entry, String kind) {
-        String owned = config.getString("gui.status-owned", "%color%☀%color%&lSTATUS: &#94FF00&l&nOWNED");
-        String locked = config.getString("gui.status-locked", "%color%☀%color%&lSTATUS: &#FF2727&l&nLOCKED");
+        String owned = config.getString("gui.status-owned", "%color%Status: &#94FF00&nOwned");
+        String locked = config.getString("gui.status-locked", "%color%Status: &#FF2727&nLocked");
         List<String> template = config.getStringList("gui.lore");
         if (template.isEmpty()) {
             template = List.of(
@@ -145,7 +145,7 @@ public final class CosmeticsMenus {
             );
         }
         String click = config.getString("gui.click-footer",
-                "&x&F&F&B&A&0&0▷&x&F&F&B&A&0&0&l&nCLICK TO EQUIP");
+                "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK To Equip");
         return Text.applyList(new ArrayList<>(template),
                 "color", entry.color(),
                 "name", entry.title(),

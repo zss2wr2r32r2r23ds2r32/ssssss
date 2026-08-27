@@ -161,6 +161,7 @@ commands:
     description: Queue for a 1v1 random teleport
     aliases: [rtpq]
     permission: shardedcore.rtp.queue
+    usage: /rtpqueue [player|leave|accept]
   sell:
     description: Sell menu
     permission: shardedcore.sell

@@ -198,8 +198,20 @@ public final class GuiButtons {
 
     public static String pretty(String id) {
         if (id == null || id.isBlank()) return "Example";
-        String stripped = ColorUtil.strip(id).replace('_', ' ').trim();
+        String stripped = ColorUtil.strip(id).replace('_', ' ').replace('-', ' ').trim();
         if (stripped.isEmpty()) return "Example";
-        return stripped.substring(0, 1).toUpperCase(Locale.ROOT) + stripped.substring(1);
+        String[] parts = stripped.split("\\s+");
+        StringBuilder out = new StringBuilder();
+        for (String part : parts) {
+            if (part.isEmpty()) continue;
+            if (out.length() > 0) out.append(' ');
+            if (part.equals(part.toUpperCase(Locale.ROOT)) && part.length() <= 4) {
+                out.append(part);
+                continue;
+            }
+            out.append(Character.toUpperCase(part.charAt(0)));
+            if (part.length() > 1) out.append(part.substring(1));
+        }
+        return out.toString();
     }
 }

@@ -147,8 +147,8 @@ public final class GlowsModule extends Module implements CommandExecutor, TabCom
                     ? cfg("placeholders.owned-yes", "&#9FFF00&nYes")
                     : cfg("placeholders.owned-no", "&#FF2727&nNo");
             String status = Text.apply(owned
-                            ? cfg("gui.status-owned", "%color%☀%color%&lSTATUS: &#94FF00&l&nOWNED")
-                            : cfg("gui.status-locked", "%color%☀%color%&lSTATUS: &#FF2727&l&nLOCKED"),
+                            ? cfg("gui.status-owned", "%color%Status: &#94FF00&nOwned")
+                            : cfg("gui.status-locked", "%color%Status: &#FF2727&nLocked"),
                     "color", CosmeticsMenus.colorOf(def.color, def.color), "name", def.displayName);
             List<String> template = config.getStringList("gui.lore");
             List<String> lore = Text.applyList(new ArrayList<>(template.isEmpty() ? def.lore : template),
@@ -189,7 +189,7 @@ public final class GlowsModule extends Module implements CommandExecutor, TabCom
             event.setCancelled(true);
             player.closeInventory();
         });
-        GuiButtons.border(menu);
+        GuiButtons.glass(menu, !config.getBoolean("gui.fill", true));
         plugin.menus().open(player, menu);
         sound(player, "sounds.open");
         GuiButtons.play(player, "open");

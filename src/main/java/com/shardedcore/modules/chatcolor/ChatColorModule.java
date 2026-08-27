@@ -314,7 +314,7 @@ public final class ChatColorModule extends Module implements CommandExecutor, Ta
             ColorDef def = definition(id);
             if (def == null) continue;
             String color = ColorUtil.colorCode(def.hex == null || def.hex.isBlank() ? "0083FF" : def.hex);
-            String title = CosmeticsMenus.pretty(def.id).toUpperCase(Locale.ROOT);
+            String title = CosmeticsMenus.pretty(def.id);
             String display = title + " Colour";
             entries.add(new CosmeticsMenus.Entry(def.id, title, display,
                     cfg("gui.default-description", "&8Description"), color, canUse(player, def.id)));

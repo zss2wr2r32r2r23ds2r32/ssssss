@@ -45,6 +45,37 @@ blocked-biomes:
   - WARM_OCEAN
   - RIVER
   - FROZEN_RIVER
+  - BEACH
+  - SNOWY_BEACH
+  - STONY_SHORE
+  - MUSHROOM_FIELDS
+
+blocked-blocks:
+  - WATER
+  - LAVA
+  - ICE
+  - PACKED_ICE
+  - BLUE_ICE
+  - KELP
+  - KELP_PLANT
+  - SEAGRASS
+  - TALL_SEAGRASS
+  - SEA_PICKLE
+  - LILY_PAD
+  - MAGMA_BLOCK
+  - CACTUS
+  - LEAVES
+  - LOG
+  - STEM
+  - WOOD
+  - FENCE
+  - WALL
+  - SLAB
+  - STAIRS
+  - GLASS_PANE
+  - CARPET
+  - SNOW
+  - POWDER_SNOW
 
 menu:
   title: "&8Random Teleport"
@@ -188,3 +219,8 @@ queue:
   found: "&#22AFFB&lRTP QUEUE &8▷ &fFound Player, Teleporting in &#22AFFB&n%seconds%s"
   cancelled: "&#22AFFB&lRTP QUEUE &8▷ &fYou left the queue."
   not-in: "&#22AFFB&lRTP QUEUE &8▷ &fYou are not in the queue."
+  requested: "&#22AFFB&lRTP QUEUE &8▷ &fAsked &#22AFFB%player% &fto queue with you."
+  incoming: "&#22AFFB&lRTP QUEUE &8▷ &#22AFFB%player% &fwants to RTP with you. Type &#22AFFB/rtpqueue accept&f."
+  no-request: "&#22AFFB&lRTP QUEUE &8▷ &fYou have no pending request."
+  offline: "&#FF0000&lERROR &8▷ &fThat player is not online."
+  self: "&#FF0000&lERROR &8▷ &fYou cannot queue with yourself."
