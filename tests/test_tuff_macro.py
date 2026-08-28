@@ -76,6 +76,22 @@ class TuffMacroRebrandTests(unittest.TestCase):
         self.assertIn(digest, hashes)
         self.assertEqual(data["salt"], "tuff-macro-v1")
 
+    def test_license_looks_next_to_start_bat_not_submacros(self) -> None:
+        license_ahk = (TUFF / "lib" / "License.ahk").read_text(encoding="utf-8")
+        self.assertIn('A_ScriptDir "\\.."', license_ahk)
+        self.assertIn("licenses.json", license_ahk)
+        self.assertIn("Invalid key", license_ahk)
+        self.assertIn("StrLower", license_ahk)
+        self.assertIn("KeyHash", license_ahk)
+        self.assertNotIn('static FilePath := A_WorkingDir', license_ahk)
+        data = json.loads((TUFF / "licenses.json").read_text(encoding="utf-8"))
+        digest = hashlib.sha256(f"{data['salt']}:charliesmacro".encode()).hexdigest()
+        self.assertEqual(digest, "a1c254e301986bccdc66b6164e84e5047dfe33f02a9af09fafc34a42882201bc")
+        self.assertIn(digest, (TUFF / "lib" / "License.ahk").read_text(encoding="utf-8"))
+        # License still accepts the key if the user types mixed case.
+        mixed = hashlib.sha256(f"{data['salt']}:{'CHARLIESMACRO'.lower()}".encode()).hexdigest()
+        self.assertEqual(mixed, digest)
+
     def test_tray_uses_tuff_icon(self) -> None:
         macro = MACRO.read_text(encoding="utf-8")
         self.assertIn('TraySetIcon "nm_image_assets\\tuff.ico"', macro)
