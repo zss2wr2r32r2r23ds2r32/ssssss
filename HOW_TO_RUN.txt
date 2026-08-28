@@ -1,0 +1,19 @@
+HOW TO RUN (read this)
+
+The .exe is a finished Windows program. You do not put it into AutoHotkey.
+
+There are two files:
+
+1) PinePollenMacro.exe
+   Double-click this to enter your license and open Bee Swarm Simulator.
+   License key: admintest123
+
+2) pine_macro.ahk
+   This is the AutoHotkey collector (like Natro Macro).
+   Install AutoHotkey v2 from https://www.autohotkey.com/
+   Then double-click pine_macro.ahk
+   Keep this whole folder together. Do not move the .ahk file out by itself.
+
+START.bat
+   If AutoHotkey v2 is installed, this starts pine_macro.ahk
+   If it is not installed, this starts the .exe instead.

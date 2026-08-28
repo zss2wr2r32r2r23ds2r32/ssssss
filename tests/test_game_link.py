@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import unittest
+import zipfile
 from pathlib import Path
 
 from pine_core.game import (
@@ -15,6 +16,7 @@ from pine_core.license_keys import TESTING_LICENSE_KEY, hash_license_key
 ROOT = Path(__file__).resolve().parent.parent
 LAUNCHER = ROOT / "launcher" / "PinePollenLauncher.c"
 EXE = ROOT / "dist" / "PinePollenMacro.exe"
+ZIP = ROOT / "dist" / "PinePollenMacro.zip"
 
 
 class GameLinkTests(unittest.TestCase):
@@ -52,6 +54,17 @@ class GameLinkTests(unittest.TestCase):
         header = EXE.read_bytes()[:2]
         self.assertEqual(header, b"MZ")
         self.assertGreater(EXE.stat().st_size, 8_000)
+
+    def test_release_zip_contains_ahk_and_exe(self) -> None:
+        self.assertTrue(ZIP.is_file(), "PinePollenMacro.zip was not packed")
+        with zipfile.ZipFile(ZIP) as zf:
+            names = set(zf.namelist())
+        self.assertIn("PinePollenMacro/pine_macro.ahk", names)
+        self.assertIn("PinePollenMacro/lib/License.ahk", names)
+        self.assertIn("PinePollenMacro/licenses.json", names)
+        self.assertIn("PinePollenMacro/START.bat", names)
+        self.assertIn("PinePollenMacro/HOW_TO_RUN.txt", names)
+        self.assertIn("PinePollenMacro/PinePollenMacro.exe", names)
 
 
 if __name__ == "__main__":

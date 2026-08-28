@@ -12,9 +12,19 @@ admintest123
 
 That admin testing key is hashed in `licenses.json`. Type it exactly (lowercase, no spaces).
 
+## Download the zip
+
+Get **[PinePollenMacro.zip](https://github.com/zss2wr2r32r2r23ds2r32/ssssss/raw/cursor/pine-pollen-macro-6fbf/dist/PinePollenMacro.zip)** and extract it. That folder is the Natro-style package:
+
+- `pine_macro.ahk` — AutoHotkey script. Install AutoHotkey v2, then double-click this file.
+- `PinePollenMacro.exe` — already-built Windows program. Double-click this to open Bee Swarm Simulator.
+- `START.bat` — starts the `.ahk` file if AutoHotkey is installed.
+
+You do **not** put the `.exe` into AutoHotkey. AutoHotkey only runs `.ahk` files.
+
 ## Windows .exe (opens the game)
 
-Download `dist/PinePollenMacro.exe` from this repo (or the pull request artifacts). Double-click it on Windows:
+`dist/PinePollenMacro.exe` is also available by itself. Double-click it on Windows:
 
 1. Enter license key `admintest123`.
 2. The launcher opens **Bee Swarm Simulator** through the official Roblox link (`roblox://experiences/start?placeId=1537690962`).
