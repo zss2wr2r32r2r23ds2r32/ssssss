@@ -2,6 +2,7 @@
 
 from .game import BSS_DEEPLINK, BSS_PLACE_ID, BSS_WEB_PAGE, launch_urls
 from .license_keys import LicenseError, LicenseStore, hash_license_key, normalize_key
+from .parse_number import parse_integer, parse_number
 from .loop import PineCollector, PineCollectorConfig
 from .paths import (
     DEFAULT_MOVESPEED,
@@ -27,6 +28,8 @@ __all__ = [
     "hash_license_key",
     "launch_urls",
     "normalize_key",
+    "parse_integer",
+    "parse_number",
     "cannon_to_pine_steps",
     "gather_pattern_steps",
     "hive_to_ramp_tiles",

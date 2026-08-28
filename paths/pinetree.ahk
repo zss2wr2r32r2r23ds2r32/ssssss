@@ -3,10 +3,16 @@
 ; gtf-pinetree.ahk / wf-pinetree.ahk
 
 GoToPineTree() {
-    global MoveMethod, RightKey, BackKey, FwdKey, LeftKey, RotRight, RotLeft, SC_E, SC_Space
+    global MoveMethod, RightKey, BackKey, FwdKey, LeftKey, RotRight, RotLeft, running
+    if !running
+        return
     if (MoveMethod = "Cannon") {
         nm_gotoramp()
+        if !running
+            return
         nm_gotocannon()
+        if !running
+            return
         Send "{e down}"
         HyperSleep(100)
         Send "{e up}{" RightKey " down}{" BackKey " down}"
@@ -19,6 +25,8 @@ GoToPineTree() {
         Sleep 2000
     } else {
         nm_gotoramp()
+        if !running
+            return
         nm_Walk(67.5, BackKey, LeftKey)
         Send "{" RotRight " 4}"
         nm_Walk(31, FwdKey)
@@ -35,7 +43,9 @@ GoToPineTree() {
 }
 
 WalkFromPineTree() {
-    global FwdKey, RightKey, LeftKey, BackKey, RotLeft, SC_Space, HiveSlot
+    global FwdKey, RightKey, LeftKey, BackKey, RotLeft, SC_Space, HiveSlot, running
+    if !running
+        return
     nm_Walk(31, FwdKey)
     nm_Walk(75, RightKey)
     Send "{" RotLeft " 4}"

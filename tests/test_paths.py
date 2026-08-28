@@ -26,7 +26,7 @@ class PathAndWalkTests(unittest.TestCase):
     def test_walk_duration_matches_natro_legacy_formula(self) -> None:
         self.assertAlmostEqual(walk_duration_ms(1, 28), 4000 / 28)
         self.assertAlmostEqual(walk_duration_ms(67.5, 28), 4000 / 28 * 67.5)
-        self.assertIn("4000 / MoveSpeedNum * tiles", AHK_WALK)
+        self.assertIn("4000 / speed * tiles", AHK_WALK)
 
     def test_zero_movespeed_rejected(self) -> None:
         with self.assertRaises(ValueError):

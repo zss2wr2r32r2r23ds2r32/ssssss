@@ -79,51 +79,67 @@ MainGui := Gui("+OwnDialogs", "Pine Pollen Macro")
 MainGui.BackColor := "141414"
 MainGui.SetFont("s10 cWhite", "Segoe UI")
 MainGui.AddText("x16 y14 w360", "Pine Tree pollen collector")
-MainGui.SetFont("s8 c888888", "Segoe UI")
+MainGui.SetFont("s8 cAAAAAA", "Segoe UI")
 roleLabel := licenseRecord.Has("role") ? licenseRecord["role"] : "user"
 MainGui.AddText("x16 y34 w360", "License: " roleLabel "  |  F1 Start   F2 Pause   F3 Stop")
 
+; Labels stay white on the dark window. Input text must be black on white.
 MainGui.SetFont("s9 cWhite", "Segoe UI")
 MainGui.AddText("x16 y64", "Hive slot")
-hiveEdit := MainGui.AddEdit("x100 y60 w50 Number", HiveSlot)
+MainGui.SetFont("s9 cBlack", "Segoe UI")
+hiveEdit := MainGui.AddEdit("x100 y60 w50 Number BackgroundFFFFFF", HiveSlot)
+
+MainGui.SetFont("s9 cWhite", "Segoe UI")
 MainGui.AddText("x170 y64", "(1-6)")
-
 MainGui.AddText("x16 y96", "Move speed")
-speedEdit := MainGui.AddEdit("x100 y92 w50", MoveSpeedNum)
-MainGui.AddText("x170 y96 w200", "Match in-game speed (no haste)")
+MainGui.SetFont("s9 cBlack", "Segoe UI")
+speedEdit := MainGui.AddEdit("x100 y92 w50 BackgroundFFFFFF", MoveSpeedNum)
 
+MainGui.SetFont("s9 cWhite", "Segoe UI")
+MainGui.AddText("x170 y96 w200", "Match in-game speed (no haste)")
 MainGui.AddText("x16 y128", "Travel")
+MainGui.SetFont("s9 cBlack", "Segoe UI")
 methodDDL := MainGui.AddDropDownList("x100 y124 w120", ["Walk", "Cannon"])
 methodDDL.Text := MoveMethod
 
+MainGui.SetFont("s9 cWhite", "Segoe UI")
 MainGui.AddText("x16 y160", "Gather min")
-gatherEdit := MainGui.AddEdit("x100 y156 w50", GatherMinutes)
+MainGui.SetFont("s9 cBlack", "Segoe UI")
+gatherEdit := MainGui.AddEdit("x100 y156 w50 BackgroundFFFFFF", GatherMinutes)
 
+MainGui.SetFont("s9 cWhite", "Segoe UI")
 MainGui.AddText("x16 y192", "Pattern")
+MainGui.SetFont("s9 cBlack", "Segoe UI")
 patternDDL := MainGui.AddDropDownList("x100 y188 w140", ["CornerXSnake", "Squares", "Snake", "Lines", "Stationary"])
 patternDDL.Text := PatternName
 
+MainGui.SetFont("s9 cWhite", "Segoe UI")
 MainGui.AddText("x250 y192", "Size")
+MainGui.SetFont("s9 cBlack", "Segoe UI")
 sizeDDL := MainGui.AddDropDownList("x290 y188 w70", ["XS", "S", "M", "L", "XL"])
 sizeDDL.Text := PatternSize
 
+MainGui.SetFont("s9 cWhite", "Segoe UI")
 MainGui.AddText("x16 y224", "Reps")
-repsEdit := MainGui.AddEdit("x100 y220 w50 Number", PatternReps)
+MainGui.SetFont("s9 cBlack", "Segoe UI")
+repsEdit := MainGui.AddEdit("x100 y220 w50 Number BackgroundFFFFFF", PatternReps)
 
+MainGui.SetFont("s9 cWhite", "Segoe UI")
 sprinklerBox := MainGui.AddCheckbox("x16 y256 Checked" PlaceSprinkler, "Place sprinkler (1)")
 convertBox := MainGui.AddCheckbox("x200 y256 Checked" ConvertAfterGather, "Convert at hive")
 clickBox := MainGui.AddCheckbox("x16 y280 Checked" HoldClick, "Hold left click while gathering")
+MainGui.AddText("x16 y300 w360", "Stand on your hive. Use Walk if Cannon misses.")
 
-MainGui.SetFont("s9 cWhite", "Segoe UI")
-startBtn := MainGui.AddButton("x16 y314 w90 h28", "Start (F1)")
-pauseBtn := MainGui.AddButton("x116 y314 w90 h28", "Pause (F2)")
-stopBtn := MainGui.AddButton("x216 y314 w90 h28", "Stop (F3)")
-playBtn := MainGui.AddButton("x16 y348 w190 h28", "Open Bee Swarm Simulator")
+MainGui.SetFont("s9 cBlack", "Segoe UI")
+startBtn := MainGui.AddButton("x16 y324 w90 h28", "Start (F1)")
+pauseBtn := MainGui.AddButton("x116 y324 w90 h28", "Pause (F2)")
+stopBtn := MainGui.AddButton("x216 y324 w90 h28", "Stop (F3)")
+playBtn := MainGui.AddButton("x16 y358 w190 h28", "Open Bee Swarm Simulator")
 pauseBtn.Enabled := false
 stopBtn.Enabled := false
 
-MainGui.SetFont("s8 cBBBBBB", "Consolas")
-statusBox := MainGui.AddEdit("x16 y388 w360 h128 ReadOnly -Wrap", "Ready. Open Bee Swarm Simulator, claim a hive, then press Start.`r`nTesting license key: admintest123")
+MainGui.SetFont("s8 cBlack", "Consolas")
+statusBox := MainGui.AddEdit("x16 y396 w360 h120 ReadOnly Wrap BackgroundFFFFFF", "Ready. Open Bee Swarm Simulator, claim a hive, then press Start.`r`nTesting license key: admintest123")
 
 startBtn.OnEvent("Click", StartMacro)
 pauseBtn.OnEvent("Click", PauseMacro)
@@ -143,23 +159,45 @@ Log(msg) {
     try SendMessage(0x115, 7, 0, statusBox.Hwnd) ; WM_VSCROLL bottom
 }
 
+; AHK v2.1 Number()/Integer() type-check strings and throw. Convert with +0 instead.
+ParseNumber(text, fallback) {
+    text := Trim(text "")
+    text := StrReplace(text, ",")
+    if (text = "" || !IsNumber(text))
+        return fallback + 0
+    return text + 0
+}
+
+ParseInteger(text, fallback) {
+    return Round(ParseNumber(text, fallback))
+}
+
+WaitMs(ms) {
+    global running
+    endAt := A_TickCount + Max(0, ms)
+    while running && A_TickCount < endAt {
+        remaining := endAt - A_TickCount
+        Sleep Min(100, remaining)
+    }
+    return running
+}
+
 SaveConfigFromGui() {
     global HiveSlot, MoveSpeedNum, MoveMethod, GatherMinutes, PatternName, PatternSize, PatternReps
     global PlaceSprinkler, ConvertAfterGather, HoldClick
     global hiveEdit, speedEdit, methodDDL, gatherEdit, patternDDL, sizeDDL, repsEdit
     global sprinklerBox, convertBox, clickBox, configPath
-    HiveSlot := Integer(hiveEdit.Value || 3)
-    HiveSlot := Min(6, Max(1, HiveSlot))
-    MoveSpeedNum := Number(speedEdit.Value || 28)
+    HiveSlot := Min(6, Max(1, ParseInteger(hiveEdit.Value, 3)))
+    MoveSpeedNum := ParseNumber(speedEdit.Value, 28)
     if MoveSpeedNum <= 0
         MoveSpeedNum := 28
-    MoveMethod := methodDDL.Text
-    GatherMinutes := Number(gatherEdit.Value || 10)
+    MoveMethod := methodDDL.Text || "Walk"
+    GatherMinutes := ParseNumber(gatherEdit.Value, 10)
     if GatherMinutes <= 0
         GatherMinutes := 10
-    PatternName := patternDDL.Text
-    PatternSize := sizeDDL.Text
-    PatternReps := Integer(repsEdit.Value || 3)
+    PatternName := patternDDL.Text || "CornerXSnake"
+    PatternSize := sizeDDL.Text || "M"
+    PatternReps := ParseInteger(repsEdit.Value, 3)
     if PatternReps < 1
         PatternReps := 1
     PlaceSprinkler := sprinklerBox.Value
@@ -182,16 +220,22 @@ LoadConfig() {
     global PlaceSprinkler, ConvertAfterGather, HoldClick, configPath
     if !FileExist(configPath)
         return
-    HiveSlot := Integer(IniRead(configPath, "Settings", "HiveSlot", HiveSlot))
-    MoveSpeedNum := Number(IniRead(configPath, "Settings", "MoveSpeedNum", MoveSpeedNum))
+    HiveSlot := Min(6, Max(1, ParseInteger(IniRead(configPath, "Settings", "HiveSlot", HiveSlot), 3)))
+    MoveSpeedNum := ParseNumber(IniRead(configPath, "Settings", "MoveSpeedNum", MoveSpeedNum), 28)
+    if MoveSpeedNum <= 0
+        MoveSpeedNum := 28
     MoveMethod := IniRead(configPath, "Settings", "MoveMethod", MoveMethod)
-    GatherMinutes := Number(IniRead(configPath, "Settings", "GatherMinutes", GatherMinutes))
+    GatherMinutes := ParseNumber(IniRead(configPath, "Settings", "GatherMinutes", GatherMinutes), 10)
+    if GatherMinutes <= 0
+        GatherMinutes := 10
     PatternName := IniRead(configPath, "Settings", "PatternName", PatternName)
     PatternSize := IniRead(configPath, "Settings", "PatternSize", PatternSize)
-    PatternReps := Integer(IniRead(configPath, "Settings", "PatternReps", PatternReps))
-    PlaceSprinkler := Integer(IniRead(configPath, "Settings", "PlaceSprinkler", PlaceSprinkler))
-    ConvertAfterGather := Integer(IniRead(configPath, "Settings", "ConvertAfterGather", ConvertAfterGather))
-    HoldClick := Integer(IniRead(configPath, "Settings", "HoldClick", HoldClick))
+    PatternReps := ParseInteger(IniRead(configPath, "Settings", "PatternReps", PatternReps), 3)
+    if PatternReps < 1
+        PatternReps := 1
+    PlaceSprinkler := ParseInteger(IniRead(configPath, "Settings", "PlaceSprinkler", PlaceSprinkler), 1)
+    ConvertAfterGather := ParseInteger(IniRead(configPath, "Settings", "ConvertAfterGather", ConvertAfterGather), 1)
+    HoldClick := ParseInteger(IniRead(configPath, "Settings", "HoldClick", HoldClick), 1)
 }
 
 WaitIfPaused() {
@@ -213,27 +257,30 @@ PatternScale(name) {
 ResetCharacter() {
     global SC_Esc, SC_R, SC_Enter, ZoomOut
     Log("Resetting character")
+    ActivateRoblox()
     Send "{" SC_Esc "}{" SC_R "}{" SC_Enter "}"
-    Sleep 8000
+    if !WaitMs(8000)
+        return
     Send "{" ZoomOut " 8}"
-    Sleep 400
+    WaitMs(400)
 }
 
 ConvertAtHive() {
     global SC_E
     Log("Converting pollen at hive")
+    ActivateRoblox()
     Send "{" SC_E " down}"
-    Sleep 100
+    WaitMs(100)
     Send "{" SC_E " up}"
-    ; Wait for backpack to empty (timed; no image search in this lite build)
-    Sleep 15000
+    WaitMs(15000)
 }
 
 PlaceFieldSprinkler() {
     global SC_1
     Log("Placing sprinkler")
+    ActivateRoblox()
     Send "{" SC_1 "}"
-    Sleep 400
+    WaitMs(400)
 }
 
 RunGatherPattern() {
@@ -303,10 +350,15 @@ MacroLoop() {
             break
         }
         ResetCharacter()
+        if !running
+            break
         WaitIfPaused()
+        if !running
+            break
         if ConvertAfterGather
             ConvertAtHive()
-        WaitIfPaused()
+        if !running
+            break
         Log("Traveling to Pine Tree (" MoveMethod ")")
         GoToPineTree()
         WaitIfPaused()

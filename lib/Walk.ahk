@@ -2,11 +2,19 @@
 ; Legacy Natro-style walk timing: 4000ms per tile at 1 movespeed.
 
 Walk(tiles, hasteCap := 0) {
-    global MoveSpeedNum
-    HyperSleep(4000 / MoveSpeedNum * tiles)
+    global MoveSpeedNum, running
+    if !running
+        return
+    speed := MoveSpeedNum
+    if !IsNumber(speed) || speed <= 0
+        speed := 28
+    HyperSleep(4000 / speed * tiles)
 }
 
 nm_Walk(tiles, MoveKey1, MoveKey2 := 0) {
+    global running
+    if !running
+        return
     Send "{" MoveKey1 " down}" (MoveKey2 ? "{" MoveKey2 " down}" : "")
     Walk(tiles)
     Send "{" MoveKey1 " up}" (MoveKey2 ? "{" MoveKey2 " up}" : "")
