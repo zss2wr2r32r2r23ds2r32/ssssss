@@ -4,6 +4,7 @@ This is an exact copy of [Natro Macro](https://github.com/NatroTeam/NatroMacro) 
 
 1. The name is **Tuff Macro**
 2. The GUI is **black and purple**
+3. The tray and window icon is a purple **T** on black (`tuff.ico`)
 
 Paths, patterns, gather logic, and everything else are unchanged.
 

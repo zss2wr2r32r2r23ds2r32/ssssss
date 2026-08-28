@@ -50,6 +50,14 @@ buff_characters := Map()
 
 #Include "%A_ScriptDir%\..\nm_image_assets\offset\bitmaps.ahk"
 #Include "%A_ScriptDir%\..\nm_image_assets\statmonitor\bitmaps.ahk"
+try {
+	tuffLogo := Gdip_CreateBitmapFromFile(A_ScriptDir "\..\nm_image_assets\tuff.png")
+	if tuffLogo {
+		if bitmaps.Has("pBMNatroLogo")
+			Gdip_DisposeImage(bitmaps["pBMNatroLogo"])
+		bitmaps["pBMNatroLogo"] := tuffLogo
+	}
+}
 
 ; ▰▰▰▰▰▰▰▰▰▰▰▰
 ; INITIALISE VARIABLES

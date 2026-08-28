@@ -15,6 +15,8 @@ class TuffMacroRebrandTests(unittest.TestCase):
         self.assertTrue((TUFF / "submacros" / "natro_macro.ahk").is_file())
         self.assertTrue((TUFF / "submacros" / "AutoHotkey32.exe").is_file())
         self.assertTrue((TUFF / "nm_image_assets" / "Styles" / "Tuff.msstyles").is_file())
+        self.assertTrue((TUFF / "nm_image_assets" / "tuff.ico").is_file())
+        self.assertTrue((TUFF / "nm_image_assets" / "tuff.png").is_file())
 
     def test_start_bat_uses_tuff_name(self) -> None:
         text = (TUFF / "START.bat").read_text(encoding="utf-8")
@@ -51,6 +53,15 @@ class TuffMacroRebrandTests(unittest.TestCase):
         self.assertNotIn("cDefault", macro)
         self.assertNotIn("cDefault", timers)
 
+    def test_tray_and_window_use_tuff_icon(self) -> None:
+        macro = (TUFF / "submacros" / "natro_macro.ahk").read_text(encoding="utf-8")
+        self.assertIn('TraySetIcon "nm_image_assets\\tuff.ico"', macro)
+        self.assertNotIn('TraySetIcon "nm_image_assets\\auryn.ico"', macro)
+        self.assertIn("nm_ApplyTuffIcon", macro)
+        ico = (TUFF / "nm_image_assets" / "tuff.ico").read_bytes()
+        self.assertEqual(ico[:4], b"\x00\x00\x01\x00")
+        self.assertGreater((TUFF / "nm_image_assets" / "tuff.ico").stat().st_size, 1000)
+
     def test_github_urls_still_credit_natro(self) -> None:
         text = (TUFF / "submacros" / "natro_macro.ahk").read_text(encoding="utf-8")
         self.assertIn("NatroTeam/NatroMacro", text)
@@ -65,6 +76,8 @@ class TuffMacroRebrandTests(unittest.TestCase):
         self.assertIn("TuffMacro/submacros/AutoHotkey32.exe", names)
         self.assertIn("TuffMacro/nm_image_assets/Styles/Tuff.msstyles", names)
         self.assertIn("TuffMacro/NOTICE.md", names)
+        self.assertIn("TuffMacro/nm_image_assets/tuff.ico", names)
+        self.assertIn("TuffMacro/nm_image_assets/tuff.png", names)
 
     def test_paths_and_patterns_were_not_rebranded(self) -> None:
         for folder in ("paths", "patterns"):

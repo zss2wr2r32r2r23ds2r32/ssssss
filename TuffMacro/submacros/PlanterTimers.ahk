@@ -81,6 +81,11 @@ hBitmapsSB["None"] := 0
 ;GUI
 TimersGui := Gui("+AlwaysOnTop +border +minsize50x30 +E0x08040000 +lastfound", "Timers Revision 4.0")
 TimersGui.BackColor := "0x0A0014"
+try {
+	hIcon := LoadPicture(A_WorkingDir "\nm_image_assets\tuff.ico", "Icon1 w32 h32", &imgType)
+	DllCall("SendMessage", "ptr", TimersGui.Hwnd, "uint", 0x80, "ptr", 1, "ptr", hIcon)
+	DllCall("SendMessage", "ptr", TimersGui.Hwnd, "uint", 0x80, "ptr", 0, "ptr", hIcon)
+}
 setTimerGuiTransparency()
 TimersGui.OnEvent("Close", (*) => ExitApp())
 TimersGui.SetFont("s8 cC9B6FF w1000", "Tahoma")

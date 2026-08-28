@@ -25,6 +25,7 @@ Gameplay, paths, patterns, and macro logic are unchanged.
 ;@Ahk2Exe-SetCompanyName Natro Team
 ;@Ahk2Exe-SetCopyright Copyright © Natro Team
 ;@Ahk2Exe-SetOrigFilename natro_macro.exe
+;@Ahk2Exe-SetMainIcon ..\nm_image_assets\tuff.ico
 #MaxThreads 255
 #Requires AutoHotkey v2.0
 #SingleInstance Force
@@ -2186,7 +2187,7 @@ hBitmapsSB["None"] := 0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; SYSTEM TRAY
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-TraySetIcon "nm_image_assets\auryn.ico"
+TraySetIcon "nm_image_assets\tuff.ico"
 A_TrayMenu.Delete()
 A_TrayMenu.Add()
 A_TrayMenu.Add("Open Logs", (*) => ListLines())
@@ -2430,6 +2431,7 @@ nm_AutoUpdateGUI(*)
 	GuiClose()
 	UpdateGui := Gui("+AlwaysOnTop -MinimizeBox +Owner" MainGui.Hwnd, "Tuff Macro Update")
 	UpdateGui.BackColor := "0x0A0014"
+	nm_ApplyTuffIcon(UpdateGui)
 	UpdateGui.OnEvent("Close", GuiClose), UpdateGui.OnEvent("Escape", GuiClose)
 	UpdateGui.SetFont("s9 cC9B6FF Norm", "Tahoma")
 	UpdateText := UpdateGui.Add("Text", "x20 w260 +Center +BackgroundTrans", "A newer version of Tuff Macro was found!`nDo you want to update now?")
@@ -2561,6 +2563,21 @@ nm_MajorUpdateHelp(*)
 	. "For more information, you can review the convention at https://semver.org/", "Major Update", 0x1040
 }
 
+
+nm_ApplyTuffIcon(targetGui) {
+	static hIcon := 0
+	if !hIcon {
+		iconPath := A_WorkingDir "\nm_image_assets\tuff.ico"
+		if !FileExist(iconPath)
+			iconPath := A_ScriptDir "\..\nm_image_assets\tuff.ico"
+		try hIcon := LoadPicture(iconPath, "Icon1 w32 h32", &imgType)
+	}
+	if (hIcon && IsObject(targetGui) && targetGui.Hwnd) {
+		DllCall("SendMessage", "ptr", targetGui.Hwnd, "uint", 0x80, "ptr", 1, "ptr", hIcon)
+		DllCall("SendMessage", "ptr", targetGui.Hwnd, "uint", 0x80, "ptr", 0, "ptr", hIcon)
+	}
+}
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; CREATE GUI
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2569,6 +2586,7 @@ MainGui := Gui((AlwaysOnTop ? "+AlwaysOnTop " : "") "+Border +OwnDialogs", "Tuff
 MainGui.BackColor := "0x0A0014"
 WinSetTransparent 255-floor(GuiTransparency*2.55), MainGui
 MainGui.Show("x" GuiX " y" GuiY " w490 h275")
+nm_ApplyTuffIcon(MainGui)
 SetLoadingProgress(percent) => MainGui.Title := "Tuff Macro (Loading " Round(percent) "%)"
 MainGui.OnEvent("Close", (*) => ExitApp())
 MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
