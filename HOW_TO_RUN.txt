@@ -1,0 +1,12 @@
+HOW TO RUN TUFF MACRO
+
+1. Download TuffMacro.zip and extract it.
+2. Open the TuffMacro folder.
+3. Double-click START.bat
+4. A small box appears. Type your license key and press Unlock.
+   The key is hidden while you type. It is not shown on screen.
+
+Windows only. Open Bee Swarm Simulator, claim a hive, then press Start.
+
+Original work: Natro Macro by Natro Team (GNU GPL v3)
+https://github.com/NatroTeam/NatroMacro
