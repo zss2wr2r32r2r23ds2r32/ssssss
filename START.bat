@@ -2,6 +2,15 @@
 setlocal
 cd /d "%~dp0"
 
+if exist "%~dp0dist\PinePollenMacro.exe" (
+    start "" "%~dp0dist\PinePollenMacro.exe"
+    exit /b 0
+)
+if exist "%~dp0PinePollenMacro.exe" (
+    start "" "%~dp0PinePollenMacro.exe"
+    exit /b 0
+)
+
 where AutoHotkey64.exe >nul 2>&1
 if %ERRORLEVEL%==0 (
     start "" AutoHotkey64.exe "%~dp0pine_macro.ahk"

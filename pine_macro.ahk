@@ -43,6 +43,11 @@ SC_LShift := "sc02a"
 SC_Space := "sc039"
 SC_1 := "sc002"
 
+BSS_PLACE_ID := "1537690962"
+BSS_DEEPLINK := "roblox://experiences/start?placeId=1537690962"
+BSS_WEB_START := "https://www.roblox.com/games/start?placeId=1537690962"
+BSS_WEB_PAGE := "https://www.roblox.com/games/1537690962/Bee-Swarm-Simulator"
+
 MoveSpeedNum := 28
 MoveMethod := "Walk"
 HiveSlot := 3
@@ -113,17 +118,19 @@ MainGui.SetFont("s9 cWhite", "Segoe UI")
 startBtn := MainGui.AddButton("x16 y314 w90 h28", "Start (F1)")
 pauseBtn := MainGui.AddButton("x116 y314 w90 h28", "Pause (F2)")
 stopBtn := MainGui.AddButton("x216 y314 w90 h28", "Stop (F3)")
+playBtn := MainGui.AddButton("x16 y348 w190 h28", "Open Bee Swarm Simulator")
 pauseBtn.Enabled := false
 stopBtn.Enabled := false
 
 MainGui.SetFont("s8 cBBBBBB", "Consolas")
-statusBox := MainGui.AddEdit("x16 y356 w360 h150 ReadOnly -Wrap", "Ready. Open Bee Swarm Simulator, claim a hive, then press Start.`r`nTesting license key: admintest123")
+statusBox := MainGui.AddEdit("x16 y388 w360 h128 ReadOnly -Wrap", "Ready. Open Bee Swarm Simulator, claim a hive, then press Start.`r`nTesting license key: admintest123")
 
 startBtn.OnEvent("Click", StartMacro)
 pauseBtn.OnEvent("Click", PauseMacro)
 stopBtn.OnEvent("Click", StopMacro)
+playBtn.OnEvent("Click", LaunchBeeSwarm)
 MainGui.OnEvent("Close", (*) => ExitApp())
-MainGui.Show("w392 h524")
+MainGui.Show("w392 h536")
 
 Hotkey "F1", StartMacro
 Hotkey "F2", PauseMacro
@@ -330,6 +337,22 @@ SetButtonsIdle() {
     startBtn.Enabled := true
     pauseBtn.Enabled := false
     stopBtn.Enabled := false
+}
+
+LaunchBeeSwarm(*) {
+    global BSS_DEEPLINK, BSS_WEB_START, BSS_WEB_PAGE
+    Log("Opening Bee Swarm Simulator")
+    try {
+        Run BSS_DEEPLINK
+        return
+    } catch {
+    }
+    try {
+        Run BSS_WEB_START
+        return
+    } catch {
+        Run BSS_WEB_PAGE
+    }
 }
 
 StartMacro(*) {

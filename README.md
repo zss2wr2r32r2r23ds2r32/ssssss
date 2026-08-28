@@ -12,7 +12,24 @@ admintest123
 
 That admin testing key is hashed in `licenses.json`. Type it exactly (lowercase, no spaces).
 
-## Windows (the real macro)
+## Windows .exe (opens the game)
+
+Download `dist/PinePollenMacro.exe` from this repo (or the pull request artifacts). Double-click it on Windows:
+
+1. Enter license key `admintest123`.
+2. The launcher opens **Bee Swarm Simulator** through the official Roblox link (`roblox://experiences/start?placeId=1537690962`).
+3. Click **Play Bee Swarm Simulator** again any time you need to rejoin.
+4. Optional: **Start Pine Macro** runs `pine_macro.ahk` if AutoHotkey v2 and the script are in the same folder.
+
+The exe does not inject into Roblox. It only uses `ShellExecute` on the public game URL.
+
+Rebuild it:
+
+```bash
+bash tools/build_windows_exe.sh
+```
+
+## Windows AutoHotkey script
 
 1. Install [AutoHotkey v2](https://www.autohotkey.com/).
 2. Open Bee Swarm Simulator, claim a hive, and stand on your pad.
