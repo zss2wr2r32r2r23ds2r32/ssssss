@@ -1,4 +1,4 @@
-﻿/*
+/*
 Tuff Macro (https://github.com/NatroTeam/NatroMacro)
 Copyright © Natro Team (https://github.com/NatroTeam)
 
@@ -48,7 +48,7 @@ MainChannelCheck := A_Args[5]
 MainChannelID := A_Args[6]
 ReportChannelCheck := A_Args[7]
 ReportChannelID := A_Args[8]
-WebhookEasterEgg := A_Args[9]
+WebhookEasterEgg := 0
 
 ssCheck := A_Args[10]
 ssDebugging := A_Args[11]
@@ -1131,7 +1131,7 @@ nm_command(command)
 
 		case "stop","reload":
 		DetectHiddenWindows 1
-		if WinExist("natro_macro ahk_class AutoHotkey")
+		if WinExist("tuff ahk_class AutoHotkey")
 		{
 			PostMessage 0x5550, 3
 			discord.SendEmbed("Stopping Macro...", 5066239, , , , id)
@@ -1146,7 +1146,7 @@ nm_command(command)
 		else
 		{
 			DetectHiddenWindows 1
-			if WinExist("natro_macro ahk_class AutoHotkey")
+			if WinExist("tuff ahk_class AutoHotkey")
 			{
 				PostMessage 0x5550, 2
 				discord.SendEmbed(((MacroState = 2) ? "Pausing" : "Unpausing") " Macro...", 5066239, , , , id)
@@ -1160,7 +1160,7 @@ nm_command(command)
 		if (MacroState = 0)
 		{
 			DetectHiddenWindows 1
-			if WinExist("natro_macro ahk_class AutoHotkey"){
+			if WinExist("tuff ahk_class AutoHotkey"){
 				PostMessage 0x5550, 1
 				discord.SendEmbed("Starting Macro...", 5066239, , , , id)
 			}
@@ -1177,7 +1177,7 @@ nm_command(command)
 		{
 			windowPid := WinGetPID()
 			DetectHiddenWindows 1
-			if WinExist("natro_macro ahk_class AutoHotkey")
+			if WinExist("tuff ahk_class AutoHotkey")
 				natroPID := WinGetPID()
 			DetectHiddenWindows 0
 			if (windowPID = natroPID)
@@ -1234,7 +1234,7 @@ nm_command(command)
 		{
 			delay := params[2] ? params[2] : 0
 			DetectHiddenWindows 1
-			if WinExist("natro_macro ahk_class AutoHotkey")
+			if WinExist("tuff ahk_class AutoHotkey")
 			{
 				PostMessage 0x5557, delay
 				discord.SendEmbed((delay > 0) ? ("Rejoining after " delay " seconds!") : "Rejoining...", 5066239, , , , id)
@@ -1252,7 +1252,7 @@ nm_command(command)
 
 		case "keep":
 		DetectHiddenWindows 1
-		if WinExist("natro_macro ahk_class AutoHotkey")
+		if WinExist("tuff ahk_class AutoHotkey")
 		{
 			try
 				result := SendMessage(0x5558, 1, , , , , , , 2000)
@@ -1279,7 +1279,7 @@ nm_command(command)
 
 		case "replace":
 		DetectHiddenWindows 1
-		if WinExist("natro_macro ahk_class AutoHotkey")
+		if WinExist("tuff ahk_class AutoHotkey")
 		{
 			try
 				result := SendMessage(0x5558, 2, , , , , , , 2000)
@@ -2074,7 +2074,7 @@ nm_command(command)
 			case "0","1","on","off":
 			state := (params[2] = "on") ? 1 : (params[2] = "off") ? 0 : params[2]
 			DetectHiddenWindows 1
-			if WinExist("natro_macro ahk_class AutoHotkey")
+			if WinExist("tuff ahk_class AutoHotkey")
 			{
 				try
 					result := SendMessage(0x5551, state, , , , , , , 2000)
@@ -2134,7 +2134,7 @@ nm_command(command)
 				Iniwrite "1", "settings\nm_config.ini", "Shrine", "ShrineIndex" n
 				Iniwrite "0", "settings\nm_config.ini", "Shrine", "LastShrine"
 				DetectHiddenWindows 1
-				if WinExist("natro_macro ahk_class AutoHotkey") {
+				if WinExist("tuff ahk_class AutoHotkey") {
 					PostMessage 0x5552, 230+n, 0 ; ShrineAmount
 					PostMessage 0x5553, 56+n, 9 ; ShrineIndex
 					PostMessage 0x5553, 54+n, 9 ; ShrineItem
@@ -2216,7 +2216,7 @@ nm_command(command)
 				Iniwrite 0, "settings\nm_config.ini", "Blender", "BlenderTime" n
 				IniWrite n, "settings\nm_config.ini", "Blender", "BlenderRot"
 				DetectHiddenWindows 1
-				if WinExist("natro_macro ahk_class AutoHotkey") {
+				if WinExist("tuff ahk_class AutoHotkey") {
 					PostMessage 0x5552, 232+n, 0 ; BlenderAmount
 					PostMessage 0x5552, 238+n, 0 ; BlenderTime
 					PostMessage 0x5553, 58+n, 8 ; BlenderIndex
@@ -2432,13 +2432,13 @@ nm_command(command)
 			discord.SendEmbed("Item ``" UI "`` is not valid", 5066239, , , , id)
 		else
 			DetectHiddenWindows 1
-			if WinExist("natro_macro ahk_class AutoHotkey")
+			if WinExist("tuff ahk_class AutoHotkey")
 				SendMessage(0x5559, ObjHasValue(items,closestItem.item),,,,,,,2000)	
 			DetectHiddenWindows 0
 
 		case 'Debug', 'Debuglog':
 			DetectHiddenWindows 1
-			if WinExist("natro_macro ahk_class AutoHotkey"){
+			if WinExist("tuff ahk_class AutoHotkey"){
 				static os_version:='', processorName:='', RAMAmount:=''
 				if !os_version || !processorName || !RAMAmount
 					winmgmts := ComObjGet("winmgmts:")
@@ -2556,7 +2556,7 @@ UpdateStr(var, value, section)
 	try %var% := value
 	IniWrite value, "settings\nm_config.ini", section, var
 	DetectHiddenWindows 1
-	if WinExist("natro_macro ahk_class AutoHotkey")
+	if WinExist("tuff ahk_class AutoHotkey")
 		PostMessage 0x5553, settings[var].enum, sections[section]
 	if WinExist("background.ahk ahk_class AutoHotkey")
 		PostMessage 0x5553, settings[var].enum, sections[section]
@@ -2568,7 +2568,7 @@ UpdateInt(var, value, section)
 	try %var% := value
 	IniWrite value, "settings\nm_config.ini", section, var
 	DetectHiddenWindows 1
-	if WinExist("natro_macro ahk_class AutoHotkey")
+	if WinExist("tuff ahk_class AutoHotkey")
 		PostMessage 0x5552, settings[var].enum, value
 	if WinExist("background.ahk ahk_class AutoHotkey")
 		PostMessage 0x5552, settings[var].enum, value

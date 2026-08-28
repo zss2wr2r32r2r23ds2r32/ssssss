@@ -14,8 +14,7 @@ You should have received a copy of the license along with Tuff Macro. If not, pl
 /*
 Tuff Macro is a modified copy of Natro Macro by Natro Team
 (https://github.com/NatroTeam/NatroMacro), GNU GPL v3.
-Changes in this copy: product name "Tuff Macro" and a black/purple GUI.
-Gameplay, paths, patterns, and macro logic are unchanged.
+Changes in this copy: renamed to tuff.ahk, blue Tuff Macro UI, license gate, rainbow webhook removed.
 */
 
 
@@ -24,7 +23,7 @@ Gameplay, paths, patterns, and macro logic are unchanged.
 ;@Ahk2Exe-SetDescription Tuff Macro
 ;@Ahk2Exe-SetCompanyName Natro Team
 ;@Ahk2Exe-SetCopyright Copyright © Natro Team
-;@Ahk2Exe-SetOrigFilename natro_macro.exe
+;@Ahk2Exe-SetOrigFilename tuff.exe
 ;@Ahk2Exe-SetMainIcon ..\nm_image_assets\tuff.ico
 #MaxThreads 255
 #Requires AutoHotkey v2.0
@@ -34,6 +33,7 @@ Gameplay, paths, patterns, and macro logic are unchanged.
 #Include "Gdip_All.ahk"
 #Include "Gdip_ImageSearch.ahk"
 #Include "JSON.ahk"
+#Include "License.ahk"
 #Include "Roblox.ahk"
 #Include "DurationFromSeconds.ahk"
 #Include "nowUnix.ahk"
@@ -85,6 +85,10 @@ ElevateScript() {
 		file.Close()
 }
 ElevateScript()
+
+; license: empty box only, key is never displayed
+if !License.PromptAndActivate()
+	ExitApp
 
 ; declare executable paths
 exe_path32 := A_AhkPath
@@ -2351,15 +2355,15 @@ nm_MsgBoxIncorrectRobloxSettings()
 		IncSettingsGui.OnEvent("Close", (*) => GuiClose())
 		IncSettingsGui.SetFont("Bold s10 c" (robloxtype = RobloxTypes.NotFound || robloxtype = RobloxTypes.UWP ? "Red" : "0a7e00"), "Tahoma")
 		IncSettingsGui.Add("Text", "x10 y10 w400 +Center", "Default Roblox Installation: " robloxtype)
-		IncSettingsGui.SetFont("s9 cC9B6FF", "Tahoma")
+		IncSettingsGui.SetFont("s9 c7EC8FF", "Tahoma")
 		IncSettingsGui.Add("Text", "x10 y40 w400 +BackgroundTrans", "The detected Roblox installation might have incorrect settings, please do these:")
 		IncSettingsGui.SetFont("s9 cRed", "Tahoma")
 		IncSettingsGui.Add("Text", "x10 y70 w400 r" recommendations.Length " +BackgroundTrans", rectext)
-		IncSettingsGui.SetFont("s8 cC9B6FF", "Tahoma")
+		IncSettingsGui.SetFont("s8 c7EC8FF", "Tahoma")
 		IncSettingsGui.Add("Text", "x10 y" (80 + 14 * recommendations.Length) " w400 +BackgroundTrans", "You can safely ignore this message if you have already changed them.")
 		IncSettingsGui.SetFont("s9", "Tahoma")
 		IncSettingsGui.Add("CheckBox", "x10 y" (110 + 14 * recommendations.Length) " w200 vIncorrectSettingsCheckbox", "Do not show again")
-		IncSettingsGui.SetFont("s9 cC9B6FF Norm", "Tahoma")
+		IncSettingsGui.SetFont("s9 c7EC8FF Norm", "Tahoma")
 		IncSettingsGui.Add("Button", "x320 y" (110 + 14 * recommendations.Length) " w90 h28 Default", "OK").OnEvent("Click"
 		, (*) => (
 			IncSettingsGui["IncorrectSettingsCheckbox"].Value
@@ -2430,10 +2434,10 @@ nm_AutoUpdateGUI(*)
 	}
 	GuiClose()
 	UpdateGui := Gui("+AlwaysOnTop -MinimizeBox +Owner" MainGui.Hwnd, "Tuff Macro Update")
-	UpdateGui.BackColor := "0x0A0014"
+	UpdateGui.BackColor := "0x071422"
 	nm_ApplyTuffIcon(UpdateGui)
 	UpdateGui.OnEvent("Close", GuiClose), UpdateGui.OnEvent("Escape", GuiClose)
-	UpdateGui.SetFont("s9 cC9B6FF Norm", "Tahoma")
+	UpdateGui.SetFont("s9 c7EC8FF Norm", "Tahoma")
 	UpdateText := UpdateGui.Add("Text", "x20 w260 +Center +BackgroundTrans", "A newer version of Tuff Macro was found!`nDo you want to update now?")
 
 	posW := TextExtent("Tuff Macro v" VersionID " ⮕ v" LatestVer, UpdateText)
@@ -2583,46 +2587,44 @@ nm_ApplyTuffIcon(targetGui) {
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 OnExit(GetOut)
 MainGui := Gui((AlwaysOnTop ? "+AlwaysOnTop " : "") "+Border +OwnDialogs", "Tuff Macro (Loading 0%)")
-MainGui.BackColor := "0x0A0014"
+MainGui.BackColor := "0x071422"
 WinSetTransparent 255-floor(GuiTransparency*2.55), MainGui
-MainGui.Show("x" GuiX " y" GuiY " w490 h275")
+MainGui.Show("x" GuiX " y" GuiY " w540 h392")
 nm_ApplyTuffIcon(MainGui)
 SetLoadingProgress(percent) => MainGui.Title := "Tuff Macro (Loading " Round(percent) "%)"
 MainGui.OnEvent("Close", (*) => ExitApp())
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
-MainGui.SetFont("w700")
-MainGui.Add("Text", "x5 y241 w80 -Wrap +BackgroundTrans", "Current Field:")
-MainGui.Add("Text", "x177 y241 w30 +BackgroundTrans", "Status:")
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
-MainGui.Add("Button", "x82 y240 w10 h15 vcurrentFieldUp Disabled", "<").OnEvent("Click", nm_currentFieldUp)
-MainGui.Add("Button", "x165 y240 w10 h15 vcurrentFieldDown Disabled", ">").OnEvent("Click", nm_currentFieldDown)
-MainGui.Add("Text", "x92 y240 w73 +center +BackgroundTrans +border vCurrentField", CurrentField:=FieldName%CurrentFieldNum%)
-MainGui.Add("Text", "x220 y240 w275 +BackgroundTrans +border vstate", "Startup: UI")
+MainGui.SetFont("s9 c7EC8FF", "Segoe UI")
+MainGui.Add("Text", "x12 y248 w70 -Wrap +BackgroundTrans", "Field")
+MainGui.Add("Text", "x200 y248 w48 +BackgroundTrans", "Status")
+MainGui.Add("Button", "x82 y248 w18 h20 vcurrentFieldUp Disabled", "<").OnEvent("Click", nm_currentFieldUp)
+MainGui.Add("Button", "x178 y248 w18 h20 vcurrentFieldDown Disabled", ">").OnEvent("Click", nm_currentFieldDown)
+MainGui.Add("Text", "x102 y248 w74 h20 +center +BackgroundTrans +border vCurrentField", CurrentField:=FieldName%CurrentFieldNum%)
+MainGui.Add("Text", "x248 y248 w278 h20 +BackgroundTrans +border vstate", "Startup: UI")
 
 ; version label and links
-(GuiCtrl := MainGui.Add("Text", "x435 y264 vVersionText", "v" versionID)).OnEvent("Click", nm_showAdvancedSettings), GuiCtrl.Move(494 - (VersionWidth := TextExtent("v" VersionID, GuiCtrl)))
+(GuiCtrl := MainGui.Add("Text", "x470 y368 vVersionText", "v" versionID)).OnEvent("Click", nm_showAdvancedSettings)
 hBM := Gdip_CreateHBITMAPFromBitmap(bitmaps["warninggui"])
-MainGui.Add("Picture", "+BackgroundTrans x482 y264 w14 h14 Hidden vImageUpdateLink", "HBITMAP:*" hBM).OnEvent("Click", nm_AutoUpdateGUI)
+MainGui.Add("Picture", "+BackgroundTrans x518 y368 w14 h14 Hidden vImageUpdateLink", "HBITMAP:*" hBM).OnEvent("Click", nm_AutoUpdateGUI)
 DllCall("DeleteObject", "Ptr", hBM)
 hBM := Gdip_CreateHBITMAPFromBitmap(bitmaps["githubgui"])
-MainGui.Add("Picture", "+BackgroundTrans x" 494-VersionWidth-23 " y262 w18 h18 vImageGitHubLink", "HBITMAP:*" hBM)
+MainGui.Add("Picture", "+BackgroundTrans x496 y366 w18 h18 vImageGitHubLink", "HBITMAP:*" hBM)
 DllCall("DeleteObject", "Ptr", hBM)
 pBM := Gdip_BitmapConvertGray(bitmaps["discordgui"]), hBM := Gdip_CreateHBITMAPFromBitmap(pBM)
-MainGui.Add("Picture", "+BackgroundTrans x" 494-VersionWidth-48 " y263 w21 h16 vImageDiscordLink", "HBITMAP:*" hBM)
+MainGui.Add("Picture", "+BackgroundTrans x472 y367 w21 h16 vImageDiscordLink", "HBITMAP:*" hBM)
 Gdip_DisposeImage(pBM), DllCall("DeleteObject", "Ptr", hBM)
 
-; control buttons
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
-MainGui.Add("Button", "x5 y260 w65 h20 -Wrap Disabled vStartButton", " Start (" StartHotkey ")").OnEvent("Click", nm_StartButton)
-MainGui.Add("Button", "x75 y260 w65 h20 -Wrap Disabled vPauseButton", " Pause (" PauseHotkey ")").OnEvent("Click", nm_PauseButton)
-MainGui.Add("Button", "x145 y260 w65 h20 -Wrap Disabled vStopButton", " Stop (" StopHotkey ")").OnEvent("Click", nm_StopButton)
+; control buttons — larger and easier to hit
+MainGui.SetFont("s10 c7EC8FF Bold", "Segoe UI")
+MainGui.Add("Button", "x12 y278 w110 h34 -Wrap Disabled vStartButton", "Start  (" StartHotkey ")").OnEvent("Click", nm_StartButton)
+MainGui.Add("Button", "x130 y278 w110 h34 -Wrap Disabled vPauseButton", "Pause  (" PauseHotkey ")").OnEvent("Click", nm_PauseButton)
+MainGui.Add("Button", "x248 y278 w110 h34 -Wrap Disabled vStopButton", "Stop  (" StopHotkey ")").OnEvent("Click", nm_StopButton)
 for k,v in ["PMondoGuid","PMondoGuidComplete","PFieldBoosted","PFieldGuidExtend","PFieldGuidExtendMins","PFieldBoostExtend","PPopStarExtend"]
 	%v%:=0
 #include "*i %A_ScriptDir%\..\settings\personal.ahk"
 
 ; add tabs
 TabArr := ["Gather","Collect/Kill","Boost","Quests","Planters","Status","Settings","Misc","Credits"], (BuffDetectReset = 1) && TabArr.Push("Advanced")
-(TabCtrl := MainGui.Add("Tab", "x0 y-1 w500 h240 -Wrap", TabArr)).OnEvent("Change", (*) => TabCtrl.Focus())
+(TabCtrl := MainGui.Add("Tab", "x0 y-1 w540 h240 -Wrap", TabArr)).OnEvent("Change", (*) => TabCtrl.Focus())
 SendMessage 0x1331, 0, 20, , TabCtrl ; set minimum tab width
 ; check for update
 try AsyncHttpRequest("GET", "https://api.github.com/repos/NatroTeam/NatroMacro/releases", nm_AutoUpdateHandler
@@ -2639,7 +2641,7 @@ MainGui.Add("Text", "x0 y25 w126 +center +BackgroundTrans", "Gathering")
 MainGui.Add("Text", "x126 y25 w205 +center +BackgroundTrans", "Pattern")
 MainGui.Add("Text", "x331 y25 w83 +center +BackgroundTrans", "Until")
 MainGui.Add("Text", "x414 y25 w86 +center +BackgroundTrans", "Sprinkler")
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 MainGui.Add("Text", "x2 y39 w124 +center +BackgroundTrans", "Field Rotation")
 MainGui.Add("Text", "x126 y25 w1 h206 0x7") ; 0x7 = SS_BLACKFRAME - faster drawing of lines since no text rendered
 MainGui.Add("Text", "x130 y39 w112 +center +BackgroundTrans", "Pattern Shape")
@@ -2658,7 +2660,7 @@ MainGui.SetFont("w700")
 MainGui.Add("Text", "x4 y61 w10 +BackgroundTrans", "1:")
 MainGui.Add("Text", "xp yp+60 wp +BackgroundTrans", "2:")
 MainGui.Add("Text", "xp yp+60 wp +BackgroundTrans", "3:")
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 
 (GuiCtrl := MainGui.Add("DropDownList", "x18 y57 w106 Disabled vFieldName1", fieldnamelist)).Text := FieldName1, GuiCtrl.OnEvent("Change", nm_FieldSelect1)
 SetLoadingProgress(3)
@@ -2801,7 +2803,7 @@ MainGui.SetFont("w700")
 MainGui.Add("Text", "x15 y28 w225 +wrap +backgroundtrans cWhite", "Development")
 MainGui.Add("Text", "x261 y28 w225 +wrap +backgroundtrans cWhite", "Supporters")
 
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 MainGui.Add("Text", "x18 y43 w225 +wrap +backgroundtrans cWhite", "Special Thanks to the developers and testers!`nClick the names to view their Discord profiles!")
 MainGui.Add("Text", "x264 y43 w180 +wrap +backgroundtrans cWhite", "Thank you for your donations and contributions to this project!")
 
@@ -2824,7 +2826,7 @@ MainGui.Add("GroupBox", "x170 y168 w160 h62 vAutoClickerButton", "AutoClicker ("
 MainGui.Add("GroupBox", "x335 y24 w160 h84", "Macro Tools")
 MainGui.Add("GroupBox", "x335 y108 w160 h60", "Discord Tools")
 MainGui.Add("GroupBox", "x335 y168 w160 h62", "Bugs and Suggestions")
-MainGui.SetFont("s9 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s9 c7EC8FF Norm", "Tahoma")
 ;hive tools
 MainGui.Add("Button", "x10 y40 w150 h40 vBasicEggHatcherButton Disabled", "Gifted Basic Bee`nAuto-Hatcher").OnEvent("Click", nm_BasicEggHatcher)
 MainGui.Add("Button", "x10 y82 w150 h40 vBitterberryFeederButton Disabled", "Bitterberry`nAuto-Feeder").OnEvent("Click", nm_BitterberryFeeder)
@@ -2846,7 +2848,7 @@ MainGui.Add("Button", "x340 y124 w150 h40 vNightAnnouncementGUI Disabled", "Nigh
 ;reporting
 MainGui.Add("Button", "x340 y184 w150 h20 vReportBugButton Disabled", "Report Bugs").OnEvent("Click", nm_ReportBugButton)
 MainGui.Add("Button", "x340 y206 w150 h20 vMakeSuggestionButton Disabled", "Make Suggestions").OnEvent("Click", nm_MakeSuggestionButton)
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 
 ; STATUS TAB
 ; ------------------------
@@ -2855,7 +2857,7 @@ MainGui.SetFont("w700")
 MainGui.Add("GroupBox", "x5 y23 w240 h210", "Status Log")
 MainGui.Add("GroupBox", "x250 y23 w245 h160", "Stats")
 MainGui.Add("GroupBox", "x250 y185 w245 h48", "Discord Integration")
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 
 MainGui.Add("CheckBox", "x85 y23 Disabled vStatusLogReverse Checked" StatusLogReverse, "Reverse Order").OnEvent("Click", nm_StatusLogReverseCheck)
 MainGui.Add("Text", "x10 y37 w230 r15 +BackgroundTrans -Wrap vstatuslog")
@@ -2864,7 +2866,7 @@ MainGui.SetFont("w700")
 MainGui.Add("Text", "x255 y40", "Total")
 MainGui.Add("Text", "x375 y40", "Session")
 
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 MainGui.Add("Text", "x255 y55 w119 h120 -Wrap vTotalStats")
 MainGui.Add("Text", "x375 y55 w119 h120 -Wrap vSessionStats")
 MainGui.Add("Button", "x290 y39 w50 h15 vResetTotalStats Disabled", "Reset").OnEvent("Click", nm_ResetTotalStats)
@@ -2883,7 +2885,7 @@ MainGui.Add("GroupBox", "x170 y25 w160 h35", "Input")
 MainGui.Add("GroupBox", "x170 y65 w160 h170", "Reconnect")
 MainGui.Add("GroupBox", "x335 y25 w160 h165", "Character")
 MainGui.Add("GroupBox", "x335 y190 w160 h45", "Updates")
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 
 ;gui settings
 MainGui.Add("CheckBox", "x10 y73 Disabled vAlwaysOnTop Checked" AlwaysOnTop, "Always On Top").OnEvent("Click", nm_AlwaysOnTop)
@@ -2901,7 +2903,7 @@ SetLoadingProgress(29)
 MainGui.Add("Text", "x10 y110 w60 +BackgroundTrans", "Hive Slot:")
 MainGui.SetFont("s6")
 MainGui.Add("Text", "x61 y112 w60 +BackgroundTrans", "(6-5-4-3-2-1)")
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 MainGui.Add("Text", "x110 y109 w34 h16 0x201 +Center")
 (GuiCtrl := MainGui.Add("UpDown", "Range1-6 vHiveSlot Disabled", HiveSlot)).Section := "Settings", GuiCtrl.OnEvent("Change", nm_saveConfig)
 MainGui.Add("Text", "x10 y125 w110 +BackgroundTrans", "My Hive Has:")
@@ -2943,7 +2945,7 @@ MainGui.SetFont("w1000 s11")
 MainGui.Add("Text", "x269 yp-2 +BackgroundTrans", ":")
 MainGui.SetFont("s6 w700")
 MainGui.Add("Text", "x295 yp+5 +BackgroundTrans", "UTC")
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 MainGui.Add("Button", "x315 yp-2 w10 h15 vReconnectTimeHelp Disabled", "?").OnEvent("Click", nm_ReconnectTimeHelp)
 (GuiCtrl := MainGui.Add("CheckBox", "x176 yp+17 w132 h15 vPublicFallback Disabled Checked" PublicFallback, "Fallback to Public Server")).Section := "Settings", GuiCtrl.OnEvent("Click", nm_saveConfig)
 MainGui.Add("Button", "x315 yp w10 h15 vPublicFallbackHelp Disabled", "?").OnEvent("Click", nm_PublicFallbackHelp)
@@ -2957,7 +2959,7 @@ nm_UpdateDetectedApplication()
 MainGui.Add("Text", "x345 y40 w110 +BackgroundTrans", "Movement Speed:")
 MainGui.SetFont("s6")
 MainGui.Add("Text", "x345 y55 w80 +right +BackgroundTrans", "(WITHOUT HASTE)")
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 MainGui.Add("Edit", "x438 y43 w43 r1 limit5 vMoveSpeedNum Disabled", MoveSpeedNum).OnEvent("Change", nm_moveSpeed)
 (GuiCtrl := MainGui.Add("CheckBox", "x345 y68 w125 h15 vNewWalk Disabled Checked" NewWalk, "MoveSpeed Correction")).Section := "Settings", GuiCtrl.OnEvent("Click", nm_saveConfig)
 MainGui.Add("Button", "x475 y68 w10 h15 vNewWalkHelp Disabled", "?").OnEvent("Click", nm_NewWalkHelp)
@@ -2994,7 +2996,7 @@ MainGui.Add("Button", "x250 y21 w246 h18 vKillSubTab", "Kill").OnEvent("Click", 
 ;collect
 MainGui.SetFont("w700")
 MainGui.Add("GroupBox", "x5 y42 w125 h124 vCollectGroupBox", "Collect")
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 (GuiCtrl := MainGui.Add("CheckBox", "x10 y57 vClockCheck Disabled Checked" ClockCheck, "Clock (tickets)")).Section := "Collect", GuiCtrl.OnEvent("Click", nm_saveConfig)
 (GuiCtrl := MainGui.Add("CheckBox", "x10 yp+18 w50 vMondoBuffCheck Disabled Checked" MondoBuffCheck, "Mondo")).Section := "Collect", GuiCtrl.OnEvent("Click", nm_saveConfig)
 MondoActionList := ["Buff", "Kill"], PMondoGuid && MondoActionList.Push("Tag", "Guid"), MondoActionList.Default := "", MondoActionList.Length := 4
@@ -3018,7 +3020,7 @@ MainGui.Add("CheckBox", "x+4 yp+5 vAntPassBuyCheck Disabled Checked" AntPassBuyC
 ;memory match
 MainGui.SetFont("w700")
 MainGui.Add("GroupBox", "x5 y168 w125 h68 vMemoryMatchGroupBox", "Memory Match")
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 (GuiCtrl := MainGui.Add("CheckBox", "x10 yp+15 w58 vNormalMemoryMatchCheck Disabled Checked" NormalMemoryMatchCheck, "Normal")).Section := "Collect", GuiCtrl.OnEvent("Click", nm_saveConfig)
 MainGui.Add("CheckBox", "xp yp+18 wp vNightMemoryMatchCheck Disabled Checked" NightMemoryMatchCheck, "Night").OnEvent("Click", nm_NightMemoryMatchCheck)
 (GuiCtrl := MainGui.Add("CheckBox", "xp+58 yp-18 wp vMegaMemoryMatchCheck Disabled Checked" MegaMemoryMatchCheck, "Mega")).Section := "Collect", GuiCtrl.OnEvent("Click", nm_saveConfig)
@@ -3027,7 +3029,7 @@ MainGui.Add("Button", "x43 yp+16 w49 h16 vMemoryMatchOptions Disabled", "Options
 ;dispensers
 MainGui.SetFont("w700")
 MainGui.Add("GroupBox", "x135 y42 w165 h105 vDispensersGroupBox", "Dispensers")
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 (GuiCtrl := MainGui.Add("CheckBox", "x140 y57 vHoneyDisCheck Disabled Checked" HoneyDisCheck, "Honey")).Section := "Collect", GuiCtrl.OnEvent("Click", nm_saveConfig)
 (GuiCtrl := MainGui.Add("CheckBox", "xp yp+18 vTreatDisCheck Disabled Checked" TreatDisCheck, "Treat")).Section := "Collect", GuiCtrl.OnEvent("Click", nm_saveConfig)
 (GuiCtrl := MainGui.Add("CheckBox", "xp yp+18 vBlueberryDisCheck Disabled Checked" BlueberryDisCheck, "Blueberry")).Section := "Collect", GuiCtrl.OnEvent("Click", nm_saveConfig)
@@ -3040,7 +3042,7 @@ MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
 beesmasActive := 0
 MainGui.SetFont("w700")
 MainGui.Add("GroupBox", "x135 y149 w360 h87 vBeesmasGroupBox", "Beesmas (Inactive)")
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 hBM := Gdip_CreateHBITMAPFromBitmap(bitmaps["warninggui"])
 MainGui.Add("Picture", "+BackgroundTrans x261 yp w14 h14 vBeesmasFailImage", "HBITMAP:*" hBM).OnEvent("Click", BeesmasActiveFail)
 DllCall("DeleteObject", "ptr", hBM)
@@ -3065,7 +3067,7 @@ else
 ;Blender
 MainGui.SetFont("w700")
 MainGui.Add("GroupBox", "x305 y42 w190 h105 vBlenderGroupBox", "Blender")
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 loop 3 {
 	xCoords := 256 + (62 * A_index)
 	MainGui.Add("Button", "x" xCoords " y124 w40 h15 vBlenderAdd" A_index " Disabled", (BlenderItem%A_index% = "None") ? "Add" : "Clear").OnEvent("Click", nm_setBlenderData)
@@ -3081,7 +3083,7 @@ MainGui.Add("Text", "x435 y106 vBlenderAmountText Hidden", "Amount")
 MainGui.Add("Text", "x435 y50 h13 vBlenderRepeatText Hidden", "Repeat")
 MainGui.SetFont("w700 underline")
 MainGui.Add("Text", "x332 y58 w80 vblendertitle1 Hidden", "Add Item")
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 MainGui.Add("Text", "x307 y74 w103 h1 vblenderline1 Hidden 0x7")
 MainGui.Add("Text", "x409 y49 w1 h97 vblenderline2 Hidden 0x7")
 MainGui.Add("Text", "x410 y64 w83 h1 vblenderline3 Hidden 0x7")
@@ -3090,17 +3092,17 @@ MainGui.Add("Text", "x431 y86 w41 h16 +Center +0x200 vBlenderIndexNum Hidden")
 MainGui.Add("UpDown", "vBlenderIndex Range1-999 Hidden", 1)
 MainGui.Add("CheckBox", "x427 y69 w60 vBlenderIndexOption Hidden", "Infinite").OnEvent("Click", nm_BlenderIndexOption)
 MainGui.Add("Picture", "x336 y80 w40 h40 vBlenderItem Hidden +0xE")
-MainGui.SetFont("s8 cC9B6FF Bold", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Bold", "Tahoma")
 MainGui.Add("Button", "x312 y95 w18 h18 vBlenderLeft Hidden", "<").OnEvent("Click", ba_AddBlenderItemButton)
 MainGui.Add("Button", "x385 y95 w18 h18 vBlenderRight Hidden", ">").OnEvent("Click", ba_AddBlenderItemButton)
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 MainGui.Add("Button", "x318 y125 w80 h16 +Center vBlenderAddSlot Hidden").OnEvent("Click", ba_AddBlenderItem)
 
 ;KILL
 ;bugrun
 MainGui.SetFont("w700")
 MainGui.Add("GroupBox", "x10 y42 w134 h188 vBugRunGroupBox Hidden", "Bug Run")
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 MainGui.Add("CheckBox", "x76 y43 vBugRunCheck Disabled Hidden", "Select All").OnEvent("Click", nm_BugRunCheck)
 MainGui.Add("Text", "x16 y62 +BackgroundTrans Hidden vTextMonsterRespawnPercent", "–       %")
 MainGui.Add("Text", "x52 y55 w80 +BackgroundTrans +Center vTextMonsterRespawn Hidden", "Monster Respawn Time")
@@ -3129,7 +3131,7 @@ MainGui.Add("Text", "x40 y100 w1 h124 0x7 Hidden vTextLineBugRun2")
 ;stingers
 MainGui.SetFont("w700")
 MainGui.Add("GroupBox", "x149 y42 w341 h60 vStingersGroupBox Hidden", "Stingers")
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 MainGui.Add("CheckBox", "x217 y43 vStingerCheck Disabled Hidden Checked" StingerCheck, "Kill Vicious Bee").OnEvent("Click", nm_saveStingers)
 (GuiCtrl := MainGui.Add("CheckBox", "x315 y43 vStingerDailyBonusCheck Disabled Hidden Checked" StingerDailyBonusCheck, "Only Daily Bonus")).Section := "Collect", GuiCtrl.OnEvent("Click", nm_saveConfig)
 MainGui.Add("Text", "x168 y69 +BackgroundTrans Hidden vTextFields", "Fields:")
@@ -3158,7 +3160,7 @@ lowBees(fieldName, ctrl, info) {
 ;bosses
 MainGui.SetFont("w700")
 MainGui.Add("GroupBox", "x149 y104 w341 h126 vBossesGroupBox Hidden", "Bosses")
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 MainGui.Add("Button", "x209 y104 w12 h14 vBossConfigHelp Disabled Hidden", "?").OnEvent("Click", nm_BossConfigHelp)
 (GuiCtrl := MainGui.Add("CheckBox", "x152 y123 vKingBeetleCheck Disabled Hidden Checked" KingBeetleCheck, "King Beetle")).Section := "Collect", GuiCtrl.OnEvent("Click", nm_saveConfig)
 (GuiCtrl := MainGui.Add("CheckBox", "xp yp+21 vTunnelBearCheck Disabled Hidden Checked" TunnelBearCheck, "Tunnel Bear")).Section := "Collect", GuiCtrl.OnEvent("Click", nm_saveConfig)
@@ -3215,7 +3217,7 @@ TabCtrl.UseTab("Boost")
 MainGui.SetFont("w700")
 MainGui.Add("GroupBox", "x10 y25 w285 h72", "Field Boost")
 MainGui.Add("GroupBox", "x10 y97 w285 h138", "Hotbar Slots")
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 
 ;field booster
 MainGui.Add("Text", "x15 y40 +BackgroundTrans Section", "1:")
@@ -3240,7 +3242,7 @@ MainGui.SetFont("w700")
 
 ;shrine
 MainGui.Add("GroupBox", "x300 y25 w192 h105", "Wind Shrine")
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 loop 2 {
 	xCoords := 246 + (86 * A_Index)
 	MainGui.Add("Button", "x" xCoords " y107 w40 h13 vShrineAdd" A_Index " Disabled", (ShrineItem%A_Index% = "None") ? "Add" : "Clear").OnEvent("Click", ba_setShrineData)
@@ -3255,7 +3257,7 @@ MainGui.Add("Text", "x430 y89 vShrineAmountText Hidden", "Amount")
 MainGui.Add("Text", "x430 y33 vShrineRepeatText Hidden", "Repeat")
 MainGui.SetFont("w700 underline")
 MainGui.Add("Text", "x327 y41 w80 vshrinetitle1 Hidden", "Add Item")
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 MainGui.Add("Text", "x302 y57 w103 h1 vShrineline1 Hidden 0x7")
 MainGui.Add("Text", "x404 y32 w1 h97 vShrineline2 Hidden 0x7")
 MainGui.Add("Text", "x405 y47 w83 h1 vShrineline3 Hidden 0x7")
@@ -3285,12 +3287,12 @@ Loop 6
 nm_HotbarWhile()
 MainGui.Add("Button", "x200 y34 w90 h30 vAutoFieldBoostButton Disabled", (AutoFieldBoostActive ? "Auto Field Boost`n[ON]" : "Auto Field Boost`n[OFF]")).OnEvent("Click", nm_autoFieldBoostGui)
 MainGui.SetFont("w700")
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 
 ;stickers
 MainGui.SetFont("w700")
 MainGui.Add("GroupBox", "x300 y130 w192 h105", "Stickers")
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 MainGui.Add("CheckBox", "x305 yp+16 vStickerStackCheck Disabled Checked" StickerStackCheck, "Sticker Stack").OnEvent("Click", nm_StickerStackCheck)
 MainGui.Add("Text", "xp+6 yp+13 +BackgroundTrans", "\__")
 MainGui.Add("Text", "x+0 yp+4 w36 +Center +BackgroundTrans Section", "Timer:")
@@ -3331,7 +3333,7 @@ petalQuestDisclaimer := Msgbox.Bind(
 	. "`n`nIT IS EXPECTED THAT PETAL QUESTS TAKE A LONG TIME, especially high-tier quests like Riley/Bucko at 250+ quests completed"
 	, "Petal Quest Warning", "Owner" MainGui.Hwnd)
 
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 (GuiCtrl := MainGui.Add("CheckBox", "x80 y23 vPolarQuestCheck Disabled Checked" PolarQuestCheck, "Enable")).Section := "Quests", GuiCtrl.OnEvent("Click", nm_PolarQuestCheck)
 (GuiCtrl := MainGui.Add("CheckBox", "x15 y37 vPolarQuestGatherInterruptCheck Disabled Checked" PolarQuestGatherInterruptCheck, "Allow Gather Interrupt")).Section := "Quests", GuiCtrl.OnEvent("Click", nm_saveConfig)
 MainGui.Add("Text", "x8 y51 w145 h78 vPolarQuestProgress", StrReplace(PolarQuestProgress, "|", "`n"))
@@ -3364,7 +3366,7 @@ MainGui.Add("CheckBox", "x340 y145 vRileyQuestGatherInterruptCheck Disabled Chec
 MainGui.Add("Text", "x333 y159 w158 h78 vRileyQuestProgress", StrReplace(RileyQuestProgress, "|", "`n"))
 
 MainGui.SetFont("w700")
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 
 ;PLANTERS TAB
 ;------------------------
@@ -3463,7 +3465,7 @@ MainGui.Add("Text", "x375 y61 w100 h20 +Center +BackgroundTrans vTextZone4" hidd
 MainGui.Add("Text", "x375 y128 w100 h20 +Center +BackgroundTrans vTextZone5" hidden, "-- 25 bee zone --")
 MainGui.Add("Text", "x375 y153 w100 h20 +Center +BackgroundTrans vTextZone6" hidden, "-- 35 bee zone --")
 
-MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 (GuiCtrl := MainGui.Add("CheckBox", "x258 y72 vDandelionFieldCheck Disabled Checked" DandelionFieldCheck hidden, "Dandelion (COM)")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
 (GuiCtrl := MainGui.Add("CheckBox", "xp y86 vSunflowerFieldCheck Disabled Checked" SunflowerFieldCheck hidden, "Sunflower (SAT)")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
 (GuiCtrl := MainGui.Add("CheckBox", "xp y100 vMushroomFieldCheck Disabled Checked" MushroomFieldCheck hidden, "Mushroom (MOT)")).Section := "Planters", GuiCtrl.OnEvent("Click", nm_saveConfig)
@@ -3578,6 +3580,16 @@ nm_LockTabs(0)
 nm_setStatus("Startup", "UI")
 TabCtrl.Focus()
 MainGui.Title := "Tuff Macro"
+
+; quick setup — hive and speed without opening Settings
+MainGui.SetFont("s9 c7EC8FF Norm", "Segoe UI")
+MainGui.Add("Text", "x12 y322 w40 +BackgroundTrans", "Hive")
+MainGui.Add("Text", "x50 y320 w40 h22 0x201 +Center")
+(GuiCtrl := MainGui.Add("UpDown", "Range1-6 vQuickHiveSlot", HiveSlot)).OnEvent("Change", nm_QuickHive)
+MainGui.Add("Text", "x100 y322 w86 +BackgroundTrans", "Move Speed")
+MainGui.Add("Edit", "x188 y318 w58 h22 vQuickMoveSpeed", MoveSpeedNum).OnEvent("Change", nm_QuickSpeed)
+MainGui.Add("Text", "x256 y322 w270 +BackgroundTrans", "Change these here — they save immediately.")
+
 MainGui["StartButton"].Enabled := 1
 MainGui["PauseButton"].Enabled := 1
 MainGui["StopButton"].Enabled := 1
@@ -3603,6 +3615,26 @@ return
 ; GUI FUNCTIONS
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;buttons
+nm_QuickHive(GuiCtrl, *){
+	global HiveSlot
+	HiveSlot := GuiCtrl.Value
+	try MainGui["HiveSlot"].Value := HiveSlot
+	IniWrite HiveSlot, "settings\nm_config.ini", "Settings", "HiveSlot"
+}
+nm_QuickSpeed(GuiCtrl, *){
+	global MoveSpeedNum
+	p := EditGetCurrentCol(GuiCtrl)
+	NewMoveSpeed := GuiCtrl.Value
+	StrReplace(NewMoveSpeed, ".", , , &n)
+	if (NewMoveSpeed ~= "[^\d\.]" || (n > 1)) {
+		GuiCtrl.Value := MoveSpeedNum
+		SendMessage 0xB1, p-2, p-2, GuiCtrl
+	} else {
+		MoveSpeedNum := NewMoveSpeed
+		try MainGui["MoveSpeedNum"].Value := MoveSpeedNum
+		IniWrite MoveSpeedNum, "settings\nm_config.ini", "Settings", "MoveSpeedNum"
+	}
+}
 nm_StartButton(GuiCtrl, *){
 	MouseGetPos , , , &hCtrl, 2
 	if (hCtrl = GuiCtrl.Hwnd)
@@ -4588,7 +4620,6 @@ nm_FieldSelect1(GuiCtrl?, *){
 	IniWrite CurrentFieldNum, "settings\nm_config.ini", "Gather", "CurrentFieldNum"
 	MainGui["CurrentField"].Text := FieldName1
 	CurrentField:=FieldName1
-	nm_WebhookEasterEgg()
 }
 nm_FieldSelect2(GuiCtrl?, *){
 	global
@@ -4659,7 +4690,6 @@ nm_FieldSelect2(GuiCtrl?, *){
 		nm_FieldDefaults(2)
 		IniWrite FieldName2, "settings\nm_config.ini", "Gather", "FieldName2"
 	}
-	nm_WebhookEasterEgg()
 }
 nm_FieldSelect3(GuiCtrl?, *){
 	global
@@ -4724,7 +4754,6 @@ nm_FieldSelect3(GuiCtrl?, *){
 		nm_FieldDefaults(3)
 		IniWrite FieldName3, "settings\nm_config.ini", "Gather", "FieldName3"
 	}
-	nm_WebhookEasterEgg()
 }
 nm_FieldDefaults(num){
 	global FieldDefault, FieldPatternSizeArr
@@ -5015,22 +5044,6 @@ nm_PasteGatherSettings(GuiCtrl, *){
 	}
 	nm_FieldSelect%i%()
 }
-nm_WebhookEasterEgg(){
-	global WebhookEasterEgg
-	FieldName1 := MainGui["FieldName1"].Text
-	FieldName2 := MainGui["FieldName2"].Text
-	FieldName3 := MainGui["FieldName3"].Text
-	if ((FieldName1 = FieldName2) && (FieldName2 = FieldName3))
-	{
-		If(MsgBox("You found an easter egg!`nEnable Rainbow Webhook?", , 0x1024 " Owner" MainGui.Hwnd) = "Yes")
-			WebhookEasterEgg := 1
-		else
-			WebhookEasterEgg := 0
-		IniWrite WebhookEasterEgg, "settings\nm_config.ini", "Status", "WebhookEasterEgg"
-		PostSubmacroMessage("Status", 0x5552, 5, WebhookEasterEgg)
-	}
-}
-
 ; COLLECT/KILL TAB
 ; ------------------------
 nm_CollectKillButton(GuiCtrl, *){
@@ -5307,7 +5320,7 @@ nm_MemoryMatchOptions(*){
 
 	MMGui := Gui("+AlwaysOnTop -MinimizeBox +Owner" MainGui.Hwnd, "Memory Match Options")
 	MMGui.OnEvent("Close", GuiClose)
-	MMGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+	MMGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 	MMGui.Add("Text", "x6 y6 w360 Center Section", "
 	(
 	Enable the option below to stop gathering when a Memory Match is ready.
@@ -5347,7 +5360,7 @@ nm_MemoryMatchOptions(*){
 
 		(MatchIgnoreGui := Gui("+AlwaysOnTop -MinimizeBox +Owner" MMGui.Hwnd, "Ignore " MemoryMatch[item].name)).Item := item
 		MatchIgnoreGui.OnEvent("Close", (*) => (MatchIgnoreGui.Destroy(), MatchIgnoreGui := ""))
-		MatchIgnoreGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+		MatchIgnoreGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 		for game in ["Normal", "Mega", "Night", "Extreme", "Winter"]
 			bit := MemoryMatchGames[game].bit, MatchIgnoreGui.Add("CheckBox", "x+1 y36 v" game " Disabled" (MemoryMatch[item].games & bit = 0) " Checked" (%item%MatchIgnore & bit > 0), game).OnEvent("Click", MatchIgnoreGameCheck)
 		MatchIgnoreGui.Add("Text", "x6 y4 w275 Center", "Choose the Memory Match games you want to ignore " MemoryMatch[item].name " for:")
@@ -6015,11 +6028,11 @@ nm_autoFieldBoostGui(*){
 	GuiClose()
 	AFBGui := Gui("+AlwaysOnTop -MinimizeBox +Owner" MainGui.Hwnd, "Auto Field Boost Settings")
 	AFBGui.OnEvent("Close", GuiClose)
-	AFBGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+	AFBGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 	AFBGui.Add("CheckBox", "x5 y5 vAutoFieldBoostActive Checked" AutoFieldBoostActive, "Activate Automatic Field Boost for Gathering Field:").OnEvent("Click", nm_autoFieldBoostCheck)
 	AFBGui.SetFont("w800 cBlue")
 	AFBGui.Add("Text", "x270 y5 left vAFBcurrentField", currentField)
-	AFBGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+	AFBGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 	AFBGui.Add("Button", "x20 y22 w120 h15", "What does this do?").OnEvent("Click", nm_AFBHelpButton)
 	AFBGui.Add("Text", "x5 y42 w355 h1 0x7")
 	AFBGui.Add("Text", "x20 y48", "Re-Buff Field Boost Every:")
@@ -6036,7 +6049,7 @@ nm_autoFieldBoostGui(*){
 	AFBGui.Add("CheckBox", "x20 y113 vAFBGlitterEnable Checked" AFBGlitterEnable, "Glitter:").OnEvent("Click", nm_AFBGlitterEnableCheck)
 	AFBGui.Add("Button", "x5 y136 w10 h15", "?").OnEvent("Click", nm_AFBFieldEnableHelpButton)
 	(GuiCtrl := AFBGui.Add("CheckBox", "x20 y136 vAFBFieldEnable Checked" AFBFieldEnable, "Free Field Boosters")).Section := "Boost", GuiCtrl.OnEvent("Click", nm_saveConfig)
-	AFBGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+	AFBGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 	AFBGui.Add("Text", "x80 y70 +BackgroundTrans", "Hotbar Slot")
 	(GuiCtrl := AFBGui.Add("DropDownList", "x80 y88 w50 h120 vAFBDiceHotbar Disabled" (!AFBDiceEnable), ["None",2,3,4,5,6,7])).Text := AFBDiceHotbar, GuiCtrl.Section := "Boost", GuiCtrl.OnEvent("Change", nm_saveConfig)
 	(GuiCtrl := AFBGui.Add("DropDownList", "x80 y110 w50 h120 vAFBGlitterHotbar Disabled" (!AFBGlitterEnable), ["None",2,3,4,5,6,7])).Text := AFBGlitterHotbar, GuiCtrl.Section := "Boost", GuiCtrl.OnEvent("Change", nm_saveConfig)
@@ -7581,7 +7594,7 @@ nm_WebhookGUI(*){
 		global
 		local v := %var%
 		IniWrite v, "settings\nm_config.ini", "Status", var
-		if WinExist("natro_macro.ahk ahk_class AutoHotkey")
+		if WinExist("tuff.ahk ahk_class AutoHotkey")
 			PostMessage 0x5552, enum[var], v
 		if WinExist("Status.ahk ahk_class AutoHotkey")
 			PostMessage 0x5552, enum[var], v
@@ -7591,7 +7604,7 @@ nm_WebhookGUI(*){
 	{
 		global
 		IniWrite %var%, "settings\nm_config.ini", "Status", var
-		if WinExist("natro_macro.ahk ahk_class AutoHotkey")
+		if WinExist("tuff.ahk ahk_class AutoHotkey")
 			PostMessage 0x5553, str_enum[var], 7
 		if WinExist("Status.ahk ahk_class AutoHotkey")
 			PostMessage 0x5553, str_enum[var], 7
@@ -7764,7 +7777,7 @@ nm_ResetFieldDefaultGUI(*){
 	GuiClose()
 	FieldDefaultGui := Gui("+AlwaysOnTop -MinimizeBox +Owner" MainGui.Hwnd, "Reset Field Defaults")
 	FieldDefaultGui.OnEvent("Close", GuiClose)
-	FieldDefaultGui.SetFont("s9 cC9B6FF Norm", "Tahoma")
+	FieldDefaultGui.SetFont("s9 c7EC8FF Norm", "Tahoma")
 	i := 0
 	for k,v in StandardFieldDefault
 	{
@@ -8689,7 +8702,7 @@ nm_BSSCalculators(*){
 	GuiClose()
 	CalculatorsGui := Gui("+AlwaysOnTop -MinimizeBox +Owner" MainGui.Hwnd, "BSS Calculators")
 	CalculatorsGui.OnEvent("Close", GuiClose)
-	CalculatorsGui.SetFont("s8 cC9B6FF Bold", "Tahoma")
+	CalculatorsGui.SetFont("s8 c7EC8FF Bold", "Tahoma")
 	CalculatorsGui.Add("Button", "x10 y10 w120 h30", "Ticket Shop Calculator").OnEvent("Click", nm_TicketShopCalculatorButton)
 	CalculatorsGui.Add("Button", "xp yp+35 wp hp", "SSA Calculator").OnEvent("Click", nm_SSACalculatorButton)
 	CalculatorsGui.Add("Button", "xp yp+35 wp hp", "Bond Calculator").OnEvent("Click", nm_BondCalculatorButton)
@@ -8714,7 +8727,7 @@ nm_AutoClickerButton(*)
 	GuiClose()
 	AutoClickerGui := Gui("+AlwaysOnTop -MinimizeBox +Owner" MainGui.Hwnd, "AutoClicker")
 	AutoClickerGui.OnEvent("Close", GuiClose)
-	AutoClickerGui.SetFont("s8 cC9B6FF w700", "Tahoma")
+	AutoClickerGui.SetFont("s8 c7EC8FF w700", "Tahoma")
 	AutoClickerGui.Add("GroupBox", "x5 y2 w161 h80", "Settings")
 	AutoClickerGui.SetFont("Norm")
 	AutoClickerGui.Add("CheckBox", "x76 y2 vClickMode Checked" ClickMode, "Infinite").OnEvent("Click", nm_ClickMode)
@@ -8756,7 +8769,7 @@ nm_HotkeyGUI(*){
 	GuiClose()
 	HotkeyGui := Gui("+AlwaysOnTop -MinimizeBox +Owner" MainGui.Hwnd, "Hotkeys")
 	HotkeyGui.OnEvent("Close", GuiClose)
-	HotkeyGui.SetFont("s8 cC9B6FF Bold", "Tahoma")
+	HotkeyGui.SetFont("s8 c7EC8FF Bold", "Tahoma")
 	HotkeyGui.Add("GroupBox", "x5 y2 w190 h144", "Change Hotkeys")
 	HotkeyGui.SetFont("Norm")
 	HotkeyGui.Add("Text", "x10 y23 w60 +BackgroundTrans", "Start:")
@@ -8773,7 +8786,7 @@ nm_HotkeyGUI(*){
 	HotkeyGui.Add("Hotkey", "x70 yp+19 w120 h18 vDebugHotkeyEdit", DebugHotkey).OnEvent("Change", nm_saveHotkey)
 	HotkeyGui.Add("Button", "x30 yp+20 w140 h20", "Restore Defaults").OnEvent("Click", nm_ResetHotkeys)
 
-	HotkeyGui.SetFont("s8 cC9B6FF Bold", "Tahoma")
+	HotkeyGui.SetFont("s8 c7EC8FF Bold", "Tahoma")
 	HotkeyGui.Add("GroupBox", "x5 yp+22 w190 h34", "Settings")
 	HotkeyGui.SetFont("Norm")
 	(GuiCtrl := HotkeyGui.Add("CheckBox", "x10 yp+16 vShowOnPause Checked" ShowOnPause, "Show Tuff on Pause")).Section := "Settings", GuiCtrl.OnEvent("Click", nm_saveConfig)
@@ -8802,7 +8815,7 @@ nm_ResetHotkeys(*){
 	HotkeyGui["AutoClickerHotkeyEdit"].Value := "F4"
 	HotkeyGui["TimersHotkeyEdit"].Value := "F5"
 	HotkeyGui["DebugHotkeyEdit"].Value := "F6"
-	MainGui["StartButton"].Text := " Start (F1)"
+	MainGui["StartButton"].Text := "Start  (F1)"
 	MainGui["PauseButton"].Text := " Pause (F2)"
 	MainGui["StopButton"].Text := " Stop (F3)"
 	MainGui["AutoClickerButton"].Text := "AutoClicker (F4)"
@@ -8860,7 +8873,7 @@ nm_DebugLogGUI(*){
 	GuiClose()
 	DebugLogGui := Gui("+AlwaysOnTop -MinimizeBox +Owner" MainGui.Hwnd, "Debug Options")
 	DebugLogGui.OnEvent("Close", GuiClose)
-	DebugLogGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+	DebugLogGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 	DebugLogGui.Add("CheckBox", "x10 y6 vDebugLogEnabled Checked" DebugLogEnabled, "Enable Debug Logging").OnEvent("Click", nm_DebugLogCheck)
 	DebugLogGui.Add("Button", "xp+140 y5 h16", "Go To File").OnEvent("Click", (*) => Run('explorer.exe /e, /n, /select,"' A_WorkingDir '\settings\debug_log.txt"'))
 	DebugLogGui.Add("Button", "x10 yp+20 hp w200", "Copy Logs (" DebugHotkey ")").OnEvent("Click", nm_copyDebugLog)
@@ -8910,11 +8923,11 @@ nm_AutoStartManager(*){
 	GuiClose()
 	ASMGui := Gui("+AlwaysOnTop -MinimizeBox +Owner" MainGui.Hwnd, "Auto-Start Manager")
 	ASMGui.OnEvent("Close", GuiClose)
-	ASMGui.SetFont("s11 cC9B6FF Bold", "Tahoma")
+	ASMGui.SetFont("s11 c7EC8FF Bold", "Tahoma")
 	ASMGui.Add("Text", "x0 y4 vStatusLabel", "Current Status: ")
 	ASMGui.Add("Text", "x0 y4 vStatusVal c" ((status > 0) ? "Red" : "Green"), (status > 0) ? "Inactive" : "Active")
 	CenterText(ASMGui["StatusLabel"], ASMGui["StatusVal"], ASMGui["StatusLabel"])
-	ASMGui.SetFont("s9 cC9B6FF Bold", "Tahoma")
+	ASMGui.SetFont("s9 c7EC8FF Bold", "Tahoma")
 	ASMGui.Add("Text", "x0 y24 w" w " h36 vStatusText +Center c" ((status > 0) ? "Red" : "Green")
 		, ((status = 0) ? "Tuff Macro will automatically start on user login using the settings below:"
 		: (status = 1) ? "No Tuff Macro auto-start found!`nUse the 'Add' button below."
@@ -8932,7 +8945,7 @@ nm_AutoStartManager(*){
 	ASMGui.Add("Button", "x135 yp w115 h24", "Add").OnEvent("Click", AddButton)
 
 	ASMGui.Add("GroupBox", "x5 yp+30 w250 h54 Section", "New Task Settings")
-	ASMGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+	ASMGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 	ASMGui.Add("CheckBox", "vAutoStartCheck x12 ys+18 Checked", "Start Macro on Run")
 	ASMGui.Add("Text", "x13 yp+16", "Delay Before Run:")
 	ASMGui.Add("Text", "vDelayText x+0 yp w50 +Center", "0s")
@@ -9001,7 +9014,7 @@ nm_NightAnnouncementGUI(*){
 	GuiClose()
 	NightGui := Gui("+AlwaysOnTop -MinimizeBox +Owner" MainGui.Hwnd, "Announce Night Detection")
 	NightGui.OnEvent("Close", GuiClose)
-	NightGui.SetFont("s8 cC9B6FF Bold", "Tahoma")
+	NightGui.SetFont("s8 c7EC8FF Bold", "Tahoma")
 	NightGui.Add("GroupBox", "x5 y2 w290 h65", "Settings")
 	NightGui.Add("CheckBox", "x73 y2 vNightAnnouncementCheck Checked" NightAnnouncementCheck, "Enabled").OnEvent("Click", nm_NightAnnouncementCheck)
 	NightGui.SetFont("Norm")
@@ -10002,13 +10015,13 @@ nm_AdvancedGUI(init:=0){
 	global
 	local hBM, GuiCtrl
 	TabCtrl.UseTab("Advanced")
-	MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+	MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 	MainGui.SetFont("w700")
 	MainGui.Add("GroupBox", "x5 y24 w240 h90", "Fallback Private Servers")
 	MainGui.Add("GroupBox", "x5 y114 w240 h76", "Danger Zone")
 	MainGui.Add("GroupBox", "x255 y24 w240 h38", "Debugging")
 	MainGui.Add("GroupBox", "x255 y62 w240 h168", "Test Paths/Patterns")
-	MainGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+	MainGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 	;reconnect
 	MainGui.Add("Text", "x15 y44", "Backup 1:")
 	MainGui.Add("Edit", "x65 y42 w170 h18 vFallbackServer1", FallbackServer1).OnEvent("Change", nm_ServerLink)
@@ -10348,7 +10361,7 @@ nm_priorityListGui(*) {
 	UpdateInt(name, value)
 	{
 		IniWrite value, "settings\nm_config.ini", "settings", name
-		if WinExist("natro_macro.ahk ahk_class AutoHotkey")
+		if WinExist("tuff.ahk ahk_class AutoHotkey")
 			PostMessage 0x5552, 366, value
 		if WinExist("Status.ahk ahk_class AutoHotkey")
 			PostMessage 0x5552, 366, value
@@ -10515,7 +10528,7 @@ robloxFPSGui(*) {
 	if isSet(fpsUnlockerGui) && fpsUnlockerGui is Gui
 		fpsUnlockerGui.destroy()
 	fpsUnlockerGui := Gui("+AlwaysOnTop -MinimizeBox +Owner" MainGui.Hwnd, "FPS Unlocker")
-	fpsUnlockerGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+	fpsUnlockerGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 	fpsUnlockerGui.Show("w150 h60")
 	fpsUnlockerGui.AddText("vWebFPSCountLabel w100 x5 Disabled", "Web Roblox FPS")
 	fpsUnlockerGui.AddText("vWebFPSCountEdit yp xp+100 w50 Right Disabled")
@@ -16967,7 +16980,7 @@ nm_Walk(tiles, MoveKey1, MoveKey2:=0){ ; string form of the function which holds
 }
 nm_createWalk(movement, name:="", vars:="") ; this function generates the 'walk' code and runs it for a given 'movement' (AHK code string), using movespeed correction if 'NewWalk' is enabled and legacy movement otherwise
 {
-	; F13 is used by 'natro_macro.ahk' to tell 'walk' to complete a cycle
+	; F13 is used by 'tuff.ahk' to tell 'walk' to complete a cycle
 	; F14 is held down by 'walk' to indicate that the cycle is in progress, then released when the cycle is finished
 	; F16 can be used by any script to pause / unpause the walk script, when unpaused it will resume from where it left off
 

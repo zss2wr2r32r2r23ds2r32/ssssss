@@ -3,9 +3,11 @@ https://github.com/NatroTeam/NatroMacro
 Copyright © Natro Team
 Licensed under the GNU General Public License v3.0 (see LICENSE.md).
 
-This copy changes only:
-  1. The product name, from Natro Macro to Tuff Macro
-  2. The GUI colors, to black and purple (default theme Tuff)
-  3. The tray / window icon (nm_image_assets/tuff.ico)
+This copy changes:
+  1. Script name tuff.ahk
+  2. Blue Tuff Macro UI with a taller window and quick hive/speed controls
+  3. Tray / window icon
+  4. A license box at startup (the key is never shown)
+  5. Rainbow webhook easter egg removed
 
-Tabs, settings, paths, patterns, gather logic, and other behavior are unchanged.
+Paths, patterns, and gather logic are unchanged.

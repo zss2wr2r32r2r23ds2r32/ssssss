@@ -5,7 +5,7 @@ chcp 65001 > nul
 cd %~dp0
 
 :: IF script and executable exist, run the macro
-if exist "submacros\natro_macro.ahk" (
+if exist "submacros\tuff.ahk" (
 	if exist "submacros\AutoHotkey32.exe" (
 		if not [%~3]==[] (
 			set /a "delay=%~3" 2>nul
@@ -13,7 +13,7 @@ if exist "submacros\natro_macro.ahk" (
 			<nul set /p =Press any key to skip . . . 
 			timeout /t !delay! >nul
 		)
-		start "" "%~dp0submacros\AutoHotkey32.exe" "%~dp0submacros\natro_macro.ahk" %*
+		start "" "%~dp0submacros\AutoHotkey32.exe" "%~dp0submacros\tuff.ahk" %*
 		exit
 	) else (set "exe_missing=1")
 )
@@ -69,7 +69,7 @@ if not [!grandparent!] == [] (
 					echo %green%Unzip complete^^! Starting Tuff Macro in 10 seconds.%reset%
 					<nul set /p =%green%Press any key to skip . . . %reset%
 					timeout /t 10 >nul
-					start "" "%USERPROFILE%\%%~a\!folder!\submacros\AutoHotkey32.exe" "%USERPROFILE%\%%~a\!folder!\submacros\natro_macro.ahk"
+					start "" "%USERPROFILE%\%%~a\!folder!\submacros\AutoHotkey32.exe" "%USERPROFILE%\%%~a\!folder!\submacros\tuff.ahk"
 					exit
 				)
 			)

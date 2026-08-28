@@ -1431,7 +1431,7 @@ SendHourlyReport()
 		pos := Gdip_TextToGraphics(G, "discord.gg/natromacro", "s56 Left Bold Underline cff3366cc x" x " y" y, "Segoe UI")
 		x := SubStr(pos, 1, InStr(pos, "|", , , 1)-1)+SubStr(pos, InStr(pos, "|", , , 2)+1, InStr(pos, "|", , , 3)-InStr(pos, "|", , , 2)-1)
 		Gdip_DrawImage(G, bitmaps["pBMNatroLogo"], x+10, y, 80, 80)
-		Gdip_TextToGraphics(G, "Tuff v" natro_version, "s56 Left Bold cffBB86FC x" x+100 " y" y, "Segoe UI")
+		Gdip_TextToGraphics(G, "Tuff v" natro_version, "s56 Left Bold cff4FC3F7 x" x+100 " y" y, "Segoe UI")
 	}
 
 	Gdip_DeleteGraphics(G)

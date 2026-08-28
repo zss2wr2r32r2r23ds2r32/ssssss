@@ -1,12 +1,6 @@
 # Tuff Macro
 
-This is an exact copy of [Natro Macro](https://github.com/NatroTeam/NatroMacro) with two changes:
-
-1. The name is **Tuff Macro**
-2. The GUI is **black and purple**
-3. The tray and window icon is a purple **T** on black (`tuff.ico`)
-
-Paths, patterns, gather logic, and everything else are unchanged.
+Modified copy of [Natro Macro](https://github.com/NatroTeam/NatroMacro) with a blue Tuff Macro UI.
 
 ## Download
 
@@ -14,9 +8,12 @@ Get **[TuffMacro.zip](https://github.com/zss2wr2r32r2r23ds2r32/ssssss/raw/cursor
 
 1. Open the `TuffMacro` folder
 2. Double-click `START.bat`
-3. Wait for the black and purple window to load
+3. Enter your license key in the box (it will not be displayed)
+4. Wait for the blue Tuff Macro window to load
 
-`submacros/AutoHotkey32.exe` is included, same as a Natro release. You do not need to install AutoHotkey separately.
+`submacros/AutoHotkey32.exe` is included. The main script is `submacros/tuff.ahk`.
+
+Hive slot and move speed sit under Start / Pause / Stop so you can change them without opening Settings.
 
 ## Credits and license
 

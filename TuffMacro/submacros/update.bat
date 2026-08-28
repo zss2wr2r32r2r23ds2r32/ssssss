@@ -102,7 +102,7 @@ echo %green%Update complete^^! Starting Tuff Macro in 10 seconds.%reset%
 <nul set /p =%green%Press any key to skip . . . %reset%
 timeout /t 10 >nul
 
-start "" "!folder!\submacros\AutoHotkey32.exe" "!folder!\submacros\natro_macro.ahk"
+start "" "!folder!\submacros\AutoHotkey32.exe" "!folder!\submacros\tuff.ahk"
 exit)
 
 ----- Begin wsf script --->

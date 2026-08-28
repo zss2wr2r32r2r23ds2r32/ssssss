@@ -80,7 +80,7 @@ hBitmapsSB["None"] := 0
 
 ;GUI
 TimersGui := Gui("+AlwaysOnTop +border +minsize50x30 +E0x08040000 +lastfound", "Timers Revision 4.0")
-TimersGui.BackColor := "0x0A0014"
+TimersGui.BackColor := "0x071422"
 try {
 	hIcon := LoadPicture(A_WorkingDir "\nm_image_assets\tuff.ico", "Icon1 w32 h32", &imgType)
 	DllCall("SendMessage", "ptr", TimersGui.Hwnd, "uint", 0x80, "ptr", 1, "ptr", hIcon)
@@ -88,7 +88,7 @@ try {
 }
 setTimerGuiTransparency()
 TimersGui.OnEvent("Close", (*) => ExitApp())
-TimersGui.SetFont("s8 cC9B6FF w1000", "Tahoma")
+TimersGui.SetFont("s8 c7EC8FF w1000", "Tahoma")
 TimersGui.Add("picture", "x2 y35 h40 w40 vvplanterfield1 +BackgroundTrans")
 TimersGui.Add("picture", "x88 y35 h40 w40 vvplanterfield2 +BackgroundTrans")
 TimersGui.Add("picture", "x174 y35 h40 w40 vvplanterfield3 +BackgroundTrans")
@@ -382,7 +382,7 @@ ba_addPlanterData(PlanterIndex) {
 	GuiClose()
 	AddGui := Gui("+AlwaysOnTop +Border -Resize", "Add Planter")
 	AddGui.OnEvent("Close", GuiClose)
-	AddGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+	AddGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 	AddGui.Add("Picture", "x20 y4 w50 h50 vAddField", "nm_image_assets\ptimers\fields\Bamboo.png")
 	AddGui.Add("Picture", "x90 y4 w50 h50 vAddPlanter", "nm_image_assets\ptimers\planters\Blueclayplanter.png")
 	AddGui.Add("Button", "x22 y58 w18 h18 vfleft", "<").OnEvent("Click", ba_AddFieldButton)
@@ -478,12 +478,12 @@ ba_setBlenderAmount(GuiCtrl, *) {
 		BlenderAmount%i% += (c = "Sub" && BlenderAmount%i% > 1) ? -1 : (c = "Add") ? 1 : 0
 		TimersGui["BlenderTextAmount" i].Text := "(" BlenderCount%i% "/" BlenderAmount%i% ") [" ((BlenderIndex%i% = "Infinite") ? "∞" : BlenderIndex%i%) "]"
 		IniWrite BlenderAmount%i%, "settings\nm_config.ini", "Blender", "BlenderAmount" i
-		if WinExist("natro_macro ahk_class AutoHotkey")
+		if WinExist("tuff ahk_class AutoHotkey")
 			PostMessage 0x5552, 232 + i, BlenderAmount%i% ; BlenderAmount
 		If (LastBlenderRot = i) {
 			TimerInterval := BlenderAmount%LastBlenderRot% * 300
 			IniWrite TimerInterval, "settings\nm_config.ini", "Blender", "TimerInterval"
-			if WinExist("natro_macro ahk_class AutoHotkey")
+			if WinExist("tuff ahk_class AutoHotkey")
 				PostMessage 0x5552, 237, TimerInterval ; TimerInterval
 		}
 	}
@@ -512,7 +512,7 @@ ba_setBlenderData(GuiCtrl, *) {
 		IniWrite 1, "settings\nm_config.ini", "Blender", "BlenderIndex" i
 		IniWrite 0, "settings\nm_config.ini", "Blender", "BlenderTime" i
 		IniWrite i, "settings\nm_config.ini", "Blender", "BlenderRot"
-		if WinExist("natro_macro ahk_class AutoHotkey") {
+		if WinExist("tuff ahk_class AutoHotkey") {
 			PostMessage 0x5552, 232 + i, 0 ; BlenderAmount
 			PostMessage 0x5552, 238 + i, 0 ; BlenderTime
 			PostMessage 0x5553, 58 + i, 8 ; BlenderIndex
@@ -531,7 +531,7 @@ ba_addBlenderData(GBlenderIndex) {
 	GuiClose()
 	AddGui := Gui("+AlwaysOnTop +Border -Resize", "Add Item")
 	AddGui.OnEvent("Close", GuiClose)
-	AddGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+	AddGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 	AddGui.Add("Picture", "x15 y10 w40 h40 vAddBlenderItem +0xE")
 	SetImage(AddGui["AddBlenderItem"].Hwnd, hBitmapsSB["RedExtract"])
 	AddGui.Add("Button", "x15 y56 w16 h16 vfleft", "<").OnEvent("Click", ba_AddBlenderItemButton)
@@ -567,7 +567,7 @@ ba_AddBlenderItem(GuiCtrl?, *) {
 	IniWrite values.BAddamount, "settings\nm_config.ini", "Blender", "BlenderAmount" BlenderaddIndex
 	IniWrite AddBlenderItem, "settings\nm_config.ini", "Blender", "BlenderItem" BlenderaddIndex
 	IniWrite values.BAddindexOption ? "Infinite" : values.BAddindex, "settings\nm_config.ini", "Blender", "BlenderIndex" BlenderaddIndex
-	if WinExist("natro_macro ahk_class AutoHotkey") {
+	if WinExist("tuff ahk_class AutoHotkey") {
 		PostMessage 0x5552, 232 + BlenderaddIndex, values.BAddamount ; BlenderAmount
 		PostMessage 0x5553, 58 + BlenderaddIndex, 8 ; BlenderIndex
 		PostMessage 0x5553, 61 + BlenderaddIndex, 8 ; BlenderItem
@@ -581,7 +581,7 @@ ba_setShrineAmount(GuiCtrl, *) {
 		ShrineAmount%i% += (c = "Sub" && ShrineAmount%i% > 1) ? -1 : (c = "Add") ? 1 : 0
 		TimersGui["ShrineTextAmount" i].Text := "(" ShrineAmount%i% ") [" ((ShrineIndex%i% = "Infinite") ? "∞" : ShrineIndex%i%) "]"
 		IniWrite ShrineAmount%i%, "settings\nm_config.ini", "Shrine", "ShrineAmount" i
-		if WinExist("natro_macro ahk_class AutoHotkey")
+		if WinExist("tuff ahk_class AutoHotkey")
 			PostMessage 0x5552, 230 + i, ShrineAmount%i% ; ShrineAmount
 	}
 }
@@ -605,7 +605,7 @@ ba_setShrineData(GuiCtrl, *) {
 		IniWrite 0, "settings\nm_config.ini", "Shrine", "ShrineAmount" i
 		IniWrite 1, "settings\nm_config.ini", "Shrine", "ShrineIndex" i
 		IniWrite 0, "settings\nm_config.ini", "Shrine", "LastShrine"
-		if WinExist("natro_macro ahk_class AutoHotkey") {
+		if WinExist("tuff ahk_class AutoHotkey") {
 			PostMessage 0x5552, 230 + i, 0 ; ShrineAmount
 			PostMessage 0x5553, 56 + i, 9 ; ShrineIndex
 			PostMessage 0x5553, 54 + i, 9 ; ShrineItem
@@ -623,7 +623,7 @@ ba_addShrineData(GShrineIndex) {
 	GuiClose()
 	AddGui := Gui("+AlwaysOnTop +Border -Resize", "Add Item")
 	AddGui.OnEvent("Close", GuiClose)
-	AddGui.SetFont("s8 cC9B6FF Norm", "Tahoma")
+	AddGui.SetFont("s8 c7EC8FF Norm", "Tahoma")
 	AddGui.Add("Picture", "x15 y10 w40 h40 vAddShrineItem +0xE")
 	SetImage(AddGui["AddShrineItem"].Hwnd, hBitmapsSB["RedExtract"])
 	AddGui.Add("Button", "x15 y56 w16 h16 vfleft", "<").OnEvent("Click", ba_AddShrineItemButton)
@@ -659,7 +659,7 @@ ba_AddShrineItem(GuiCtrl?, *) {
 	IniWrite values.SAddamount, "settings\nm_config.ini", "Shrine", "ShrineAmount" ShrineaddIndex
 	IniWrite AddShrineItem, "settings\nm_config.ini", "Shrine", "ShrineItem" ShrineaddIndex
 	IniWrite values.SAddindexOption ? "Infinite" : values.SAddindex, "settings\nm_config.ini", "Shrine", "ShrineIndex" ShrineaddIndex
-	if WinExist("natro_macro ahk_class AutoHotkey") {
+	if WinExist("tuff ahk_class AutoHotkey") {
 		PostMessage 0x5552, 230 + ShrineaddIndex, values.SAddamount ; ShrineAmount
 		PostMessage 0x5553, 56 + ShrineaddIndex, 9 ; ShrineIndex
 		PostMessage 0x5553, 54 + ShrineaddIndex, 9 ; ShrineItem
@@ -685,7 +685,7 @@ UpdateStr(var, value)
 	try %var% := value
 	IniWrite value, "settings\nm_config.ini", "Planters", var
 	DetectHiddenWindows 1
-	if WinExist("natro_macro ahk_class AutoHotkey")
+	if WinExist("tuff ahk_class AutoHotkey")
 		PostMessage 0x5553, enum[var], 4
 }
 
@@ -731,7 +731,7 @@ UpdateInt(var, value)
 	try %var% := value
 	IniWrite value, "settings\nm_config.ini", "Planters", var
 	DetectHiddenWindows 1
-	if WinExist("natro_macro ahk_class AutoHotkey")
+	if WinExist("tuff ahk_class AutoHotkey")
 		PostMessage 0x5552, enum[var], value
 }
 

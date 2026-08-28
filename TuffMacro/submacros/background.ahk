@@ -1,4 +1,4 @@
-﻿/*
+/*
 Tuff Macro (https://github.com/NatroTeam/NatroMacro)
 Copyright © Natro Team (https://github.com/NatroTeam)
 
@@ -101,9 +101,9 @@ nm_deathCheck(){
 		catch
 			return
 		if (result = 1) {
-			if WinExist("natro_macro ahk_class AutoHotkey") {
+			if WinExist("tuff ahk_class AutoHotkey") {
 				PostMessage 0x5555, 1, 1
-				Send_WM_COPYDATA("You Died", "natro_macro ahk_class AutoHotkey")
+				Send_WM_COPYDATA("You Died", "tuff ahk_class AutoHotkey")
 			}
 			LastDeathDetected := nowUnix()
 		}
@@ -121,9 +121,9 @@ nm_guidCheck(){
 		confirm:=0
 		if ((FieldGuidDetected = 0) && (state = 1)) {
 			FieldGuidDetected := 1
-			if WinExist("natro_macro ahk_class AutoHotkey") {
+			if WinExist("tuff ahk_class AutoHotkey") {
 				PostMessage 0x5555, 6, 1
-				Send_WM_COPYDATA("Detected: Guiding Star Active", "natro_macro ahk_class AutoHotkey")
+				Send_WM_COPYDATA("Detected: Guiding Star Active", "tuff ahk_class AutoHotkey")
 			}
 			LastFieldGuidDetected := nowUnix()
 		}
@@ -133,7 +133,7 @@ nm_guidCheck(){
 		if (confirm >= 5) {
 			confirm:=0
 			FieldGuidDetected := 0
-			if WinExist("natro_macro ahk_class AutoHotkey") {
+			if WinExist("tuff ahk_class AutoHotkey") {
 				PostMessage 0x5555, 6, 0
 			}
 		}
@@ -149,13 +149,13 @@ nm_popStarCheck(){
 	if (result = 1) { ;Has Pop
 		if (HasPopStar = 0){
 			HasPopStar := 1
-			if WinExist("natro_macro ahk_class AutoHotkey") {
+			if WinExist("tuff ahk_class AutoHotkey") {
 				PostMessage 0x5555, 7, 1
 			}
 		}
 		if (HasPopStar && (PopStarActive = 1)){
 			PopStarActive := 0
-			if WinExist("natro_macro ahk_class AutoHotkey") {
+			if WinExist("tuff ahk_class AutoHotkey") {
 				PostMessage 0x5555, 8, 0
 			}
 			if WinExist("StatMonitor.ahk ahk_class AutoHotkey") {
@@ -165,9 +165,9 @@ nm_popStarCheck(){
 	} else {
 		if (HasPopStar && (PopStarActive = 0) && (state = 1)){
 			PopStarActive := 1
-			if WinExist("natro_macro ahk_class AutoHotkey") {
+			if WinExist("tuff ahk_class AutoHotkey") {
 				PostMessage 0x5555, 8, 1
-				;Send_WM_COPYDATA("Detected: Pop Star Active", "natro_macro ahk_class AutoHotkey")
+				;Send_WM_COPYDATA("Detected: Pop Star Active", "tuff ahk_class AutoHotkey")
 			}
 			if WinExist("StatMonitor.ahk ahk_class AutoHotkey") {
 				PostMessage 0x5556, 1, 1
@@ -199,9 +199,9 @@ nm_CheckNight() {
 		nightConfidence := 0
 		if (nowUnix()-NightLastDetected > 300 || nowUnix()-NightLastDetected < 0) {
 			NightLastDetected := nowUnix()
-			if WinExist("natro_macro ahk_class AutoHotkey") {
+			if WinExist("tuff ahk_class AutoHotkey") {
 				PostMessage 0x5552, 368, night
-				Send_WM_COPYDATA("Detected: Night", "natro_macro ahk_class AutoHotkey")
+				Send_WM_COPYDATA("Detected: Night", "tuff ahk_class AutoHotkey")
 			}
 		}
 	}
@@ -338,7 +338,7 @@ nm_backpackPercent(){
 			}
 		}
 	}
-	if ((BackpackPercent != LastBackpackPercent) && WinExist("natro_macro ahk_class AutoHotkey")) {
+	if ((BackpackPercent != LastBackpackPercent) && WinExist("tuff ahk_class AutoHotkey")) {
 		PostMessage 0x5555, 4, BackpackPercent
 		LastBackpackPercent := BackpackPercent
 	}
@@ -365,7 +365,7 @@ nm_backpackPercentFilter(){
 	}
 	i:=Mod(i+1, 6)
 	if (BackpackPercentFiltered != LastBackpackPercentFiltered) {
-		if WinExist("natro_macro ahk_class AutoHotkey") {
+		if WinExist("tuff ahk_class AutoHotkey") {
 			PostMessage 0x5555, 5, BackpackPercentFiltered
 		}
 		LastBackpackPercentFiltered := BackpackPercentFiltered
@@ -402,8 +402,8 @@ nm_guidingStarDetect(){
 			catch
 				return
 			if (result = 1) {
-				if WinExist("natro_macro ahk_class AutoHotkey") {
-					Send_WM_COPYDATA(value, "natro_macro ahk_class AutoHotkey", 1)
+				if WinExist("tuff ahk_class AutoHotkey") {
+					Send_WM_COPYDATA(value, "tuff ahk_class AutoHotkey", 1)
 					LastGuidDetected := nowUnix()
 					break
 				}
@@ -429,8 +429,8 @@ nm_dailyReconnect(){
 	}
 	if((Number(ReconnectMin)=RCminUTC) && HourReady && (MacroState = 2)) {
 		LastDailyReconnect := nowUnix()
-		if WinExist("natro_macro ahk_class AutoHotkey") {
-			Send_WM_COPYDATA("Closing: Roblox, Daily Reconnect", "natro_macro ahk_class AutoHotkey")
+		if WinExist("tuff ahk_class AutoHotkey") {
+			Send_WM_COPYDATA("Closing: Roblox, Daily Reconnect", "tuff ahk_class AutoHotkey")
 			PostMessage 0x5557, 60
 		}
 	}
@@ -440,9 +440,9 @@ nm_EmergencyBalloon(){
 	static LastEmergency:=0
 	if ((EmergencyBalloonPingCheck = 1) && (ConvertBalloon != "Never") && (nowUnix() - LastEmergency > 60) && ((time := nowUnix() - LastConvertBalloon) > 2700) && (time < 3600))
 	{
-		if WinExist("natro_macro ahk_class AutoHotkey") {
+		if WinExist("tuff ahk_class AutoHotkey") {
 			duration := DurationFromSeconds(time, "m'm' ss's'")
-			Send_WM_COPYDATA("Detected: No Balloon Convert in " duration, "natro_macro ahk_class AutoHotkey")
+			Send_WM_COPYDATA("Detected: No Balloon Convert in " duration, "tuff ahk_class AutoHotkey")
 			LastEmergency := nowUnix()
 		}
 	}
