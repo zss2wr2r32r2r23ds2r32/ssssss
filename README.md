@@ -1,90 +1,22 @@
-# Pine Pollen Macro
+# Tuff Macro
 
-Bee Swarm Simulator collector for **Pine Tree** field. Travel, gather, and convert loops are modeled on [Natro Macro](https://github.com/NatroTeam/NatroMacro) (GPL-3.0): same hive-to-ramp math, Pine Tree cannon/walk routes, and `4000 / movespeed` tile timing.
+This is an exact copy of [Natro Macro](https://github.com/NatroTeam/NatroMacro) with two changes:
 
-This build is Pine-only and gated behind a license key.
+1. The name is **Tuff Macro**
+2. The GUI is **black and purple**
 
-## Testing license key
+Paths, patterns, gather logic, and everything else are unchanged.
 
-```
-admintest123
-```
+## Download
 
-That admin testing key is hashed in `licenses.json`. Type it exactly (lowercase, no spaces).
+Get **[TuffMacro.zip](https://github.com/zss2wr2r32r2r23ds2r32/ssssss/raw/cursor/pine-pollen-macro-6fbf/dist/TuffMacro.zip)** and extract it.
 
-## Download the zip
+1. Open the `TuffMacro` folder
+2. Double-click `START.bat`
+3. Wait for the black and purple window to load
 
-Get **[PinePollenMacro.zip](https://github.com/zss2wr2r32r2r23ds2r32/ssssss/raw/cursor/pine-pollen-macro-6fbf/dist/PinePollenMacro.zip)** and extract it. That folder is the Natro-style package:
+`submacros/AutoHotkey32.exe` is included, same as a Natro release. You do not need to install AutoHotkey separately.
 
-- `pine_macro.ahk` — AutoHotkey script. Install AutoHotkey v2, then double-click this file.
-- `PinePollenMacro.exe` — already-built Windows program. Double-click this to open Bee Swarm Simulator.
-- `START.bat` — starts the `.ahk` file if AutoHotkey is installed.
+## Credits and license
 
-You do **not** put the `.exe` into AutoHotkey. AutoHotkey only runs `.ahk` files.
-
-## Windows .exe (opens the game)
-
-`dist/PinePollenMacro.exe` is also available by itself. Double-click it on Windows:
-
-1. Enter license key `admintest123`.
-2. The launcher opens **Bee Swarm Simulator** through the official Roblox link (`roblox://experiences/start?placeId=1537690962`).
-3. Click **Play Bee Swarm Simulator** again any time you need to rejoin.
-4. Optional: **Start Pine Macro** runs `pine_macro.ahk` if AutoHotkey v2 and the script are in the same folder.
-
-The exe does not inject into Roblox. It only uses `ShellExecute` on the public game URL.
-
-Rebuild it:
-
-```bash
-bash tools/build_windows_exe.sh
-```
-
-## Windows AutoHotkey script
-
-1. Install [AutoHotkey v2](https://www.autohotkey.com/).
-2. Open Bee Swarm Simulator, claim a hive, and stand on your pad.
-3. Double-click `START.bat` (or run `pine_macro.ahk`).
-4. Enter a license key (`admintest123` for testing).
-5. Set **Hive slot** and **Move speed** to match your hive and unhasted move speed.
-6. Press **F1** / Start.
-
-| Hotkey | Action |
-| --- | --- |
-| F1 | Start |
-| F2 | Pause / resume |
-| F3 | Stop |
-
-Travel can be **Walk** (safer, slower) or **Cannon** (Natro pine glider). Default gather pattern is **CornerXSnake**, Natro's Pine Tree default.
-
-The AutoHotkey script sends keyboard input to the Roblox window. It does not inject into the client or read game memory.
-
-## Simulator and tests (any OS)
-
-Preview the license gate and one collection cycle without Roblox:
-
-```bash
-python3 simulator/pine_collector_sim.py
-```
-
-```bash
-python3 -m unittest discover -s tests -v
-python3 tools/check_license.py admintest123
-```
-
-Add another hashed key:
-
-```bash
-python3 tools/add_license.py --key YOURKEY --label "Friend" --role user
-```
-
-## Layout
-
-- `pine_macro.ahk` — Windows collector GUI and loop
-- `lib/License.ahk` — SHA-256 license check (same salt/hash as Python)
-- `paths/pinetree.ahk` — Pine Tree go-to / walk-from routes
-- `licenses.json` — hashed allowlist
-- `pine_core/` — shared license, path, and loop logic
-
-## License
-
-GNU GPL v3.0. Pine routes and walk timing are adapted from Natro Macro. If you distribute this project you must keep the GPL notice and source available.
+Tuff Macro is a modified copy of Natro Macro by Natro Team, GNU GPL v3. See `TuffMacro/LICENSE.md` and `TuffMacro/NOTICE.md`.

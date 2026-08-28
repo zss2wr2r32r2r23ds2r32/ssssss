@@ -1,19 +1,14 @@
-HOW TO RUN (read this)
+HOW TO RUN TUFF MACRO
 
-The .exe is a finished Windows program. You do not put it into AutoHotkey.
+Tuff Macro is Natro Macro with the name changed and a black/purple UI.
+Nothing else was changed.
 
-There are two files:
+1. Download TuffMacro.zip and extract it.
+2. Open the TuffMacro folder.
+3. Double-click START.bat
+   AutoHotkey32.exe is already inside submacros, same as Natro.
 
-1) PinePollenMacro.exe
-   Double-click this to enter your license and open Bee Swarm Simulator.
-   License key: admintest123
+Windows only. Open Bee Swarm Simulator, claim a hive, then start the macro.
 
-2) pine_macro.ahk
-   This is the AutoHotkey collector (like Natro Macro).
-   Install AutoHotkey v2 from https://www.autohotkey.com/
-   Then double-click pine_macro.ahk
-   Keep this whole folder together. Do not move the .ahk file out by itself.
-
-START.bat
-   If AutoHotkey v2 is installed, this starts pine_macro.ahk
-   If it is not installed, this starts the .exe instead.
+Original work: Natro Macro by Natro Team (GNU GPL v3)
+https://github.com/NatroTeam/NatroMacro
