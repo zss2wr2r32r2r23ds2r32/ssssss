@@ -14,10 +14,11 @@ tools:
     expire: 7d
     radius: 1
     unbreakable: false
-    hide-enchants: false
+    hide-enchants: true
     enchants:
       efficiency: 5
       unbreaking: 3
+      mending: 1
     lore: []
     expire-line: "&#A370EE⚓ &fExpires in: %expire%"
   chopper:
@@ -27,10 +28,11 @@ tools:
     max-blocks: 512
     break-leaves: true
     unbreakable: false
-    hide-enchants: false
+    hide-enchants: true
     enchants:
       efficiency: 5
       unbreaking: 3
+      mending: 1
     lore: []
     expire-line: "&#A370EE⚓ &fExpires in: %expire%"
   firework:
@@ -39,15 +41,40 @@ tools:
     expire: 7d
     amount: 1
     unbreakable: false
-    hide-enchants: false
+    hide-enchants: true
     lore: []
     expire-line: "&#A370EE⚓ &fExpires in: %expire%"
+    info-lore:
+      - "&8Description"
+      - ""
+      - "&#A370EEInformation:"
+      - "&#A370EE| &fInfinite firework rocket"
+      - "&#A370EE| &fwhile it is active"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
+  firework-14:
+    material: FIREWORK_ROCKET
+    name: "&#A370EE&lSHARDED FIREWORK &7(14d)"
+    expire: 14d
+    amount: 1
+    unbreakable: false
+    hide-enchants: true
+    lore: []
+    expire-line: "&#A370EE⚓ &fExpires in: %expire%"
+    info-lore:
+      - "&8Description"
+      - ""
+      - "&#A370EEInformation:"
+      - "&#A370EE| &fInfinite firework rocket"
+      - "&#A370EE| &ffor 14 days"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
   sellwand:
     material: BLAZE_ROD
     name: "&#80EE0B&lSELL WAND"
     expire: 1d
     unbreakable: false
-    hide-enchants: false
+    hide-enchants: true
     lore: []
     expire-line: "&#80EE0B⚓ &fExpires in: %expire%"
 
@@ -63,3 +90,44 @@ messages:
   unknown-tool: "&#FF0000&lERROR &8▷ &fUnknown tool &#A370EE%tool%&f."
   player-missing: "&#FF0000&lERROR &8▷ &fThat player is not online."
   no-permission: "&#FF0000&lERROR &8▷ &fYou do not have permission."
+  players-only: "&#FF0000&lERROR &8▷ &fOnly a player can do that."
+
+gui:
+  title: "&8Sharded Tools"
+  rows: 3
+  drill:
+    slot: 11
+    material: NETHERITE_PICKAXE
+    name: "&#A370EE&lSHARDED DRILL"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#A370EEInformation:"
+      - "&#A370EE| &fMines a 3x3 area"
+      - "&#A370EE| &fin one hit"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
+  chopper:
+    slot: 13
+    material: NETHERITE_AXE
+    name: "&#A370EE&lSHARDED CHOPPER"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#A370EEInformation:"
+      - "&#A370EE| &fChops a whole tree"
+      - "&#A370EE| &fin one hit"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
+  firework:
+    slot: 15
+    material: FIREWORK_ROCKET
+    name: "&#A370EE&lSHARDED FIREWORK"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#A370EEInformation:"
+      - "&#A370EE| &fInfinite firework rocket"
+      - "&#A370EE| &fwhile it is active"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0To View"

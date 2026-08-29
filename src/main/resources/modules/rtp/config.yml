@@ -12,8 +12,10 @@ pool-size: 8
 refill-seconds: 10
 
 # Block lookups that actually hit the world stay on the server thread.
-# Keep this at 1 so RTP never spikes the tick.
+# Keep this at 1 so RTP never spikes the tick. The drain task only runs when
+# a search actually needs the main thread, so idle RTP stays off Spark.
 main-checks-per-tick: 1
+ocean-nearby: false
 
 # Never more searches than this at once, so thirty clicks cannot generate
 # thirty areas at the same time.
@@ -87,17 +89,16 @@ menu:
 
   queue:
     slot: 15
-    material: DIAMOND_SWORD
+    material: SPYGLASS
     name: "&#22AFFB&lRTP QUEUE"
     lore:
-      - "&7[ʀᴀɴᴅᴏᴍ ᴛᴇʟᴇᴘᴏʀᴛ]"
+      - "&8Description"
       - ""
       - "&#22AFFBDescription:"
-      - "&#22AFFB¦ &fQueue with another player"
-      - "&#22AFFB¦ &fand teleport together."
+      - "&#22AFFB| &fQueue with another player"
+      - "&#22AFFB| &fand teleport together."
       - ""
-      - "&#22AFFB⚓ &fAccess: &#22AFFB/rtpqueue"
-      - "&#22AFFB⚓ &fLeave: &#22AFFB/leave"
+      - "&#22AFFBℹ &fAccess: &#22AFFB/rtpqueue"
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Queue"
 
@@ -114,14 +115,14 @@ worlds:
     min-y: 50
     name: "&#97F900&lOVERWORLD"
     lore:
-      - "&7[ʀᴀɴᴅᴏᴍ ᴛᴇʟᴇᴘᴏʀᴛ]"
+      - "&8Description"
       - ""
       - "&#97F900Description:"
-      - "&#97F900¦ &fClick to randomly teleport"
-      - "&#97F900¦ &fsomewhere inside the &#97F900Overworld&f!"
+      - "&#97F900| &fClick to randomly teleport"
+      - "&#97F900| &fsomewhere inside the &#97F900Overworld&f!"
       - ""
       - "&#97F900⚓ &fPlayers: &#97F900%players%"
-      - "&#97F900⚡ &fRadius: &#97F900%radius%"
+      - "&#97F900⚡ &fRadius: &#97F90020K"
       - "&#97F900✉ &fBorder: &#97F900%border%"
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
@@ -139,11 +140,11 @@ worlds:
     max-y: 120
     name: "&#FF0000&lNETHER"
     lore:
-      - "&7[ʀᴀɴᴅᴏᴍ ᴛᴇʟᴇᴘᴏʀᴛ]"
+      - "&8Description"
       - ""
       - "&#FF0000Description:"
-      - "&#FF0000¦ &fClick to randomly teleport"
-      - "&#FF0000¦ &fsomewhere inside the &#FF0000Nether&f!"
+      - "&#FF0000| &fClick to randomly teleport"
+      - "&#FF0000| &fsomewhere inside the &#FF0000Nether&f!"
       - ""
       - "&#FF0000⚓ &fPlayers: &#FF0000%players%"
       - "&#FF0000⚡ &fRadius: &#FF0000%radius%"
@@ -161,17 +162,17 @@ worlds:
     center-x: 0
     center-z: 0
     min-y: 40
-    name: "&#D66BFC&lTHE END"
+    name: "&#FFEF12&lEND"
     lore:
-      - "&7[ʀᴀɴᴅᴏᴍ ᴛᴇʟᴇᴘᴏʀᴛ]"
+      - "&8Description"
       - ""
-      - "&#D66BFCDescription:"
-      - "&#D66BFC¦ &fClick to randomly teleport"
-      - "&#D66BFC¦ &fsomewhere inside &#D66BFCThe End&f!"
+      - "&#FFEF12Description:"
+      - "&#FFEF12| &fClick to randomly teleport"
+      - "&#FFEF12| &fsomewhere inside &#FFEF12The End&f!"
       - ""
-      - "&#D66BFC⚓ &fPlayers: &#D66BFC%players%"
-      - "&#D66BFC⚡ &fRadius: &#D66BFC%radius%"
-      - "&#D66BFC✉ &fBorder: &#D66BFC%border%"
+      - "&#FFEF12⚓ &fPlayers: &#FFEF12%players%"
+      - "&#FFEF12⚡ &fRadius: &#FFEF12%radius%"
+      - "&#FFEF12✉ &fBorder: &#FFEF12%border%"
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
 
@@ -200,9 +201,9 @@ sounds:
 messages:
   actionbar: true
   countdown: "&#97F900&lRTP &8▷ &fTeleporting you away in &#97F900%seconds%&f."
-  teleported: "&#97F900&lRTP &8▷ &fYou have been &#22AFFBteleported &faway to &#97F900%coordinates%!"
+  teleported: "&#97F900&lRTP &8▷ &fYou have been &#22AFFBteleported &faway"
   searching: "&#97F900&lRTP &8▷ &fLooking for a safe spot..."
-  cancelled: "&#97F900&lRTP &8▷ &fYou moved, the teleport was stopped."
+  cancelled: "&#FF0000&lERROR &8▷ &fYou moved, the teleport was stopped."
 
   cooldown: "&#FF0000&lERROR &8▷ &fWait &#97F900%time%s &fbefore the next teleport."
   already-teleporting: "&#FF0000&lERROR &8▷ &fYou are already being teleported."
@@ -213,6 +214,9 @@ messages:
   players-only: "&#FF0000&lERROR &8▷ &fOnly a player can use that."
 
 queue:
+  messages: true
+  broadcast-join: true
+  join-broadcast: "&#22AFFB&lRTP QUEUE &8▷ &#22AFFB%player% &fHas Joined an Rtp Queue &7(/rtpqueue)"
   countdown-seconds: 5
   offset: 8
   looking: "&#22AFFB&lRTP QUEUE &8▷ &fLooking for Player"

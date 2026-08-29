@@ -13,13 +13,13 @@ menu:
   info:
     slot: 22
     material: PLAYER_HEAD
-    name: "&#00A2FF&lYOUR CRYSTALS"
+    name: "&#00A2FF&lCRYSTALS"
     lore:
       - "&8Description"
       - ""
       - "&#00A2FFInformation:"
-      - "&#00A2FF| &fCrystals Is A currency to Buy"
-      - "&#00A2FF| &fCosmetics Such as Chatcolors, Chat tags and much more!"
+      - "&#00A2FF| &fBelow you can see"
+      - "&#00A2FF| &fCHow much crystals you have" 
       - ""
       - "&#00A2FF⚓ &fBalance: &#00A2FF%crystals%"
       - ""
@@ -104,12 +104,16 @@ sections:
     enabled: true
     slot: 10
     material: NAME_TAG
-    name: "&#A370EE&lTAGS"
+    name: "&#00D6FF&lTAGS"
     lore:
       - "&8Description"
       - ""
-      - "&#A370EEInformation:"
-      - "&#A370EE| &fBuy chat and tab tags"
+      - "&#00D6FFInformation:"
+      - "&#00D6FF| &fClick here to go"
+      - "&#00D6FF| &fTo Tags Shop"
+      - ""
+      - "&#00D6FFCommands:"
+      - "&#00D6FFℹ &fCommand: &#00D6FF/tags"
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
     title: "Tags"
@@ -250,13 +254,17 @@ sections:
   chatcolors:
     enabled: true
     slot: 11
-    material: PURPLE_DYE
-    name: "&#A370EE&lCHAT COLORS"
+    material: RED_BUNDLE
+    name: "&#FF0000&lCHAT COLORS"
     lore:
       - "&8Description"
       - ""
-      - "&#A370EEInformation:"
-      - "&#A370EE| &fColor your chat messages"
+      - "&#FF0000Information:"
+      - "&#FF0000| &fClick to open"
+      - "&#FF0000| &fChat color Shop"
+      - ""
+      - "&#FF0000Commands:"
+      - "&#FF0000ℹ &fCommand: &#FF0000/chatcolors"
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
     title: "Chat Colors"
@@ -413,13 +421,17 @@ sections:
   glows:
     enabled: true
     slot: 12
-    material: GLOWSTONE_DUST
-    name: "&#A370EE&lGLOWS"
+    material: PINK_HARNESS
+    name: "&#FF6B9D&lGLOWS"
     lore:
       - "&8Description"
       - ""
-      - "&#A370EEInformation:"
-      - "&#A370EE| &fUnlock player glows"
+      - "&#FF6B9DInformation:"
+      - "&#FF6B9D| &fClick to open"
+      - "&#FF6B9D| &fGlow Shop"
+      - ""
+      - "&#FF6B9DCommands:"
+      - "&#FF6B9Dℹ &fCommand: &#FF6B9D/glows"
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
     title: "Glows"
@@ -433,7 +445,7 @@ sections:
         type: glow
         glow: red
         price: 80
-        material: RED_BUNDLE
+        material: RED_HARNESS
         name: "&#FF0000&lRED GLOW"
         lore:
           - "&8Description"
@@ -449,7 +461,7 @@ sections:
         type: glow
         glow: yellow
         price: 80
-        material: YELLOW_BUNDLE
+        material: YELLOW_HARNESS
         name: "&#FFF800&lYELLOW GLOW"
         lore:
           - "&8Description"
@@ -465,7 +477,7 @@ sections:
         type: glow
         glow: green
         price: 80
-        material: LIME_BUNDLE
+        material: LIME_HARNESS
         name: "&#8AFF00&lGREEN GLOW"
         lore:
           - "&8Description"
@@ -481,7 +493,7 @@ sections:
         type: glow
         glow: blue
         price: 80
-        material: LIGHT_BLUE_BUNDLE
+        material: LIGHT_BLUE_HARNESS
         name: "&#00C1FF&lBLUE GLOW"
         lore:
           - "&8Description"
@@ -497,7 +509,7 @@ sections:
         type: glow
         glow: purple
         price: 80
-        material: PURPLE_BUNDLE
+        material: PURPLE_HARNESS
         name: "&#8000FF&lPURPLE GLOW"
         lore:
           - "&8Description"
@@ -513,7 +525,7 @@ sections:
         type: glow
         glow: pink
         price: 80
-        material: PINK_BUNDLE
+        material: PINK_HARNESS
         name: "&#FF74DF&lPINK GLOW"
         lore:
           - "&8Description"
@@ -529,7 +541,7 @@ sections:
         type: glow
         glow: rainbow
         price: 200
-        material: MAGENTA_BUNDLE
+        material: MAGENTA_HARNESS
         name: "&#FF00AA&lRAINBOW GLOW"
         lore:
           - "&8Description"
@@ -545,12 +557,16 @@ sections:
     enabled: true
     slot: 13
     material: NETHERITE_PICKAXE
-    name: "&#A370EE&lDRILLS"
+    name: "&#A370EE&lTOOLS"
     lore:
       - "&8Description"
       - ""
       - "&#A370EEInformation:"
-      - "&#A370EE| &fSharded tools with an expire time"
+      - "&#A370EE| &fClick to Open"
+      - "&#A370EE| &fDrill Shop"
+      - ""
+      - "&#A370EECommands:"
+      - "&#A370EEℹ &fCommand: &#A370EE/drills"
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
     title: "Tools"
@@ -652,7 +668,7 @@ sections:
       firework-14:
         slot: 25
         type: tool
-        tool: firework
+        tool: firework-14
         expire: 14d
         price: 650
         material: FIREWORK_ROCKET
@@ -671,14 +687,17 @@ sections:
   perks:
     enabled: true
     slot: 14
-    material: NETHER_STAR
+    material: SPYGLASS
     name: "&#FFD900&lPERKS"
     lore:
       - "&8Description"
       - ""
       - "&#FFD900Information:"
-      - "&#FFD900| &fUnlock /ec /craft /fly"
-      - "&#FFD900| &ffor 7 days"
+      - "&#FFD900| &fClick to open"
+      - "&#FFD900| &fPerks Shop"
+      - ""
+      - "&#FFD900Commands:"
+      - "&#FFD900ℹ &fCommands: &#FFD900/ec,/fly,/craft"
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
     title: "Perks"
@@ -695,14 +714,14 @@ sections:
         permission: shardedcore.ec
         price: 200
         material: ENDER_CHEST
-        name: "&#A370EE&l/EC &7(7d)"
+        name: "&#FF0072&l/EC &7(7d)"
         lore:
           - "&8Description"
           - ""
-          - "&#A370EEInformation:"
-          - "&#A370EE| &fUnlock /ec for 7 days"
+          - "&#FF0072Information:"
+          - "&#FF0072| &fUnlock &#FF0072/ec &ffor 7 days"
           - ""
-          - "&#A370EE⚓ &fPrice: &#A370EE%price%"
+          - "&#FF0072⚓ &fPrice: &#FF0072%price%"
           - ""
           - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       craft:
@@ -713,14 +732,14 @@ sections:
         permission: shardedcore.craft
         price: 200
         material: CRAFTING_TABLE
-        name: "&#FFBA00&l/CRAFT &7(7d)"
+        name: "&#FCFF00&l/CRAFT &7(7d)"
         lore:
           - "&8Description"
           - ""
-          - "&#FFBA00Information:"
-          - "&#FFBA00| &fUnlock /craft for 7 days"
+          - "&#FCFF00Information:"
+          - "&#FCFF00 &fUnlock &#FCFF00/craft &ffor 7 days"
           - ""
-          - "&#FFBA00⚓ &fPrice: &#FFBA00%price%"
+          - "&#FCFF00⚓ &fPrice: &#FCFF00%price%"
           - ""
           - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       fly:
@@ -730,15 +749,15 @@ sections:
         duration: 7d
         permission: shardedcore.fly.bypass
         price: 400
-        material: FEATHER
-        name: "&#00C1FF&l/FLY &7(7d)"
+        material: ELYTRA
+        name: "&#006EFF&l/FLY &7(7d)"
         lore:
           - "&8Description"
           - ""
-          - "&#00C1FFInformation:"
-          - "&#00C1FF| &fUnlock /fly for 7 days"
+          - "&#006EFFInformation:"
+          - "&#006EFF| &fUnlock &#006EFF/fly &ffor 7 days"
           - ""
-          - "&#00C1FF⚓ &fPrice: &#00C1FF%price%"
+          - "&#006EFF⚓ &fPrice: &#006EFF%price%"
           - ""
           - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
 
@@ -746,12 +765,13 @@ sections:
     enabled: true
     slot: 15
     material: BLAZE_ROD
-    name: "&#80EE0B&lSELL WANDS"
+    name: "&#FF7200&lSELL WANDS"
     lore:
       - "&8Description"
       - ""
-      - "&#80EE0BInformation:"
-      - "&#80EE0B| &fBuy timed sell wands"
+      - "&#FF7200Information:"
+      - "&#FF7200| &fClick to open"
+      - "&#FF7200| &fSell Wand Shop"
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
     title: "Sell Wands"
@@ -767,15 +787,15 @@ sections:
         expire: 1d
         price: 150
         material: BLAZE_ROD
-        name: "&#80EE0B&lSELL WAND &7(1d)"
+        name: "&#FF7200&lSELL WAND &7(1d)"
         lore:
           - "&8Description"
           - ""
-          - "&#80EE0BInformation:"
-          - "&#80EE0B| &fRight click a chest to sell"
-          - "&#80EE0B| &fExpires in 1 day"
+          - "&#FF7200Information:"
+          - "&#FF7200| &fRight click a chest to sell"
+          - "&#FF7200| &fExpires in &#FF72001 day"
           - ""
-          - "&#80EE0B⚓ &fPrice: &#80EE0B%price%"
+          - "&#FF7200⚓ &fPrice: &#FF7200%price%"
           - ""
           - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       wand-3d:
@@ -785,15 +805,15 @@ sections:
         expire: 3d
         price: 300
         material: BLAZE_ROD
-        name: "&#80EE0B&lSELL WAND &7(3d)"
+        name: "&#FF7200&lSELL WAND &7(3d)"
         lore:
           - "&8Description"
           - ""
-          - "&#80EE0BInformation:"
-          - "&#80EE0B| &fRight click a chest to sell"
-          - "&#80EE0B| &fExpires in 3 days"
+          - "&#FF7200Information:"
+          - "&#FF7200| &fRight click a chest to sell"
+          - "&#FF7200| &fExpires in &#FF72003 days"
           - ""
-          - "&#80EE0B⚓ &fPrice: &#80EE0B%price%"
+          - "&#FF7200⚓ &fPrice: &#FF7200%price%"
           - ""
           - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
       wand-7d:
@@ -803,15 +823,15 @@ sections:
         expire: 7d
         price: 500
         material: BLAZE_ROD
-        name: "&#80EE0B&lSELL WAND &7(7d)"
+        name: "&#FF7200&lSELL WAND &7(7d)"
         lore:
           - "&8Description"
           - ""
-          - "&#80EE0BInformation:"
-          - "&#80EE0B| &fRight click a chest to sell"
-          - "&#80EE0B| &fExpires in 7 days"
+          - "&#FF7200Information:"
+          - "&#FF7200| &fRight click a chest to sell"
+          - "&#FF7200| &fExpires in &#FF72007 days"
           - ""
-          - "&#80EE0B⚓ &fPrice: &#80EE0B%price%"
+          - "&#FF7200⚓ &fPrice: &#FF7200%price%"
           - ""
           - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
 
@@ -824,7 +844,11 @@ sections:
       - "&8Description"
       - ""
       - "&#00BDF9Information:"
-      - "&#00BDF9| &fBuy mob spawners"
+      - "&#00BDF9| &fClick to open"
+      - "&#00BDF9| &fSpawner Shop"
+      - ""
+      - "&#00BDF9Commands:"
+      - "&#00BDF9ℹ &fCommands: &#00BDF9/sell"
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
     title: "Spawners"
@@ -839,14 +863,14 @@ sections:
         entity: pig
         price: 800
         material: SPAWNER
-        name: "&#FFB6C1&lPIG SPAWNER"
+        name: "&#FF0072&lPIG SPAWNER"
         lore:
           - "&8Description"
           - ""
-          - "&#FFB6C1Information:"
-          - "&#FFB6C1| &fGives a pig spawner"
+          - "&#FF0072Information:"
+          - "&#FF0072| &fGives a pig spawner"
           - ""
-          - "&#FFB6C1⚓ &fPrice: &#FFB6C1%price%"
+          - "&#FF0072⚓ &fPrice: &#FF0072%price%"
           - ""
           - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
         commands:
@@ -857,14 +881,14 @@ sections:
         entity: cow
         price: 900
         material: SPAWNER
-        name: "&#C4A484&lCOW SPAWNER"
+        name: "&#0079FF&lCOW SPAWNER"
         lore:
           - "&8Description"
           - ""
-          - "&#C4A484Information:"
-          - "&#C4A484| &fGives a cow spawner"
+          - "&#0079FFInformation:"
+          - "&#0079FF| &fGives a cow spawner"
           - ""
-          - "&#C4A484⚓ &fPrice: &#C4A484%price%"
+          - "&#0079FF⚓ &fPrice: &#0079FF%price%"
           - ""
           - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
         commands:
@@ -911,14 +935,14 @@ sections:
         entity: creeper
         price: 1400
         material: SPAWNER
-        name: "&#007E20&lCREEPER SPAWNER"
+        name: "&#80FF00&lCREEPER SPAWNER"
         lore:
           - "&8Description"
           - ""
-          - "&#007E20Information:"
-          - "&#007E20| &fGives a creeper spawner"
+          - "&#80FF00Information:"
+          - "&#80FF00| &fGives a creeper spawner"
           - ""
-          - "&#007E20⚓ &fPrice: &#007E20%price%"
+          - "&#80FF00⚓ &fPrice: &#80FF00%price%"
           - ""
           - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
         commands:
@@ -929,14 +953,14 @@ sections:
         entity: blaze
         price: 1800
         material: SPAWNER
-        name: "&#FFBA00&lBLAZE SPAWNER"
+        name: "&#FF6700&lBLAZE SPAWNER"
         lore:
           - "&8Description"
           - ""
-          - "&#FFBA00Information:"
-          - "&#FFBA00| &fGives a blaze spawner"
+          - "&#FF6700Information:"
+          - "&#FF6700| &fGives a blaze spawner"
           - ""
-          - "&#FFBA00⚓ &fPrice: &#FFBA00%price%"
+          - "&#FF6700⚓ &fPrice: &#FF6700%price%"
           - ""
           - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
         commands:
@@ -947,14 +971,14 @@ sections:
         entity: iron_golem
         price: 2500
         material: SPAWNER
-        name: "&7&lIRON GOLEM SPAWNER"
+        name: "&#FF0000&lIRON GOLEM SPAWNER"
         lore:
           - "&8Description"
           - ""
-          - "&7Information:"
-          - "&7| &fGives an iron golem spawner"
+          - "&#FF0000Information:"
+          - "&#FF0000| &fGives an iron golem spawner"
           - ""
-          - "&7⚓ &fPrice: &7%price%"
+          - "&#FF0000⚓ &fPrice: &#FF0000%price%"
           - ""
           - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
         commands:
@@ -969,7 +993,11 @@ sections:
       - "&8Description"
       - ""
       - "&#80EE0BInformation:"
-      - "&#80EE0B| &fTrade crystals for money"
+      - "&#80EE0B| &fClick to open"
+      - "&#80EE0B| &fMoney Shop"
+      - ""
+      - "&#80EE0BCommands:"
+      - "&#80EE0Bℹ &fCommands: &#80EE0B/shop"
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
     title: "Money"
@@ -1063,12 +1091,16 @@ sections:
     enabled: true
     slot: 21
     material: TRIPWIRE_HOOK
-    name: "&#A370EE&lCRATE KEYS"
+    name: "&#8A00FF&lCRATE KEYS"
     lore:
       - "&8Description"
       - ""
-      - "&#A370EEInformation:"
-      - "&#A370EE| &fBuy crate keys with crystals"
+      - "&#8A00FFInformation:"
+      - "&#8A00FF| &fClick to open"
+      - "&#8A00FF| &fCrate key Shop"
+      - ""
+      - "&#8A00FFCommands:"
+      - "&#8A00FFℹ &fCommands: &#8A00FF/crates"
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
     title: "Crate Keys"

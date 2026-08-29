@@ -34,12 +34,12 @@ icons:
   locked:
     material: RED_DYE
     name: "&#FF0000&lIN PROGRESS &r&#FF0000(%required% Kills)"
-    lore: ["&8Description","","&#FF0000Information:","&#FF0000¦ &fYou need &#FF0000%left% &fmore","&#FF0000¦ &fkills for this &#FF0000reward&f!","","&#FF0000Rewards:","%rewards%","","&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Refresh"]
+    lore: ["&8Description","","&#FF0000Information:","&#FF0000¦ &fYou need &#FF0000%left% &fmore","&#FF0000¦ &fkills for this &#FF0000reward&f!","","&#FF0000Rewards:","☀ %rewards%","","&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Refresh"]
   ready:
     material: YELLOW_DYE
     glow: true
     name: "&#FFEE00&lREADY &r&#FFEE00(%required% Kills)"
-    lore: ["&8Description","","&#FFEE00Information:","&#FFEE00¦ &fYou reached &#FFEE00%required% &fkills,","&#FFEE00¦ &fthis &#FFEE00reward &fis yours!","","&#FFEE00Rewards:","%rewards%","","&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Claim"]
+    lore: ["&8Description","","&#FFEE00Information:","&#FFEE00¦ &fYou reached &#FFEE00%required% &fkills,","&#FFEE00¦ &fthis &#FFEE00reward &fis yours!","","&#FFEE00Rewards:","☀ %rewards%","","&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Claim"]
   claimed:
     material: LIME_DYE
     name: "&#80EE0B&lCLAIMED &r&#80EE0B(%required% Kills)"

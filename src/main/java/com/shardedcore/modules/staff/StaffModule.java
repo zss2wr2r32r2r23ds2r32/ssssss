@@ -69,7 +69,7 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
             "staff", "staffmode", "vanish", "freeze", "unfreeze", "stafflist", "randomtp", "staffchat",
             "gmc", "gms", "gmsp", "gma", "punish", "ban", "mute", "kick", "offend", "banip",
             "unban", "unbanip", "unmute", "pardon", "alts", "screenshare", "invrollback",
-            "revokepunishment", "requeststaff"
+            "revokepunishment", "requeststaff", "staffgoto"
     );
 
     private Sqlite sqlite;
@@ -196,6 +196,7 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
             case "invrollback" -> rollback(sender, args);
             case "revokepunishment" -> revoke(sender);
             case "requeststaff" -> request(sender);
+            case "staffgoto" -> staffGoto(sender, args);
             default -> true;
         };
     }
@@ -233,6 +234,14 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         return true;
     }
 
+    public boolean inStaffMode(Player player) {
+        return player != null && staffMode.contains(player.getUniqueId());
+    }
+
+    public boolean vanished(Player player) {
+        return player != null && vanished.contains(player.getUniqueId());
+    }
+
     private boolean staffMode(CommandSender sender) {
         if (!(sender instanceof Player player) || !staff(player, "shardedcore.staff.mode")) return true;
         if (staffMode.remove(player.getUniqueId())) {
@@ -251,6 +260,8 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         PlayerInventory inventory = player.getInventory();
         inventory.clear();
         player.setGameMode(GameMode.CREATIVE);
+        player.setAllowFlight(true);
+        player.setFlying(true);
         if (config.getBoolean("staffmode.vanish-on-enter", true)) setVanish(player, true);
         else hideFromPlayers(player);
         String disable = cfg("staffmode.disable-eglow-command", "eglow:eglow disable");
@@ -1050,12 +1061,31 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         }
         requests.put(player.getUniqueId(), System.currentTimeMillis());
         send(player, "request-sent");
+        String name = player.getName();
         for (Player staff : Bukkit.getOnlinePlayers()) {
             if (!staff.hasPermission("shardedcore.staff")) continue;
-            staff.sendMessage(ColorUtil.parse(Text.apply(cfg("messages.request-staff", ""),
-                            "player", player.getName()))
-                    .clickEvent(ClickEvent.runCommand("/tp " + player.getName())));
+            staff.sendMessage(ColorUtil.parse(staffMessage("request-staff", "player", name))
+                    .clickEvent(ClickEvent.runCommand("/staffgoto " + name))
+                    .hoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(
+                            ColorUtil.parse(cfg("messages.request-hover", "&7Click to teleport to %player%")
+                                    .replace("%player%", name)))));
         }
+        return true;
+    }
+
+    private boolean staffGoto(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player staff) || !staff(staff, "shardedcore.staff")) return true;
+        if (args.length < 1) {
+            send(staff, "usage-player", "command", "staffgoto");
+            return true;
+        }
+        Player target = Bukkit.getPlayerExact(args[0]);
+        if (target == null) {
+            send(staff, "player-not-found");
+            return true;
+        }
+        staff.teleportAsync(target.getLocation());
+        send(staff, "goto", "player", target.getName());
         return true;
     }
 
@@ -1490,8 +1520,8 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
     }
 
     private void broadcast(String action, String player, String staff, String reason) {
-        String text = Text.apply(cfg("messages.broadcast", ""), "action", action, "player", player, "staff", staff, "reason", reason);
-        if (text.isBlank()) return;
+        String text = staffMessage("broadcast", "action", action, "player", player, "staff", staff, "reason", reason);
+        if (text == null || text.isBlank()) return;
         Bukkit.getOnlinePlayers().forEach(online -> online.sendMessage(ColorUtil.parse(text)));
     }
 
@@ -1557,7 +1587,7 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
         if (args.length == 1) {
             return switch (name) {
                 case "freeze", "unfreeze", "punish", "ban", "mute", "kick", "offend", "banip", "unmute",
-                     "alts", "screenshare", "invrollback", "gmc", "gms", "gmsp", "gma" -> Tabs.players(args[0]);
+                     "alts", "screenshare", "invrollback", "gmc", "gms", "gmsp", "gma", "staffgoto" -> Tabs.players(args[0]);
                 case "unban", "pardon" -> bannedNames(args[0]);
                 case "unbanip" -> {
                     List<String> options = new ArrayList<>(List.of("list"));

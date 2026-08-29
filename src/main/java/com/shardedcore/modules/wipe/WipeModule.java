@@ -9,7 +9,6 @@ import com.shardedcore.modules.crystals.CrystalsModule;
 import com.shardedcore.modules.economy.EconomyModule;
 import com.shardedcore.modules.enderchest.EnderchestModule;
 import com.shardedcore.modules.glows.GlowsModule;
-import com.shardedcore.modules.orders.OrdersModule;
 import com.shardedcore.modules.spawn.SpawnModule;
 import com.shardedcore.modules.tags.TagsModule;
 import com.shardedcore.modules.teams.TeamsModule;
@@ -132,8 +131,6 @@ public final class WipeModule extends Module implements CommandExecutor, TabComp
         if (enderchest != null) enderchest.wipe(uuid);
         CratesModule crates = plugin.modules().get(CratesModule.class);
         if (crates != null) crates.wipe(uuid);
-        OrdersModule orders = plugin.modules().get(OrdersModule.class);
-        if (orders != null) orders.wipe(uuid);
         TagsModule tags = plugin.modules().get(TagsModule.class);
         if (tags != null) tags.wipe(uuid);
         ChatColorModule colors = plugin.modules().get(ChatColorModule.class);

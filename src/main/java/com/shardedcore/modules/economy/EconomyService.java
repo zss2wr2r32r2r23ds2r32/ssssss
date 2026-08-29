@@ -18,6 +18,7 @@ public final class EconomyService {
     private final Map<UUID, Double> balances = new ConcurrentHashMap<>();
     private final Map<UUID, Boolean> frozen = new ConcurrentHashMap<>();
     private final double starting;
+    private final double max;
 
     public interface ShardedCoreEconomy {
         org.bukkit.plugin.Plugin plugin();
@@ -25,7 +26,7 @@ public final class EconomyService {
         void log(Level level, String message, Throwable error);
     }
 
-    public EconomyService(com.shardedcore.ShardedCore plugin, Sqlite sqlite, double starting) {
+    public EconomyService(com.shardedcore.ShardedCore plugin, Sqlite sqlite, double starting, double max) {
         this.owner = new ShardedCoreEconomy() {
             @Override
             public org.bukkit.plugin.Plugin plugin() {
@@ -44,6 +45,7 @@ public final class EconomyService {
         };
         this.sqlite = sqlite;
         this.starting = starting;
+        this.max = max;
         try {
             sqlite.run("""
                     CREATE TABLE IF NOT EXISTS economy (
@@ -63,6 +65,7 @@ public final class EconomyService {
 
     public void set(UUID uuid, double amount) {
         double value = Math.max(0, amount);
+        if (max > 0) value = Math.min(max, value);
         balances.put(uuid, value);
         save(uuid);
     }

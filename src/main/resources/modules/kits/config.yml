@@ -55,249 +55,284 @@ no-cooldown: '&#019BEENone'
 
 kits:
   default:
-    slot: 10
+    slot: 9
     cooldown: '1h'
-    permission: shardedcore.kit.default
+    permission: shardedcore.kit.member
     item:
       material: LIGHT_GRAY_CANDLE
-      name: '&7&lDEFAULT KIT'
+      name: '&7&lMEMBER KIT'
       glow: false
       lore:
         - '&8Description'
         - ''
-        - '&#00bffcInformation:'
+        - '&7Information:'
         - "&7Click here, &fto claim"
-        - "&fthe &7&lDEFAULT &7Kit"
+        - "&fthe &7&lMEMBER &7Kit"
         - ""
-        - "&7☀ &fCooldown &7▶ %cooldown%"
+        - "&7☀ &fCooldown &7▷ %cooldown%"
         - '&#019BEE⭐ &fReady in: &#019BEE%time%'
         - ''
-        - '&#FFD900▶ &n&lLEFT CLICK&#FFD900 To Claim'
-        - '&#FFD900▶ &n&lRIGHT CLICK&#FFD900 To Arrange'
+        - '&#FFD900▷ &n&lLEFT CLICK&#FFD900 To Claim'
+        - '&#FFD900▷ &n&lRIGHT CLICK&#FFD900 To Arrange'
     locked:
       material: LIGHT_GRAY_CANDLE
-      name: '&7&lDEFAULT KIT'
+      name: '&7&lMEMBER KIT'
       glow: false
       lore:
         - '&8Description'
         - ''
-        - '&#00bffcInformation:'
+        - '&7Information:'
         - "&7Click here, &fto claim"
-        - "&fthe &7&lDEFAULT &7Kit"
+        - "&fthe &7&lMEMBER &7Kit"
         - ""
-        - "&7☀ &fCooldown &7▶ %cooldown%"
+        - "&7☀ &fCooldown &7▷ %cooldown%"
         - ''
-        - '&#FF0000▶ &n&lLOCKED'
+        - '&#FF0000▷ &n&lLOCKED'
+
+  supporter:
+    slot: 10
+    cooldown: '1h'
+    permission: shardedcore.kit.supporter
+    item:
+      material: PINK_CANDLE
+      name: '&#FF6C9C&lSUPPORTER KIT'
+      glow: false
+      lore:
+        - '&8Description'
+        - ''
+        - '&#FF6C9CInformation:'
+        - "&#FF6C9CClick here, &fto claim"
+        - "&fthe &#FF6C9C&lSUPPORTER &#FF6C9CKit"
+        - ""
+        - "&#FF6C9C☀ &fCooldown &#FF6C9C▷ %cooldown%"
+        - '&#019BEE⭐ &fReady in: &#019BEE%time%'
+        - ''
+        - '&#FFD900▷ &n&lLEFT CLICK&#FFD900 To Claim'
+        - '&#FFD900▷ &n&lRIGHT CLICK&#FFD900 To Arrange'
+    locked:
+      material: PINK_CANDLE
+      name: '&#FF6C9C&lSUPPORTER KIT'
+      glow: false
+      lore:
+        - '&8Description'
+        - ''
+        - '&#FF6C9CInformation:'
+        - "&#FF6C9CClick here, &fto claim"
+        - "&fthe &#FF6C9C&lSUPPORTER &#FF6C9CKit"
+        - ""
+        - "&#FF6C9C☀ &fCooldown &#FF6C9C▷ %cooldown%"
+        - ''
+        - '&#FF0000▷ &n&lLOCKED'
 
   vip:
     slot: 11
     cooldown: '1h'
-    permission: shardedcore.kit.vip
+    permission: shardedcore.kit.prism
     item:
       material: YELLOW_CANDLE
-      name: '&e&lVIP KIT'
+      name: '&#FBC400&lPRISM KIT'
       glow: false
       lore:
         - '&8Description'
         - ''
-        - '&#00bffcInformation:'
-        - "&eClick here, &fto claim"
-        - "&fthe &e&lVIP &eKit"
+        - '&#FBC400Information:'
+        - "&#FBC400Click here, &fto claim"
+        - "&fthe &#FBC400&lPRISM &#FBC400Kit"
         - ""
-        - "&e☀ &fCooldown &e▶ %cooldown%"
+        - "&#FBC400☀ &fCooldown &#FBC400▷ %cooldown%"
         - '&#019BEE⭐ &fReady in: &#019BEE%time%'
         - ''
-        - '&#FFD900▶ &n&lLEFT CLICK&#FFD900 To Claim'
-        - '&#FFD900▶ &n&lRIGHT CLICK&#FFD900 To Arrange'
+        - '&#FFD900▷ &n&lLEFT CLICK&#FFD900 To Claim'
+        - '&#FFD900▷ &n&lRIGHT CLICK&#FFD900 To Arrange'
     locked:
       material: YELLOW_CANDLE
-      name: '&e&lVIP KIT'
+      name: '&#FBC400&lPRISM KIT'
       glow: false
       lore:
         - '&8Description'
         - ''
-        - '&#00bffcInformation:'
-        - "&eClick here, &fto claim"
-        - "&fthe &e&lVIP &eKit"
+        - '&#FBC400Information:'
+        - "&#FBC400Click here, &fto claim"
+        - "&fthe &#FBC400&lPRISM &#FBC400Kit"
         - ""
-        - "&e☀ &fCooldown &e▶ %cooldown%"
+        - "&#FBC400☀ &fCooldown &#FBC400▷ %cooldown%"
         - ''
-        - '&#FF0000▶ &n&lLOCKED'
+        - '&#FF0000▷ &n&lLOCKED'
 
   mvp:
     slot: 12
     cooldown: '1h'
-    permission: shardedcore.kit.mvp
+    permission: shardedcore.kit.crystal
     item:
-      material: ORANGE_CANDLE
-      name: '&#f87a0b&lMVP KIT'
+      material: LIGHT_BLUE_CANDLE
+      name: '&#4E9BFF&lCRYSTAL KIT'
       glow: false
       lore:
         - '&8Description'
         - ''
-        - '&#00bffcInformation:'
-        - "&#f87a0bClick here, &fto claim"
-        - "&fthe &#f87a0b&lMVP &#f87a0bKit"
+        - '&#4E9BFFInformation:'
+        - "&#4E9BFFClick here, &fto claim"
+        - "&fthe &#4E9BFF&lCRYSTAL &#4E9BFFKit"
         - ""
-        - "&#f87a0b☀ &fCooldown &#f87a0b▶ %cooldown%"
+        - "&#4E9BFF☀ &fCooldown &#4E9BFF▷ %cooldown%"
         - '&#019BEE⭐ &fReady in: &#019BEE%time%'
         - ''
-        - '&#FFD900▶ &n&lLEFT CLICK&#FFD900 To Claim'
-        - '&#FFD900▶ &n&lRIGHT CLICK&#FFD900 To Arrange'
+        - '&#FFD900▷ &n&lLEFT CLICK&#FFD900 To Claim'
+        - '&#FFD900▷ &n&lRIGHT CLICK&#FFD900 To Arrange'
     locked:
-      material: ORANGE_CANDLE
-      name: '&#f87a0b&lMVP KIT'
+      material: LIGHT_BLUE_CANDLE
+      name: '&#4E9BFF&lCRYSTAL KIT'
       glow: false
       lore:
         - '&8Description'
         - ''
-        - '&#00bffcInformation:'
-        - "&#f87a0bClick here, &fto claim"
-        - "&fthe &#f87a0b&lMVP &#f87a0bKit"
+        - '&#4E9BFFInformation:'
+        - "&#4E9BFFClick here, &fto claim"
+        - "&fthe &#4E9BFF&lCRYSTAL &#4E9BFFKit"
         - ""
-        - "&#f87a0b☀ &fCooldown &#f87a0b▶ %cooldown%"
+        - "&#4E9BFF☀ &fCooldown &#4E9BFF▷ %cooldown%"
         - ''
-        - '&#FF0000▶ &n&lLOCKED'
+        - '&#FF0000▷ &n&lLOCKED'
 
   elite:
     slot: 13
     cooldown: '1h'
-    permission: shardedcore.kit.elite
+    permission: shardedcore.kit.amethyst
     item:
-      material: PURPLE_CANDLE
-      name: '&#b479fc&lELITE KIT'
+      material: MAGENTA_CANDLE
+      name: '&#FF6CA2&lAMETHYST KIT'
       glow: false
       lore:
         - '&8Description'
         - ''
-        - '&#00bffcInformation:'
-        - "&#b479fcClick here, &fto claim"
-        - "&fthe &#b479fc&lELITE &#b479fcKit"
+        - '&#FF6CA2Information:'
+        - "&#FF6CA2Click here, &fto claim"
+        - "&fthe &#FF6CA2&lAMETHYST &#FF6CA2Kit"
         - ""
-        - "&#b479fc☀ &fCooldown &#b479fc▶ %cooldown%"
+        - "&#FF6CA2☀ &fCooldown &#FF6CA2▷ %cooldown%"
         - '&#019BEE⭐ &fReady in: &#019BEE%time%'
         - ''
-        - '&#FFD900▶ &n&lLEFT CLICK&#FFD900 To Claim'
-        - '&#FFD900▶ &n&lRIGHT CLICK&#FFD900 To Arrange'
+        - '&#FFD900▷ &n&lLEFT CLICK&#FFD900 To Claim'
+        - '&#FFD900▷ &n&lRIGHT CLICK&#FFD900 To Arrange'
     locked:
-      material: PURPLE_CANDLE
-      name: '&#b479fc&lELITE KIT'
+      material: MAGENTA_CANDLE
+      name: '&#FF6CA2&lAMETHYST KIT'
       glow: false
       lore:
         - '&8Description'
         - ''
-        - '&#00bffcInformation:'
-        - "&#b479fcClick here, &fto claim"
-        - "&fthe &#b479fc&lELITE &#b479fcKit"
+        - '&#FF6CA2Information:'
+        - "&#FF6CA2Click here, &fto claim"
+        - "&fthe &#FF6CA2&lAMETHYST &#FF6CA2Kit"
         - ""
-        - "&#b479fc☀ &fCooldown &#b479fc▶ %cooldown%"
+        - "&#FF6CA2☀ &fCooldown &#FF6CA2▷ %cooldown%"
         - ''
-        - '&#FF0000▶ &n&lLOCKED'
+        - '&#FF0000▷ &n&lLOCKED'
 
   divine:
     slot: 14
     cooldown: '1h'
-    permission: shardedcore.kit.divine
+    permission: shardedcore.kit.sharded
     item:
-      material: PINK_CANDLE
-      name: '&#f5a6ed&lDIVINE KIT'
+      material: PURPLE_CANDLE
+      name: '&#AD4EFF&lSHARDED KIT'
       glow: false
       lore:
         - '&8Description'
         - ''
-        - '&#00bffcInformation:'
-        - "&#f5a6edClick here, &fto claim"
-        - "&fthe &#f5a6ed&lDIVINE &#f5a6edKit"
+        - '&#AD4EFFInformation:'
+        - "&#AD4EFFClick here, &fto claim"
+        - "&fthe &#AD4EFF&lSHARDED &#AD4EFFKit"
         - ""
-        - "&#f5a6ed☀ &fCooldown &#f5a6ed▶ %cooldown%"
+        - "&#AD4EFF☀ &fCooldown &#AD4EFF▷ %cooldown%"
         - '&#019BEE⭐ &fReady in: &#019BEE%time%'
         - ''
-        - '&#FFD900▶ &n&lLEFT CLICK&#FFD900 To Claim'
-        - '&#FFD900▶ &n&lRIGHT CLICK&#FFD900 To Arrange'
+        - '&#FFD900▷ &n&lLEFT CLICK&#FFD900 To Claim'
+        - '&#FFD900▷ &n&lRIGHT CLICK&#FFD900 To Arrange'
     locked:
-      material: PINK_CANDLE
-      name: '&#f5a6ed&lDIVINE KIT'
+      material: PURPLE_CANDLE
+      name: '&#AD4EFF&lSHARDED KIT'
       glow: false
       lore:
         - '&8Description'
         - ''
-        - '&#00bffcInformation:'
-        - "&#f5a6edClick here, &fto claim"
-        - "&fthe &#f5a6ed&lDIVINE &#f5a6edKit"
+        - '&#AD4EFFInformation:'
+        - "&#AD4EFFClick here, &fto claim"
+        - "&fthe &#AD4EFF&lSHARDED &#AD4EFFKit"
         - ""
-        - "&#f5a6ed☀ &fCooldown &#f5a6ed▶ %cooldown%"
+        - "&#AD4EFF☀ &fCooldown &#AD4EFF▷ %cooldown%"
         - ''
-        - '&#FF0000▶ &n&lLOCKED'
+        - '&#FF0000▷ &n&lLOCKED'
 
   legend:
     slot: 15
     cooldown: '1h'
-    permission: shardedcore.kit.legend
+    permission: shardedcore.kit.sharded+
     item:
-      material: CYAN_CANDLE
-      name: '&#a6dff5&lLEGEND KIT'
+      material: PURPLE_CANDLE
+      name: '&#AD4EFF&lS&#B359FF&lH&#BA65FF&lA&#C070FF&lR&#C77BFF&lD&#CD86FF&lE&#D492FF&lD&#DA9DFF+ &#AD4EFF&lKIT'
       glow: false
       lore:
         - '&8Description'
         - ''
-        - '&#00bffcInformation:'
-        - "&#a6dff5Click here, &fto claim"
-        - "&fthe &#a6dff5&lLEGEND &#a6dff5Kit"
+        - '&#AD4EFFInformation:'
+        - "&#AD4EFFClick here, &fto claim"
+        - "&fthe &#AD4EFF&lS&#B359FF&lH&#BA65FF&lA&#C070FF&lR&#C77BFF&lD&#CD86FF&lE&#D492FF&lD&#DA9DFF+ &#AD4EFFKit"
         - ""
-        - "&#a6dff5☀ &fCooldown &#a6dff5▶ %cooldown%"
+        - "&#AD4EFF☀ &fCooldown &#AD4EFF▷ %cooldown%"
         - '&#019BEE⭐ &fReady in: &#019BEE%time%'
         - ''
-        - '&#FFD900▶ &n&lLEFT CLICK&#FFD900 To Claim'
-        - '&#FFD900▶ &n&lRIGHT CLICK&#FFD900 To Arrange'
+        - '&#FFD900▷ &n&lLEFT CLICK&#FFD900 To Claim'
+        - '&#FFD900▷ &n&lRIGHT CLICK&#FFD900 To Arrange'
     locked:
-      material: CYAN_CANDLE
-      name: '&#a6dff5&lLEGEND KIT'
+      material: PURPLE_CANDLE
+      name: '&#AD4EFF&lS&#B359FF&lH&#BA65FF&lA&#C070FF&lR&#C77BFF&lD&#CD86FF&lE&#D492FF&lD&#DA9DFF+ &#AD4EFF&lKIT'
       glow: false
       lore:
         - '&8Description'
         - ''
-        - '&#00bffcInformation:'
-        - "&#a6dff5Click here, &fto claim"
-        - "&fthe &#a6dff5&lLEGEND &#a6dff5Kit"
+        - '&#AD4EFFInformation:'
+        - "&#AD4EFFClick here, &fto claim"
+        - "&fthe &#AD4EFF&lS&#B359FF&lH&#BA65FF&lA&#C070FF&lR&#C77BFF&lD&#CD86FF&lE&#D492FF&lD&#DA9DFF+ &#AD4EFFKit"
         - ""
-        - "&#a6dff5☀ &fCooldown &#a6dff5▶ %cooldown%"
+        - "&#AD4EFF☀ &fCooldown &#AD4EFF▷ %cooldown%"
         - ''
-        - '&#FF0000▶ &n&lLOCKED'
+        - '&#FF0000▷ &n&lLOCKED'
 
   immortal:
     slot: 16
     cooldown: '1h'
-    permission: shardedcore.kit.immortal
+    permission: shardedcore.kit.patron
     item:
-      material: BLUE_CANDLE
-      name: '&#144afc&lIMMORTAL KIT'
+      material: WHITE_CANDLE
+      name: '&x&F&9&7&E&9&C&lP&x&F&9&9&7&A&F&lA&x&F&9&A&F&C&1&lT&x&F&9&C&8&D&4&lR&x&F&9&E&0&E&6&lO&x&F&9&F&9&F&9&lN &#F97E9C&lKIT'
       glow: false
       lore:
         - '&8Description'
         - ''
-        - '&#00bffcInformation:'
-        - "&#144afcClick here, &fto claim"
-        - "&fthe &#144afc&lIMMORTAL &#144afcKit"
+        - '&#F97E9CInformation:'
+        - "&#F97E9CClick here, &fto claim"
+        - "&fthe &x&F&9&7&E&9&C&lP&x&F&9&9&7&A&F&lA&x&F&9&A&F&C&1&lT&x&F&9&C&8&D&4&lR&x&F&9&E&0&E&6&lO&x&F&9&F&9&F&9&lN &#F97E9CKit"
         - ""
-        - "&#144afc☀ &fCooldown &#144afc▶ %cooldown%"
+        - "&#F97E9C☀ &fCooldown &#F97E9C▷ %cooldown%"
         - '&#019BEE⭐ &fReady in: &#019BEE%time%'
         - ''
-        - '&#FFD900▶ &n&lLEFT CLICK&#FFD900 To Claim'
-        - '&#FFD900▶ &n&lRIGHT CLICK&#FFD900 To Arrange'
+        - '&#FFD900▷ &n&lLEFT CLICK&#FFD900 To Claim'
+        - '&#FFD900▷ &n&lRIGHT CLICK&#FFD900 To Arrange'
     locked:
-      material: BLUE_CANDLE
-      name: '&#144afc&lIMMORTAL KIT'
+      material: WHITE_CANDLE
+      name: '&x&F&9&7&E&9&C&lP&x&F&9&9&7&A&F&lA&x&F&9&A&F&C&1&lT&x&F&9&C&8&D&4&lR&x&F&9&E&0&E&6&lO&x&F&9&F&9&F&9&lN &#F97E9C&lKIT'
       glow: false
       lore:
         - '&8Description'
         - ''
-        - '&#00bffcInformation:'
-        - "&#144afcClick here, &fto claim"
-        - "&fthe &#144afc&lIMMORTAL &#144afcKit"
+        - '&#F97E9CInformation:'
+        - "&#F97E9CClick here, &fto claim"
+        - "&fthe &x&F&9&7&E&9&C&lP&x&F&9&9&7&A&F&lA&x&F&9&A&F&C&1&lT&x&F&9&C&8&D&4&lR&x&F&9&E&0&E&6&lO&x&F&9&F&9&F&9&lN &#F97E9CKit"
         - ""
-        - "&#144afc☀ &fCooldown &#144afc▶ %cooldown%"
+        - "&#F97E9C☀ &fCooldown &#F97E9C▷ %cooldown%"
         - ''
-        - '&#FF0000▶ &n&lLOCKED'
+        - '&#FF0000▷ &n&lLOCKED'
 
 sounds:
   open:

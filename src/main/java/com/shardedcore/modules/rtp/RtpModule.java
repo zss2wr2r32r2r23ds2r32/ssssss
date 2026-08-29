@@ -5,7 +5,9 @@ import com.shardedcore.gui.Menus;
 import com.shardedcore.module.Module;
 import com.shardedcore.modules.combat.CombatModule;
 import com.shardedcore.modules.economy.EconomyModule;
+import com.shardedcore.modules.settings.SettingsModule;
 import com.shardedcore.util.Amounts;
+import com.shardedcore.util.ColorUtil;
 import com.shardedcore.util.Items;
 import com.shardedcore.util.Sounds;
 import com.shardedcore.util.Tabs;
@@ -331,31 +333,24 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
             queue.remove(partner);
             stop(partner);
             Player other = Bukkit.getPlayer(partner);
-            if (other != null) {
-                sendBar(other, "queue.cancelled");
-                sendRaw(other, cfg("queue.cancelled", "&#22AFFB&lRTP QUEUE &8▷ &fYou left the queue."));
-            }
+            if (other != null) queueTell(other, "queue.cancelled");
         }
         player.sendActionBar(net.kyori.adventure.text.Component.empty());
         if (queued || looking || teleporting || partner != null || asked != null) {
-            sendBar(player, "queue.cancelled");
-            sendRaw(player, cfg("queue.cancelled", "&#22AFFB&lRTP QUEUE &8▷ &fYou left the queue."));
+            queueTell(player, "queue.cancelled");
             return;
         }
-        sendBar(player, "queue.not-in");
-        sendRaw(player, cfg("queue.not-in", "&#22AFFB&lRTP QUEUE &8▷ &fYou are not in the queue."));
+        queueTell(player, "queue.not-in");
     }
 
     private void challenge(Player player, String name) {
         Player target = Bukkit.getPlayerExact(name);
         if (target == null || !target.isOnline()) {
-            sendBar(player, "queue.offline");
-            send(player, "queue.offline");
+            queueTell(player, "queue.offline");
             return;
         }
         if (target.getUniqueId().equals(player.getUniqueId())) {
-            sendBar(player, "queue.self");
-            send(player, "queue.self");
+            queueTell(player, "queue.self");
             return;
         }
         if (queue.contains(target.getUniqueId()) || partners.containsKey(target.getUniqueId())) {
@@ -369,10 +364,8 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
             return;
         }
         challenges.put(player.getUniqueId(), target.getUniqueId());
-        sendBar(player, "queue.requested", "player", target.getName());
-        send(player, "queue.requested", "player", target.getName());
-        sendBar(target, "queue.incoming", "player", player.getName());
-        send(target, "queue.incoming", "player", player.getName());
+        queueTell(player, "queue.requested", "player", target.getName());
+        queueTell(target, "queue.incoming", "player", player.getName());
     }
 
     private void acceptChallenge(Player player) {
@@ -384,15 +377,13 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
             }
         }
         if (from == null) {
-            sendBar(player, "queue.no-request");
-            send(player, "queue.no-request");
+            queueTell(player, "queue.no-request");
             return;
         }
         challenges.remove(from);
         Player other = Bukkit.getPlayer(from);
         if (other == null || !other.isOnline()) {
-            sendBar(player, "queue.offline");
-            send(player, "queue.offline");
+            queueTell(player, "queue.offline");
             return;
         }
         queue.remove(player.getUniqueId());
@@ -447,11 +438,39 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
 
     private void toggleQueue(Player player) {
         if (queue.remove(player.getUniqueId())) {
-            sendBar(player, "queue.cancelled");
+            queueMessage(player, "queue.cancelled");
             return;
         }
         queue.add(player.getUniqueId());
-        sendRawBar(player, lookingText(1));
+        if (queueMessages(player)) sendRawBar(player, lookingText(1));
+        broadcastJoin(player);
+    }
+
+    private void broadcastJoin(Player player) {
+        if (!config.getBoolean("queue.broadcast-join", true)) return;
+        String line = Text.apply(cfg("queue.join-broadcast",
+                        "&#22AFFB&lRTP QUEUE &8▷ &#22AFFB%player% &fHas Joined an Rtp Queue &7(/rtpqueue)"),
+                "player", player.getName());
+        if (line == null || line.isBlank()) return;
+        for (Player online : Bukkit.getOnlinePlayers()) {
+            if (queueMessages(online)) online.sendMessage(ColorUtil.parse(line));
+        }
+    }
+
+    private boolean queueMessages(Player player) {
+        if (!config.getBoolean("queue.messages", true)) return false;
+        SettingsModule settings = plugin.modules().get(SettingsModule.class);
+        return settings == null || settings.rtpQueue(player);
+    }
+
+    private void queueMessage(Player player, String path, String... pairs) {
+        queueTell(player, path, pairs);
+    }
+
+    private void queueTell(Player player, String path, String... pairs) {
+        if (player == null || !queueMessages(player)) return;
+        sendBar(player, path, pairs);
+        send(player, path, pairs);
     }
 
     private void tickQueue() {
@@ -476,7 +495,7 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
         String text = lookingText(queueDots);
         for (UUID uuid : queue) {
             Player player = Bukkit.getPlayer(uuid);
-            if (player != null) sendRawBar(player, text);
+            if (player != null && queueMessages(player)) sendRawBar(player, text);
         }
     }
 
@@ -522,9 +541,11 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
                 sound(player, "sounds.teleport");
                 return;
             }
-            sendRawBar(player, Text.apply(cfg("queue.found",
-                    "&#22AFFB&lRTP QUEUE &8▷ &fFound Player, Teleporting in &#22AFFB&n%seconds%s"),
-                    "seconds", String.valueOf(left[0])));
+            if (queueMessages(player)) {
+                sendRawBar(player, Text.apply(cfg("queue.found",
+                        "&#22AFFB&lRTP QUEUE &8▷ &fFound Player, Teleporting in &#22AFFB&n%seconds%s"),
+                        "seconds", String.valueOf(left[0])));
+            }
             sound(player, "sounds.countdown");
             left[0]--;
         }, 0L, 20L);

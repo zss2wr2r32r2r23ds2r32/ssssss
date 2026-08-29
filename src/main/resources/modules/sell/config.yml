@@ -75,13 +75,13 @@ history:
   keep-days: 14
 
   entry:
-    name: "&#80ee0b&l%amount%x %item%"
+    name: "&#80ee0b%amount%x %item%"
     lore:
       - "&8Description"
       - ""
       - "&#80ee0bInformation:"
-      - "&#80ee0b¦ &fA sale from the"
-      - "&#80ee0b¦ &fsell &#80ee0bmenu&f."
+      - "&#80ee0b| &fA sale from the"
+      - "&#80ee0b| &fsell &#80ee0bmenu&f."
       - ""
       - "&#22AFFBℹ &fPlayer: &#22AFFB%player%"
       - "&#80ee0b&l$&r &fWorth &8▷ &#80ee0b$%base%"
@@ -91,25 +91,25 @@ history:
 
   previous:
     slot: 48
-    material: ARROW
+    material: RED_STAINED_GLASS_PANE
     name: "&#FF0000&lPREVIOUS PAGE"
     lore:
       - "&8Description"
       - ""
       - "&#FF0000Information:"
-      - "&#FF0000¦ &fGo one page back."
+      - "&#FF0000| &fGo one page back."
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
 
   next:
     slot: 50
-    material: ARROW
-    name: "&#80ee0b&lUPCOMING PAGE"
+    material: LIME_STAINED_GLASS_PANE
+    name: "&#80ee0b&lNEXT PAGE"
     lore:
       - "&8Description"
       - ""
       - "&#80ee0bInformation:"
-      - "&#80ee0b¦ &fGo one page forward."
+      - "&#80ee0b| &fGo one page forward."
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
 
@@ -117,7 +117,7 @@ messages:
   sold: "&#80ee0b&lSELL &8▷ &fSold &#80ee0b%items% items &ffor &#80ee0b$%total%&f."
   sold-multiplied: "&#80ee0b&lSELL &8▷ &fSold &#80ee0b%items% items &ffor &#80ee0b$%total% &7(&#FFD900%multi%x&7)"
   # Sent on top of the chat line. Leave empty to only use the chat.
-  sold-bar: "&#80ee0b&lSELL &8▷ &f+$%total%"
+  sold-bar: "&#80ee0b+$%total%"
   sold-multiplied-bar: "&#80ee0b&lSELL &8▷ &f+$%total% &7(&#FFD900%multi%x&7)"
   # Left empty on purpose, closing an empty menu says nothing.
   nothing-sold: ""

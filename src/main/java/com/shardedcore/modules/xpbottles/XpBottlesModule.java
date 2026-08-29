@@ -3,6 +3,7 @@ package com.shardedcore.modules.xpbottles;
 import com.shardedcore.ShardedCore;
 import com.shardedcore.module.Module;
 import com.destroystokyo.paper.event.entity.ExperienceOrbMergeEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.event.EventHandler;
@@ -43,17 +44,39 @@ public final class XpBottlesModule extends Module implements Listener {
 
     @EventHandler
     public void onSpawn(EntitySpawnEvent event) {
-        if (config.getBoolean("combine-orbs", true)) return;
-        if (!config.getBoolean("convert-spawns", false)) return;
         if (!(event.getEntity() instanceof ExperienceOrb orb)) return;
+        if (config.getBoolean("combine-orbs", true)) {
+            Bukkit.getScheduler().runTask(plugin, () -> mergeNearby(orb));
+            return;
+        }
+        if (!config.getBoolean("convert-spawns", false)) return;
         int per = Math.max(1, config.getInt("experience-per-bottle", 7));
         int min = config.getInt("min-experience", per * config.getInt("min-bottles", 2));
-        org.bukkit.Bukkit.getScheduler().runTask(plugin, () -> {
+        Bukkit.getScheduler().runTask(plugin, () -> {
             if (!orb.isValid()) return;
             int total = xp(orb);
             if (total < min) return;
             convert(orb, total, per);
         });
+    }
+
+    private void mergeNearby(ExperienceOrb orb) {
+        if (!orb.isValid() || orb.getWorld() == null) return;
+        double radius = Math.max(1D, config.getDouble("combine-radius", 4));
+        ExperienceOrb target = null;
+        for (org.bukkit.entity.Entity entity : orb.getNearbyEntities(radius, radius, radius)) {
+            if (entity instanceof ExperienceOrb other && other != orb && other.isValid()) {
+                target = other;
+                break;
+            }
+        }
+        if (target == null) return;
+        target.setExperience(xp(target) + xp(orb));
+        try {
+            target.setCount(1);
+        } catch (Throwable ignored) {
+        }
+        orb.remove();
     }
 
     private int xp(ExperienceOrb orb) {

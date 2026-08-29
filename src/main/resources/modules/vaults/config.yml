@@ -60,47 +60,47 @@ menu:
   previous:
     slot: 19
     material: RED_DYE
-    name: "&ePrevious page"
+    name: "&#FF007B&lPREVIOUS PAGE"
     lore:
       - "&8Description"
       - ""
-      - "&eInformation:"
-      - "&e| &fGo back a page."
+      - "&#FF007BInformation:"
+      - "&#FF007B¦ &fGo back a page."
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
 
   next:
     slot: 25
     material: LIME_DYE
-    name: "&eNext page"
+    name: "&#45FF17&lNEXT PAGE"
     lore:
       - "&8Description"
       - ""
-      - "&eInformation:"
-      - "&e| &fGo to the next page."
+      - "&&#45FF17Information:"
+      - "&#45FF17¦ &fGo to the next page."
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
 
   unlocked:
     material: PURPLE_SHULKER_BOX
     amount: 1
     glow: false
     custom-model-data: 0
-    name: "&#00E1FF&lVAULT #%number%"
+    name: "&#A370EE&lVAULT #%number%"
     lore:
       - "&8Description"
       - ""
-      - "&#00E1FFInformation:"
-      - "&#00E1FF¦ &fThis vault is &#00E1FFunlocked"
-      - "&#00E1FF¦ &fand available to access"
+      - "&#A370EEInformation:"
+      - "&#A370EE¦ &fThis vault is &#A370EEunlocked"
+      - "&#A370EE¦ &fand available to access"
       - ""
-      - "&#00E1FF¦ &fSlots Used: &#00E1FF%used%"
-      - "&#00E1FF¦ &fMax Slots: &#00E1FF%max%"
+      - "&#A370EE¦ &fSlots Used: &#A370EE%used%"
+      - "&#A370EE¦ &fMax Slots: &#A370EE%max%"
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
 
   locked:
-    material: RED_DYE
+    material: RED_SHULKER_BOX
     amount: 1
     glow: false
     custom-model-data: 0
@@ -109,10 +109,10 @@ menu:
       - "&8Description"
       - ""
       - "&#FF0000Information:"
-      - "&#FF0000¦ &fThis vault has not"
-      - "&#FF0000¦ &fbeen unlocked yet."
+      - "&#A370EE¦ &fThis vault has not"
+      - "&#A370EE¦ &fbeen unlocked yet."
       - ""
-      - "&#FF0000¦ &fStatus: &#FF0000Locked"
+      - "&#A370EE¦ &fStatus: &#A370EELocked"
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Unlock"
 
@@ -158,5 +158,5 @@ messages:
   unknown-vault: "&#FF0000&lERROR &8▷ &fThat vault does not exist."
   unknown-player: "&#FF0000&lERROR &8▷ &f&#00E1FF%player% &fhas never joined this server."
   players-only: "&#FF0000&lERROR &8▷ &fOnly players can open a vault."
-  usage: "&#00E1FF&lVAULT &8▷ &f/vault"
+  usage: "&#A370EE&lVAULT &8▷ &f/vault"
   no-permission: "&#FF0000&lERROR &8▷ &fYou do not have permission."

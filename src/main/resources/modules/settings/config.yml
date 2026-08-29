@@ -64,12 +64,17 @@ defaults:
   death: true
   pay: true
   nightvision: false
-  orders: true
   bossbar: true
   scoreboard: true
   tpauto: false
   coinflip: true
   crystal: true
+  rtpqueue: true
+
+open-sound:
+  sound: ui.button.click
+  volume: 1
+  pitch: 1
 
 mob-radius: 50
 
@@ -77,12 +82,12 @@ entries:
   chat:
     command: "/chattoggle"
     material: PAPER
-    name: "&#FF0072&lPUBLIC CHAT"
+    name: "&#FF0000&lPUBLIC CHAT"
     description: "Toggle Public Chat"
   msg:
     command: "/msgtoggle"
     material: WRITABLE_BOOK
-    name: "&#FF0072&lPRIVATE MESSAGES"
+    name: "&#FFF800&lPRIVATE MESSAGES"
     description: "Toggle Private Messages"
   live:
     command: "/livetoggle"
@@ -92,68 +97,68 @@ entries:
   tpa:
     command: "/tpatoggle"
     material: ENDER_PEARL
-    name: "&#FF0072&lTPA REQUESTS"
+    name: "&#008DFF&lTPA REQUESTS"
     description: "Toggle TPA Requests"
   tpahere:
     command: "/tpaheretoggle"
     material: CHORUS_FRUIT
-    name: "&#FF0072&lTPA HERE"
+    name: "&#FF6700&lTPA HERE"
     description: "Toggle TPA Here Requests"
   joinleave:
     command: "/joinleavetoggle"
     material: OAK_DOOR
-    name: "&#FF0072&lJOIN / LEAVE"
+    name: "&#004FFF&lJOIN / LEAVE"
     description: "Toggle Join And Leave Messages"
   mobs:
     command: "/mobspawning"
     material: ZOMBIE_HEAD
-    name: "&#FF0072&lMOB SPAWNING"
+    name: "&#94FF00&lMOB SPAWNING"
     description: "Toggle Mobs Near You"
   death:
     command: "/deathtoggle"
     material: SKELETON_SKULL
-    name: "&#FF0072&lDEATH MESSAGES"
+    name: "&#FF0000&lDEATH MESSAGES"
     description: "Toggle Death Messages"
   pay:
     command: "/paytoggle"
     material: GOLD_INGOT
-    name: "&#FF0072&lPAYMENTS"
+    name: "&#E7FF00&lPAYMENTS"
     description: "Toggle Incoming Payments"
   nightvision:
     command: "/nvtoggle"
     material: GOLDEN_CARROT
-    name: "&#FF0072&lNIGHT VISION"
+    name: "&#00CBFF&lNIGHT VISION"
     description: "Toggle Night Vision"
-  orders:
-    command: "/ordertoggle"
-    material: CHEST
-    name: "&#FF0072&lORDER MESSAGES"
-    description: "Toggle Order Messages"
   bossbar:
     command: "/tab bossbar toggle"
     material: DRAGON_HEAD
-    name: "&#FF0072&lTAB BOSSBAR"
+    name: "&#9F00FF&lTAB BOSSBAR"
     description: "Toggle The TAB Bossbar"
   scoreboard:
     command: "/tab scoreboard toggle"
     material: PAINTING
-    name: "&#FF0072&lTAB SCOREBOARD"
+    name: "&#0079FF&lTAB SCOREBOARD"
     description: "Toggle The TAB Scoreboard"
   tpauto:
     command: "/tpauto"
     material: RECOVERY_COMPASS
-    name: "&#FF0072&lTPA AUTO ACCEPT"
+    name: "&#9FFF00&lTPA AUTO ACCEPT"
     description: "Automatically Accept TPA"
   coinflip:
     command: "/cf toggle"
     material: SUNFLOWER
-    name: "&#FF0072&lCOINFLIP MESSAGES"
+    name: "&#E7FF00&lCOINFLIP MESSAGES"
     description: "Toggle Coinflip Messages"
   crystal:
     command: "/crystaltoggle"
     material: END_CRYSTAL
-    name: "&#FF0072&lFAST CRYSTAL"
+    name: "&#FF005D&lFAST CRYSTAL"
     description: "Toggle Fast Crystal"
+  rtpqueue:
+    command: "/rtpqueuetoggle"
+    material: ENDER_PEARL
+    name: "&#22AFFB&lRTP QUEUE MESSAGES"
+    description: "Toggle RTP Queue Messages"
 
 # Prefix used by toggle commands. The GUI still uses messages.* below.
 command-prefix: "&#FF0072&lSETTINGS &8▷"
@@ -168,12 +173,12 @@ command-prefixes:
   death: "&#FF256E&lDEATH &8▷"
   pay: "&#94FF00&lMONEY &8▷"
   nv: "&#FF0072&lNV &8▷"
-  orders: "&#FF0072&lORDERS &8▷"
   bossbar: "&#FF0072&lBOSSBAR &8▷"
   scoreboard: "&#FF0072&lSCOREBOARD &8▷"
   tpauto: "&#FF0072&lTPAUTO &8▷"
   cf: "&#FFE925&lCOINFLIP &8▷"
   crystal: "&#FF0072&lCRYSTAL &8▷"
+  rtpqueue: "&#22AFFB&lRTP QUEUE &8▷"
 command-messages:
   chat-on: "%prefix% &fPublic chat is now shown."
   chat-off: "%prefix% &fPublic chat is now hidden."
@@ -195,8 +200,6 @@ command-messages:
   pay-off: "%prefix% &fYou are no longer accepting payments."
   nv-on: "%prefix% &fNight vision enabled."
   nv-off: "%prefix% &fNight vision disabled."
-  orders-on: "%prefix% &fOrder messages are now shown."
-  orders-off: "%prefix% &fOrder messages are now hidden."
   bossbar-on: "%prefix% &fTAB bossbar shown."
   bossbar-off: "%prefix% &fTAB bossbar hidden."
   scoreboard-on: "%prefix% &fTAB scoreboard shown."
@@ -207,6 +210,8 @@ command-messages:
   cf-off: "%prefix% &fYou will no longer see Coinflip messages."
   crystal-on: "%prefix% &fFast crystal is now enabled."
   crystal-off: "%prefix% &fFast crystal is now disabled."
+  rtpqueue-on: "%prefix% &fRTP queue messages are now shown."
+  rtpqueue-off: "%prefix% &fRTP queue messages are now hidden."
 
 messages:
   chat-on: "&#FF0072&lSETTINGS &8▷ &fPublic chat is now shown."
@@ -229,8 +234,6 @@ messages:
   pay-off: "&#94FF00&lMONEY &8▷ &fYou are no longer accepting payments."
   nv-on: "&#FF0072&lSETTINGS &8▷ &fNight vision enabled."
   nv-off: "&#FF0072&lSETTINGS &8▷ &fNight vision disabled."
-  orders-on: "&#FF0072&lSETTINGS &8▷ &fOrder messages are now shown."
-  orders-off: "&#FF0072&lSETTINGS &8▷ &fOrder messages are now hidden."
   bossbar-on: "&#FF0072&lSETTINGS &8▷ &fTAB bossbar shown."
   bossbar-off: "&#FF0072&lSETTINGS &8▷ &fTAB bossbar hidden."
   scoreboard-on: "&#FF0072&lSETTINGS &8▷ &fTAB scoreboard shown."
@@ -241,6 +244,8 @@ messages:
   cf-off: "&#FFE925&lCOINFLIP &8▷ &fYou will no longer see Coinflip messages."
   crystal-on: "&#FF0072&lSETTINGS &8▷ &fFast crystal is now enabled."
   crystal-off: "&#FF0072&lSETTINGS &8▷ &fFast crystal is now disabled."
+  rtpqueue-on: "&#22AFFB&lRTP QUEUE &8▷ &fRTP queue messages are now shown."
+  rtpqueue-off: "&#22AFFB&lRTP QUEUE &8▷ &fRTP queue messages are now hidden."
   msg-usage: "&#FF0072&lMSG &8▷ &fUse /msg <player> <message>"
   msg-ignored: "&#FF0072&lMSG &8▷ &fThat player is not accepting messages."
   msg-self: "&#FF0072&lMSG &8▷ &fYou cannot message yourself."

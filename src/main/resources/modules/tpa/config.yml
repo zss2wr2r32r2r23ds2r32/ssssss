@@ -25,6 +25,7 @@ messages:
 
 # Shown on the TPA confirm menu. Keys are locale codes (en_us) or language (en).
 regions:
+  always-default: true
   default: "EU"
   en_us: "NA"
   en_ca: "NA"

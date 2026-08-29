@@ -266,6 +266,9 @@ public final class TpaModule extends Module implements CommandExecutor, TabCompl
     }
 
     private String region(Player player) {
+        if (config.getBoolean("regions.always-default", true)) {
+            return cfg("regions.default", "EU");
+        }
         String locale = player.locale().toString().toLowerCase(Locale.ROOT).replace('-', '_');
         ConfigurationSection map = config.getConfigurationSection("regions");
         if (map != null) {

@@ -1,6 +1,7 @@
 package com.shardedcore.modules.settings;
 
 import com.shardedcore.ShardedCore;
+import com.shardedcore.gui.GuiButtons;
 import com.shardedcore.gui.Menus;
 import com.shardedcore.module.Module;
 import com.shardedcore.util.Items;
@@ -47,15 +48,15 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
     public static final String DEATH = "death";
     public static final String PAY = "pay";
     public static final String NV = "nightvision";
-    public static final String ORDERS = "orders";
     public static final String BOSSBAR = "bossbar";
     public static final String SCOREBOARD = "scoreboard";
     public static final String TPAUTO = "tpauto";
     public static final String CF = "coinflip";
     public static final String CRYSTAL = "crystal";
+    public static final String RTPQUEUE = "rtpqueue";
 
     private static final List<String> ORDER = List.of(
-            CHAT, MSG, LIVE, TPA, TPAHERE, JOIN, MOBS, DEATH, PAY, NV, ORDERS, BOSSBAR, SCOREBOARD, TPAUTO, CF, CRYSTAL
+            CHAT, MSG, LIVE, TPA, TPAHERE, JOIN, MOBS, DEATH, PAY, NV, BOSSBAR, SCOREBOARD, TPAUTO, CF, CRYSTAL, RTPQUEUE
     );
 
     private final Map<UUID, UUID> replies = new ConcurrentHashMap<>();
@@ -78,11 +79,11 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
         registerCommand("deathtoggle", this);
         registerCommand("paytoggle", this);
         registerCommand("nvtoggle", this);
-        registerCommand("ordertoggle", this);
         registerCommand("tabbossbar", this);
         registerCommand("tabscoreboard", this);
         registerCommand("tpauto", this);
         registerCommand("crystaltoggle", this);
+        registerCommand("rtpqueuetoggle", this);
         registerCommand("msg", this);
         registerCommand("r", this);
         for (Player player : Bukkit.getOnlinePlayers()) applyNightVision(player);
@@ -107,7 +108,7 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
     public boolean pay(Player player) { return on(player, PAY); }
     public boolean tpAuto(Player player) { return on(player, TPAUTO); }
     public boolean coinflip(Player player) { return on(player, CF); }
-    public boolean orders(Player player) { return on(player, ORDERS); }
+    public boolean rtpQueue(Player player) { return on(player, RTPQUEUE); }
 
     public boolean flipLive(Player player) {
         return flip(player, LIVE, "live", true);
@@ -186,12 +187,12 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
         map.put("nightvisiontoggle", NV);
         map.put("nightvision", NV);
         map.put("nv", NV);
-        map.put("ordertoggle", ORDERS);
         map.put("tabbossbar", BOSSBAR);
         map.put("tabscoreboard", SCOREBOARD);
         map.put("tpauto", TPAUTO);
         map.put("crystaltoggle", CRYSTAL);
         map.put("fastcrystal", CRYSTAL);
+        map.put("rtpqueuetoggle", RTPQUEUE);
         String key = map.get(name);
         if (key != null) {
             String msgKey = switch (key) {
@@ -205,12 +206,12 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
                 case DEATH -> "death";
                 case PAY -> "pay";
                 case NV -> "nv";
-                case ORDERS -> "orders";
                 case BOSSBAR -> "bossbar";
                 case SCOREBOARD -> "scoreboard";
                 case TPAUTO -> "tpauto";
                 case CF -> "cf";
                 case CRYSTAL -> "crystal";
+                case RTPQUEUE -> "rtpqueue";
                 default -> key;
             };
             flip(player, key, msgKey, true);
@@ -294,6 +295,8 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
                 config.getStringList("filler.lore")
         ));
         plugin.menus().open(player, menu);
+        GuiButtons.play(player, "open");
+        Sounds.play(player, config.getConfigurationSection("open-sound"));
     }
 
     private List<String> visibleKeys() {
@@ -318,12 +321,12 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
             case DEATH -> "death";
             case PAY -> "pay";
             case NV -> "nv";
-            case ORDERS -> "orders";
             case BOSSBAR -> "bossbar";
             case SCOREBOARD -> "scoreboard";
             case TPAUTO -> "tpauto";
             case CF -> "cf";
             case CRYSTAL -> "crystal";
+            case RTPQUEUE -> "rtpqueue";
             default -> key;
         };
     }

@@ -295,6 +295,9 @@ public final class NametagsModule extends Module implements CommandExecutor, Lis
     private Vector3f offset(Player player, boolean top) {
         double extra = config.getDouble("display.y-offset", 0.5);
         double gap = config.getDouble("display.line-gap", 0.25);
+        if (config.getBoolean("display.ride", true)) {
+            return new Vector3f(0f, (float) (extra + (top ? gap : 0)), 0f);
+        }
         float y = (float) (player.getHeight() + extra + (top ? gap : 0));
         return new Vector3f(0f, y, 0f);
     }

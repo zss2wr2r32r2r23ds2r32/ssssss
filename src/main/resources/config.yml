@@ -31,7 +31,7 @@ modules:
   welcome: true
   killrewards: true
   playtimerewards: true
-  orders: true
+  ranks: true
   giveaway: true
   vaults: true
   chatcolor: true
@@ -47,3 +47,9 @@ modules:
   xpbottles: true
   attributefixer: true
   staff: true
+
+# Shared SQLite file for economy, crystals, crate keys, vaults, enderchest, teams, shop, and settings.
+# Path: plugins/ShardedCore/data.db
+database:
+  type: sqlite
+  file: data.db

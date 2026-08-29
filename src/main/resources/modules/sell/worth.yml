@@ -7,6 +7,7 @@ menu:
 entry:
   name: "&f%item%"
   lore:
+    - ""
     - "&#80ee0b&l$&r &fWorth &8▷ &#80ee0b$%price%"
 
 buttons:
@@ -19,31 +20,31 @@ buttons:
       - "&8Description"
       - ""
       - "&#FF0000Information:"
-      - "&#FF0000¦ &fGo one page back."
+      - "&#FF0000| &fGo one page back."
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
 
   next:
     slot: 53
     material: LIME_STAINED_GLASS_PANE
-    name: "&#80ee0b&lUPCOMING PAGE"
+    name: "&#80ee0b&lNEXT PAGE"
     lore:
       - "&8Description"
       - ""
       - "&#80ee0bInformation:"
-      - "&#80ee0b¦ &fGo one page forward."
+      - "&#80ee0b| &fGo one page forward."
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
 
   refresh:
     slot: 49
-    material: LANTERN
+    material: BELL
     name: "&#FFD900&lREFRESH PAGE"
     lore:
       - "&8Description"
       - ""
       - "&#FFD900Information:"
-      - "&#FFD900¦ &fLoad this page again."
+      - "&#FFD900| &fLoad this page again."
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Refresh"
 
@@ -52,9 +53,11 @@ buttons:
     slot: 48
     material: CAULDRON
     name: "&#FFD900&lSORTING"
-    lore: []
-    active: "&#FFD900▶ &f%name%"
-    inactive: "&8▶ &7%name%"
+    lore: 
+      - "&8Description"
+      - ""
+    active: "&#FFD900● &f%name%"
+    inactive: "&8● &7%name%"
     names:
       highest: "Highest Price"
       lowest: "Lowest Price"
@@ -62,11 +65,13 @@ buttons:
 
   filter:
     slot: 50
-    material: ANVIL
+    material: HOPPER
     name: "&#22AFFB&lFILTER"
-    lore: []
-    active: "&#22AFFB▶ &f%name%"
-    inactive: "&8▶ &7%name%"
+    lore: 
+      - "&8Description"
+      - ""
+    active: "&#22AFFB● &f%name%"
+    inactive: "&8● &7%name%"
     names:
       all: "All"
       blocks: "Blocks"

@@ -3,7 +3,7 @@ players-only: "&#FF0000&lERROR &8▷ &fOnly a player can use that."
 unavailable: "&#FF0000&lERROR &8▷ &fThat cosmetic menu is not available."
 
 menu:
-  title: "Cosmetics"
+  title: "☀ Cosmetics"
   rows: 3
   filler:
     enabled: true
@@ -14,35 +14,41 @@ entries:
     enabled: true
     slot: 11
     material: NAME_TAG
-    name: "&#A370EE&lTAGS"
+    name: "&#00D6FF&lTAGS"
     lore:
       - "&8Description"
       - ""
-      - "&#A370EEInformation:"
-      - "&#A370EE| &fEquip chat and nametag tags"
+      - "&#00D6FFInformation:"
+      - "&#00D6FF| &fUnlock Different Tags"
+      - "&#00D6FF| &fAt The Crystal Shop and enchance"
+      - "&#00D6FF| &fYour &#00D6FFLooks!"
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
   chatcolors:
     enabled: true
     slot: 13
-    material: PINK_BUNDLE
-    name: "&#FF74DF&lCHAT COLORS"
+    material: RED_BUNDLE
+    name: "&#FF0000&lCHAT COLORS"
     lore:
       - "&8Description"
       - ""
-      - "&#FF74DFInformation:"
-      - "&#FF74DF| &fEquip a chat color"
+      - "&#FF0000Information:"
+      - "&#FF0000| &fUnlock Different Chat Colors"
+      - "&#FF0000| &fAt The Crystal Shop and enchance"
+      - "&#FF0000| &fYour &#FF0000Chats!"
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
   glows:
     enabled: true
     slot: 15
-    material: RED_HARNESS
+    material: PINK_HARNESS
     name: "&#FF6B9D&lGLOWS"
     lore:
       - "&8Description"
       - ""
       - "&#FF6B9DInformation:"
-      - "&#FF6B9D| &fEquip a colored glow"
+      - "&#FF6B9D| &fUnlock Different Glows"
+      - "&#FF6B9D| &fAt The Crystal Shop and enchance"
+      - "&#FF6B9D| &fYour &#FF6B9DLooks!"
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"

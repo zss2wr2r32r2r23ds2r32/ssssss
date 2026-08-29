@@ -48,13 +48,13 @@ sounds:
 # Used by every item that brings no own name or lore.
 # A section can carry its own item-template and overrules this one.
 item-template:
-  name: "&f%item%"
+  name: "&#99ff00%item%"
   lore:
     - "&8Description"
     - ""
     - "&#99ff00Information:"
-    - "&#99ff00¦ &fBuy this item straight"
-    - "&#99ff00¦ &ffrom the &#99ff00shop&f."
+    - "&#99ff00| &fBuy this item straight"
+    - "&#99ff00| &ffrom the &#99ff00shop&f."
     - ""
     - "&#99ff00&l$&r &fPrice &8▷ &#99ff00$&r&#99ff00%price%"
     - ""
@@ -74,8 +74,8 @@ sections:
         - "&8Description"
         - ""
         - "&#99ff00Information:"
-        - "&#99ff00¦ &fBlock shop is used, to"
-        - "&#99ff00¦ &fgain &#99ff00blocks &fto build."
+        - "&#99ff00| &fBlock shop is used, to"
+        - "&#99ff00| &fgain &#99ff00blocks &fto build."
         - ""
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
 
@@ -90,8 +90,8 @@ sections:
         - "&8Description"
         - ""
         - "&#99ff00Information:"
-        - "&#99ff00¦ &fFarm shop can be used,"
-        - "&#99ff00¦ &fto build your own &#99ff00farms&f."
+        - "&#99ff00| &fFarm shop can be used,"
+        - "&#99ff00| &fto build your own &#99ff00farms&f."
         - ""
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
 
@@ -106,8 +106,8 @@ sections:
         - "&8Description"
         - ""
         - "&#22AFFBInformation:"
-        - "&#22AFFB¦ &fGear shop can be used,"
-        - "&#22AFFB¦ &fto purchase &#22AFFBfight stuff&f."
+        - "&#22AFFB| &fGear shop can be used,"
+        - "&#22AFFB| &fto purchase &#22AFFBfight stuff&f."
         - ""
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
 
@@ -122,8 +122,8 @@ sections:
         - "&8Description"
         - ""
         - "&#ABABABInformation:"
-        - "&#ABABAB¦ &fMob drops can be used,"
-        - "&#ABABAB¦ &fto skip the &#ABABABgrinding&f."
+        - "&#ABABAB| &fMob drops can be used,"
+        - "&#ABABAB| &fto skip the &#ABABABgrinding&f."
         - ""
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
 
@@ -138,8 +138,8 @@ sections:
         - "&8Description"
         - ""
         - "&#FF0000Information:"
-        - "&#FF0000¦ &fRedstone shop is used,"
-        - "&#FF0000¦ &fto build your own &#FF0000farms&f."
+        - "&#FF0000| &fRedstone shop is used,"
+        - "&#FF0000| &fto build your own &#FF0000farms&f."
         - ""
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
 
@@ -151,14 +151,14 @@ sections:
     permission: ""
     command: "crystal shop"
     icon:
-      material: AMETHYST_SHARD
+      material: PURPLE_BUNDLE
       name: "&#A370EE&lCRYSTAL SHOP"
       lore:
         - "&8Description"
         - ""
         - "&#A370EEInformation:"
-        - "&#A370EE¦ &fCrystal shop used to buy,"
-        - "&#A370EE¦ &fspecial and &#A370EEunique items&f."
+        - "&#A370EE| &fCrystal shop used to buy,"
+        - "&#A370EE| &fspecial and &#A370EEunique items&f."
         - ""
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
 
@@ -168,14 +168,14 @@ sections:
     slot: 22
     permission: "shardedcore.shop.premium"
     icon:
-      material: NETHERITE_SWORD
+      material: HEAVY_CORE
       name: "&#FFD900&lPREMIUM SHOP"
       lore:
         - "&8Description"
         - ""
         - "&#FFD900Information:"
-        - "&#FFD900¦ &fPurchase premium items,"
-        - "&#FFD900¦ &fnobody else can &#FFD900get&f."
+        - "&#FFD900| &fPurchase premium items,"
+        - "&#FFD900| &fnobody else can &#FFD900get&f."
         - ""
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
 
@@ -190,8 +190,8 @@ sections:
         - "&8Description"
         - ""
         - "&#00BDF9Information:"
-        - "&#00BDF9¦ &fSpawner shop used,"
-        - "&#00BDF9¦ &fto obtain &#00BDF9spawners&f."
+        - "&#00BDF9| &fSpawner shop used,"
+        - "&#00BDF9| &fto obtain &#00BDF9spawners&f."
         - ""
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
 
@@ -207,8 +207,8 @@ history:
       - "&8Description"
       - ""
       - "&#99ff00Information:"
-      - "&#99ff00¦ &fA purchase from the"
-      - "&#99ff00¦ &f&#99ff00%section% &fsection."
+      - "&#99ff00| &fA purchase from the"
+      - "&#99ff00| &f&#99ff00%section% &fsection."
       - ""
       - "&#22AFFBℹ &fPlayer: &#22AFFB%player%"
       - "&#99ff00&l$&r &fPaid &8▷ &#99ff00$%price%"
@@ -222,7 +222,7 @@ history:
       - "&8Description"
       - ""
       - "&#FF0000Information:"
-      - "&#FF0000¦ &fGo one page back."
+      - "&#FF0000| &fGo one page back."
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
 
@@ -234,13 +234,14 @@ history:
       - "&8Description"
       - ""
       - "&#99ff00Information:"
-      - "&#99ff00¦ &fGo one page forward."
+      - "&#99ff00| &fGo one page forward."
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
 
 messages:
   bought: "&#99ff00&lSHOP &8▷ &fYou bought &#99ff00%amount%x %item% &ffor &#99ff00$%total%&f."
   cannot-afford: "&#FF0000&lERROR &8▷ &fYou need &#99ff00$%total% &ffor that."
+  inventory-full: "&#FF0000&lERROR &8▷ &fYour inventory is full."
   no-space: "&#FF0000&lERROR &8▷ &fYour inventory has no room for that."
   no-economy: "&#FF0000&lERROR &8▷ &fThe shop is not ready yet."
   no-sections: "&#FF0000&lERROR &8▷ &fThe shop has nothing in it yet."

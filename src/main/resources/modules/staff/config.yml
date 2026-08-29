@@ -308,6 +308,8 @@ messages:
   request-sent: "%prefix%&#9FFF00Staff have been notified."
   request-cooldown: "%prefix%&#FF2727Wait before requesting staff again."
   request-staff: "%prefix%&#FF8300%player% requested staff. Click to teleport."
+  request-hover: "&7Click to teleport to %player%"
+  goto: "%prefix%&#9FFF00Teleported to &f%player%&#9FFF00."
   revoke-done: "%prefix%&#9FFF00Revoked &f%count% &7punishments."
   alts-header: "%prefix%&#FF8300Alts for &f%player%&7:"
   alts-none: "%prefix%&#FF2727No alts found."

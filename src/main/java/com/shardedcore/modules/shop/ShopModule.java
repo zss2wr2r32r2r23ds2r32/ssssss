@@ -211,7 +211,7 @@ public final class ShopModule extends Module implements CommandExecutor {
             });
             menu.set(buttons.getInt("confirm.slot", GuiButtons.slot("confirm", 15)), GuiButtons.confirm(player), event -> {
                 event.setCancelled(true);
-                buy(player, sectionId, item, current);
+                buy(player, sectionId, itemId, item, current);
             });
         }
         GuiButtons.fill(menu);
@@ -228,7 +228,7 @@ public final class ShopModule extends Module implements CommandExecutor {
         });
     }
 
-    private void buy(Player player, String sectionId, ConfigurationSection item, int amount) {
+    private void buy(Player player, String sectionId, String itemId, ConfigurationSection item, int requested) {
         long wait = player.hasPermission("shardedcore.shop.fastbuy")
                 ? config.getLong("fast-buy-millis", 50)
                 : 200L;
@@ -240,42 +240,66 @@ public final class ShopModule extends Module implements CommandExecutor {
             send(player, "no-economy");
             return;
         }
-        double total = item.getDouble("price", 0) * amount;
+        List<String> commands = new ArrayList<>(item.getStringList("commands"));
+        if (item.isString("command") && item.getString("command") != null && !item.getString("command").isBlank()) {
+            commands.add(item.getString("command"));
+        }
+        Material material = Sounds.material(item.getString("material", "STONE"), Material.STONE);
+        int amount = Math.max(1, requested);
+        if (commands.isEmpty()) {
+            int space = spaceFor(player, material);
+            if (space <= 0) {
+                send(player, "inventory-full");
+                Sounds.play(player, config.getConfigurationSection("sounds.error"));
+                openBuy(player, sectionId, itemId, item, requested);
+                return;
+            }
+            amount = Math.min(amount, space);
+        }
+        final int sold = amount;
+        double total = item.getDouble("price", 0) * sold;
         if (!economy.service().take(player.getUniqueId(), total)) {
             send(player, "cannot-afford", "total", Amounts.commas(total));
             Sounds.play(player, config.getConfigurationSection("sounds.error"));
             return;
         }
-        List<String> commands = new ArrayList<>(item.getStringList("commands"));
-        if (item.isString("command") && item.getString("command") != null && !item.getString("command").isBlank()) {
-            commands.add(item.getString("command"));
-        }
         if (!commands.isEmpty()) {
             for (String line : commands) {
                 org.bukkit.Bukkit.dispatchCommand(org.bukkit.Bukkit.getConsoleSender(),
-                        line.replace("%player%", player.getName()));
+                        line.replace("%player%", player.getName()).replace("%amount%", String.valueOf(sold)));
             }
         } else {
-            ItemStack stack = new ItemStack(Sounds.material(item.getString("material", "STONE"), Material.STONE), amount);
-            HashMap<Integer, ItemStack> leftover = player.getInventory().addItem(stack);
-            if (!leftover.isEmpty()) {
-                leftover.values().forEach(drop -> player.getWorld().dropItemNaturally(player.getLocation(), drop));
-            }
+            ItemStack stack = new ItemStack(material, sold);
+            player.getInventory().addItem(stack);
         }
-        send(player, "bought", "amount", String.valueOf(amount), "item", itemName(item), "total", Amounts.commas(total));
+        send(player, "bought", "amount", String.valueOf(sold), "item", itemName(item), "total", Amounts.commas(total));
         Sounds.play(player, config.getConfigurationSection("sounds.buy"));
         org.bukkit.Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 sqlite.execute("""
                         INSERT INTO shop_history (uuid, player, section, item, amount, price, at)
                         VALUES (?, ?, ?, ?, ?, ?, ?)
-                        """, player.getUniqueId().toString(), player.getName(), sectionId, itemName(item), amount, total,
+                        """, player.getUniqueId().toString(), player.getName(), sectionId, itemName(item), sold, total,
                         System.currentTimeMillis());
             } catch (SQLException ex) {
                 plugin.getLogger().log(Level.WARNING, "Failed to save shop history", ex);
             }
         });
-        player.closeInventory();
+        openBuy(player, sectionId, itemId, item, requested);
+    }
+
+    private int spaceFor(Player player, Material material) {
+        int max = Math.max(1, material.getMaxStackSize());
+        int space = 0;
+        ItemStack air = new ItemStack(material);
+        for (ItemStack slot : player.getInventory().getStorageContents()) {
+            if (slot == null || slot.getType().isAir()) {
+                space += max;
+            } else if (slot.getType() == material && slot.isSimilar(air) && slot.getAmount() < max) {
+                space += max - slot.getAmount();
+            }
+        }
+        return space;
     }
 
     private ItemStack shopIcon(Player player, ConfigurationSection item) {

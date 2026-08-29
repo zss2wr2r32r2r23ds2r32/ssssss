@@ -8,7 +8,7 @@ gui:
     lore: []
   head:
     slot: 13
-    name: "&#FF2727&l%player%"
+    name: "&#FF2727%player%"
     lore:
       - "&8Description"
       - ""
@@ -18,8 +18,8 @@ gui:
       - "&#FF2727| &fvaults, enderchest, keys and orders."
   confirm:
     slot: 11
-    material: LIME_DYE
-    name: "&#9FFF00&lConfirm"
+    material: LIME_STAINED_GLASS_PANE
+    name: "&#9FFF00&lCONFIRM"
     lore:
       - "&8Description"
       - ""
@@ -29,8 +29,8 @@ gui:
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Confirm"
   cancel:
     slot: 15
-    material: RED_DYE
-    name: "&#FF2727&lCancel"
+    material: RED_STAINED_GLASS_PANE
+    name: "&#FF2727&lCANCEL"
     lore:
       - "&8Description"
       - ""

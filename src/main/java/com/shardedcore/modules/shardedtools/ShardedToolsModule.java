@@ -1,9 +1,12 @@
 package com.shardedcore.modules.shardedtools;
 
 import com.shardedcore.ShardedCore;
+import com.shardedcore.gui.GuiButtons;
+import com.shardedcore.gui.Menus;
 import com.shardedcore.module.Module;
 import com.shardedcore.util.Amounts;
 import com.shardedcore.util.ColorUtil;
+import com.shardedcore.util.Items;
 import com.shardedcore.util.Players;
 import com.shardedcore.util.Sounds;
 import com.shardedcore.util.Tabs;
@@ -68,6 +71,7 @@ public final class ShardedToolsModule extends Module implements CommandExecutor,
         idKey = new NamespacedKey(plugin, "sharded_tool");
         expireKey = new NamespacedKey(plugin, "sharded_tool_expire");
         registerCommand("shardedtool", this);
+        registerCommand("tools", this);
         registerListener(this);
         task = Bukkit.getScheduler().runTaskTimer(plugin, this::tick, 20L, 20L);
     }
@@ -91,6 +95,10 @@ public final class ShardedToolsModule extends Module implements CommandExecutor,
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
+            if (sender instanceof Player player && command.getName().equalsIgnoreCase("tools")) {
+                openTools(player);
+                return true;
+            }
             send(sender, "usage");
             return true;
         }
@@ -187,7 +195,7 @@ public final class ShardedToolsModule extends Module implements CommandExecutor,
     @EventHandler
     public void onBoost(PlayerElytraBoostEvent event) {
         ItemStack item = event.getItemStack();
-        if (!isTool(item, "firework")) return;
+        if (!isFirework(item)) return;
         if (expired(item)) {
             event.setCancelled(true);
             expire(event.getPlayer(), item, null);
@@ -224,7 +232,7 @@ public final class ShardedToolsModule extends Module implements CommandExecutor,
     public void onInteract(PlayerInteractEvent event) {
         if (event.getHand() != EquipmentSlot.HAND && event.getHand() != EquipmentSlot.OFF_HAND) return;
         ItemStack item = event.getItem();
-        if (!isTool(item, "firework")) return;
+        if (!isFirework(item)) return;
         if (expired(item)) {
             expire(event.getPlayer(), item, event.getHand());
             event.setCancelled(true);
@@ -240,13 +248,13 @@ public final class ShardedToolsModule extends Module implements CommandExecutor,
         ItemStack[] contents = player.getInventory().getContents();
         for (int i = 0; i < contents.length; i++) {
             ItemStack held = contents[i];
-            if (isTool(held, "firework")) {
+            if (isFirework(held)) {
                 held.setAmount(Math.max(1, config.getInt("tools.firework.amount", 1)));
                 found = true;
             }
         }
         ItemStack off = player.getInventory().getItemInOffHand();
-        if (isTool(off, "firework")) {
+        if (isFirework(off)) {
             off.setAmount(Math.max(1, config.getInt("tools.firework.amount", 1)));
             found = true;
         }
@@ -338,8 +346,40 @@ public final class ShardedToolsModule extends Module implements CommandExecutor,
             scan(player, player.getInventory().getContents());
             scan(player, player.getInventory().getArmorContents());
             ItemStack off = player.getInventory().getItemInOffHand();
-            if (refresh(player, off)) player.getInventory().setItemInOffHand(off.getAmount() <= 0 ? null : off);
+            if (refresh(player, off) && (off == null || off.getAmount() <= 0)) {
+                player.getInventory().setItemInOffHand(null);
+            }
+            if (player.getOpenInventory() != null) {
+                expireInventory(player, player.getOpenInventory().getTopInventory());
+            }
         }
+    }
+
+    @EventHandler
+    public void onInventoryOpen(org.bukkit.event.inventory.InventoryOpenEvent event) {
+        if (event.getPlayer() instanceof Player player) {
+            expireInventory(player, event.getInventory());
+        }
+    }
+
+    private void expireInventory(Player player, org.bukkit.inventory.Inventory inventory) {
+        if (inventory == null) return;
+        ItemStack[] contents = inventory.getContents();
+        boolean changed = false;
+        for (int i = 0; i < contents.length; i++) {
+            ItemStack item = contents[i];
+            if (item == null || !item.hasItemMeta()) continue;
+            String id = toolId(item);
+            if (id == null) continue;
+            if (expired(item)) {
+                expire(player, item, null);
+                contents[i] = null;
+                changed = true;
+            } else {
+                updateLore(item);
+            }
+        }
+        if (changed) inventory.setContents(contents);
     }
 
     private void scan(Player player, ItemStack[] contents) {
@@ -445,6 +485,38 @@ public final class ShardedToolsModule extends Module implements CommandExecutor,
     private String toolId(ItemStack item) {
         if (item == null || !item.hasItemMeta()) return null;
         return item.getItemMeta().getPersistentDataContainer().get(idKey, PersistentDataType.STRING);
+    }
+
+    private boolean isFirework(ItemStack item) {
+        String id = toolId(item);
+        return id != null && id.toLowerCase(Locale.ROOT).startsWith("firework");
+    }
+
+    private void openTools(Player player) {
+        ConfigurationSection gui = config.getConfigurationSection("gui");
+        int rows = gui == null ? 3 : Math.max(1, gui.getInt("rows", 3));
+        Menus.Menu menu = plugin.menus().create(player, gui == null ? "&8Tools" : gui.getString("title", "&8Tools"), rows);
+        placeTool(menu, player, gui, "drill", 11, Material.NETHERITE_PICKAXE);
+        placeTool(menu, player, gui, "chopper", 13, Material.NETHERITE_AXE);
+        placeTool(menu, player, gui, "firework", 15, Material.FIREWORK_ROCKET);
+        GuiButtons.fill(menu);
+        plugin.menus().open(player, menu);
+        GuiButtons.play(player, "open");
+    }
+
+    private void placeTool(Menus.Menu menu, Player player, ConfigurationSection gui, String id, int fallback, Material material) {
+        ConfigurationSection section = gui == null ? null : gui.getConfigurationSection(id);
+        ConfigurationSection tool = toolSection(id);
+        int slot = section == null ? fallback : section.getInt("slot", fallback);
+        String name = section == null
+                ? (tool == null ? "&#A370EE&l" + id.toUpperCase(Locale.ROOT) : tool.getString("name", id))
+                : section.getString("name", tool == null ? id : tool.getString("name", id));
+        List<String> lore = section == null || section.getStringList("lore").isEmpty()
+                ? (tool == null ? List.of() : tool.getStringList("info-lore"))
+                : section.getStringList("lore");
+        if (lore.isEmpty() && section != null) lore = section.getStringList("info-lore");
+        Material type = Sounds.material(section == null ? material.name() : section.getString("material", material.name()), material);
+        menu.set(slot, Items.named(type, name, lore));
     }
 
     private boolean isTool(ItemStack item, String id) {

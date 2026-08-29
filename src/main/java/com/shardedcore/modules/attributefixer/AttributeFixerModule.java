@@ -58,13 +58,15 @@ public final class AttributeFixerModule extends Module implements Listener {
     public void onClick(InventoryClickEvent event) {
         if (!config.getBoolean("fix-on-click", true)) return;
         if (!(event.getWhoClicked() instanceof Player player)) return;
-        boolean swapOff = event.getClick() == ClickType.SWAP_OFFHAND;
-        Bukkit.getScheduler().runTask(plugin, () -> {
+        boolean swap = event.getClick() == ClickType.SWAP_OFFHAND
+                || event.getClick() == ClickType.NUMBER_KEY
+                || event.getClick().isKeyboardClick();
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
             fix(event.getCurrentItem());
             fix(event.getCursor());
-            if (swapOff) refreshHands(player);
+            if (swap) refreshHands(player);
             else fixPlayer(player);
-        });
+        }, 1L);
     }
 
     @EventHandler

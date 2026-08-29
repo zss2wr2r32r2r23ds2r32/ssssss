@@ -23,7 +23,7 @@ commands:
     permission: shardedcore.command.discord
   store:
     description: Store link
-    aliases: [webstore]
+    aliases: [webstore, website]
     permission: shardedcore.command.store
   apply:
     description: Staff applications
@@ -74,9 +74,6 @@ commands:
     description: Toggle night vision
     aliases: [nightvisiontoggle, nightvision, nv]
     permission: shardedcore.settings.nightvision
-  ordertoggle:
-    description: Toggle order messages
-    permission: shardedcore.settings.orders
   tabbossbar:
     description: Toggle TAB bossbar
     permission: shardedcore.settings.bossbar
@@ -236,13 +233,6 @@ commands:
   playtime:
     description: Show playtime
     permission: shardedcore.playtimerewards
-  order:
-    description: Player order board
-    aliases: [orders]
-    permission: shardedcore.orders
-  orderadmin:
-    description: Orders admin
-    permission: shardedcore.orders.admin
   giveaway:
     description: Public giveaways
     aliases: [gws, gw, giveaways]
@@ -392,9 +382,39 @@ commands:
   requeststaff:
     description: Request staff help
     permission: shardedcore.staff.request
+  staffgoto:
+    description: Teleport to a staff request
+    permission: shardedcore.staff
   staff:
     description: Staff command list
     permission: shardedcore.staff
+  survival:
+    description: Switch to survival
+    permission: shardedcore.command.survival
+  events:
+    description: Switch to events
+    permission: shardedcore.command.events
+  diasmp:
+    description: Switch to diasmp
+    permission: shardedcore.command.diasmp
+  dev:
+    description: Switch to a dev server
+    permission: shardedcore.command.dev
+  patron:
+    description: Patron ranks
+    permission: shardedcore.command.patron
+  promote:
+    description: Promote a LuckPerms group
+    permission: shardedcore.promote
+  demote:
+    description: Demote a LuckPerms group
+    permission: shardedcore.demote
+  tools:
+    description: Sharded tools info
+    permission: shardedcore.tools
+  rtpqueuetoggle:
+    description: Toggle RTP queue messages
+    permission: shardedcore.settings.rtpqueue
 
 permissions:
   shardedcore.admin:
@@ -436,11 +456,11 @@ permissions:
       shardedcore.settings.death: true
       shardedcore.settings.pay: true
       shardedcore.settings.nightvision: true
-      shardedcore.settings.orders: true
       shardedcore.settings.bossbar: true
       shardedcore.settings.scoreboard: true
       shardedcore.settings.tpauto: true
       shardedcore.settings.crystal: true
+      shardedcore.settings.rtpqueue: true
   shardedcore.settings.chat:
     default: true
   shardedcore.settings.msg:
@@ -461,8 +481,6 @@ permissions:
     default: true
   shardedcore.settings.nightvision:
     default: true
-  shardedcore.settings.orders:
-    default: true
   shardedcore.settings.bossbar:
     default: true
   shardedcore.settings.scoreboard:
@@ -470,6 +488,8 @@ permissions:
   shardedcore.settings.tpauto:
     default: true
   shardedcore.settings.crystal:
+    default: true
+  shardedcore.settings.rtpqueue:
     default: true
   shardedcore.coinflip:
     default: true
@@ -561,10 +581,6 @@ permissions:
     default: true
   shardedcore.playtimerewards:
     default: true
-  shardedcore.orders:
-    default: true
-  shardedcore.orders.admin:
-    default: op
   shardedcore.giveaway:
     default: true
   shardedcore.giveaway.admin:
@@ -853,6 +869,22 @@ permissions:
     children:
       shardedcore.commands.listed: true
   shardedcore.leave:
+    default: true
+  shardedcore.command.survival:
+    default: true
+  shardedcore.command.events:
+    default: true
+  shardedcore.command.diasmp:
+    default: true
+  shardedcore.command.dev:
+    default: true
+  shardedcore.command.patron:
+    default: true
+  shardedcore.promote:
+    default: op
+  shardedcore.demote:
+    default: op
+  shardedcore.tools:
     default: true
   shardedcore.internal.disabled:
     default: false

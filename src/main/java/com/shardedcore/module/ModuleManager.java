@@ -27,9 +27,9 @@ import com.shardedcore.modules.killrewards.KillRewardsModule;
 import com.shardedcore.modules.kits.KitsModule;
 import com.shardedcore.modules.live.LiveModule;
 import com.shardedcore.modules.nametags.NametagsModule;
-import com.shardedcore.modules.orders.OrdersModule;
 import com.shardedcore.modules.ping.PingModule;
 import com.shardedcore.modules.playtimerewards.PlaytimeRewardsModule;
+import com.shardedcore.modules.ranks.RanksModule;
 import com.shardedcore.modules.rtp.RtpModule;
 import com.shardedcore.modules.rules.RulesModule;
 import com.shardedcore.modules.sell.SellModule;
@@ -99,7 +99,6 @@ public final class ModuleManager {
         register(new RulesModule(plugin));
         register(new KillRewardsModule(plugin));
         register(new PlaytimeRewardsModule(plugin));
-        register(new OrdersModule(plugin));
         register(new GiveawayModule(plugin));
         register(new VaultsModule(plugin));
         register(new CrystalsModule(plugin));
@@ -110,6 +109,7 @@ public final class ModuleManager {
         register(new AttributeFixerModule(plugin));
         register(new SpawnModule(plugin));
         register(new StaffModule(plugin));
+        register(new RanksModule(plugin));
         register(new TpaModule(plugin));
         register(new WorkstationsModule(plugin));
     }
@@ -191,11 +191,12 @@ public final class ModuleManager {
 
     public void openGui(Player player, int page) {
         List<Module> list = new ArrayList<>(registered.values());
-        int perPage = 14;
+        int rows = 6;
+        int[] slots = com.shardedcore.gui.GuiButtons.inner(rows);
+        int perPage = Math.max(1, slots.length);
         int pages = Math.max(1, (list.size() + perPage - 1) / perPage);
         int current = Math.max(0, Math.min(page, pages - 1));
-        Menus.Menu menu = plugin.menus().create(player, "&8Modules", 3);
-        int[] slots = {10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25};
+        Menus.Menu menu = plugin.menus().create(player, "&8Modules", rows);
         int start = current * perPage;
         for (int i = 0; i < slots.length; i++) {
             int index = start + i;
@@ -224,11 +225,14 @@ public final class ModuleManager {
                 openGui(player, current);
             });
         }
-        menu.set(18, Items.named(Material.RED_STAINED_GLASS_PANE, "&#FF0000&lPREVIOUS PAGE", List.of("&7Page " + current)), event -> {
+        int last = (rows - 1) * 9;
+        menu.set(last + 3, Items.named(Material.RED_STAINED_GLASS_PANE, "&#FF0000&lPREVIOUS PAGE",
+                List.of("&7Page " + current)), event -> {
             event.setCancelled(true);
             if (current > 0) openGui(player, current - 1);
         });
-        menu.set(26, Items.named(Material.LIME_STAINED_GLASS_PANE, "&#80ee0b&lNEXT PAGE", List.of("&7Page " + (current + 2))), event -> {
+        menu.set(last + 5, Items.named(Material.LIME_STAINED_GLASS_PANE, "&#80ee0b&lNEXT PAGE",
+                List.of("&7Page " + (current + 2))), event -> {
             event.setCancelled(true);
             if (current + 1 < pages) openGui(player, current + 1);
         });

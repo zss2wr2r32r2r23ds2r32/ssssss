@@ -4,10 +4,10 @@ refresh: 1
 display:
   background: '#00000000'
   brightness: 15
-  view-distance: 64
+  view-distance: 32
   scale: 1.0
-  y-offset: 0.22
-  line-gap: 0.24
+  y-offset: 0.35
+  line-gap: 0.25
   line-width: 1000
   text-opacity: 255
   see-through: false
@@ -37,7 +37,7 @@ lines:
     interval: 80
     refresh: 40
     frames:
-      - '&#80ee0b&l$&r &#80ee0b%shardedcore_money_formatted% &7| &#F47714⚑ &#F47714%shardedcore_team% &7| &#0AACE6☀ &#0AACE6%shards_value_formatted%'
+      - '&#80ee0b&l$&r &#80ee0b%shardedcore_money_formatted% &7| &#A370EE❖ &#A370EE%shardedcore_crystals_formatted% &7| &#F47714⚑ &#F47714%shardedcore_team%'
       - '&#FF0000🗡 &#FF0000%statistic_player_kills% &7| &#FB7B0B☠ &#FB7B0B%statistic_deaths% &7| &#FFF300⌛ &#FFF300%statistic_time_played%'
 
 messages:

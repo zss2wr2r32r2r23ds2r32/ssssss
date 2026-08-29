@@ -1,15 +1,19 @@
 package com.shardedcore.modules.commands;
 
 import com.shardedcore.ShardedCore;
+import com.shardedcore.gui.GuiButtons;
 import com.shardedcore.gui.Menus;
 import com.shardedcore.module.Module;
 import com.shardedcore.util.ColorUtil;
 import com.shardedcore.util.Items;
 import com.shardedcore.util.Sounds;
+import com.shardedcore.util.Tabs;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,15 +22,17 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-public final class CommandsModule extends Module implements CommandExecutor, Listener {
+public final class CommandsModule extends Module implements CommandExecutor, TabCompleter, Listener {
 
     private volatile Set<String> allowed = Set.of();
+    private BukkitTask scheduled;
 
     public CommandsModule(ShardedCore plugin) {
         super(plugin, "commands");
@@ -39,11 +45,18 @@ public final class CommandsModule extends Module implements CommandExecutor, Lis
         registerCommand("store", this);
         registerCommand("apply", this);
         registerCommand("media", this);
+        registerCommand("survival", this);
+        registerCommand("events", this);
+        registerCommand("diasmp", this);
+        registerCommand("dev", this);
+        registerCommand("patron", this);
         registerListener(this);
+        startScheduled();
     }
 
     @Override
     public void disable() {
+        if (scheduled != null) scheduled.cancel();
         cleanup();
     }
 
@@ -52,6 +65,18 @@ public final class CommandsModule extends Module implements CommandExecutor, Lis
         super.reload();
         rebuildWhitelist();
         Bukkit.getOnlinePlayers().forEach(Player::updateCommands);
+        startScheduled();
+    }
+
+    private void startScheduled() {
+        if (scheduled != null) scheduled.cancel();
+        if (!config.getBoolean("scheduled.enabled", true)) return;
+        long minutes = Math.max(1, config.getLong("scheduled.interval-minutes", 15));
+        String command = config.getString("scheduled.command", "asyncarenas reset warzone");
+        if (command == null || command.isBlank()) return;
+        long ticks = minutes * 20L * 60L;
+        scheduled = Bukkit.getScheduler().runTaskTimer(plugin, () ->
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command), ticks, ticks);
     }
 
     private void rebuildWhitelist() {
@@ -69,6 +94,13 @@ public final class CommandsModule extends Module implements CommandExecutor, Lis
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String name = command.getName().toLowerCase(Locale.ROOT);
+        if (name.equals("survival") || name.equals("events") || name.equals("diasmp") || name.equals("dev")) {
+            return serverCommand(sender, name, args);
+        }
+        if (name.equals("patron")) {
+            if (sender instanceof Player player) openPatron(player);
+            return true;
+        }
         if (name.equals("media")) {
             if (!(sender instanceof Player player)) {
                 show(sender, "Media");
@@ -82,7 +114,7 @@ public final class CommandsModule extends Module implements CommandExecutor, Lis
             return true;
         }
         String key = switch (name) {
-            case "store", "webstore" -> "Store";
+            case "store", "webstore", "website" -> "Store";
             case "apply" -> "Apply";
             default -> "Discord";
         };
@@ -212,5 +244,85 @@ public final class CommandsModule extends Module implements CommandExecutor, Lis
         player.sendActionBar(ColorUtil.parse(cfg("whitelist.unknown",
                 "&#00A2FF&lCORE &8▷ &fYou do not have Permission.")));
         Sounds.play(player, config.getConfigurationSection("whitelist.sound"));
+    }
+
+    private boolean serverCommand(CommandSender sender, String name, String[] args) {
+        if (!(sender instanceof Player player)) {
+            sendRaw(sender, "&#FF0000&lERROR &8▷ &fOnly a player can do that.");
+            return true;
+        }
+        String server = switch (name) {
+            case "survival" -> config.getString("servers.survival", "survival");
+            case "events" -> config.getString("servers.events", "events");
+            case "diasmp" -> config.getString("servers.diasmp", "diasmp");
+            case "dev" -> {
+                if (args.length > 0 && args[0].equals("1")) yield config.getString("servers.dev1", "dev1");
+                if (args.length > 0 && args[0].equals("2")) yield config.getString("servers.dev2", "dev2");
+                yield config.getString("servers.dev", "dev");
+            }
+            default -> name;
+        };
+        player.performCommand("server " + server);
+        return true;
+    }
+
+    private void openPatron(Player player) {
+        ConfigurationSection gui = config.getConfigurationSection("patron");
+        Sounds.play(player, gui == null ? "item.book.page_turn" : gui.getString("open-sound", "item.book.page_turn"), 1f, 1f);
+        String spent = spent(player);
+        int rows = gui == null ? 4 : Math.max(1, gui.getInt("rows", 4));
+        Menus.Menu menu = plugin.menus().create(player, gui == null ? "🔥 Patron" : gui.getString("title", "🔥 Patron"), rows);
+        ItemStack fill = Items.named(Sounds.material(gui == null ? "GRAY_STAINED_GLASS_PANE"
+                : gui.getString("filler.material", "GRAY_STAINED_GLASS_PANE"), Material.GRAY_STAINED_GLASS_PANE), " ", List.of());
+        for (int slot = 0; slot < rows * 9; slot++) menu.set(slot, fill);
+        placePatron(menu, player, gui, "tier-1", 11, Material.PINK_HARNESS, spent);
+        placePatron(menu, player, gui, "tier-2", 13, Material.LIGHT_BLUE_HARNESS, spent);
+        placePatron(menu, player, gui, "tier-3", 15, Material.RED_HARNESS, spent);
+        ConfigurationSection close = gui == null ? null : gui.getConfigurationSection("close");
+        int closeSlot = close == null ? 31 : close.getInt("slot", 31);
+        menu.set(closeSlot, Items.fromSection(close, player), event -> {
+            event.setCancelled(true);
+            Sounds.play(player, gui == null ? "block.barrel.close" : gui.getString("close-sound", "block.barrel.close"), 1f, 1f);
+            player.closeInventory();
+        });
+        if (close == null) {
+            menu.set(31, Items.named(Material.FLOWER_BANNER_PATTERN, "&#FF0000&lCLOSE", List.of(
+                    "&8Description", "", "&#FF0000Information:", "&#FF0000| &fClose this GUI by Clicking", "",
+                    GuiButtons.clickFooter("To Close"))), event -> {
+                event.setCancelled(true);
+                Sounds.play(player, "block.barrel.close", 1f, 1f);
+                player.closeInventory();
+            });
+        }
+        plugin.menus().open(player, menu);
+    }
+
+    private void placePatron(Menus.Menu menu, Player player, ConfigurationSection gui, String id, int fallback,
+                             Material material, String spent) {
+        ConfigurationSection section = gui == null ? null : gui.getConfigurationSection(id);
+        int slot = section == null ? fallback : section.getInt("slot", fallback);
+        ItemStack item = section == null
+                ? Items.named(material, "&#F97E9C&lPATRON", List.of("&7You have spent " + spent))
+                : Items.fromSection(section, player, "spent", spent);
+        menu.set(slot, item, event -> {
+            event.setCancelled(true);
+            Sounds.play(player, "ui.button.click", 1f, 1f);
+            player.performCommand(section == null ? "store" : section.getString("command", "store"));
+        });
+    }
+
+    private String spent(Player player) {
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            return me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, "%ctd_player_spent_alltime%");
+        }
+        return "0";
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (command.getName().equalsIgnoreCase("dev") && args.length == 1) {
+            return Tabs.filter(List.of("1", "2"), args[0]);
+        }
+        return List.of();
     }
 }

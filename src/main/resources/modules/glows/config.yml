@@ -1,5 +1,5 @@
 config-version: 3
-prefix: "&#A370EE&lGLOWS &8▷ &r"
+prefix: "&#FF6B9D&lGLOWS &8▷ &r"
 message-mode: chat
 
 menu-rows: 4
@@ -19,8 +19,8 @@ gui:
     - "%color%⚓ &fStatus: %status%"
     - ""
     - "%click%"
-  status-owned: "&f&lOWNED"
-  status-locked: "&f&lLOCKED"
+  status-owned: "&#94FF00&l&nOWNED"
+  status-locked: "&#FF0000&l&nLOCKED"
   click-footer: "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply"
   colored-harnesses: true
   fill: true

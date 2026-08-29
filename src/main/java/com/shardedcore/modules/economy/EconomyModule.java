@@ -12,6 +12,7 @@ import com.shardedcore.util.Tabs;
 import com.shardedcore.util.Text;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -43,7 +44,8 @@ public final class EconomyModule extends Module implements CommandExecutor, TabC
 
     @Override
     public void enable() {
-        service = new EconomyService(plugin, plugin.toggles().sqlite(), config.getDouble("starting-balance", 0));
+        service = new EconomyService(plugin, plugin.toggles().sqlite(),
+                config.getDouble("starting-balance", 0), config.getDouble("max-balance", 0));
         registerCommand("bal", this);
         registerCommand("pay", this);
         registerCommand("baltop", this);
@@ -105,9 +107,9 @@ public final class EconomyModule extends Module implements CommandExecutor, TabC
             sendRaw(player, line("usage-pay"));
             return true;
         }
-        Player target = Players.online(args[0]);
-        if (target == null) {
-            sendRaw(player, line("player-offline"));
+        OfflinePlayer target = Players.offline(args[0]);
+        if (target == null || target.getUniqueId() == null || (!target.hasPlayedBefore() && !target.isOnline())) {
+            sendRaw(player, line("player-missing"));
             return true;
         }
         if (target.getUniqueId().equals(player.getUniqueId())) {
@@ -124,7 +126,8 @@ public final class EconomyModule extends Module implements CommandExecutor, TabC
             return true;
         }
         SettingsModule settings = plugin.modules().get(SettingsModule.class);
-        if (settings != null && !settings.pay(target)) {
+        Player online = target.getPlayer();
+        if (online != null && settings != null && !settings.pay(online)) {
             sendRaw(player, line("pay-disabled"));
             return true;
         }
@@ -133,8 +136,10 @@ public final class EconomyModule extends Module implements CommandExecutor, TabC
             return true;
         }
         service.add(target.getUniqueId(), amount);
-        sendRaw(player, line("paid", "amount", service.format(amount), "player", target.getName()));
-        sendRaw(target, line("received", "amount", service.format(amount), "player", player.getName()));
+        sendRaw(player, line("paid", "amount", service.format(amount), "player", Players.name(target)));
+        if (online != null) {
+            sendRaw(online, line("received", "amount", service.format(amount), "player", player.getName()));
+        }
         return true;
     }
 
@@ -286,6 +291,10 @@ public final class EconomyModule extends Module implements CommandExecutor, TabC
     }
 
     private boolean moneyMethods(CommandSender sender) {
+        if (sender instanceof Player player && config.getBoolean("money-methods-gui.enabled", true)) {
+            openMoneyMethods(player);
+            return true;
+        }
         List<String> lines = config.getStringList("money-methods");
         if (lines.isEmpty()) {
             sendRaw(sender, line("money-methods-empty"));
@@ -293,6 +302,30 @@ public final class EconomyModule extends Module implements CommandExecutor, TabC
         }
         for (String line : lines) sendRaw(sender, line);
         return true;
+    }
+
+    private void openMoneyMethods(Player player) {
+        ConfigurationSection gui = config.getConfigurationSection("money-methods-gui");
+        int rows = gui == null ? 3 : Math.max(1, gui.getInt("rows", 3));
+        Menus.Menu menu = plugin.menus().create(player, gui == null ? "&8Money Methods" : gui.getString("title", "&8Money Methods"), rows);
+        ConfigurationSection items = gui == null ? null : gui.getConfigurationSection("items");
+        if (items != null) {
+            for (String id : items.getKeys(false)) {
+                ConfigurationSection item = items.getConfigurationSection(id);
+                if (item == null) continue;
+                menu.set(item.getInt("slot", 0), Items.fromSection(item, player));
+            }
+        } else {
+            List<String> lines = config.getStringList("money-methods");
+            int slot = 11;
+            for (String line : lines) {
+                if (slot > 15) break;
+                menu.set(slot++, Items.named(Material.GOLD_INGOT, line, List.of()));
+            }
+        }
+        GuiButtons.fill(menu);
+        plugin.menus().open(player, menu);
+        GuiButtons.play(player, "open");
     }
 
     @EventHandler

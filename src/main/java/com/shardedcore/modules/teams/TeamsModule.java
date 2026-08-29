@@ -5,9 +5,11 @@ import com.shardedcore.database.Sqlite;
 import com.shardedcore.gui.GuiButtons;
 import com.shardedcore.gui.Menus;
 import com.shardedcore.module.Module;
+import com.shardedcore.modules.combat.CombatModule;
 import com.shardedcore.util.Amounts;
 import com.shardedcore.util.ColorUtil;
 import com.shardedcore.util.Items;
+import com.shardedcore.util.Sounds;
 import com.shardedcore.util.Tabs;
 import com.shardedcore.util.Text;
 import io.papermc.paper.event.player.AsyncChatEvent;
@@ -28,9 +30,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -46,7 +50,9 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
     private Sqlite sqlite;
     private final Map<UUID, String> teamChat = new ConcurrentHashMap<>();
     private final Map<UUID, String> creating = new ConcurrentHashMap<>();
+    private final Map<UUID, String> renaming = new ConcurrentHashMap<>();
     private final Map<UUID, Long> emergency = new ConcurrentHashMap<>();
+    private final Map<UUID, BukkitTask> pendingHome = new ConcurrentHashMap<>();
 
     public TeamsModule(ShardedCore plugin) {
         super(plugin, "teams");
@@ -108,6 +114,9 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
     public void disable() {
         teamChat.clear();
         creating.clear();
+        renaming.clear();
+        pendingHome.values().forEach(BukkitTask::cancel);
+        pendingHome.clear();
         cleanup();
     }
 
@@ -115,6 +124,27 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
         String name = teamName(player.getUniqueId());
         if (name == null || name.isBlank()) return cfg("placeholders.not-in-team", "N/A");
         return name;
+    }
+
+    public String leaderboardPlaceholder(Player player) {
+        String team = teamId(player.getUniqueId());
+        if (team == null) return cfg("placeholders.not-in-team", "N/A");
+        return rank(team);
+    }
+
+    public String teamKills(Player player) {
+        String team = teamId(player.getUniqueId());
+        return team == null ? "0" : String.valueOf(stats(team).kills);
+    }
+
+    public String teamPlaytime(Player player) {
+        String team = teamId(player.getUniqueId());
+        return team == null ? cfg("placeholders.no-playtime", "0h 0m") : stats(team).playtime;
+    }
+
+    public String teamMoney(Player player) {
+        String team = teamId(player.getUniqueId());
+        return team == null ? "0" : Amounts.format(stats(team).tokens);
     }
 
     public void wipe(UUID uuid) {
@@ -126,6 +156,8 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
         }
         teamChat.remove(uuid);
         creating.remove(uuid);
+        renaming.remove(uuid);
+        stopHome(uuid);
         try {
             sqlite.execute("DELETE FROM team_invites WHERE uuid = ?", uuid.toString());
         } catch (SQLException ignored) {
@@ -185,51 +217,70 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
             return;
         }
         String name = teamName(player.getUniqueId());
+        Stats stats = stats(team);
         Menus.Menu menu = plugin.menus().create(player,
-                Text.apply(cfg("gui.main-title", "Team | %team%"), "team", name), 4);
-        button(menu, config.getInt("gui.home-slot", 10), Material.RED_BED, cfg("gui.home-name", "&#00A2FF&lTEAM HOME"),
+                Text.apply(cfg("gui.main-title", "Team | %team%"), "team", name), config.getInt("gui.rows", 4));
+        button(menu, config.getInt("gui.home-slot", 10), guiMaterial("home-material", Material.RED_BED),
+                cfg("gui.home-name", "&#00A2FF&lTEAM HOME"),
                 lore("gui.home-lore", "click", click("click-footer")),
                 event -> home(player));
-        button(menu, 11, Material.ARMOR_STAND, cfg("gui.members-name", "&#9FFF00&lMEMBERS"),
-                lore("gui.members-lore", "click", click("click-footer"), "count", String.valueOf(members(team).size())),
-                event -> openMembers(player, team));
-        button(menu, 12, Material.SPYGLASS, cfg("gui.browse-name", "&#00D4FF&lBROWSE TEAMS"),
+        button(menu, config.getInt("gui.browse-slot", 12), guiMaterial("browse-material", Material.SPYGLASS),
+                cfg("gui.browse-name", "&#00D4FF&lBROWSE TEAMS"),
                 lore("gui.browse-lore", "click", click("click-footer")),
                 event -> openBrowse(player, 0));
-        button(menu, 13, Material.TOTEM_OF_UNDYING, cfg("gui.emergency-name", "&#FF2727&lEMERGENCY"),
+        button(menu, config.getInt("gui.emergency-slot", 11), guiMaterial("emergency-material", Material.GOAT_HORN),
+                cfg("gui.emergency-name", "&#FF2727&lEMERGENCY"),
                 lore("gui.emergency-lore", "click", click("click-footer")),
                 event -> emergency(player));
+        OfflinePlayer owner = leaderOf(team);
+        List<String> membersLore = lore("gui.members-lore", "click", click("click-footer"),
+                "count", String.valueOf(members(team).size()));
+        ItemStack membersIcon = owner == null
+                ? Items.named(guiMaterial("members-material", Material.PLAYER_HEAD),
+                cfg("gui.members-name", "&#9FFF00&lMEMBERS"), membersLore)
+                : Items.head(owner, cfg("gui.members-name", "&#9FFF00&lMEMBERS"), membersLore);
+        button(menu, config.getInt("gui.members-slot", 13), membersIcon, event -> openMembers(player, team));
         boolean chatting = team.equals(teamChat.get(player.getUniqueId()));
-        button(menu, 14, Material.GOAT_HORN, cfg("gui.chat-name", "&x&F&F&B&A&0&0&lTEAM CHAT"),
+        button(menu, config.getInt("gui.chat-slot", 14), guiMaterial("chat-material", Material.GUSTER_BANNER_PATTERN),
+                cfg("gui.chat-name", "&x&F&F&B&A&0&0&lTEAM CHAT"),
                 lore("gui.chat-lore", "click", click("click-footer"),
                         "status", chatting ? "&#A9FF00&lENABLED" : "&#FF0000&lDISABLED"),
                 event -> {
                     chat(player);
                     openMain(player);
                 });
-        button(menu, 15, Material.SHIELD, cfg("gui.allies-name", "&#FFD700&lALLIES"),
+        button(menu, config.getInt("gui.allies-slot", 15), guiMaterial("allies-material", Material.SHIELD),
+                cfg("gui.allies-name", "&#FFD700&lALLIES"),
                 lore("gui.allies-lore", "click", click("click-footer"),
                         "count", String.valueOf(allies(team).size()),
                         "max", String.valueOf(config.getInt("ally.max-allies", 1))),
                 event -> openAllies(player, team));
-        button(menu, 16, Material.GOLD_BLOCK, cfg("gui.leaderboard-name", "&#FFD700&lTEAM LEADERBOARD"),
-                lore("gui.leaderboard-lore", "click", click("click-footer")),
+        button(menu, config.getInt("gui.leaderboard-slot", 16), guiMaterial("leaderboard-material", Material.PINK_BANNER),
+                cfg("gui.leaderboard-name", "&#FFD700&lTEAM LEADERBOARD"),
+                lore("gui.leaderboard-lore", "click", click("click-footer"),
+                        "rank", rank(team),
+                        "kills", String.valueOf(stats.kills),
+                        "playtime", stats.playtime,
+                        "money", Amounts.format(stats.tokens),
+                        "tokens", Amounts.format(stats.tokens)),
                 event -> openBrowse(player, 0));
-        button(menu, config.getInt("gui.enderchest-slot", 19), Material.ENDER_CHEST,
+        button(menu, config.getInt("gui.enderchest-slot", 21), guiMaterial("enderchest-material", Material.ENDER_CHEST),
                 cfg("gui.enderchest-name", "&#A370EE&lTEAM ENDERCHEST"),
                 lore("gui.enderchest-lore", "%click%", click("click-footer")),
                 event -> openEnderchest(player));
-        button(menu, config.getInt("gui.settings-slot", 20), Material.REPEATER,
+        button(menu, config.getInt("gui.settings-slot", 23), guiMaterial("settings-material", Material.REPEATER),
                 cfg("gui.settings-name", "&#FFBA00&lTEAM SETTINGS"),
                 lore("gui.settings-lore", "%click%", click("click-footer")),
                 event -> openSettings(player));
+        int leaveSlot = config.getInt("gui.disband-slot", 22);
         if ("LEADER".equals(role(player.getUniqueId()))) {
-            button(menu, 22, Material.BARRIER, cfg("gui.disband-name", "&#FF2727&lDISBAND TEAM"),
+            button(menu, leaveSlot, guiMaterial("disband-material", Material.BARRIER),
+                    cfg("gui.disband-name", "&#FF2727&lDISBAND TEAM"),
                     lore("gui.disband-lore", "click", click("click-footer")),
                     event -> openDisband(player));
         } else {
             List<String> leaveLore = lore("gui.leave-lore", "click", click("click-footer"));
-            menu.set(22, Items.head(player, cfg("gui.leave-name", "&#FF2727&lLEAVE TEAM"), leaveLore), event -> {
+            menu.set(leaveSlot, Items.head(player, cfg("gui.leave-name", "&#FF2727&lLEAVE TEAM"), leaveLore), event -> {
                 event.setCancelled(true);
                 player.closeInventory();
                 leave(player);
@@ -375,6 +426,7 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
                         "count", String.valueOf(members(team).size()),
                         "kills", String.valueOf(stats.kills),
                         "tokens", Amounts.format(stats.tokens),
+                        "money", Amounts.format(stats.tokens),
                         "playtime", stats.playtime,
                         "score", String.valueOf(stats.score))));
         button(menu, 22, GuiButtons.back(player), event -> openBrowse(player, 0));
@@ -625,6 +677,15 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
     @EventHandler(priority = EventPriority.LOWEST)
     public void onTyped(AsyncChatEvent event) {
         Player player = event.getPlayer();
+        if (renaming.containsKey(player.getUniqueId())) {
+            event.setCancelled(true);
+            String name = PlainTextComponentSerializer.plainText().serialize(event.message());
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                renaming.remove(player.getUniqueId());
+                rename(player, new String[]{"name", name});
+            });
+            return;
+        }
         if (!creating.containsKey(player.getUniqueId())) return;
         event.setCancelled(true);
         String name = PlainTextComponentSerializer.plainText().serialize(event.message());
@@ -659,6 +720,20 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         creating.remove(event.getPlayer().getUniqueId());
+        renaming.remove(event.getPlayer().getUniqueId());
+        stopHome(event.getPlayer().getUniqueId());
+    }
+
+    @EventHandler
+    public void onHomeMove(PlayerMoveEvent event) {
+        if (!config.getBoolean("home.cancel-on-move", true)) return;
+        if (event.getTo() == null) return;
+        if (event.getFrom().getBlockX() == event.getTo().getBlockX()
+                && event.getFrom().getBlockY() == event.getTo().getBlockY()
+                && event.getFrom().getBlockZ() == event.getTo().getBlockZ()) return;
+        if (!pendingHome.containsKey(event.getPlayer().getUniqueId())) return;
+        stopHome(event.getPlayer().getUniqueId());
+        send(event.getPlayer(), "home-cancel");
     }
 
     private boolean togglePvp(Player player) {
@@ -722,10 +797,55 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
             send(player, "no-home");
             return true;
         }
+        CombatModule combat = plugin.modules().get(CombatModule.class);
+        if (combat != null && combat.tagged(player)) {
+            send(player, "in-combat");
+            return true;
+        }
         player.closeInventory();
-        player.teleportAsync(location);
-        send(player, "home-teleport");
+        if (pendingHome.containsKey(player.getUniqueId())) {
+            send(player, "already-teleporting");
+            return true;
+        }
+        int seconds = Math.max(0, config.getInt("home.delay-seconds", 5));
+        if (seconds == 0) {
+            finishHome(player, location);
+            return true;
+        }
+        int[] left = {seconds};
+        BukkitTask task = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+            if (!player.isOnline()) {
+                stopHome(player.getUniqueId());
+                return;
+            }
+            CombatModule tagged = plugin.modules().get(CombatModule.class);
+            if (tagged != null && tagged.tagged(player)) {
+                stopHome(player.getUniqueId());
+                send(player, "in-combat");
+                return;
+            }
+            if (left[0] <= 0) {
+                stopHome(player.getUniqueId());
+                finishHome(player, location);
+                return;
+            }
+            send(player, "home-countdown", "seconds", String.valueOf(left[0]));
+            left[0]--;
+        }, 0L, 20L);
+        pendingHome.put(player.getUniqueId(), task);
         return true;
+    }
+
+    private void finishHome(Player player, Location location) {
+        player.teleportAsync(location).thenAccept(ok -> Bukkit.getScheduler().runTask(plugin, () -> {
+            if (!Boolean.TRUE.equals(ok) || !player.isOnline()) return;
+            send(player, "home-teleport");
+        }));
+    }
+
+    private void stopHome(UUID uuid) {
+        BukkitTask task = pendingHome.remove(uuid);
+        if (task != null) task.cancel();
     }
 
     private boolean setHome(Player player) {
@@ -795,32 +915,47 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
             return;
         }
         boolean friendly = pvp(team);
-        Menus.Menu menu = plugin.menus().create(player, cfg("gui.settings-title", "☀ Team ☀ Previewing | Settings"), 3);
-        button(menu, 11, Material.NAME_TAG, cfg("gui.tag-name", "&#FFBA00&lTEAM NAME"),
+        Menus.Menu menu = plugin.menus().create(player, cfg("gui.settings-title", "☀ Team ☀ Previewing | Settings"),
+                config.getInt("gui.settings-rows", 3));
+        button(menu, config.getInt("gui.tag-slot", 11), guiMaterial("tag-material", Material.NAME_TAG),
+                cfg("gui.tag-name", "&#FFBA00&lTEAM NAME"),
                 lore("gui.tag-lore", "%click%", click("click-footer"), "tag", displayName(team)),
                 event -> {
+                    if (!"LEADER".equals(role(player.getUniqueId()))) {
+                        send(player, "not-leader");
+                        return;
+                    }
                     player.closeInventory();
-                    send(player, "usage-name");
+                    renaming.put(player.getUniqueId(), team);
+                    send(player, "type-rename");
                 });
-        button(menu, 13, Material.RED_BANNER, cfg("gui.home-set-name", "&#00A2FF&lSET HOME"),
+        button(menu, config.getInt("gui.home-set-slot", 13), guiMaterial("home-set-material", Material.RED_BANNER),
+                cfg("gui.home-set-name", "&#00A2FF&lSET HOME"),
                 lore("gui.home-set-lore", "%click%", click("click-footer")),
                 event -> {
                     player.closeInventory();
                     setHome(player);
                 });
-        button(menu, 15, friendly ? Material.LIME_WOOL : Material.RED_WOOL,
-                cfg("gui.pvp-name", "&#FF0000&lFRIENDLY FIRE"),
+        Material pvpItem = friendly
+                ? guiMaterial("pvp-on-material", Material.LIME_WOOL)
+                : guiMaterial("pvp-off-material", Material.RED_WOOL);
+        String pvpName = friendly
+                ? cfg("gui.pvp-name-on", "&#94FF00&lFRIENDLY FIRE")
+                : cfg("gui.pvp-name-off", "&#FF0000&lFRIENDLY FIRE");
+        button(menu, config.getInt("gui.pvp-slot", 15), pvpItem, pvpName,
                 lore("gui.pvp-lore", "%click%", click("click-footer"),
                         "status", friendly ? "&#94FF00&lON" : "&#FF0000&lOFF"),
                 event -> {
                     togglePvp(player);
                     openSettings(player);
                 });
-        menu.set(GuiButtons.slot("back", 22), GuiButtons.back(player), event -> {
+        menu.set(config.getInt("gui.settings-back-slot", 22), GuiButtons.back(player), event -> {
             event.setCancelled(true);
             openMain(player);
         });
-        GuiButtons.border(menu);
+        menu.fill(Items.named(
+                Sounds.material(cfg("gui.settings-filler", "BLACK_STAINED_GLASS_PANE"), Material.BLACK_STAINED_GLASS_PANE),
+                " ", List.of()));
         plugin.menus().open(player, menu);
     }
 
@@ -1183,9 +1318,10 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
         var economy = plugin.modules().get(com.shardedcore.modules.economy.EconomyModule.class);
         for (Member member : members(team)) {
             OfflinePlayer player = Bukkit.getOfflinePlayer(member.uuid);
-            if (player.isOnline() && player.getPlayer() != null) {
-                kills += player.getPlayer().getStatistic(Statistic.PLAYER_KILLS);
-                play += player.getPlayer().getStatistic(Statistic.PLAY_ONE_MINUTE);
+            try {
+                kills += player.getStatistic(Statistic.PLAYER_KILLS);
+                play += player.getStatistic(Statistic.PLAY_ONE_MINUTE);
+            } catch (IllegalArgumentException ignored) {
             }
             if (economy != null) tokens += economy.service().get(member.uuid);
         }
@@ -1193,6 +1329,17 @@ public final class TeamsModule extends Module implements CommandExecutor, TabCom
                 + (int) (tokens * config.getInt("leaderboard.token-weight", 1))
                 + (int) ((play / 20L / 3600L) * config.getInt("leaderboard.playtime-hour-weight", 50));
         return new Stats(kills, tokens, playtime(play / 20L), score);
+    }
+
+    private OfflinePlayer leaderOf(String team) {
+        for (Member member : members(team)) {
+            if ("LEADER".equals(member.role)) return Bukkit.getOfflinePlayer(member.uuid);
+        }
+        return null;
+    }
+
+    private Material guiMaterial(String key, Material fallback) {
+        return Sounds.material(cfg("gui." + key, fallback.name()), fallback);
     }
 
     private static String playtime(long seconds) {

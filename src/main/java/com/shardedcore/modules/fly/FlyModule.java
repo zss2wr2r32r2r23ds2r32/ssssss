@@ -3,6 +3,7 @@ package com.shardedcore.modules.fly;
 import com.shardedcore.data.TimedPerks;
 import com.shardedcore.ShardedCore;
 import com.shardedcore.module.Module;
+import com.shardedcore.modules.staff.StaffModule;
 import com.shardedcore.util.Configs;
 import com.shardedcore.util.Tabs;
 import org.bukkit.Bukkit;
@@ -134,6 +135,8 @@ public final class FlyModule extends Module implements CommandExecutor, TabCompl
 
     private boolean allowed(Player player) {
         if (player.hasPermission("shardedcore.fly.bypass")) return true;
+        StaffModule staff = plugin.modules().get(StaffModule.class);
+        if (staff != null && (staff.inStaffMode(player) || staff.vanished(player))) return true;
         if (TimedPerks.has(player.getUniqueId(), "fly")) return true;
         if (!inside(player.getLocation())) return false;
         return player.hasPermission("shardedcore.fly") || config.getBoolean("default-permission", true);
@@ -155,6 +158,8 @@ public final class FlyModule extends Module implements CommandExecutor, TabCompl
     private void enforce(Player player) {
         if (!player.getAllowFlight()) return;
         if (player.hasPermission("shardedcore.fly.bypass")) return;
+        StaffModule staff = plugin.modules().get(StaffModule.class);
+        if (staff != null && (staff.inStaffMode(player) || staff.vanished(player))) return;
         if (TimedPerks.has(player.getUniqueId(), "fly")) return;
         if (inside(player.getLocation())) return;
         player.setAllowFlight(false);

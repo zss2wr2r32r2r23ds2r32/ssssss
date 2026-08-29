@@ -30,6 +30,9 @@ public final class Amounts {
         } else if (normalized.endsWith("t")) {
             multiplier = 1_000_000_000_000D;
             normalized = normalized.substring(0, normalized.length() - 1);
+        } else if (normalized.endsWith("q")) {
+            multiplier = 1_000_000_000_000_000D;
+            normalized = normalized.substring(0, normalized.length() - 1);
         }
         try {
             return Double.parseDouble(normalized) * multiplier;
@@ -44,11 +47,16 @@ public final class Amounts {
 
     public static String format(double value) {
         double abs = Math.abs(value);
-        if (abs >= 1_000_000_000_000D) return trim(value / 1_000_000_000_000D) + "T";
-        if (abs >= 1_000_000_000D) return trim(value / 1_000_000_000D) + "B";
-        if (abs >= 1_000_000D) return trim(value / 1_000_000D) + "M";
-        if (abs >= 1_000D) return trim(value / 1_000D) + "K";
-        return COMMA.format(value);
+        String[] suffixes = {"", "K", "M", "B", "T", "Q"};
+        double scaled = abs;
+        int index = 0;
+        while (index < suffixes.length - 1 && scaled >= 1000D) {
+            scaled /= 1000D;
+            index++;
+        }
+        if (index == 0) return COMMA.format(value);
+        if (value < 0) scaled = -scaled;
+        return trim(scaled) + suffixes[index];
     }
 
     public static String commas(double value) {

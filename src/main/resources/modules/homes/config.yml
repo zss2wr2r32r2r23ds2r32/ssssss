@@ -30,7 +30,7 @@ disabled-worlds:
   - "spawn"
 
 gui:
-  title: "&8Homes | Dashboard"
+  title: "&8Homes"
   size: 54
   open-sound:
     enabled: true
@@ -47,7 +47,7 @@ gui:
   # it names no slot of its own - that comes from the home standing there.
   locked:
     bed:
-      material: PURPLE_BED
+      material: RED_BED
       name: "&#A370EE&lNO PERMISSION"
       lore:
         - "&8Description"
@@ -56,7 +56,7 @@ gui:
         - "&#A370EE¦ &fBuy a higher rank on"
         - "&#A370EE¦ &four store for more homes."
     dye:
-      material: PURPLE_DYE
+      material: RED_DYE
       name: "&#A370EE&lNO PERMISSION"
       lore:
         - "&8Description"
@@ -71,14 +71,14 @@ gui:
       bed:
         set:
           slot: 10
-          material: LIME_BED
-          name: "&#16D223&lHOME 1"
+          material: PURPLE_BED
+          name: "&#AF12FF&lHOME 1"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to teleport"
-            - "&#16D223¦ &fto your &#16D223home 1&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to teleport"
+            - "&#AF12FF| &fto your &#AF12FFhome 1&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
@@ -96,14 +96,14 @@ gui:
       dye:
         set:
           slot: 19
-          material: LIME_DYE
-          name: "&#16D223&lHOME 1"
+          material: PURPLE_DYE
+          name: "&#AF12FF&lHOME 1"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to delete"
-            - "&#16D223¦ &fthis &#16D223home&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to delete"
+            - "&#AF12FF| &fthis &#AF12FFhome&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
@@ -123,14 +123,14 @@ gui:
       bed:
         set:
           slot: 11
-          material: LIME_BED
-          name: "&#16D223&lHOME 2"
+          material: PURPLE_BED
+          name: "&#AF12FF&lHOME 2"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to teleport"
-            - "&#16D223¦ &fto your &#16D223home 2&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to teleport"
+            - "&#AF12FF| &fto your &#AF12FFhome 2&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
@@ -148,14 +148,14 @@ gui:
       dye:
         set:
           slot: 20
-          material: LIME_DYE
-          name: "&#16D223&lHOME 2"
+          material: PURPLE_DYE
+          name: "&#AF12FF&lHOME 2"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to delete"
-            - "&#16D223¦ &fthis &#16D223home&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to delete"
+            - "&#AF12FF| &fthis &#AF12FFhome&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
@@ -175,14 +175,14 @@ gui:
       bed:
         set:
           slot: 12
-          material: LIME_BED
-          name: "&#16D223&lHOME 3"
+          material: PURPLE_BED
+          name: "&#AF12FF&lHOME 3"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to teleport"
-            - "&#16D223¦ &fto your &#16D223home 3&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to teleport"
+            - "&#AF12FF| &fto your &#AF12FFhome 3&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
@@ -200,14 +200,14 @@ gui:
       dye:
         set:
           slot: 21
-          material: LIME_DYE
-          name: "&#16D223&lHOME 3"
+          material: PURPLE_DYE
+          name: "&#AF12FF&lHOME 3"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to delete"
-            - "&#16D223¦ &fthis &#16D223home&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to delete"
+            - "&#AF12FF| &fthis &#AF12FFhome&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
@@ -227,14 +227,14 @@ gui:
       bed:
         set:
           slot: 13
-          material: LIME_BED
-          name: "&#16D223&lHOME 4"
+          material: PURPLE_BED
+          name: "&#AF12FF&lHOME 4"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to teleport"
-            - "&#16D223¦ &fto your &#16D223home 4&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to teleport"
+            - "&#AF12FF| &fto your &#AF12FFhome 4&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
@@ -252,14 +252,14 @@ gui:
       dye:
         set:
           slot: 22
-          material: LIME_DYE
-          name: "&#16D223&lHOME 4"
+          material: PURPLE_DYE
+          name: "&#AF12FF&lHOME 4"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to delete"
-            - "&#16D223¦ &fthis &#16D223home&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to delete"
+            - "&#AF12FF| &fthis &#AF12FFhome&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
@@ -279,14 +279,14 @@ gui:
       bed:
         set:
           slot: 14
-          material: LIME_BED
-          name: "&#16D223&lHOME 5"
+          material: PURPLE_BED
+          name: "&#AF12FF&lHOME 5"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to teleport"
-            - "&#16D223¦ &fto your &#16D223home 5&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to teleport"
+            - "&#AF12FF| &fto your &#AF12FFhome 5&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
@@ -304,14 +304,14 @@ gui:
       dye:
         set:
           slot: 23
-          material: LIME_DYE
-          name: "&#16D223&lHOME 5"
+          material: PURPLE_DYE
+          name: "&#AF12FF&lHOME 5"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to delete"
-            - "&#16D223¦ &fthis &#16D223home&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to delete"
+            - "&#AF12FF| &fthis &#AF12FFhome&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
@@ -331,14 +331,14 @@ gui:
       bed:
         set:
           slot: 15
-          material: LIME_BED
-          name: "&#16D223&lHOME 6"
+          material: PURPLE_BED
+          name: "&#AF12FF&lHOME 6"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to teleport"
-            - "&#16D223¦ &fto your &#16D223home 6&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to teleport"
+            - "&#AF12FF| &fto your &#AF12FFhome 6&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
@@ -356,14 +356,14 @@ gui:
       dye:
         set:
           slot: 24
-          material: LIME_DYE
-          name: "&#16D223&lHOME 6"
+          material: PURPLE_DYE
+          name: "&#AF12FF&lHOME 6"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to delete"
-            - "&#16D223¦ &fthis &#16D223home&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to delete"
+            - "&#AF12FF| &fthis &#AF12FFhome&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
@@ -383,14 +383,14 @@ gui:
       bed:
         set:
           slot: 16
-          material: LIME_BED
-          name: "&#16D223&lHOME 7"
+          material: PURPLE_BED
+          name: "&#AF12FF&lHOME 7"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to teleport"
-            - "&#16D223¦ &fto your &#16D223home 7&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to teleport"
+            - "&#AF12FF| &fto your &#AF12FFhome 7&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
@@ -408,14 +408,14 @@ gui:
       dye:
         set:
           slot: 25
-          material: LIME_DYE
-          name: "&#16D223&lHOME 7"
+          material: PURPLE_DYE
+          name: "&#AF12FF&lHOME 7"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to delete"
-            - "&#16D223¦ &fthis &#16D223home&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to delete"
+            - "&#AF12FF| &fthis &#AF12FFhome&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
@@ -435,14 +435,14 @@ gui:
       bed:
         set:
           slot: 28
-          material: LIME_BED
-          name: "&#16D223&lHOME 8"
+          material: PURPLE_BED
+          name: "&#AF12FF&lHOME 8"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to teleport"
-            - "&#16D223¦ &fto your &#16D223home 8&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to teleport"
+            - "&#AF12FF| &fto your &#AF12FFhome 8&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
@@ -460,14 +460,14 @@ gui:
       dye:
         set:
           slot: 37
-          material: LIME_DYE
-          name: "&#16D223&lHOME 8"
+          material: PURPLE_DYE
+          name: "&#AF12FF&lHOME 8"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to delete"
-            - "&#16D223¦ &fthis &#16D223home&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to delete"
+            - "&#AF12FF| &fthis &#AF12FFhome&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
@@ -487,14 +487,14 @@ gui:
       bed:
         set:
           slot: 29
-          material: LIME_BED
-          name: "&#16D223&lHOME 9"
+          material: PURPLE_BED
+          name: "&#AF12FF&lHOME 9"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to teleport"
-            - "&#16D223¦ &fto your &#16D223home 9&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to teleport"
+            - "&#AF12FF| &fto your &#AF12FFhome 9&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
@@ -512,14 +512,14 @@ gui:
       dye:
         set:
           slot: 38
-          material: LIME_DYE
-          name: "&#16D223&lHOME 9"
+          material: PURPLE_DYE
+          name: "&#AF12FF&lHOME 9"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to delete"
-            - "&#16D223¦ &fthis &#16D223home&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to delete"
+            - "&#AF12FF| &fthis &#AF12FFhome&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
@@ -539,14 +539,14 @@ gui:
       bed:
         set:
           slot: 30
-          material: LIME_BED
-          name: "&#16D223&lHOME 10"
+          material: PURPLE_BED
+          name: "&#AF12FF&lHOME 10"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to teleport"
-            - "&#16D223¦ &fto your &#16D223home 10&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to teleport"
+            - "&#AF12FF| &fto your &#AF12FFhome 10&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
@@ -564,14 +564,14 @@ gui:
       dye:
         set:
           slot: 39
-          material: LIME_DYE
-          name: "&#16D223&lHOME 10"
+          material: PURPLE_DYE
+          name: "&#AF12FF&lHOME 10"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to delete"
-            - "&#16D223¦ &fthis &#16D223home&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to delete"
+            - "&#AF12FF| &fthis &#AF12FFhome&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
@@ -591,14 +591,14 @@ gui:
       bed:
         set:
           slot: 31
-          material: LIME_BED
-          name: "&#16D223&lHOME 11"
+          material: PURPLE_BED
+          name: "&#AF12FF&lHOME 11"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to teleport"
-            - "&#16D223¦ &fto your &#16D223home 11&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to teleport"
+            - "&#AF12FF| &fto your &#AF12FFhome 11&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
@@ -616,14 +616,14 @@ gui:
       dye:
         set:
           slot: 40
-          material: LIME_DYE
-          name: "&#16D223&lHOME 11"
+          material: PURPLE_DYE
+          name: "&#AF12FF&lHOME 11"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to delete"
-            - "&#16D223¦ &fthis &#16D223home&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to delete"
+            - "&#AF12FF| &fthis &#AF12FFhome&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
@@ -643,14 +643,14 @@ gui:
       bed:
         set:
           slot: 32
-          material: LIME_BED
-          name: "&#16D223&lHOME 12"
+          material: PURPLE_BED
+          name: "&#AF12FF&lHOME 12"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to teleport"
-            - "&#16D223¦ &fto your &#16D223home 12&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to teleport"
+            - "&#AF12FF| &fto your &#AF12FFhome 12&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
@@ -668,14 +668,14 @@ gui:
       dye:
         set:
           slot: 41
-          material: LIME_DYE
-          name: "&#16D223&lHOME 12"
+          material: PURPLE_DYE
+          name: "&#AF12FF&lHOME 12"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to delete"
-            - "&#16D223¦ &fthis &#16D223home&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to delete"
+            - "&#AF12FF| &fthis &#AF12FFhome&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
@@ -695,14 +695,14 @@ gui:
       bed:
         set:
           slot: 33
-          material: LIME_BED
-          name: "&#16D223&lHOME 13"
+          material: PURPLE_BED
+          name: "&#AF12FF&lHOME 13"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to teleport"
-            - "&#16D223¦ &fto your &#16D223home 13&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to teleport"
+            - "&#AF12FF| &fto your &#AF12FFhome 13&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
@@ -720,14 +720,14 @@ gui:
       dye:
         set:
           slot: 42
-          material: LIME_DYE
-          name: "&#16D223&lHOME 13"
+          material: PURPLE_DYE
+          name: "&#AF12FF&lHOME 13"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to delete"
-            - "&#16D223¦ &fthis &#16D223home&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to delete"
+            - "&#AF12FF| &fthis &#AF12FFhome&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
@@ -747,14 +747,14 @@ gui:
       bed:
         set:
           slot: 34
-          material: LIME_BED
-          name: "&#16D223&lHOME 14"
+          material: PURPLE_BED
+          name: "&#AF12FF&lHOME 14"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to teleport"
-            - "&#16D223¦ &fto your &#16D223home 14&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to teleport"
+            - "&#AF12FF| &fto your &#AF12FFhome 14&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
         not-set:
@@ -772,14 +772,14 @@ gui:
       dye:
         set:
           slot: 43
-          material: LIME_DYE
-          name: "&#16D223&lHOME 14"
+          material: PURPLE_DYE
+          name: "&#AF12FF&lHOME 14"
           lore:
             - "&8Description"
             - ""
-            - "&#16D223Information:"
-            - "&#16D223¦ &fClick to delete"
-            - "&#16D223¦ &fthis &#16D223home&f."
+            - "&#AF12FFInformation:"
+            - "&#AF12FF| &fClick to delete"
+            - "&#AF12FF| &fthis &#AF12FFhome&f."
             - ""
             - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
         not-set:
@@ -814,36 +814,36 @@ confirm:
 
   info:
     slot: 13
-    material: LIME_DYE
-    name: "&#16D223&lHOME %number%"
+    material: PURPLE_DYE
+    name: "&#AF12FF&lHOME %number%"
     lore:
       - "&8Description"
       - ""
-      - "&#16D223Information:"
-      - "&#16D223¦ &fYou are about to delete"
-      - "&#16D223¦ &fyour &#16D223home %number%&f."
+      - "&#AF12FFInformation:"
+      - "&#AF12FF| &fYou are about to delete"
+      - "&#AF12FF| &fyour &#AF12FFhome %number%&f."
 
   confirm:
     slot: 15
     material: LIME_STAINED_GLASS_PANE
-    name: "&#16D223&lCONFIRM"
+    name: "&#AF12FF&lCONFIRM"
     lore:
       - "&8Description"
       - ""
-      - "&#16D223Information:"
-      - "&#16D223¦ &fClick to delete"
-      - "&#16D223¦ &fthis home for good."
+      - "&#AF12FFInformation:"
+      - "&#AF12FF| &fClick to delete"
+      - "&#AF12FF| &fthis home for good."
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Confirm"
 
 messages:
-  teleport: "&#16D223&lHOMES &8▷ &fTeleport in &#16D223%number%"
-  teleport-cancel: "&#16D223&lHOMES &8▷ &fTeleport cancelled, you moved."
-  teleport-success: "&#16D223&lHOMES &8▷ &fYou arrived at your home."
-  already-teleporting: "&#16D223&lHOMES &8▷ &fYou are already teleporting."
+  teleport: "&#AF12FF&lHOMES &8▷ &fTeleporting in &#AF12FF%number%"
+  teleport-cancel: "&#AF12FF&lHOMES &8▷ &fTeleport cancelled, you moved."
+  teleport-success: "&#AF12FF&lHOMES &8▷ &fYou arrived at your home."
+  already-teleporting: "&#AF12FF&lHOMES &8▷ &fYou are already teleporting."
   home-not-found: "&#FF0000&lERROR &8▷ &fThat home does not exist."
   home-world-blacklist: "&#FF0000&lERROR &8▷ &fYou cannot set a home in this world."
-  home-limit: "&#FF0000&lERROR &8▷ &fYou can only own &#16D223%max% &fhomes."
-  home-set: "&#16D223&lHOMES &8▷ &fHome &#16D223%number% &fwas saved."
-  home-delete: "&#16D223&lHOMES &8▷ &fHome &#16D223%number% &fwas deleted."
-  usage-delhome: "&#16D223&lHOMES &8▷ &fUse /delhome <number>"
+  home-limit: "&#FF0000&lERROR &8▷ &fYou can only own &#AF12FF%max% &fhomes."
+  home-set: "&#AF12FF&lHOMES &8▷ &fHome &#AF12FF%number% &fwas saved."
+  home-delete: "&#AF12FF&lHOMES &8▷ &fHome &#AF12FF%number% &fwas deleted."
+  usage-delhome: "&#AF12FF&lHOMES &8▷ &fUse /delhome <number>"

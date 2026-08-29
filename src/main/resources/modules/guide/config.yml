@@ -32,7 +32,7 @@ entries:
   teams:
     enabled: true
     slot: 11
-    material: SHIELD
+    material: PINK_BANNER
     name: '&#FF3EA5&lTEAMS'
     command: 'team'
     permission: ''
@@ -40,8 +40,8 @@ entries:
       - '&8Description'
       - ''
       - '&#FF3EA5Information'
-      - '&#FF3EA5¦ &#FF3EA5Click here&f, to create'
-      - '&#FF3EA5¦ &fYour very own &#FF3EA5team'
+      - '&#FF3EA5| &fClick here to create'
+      - '&#FF3EA5| &fa Team'
       - ''
       - '&#FF3EA5☀ &fCommand: &#FF3EA5/team'
       - ''
@@ -50,16 +50,16 @@ entries:
   crystal-shop:
     enabled: true
     slot: 12
-    material: PRISMARINE_SHARD
-    name: '&#AD4EFF&lCRYSTALSHOP'
+    material: AMETHYST_SHARD
+    name: '&#AD4EFF&lCRYSTAL SHOP'
     command: 'crystalshop'
     permission: ''
     lore:
       - '&8Description'
       - ''
       - '&#AD4EFFInformation'
-      - '&#AD4EFF¦ &#AD4EFFClick here&f, to purchase'
-      - '&#AD4EFF¦ &#AD4EFFunique &fItems and more'
+      - '&#AD4EFF| &fClick here to purchase'
+      - '&#AD4EFF| &fCosmetics From the Crystal Shop'
       - ''
       - '&#AD4EFF☀ &fCommand: &#AD4EFF/crystalshop'
       - ''
@@ -68,7 +68,7 @@ entries:
   server-shop:
     enabled: true
     slot: 13
-    material: CHEST_MINECART
+    material: SPYGLASS
     name: '&#FFC42B&lSERVER SHOP'
     command: 'shop'
     permission: ''
@@ -76,8 +76,8 @@ entries:
       - '&8Description'
       - ''
       - '&#FFC42BInformation'
-      - '&#FFC42B¦ &#FFC42BClick here&f, to purchase'
-      - '&#FFC42B¦ &#FFC42BPowerful Gear &fTo fight'
+      - '&#FFC42B| &fClick Here to purchase'
+      - '&#FFC42B| &fPowerful Gear &fTo fight'
       - ''
       - '&#FFC42B☀ &fCommand: &#FFC42B/shop'
       - ''
@@ -94,8 +94,8 @@ entries:
       - '&8Description'
       - ''
       - '&#45FF17Information'
-      - '&#45FF17¦ &#45FF17Click here&f, to randomly'
-      - '&#45FF17¦ &fTeleport in the &#45FF17world'
+      - '&#45FF17| &fClick here to randomly'
+      - '&#45FF17| &fTeleport in any dimensions'
       - ''
       - '&#45FF17☀ &fCommand: &#45FF17/rtp'
       - ''
@@ -112,8 +112,8 @@ entries:
       - '&8Description'
       - ''
       - '&#FF3EA5Information'
-      - '&#FF3EA5¦ &#FF3EA5Click here&f, to view'
-      - '&#FF3EA5¦ &fThe server &#FF3EA5Leaderboards'
+      - '&#FF3EA5| &fClick here to view'
+      - '&#FF3EA5| &fThe server Leaderboards'
       - ''
       - '&#FF3EA5☀ &fCommand: &#FF3EA5/leaderboard'
       - ''
@@ -130,8 +130,8 @@ entries:
       - '&8Description'
       - ''
       - '&#26E07AInformation'
-      - '&#26E07A¦ &#26E07AClick here&f, to support'
-      - '&#26E07A¦ &fYour favorite &#26E07ANetwork'
+      - '&#26E07A| &fClick here to support'
+      - '&#26E07A| &fYour favorite Network'
       - ''
       - '&#26E07A☀ &fCommand: &#26E07A/store'
       - ''
@@ -140,7 +140,7 @@ entries:
   rules:
     enabled: true
     slot: 22
-    material: BOOK
+    material: PINK_BUNDLE
     name: '&#FF5C8A&lRULES'
     command: 'rules'
     permission: ''
@@ -148,8 +148,8 @@ entries:
       - '&8Description'
       - ''
       - '&#FF5C8AInformation'
-      - '&#FF5C8A¦ &#FF5C8AClick here&f, to view'
-      - '&#FF5C8A¦ &fThe server &#FF5C8ARules'
+      - '&#FF5C8A| &fClick here to view'
+      - '&#FF5C8A| &fThe server &fRules'
       - ''
       - '&#FF5C8A☀ &fCommand: &#FF5C8A/rules'
       - ''
@@ -166,8 +166,8 @@ entries:
       - '&8Description'
       - ''
       - '&#5AA1D8Information'
-      - '&#5AA1D8¦ &#5AA1D8Click here&f, to join'
-      - '&#5AA1D8¦ &fOur official &#5AA1D8Discord'
+      - '&#5AA1D8| &fClick here to join'
+      - '&#5AA1D8| &fOur official &fDiscord'
       - ''
       - '&#5AA1D8☀ &fCommand: &#5AA1D8/discord'
       - ''

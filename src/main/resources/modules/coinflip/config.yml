@@ -19,42 +19,40 @@ menu:
   head:
     name: "&#FFE925%player%'s Bet"
     lore:
-      - "&8[ᴄᴏɪɴғʟɪᴘ]"
+      - "&8Description"
       - ""
       - "&#FFE925Information:"
-      - "&#FFE925¦ &fClick here to play"
-      - "&#FFE925¦ &fthis game."
+      - "&#FFE925| &fClick here to play"
+      - "&#FFE925| &fthis game."
       - ""
       - "&#80ee0b&l$&r &fAmount: &#80ee0b%amount%"
       - ""
-      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Play"
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Join"
 
   stats:
     slot: 4
     material: GUSTER_BANNER_PATTERN
-    name: "&#FFE925&lCOINFLIP"
+    name: "&#FFE925&lCOINFLIP &#FFE925Stats"
     lore:
-      - "&8[ᴄᴏɪɴғʟɪᴘ]"
+      - "&8Description"
       - ""
       - "&#FFE925Information:"
-      - "&#FFE925¦ &fHere you can see"
-      - "&#FFE925¦ &fyour coinflip stats."
+      - "&#FFE925| &fHere you can see"
+      - "&#FFE925| &fyour coinflip stats."
       - ""
       - "&#80ee0b☀ &fWins: &#80ee0b%wins%"
       - "&#FF0000☠ &fLosses: &#FF0000%losses%"
-      - "&#22AFFBℹ &fWin Rate: &#22AFFB%rate%%"
-      - "&#80ee0b&l$&r &fProfit: &#80ee0b%profit%"
 
   empty:
     slot: 22
     material: MINECART
     name: "&#FF0000&lNO GAMES FOUND"
     lore:
-      - "&8[ᴄᴏɪɴғʟɪᴘ]"
+      - "&8Description"
       - ""
       - "&#FF0000Information:"
-      - "&#FF0000¦ &fNobody has a coinflip"
-      - "&#FF0000¦ &fopen right now."
+      - "&#FF0000| &fNobody has a coinflip"
+      - "&#FF0000| &fopen right now."
       - ""
       - "&#FF0000▷ &fUse &#FF0000/cf create <amount>"
 
@@ -63,11 +61,11 @@ menu:
     material: CLOCK
     name: "&#FFE925&lREFRESH"
     lore:
-      - "&8[ᴄᴏɪɴғʟɪᴘ]"
+      - "&8Description"
       - ""
       - "&#FFE925Information:"
-      - "&#FFE925¦ &fClick here to reload"
-      - "&#FFE925¦ &fthe current page."
+      - "&#FFE925| &fClick here to reload"
+      - "&#FFE925| &fthe current page."
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Refresh"
 
@@ -76,11 +74,11 @@ menu:
     material: RED_STAINED_GLASS_PANE
     name: "&#FF0000&lPREVIOUS PAGE"
     lore:
-      - "&8[ᴄᴏɪɴғʟɪᴘ]"
+      - "&8Description"
       - ""
       - "&#FF0000Information:"
-      - "&#FF0000¦ &fClick here to return"
-      - "&#FF0000¦ &fto page &#FF0000%page%&f."
+      - "&#FF0000| &fClick here to return"
+      - "&#FF0000| &fto page &#FF0000%page%&f."
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue"
 
@@ -89,11 +87,11 @@ menu:
     material: LIME_STAINED_GLASS_PANE
     name: "&#80ee0b&lNEXT PAGE"
     lore:
-      - "&8[ᴄᴏɪɴғʟɪᴘ]"
+      - "&8Description"
       - ""
       - "&#80ee0bDescription:"
-      - "&#80ee0b¦ &fClick here to open"
-      - "&#80ee0b¦ &fpage &#80ee0b%page%&f."
+      - "&#80ee0b| &fClick here to open"
+      - "&#80ee0b| &fpage &#80ee0b%page%&f."
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue"
 
@@ -107,11 +105,11 @@ history:
   entry:
     name: "&#80ee0b&l$%amount%"
     lore:
-      - "&8[ᴄᴏɪɴғʟɪᴘ]"
+      - "&8Description"
       - ""
       - "&#FFE925Information:"
-      - "&#FFE925¦ &fOne finished game"
-      - "&#FFE925¦ &fbetween two players."
+      - "&#FFE925| &fOne finished game"
+      - "&#FFE925| &fbetween two players."
       - ""
       - "&#80ee0b☀ &fWinner: &#80ee0b%winner%"
       - "&#FF0000☠ &fLoser: &#FF0000%loser%"
@@ -122,11 +120,11 @@ history:
     material: RED_STAINED_GLASS_PANE
     name: "&#FF0000&lPREVIOUS PAGE"
     lore:
-      - "&8[ᴄᴏɪɴғʟɪᴘ]"
+      - "&8Description"
       - ""
       - "&#FF0000Information:"
-      - "&#FF0000¦ &fClick here to return"
-      - "&#FF0000¦ &fto page &#FF0000%page%&f."
+      - "&#FF0000| &fClick here to return"
+      - "&#FF0000| &fto page &#FF0000%page%&f."
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue"
 
@@ -135,11 +133,11 @@ history:
     material: NAME_TAG
     name: "&#FFD900&lSEARCH"
     lore:
-      - "&8[ᴄᴏɪɴғʟɪᴘ]"
+      - "&8Description"
       - ""
       - "&#FFD900Information:"
-      - "&#FFD900¦ &fLook for the games"
-      - "&#FFD900¦ &fof one player."
+      - "&#FFD900| &fLook for the games"
+      - "&#FFD900| &fof one player."
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Search"
 
@@ -148,11 +146,11 @@ history:
     material: LIME_STAINED_GLASS_PANE
     name: "&#80ee0b&lNEXT PAGE"
     lore:
-      - "&8[ᴄᴏɪɴғʟɪᴘ]"
+      - "&8Description"
       - ""
       - "&#80ee0bInformation:"
-      - "&#80ee0b¦ &fClick here to open"
-      - "&#80ee0b¦ &fpage &#80ee0b%page%&f."
+      - "&#80ee0b| &fClick here to open"
+      - "&#80ee0b| &fpage &#80ee0b%page%&f."
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue"
 
@@ -183,11 +181,11 @@ animation:
   head:
     name: "&#FFE925&l%player%"
     lore:
-      - "&8[ᴄᴏɪɴғʟɪᴘ]"
+      - "&8Description"
       - ""
       - "&#FFE925Information:"
-      - "&#FFE925¦ &fThe coin is still"
-      - "&#FFE925¦ &fin the air."
+      - "&#FFE925| &fThe coin is still"
+      - "&#FFE925| &fin the air."
       - ""
       - "&#80ee0b&l$&r &fAmount: &#80ee0b%amount%"
 
@@ -241,27 +239,27 @@ sounds:
 win:
   - ""
   - "&#80ee0b&lYOU WON"
-  - "&8[ɪɴғᴏʀᴍᴀᴛɪᴏɴ]"
+  - "&8Description"
   - ""
-  - "&#80ee0b¦ &fYou won a Coinflip"
-  - "&#80ee0b¦ &fagainst &#FF256E%player%&f."
+  - "&#80ee0b| &fYou won a Coinflip"
+  - "&#80ee0b| &fagainst &#FF256E%player%&f."
   - ""
   - "&#80ee0b&l$&r &fAmount: &#80ee0b%amount%"
 
 lose:
   - ""
   - "&#FF0000&lYOU LOST"
-  - "&8[ɪɴғᴏʀᴍᴀᴛɪᴏɴ]"
+  - "&8Description"
   - ""
-  - "&#FF0000¦ &fYou lost a Coinflip"
-  - "&#FF0000¦ &fagainst &#FF256E%player%&f."
+  - "&#FF0000| &fYou lost a Coinflip"
+  - "&#FF0000| &fagainst &#FF256E%player%&f."
   - ""
   - "&#80ee0b&l$&r &fAmount: &#80ee0b%amount%"
 
 messages:
   created: "&#FFE925&lCOINFLIP &8▷ &#22AFFB%player% &fcreated a Coinflip of &#80ee0b$%amount%"
-  won-broadcast: "&#FFE925&lCOINFLIP &8▷ &#80ee0b%winner% &fjust beat &#FF256E%loser% &fIn a Coinflip worth &#80ee0b$%amount%"
-  gone: "&#FFE925&lCOINFLIP &8▷ &fThis game is &#FF256Eno longer &favailable."
+  won-broadcast: "&#FFE925&lCOINFLIP &8▷ &#80ee0b%winner% &fjust beat &#FF0000%loser% &fIn a Coinflip worth &#80ee0b$%amount%"
+  gone: "&#FFE925&lCOINFLIP &8▷ &fThis game is &#FF0000no longer &favailable."
 
   created-self: "&#FFE925&lCOINFLIP &8▷ &fYour Coinflip of &#80ee0b$%amount% &fis open."
   deleted: "&#FFE925&lCOINFLIP &8▷ &fYour Coinflip was closed, &#80ee0b$%amount% &fis back."
@@ -279,7 +277,7 @@ messages:
   in-combat: "&#FFE925&lCOINFLIP &8▷ &fYou cannot play while in combat."
   no-economy: "&#FFE925&lCOINFLIP &8▷ &fThe economy is not available."
   too-fast: "&#FFE925&lCOINFLIP &8▷ &fSlow down a moment."
-  search-prompt: "&#FFD900&lSEARCH &8▷ &fType a name in the chat, or &#FFD900cancel&f."
+  search-prompt: "&#FFD900&lSEARCH &8▷ &fType a name in the chat, or &#FF0000cancel&f."
   players-only: "&#FFE925&lCOINFLIP &8▷ &fOnly a player can use that."
 
   usage: "&#FFE925&lCOINFLIP &8▷ &fUse /cf, /cf create <amount>, /cf delete or /cf toggle"

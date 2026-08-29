@@ -22,6 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -32,10 +33,10 @@ final class RtpSafeSpotPool {
     private final ConcurrentLinkedQueue<Runnable> mainWork = new ConcurrentLinkedQueue<>();
     private final AtomicInteger inFlight = new AtomicInteger();
     private final AtomicInteger generated = new AtomicInteger();
+    private final AtomicBoolean draining = new AtomicBoolean();
     private final Set<Biome> blocked = new HashSet<>();
     private BukkitTask refill;
     private BukkitTask minute;
-    private BukkitTask drain;
 
     RtpSafeSpotPool(RtpModule module) {
         this.module = module;
@@ -49,13 +50,11 @@ final class RtpSafeSpotPool {
         int refillSeconds = Math.max(5, module.config().getInt("refill-seconds", 10));
         refill = Bukkit.getScheduler().runTaskTimerAsynchronously(module.plugin(), this::refill, 40L, refillSeconds * 20L);
         minute = Bukkit.getScheduler().runTaskTimerAsynchronously(module.plugin(), () -> generated.set(0), 20L * 60L, 20L * 60L);
-        drain = Bukkit.getScheduler().runTaskTimer(module.plugin(), this::drain, 1L, 1L);
     }
 
     void shutdown() {
         if (refill != null) refill.cancel();
         if (minute != null) minute.cancel();
-        if (drain != null) drain.cancel();
         mainWork.clear();
         pools.clear();
         inFlight.set(0);
@@ -89,6 +88,23 @@ final class RtpSafeSpotPool {
             if (work == null) return;
             work.run();
         }
+    }
+
+    private void offerMain(Runnable work) {
+        mainWork.offer(work);
+        scheduleDrain();
+    }
+
+    private void scheduleDrain() {
+        if (!draining.compareAndSet(false, true)) return;
+        Bukkit.getScheduler().runTask(module.plugin(), () -> {
+            try {
+                drain();
+            } finally {
+                draining.set(false);
+                if (!mainWork.isEmpty()) scheduleDrain();
+            }
+        });
     }
 
     private void refill() {
@@ -125,7 +141,7 @@ final class RtpSafeSpotPool {
 
     private void attempt(World world, ConfigurationSection dest, int remaining, int used, Consumer<Location> done) {
         if (remaining <= 0) {
-            mainWork.offer(() -> done.accept(null));
+            offerMain(() -> done.accept(null));
             return;
         }
         int radius = Math.max(16, dest.getInt("radius", 1000));
@@ -156,7 +172,7 @@ final class RtpSafeSpotPool {
                 }
                 attempt(world, dest, remaining - 1, used + 1, done);
             };
-            mainWork.offer(next);
+            offerMain(next);
         });
     }
 
@@ -199,7 +215,7 @@ final class RtpSafeSpotPool {
         if (wet(feet) || wet(head) || wet(ground.getRelative(BlockFace.UP))) return null;
         Biome biome = world.getBiome(x, groundY, z);
         if (blocked.contains(biome)) return null;
-        if (oceanNearby(world, x, groundY, z)) return null;
+        if (module.config().getBoolean("ocean-nearby", false) && oceanNearby(world, x, groundY, z)) return null;
         Location loc = feet.getLocation().add(0.5, 0, 0.5);
         loc.setYaw(ThreadLocalRandom.current().nextFloat() * 360f);
         loc.setPitch(0f);

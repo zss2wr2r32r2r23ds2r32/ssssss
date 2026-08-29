@@ -65,6 +65,22 @@ public final class CoreExpansion extends PlaceholderExpansion {
                 var teams = plugin.modules().get(com.shardedcore.modules.teams.TeamsModule.class);
                 yield teams == null ? "N/A" : teams.placeholder(player);
             }
+            case "teamleaderboard", "team_leaderboard", "team_rank" -> {
+                var teams = plugin.modules().get(com.shardedcore.modules.teams.TeamsModule.class);
+                yield teams == null ? "N/A" : teams.leaderboardPlaceholder(player);
+            }
+            case "team_kills" -> {
+                var teams = plugin.modules().get(com.shardedcore.modules.teams.TeamsModule.class);
+                yield teams == null ? "0" : teams.teamKills(player);
+            }
+            case "team_playtime" -> {
+                var teams = plugin.modules().get(com.shardedcore.modules.teams.TeamsModule.class);
+                yield teams == null ? "0" : teams.teamPlaytime(player);
+            }
+            case "team_money", "team_balance" -> {
+                var teams = plugin.modules().get(com.shardedcore.modules.teams.TeamsModule.class);
+                yield teams == null ? "0" : teams.teamMoney(player);
+            }
             case "chatcolor" -> {
                 var colors = plugin.modules().get(com.shardedcore.modules.chatcolor.ChatColorModule.class);
                 yield colors == null ? "" : colors.display(player);
