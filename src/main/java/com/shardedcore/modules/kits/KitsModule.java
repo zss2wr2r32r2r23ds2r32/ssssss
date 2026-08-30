@@ -279,7 +279,7 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
         }
         Map<Integer, ItemStack> layout = loadLayout(player.getUniqueId(), id);
         Map<Integer, ItemStack> use = layout != null && sameItems(flat(layout), flat(items)) ? layout : items;
-        if (!com.shardedcore.util.Inventories.hasSpace(player, use)) {
+        if (!hasKitSpace(player, use)) {
             send(player, "no-space", "kit", name);
             sound(player, "sounds.denied");
             return;
@@ -372,16 +372,71 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
     private void giveMapped(Player player, Map<Integer, ItemStack> items, Map<Integer, ItemStack> layout) {
         Map<Integer, ItemStack> use = layout != null && sameItems(flat(layout), flat(items)) ? layout : items;
         PlayerInventory inventory = player.getInventory();
+        List<ItemStack> leftover = new ArrayList<>();
+        boolean totemOffhand = false;
         for (Map.Entry<Integer, ItemStack> entry : use.entrySet()) {
-            int slot = entry.getKey();
             ItemStack item = entry.getValue().clone();
-            if (slot >= 0 && slot < inventory.getSize() && isAir(inventory.getItem(slot))) {
+            int armor = armorSlot(item);
+            if (armor >= 0 && isAir(inventory.getItem(armor))) {
+                inventory.setItem(armor, item);
+                continue;
+            }
+            if (!totemOffhand && isTotem(item) && isAir(inventory.getItemInOffHand())) {
+                inventory.setItemInOffHand(item);
+                totemOffhand = true;
+                continue;
+            }
+            int slot = entry.getKey();
+            if (slot >= 0 && slot < inventory.getSize() && slot < 36 && isAir(inventory.getItem(slot))) {
                 inventory.setItem(slot, item);
             } else {
-                HashMap<Integer, ItemStack> leftover = inventory.addItem(item);
-                leftover.values().forEach(stack -> inventory.addItem(stack));
+                leftover.add(item);
             }
         }
+        for (ItemStack item : leftover) {
+            HashMap<Integer, ItemStack> extra = inventory.addItem(item);
+            extra.values().forEach(stack -> player.getWorld().dropItemNaturally(player.getLocation(), stack));
+        }
+    }
+
+    private boolean hasKitSpace(Player player, Map<Integer, ItemStack> items) {
+        boolean offhand = isAir(player.getInventory().getItemInOffHand());
+        boolean[] armor = {
+                isAir(player.getInventory().getBoots()),
+                isAir(player.getInventory().getLeggings()),
+                isAir(player.getInventory().getChestplate()),
+                isAir(player.getInventory().getHelmet())
+        };
+        List<ItemStack> storage = new ArrayList<>();
+        for (ItemStack item : items.values()) {
+            if (isAir(item)) continue;
+            int slot = armorSlot(item);
+            if (slot == 36 && armor[0]) { armor[0] = false; continue; }
+            if (slot == 37 && armor[1]) { armor[1] = false; continue; }
+            if (slot == 38 && armor[2]) { armor[2] = false; continue; }
+            if (slot == 39 && armor[3]) { armor[3] = false; continue; }
+            if (offhand && isTotem(item)) { offhand = false; continue; }
+            storage.add(item);
+        }
+        return com.shardedcore.util.Inventories.hasSpace(player, storage);
+    }
+
+    private static boolean isTotem(ItemStack item) {
+        return item != null && item.getType() == Material.TOTEM_OF_UNDYING;
+    }
+
+    private static int armorSlot(ItemStack item) {
+        if (item == null) return -1;
+        return switch (item.getType()) {
+            case NETHERITE_HELMET, DIAMOND_HELMET, IRON_HELMET, GOLDEN_HELMET, CHAINMAIL_HELMET, LEATHER_HELMET,
+                    TURTLE_HELMET -> 39;
+            case NETHERITE_CHESTPLATE, DIAMOND_CHESTPLATE, IRON_CHESTPLATE, GOLDEN_CHESTPLATE, CHAINMAIL_CHESTPLATE,
+                    LEATHER_CHESTPLATE, ELYTRA -> 38;
+            case NETHERITE_LEGGINGS, DIAMOND_LEGGINGS, IRON_LEGGINGS, GOLDEN_LEGGINGS, CHAINMAIL_LEGGINGS,
+                    LEATHER_LEGGINGS -> 37;
+            case NETHERITE_BOOTS, DIAMOND_BOOTS, IRON_BOOTS, GOLDEN_BOOTS, CHAINMAIL_BOOTS, LEATHER_BOOTS -> 36;
+            default -> -1;
+        };
     }
 
     private Map<Integer, ItemStack> loadItems(String id) {

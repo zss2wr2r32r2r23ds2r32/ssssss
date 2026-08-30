@@ -214,6 +214,7 @@ messages:
   players-only: "&#FF0000&lERROR &8▷ &fOnly a player can use that."
 
 queue:
+  # Player toggle /rtpqueuetoggle only hides chat (join broadcast / requests). Countdown stays.
   messages: true
   broadcast-join: true
   join-broadcast: "&#22AFFB&lRTP QUEUE &8▷ &#22AFFB%player% &fHas Joined an Rtp Queue &7(/rtpqueue)"

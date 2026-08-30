@@ -398,6 +398,9 @@ commands:
   diasmp:
     description: Switch to diasmp
     permission: shardedcore.command.diasmp
+  server:
+    description: Switch proxy server
+    permission: shardedcore.command.server
   dev:
     description: Switch to a dev server
     permission: shardedcore.command.dev
@@ -876,6 +879,8 @@ permissions:
   shardedcore.command.events:
     default: true
   shardedcore.command.diasmp:
+    default: true
+  shardedcore.command.server:
     default: true
   shardedcore.command.dev:
     default: true

@@ -133,6 +133,11 @@ whitelist:
   enabled: true
   bypass-permission: shardedcore.command.bypass
   unknown: "&#4498DB&lCOMMANDS &8▷ &fYou do not have Permission."
+  proxy-commands:
+    - server
+    - hub
+    - lobby
+    - queue
   sound:
     enabled: true
     sound: "block.note_block.bass"
@@ -258,6 +263,7 @@ whitelist:
     - events
     - event
     - diasmp
+    - server
     - dev
     - patron
     - promote
@@ -271,6 +277,7 @@ whitelist:
 
 servers:
   channel: BungeeCord
+  usage: "&#00A2FF&lCORE &8▷ &fUse /server <name>"
   survival: survival
   events: events
   diasmp: diasmp

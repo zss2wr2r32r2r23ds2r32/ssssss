@@ -24,6 +24,7 @@ import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -49,6 +50,7 @@ public final class CommandsModule extends Module implements CommandExecutor, Tab
         registerCommand("events", this);
         registerCommand("diasmp", this);
         registerCommand("dev", this);
+        registerCommand("server", this);
         registerCommand("patron", this);
         registerListener(this);
         String channel = config.getString("servers.channel", "BungeeCord");
@@ -99,7 +101,7 @@ public final class CommandsModule extends Module implements CommandExecutor, Tab
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String name = command.getName().toLowerCase(Locale.ROOT);
         if (name.equals("survival") || name.equals("events") || name.equals("event")
-                || name.equals("diasmp") || name.equals("dev")) {
+                || name.equals("diasmp") || name.equals("dev") || name.equals("server")) {
             return serverCommand(sender, name, args);
         }
         if (name.equals("patron")) {
@@ -243,6 +245,7 @@ public final class CommandsModule extends Module implements CommandExecutor, Tab
         if (raw.length() < 2 || raw.charAt(0) != '/') return;
         String name = raw.substring(1).split(" ")[0].toLowerCase(Locale.ROOT);
         if (name.contains(":")) name = name.substring(name.indexOf(':') + 1);
+        if (proxyCommand(name)) return;
         Command command = Bukkit.getCommandMap().getCommand(name);
         if (command != null) return;
         event.setCancelled(true);
@@ -265,10 +268,32 @@ public final class CommandsModule extends Module implements CommandExecutor, Tab
                 if (args.length > 0 && args[0].equals("2")) yield config.getString("servers.dev2", "dev2");
                 yield config.getString("servers.dev", "dev");
             }
+            case "server" -> {
+                if (args.length == 0) {
+                    sendRaw(player, cfg("servers.usage", "&#00A2FF&lCORE &8▷ &fUse /server <name>"));
+                    yield "";
+                }
+                yield serverName(args[0]);
+            }
             default -> name;
         };
+        if (server == null || server.isBlank()) return true;
         connect(player, server);
         return true;
+    }
+
+    private boolean proxyCommand(String name) {
+        List<String> extra = config.getStringList("whitelist.proxy-commands");
+        if (extra.isEmpty()) extra = List.of("server", "hub", "lobby", "queue");
+        return extra.stream().anyMatch(value -> value != null && value.equalsIgnoreCase(name));
+    }
+
+    private String serverName(String raw) {
+        if (raw == null || raw.isBlank()) return "";
+        String key = raw.toLowerCase(Locale.ROOT);
+        String mapped = config.getString("servers." + key, "");
+        if (mapped != null && !mapped.isBlank() && !key.equals("channel")) return mapped;
+        return raw;
     }
 
     private void connect(Player player, String server) {
@@ -340,6 +365,17 @@ public final class CommandsModule extends Module implements CommandExecutor, Tab
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (command.getName().equalsIgnoreCase("dev") && args.length == 1) {
             return Tabs.filter(List.of("1", "2"), args[0]);
+        }
+        if (command.getName().equalsIgnoreCase("server") && args.length == 1) {
+            List<String> names = new ArrayList<>();
+            ConfigurationSection servers = config.getConfigurationSection("servers");
+            if (servers != null) {
+                for (String key : servers.getKeys(false)) {
+                    if (key.equalsIgnoreCase("channel") || key.equalsIgnoreCase("usage")) continue;
+                    names.add(key);
+                }
+            }
+            return Tabs.filter(names, args[0]);
         }
         return List.of();
     }

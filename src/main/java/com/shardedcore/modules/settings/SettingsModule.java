@@ -256,7 +256,7 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
             List<String> loreLines = entry.getStringList("lore");
             if (loreLines.isEmpty()) loreLines = defaultLore;
             loreLines = Text.applyList(new ArrayList<>(loreLines),
-                    "color", loreColor,
+                    "color", entryColor(entry, name, loreColor),
                     "description", entry.getString("description", "Toggle"),
                     "command", entry.getString("command", ""),
                     "status", on ? enabledText : disabledText,
@@ -307,6 +307,16 @@ public final class SettingsModule extends Module implements CommandExecutor, Tab
             if (entries.isConfigurationSection(key)) keys.add(key);
         }
         return keys;
+    }
+
+    private static String entryColor(ConfigurationSection entry, String name, String fallback) {
+        String color = entry.getString("color", "");
+        if (color != null && !color.isBlank()) return color;
+        if (name != null) {
+            int index = name.indexOf("&#");
+            if (index >= 0 && name.length() >= index + 8) return name.substring(index, index + 8);
+        }
+        return fallback == null || fallback.isBlank() ? "&#FF0072" : fallback;
     }
 
     private String messageKey(String key) {

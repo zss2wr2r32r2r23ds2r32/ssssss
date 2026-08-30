@@ -442,7 +442,7 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
             return;
         }
         queue.add(player.getUniqueId());
-        if (queueMessages(player)) sendRawBar(player, lookingText(1));
+        sendRawBar(player, lookingText(1));
         broadcastJoin(player);
     }
 
@@ -495,7 +495,7 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
         String text = lookingText(queueDots);
         for (UUID uuid : queue) {
             Player player = Bukkit.getPlayer(uuid);
-            if (player != null && queueMessages(player)) sendRawBar(player, text);
+            if (player != null) sendRawBar(player, text);
         }
     }
 
@@ -541,11 +541,9 @@ public final class RtpModule extends Module implements CommandExecutor, TabCompl
                 sound(player, "sounds.teleport");
                 return;
             }
-            if (queueMessages(player)) {
-                sendRawBar(player, Text.apply(cfg("queue.found",
-                        "&#22AFFB&lRTP QUEUE &8▷ &fFound Player, Teleporting in &#22AFFB&n%seconds%s"),
-                        "seconds", String.valueOf(left[0])));
-            }
+            sendRawBar(player, Text.apply(cfg("queue.found",
+                    "&#22AFFB&lRTP QUEUE &8▷ &fFound Player, Teleporting in &#22AFFB&n%seconds%s"),
+                    "seconds", String.valueOf(left[0])));
             sound(player, "sounds.countdown");
             left[0]--;
         }, 0L, 20L);
