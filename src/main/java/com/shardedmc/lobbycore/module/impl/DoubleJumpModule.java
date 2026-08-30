@@ -8,11 +8,13 @@ import org.bukkit.GameMode;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
 import java.util.HashSet;
@@ -121,18 +123,6 @@ public class DoubleJumpModule implements Module, Listener {
         }
     }
 
-    public void performLaunch(Player player) {
-        double power = config.getDouble("power", 1.2);
-        double vertical = config.getDouble("vertical-boost", 0.8);
-        Vector direction = player.getLocation().getDirection().normalize().multiply(power);
-        direction.setY(vertical);
-        player.setVelocity(direction);
-
-        if (config.getBoolean("play-sound", true)) {
-            player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_BAT_TAKEOFF, 1f, 1.2f);
-        }
-    }
-
     public void resetPlayer(Player player) {
         hasJumped.remove(player.getUniqueId());
         if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
@@ -145,9 +135,16 @@ public class DoubleJumpModule implements Module, Listener {
         player.setFlying(false);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onMove(PlayerMoveEvent event) {
-        if (event.getTo() == null) {
+        Location to = event.getTo();
+        if (to == null) {
+            return;
+        }
+        // Ground reset only needs block changes
+        if (event.getFrom().getBlockX() == to.getBlockX()
+                && event.getFrom().getBlockY() == to.getBlockY()
+                && event.getFrom().getBlockZ() == to.getBlockZ()) {
             return;
         }
         Player player = event.getPlayer();
