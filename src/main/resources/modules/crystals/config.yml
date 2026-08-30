@@ -417,6 +417,86 @@ sections:
           - "&#9B59B6⚓ &fPrice: &#9B59B6%price%"
           - ""
           - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
+      warden:
+        slot: 21
+        type: chatcolor
+        color: warden
+        price: 350
+        material: CYAN_BUNDLE
+        name: "&#3EE6D0&lWARDEN"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#3EE6D0Information:"
+          - "&#3EE6D0| &fUnlock this chat color"
+          - ""
+          - "&#3EE6D0⚓ &fPrice: &#3EE6D0%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
+      sharded:
+        slot: 22
+        type: chatcolor
+        color: sharded
+        price: 350
+        material: PURPLE_BUNDLE
+        name: "&#A370EE&lSHARDED"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#A370EEInformation:"
+          - "&#A370EE| &fUnlock this chat color"
+          - ""
+          - "&#A370EE⚓ &fPrice: &#A370EE%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
+      neon:
+        slot: 23
+        type: chatcolor
+        color: neon
+        price: 350
+        material: LIME_BUNDLE
+        name: "&#39FF14&lNEON"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#39FF14Information:"
+          - "&#39FF14| &fUnlock this chat color"
+          - ""
+          - "&#39FF14⚓ &fPrice: &#39FF14%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
+      roses:
+        slot: 24
+        type: chatcolor
+        color: roses
+        price: 350
+        material: PINK_BUNDLE
+        name: "&#FF4D6D&lROSES"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#FF4D6DInformation:"
+          - "&#FF4D6D| &fUnlock this chat color"
+          - ""
+          - "&#FF4D6D⚓ &fPrice: &#FF4D6D%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
+      blood:
+        slot: 25
+        type: chatcolor
+        color: blood
+        price: 350
+        material: RED_BUNDLE
+        name: "&#FF1A1A&lBLOOD"
+        lore:
+          - "&8Description"
+          - ""
+          - "&#FF1A1AInformation:"
+          - "&#FF1A1A| &fUnlock this chat color"
+          - ""
+          - "&#FF1A1A⚓ &fPrice: &#FF1A1A%price%"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
 
   glows:
     enabled: true

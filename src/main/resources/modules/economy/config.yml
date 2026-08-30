@@ -77,73 +77,93 @@ money-methods-gui:
     lore: []
   items:
     cane:
-      slot: 10
-      material: SUGAR_CANE
-      name: "&#94FF00&lFARMS &f(#1)"
+      slot: 11
+      material: SEA_PICKLE
+      name: "&#94FF00&lFARMS &7&o&n(#2)"
       lore:
-        - "&7[SUGAR CANE]"
+        - "&8Description"
         - ""
-        - "&#22AFFBInformation"
-        - "&fClick here, to farm and /sell &#94FF00SUGAR CANE"
+        - "&#94FF00Information"
+        - "&#94FF00| &fClick here To View The Best &#94FF00Farming"
+        - "&#94FF00| &fMaterials To Earn Big Money"
         - ""
-        - "&#94FF00Hourly &8▷ &#94FF0090B"
+        - "&#94FF00☀ &fHourly &8▷ &#94FF00&n420K"
+        - ""
+        - "&#94FF00Commands:"
+        - "&#94FF00ℹ &fCommand: &#94FF00/worth"
         - ""
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
-      command: "shop"
+      command: "worth"
     cactus:
-      slot: 11
-      material: CACTUS
-      name: "&#94FF00&lFARMS &f(#2)"
+      slot: 10
+      material: SPAWNER
+      name: "&#0098FF&lSPAWNERS &7&o&n(#1)"
       lore:
-        - "&7[CACTUS]"
+        - "&8Description"
         - ""
-        - "&#22AFFBInformation"
-        - "&fClick here, to AFK farm and /sell &#94FF00CACTUS"
+        - "&#0098FFInformation"
+        - "&#0098FF| &fClick here To View &#0098FFSpawner"
+        - "&#0098FF| &fShop To Earn A Passive Income"
         - ""
-        - "&#94FF00Hourly &8▷ &#94FF0075B"
+        - "&#0098FF☀ &fHourly &8▷ &#0098FF&n1M"
+        - ""
+        - "&#0098FFCommands:"
+        - "&#0098FFℹ &fCommand: &#0098FF/shop"
         - ""
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
       command: "shop"
     wart:
       slot: 13
-      material: NETHER_WART
-      name: "&#94FF00&lFARMS &f(#3)"
+      material: ELYTRA
+      name: "&#FF005D&lELYTRAS &7&n&o(#3)"
       lore:
-        - "&7[NETHER WART]"
+        - "&8Description"
         - ""
-        - "&#22AFFBInformation"
-        - "&fClick here, to farm and /sell &#94FF00NETHER WART"
+        - "&#FF005DInformation"
+        - "&#FF005D| &fClick here To Randomly"
+        - "&#FF005D| &fTeleport to the &#FF005DEnd"
         - ""
-        - "&#94FF00Hourly &8▷ &#94FF0060B"
+        - "&#FF005D☀ &fHourly &8▷ &#FF005D&n400K"
+        - ""
+        - "&#FF005DCommands:"
+        - "&#FF005Dℹ &fCommand: &#FF005D/rtp"
         - ""
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
-      command: "shop"
+      command: "rtp end"
     bamboo:
       slot: 15
-      material: BAMBOO
-      name: "&#94FF00&lFARMS &f(#4)"
+      material: NETHERITE_BLOCK
+      name: "&#FF0000&lNETHERITE &7&n&o(#4)"
       lore:
-        - "&7[BAMBOO]"
+        - "&8Description"
         - ""
-        - "&#22AFFBInformation"
-        - "&fClick here, to grow and /sell &#94FF00BAMBOO"
+        - "&#FF0000Information"
+        - "&#FF0000| &fClick here To Randomly"
+        - "&#FF0000| &fTeleport to the &#FF0000Nether"
         - ""
-        - "&#94FF00Hourly &8▷ &#94FF0045B"
+        - "&#FF0000☀ &fHourly &8▷ &#FF0000&n216K"
+        - ""
+        - "&#FF0000Commands:"
+        - "&#FF0000ℹ &fCommand: &#FF0000/rtp"
         - ""
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
-      command: "shop"
+      command: "rtp nether"
     melon:
       slot: 16
-      material: MELON
-      name: "&#94FF00&lFARMS &f(#5)"
+      material: HEAVY_CORE
+      name: "&#FFEE00&lTRIAL CHAMBERS &7&n&o(#5)"
       lore:
-        - "&7[MELONS]"
+        - "&8Description"
         - ""
-        - "&#22AFFBInformation"
-        - "&fClick here, to harvest and /sell &#94FF00MELONS"
+        - "&#FFEE00Information"
+        - "&#FFEE00| &fClick here To Randomly"
+        - "&#FFEE00| &fTeleport to the &#FFEE00Overworld"
         - ""
-        - "&#94FF00Hourly &8▷ &#94FF0030B"
+        - "&#FFEE00☀ &fHourly &8▷ &#FFEE00&n200K"
+        - ""
+        - "&#FFEE00Commands:"
+        - "&#FFEE00ℹ &fCommand: &#FFEE00/rtp"
         - ""
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
-      command: "shop"
+      command: "rtp overworld"
 

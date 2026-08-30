@@ -91,26 +91,10 @@ public final class StaffModule extends Module implements CommandExecutor, TabCom
     @Override
     public void enable() {
         sqlite = plugin.toggles().sqlite();
-        if ("mysql".equalsIgnoreCase(config.getString("database.type", "sqlite"))) {
-            ConfigurationSection mysql = config.getConfigurationSection("database.mysql");
-            if (mysql != null) {
-                String host = mysql.getString("host", "localhost");
-                int port = mysql.getInt("port", 3306);
-                String database = mysql.getString("database", "shardedcore");
-                String user = mysql.getString("username", "root");
-                String pass = mysql.getString("password", "");
-                String url = "jdbc:mysql://" + host + ":" + port + "/" + database
-                        + "?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8";
-                try {
-                    Sqlite remote = new Sqlite(plugin, url, user, pass);
-                    remote.open();
-                    sqlite = remote;
-                    remoteSql = true;
-                    plugin.getLogger().info("Staff database is using MySQL.");
-                } catch (SQLException ex) {
-                    plugin.getLogger().log(Level.SEVERE, "MySQL failed, staff is using SQLite instead", ex);
-                }
-            }
+        Sqlite remote = com.shardedcore.database.Databases.open(plugin, config.getConfigurationSection("database"), sqlite, "Staff");
+        if (remote != sqlite) {
+            sqlite = remote;
+            remoteSql = true;
         }
         toolKey = new NamespacedKey(plugin, "staff_tool");
         try {

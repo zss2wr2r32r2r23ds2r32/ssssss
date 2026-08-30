@@ -46,7 +46,11 @@ public final class Sqlite implements AutoCloseable {
     public void open() throws SQLException {
         if (mysql) {
             try {
-                Class.forName("com.mysql.cj.jdbc.Driver");
+                if (url != null && url.startsWith("jdbc:mariadb:")) {
+                    Class.forName("org.mariadb.jdbc.Driver");
+                } else {
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                }
             } catch (ClassNotFoundException ignored) {
             }
             connection = DriverManager.getConnection(url, username == null ? "" : username, password == null ? "" : password);

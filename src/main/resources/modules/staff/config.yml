@@ -20,9 +20,16 @@ default-reason: Unfair Modifications
 snapshot-interval-minutes: 5
 max-snapshots: 20
 
-# sqlite keeps working if mysql is off. Fill these in to store punishments in MySQL.
+# Bans, mutes, and staff state. type: mariadb | mysql | sqlite
+# If MariaDB is down, staff falls back to the shared SQLite file.
 database:
-  type: sqlite
+  type: mariadb
+  mariadb:
+    host: localhost
+    port: 3306
+    database: shardedcore
+    username: root
+    password: ""
   mysql:
     host: localhost
     port: 3306

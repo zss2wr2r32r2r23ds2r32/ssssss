@@ -37,6 +37,26 @@ colors:
     type: gradient
     hex: "9B59B6"
     hex2: "E0B0FF"
+  warden:
+    type: gradient
+    hex: "0A3D3A"
+    hex2: "3EE6D0"
+  sharded:
+    type: gradient
+    hex: "A370EE"
+    hex2: "00A2FF"
+  neon:
+    type: gradient
+    hex: "39FF14"
+    hex2: "00F0FF"
+  roses:
+    type: gradient
+    hex: "FF4D6D"
+    hex2: "FFB3C1"
+  blood:
+    type: gradient
+    hex: "6B0000"
+    hex2: "FF1A1A"
 
 gui:
   title: "Chat Colors"

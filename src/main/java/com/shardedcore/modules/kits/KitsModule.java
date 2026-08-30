@@ -258,7 +258,7 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
     }
 
     private void claim(Player player, String name) {
-        String id = sanitize(name);
+        String id = resolveKitId(name);
         ConfigurationSection section = config.getConfigurationSection("kits." + id);
         String permission = section == null ? "shardedcore.kit." + id : section.getString("permission", "shardedcore.kit." + id);
         if (!canUse(player, id, permission)) {
@@ -272,7 +272,7 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
             sound(player, "sounds.denied");
             return;
         }
-        Map<Integer, ItemStack> items = loadItems(id);
+        Map<Integer, ItemStack> items = loadItems(name);
         if (items.isEmpty()) {
             send(player, "empty-kit", "kit", name);
             return;
@@ -291,7 +291,8 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
         sound(player, "sounds.claim");
     }
 
-    private void openArrange(Player player, String id) {
+    private void openArrange(Player player, String raw) {
+        String id = resolveKitId(raw);
         ConfigurationSection section = config.getConfigurationSection("kits." + id);
         String permission = section == null ? "shardedcore.kit." + id : section.getString("permission", "shardedcore.kit." + id);
         if (!canUse(player, id, permission)) {
@@ -384,7 +385,14 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
     }
 
     private Map<Integer, ItemStack> loadItems(String id) {
-        File file = new File(new File(kitsFolder, contentsId(id)), "kit.yml");
+        for (String folder : itemFolders(id)) {
+            Map<Integer, ItemStack> items = readKitFile(new File(new File(kitsFolder, folder), "kit.yml"));
+            if (!items.isEmpty()) return items;
+        }
+        return Map.of();
+    }
+
+    private Map<Integer, ItemStack> readKitFile(File file) {
         if (!file.exists()) return Map.of();
         FileConfiguration yaml = Configs.load(file);
         Map<Integer, ItemStack> items = new HashMap<>();
@@ -478,12 +486,6 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
         List<String> ids = new ArrayList<>();
         ConfigurationSection kits = config.getConfigurationSection("kits");
         if (kits != null) ids.addAll(kits.getKeys(false));
-        File[] folders = kitsFolder.listFiles(File::isDirectory);
-        if (folders != null) {
-            for (File folder : folders) {
-                if (!ids.contains(folder.getName())) ids.add(folder.getName());
-            }
-        }
         return ids;
     }
 
@@ -504,21 +506,48 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
         return list;
     }
 
-    private String contentsId(String id) {
-        ConfigurationSection section = config.getConfigurationSection("kits." + id);
-        if (section != null) {
-            String contents = section.getString("contents", section.getString("file", ""));
-            if (contents != null && !contents.isBlank()) return sanitize(contents);
+    private String resolveKitId(String raw) {
+        String id = sanitize(raw);
+        if (config.isConfigurationSection("kits." + id)) return id;
+        ConfigurationSection aliases = config.getConfigurationSection("aliases");
+        if (aliases != null) {
+            String mapped = aliases.getString(id, "");
+            if (mapped != null && !mapped.isBlank() && config.isConfigurationSection("kits." + sanitize(mapped))) {
+                return sanitize(mapped);
+            }
         }
-        return switch (id == null ? "" : id.toLowerCase(Locale.ROOT)) {
+        return switch (id) {
+            case "default" -> config.isConfigurationSection("kits.member") ? "member" : id;
             case "vip" -> "prism";
             case "mvp" -> "crystal";
             case "elite" -> "amethyst";
             case "divine" -> "sharded";
-            case "legend" -> "sharded_";
+            case "legend", "sharded_" -> "shardedplus";
             case "immortal" -> "patron";
-            default -> sanitize(id);
+            default -> id;
         };
+    }
+
+    private List<String> itemFolders(String raw) {
+        String typed = sanitize(raw);
+        String resolved = resolveKitId(raw);
+        List<String> folders = new ArrayList<>();
+        if (!typed.isEmpty()) folders.add(typed);
+        if (!resolved.isEmpty() && !folders.contains(resolved)) folders.add(resolved);
+        ConfigurationSection section = config.getConfigurationSection("kits." + resolved);
+        if (section != null) {
+            String contents = section.getString("contents", section.getString("file", ""));
+            if (contents != null && !contents.isBlank()) {
+                String folder = sanitize(contents);
+                if (!folders.contains(folder)) folders.add(folder);
+            }
+        }
+        String legacy = switch (resolved) {
+            case "shardedplus" -> "sharded_";
+            default -> "";
+        };
+        if (!legacy.isEmpty() && !folders.contains(legacy)) folders.add(legacy);
+        return folders;
     }
 
     private static boolean fillerLike(ItemStack item, ItemStack filler) {
@@ -582,7 +611,6 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
         List<String> names = kitIds();
         if (args.length == 1) {
             List<String> options = new ArrayList<>(List.of("claim"));
-            options.addAll(names);
             if (sender.hasPermission(ADMIN)) options.addAll(0, List.of("create", "delete", "give", "list", "help"));
             return Tabs.filter(options, args[0]);
         }

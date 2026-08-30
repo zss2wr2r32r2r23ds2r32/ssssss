@@ -53,8 +53,19 @@ layout:
 ready: '&#019BEEReady'
 no-cooldown: '&#019BEENone'
 
+# Old /kit claim names still work.
+aliases:
+  default: member
+  vip: prism
+  mvp: crystal
+  elite: amethyst
+  divine: sharded
+  legend: shardedplus
+  sharded_: shardedplus
+  immortal: patron
+
 kits:
-  default:
+  member:
     slot: 9
     contents: default
     cooldown: '1h'
@@ -126,7 +137,7 @@ kits:
         - ''
         - '&#FF0000▷ &n&lLOCKED'
 
-  vip:
+  prism:
     slot: 11
     contents: prism
     cooldown: '1h'
@@ -162,7 +173,7 @@ kits:
         - ''
         - '&#FF0000▷ &n&lLOCKED'
 
-  mvp:
+  crystal:
     slot: 12
     contents: crystal
     cooldown: '1h'
@@ -198,7 +209,7 @@ kits:
         - ''
         - '&#FF0000▷ &n&lLOCKED'
 
-  elite:
+  amethyst:
     slot: 13
     contents: amethyst
     cooldown: '1h'
@@ -234,7 +245,7 @@ kits:
         - ''
         - '&#FF0000▷ &n&lLOCKED'
 
-  divine:
+  sharded:
     slot: 14
     contents: sharded
     cooldown: '1h'
@@ -270,7 +281,7 @@ kits:
         - ''
         - '&#FF0000▷ &n&lLOCKED'
 
-  legend:
+  shardedplus:
     slot: 15
     contents: sharded_
     cooldown: '1h'
@@ -306,7 +317,7 @@ kits:
         - ''
         - '&#FF0000▷ &n&lLOCKED'
 
-  immortal:
+  patron:
     slot: 16
     contents: patron
     cooldown: '1h'

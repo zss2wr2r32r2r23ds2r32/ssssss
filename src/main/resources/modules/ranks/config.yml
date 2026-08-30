@@ -9,6 +9,16 @@ player-missing: "&#FF0000&lERROR &8▷ &fUnknown player."
 luckperms-missing: "&#FF0000&lERROR &8▷ &fLuckPerms is not loaded."
 no-permission: "&#FF0000&lERROR &8▷ &fYou do not have permission."
 
+# Promote/demote history. type: mariadb | mysql | sqlite
+database:
+  type: mariadb
+  mariadb:
+    host: localhost
+    port: 3306
+    database: shardedcore
+    username: root
+    password: ""
+
 # Tab-complete extras. Loaded LuckPerms groups are added automatically.
 groups:
   - default
