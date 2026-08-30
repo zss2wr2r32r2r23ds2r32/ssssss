@@ -13,16 +13,19 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public final class ServerStatusManager {
 
-    private static final long PING_TIMEOUT_MS = 750L;
+    private static final long PING_TIMEOUT_MS = 2000L;
+    private static final int OFFLINE_FAILURE_THRESHOLD = 3;
 
     private final ProxyServer server;
     private final PluginConfig config;
     private final WhitelistTracker whitelistTracker = new WhitelistTracker();
     private final Map<String, ServerState> states = new ConcurrentHashMap<>();
     private final Map<String, Boolean> reachable = new ConcurrentHashMap<>();
+    private final Map<String, AtomicInteger> consecutiveFailures = new ConcurrentHashMap<>();
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(r -> {
         Thread thread = new Thread(r, "ShardedVelocityCore-status");
         thread.setDaemon(true);
@@ -37,8 +40,9 @@ public final class ServerStatusManager {
         whitelistTracker.setSaveListener(persistence::save);
         for (String tracked : config.trackedServers()) {
             String key = normalize(tracked);
-            // Optimistic until the first async ping completes — avoids blocking joins.
+            // Optimistic until proven otherwise — never block joins on ping.
             reachable.put(key, true);
+            consecutiveFailures.put(key, new AtomicInteger(0));
             states.put(key, computeState(tracked));
         }
     }
@@ -111,14 +115,17 @@ public final class ServerStatusManager {
     }
 
     public boolean isReachable(String serverName) {
-        return Boolean.TRUE.equals(reachable.get(normalize(serverName)));
+        String key = normalize(serverName);
+        if (Boolean.TRUE.equals(reachable.get(key))) {
+            return true;
+        }
+        // If anyone is already connected through Velocity, treat as up.
+        RegisteredServer registeredServer = ServerResolver.find(server, serverName).orElse(null);
+        return registeredServer != null && !registeredServer.getPlayersConnected().isEmpty();
     }
 
     public boolean isJoinable(String serverName) {
         if (isHardMaintenance(serverName)) {
-            return false;
-        }
-        if (!isReachable(serverName)) {
             return false;
         }
         if (config.isLobby(serverName)) {
@@ -144,10 +151,28 @@ public final class ServerStatusManager {
             return;
         }
 
+        // Players already online through the proxy means the server is up.
+        if (!registeredServer.getPlayersConnected().isEmpty()) {
+            consecutiveFailures.computeIfAbsent(key, ignored -> new AtomicInteger()).set(0);
+            Boolean previous = reachable.put(key, true);
+            ServerState previousState = states.put(key, computeState(serverName));
+            if (previous == null || !previous || previousState != states.get(key)) {
+                notifyChange();
+            }
+            return;
+        }
+
         registeredServer.ping()
                 .orTimeout(PING_TIMEOUT_MS, TimeUnit.MILLISECONDS)
                 .whenComplete((ignored, error) -> {
-                    boolean up = error == null;
+                    AtomicInteger failures = consecutiveFailures.computeIfAbsent(key, k -> new AtomicInteger());
+                    boolean up;
+                    if (error == null) {
+                        failures.set(0);
+                        up = true;
+                    } else {
+                        up = failures.incrementAndGet() < OFFLINE_FAILURE_THRESHOLD;
+                    }
                     Boolean previous = reachable.put(key, up);
                     ServerState previousState = states.put(key, computeState(serverName));
                     if (previous == null || previous.booleanValue() != up

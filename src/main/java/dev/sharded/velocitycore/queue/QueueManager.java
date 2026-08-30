@@ -61,15 +61,9 @@ public final class QueueManager {
 
         leaveQueue(player);
 
-        if (config.isLobby(canonical)) {
-            if (statusManager.isReachable(canonical)) {
-                connect(player, canonical);
-                return true;
-            }
-            return false;
-        }
-
-        if (statusManager.isJoinable(canonical)) {
+        // Always attempt an immediate transfer unless the server is full.
+        // Do not gate on ping/whitelist status — those are display-only / backend-enforced.
+        if (config.isLobby(canonical) || !statusManager.isFull(canonical)) {
             connect(player, canonical);
             return true;
         }
@@ -128,7 +122,7 @@ public final class QueueManager {
     public void processQueues() {
         for (String serverName : new ArrayList<>(queues.keySet())) {
             String canonical = ServerResolver.canonicalName(server, serverName);
-            if (!statusManager.isJoinable(canonical)) {
+            if (statusManager.isHardMaintenance(canonical) || statusManager.isFull(canonical)) {
                 continue;
             }
             Deque<UUID> queue = queues.get(serverName);

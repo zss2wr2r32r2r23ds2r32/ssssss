@@ -38,8 +38,8 @@ public final class ServerConnectService {
 
         String canonical = ServerResolver.canonicalName(proxy, resolvedTarget);
 
-        // Only block explicit maintenance-servers. Whitelist-as-maintenance is display-only;
-        // the backend whitelist still decides who can join.
+        // Only explicit maintenance-servers blocks transfers.
+        // Whitelist-as-maintenance is hologram display only — backend enforces whitelist.
         if (!config.isLobby(canonical)
                 && queueManager.statusManager().isHardMaintenance(canonical)) {
             return List.of(queueManager.format(
@@ -47,16 +47,10 @@ public final class ServerConnectService {
             ));
         }
 
-        if (config.isLobby(canonical) && !queueManager.statusManager().isReachable(canonical)) {
-            return List.of(queueManager.format(
-                    config.queueColors().error() + "Lobby is currently offline."
-            ));
-        }
-
         boolean joined = queueManager.joinQueue(player, canonical);
         if (!joined) {
             return List.of(queueManager.format(
-                    config.queueColors().error() + "Unable to queue for "
+                    config.queueColors().error() + "Unable to connect to "
                             + config.queueColors().accent() + canonical
                             + config.queueColors().error() + "."
             ));
