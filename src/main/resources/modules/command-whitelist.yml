@@ -1,0 +1,47 @@
+# Command Whitelist Module
+# Non-whitelisted commands are REMOVED from the client list (appear red if typed).
+# Players with shardedlobbycore.bypass.commandwhitelist skip this.
+
+enabled: true
+filter-command-send: true
+filter-tab-complete: true
+bypass-for-op: false
+
+whitelist:
+  - "msg"
+  - "tell"
+  - "w"
+  - "r"
+  - "reply"
+  - "message"
+  - "discord"
+  - "store"
+  - "spawn"
+  - "server"
+  - "servers"
+  - "music"
+  - "fly"
+  - "promote"
+  - "demote"
+
+# Always stripped even if listed above
+blocked:
+  - "plugins"
+  - "pl"
+  - "help"
+  - "?"
+  - "version"
+  - "ver"
+  - "about"
+  - "paper"
+  - "spigot"
+  - "bukkit"
+  - "minecraft"
+  - "icanhasbukkit"
+  - "op"
+  - "deop"
+  - "stop"
+  - "reload"
+  - "rl"
+
+message: "&#FF0000&lERROR &8▷ &fYou cannot use that command here."

@@ -1,0 +1,83 @@
+name: ShardedLobbyCore
+version: '${project.version}'
+main: com.shardedmc.lobbycore.ShardedLobbyCore
+api-version: '1.20'
+authors: [ShardedMC]
+description: Modular, optimized lobby core plugin
+softdepend: [PlaceholderAPI, LuckPerms]
+
+commands:
+  shardedlobbycore:
+    description: Main plugin command
+    aliases: [slc, shardedlobby]
+    permission: shardedlobbycore.admin
+  setspawn:
+    description: Set the lobby spawn point
+    permission: shardedlobbycore.setspawn
+  clearchat:
+    description: Clear the chat
+    permission: shardedlobbycore.clearchat
+  lockchat:
+    description: Lock or unlock the chat
+    permission: shardedlobbycore.lockchat
+  fly:
+    description: Toggle flight
+    permission: shardedlobbycore.fly
+  discord:
+    description: Show the Discord server link
+  store:
+    description: Show the webstore link
+  chatfilter:
+    description: Chat filter admin tools
+    aliases: [cf, filter]
+    permission: shardedlobbycore.chatfilter.admin
+  promote:
+    description: Promote a player to a LuckPerms rank
+    permission: shardedlobbycore.ranks.manage
+  demote:
+    description: Demote a player to a LuckPerms rank
+    permission: shardedlobbycore.ranks.manage
+
+permissions:
+  shardedlobbycore.admin:
+    description: Access to admin commands
+    default: op
+  shardedlobbycore.setspawn:
+    description: Set lobby spawn
+    default: op
+  shardedlobbycore.clearchat:
+    description: Clear chat
+    default: op
+  shardedlobbycore.lockchat:
+    description: Lock chat
+    default: op
+  shardedlobbycore.bypass.antiswear:
+    description: Bypass anti-swear (legacy)
+    default: op
+  shardedlobbycore.bypass.commandwhitelist:
+    description: Bypass command whitelist
+    default: op
+  shardedlobbycore.chatfilter.bypass:
+    description: Bypass all chat filter checks
+    default: op
+  shardedlobbycore.chatfilter.alerts:
+    description: Receive chat filter alerts
+    default: op
+  shardedlobbycore.chatfilter.admin:
+    description: Manage chat filter
+    default: op
+  shardedlobbycore.chatfilter.bypass.advertising:
+    description: Bypass advertising filter
+    default: false
+  shardedlobbycore.chatfilter.bypass.links:
+    description: Bypass links filter
+    default: false
+  shardedlobbycore.fly:
+    description: Toggle flight in lobby
+    default: op
+  shardedlobbycore.ranks.manage:
+    description: Use /promote and /demote
+    default: op
+  shardedlobbycore.chatprefix.*:
+    description: Chat prefix permissions
+    default: false

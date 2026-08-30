@@ -1,0 +1,77 @@
+# Default Items Module
+
+enabled: true
+give-on-join: true
+lobby-arrow-slot: 9
+lobby-arrow-amount: 1
+
+items:
+  server-selector:
+    slot: 4
+    material: COMPASS
+    amount: 1
+    name: "&#AD4EFFServer Selector &7[Right-Click]"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Server Selection menu!"
+    actions:
+      - "[OPEN_MENU] server-selector"
+
+  player-visibility:
+    slot: 7
+    material: LIME_DYE
+    amount: 1
+    name: "&#94FF00Player Visability &7[Enabled]"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Right click me to hide players"
+
+  bow-popper:
+    slot: 1
+    material: BOW
+    amount: 1
+    name: "&#FFE300Bow Popper &7[Right-Click]"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Teleport where it lands"
+    unbreakable: true
+    enchantments:
+      infinity: 1
+
+  pvp-sword:
+    slot: 0
+    material: DIAMOND_SWORD
+    amount: 1
+    name: "&#FF0000PVP Sword &7[Hold]"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Hold to enter PvP"
+    unbreakable: true
+
+  parkour:
+    slot: 2
+    material: LIME_GLAZED_TERRACOTTA
+    amount: 1
+    name: "&#45FF17Parkour &7[Right-Click]"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Click to start parkour"
+    actions:
+      - "[PARKOUR]"
+
+  music:
+    slot: 8
+    material: JUKEBOX
+    amount: 1
+    name: "&#FF0072Music &7[Right-Click]"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Browse and play music!"
+    actions:
+      - "[OPEN_MENU] music"

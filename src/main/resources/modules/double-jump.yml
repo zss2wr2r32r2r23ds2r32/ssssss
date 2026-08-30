@@ -1,0 +1,10 @@
+# Double Jump Module
+
+enabled: true
+
+power: 1.2
+vertical-boost: 0.8
+play-sound: true
+
+messages:
+  used: ""
