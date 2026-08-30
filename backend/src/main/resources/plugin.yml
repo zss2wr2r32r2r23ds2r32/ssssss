@@ -1,0 +1,6 @@
+name: ShardedVelocityCore-Backend
+version: 1.0.16
+main: dev.sharded.velocitycore.backend.BackendPlugin
+api-version: '1.21'
+author: Sharded
+description: Reports whitelist status from backend servers to ShardedVelocityCore on Velocity.

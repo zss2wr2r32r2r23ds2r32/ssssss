@@ -1,0 +1,73 @@
+# ShardedVelocityCore Configuration
+
+status-refresh-seconds = 1
+status-sync-interval-seconds = 1
+whitelist-as-maintenance = true
+lobby-server = "lobby"
+
+tracked-servers = ["survival", "events", "diasmp", "dev-1", "dev-2"]
+queue-servers = ["lobby", "survival", "events", "diasmp", "dev-1", "dev-2"]
+
+maintenance-servers = []
+
+[motd]
+center-width = 48
+lines = [
+  "&#AD4EFF&lSHARDEDMC &8▷ &7[1.21+]",
+  "&#FFE300⚓ &#FFE300&lSEASON 1 SOON &#FFE300⚓"
+]
+
+[hover]
+enabled = false
+messages = [
+  "",
+  "&#9863E7&lSHARDEDMC NETWORK &8¦ &7[1.21+]",
+  "",
+  "&#A370EEInformation:",
+  "&#008EFF⚓ &fDiscord &8▷ &#008EFFdiscord.gg/shardedmc",
+  "&#6BDB44⛨ &fStore &8▷ &#6BDB44store.shardedmc.net",
+  "",
+  "&#9863E7☀ &fPlay with &#9863E7&n{online_players}&f other players"
+]
+
+[maintenance-motd]
+kick-message = [
+  "",
+  "&#FF0000&lMAINTENANCE",
+  "&fThis Server is currently in Maintenance",
+  "",
+  "&fPlease Be patient, Join the discord for more updates:",
+  "&#FFD900▷ &#FFD900&ndiscord.gg/shardedmc&f &#FFD900◁"
+]
+protocol-text = true
+text = "Maintenance"
+protocol-version = -1
+online-text = "1.21"
+online-protocol-version = 767
+
+[queue]
+  action-bar = "&#4498DB#%numberinqueue% in queue to &n%server_color%%server%&r &7(Wating: %numberofpeoplewaitinginqueue%)"
+  prefix = "&#4498DB&lQUEUE &8▷&r "
+  default-server = "survival"
+  action-bar-interval-ticks = 10
+
+  [queue.colors]
+    position = "&#FFFFFF"
+    server = "&#8AFF00"
+    waiting = "&#AAAAAA"
+    success = "&#8AFF00"
+    error = "&#FF0000"
+    accent = "&#4498DB"
+
+  [queue.server-colors]
+    lobby = "&#4498DB"
+    survival = "&#8AFF00"
+    events = "&#FFEE00"
+    diasmp = "&#FF0000"
+    diamondsmp = "&#FF0000"
+
+  [queue.max-players]
+    lobby = 500
+    survival = 100
+    events = 200
+    diasmp = 150

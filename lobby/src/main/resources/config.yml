@@ -1,0 +1,35 @@
+config-schema: "10802"
+
+motd:
+  lines:
+    - "&#AD4EFF&lSHARDEDMC &8▷ &7[1.21+]"
+    - "&#FFE300⚓ &#FFE300&lSEASON 1 SOON &#FFE300⚓"
+  center-width: 48
+
+server-icon:
+  enabled: false
+  image: "default-server-icon.png"
+
+hover:
+  enabled: false
+  messages:
+    - ""
+    - "&#9863E7&lSHARDEDMC NETWORK &8¦ &7[1.21+]"
+    - ""
+    - "&#A370EEInformation:"
+    - "&#008EFF⚓ &fDiscord &8▷ &#008EFFdiscord.gg/shardedmc"
+    - "&#6BDB44⛨ &fStore &8▷ &#6BDB44store.shardedmc.net"
+    - ""
+    - "&#9863E7☀ &fPlay with &#9863E7&n{online_players}&f other players"
+
+maintenance-motd:
+  kick-message:
+    - ""
+    - "&#FF0000&lMAINTENANCE"
+    - "&fThis Server is currently in Maintenance"
+    - ""
+    - "&fPlease Be patient, Join the discord for more updates:"
+    - "&#FFD900▷ &#FFD900&ndiscord.gg/shardedmc&f &#FFD900◁"
+  protocol-text: true
+  text: "Maintenance"
+  protocol-version: -1
