@@ -7,7 +7,6 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
-import net.luckperms.api.node.NodeType;
 import net.luckperms.api.node.types.InheritanceNode;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -26,8 +25,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * /promote and /demote — clears existing parent groups, sets the target
- * LuckPerms group as the only parent + primary group, then saves.
+ * /promote and /demote — sets the target LuckPerms group as parent + primary, then saves.
+ * Uses LP parent set (not parent clear).
  */
 public class RanksModule implements Module, Listener, CommandExecutor, TabCompleter {
 
@@ -153,9 +152,7 @@ public class RanksModule implements Module, Listener, CommandExecutor, TabComple
                     return;
                 }
 
-                // Drop every parent group (any context), then assign only the target rank.
-                // parent set alone can leave weight-based primary pointing at a leftover group.
-                user.data().clear(NodeType.INHERITANCE.predicate());
+                // parent set semantics: ensure membership + primary. Do not parent clear.
                 user.data().add(InheritanceNode.builder(groupName).build());
 
                 var primaryResult = user.setPrimaryGroup(groupName);
@@ -173,10 +170,7 @@ public class RanksModule implements Module, Listener, CommandExecutor, TabComple
                 boolean alsoConsole = config.getBoolean("also-run-console-commands", true);
 
                 sync(() -> {
-                    // Clear leftovers then set — stronger than parent set alone.
                     if (alsoConsole) {
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-                                "lp user " + playerName + " parent clear");
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                                 "lp user " + playerName + " parent set " + groupName);
                     }

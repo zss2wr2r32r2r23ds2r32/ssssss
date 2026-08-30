@@ -9,7 +9,7 @@ enabled: true
 notify-target: true
 allow-offline: true
 
-# After API apply, also run lp parent clear + parent set (keeps multi-server sync happy)
+# After API apply, also run lp user … parent set (no parent clear)
 also-run-console-commands: true
 
 # Tab-complete role list (must exist as LuckPerms groups)
