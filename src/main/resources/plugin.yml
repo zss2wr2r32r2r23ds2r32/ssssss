@@ -393,6 +393,7 @@ commands:
     permission: shardedcore.command.survival
   events:
     description: Switch to events
+    aliases: [event]
     permission: shardedcore.command.events
   diasmp:
     description: Switch to diasmp

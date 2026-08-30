@@ -7,7 +7,6 @@ import com.shardedcore.util.Tabs;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
-import net.luckperms.api.node.Node;
 import net.luckperms.api.node.types.InheritanceNode;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -63,7 +62,7 @@ public final class RanksModule extends Module implements CommandExecutor, TabCom
         }
         UUID uuid = target.getUniqueId();
         String name = Players.name(target);
-        api.getUserManager().modifyUser(uuid, user -> apply(user, group, add));
+        api.getUserManager().modifyUser(uuid, user -> setRole(user, group));
         send(sender, add ? "promoted" : "demoted", "player", name, "role", group);
         if (target.getPlayer() != null) {
             send(target.getPlayer(), add ? "promoted-self" : "demoted-self", "role", group);
@@ -71,10 +70,19 @@ public final class RanksModule extends Module implements CommandExecutor, TabCom
         return true;
     }
 
-    private void apply(User user, String group, boolean add) {
-        Node node = InheritanceNode.builder(group).build();
-        if (add) user.data().add(node);
-        else user.data().remove(node);
+    private void setRole(User user, String group) {
+        java.util.Set<String> replace = new java.util.HashSet<>();
+        for (String name : config.getStringList("groups")) {
+            if (name != null && !name.isBlank()) replace.add(name.toLowerCase(Locale.ROOT));
+        }
+        if (user.getPrimaryGroup() != null) replace.add(user.getPrimaryGroup().toLowerCase(Locale.ROOT));
+        user.data().clear(node -> node instanceof InheritanceNode inheritance
+                && replace.contains(inheritance.getGroupName().toLowerCase(Locale.ROOT)));
+        user.data().add(InheritanceNode.builder(group).build());
+        try {
+            user.setPrimaryGroup(group);
+        } catch (IllegalStateException ignored) {
+        }
     }
 
     @Override

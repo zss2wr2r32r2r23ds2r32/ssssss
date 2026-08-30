@@ -44,8 +44,16 @@ tags:
     tag: "&7[&#FF0000☆ &#FF0000&lHACKER&7]"
     name: "HACKER"
     description: "&8Description"
+  lucky:
+    tag: "&7[&#0098FF🌊 &#0098FF&lLUCKY&7]"
+    name: "LUCKY"
+    description: "&8Description"
 
-limited: {}
+limited:
+  summer:
+    tag: "&7[&#FFE300 ☀&#FFE300&lSUMMER&7]"
+    name: "SUMMER"
+    description: "&8Description"
 
 gui:
   title: "Name Tags"

@@ -51,6 +51,10 @@ public final class CommandsModule extends Module implements CommandExecutor, Tab
         registerCommand("dev", this);
         registerCommand("patron", this);
         registerListener(this);
+        String channel = config.getString("servers.channel", "BungeeCord");
+        if (channel != null && !channel.isBlank()) {
+            plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, channel);
+        }
         startScheduled();
     }
 
@@ -94,7 +98,8 @@ public final class CommandsModule extends Module implements CommandExecutor, Tab
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String name = command.getName().toLowerCase(Locale.ROOT);
-        if (name.equals("survival") || name.equals("events") || name.equals("diasmp") || name.equals("dev")) {
+        if (name.equals("survival") || name.equals("events") || name.equals("event")
+                || name.equals("diasmp") || name.equals("dev")) {
             return serverCommand(sender, name, args);
         }
         if (name.equals("patron")) {
@@ -253,7 +258,7 @@ public final class CommandsModule extends Module implements CommandExecutor, Tab
         }
         String server = switch (name) {
             case "survival" -> config.getString("servers.survival", "survival");
-            case "events" -> config.getString("servers.events", "events");
+            case "events", "event" -> config.getString("servers.events", "events");
             case "diasmp" -> config.getString("servers.diasmp", "diasmp");
             case "dev" -> {
                 if (args.length > 0 && args[0].equals("1")) yield config.getString("servers.dev1", "dev1");
@@ -262,8 +267,21 @@ public final class CommandsModule extends Module implements CommandExecutor, Tab
             }
             default -> name;
         };
-        player.performCommand("server " + server);
+        connect(player, server);
         return true;
+    }
+
+    private void connect(Player player, String server) {
+        if (server == null || server.isBlank()) return;
+        try {
+            java.io.ByteArrayOutputStream bytes = new java.io.ByteArrayOutputStream();
+            java.io.DataOutputStream out = new java.io.DataOutputStream(bytes);
+            out.writeUTF("Connect");
+            out.writeUTF(server);
+            player.sendPluginMessage(plugin, config.getString("servers.channel", "BungeeCord"), bytes.toByteArray());
+        } catch (Exception ex) {
+            plugin.getLogger().warning("Could not send " + player.getName() + " to " + server + ": " + ex.getMessage());
+        }
     }
 
     private void openPatron(Player player) {

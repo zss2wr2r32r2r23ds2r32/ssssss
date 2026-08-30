@@ -56,6 +56,7 @@ no-cooldown: '&#019BEENone'
 kits:
   default:
     slot: 9
+    contents: default
     cooldown: '1h'
     permission: shardedcore.kit.member
     item:
@@ -91,6 +92,7 @@ kits:
 
   supporter:
     slot: 10
+    contents: supporter
     cooldown: '1h'
     permission: shardedcore.kit.supporter
     item:
@@ -126,6 +128,7 @@ kits:
 
   vip:
     slot: 11
+    contents: prism
     cooldown: '1h'
     permission: shardedcore.kit.prism
     item:
@@ -161,6 +164,7 @@ kits:
 
   mvp:
     slot: 12
+    contents: crystal
     cooldown: '1h'
     permission: shardedcore.kit.crystal
     item:
@@ -196,6 +200,7 @@ kits:
 
   elite:
     slot: 13
+    contents: amethyst
     cooldown: '1h'
     permission: shardedcore.kit.amethyst
     item:
@@ -231,6 +236,7 @@ kits:
 
   divine:
     slot: 14
+    contents: sharded
     cooldown: '1h'
     permission: shardedcore.kit.sharded
     item:
@@ -266,6 +272,7 @@ kits:
 
   legend:
     slot: 15
+    contents: sharded_
     cooldown: '1h'
     permission: shardedcore.kit.sharded+
     item:
@@ -301,6 +308,7 @@ kits:
 
   immortal:
     slot: 16
+    contents: patron
     cooldown: '1h'
     permission: shardedcore.kit.patron
     item:

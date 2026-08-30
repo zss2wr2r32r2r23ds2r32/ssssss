@@ -256,6 +256,7 @@ whitelist:
     - website
     - survival
     - events
+    - event
     - diasmp
     - dev
     - patron
@@ -269,6 +270,7 @@ whitelist:
     - cosmetic
 
 servers:
+  channel: BungeeCord
   survival: survival
   events: events
   diasmp: diasmp

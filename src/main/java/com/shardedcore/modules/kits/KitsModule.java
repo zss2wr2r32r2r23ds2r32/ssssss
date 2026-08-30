@@ -304,33 +304,58 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
             return;
         }
         int rows = Math.max(6, config.getInt("layout.rows", 6));
-        Menus.Menu menu = plugin.menus().create(player, cfg("layout.title", "&8Kits | Preview"), rows).unlocked();
+        ConfigurationSection back = config.getConfigurationSection("layout.back");
+        int backSlot = back == null ? 45 : back.getInt("slot", 45);
+        java.util.Set<Integer> editable = new java.util.HashSet<>();
+        for (int slot = 0; slot < GUI_TO_PLAYER.length; slot++) {
+            if (GUI_TO_PLAYER[slot] >= 0 && slot != backSlot) editable.add(slot);
+        }
+        Menus.Menu menu = plugin.menus().create(player, cfg("layout.title", "&8Kits | Preview"), rows)
+                .editableSlots(editable);
         Map<Integer, ItemStack> layout = loadLayout(player.getUniqueId(), id);
         Map<Integer, ItemStack> placed = layout == null || !sameItems(flat(layout), flat(items)) ? items : layout;
         for (Map.Entry<Integer, ItemStack> entry : placed.entrySet()) {
             int gui = playerToGui(entry.getKey());
-            if (gui >= 0) menu.set(gui, entry.getValue().clone());
+            if (gui >= 0 && gui != backSlot) menu.inventory().setItem(gui, entry.getValue().clone());
         }
-        ConfigurationSection back = config.getConfigurationSection("layout.back");
-        int backSlot = back == null ? 45 : back.getInt("slot", 45);
         menu.set(backSlot, Items.fromSection(back, player), event -> {
             event.setCancelled(true);
-            saveArrange(player, id, menu, items);
             player.closeInventory();
             openGui(player);
         });
-        menu.fill(Items.fromSection(config.getConfigurationSection("layout.filler"), player));
-        menu.onClose(closed -> saveArrange(closed, id, menu, items));
+        menu.fillExcept(Items.fromSection(config.getConfigurationSection("layout.filler"), player), editable);
+        menu.onBottom(event -> event.setCancelled(true));
+        menu.onClose(closed -> saveArrange(closed, id, menu, items, backSlot));
         plugin.menus().open(player, menu);
     }
 
-    private void saveArrange(Player player, String id, Menus.Menu menu, Map<Integer, ItemStack> original) {
+    private void saveArrange(Player player, String id, Menus.Menu menu, Map<Integer, ItemStack> original, int backSlot) {
+        ItemStack cursor = player.getItemOnCursor();
+        if (!isAir(cursor)) {
+            ItemStack[] contents = menu.inventory().getContents();
+            boolean stored = false;
+            for (int slot = 0; slot < contents.length; slot++) {
+                if (slot == backSlot) continue;
+                if (slot >= GUI_TO_PLAYER.length || GUI_TO_PLAYER[slot] < 0) continue;
+                if (isAir(contents[slot])) {
+                    menu.inventory().setItem(slot, cursor.clone());
+                    stored = true;
+                    break;
+                }
+            }
+            player.setItemOnCursor(null);
+            if (!stored) {
+                send(player, "layout-refused", "kit", id);
+                return;
+            }
+        }
         Map<Integer, ItemStack> arranged = new HashMap<>();
+        ItemStack filler = Items.fromSection(config.getConfigurationSection("layout.filler"), player);
         ItemStack[] contents = menu.inventory().getContents();
         for (int slot = 0; slot < contents.length; slot++) {
-            if (slot == config.getInt("layout.back.slot", 45)) continue;
+            if (slot == backSlot) continue;
             ItemStack item = contents[slot];
-            if (isAir(item)) continue;
+            if (isAir(item) || fillerLike(item, filler)) continue;
             int playerSlot = slot < GUI_TO_PLAYER.length ? GUI_TO_PLAYER[slot] : -1;
             if (playerSlot < 0) continue;
             arranged.put(playerSlot, item.clone());
@@ -359,7 +384,7 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
     }
 
     private Map<Integer, ItemStack> loadItems(String id) {
-        File file = new File(new File(kitsFolder, id), "kit.yml");
+        File file = new File(new File(kitsFolder, contentsId(id)), "kit.yml");
         if (!file.exists()) return Map.of();
         FileConfiguration yaml = Configs.load(file);
         Map<Integer, ItemStack> items = new HashMap<>();
@@ -479,16 +504,39 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
         return list;
     }
 
+    private String contentsId(String id) {
+        ConfigurationSection section = config.getConfigurationSection("kits." + id);
+        if (section != null) {
+            String contents = section.getString("contents", section.getString("file", ""));
+            if (contents != null && !contents.isBlank()) return sanitize(contents);
+        }
+        return switch (id == null ? "" : id.toLowerCase(Locale.ROOT)) {
+            case "vip" -> "prism";
+            case "mvp" -> "crystal";
+            case "elite" -> "amethyst";
+            case "divine" -> "sharded";
+            case "legend" -> "sharded_";
+            case "immortal" -> "patron";
+            default -> sanitize(id);
+        };
+    }
+
+    private static boolean fillerLike(ItemStack item, ItemStack filler) {
+        if (isAir(item) || isAir(filler)) return false;
+        return item.getType() == filler.getType() && item.getType().name().endsWith("GLASS_PANE");
+    }
+
     private static boolean sameItems(List<ItemStack> a, List<ItemStack> b) {
         if (a.size() != b.size()) return false;
         List<ItemStack> remaining = new ArrayList<>();
-        for (ItemStack item : b) remaining.add(item.clone());
+        for (ItemStack item : b) remaining.add(normalize(item));
         for (ItemStack item : a) {
+            ItemStack compare = normalize(item);
             boolean found = false;
             Iterator<ItemStack> iterator = remaining.iterator();
             while (iterator.hasNext()) {
                 ItemStack other = iterator.next();
-                if (item.isSimilar(other) && item.getAmount() == other.getAmount()) {
+                if (compare.isSimilar(other) && compare.getAmount() == other.getAmount()) {
                     iterator.remove();
                     found = true;
                     break;
@@ -497,6 +545,12 @@ public final class KitsModule extends Module implements CommandExecutor, TabComp
             if (!found) return false;
         }
         return remaining.isEmpty();
+    }
+
+    private static ItemStack normalize(ItemStack item) {
+        ItemStack clone = item.clone();
+        Items.hideBundleBits(clone);
+        return clone;
     }
 
     private static int playerToGui(int playerSlot) {

@@ -69,62 +69,81 @@ baltop:
 
 money-methods-gui:
   enabled: true
-  title: "Money Methods"
-  rows: 3
+  title: "&8☀ Money Methods"
+  rows: 4
+  filler:
+    material: BLACK_STAINED_GLASS_PANE
+    name: " "
+    lore: []
   items:
     cane:
-      slot: 11
+      slot: 10
       material: SUGAR_CANE
-      name: "&#94FF00&lSUGAR CANE"
+      name: "&#94FF00&lFARMS &f(#1)"
       lore:
-        - "&8Description"
+        - "&7[SUGAR CANE]"
         - ""
-        - "&#94FF00Information:"
-        - "&#94FF00| &fFarm it and /sell"
+        - "&#22AFFBInformation"
+        - "&fClick here, to farm and /sell &#94FF00SUGAR CANE"
+        - ""
+        - "&#94FF00Hourly &8▷ &#94FF0090B"
         - ""
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
+      command: "shop"
     cactus:
-      slot: 12
+      slot: 11
       material: CACTUS
-      name: "&#94FF00&lCACTUS"
+      name: "&#94FF00&lFARMS &f(#2)"
       lore:
-        - "&8Description"
+        - "&7[CACTUS]"
         - ""
-        - "&#94FF00Information:"
-        - "&#94FF00| &fAFK farm and /sell"
+        - "&#22AFFBInformation"
+        - "&fClick here, to AFK farm and /sell &#94FF00CACTUS"
+        - ""
+        - "&#94FF00Hourly &8▷ &#94FF0075B"
         - ""
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
+      command: "shop"
     wart:
       slot: 13
       material: NETHER_WART
-      name: "&#94FF00&lNETHER WART"
+      name: "&#94FF00&lFARMS &f(#3)"
       lore:
-        - "&8Description"
+        - "&7[NETHER WART]"
         - ""
-        - "&#94FF00Information:"
-        - "&#94FF00| &fNether farm and /sell"
+        - "&#22AFFBInformation"
+        - "&fClick here, to farm and /sell &#94FF00NETHER WART"
+        - ""
+        - "&#94FF00Hourly &8▷ &#94FF0060B"
         - ""
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
+      command: "shop"
     bamboo:
-      slot: 14
-      material: BAMBOO
-      name: "&#94FF00&lBAMBOO"
-      lore:
-        - "&8Description"
-        - ""
-        - "&#94FF00Information:"
-        - "&#94FF00| &fGrow it fast and /sell"
-        - ""
-        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
-    melon:
       slot: 15
-      material: MELON
-      name: "&#94FF00&lMELONS"
+      material: BAMBOO
+      name: "&#94FF00&lFARMS &f(#4)"
       lore:
-        - "&8Description"
+        - "&7[BAMBOO]"
         - ""
-        - "&#94FF00Information:"
-        - "&#94FF00| &fHarvest and /sell"
+        - "&#22AFFBInformation"
+        - "&fClick here, to grow and /sell &#94FF00BAMBOO"
+        - ""
+        - "&#94FF00Hourly &8▷ &#94FF0045B"
         - ""
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
+      command: "shop"
+    melon:
+      slot: 16
+      material: MELON
+      name: "&#94FF00&lFARMS &f(#5)"
+      lore:
+        - "&7[MELONS]"
+        - ""
+        - "&#22AFFBInformation"
+        - "&fClick here, to harvest and /sell &#94FF00MELONS"
+        - ""
+        - "&#94FF00Hourly &8▷ &#94FF0030B"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
+      command: "shop"
 

@@ -43,6 +43,7 @@ public final class ShardedCore extends JavaPlugin {
         toggles.init();
         menus = new Menus(this);
         menus.register();
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
         PluginCommand core = getCommand("shardedcore");
         CoreCommand executor = new CoreCommand(this);
@@ -82,6 +83,7 @@ public final class ShardedCore extends JavaPlugin {
         }
         if (modules != null) modules.disableAll();
         if (toggles != null) toggles.close();
+        getServer().getMessenger().unregisterOutgoingPluginChannel(this);
         instance = null;
         getLogger().info("ShardedCore disabled.");
     }

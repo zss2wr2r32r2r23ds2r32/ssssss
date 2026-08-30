@@ -59,9 +59,9 @@ public final class Menus implements Listener {
         if (menu == null || event.getInventory() != menu.inventory) return;
         if (menu.locked) event.setCancelled(true);
         if (event.getClickedInventory() != menu.inventory) {
-            if (menu.locked) event.setCancelled(true);
+            if (menu.locked || menu.editable != null) event.setCancelled(true);
             if (menu.editable != null && (event.isShiftClick() || event.getClick() == ClickType.NUMBER_KEY
-                    || event.getClick() == ClickType.DOUBLE_CLICK)) {
+                    || event.getClick() == ClickType.DOUBLE_CLICK || event.getClick() == ClickType.SWAP_OFFHAND)) {
                 event.setCancelled(true);
             }
             if (menu.bottomClick != null && event.getClickedInventory() == player.getInventory()) {
@@ -69,9 +69,15 @@ public final class Menus implements Listener {
             }
             return;
         }
-        if (menu.editable != null && !menu.editable.contains(event.getRawSlot())
-                && !menu.clicks.containsKey(event.getRawSlot())) {
-            event.setCancelled(true);
+        if (menu.editable != null) {
+            ClickType click = event.getClick();
+            if (event.isShiftClick() || click == ClickType.NUMBER_KEY || click == ClickType.DOUBLE_CLICK
+                    || click == ClickType.SWAP_OFFHAND || click == ClickType.DROP || click == ClickType.CONTROL_DROP) {
+                event.setCancelled(true);
+            }
+            if (!menu.editable.contains(event.getRawSlot()) && !menu.clicks.containsKey(event.getRawSlot())) {
+                event.setCancelled(true);
+            }
         }
         Consumer<InventoryClickEvent> handler = menu.clicks.get(event.getRawSlot());
         if (handler != null) handler.accept(event);
@@ -87,7 +93,7 @@ public final class Menus implements Listener {
         if (menu.editable != null) {
             int size = menu.inventory.getSize();
             for (int slot : event.getRawSlots()) {
-                if (slot >= 0 && slot < size && !menu.editable.contains(slot) && !menu.clicks.containsKey(slot)) {
+                if (slot < 0 || slot >= size || (!menu.editable.contains(slot) && !menu.clicks.containsKey(slot))) {
                     event.setCancelled(true);
                     return;
                 }

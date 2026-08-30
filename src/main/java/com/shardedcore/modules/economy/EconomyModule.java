@@ -306,14 +306,22 @@ public final class EconomyModule extends Module implements CommandExecutor, TabC
 
     private void openMoneyMethods(Player player) {
         ConfigurationSection gui = config.getConfigurationSection("money-methods-gui");
-        int rows = gui == null ? 3 : Math.max(1, gui.getInt("rows", 3));
-        Menus.Menu menu = plugin.menus().create(player, gui == null ? "&8Money Methods" : gui.getString("title", "&8Money Methods"), rows);
+        int rows = gui == null ? 4 : Math.max(1, gui.getInt("rows", 4));
+        Menus.Menu menu = plugin.menus().create(player, gui == null ? "&8☀ Money Methods" : gui.getString("title", "&8☀ Money Methods"), rows);
         ConfigurationSection items = gui == null ? null : gui.getConfigurationSection("items");
         if (items != null) {
             for (String id : items.getKeys(false)) {
                 ConfigurationSection item = items.getConfigurationSection(id);
                 if (item == null) continue;
-                menu.set(item.getInt("slot", 0), Items.fromSection(item, player));
+                String command = item.getString("command", "");
+                menu.set(item.getInt("slot", 0), Items.fromSection(item, player), event -> {
+                    event.setCancelled(true);
+                    GuiButtons.play(player, "click");
+                    if (command != null && !command.isBlank()) {
+                        player.closeInventory();
+                        player.performCommand(command);
+                    }
+                });
             }
         } else {
             List<String> lines = config.getStringList("money-methods");
@@ -323,7 +331,12 @@ public final class EconomyModule extends Module implements CommandExecutor, TabC
                 menu.set(slot++, Items.named(Material.GOLD_INGOT, line, List.of()));
             }
         }
-        GuiButtons.fill(menu);
+        ConfigurationSection filler = gui == null ? null : gui.getConfigurationSection("filler");
+        if (filler == null) {
+            GuiButtons.fill(menu);
+        } else {
+            menu.fill(Items.fromSection(filler, player));
+        }
         plugin.menus().open(player, menu);
         GuiButtons.play(player, "open");
     }
