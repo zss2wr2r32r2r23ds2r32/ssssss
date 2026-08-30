@@ -5,8 +5,8 @@ status-sync-interval-seconds = 1
 whitelist-as-maintenance = true
 lobby-server = "lobby"
 
-tracked-servers = ["survival", "events", "diasmp"]
-queue-servers = ["lobby", "survival", "events", "diasmp"]
+tracked-servers = ["survival", "events", "diasmp", "dev-1", "dev-2"]
+queue-servers = ["lobby", "survival", "events", "diasmp", "dev-1", "dev-2"]
 
 maintenance-servers = []
 
@@ -21,13 +21,13 @@ lines = [
 enabled = false
 messages = [
   "",
-  "&#AD4EFF&lSHARDEDMC &#AD4EFF&lNetwork &8| &7[1.21+]",
+  "&#9863E7&lSHARDEDMC NETWORK &8¦ &7[1.21+]",
   "",
-  "&#AD4EFFɪɴꜰᴏʀᴍᴀᴛɪᴏɴ:",
-  "&#FF005D⚓ &fDiscord &8▷ &#FF005Dᴅɪsᴄᴏʀᴅ.ɢɢ/shardedmc",
-  "&#9FFF00⛨ &fStore &8▷ &#9FFF00ᴄᴏᴍɪɴɢ sᴏᴏɴ",
+  "&#A370EEInformation:",
+  "&#008EFF⚓ &fDiscord &8▷ &#008EFFdiscord.gg/shardedmc",
+  "&#6BDB44⛨ &fStore &8▷ &#6BDB44store.shardedmc.net",
   "",
-  "&#AD4EFF☀ &fPlay with &#AD4EFF&n{online_players}&f other players"
+  "&#9863E7☀ &fPlay with &#9863E7&n{online_players}&f other players"
 ]
 
 [maintenance-motd]

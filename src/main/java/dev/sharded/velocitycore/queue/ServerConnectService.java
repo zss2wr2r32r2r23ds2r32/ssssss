@@ -3,7 +3,6 @@ package dev.sharded.velocitycore.queue;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
-import dev.sharded.velocitycore.ServerState;
 import dev.sharded.velocitycore.config.PluginConfig;
 import dev.sharded.velocitycore.util.LegacyText;
 import dev.sharded.velocitycore.util.ServerResolver;
@@ -39,8 +38,10 @@ public final class ServerConnectService {
 
         String canonical = ServerResolver.canonicalName(proxy, resolvedTarget);
 
+        // Only block explicit maintenance-servers. Whitelist-as-maintenance is display-only;
+        // the backend whitelist still decides who can join.
         if (!config.isLobby(canonical)
-                && queueManager.statusManager().getState(canonical) == ServerState.MAINTENANCE) {
+                && queueManager.statusManager().isHardMaintenance(canonical)) {
             return List.of(queueManager.format(
                     config.queueColors().error() + canonical + " is currently in maintenance."
             ));

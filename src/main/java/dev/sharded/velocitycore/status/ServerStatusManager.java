@@ -16,10 +16,13 @@ import java.util.concurrent.TimeUnit;
 
 public final class ServerStatusManager {
 
+    private static final long PING_TIMEOUT_MS = 750L;
+
     private final ProxyServer server;
     private final PluginConfig config;
     private final WhitelistTracker whitelistTracker = new WhitelistTracker();
     private final Map<String, ServerState> states = new ConcurrentHashMap<>();
+    private final Map<String, Boolean> reachable = new ConcurrentHashMap<>();
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(r -> {
         Thread thread = new Thread(r, "ShardedVelocityCore-status");
         thread.setDaemon(true);
@@ -33,7 +36,10 @@ public final class ServerStatusManager {
         whitelistTracker.load(persistence.load());
         whitelistTracker.setSaveListener(persistence::save);
         for (String tracked : config.trackedServers()) {
-            states.put(normalize(tracked), resolveState(tracked));
+            String key = normalize(tracked);
+            // Optimistic until the first async ping completes — avoids blocking joins.
+            reachable.put(key, true);
+            states.put(key, computeState(tracked));
         }
     }
 
@@ -58,17 +64,11 @@ public final class ServerStatusManager {
     public boolean refreshNow() {
         Map<String, ServerState> previous = snapshot();
         for (String tracked : config.trackedServers()) {
+            pingAsync(tracked);
             String key = normalize(tracked);
-            states.put(key, resolveState(tracked));
+            states.put(key, computeState(tracked));
         }
-        if (!previous.equals(states)) {
-            Runnable listener = changeListener;
-            if (listener != null) {
-                listener.run();
-            }
-            return true;
-        }
-        return false;
+        return notifyIfChanged(previous);
     }
 
     public boolean updateWhitelistReport(String serverName, boolean whitelisted) {
@@ -76,16 +76,12 @@ public final class ServerStatusManager {
         whitelistTracker.setWhitelisted(serverName, whitelisted);
 
         String key = normalize(ServerResolver.canonicalName(server, serverName));
-        ServerState newState = resolveState(serverName);
-        ServerState previous = states.get(key);
-        states.put(key, newState);
+        Map<String, ServerState> previous = snapshot();
+        states.put(key, computeState(serverName));
 
-        boolean changed = previous != newState || wasWhitelisted != whitelisted;
+        boolean changed = !previous.equals(states) || wasWhitelisted != whitelisted;
         if (changed) {
-            Runnable listener = changeListener;
-            if (listener != null) {
-                listener.run();
-            }
+            notifyChange();
         }
         return changed;
     }
@@ -106,24 +102,29 @@ public final class ServerStatusManager {
         return config.whitelistAsMaintenance();
     }
 
+    /**
+     * Explicit maintenance from config {@code maintenance-servers} only.
+     * Whitelist-as-maintenance is display-only and must not block joins.
+     */
+    public boolean isHardMaintenance(String serverName) {
+        return config.maintenanceServers().contains(normalize(serverName));
+    }
+
     public boolean isReachable(String serverName) {
-        RegisteredServer registeredServer = ServerResolver.find(server, serverName).orElse(null);
-        if (registeredServer == null) {
-            return false;
-        }
-        try {
-            registeredServer.ping().join();
-            return true;
-        } catch (Exception ignored) {
-            return false;
-        }
+        return Boolean.TRUE.equals(reachable.get(normalize(serverName)));
     }
 
     public boolean isJoinable(String serverName) {
-        if (config.isLobby(serverName)) {
-            return isReachable(serverName);
+        if (isHardMaintenance(serverName)) {
+            return false;
         }
-        return getState(serverName) == ServerState.ONLINE && !isFull(serverName);
+        if (!isReachable(serverName)) {
+            return false;
+        }
+        if (config.isLobby(serverName)) {
+            return true;
+        }
+        return !isFull(serverName);
     }
 
     public boolean isFull(String serverName) {
@@ -134,7 +135,29 @@ public final class ServerStatusManager {
         return registeredServer.getPlayersConnected().size() >= config.maxPlayers(normalize(serverName));
     }
 
-    private ServerState resolveState(String serverName) {
+    private void pingAsync(String serverName) {
+        String key = normalize(serverName);
+        RegisteredServer registeredServer = ServerResolver.find(server, serverName).orElse(null);
+        if (registeredServer == null) {
+            reachable.put(key, false);
+            states.put(key, ServerState.OFFLINE);
+            return;
+        }
+
+        registeredServer.ping()
+                .orTimeout(PING_TIMEOUT_MS, TimeUnit.MILLISECONDS)
+                .whenComplete((ignored, error) -> {
+                    boolean up = error == null;
+                    Boolean previous = reachable.put(key, up);
+                    ServerState previousState = states.put(key, computeState(serverName));
+                    if (previous == null || previous.booleanValue() != up
+                            || previousState != states.get(key)) {
+                        notifyChange();
+                    }
+                });
+    }
+
+    private ServerState computeState(String serverName) {
         String normalized = normalize(serverName);
         if (config.maintenanceServers().contains(normalized)) {
             return ServerState.MAINTENANCE;
@@ -149,11 +172,25 @@ public final class ServerStatusManager {
             return ServerState.MAINTENANCE;
         }
 
-        try {
-            registeredServer.ping().join();
-            return ServerState.ONLINE;
-        } catch (Exception ignored) {
+        if (!isReachable(serverName)) {
             return ServerState.OFFLINE;
+        }
+
+        return ServerState.ONLINE;
+    }
+
+    private boolean notifyIfChanged(Map<String, ServerState> previous) {
+        if (!previous.equals(states)) {
+            notifyChange();
+            return true;
+        }
+        return false;
+    }
+
+    private void notifyChange() {
+        Runnable listener = changeListener;
+        if (listener != null) {
+            listener.run();
         }
     }
 

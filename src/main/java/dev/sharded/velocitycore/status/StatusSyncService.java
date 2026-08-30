@@ -13,6 +13,7 @@ import dev.sharded.velocitycore.config.PluginConfig;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class StatusSyncService {
 
@@ -22,7 +23,9 @@ public final class StatusSyncService {
     private final ProxyServer server;
     private final ServerStatusManager statusManager;
     private final PluginConfig config;
+    private final AtomicBoolean syncQueued = new AtomicBoolean(false);
     private ScheduledTask syncTask;
+    private Object plugin;
 
     public StatusSyncService(ProxyServer server, ServerStatusManager statusManager, PluginConfig config) {
         this.server = server;
@@ -32,6 +35,7 @@ public final class StatusSyncService {
     }
 
     public void start(Object plugin) {
+        this.plugin = plugin;
         broadcastNow();
         long intervalMs = config.statusSyncIntervalSeconds() * 1000L;
         syncTask = server.getScheduler()
@@ -47,12 +51,10 @@ public final class StatusSyncService {
     }
 
     public void sendToPlayer(Player player) {
-        statusManager.refreshNow();
         player.sendPluginMessage(CHANNEL, encode(statusManager.snapshot()));
     }
 
     public void broadcastNow() {
-        statusManager.refreshNow();
         byte[] payload = encode(statusManager.snapshot());
         for (RegisteredServer registeredServer : server.getAllServers()) {
             registeredServer.sendPluginMessage(CHANNEL, payload);
@@ -60,6 +62,22 @@ public final class StatusSyncService {
         for (Player player : server.getAllPlayers()) {
             player.sendPluginMessage(CHANNEL, payload);
         }
+    }
+
+    /**
+     * Coalesce rapid status changes (async pings) into a single broadcast.
+     */
+    public void broadcastSoon() {
+        if (!syncQueued.compareAndSet(false, true) || plugin == null) {
+            return;
+        }
+        server.getScheduler()
+                .buildTask(plugin, () -> {
+                    syncQueued.set(false);
+                    broadcastNow();
+                })
+                .delay(250, java.util.concurrent.TimeUnit.MILLISECONDS)
+                .schedule();
     }
 
     static byte[] encode(Map<String, ServerState> snapshot) {

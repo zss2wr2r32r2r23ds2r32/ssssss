@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(
         id = "shardedvelocitycore",
         name = "ShardedVelocityCore",
-        version = "1.0.14",
+        version = "1.0.15",
         description = "Server status placeholders, queue system, and hologram status sync for Velocity networks.",
         authors = {"Sharded"}
 )
@@ -79,7 +79,7 @@ public final class ShardedVelocityCore {
         this.whitelistRequestService = new WhitelistRequestService(server, config);
         this.maintenanceRequestService = new MaintenanceRequestService(server, config);
 
-        statusManager.setChangeListener(statusSyncService::broadcastNow);
+        statusManager.setChangeListener(statusSyncService::broadcastSoon);
 
         server.getCommandManager().register(
                 server.getCommandManager().metaBuilder("queue").aliases("q").plugin(this).build(),
@@ -102,12 +102,7 @@ public final class ShardedVelocityCore {
         );
 
         server.getEventManager().register(this, new ServerCommandListener(connectService));
-        server.getEventManager().register(this, new PlayerListener(
-                queueManager,
-                statusSyncService,
-                whitelistRequestService,
-                maintenanceRequestService
-        ));
+        server.getEventManager().register(this, new PlayerListener(queueManager, statusSyncService));
         server.getEventManager().register(this, new WhitelistReportListener(statusManager, statusSyncService));
         server.getEventManager().register(this, new MaintenanceSyncListener(networkMotdState));
         server.getEventManager().register(this, new NetworkMotdPingListener(networkMotdState, serverIconService));
