@@ -16,11 +16,10 @@ import org.bukkit.event.Listener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
- * /promote and /demote using LuckPerms primary group changes.
+ * /promote and /demote — sets LuckPerms primary group via console LP commands.
  */
 public class RanksModule implements Module, Listener, CommandExecutor, TabCompleter {
 
@@ -46,7 +45,10 @@ public class RanksModule implements Module, Listener, CommandExecutor, TabComple
                 .map(r -> r.toLowerCase(Locale.ROOT))
                 .collect(Collectors.toCollection(ArrayList::new));
         if (roles.isEmpty()) {
-            roles.addAll(List.of("default", "vip", "mvp", "helper", "mod", "admin", "owner"));
+            roles.addAll(List.of(
+                    "default", "helper", "sr-helper", "mod", "sr-mod",
+                    "admin", "sr-admin", "manager", "developer", "director", "owner"
+            ));
         }
 
         if (plugin.getCommand("promote") != null) {
@@ -96,88 +98,51 @@ public class RanksModule implements Module, Listener, CommandExecutor, TabComple
 
         Player target = Bukkit.getPlayerExact(targetName);
         if (target == null) {
-            MessageUtil.sendRaw(sender, config.getString("messages.player-offline",
-                            "&#FF0000&lERROR &8▷ &fPlayer &#FF0000%player% &fis not online.")
-                    .replace("%player%", targetName));
+            // Allow offline by name for LP console command
+            if (!config.getBoolean("allow-offline", true)) {
+                MessageUtil.sendRaw(sender, config.getString("messages.player-offline",
+                                "&#FF0000&lERROR &8▷ &fPlayer &#FF0000%player% &fis not online.")
+                        .replace("%player%", targetName));
+                return true;
+            }
+        }
+
+        if (!Bukkit.getPluginManager().isPluginEnabled("LuckPerms")) {
+            MessageUtil.sendRaw(sender, config.getString("messages.no-luckperms",
+                    "&#FF0000&lERROR &8▷ &fLuckPerms is not installed."));
             return true;
         }
 
         boolean promote = "promote".equalsIgnoreCase(command.getName());
-        setPrimaryGroup(sender, target, role, promote);
+        String playerArg = target != null ? target.getName() : targetName;
+
+        // parent set = replace primary parent group (safe public LP command, no reflection)
+        String lpCommand = config.getString("luckperms-command", "lp user %player% parent set %role%")
+                .replace("%player%", playerArg)
+                .replace("%role%", role);
+
+        boolean ok = Bukkit.dispatchCommand(Bukkit.getConsoleSender(), lpCommand);
+        if (!ok) {
+            MessageUtil.sendRaw(sender, config.getString("messages.failed",
+                    "&#FF0000&lERROR &8▷ &fFailed to update rank. Check console."));
+            return true;
+        }
+
+        String path = promote ? "messages.promoted" : "messages.demoted";
+        String fallback = promote
+                ? "&#94FF00&lRANKS &8▷ &fPromoted &#94FF00%player% &fto &#94FF00%role%&f."
+                : "&#FFB600&lRANKS &8▷ &fDemoted &#FFB600%player% &fto &#FFB600%role%&f.";
+        MessageUtil.sendRaw(sender, config.getString(path, fallback)
+                .replace("%player%", playerArg)
+                .replace("%role%", role));
+
+        if (target != null && config.getBoolean("notify-target", true)) {
+            String targetMsg = config.getString("messages.target-" + (promote ? "promoted" : "demoted"),
+                            "&#94FF00&lRANKS &8▷ &fYour rank is now &#94FF00%role%&f.")
+                    .replace("%role%", role);
+            MessageUtil.sendFormatted(target, targetMsg);
+        }
         return true;
-    }
-
-    private void setPrimaryGroup(CommandSender sender, Player target, String role, boolean promote) {
-        if (!Bukkit.getPluginManager().isPluginEnabled("LuckPerms")) {
-            MessageUtil.sendRaw(sender, config.getString("messages.no-luckperms",
-                    "&#FF0000&lERROR &8▷ &fLuckPerms is not installed."));
-            return;
-        }
-
-        try {
-            Class<?> provider = Class.forName("net.luckperms.api.LuckPermsProvider");
-            Object api = provider.getMethod("get").invoke(null);
-            Object userManager = api.getClass().getMethod("getUserManager").invoke(api);
-            Object groupManager = api.getClass().getMethod("getGroupManager").invoke(api);
-
-            Object group = groupManager.getClass().getMethod("getGroup", String.class).invoke(groupManager, role);
-            if (group == null) {
-                MessageUtil.sendRaw(sender, config.getString("messages.group-missing",
-                                "&#FF0000&lERROR &8▷ &fLuckPerms group &#FF0000%role% &fdoes not exist.")
-                        .replace("%role%", role));
-                return;
-            }
-
-            @SuppressWarnings("unchecked")
-            CompletableFuture<Object> future = (CompletableFuture<Object>) userManager.getClass()
-                    .getMethod("loadUser", java.util.UUID.class)
-                    .invoke(userManager, target.getUniqueId());
-
-            future.thenAccept(user -> {
-                try {
-                    Object data = user.getClass().getMethod("data").invoke(user);
-
-                    // Set primary group
-                    user.getClass().getMethod("setPrimaryGroup", String.class).invoke(user, role);
-
-                    // Ensure they inherit the group
-                    Class<?> inheritanceNode = Class.forName("net.luckperms.api.node.types.InheritanceNode");
-                    Object builder = inheritanceNode.getMethod("builder", String.class).invoke(null, role);
-                    Object node = builder.getClass().getMethod("build").invoke(builder);
-                    data.getClass().getMethod("add", Class.forName("net.luckperms.api.node.Node")).invoke(data, node);
-
-                    userManager.getClass().getMethod("saveUser", Class.forName("net.luckperms.api.model.user.User"))
-                            .invoke(userManager, user);
-
-                    Bukkit.getScheduler().runTask(plugin, () -> {
-                        String path = promote ? "messages.promoted" : "messages.demoted";
-                        String fallback = promote
-                                ? "&#94FF00&lRANKS &8▷ &fPromoted &#94FF00%player% &fto &#94FF00%role%&f."
-                                : "&#FFB600&lRANKS &8▷ &fDemoted &#FFB600%player% &fto &#FFB600%role%&f.";
-                        MessageUtil.sendRaw(sender, config.getString(path, fallback)
-                                .replace("%player%", target.getName())
-                                .replace("%role%", role));
-                        if (config.getBoolean("notify-target", true)) {
-                            String targetMsg = config.getString("messages.target-" + (promote ? "promoted" : "demoted"),
-                                            "&#94FF00&lRANKS &8▷ &fYour rank is now &#94FF00%role%&f.")
-                                    .replace("%role%", role);
-                            MessageUtil.sendFormatted(target, targetMsg);
-                        }
-                    });
-                } catch (ReflectiveOperationException ex) {
-                    Bukkit.getScheduler().runTask(plugin, () ->
-                            MessageUtil.sendRaw(sender, "&#FF0000&lERROR &8▷ &fFailed to update rank: " + ex.getMessage()));
-                    plugin.getLogger().warning("Rank update failed: " + ex.getMessage());
-                }
-            }).exceptionally(ex -> {
-                Bukkit.getScheduler().runTask(plugin, () ->
-                        MessageUtil.sendRaw(sender, "&#FF0000&lERROR &8▷ &fFailed to load LuckPerms user."));
-                return null;
-            });
-        } catch (ReflectiveOperationException ex) {
-            MessageUtil.sendRaw(sender, "&#FF0000&lERROR &8▷ &fLuckPerms API error: " + ex.getMessage());
-            plugin.getLogger().warning("LuckPerms promote/demote error: " + ex.getMessage());
-        }
     }
 
     @Override
@@ -197,7 +162,6 @@ public class RanksModule implements Module, Listener, CommandExecutor, TabComple
             String partial = args[1].toLowerCase(Locale.ROOT);
             return roles.stream()
                     .filter(role -> role.startsWith(partial))
-                    .sorted()
                     .collect(Collectors.toList());
         }
         return List.of();

@@ -4,15 +4,23 @@
 
 enabled: true
 notify-target: true
+allow-offline: true
+
+# Console command used to apply the rank (%player% %role%)
+luckperms-command: "lp user %player% parent set %role%"
 
 # Tab-complete role list (must exist as LuckPerms groups)
 roles:
   - "default"
-  - "vip"
-  - "mvp"
   - "helper"
+  - "sr-helper"
   - "mod"
+  - "sr-mod"
   - "admin"
+  - "sr-admin"
+  - "manager"
+  - "developer"
+  - "director"
   - "owner"
 
 messages:
@@ -22,7 +30,7 @@ messages:
   unknown-role: "&#FF0000&lERROR &8▷ &fUnknown role &#FF0000%role%&f."
   player-offline: "&#FF0000&lERROR &8▷ &fPlayer &#FF0000%player% &fis not online."
   no-luckperms: "&#FF0000&lERROR &8▷ &fLuckPerms is not installed."
-  group-missing: "&#FF0000&lERROR &8▷ &fLuckPerms group &#FF0000%role% &fdoes not exist."
+  failed: "&#FF0000&lERROR &8▷ &fFailed to update rank. Check console."
   promoted: "&#94FF00&lRANKS &8▷ &fPromoted &#94FF00%player% &fto &#94FF00%role%&f."
   demoted: "&#FFB600&lRANKS &8▷ &fDemoted &#FFB600%player% &fto &#FFB600%role%&f."
   target-promoted: "&#94FF00&lRANKS &8▷ &fYour rank is now &#94FF00%role%&f."
