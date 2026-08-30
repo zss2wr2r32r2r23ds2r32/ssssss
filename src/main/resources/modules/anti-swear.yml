@@ -1,11 +1,9 @@
 # Anti Swear Module
+# Disabled — replaced by chat-filter module + blocked.yml
 
-enabled: true
+enabled: false
 
-blocked-words:
-  - "badword1"
-  - "badword2"
-  - "badword3"
+blocked-words: []
 
 message: "%prefix% &cPlease do not use inappropriate language."
 notify-staff: true

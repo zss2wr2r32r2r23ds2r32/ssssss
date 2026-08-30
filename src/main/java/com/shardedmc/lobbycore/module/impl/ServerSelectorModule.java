@@ -178,6 +178,15 @@ public class ServerSelectorModule implements Module, Listener {
 
     private void connectPlayer(Player player, String serverId, ConfigurationSection server) {
         String target = resolveTargetName(server);
+
+        if (isMaintenance(player, server, target)) {
+            String display = server.getString("display-name", target);
+            MessageUtil.sendFormatted(player, config.getString("maintenance-message",
+                            "&#2BD6FF&lQUEUE &8▷ &#FF0000%server% is currently in maintenance.")
+                    .replace("%server%", display));
+            return;
+        }
+
         String method = config.getString("connect-method", "auto").toLowerCase();
 
         if (config.getBoolean("debug", false)) {
@@ -204,6 +213,34 @@ public class ServerSelectorModule implements Module, Listener {
         if (server.contains("message")) {
             MessageUtil.sendFormatted(player, server.getString("message"));
         }
+    }
+
+    private boolean isMaintenance(Player player, ConfigurationSection server, String target) {
+        String statusPlaceholder = server.getString("status-placeholder", "");
+        if (statusPlaceholder == null || statusPlaceholder.isEmpty()) {
+            // Infer from lore placeholders like %shardedvelocitycore_status_diasmp%
+            List<String> lore = server.getStringList("lore");
+            for (String line : lore) {
+                if (line.contains("%shardedvelocitycore_status_")) {
+                    int start = line.indexOf("%shardedvelocitycore_status_");
+                    int end = line.indexOf('%', start + 1);
+                    if (end > start) {
+                        statusPlaceholder = line.substring(start, end + 1);
+                        break;
+                    }
+                }
+            }
+        }
+        if (statusPlaceholder == null || statusPlaceholder.isEmpty()) {
+            return server.getBoolean("maintenance", false);
+        }
+
+        String status = MessageUtil.applyPapi(player, statusPlaceholder);
+        if (status == null || status.equals(statusPlaceholder)) {
+            return server.getBoolean("maintenance", false);
+        }
+        String lower = status.toLowerCase(java.util.Locale.ROOT);
+        return lower.contains("maintenance") || lower.contains("offline") || lower.contains("closed");
     }
 
     private String resolveTargetName(ConfigurationSection server) {

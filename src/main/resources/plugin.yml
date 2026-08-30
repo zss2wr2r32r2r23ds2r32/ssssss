@@ -4,7 +4,7 @@ main: com.shardedmc.lobbycore.ShardedLobbyCore
 api-version: '1.20'
 authors: [ShardedMC]
 description: Modular, optimized lobby core plugin
-softdepend: [PlaceholderAPI]
+softdepend: [PlaceholderAPI, LuckPerms]
 
 commands:
   shardedlobbycore:
@@ -27,6 +27,10 @@ commands:
     description: Show the Discord server link
   store:
     description: Show the webstore link
+  chatfilter:
+    description: Chat filter admin tools
+    aliases: [cf, filter]
+    permission: shardedlobbycore.chatfilter.admin
 
 permissions:
   shardedlobbycore.admin:
@@ -42,8 +46,26 @@ permissions:
     description: Lock chat
     default: op
   shardedlobbycore.bypass.antiswear:
-    description: Bypass anti-swear
+    description: Bypass anti-swear (legacy)
     default: op
+  shardedlobbycore.bypass.commandwhitelist:
+    description: Bypass command whitelist
+    default: op
+  shardedlobbycore.chatfilter.bypass:
+    description: Bypass all chat filter checks
+    default: op
+  shardedlobbycore.chatfilter.alerts:
+    description: Receive chat filter alerts
+    default: op
+  shardedlobbycore.chatfilter.admin:
+    description: Manage chat filter
+    default: op
+  shardedlobbycore.chatfilter.bypass.advertising:
+    description: Bypass advertising filter
+    default: false
+  shardedlobbycore.chatfilter.bypass.links:
+    description: Bypass links filter
+    default: false
   shardedlobbycore.fly:
     description: Toggle flight in lobby
     default: op

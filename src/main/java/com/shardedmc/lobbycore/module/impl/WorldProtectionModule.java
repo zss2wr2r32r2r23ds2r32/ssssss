@@ -54,6 +54,11 @@ public class WorldProtectionModule implements Module, Listener {
         return pvp != null && pvp.isInPvp(player.getUniqueId());
     }
 
+    private boolean isDying(Player player) {
+        PvpModule pvp = (PvpModule) plugin.getModuleManager().getModule("pvp");
+        return pvp != null && pvp.isDying(player.getUniqueId());
+    }
+
     private boolean canBypassInventory(Player player) {
         return player.getGameMode() == GameMode.CREATIVE;
     }
@@ -65,6 +70,11 @@ public class WorldProtectionModule implements Module, Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageEvent event) {
         if (!config.getBoolean("disable-damage", true) || !(event.getEntity() instanceof Player victim)) {
+            return;
+        }
+
+        if (isDying(victim) || victim.isDead()) {
+            event.setCancelled(true);
             return;
         }
 

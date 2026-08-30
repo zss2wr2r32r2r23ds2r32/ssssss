@@ -194,16 +194,24 @@ public final class MessageUtil {
         }
         if (player != null) {
             result = result.replace("%player%", player.getName());
-            if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-                try {
-                    Class<?> papi = Class.forName("me.clip.placeholderapi.PlaceholderAPI");
-                    result = (String) papi.getMethod("setPlaceholders", Player.class, String.class).invoke(null, player, result);
-                } catch (ReflectiveOperationException ignored) {
-                    // PlaceholderAPI not present at runtime
-                }
-            }
+            result = applyPapi(player, result);
         }
         return colorize(result);
+    }
+
+    public static String applyPapi(Player player, String text) {
+        if (text == null || player == null) {
+            return text;
+        }
+        if (!plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            return text;
+        }
+        try {
+            Class<?> papi = Class.forName("me.clip.placeholderapi.PlaceholderAPI");
+            return (String) papi.getMethod("setPlaceholders", Player.class, String.class).invoke(null, player, text);
+        } catch (ReflectiveOperationException ignored) {
+            return text;
+        }
     }
 
     public static Component component(String text) {

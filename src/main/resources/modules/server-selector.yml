@@ -6,9 +6,10 @@ center-servers: true
 connect-method: bungee
 debug: false
 connect-failed-message: "%prefix% &#FF2727Could not connect to that server. Please try again or contact staff."
+maintenance-message: "&#2BD6FF&lQUEUE &8▷ &#FF0000%server% is currently in maintenance."
 
 gui:
-  title: "SERVER SELECTOR"
+  title: "Server Selector"
   rows: 3
 
 filler:
@@ -20,48 +21,54 @@ filler:
 servers:
   survival:
     material: END_CRYSTAL
-    name: "&#8AFF00Shop &#8AFF00Survival"
+    name: "&#8AFF00&lSHOP &#8AFF00Survival"
+    display-name: "Survival"
     bungee-name: Survival
     lore:
       - "&8Description"
       - ""
+      - "&#8AFF00Information:"
       - "&#8AFF00| &fClick me to Connect"
       - "&#8AFF00| &fTo &#8AFF00Shop Survival"
       - ""
       - "&#8AFF00⚓ &fPlayers: &#8AFF00%bungee_survival%"
       - "&#FF005D🌊 &fSeason: &#FF005D#1"
-      - "&#008DFF⛨ &fStatus: &#008DFF"
+      - "&#008DFF⛨ &fStatus: &#008DFF%shardedvelocitycore_status_survival%"
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Join"
 
   events:
-    material: FIREWORK_ROCKET
-    name: "&#FF007CEvents"
+    material: TOTEM_OF_UNDYING
+    name: "&#FF007C&lEVENTS"
+    display-name: "Events"
     bungee-name: Events
     lore:
       - "&8Description"
       - ""
+      - "&#FF007CInformation:"
       - "&#FF007C| &fClick me to Connect"
       - "&#FF007C| &fTo &#FF007CEvents"
       - ""
       - "&#8AFF00⚓ &fPlayers: &#8AFF00%bungee_events%"
       - "&#FF005D🌊 &fSeason: &#FF005D#1"
-      - "&#008DFF⛨ &fStatus: &#008DFF"
+      - "&#008DFF⛨ &fStatus: &#008DFF%shardedvelocitycore_status_events%"
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Join"
 
   diamond-smp:
-    material: DIAMOND
-    name: "&#FF0000Diamond SMP"
+    material: DIAMOND_SWORD
+    name: "&#FF0000&lDIAMOND &#FF0000SMP"
+    display-name: "DiaSMP"
     bungee-name: DiaSMP
     lore:
       - "&8Description"
       - ""
+      - "&#FF0000Information"
       - "&#FF0000| &fClick me to Connect"
       - "&#FF0000| &fTo &#FF0000Diamond SMP"
       - ""
       - "&#8AFF00⚓ &fPlayers: &#8AFF00%bungee_diasmp%"
       - "&#FF005D🌊 &fSeason: &#FF005D#1"
-      - "&#008DFF⛨ &fStatus: &#008DFF"
+      - "&#008DFF⛨ &fStatus: &#008DFF%shardedvelocitycore_status_diasmp%"
       - ""
       - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Join"

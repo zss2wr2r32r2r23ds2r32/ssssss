@@ -37,6 +37,8 @@ public class ModuleManager {
         register(new VoidSpawnModule());
         register(new SpawnModule());
         register(new JoinActionsModule());
+        register(new ChatFilterModule());
+        register(new CommandWhitelistModule());
         register(new AntiSwearModule());
         register(new ModerationModule());
         register(new WorldProtectionModule());

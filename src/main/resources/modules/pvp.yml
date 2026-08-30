@@ -34,6 +34,7 @@ leave-item:
 messages:
   entered: "%prefix% &#9FFF00You have entered PvP mode, you may fight!"
   left: "%prefix% &#9FFF00You have left PvP mode, PvP is now disabled."
+  death: "&#FF256E🗡 &#FF256E%player% &fdied"
 
 kit:
   arrow-slot: 9

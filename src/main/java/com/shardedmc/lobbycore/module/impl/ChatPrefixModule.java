@@ -4,7 +4,6 @@ import com.shardedmc.lobbycore.ShardedLobbyCore;
 import com.shardedmc.lobbycore.module.Module;
 import com.shardedmc.lobbycore.util.MessageUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,7 +24,7 @@ public class ChatPrefixModule implements Module, Listener {
 
     @Override
     public String getDisplayName() {
-        return "Chat Prefixes";
+        return "Chat Format";
     }
 
     @Override
@@ -47,39 +46,49 @@ public class ChatPrefixModule implements Module, Listener {
         }
 
         Player player = event.getPlayer();
-        String prefix = getPrefix(player);
-        String format = config.getString("format", "%prefix%%player%&8: &f%message%")
-                .replace("%prefix%", prefix)
-                .replace("%player%", player.getName())
-                .replace("%message%", event.getMessage());
+        String prefix = resolvePlaceholder(player,
+                config.getString("prefix-placeholder", "%luckperms_prefix%"),
+                config.getString("default-prefix", "&7"));
+        String suffix = resolvePlaceholder(player,
+                config.getString("suffix-placeholder", "%luckperms_suffix%"),
+                config.getString("default-suffix", ""));
+        String tag = resolvePlaceholder(player,
+                config.getString("tag-placeholder", "%shardedcore_tag%"),
+                config.getString("default-tag", ""));
+        String name = resolvePlaceholder(player,
+                config.getString("name-placeholder", "%player_name%"),
+                player.getName());
 
-        event.setFormat(MessageUtil.colorize(format));
+        String format = config.getString("format", "{prefix}{name}{tag} &8▷ &r{message}")
+                .replace("{prefix}", prefix)
+                .replace("{suffix}", suffix)
+                .replace("{tag}", tag)
+                .replace("{name}", name)
+                .replace("{message}", "%2$s")
+                .replace("%prefix%", prefix)
+                .replace("%suffix%", suffix)
+                .replace("%tag%", tag)
+                .replace("%player%", name)
+                .replace("%message%", "%2$s");
+
+        if (!format.contains("%2$s")) {
+            format = format + "%2$s";
+        }
+
+        String colored = MessageUtil.colorize(format);
+        // Escape % for String.format, but keep %2$s
+        colored = colored.replace("%", "%%").replace("%%2$s", "%2$s").replace("%%1$s", "%1$s");
+        event.setFormat(colored);
     }
 
-    private String getPrefix(Player player) {
-        ConfigurationSection prefixes = config.getConfigurationSection("prefixes");
-        if (prefixes == null) {
-            return MessageUtil.colorize(config.getString("default-prefix", "&7"));
+    private String resolvePlaceholder(Player player, String placeholder, String fallback) {
+        if (placeholder == null || placeholder.isEmpty()) {
+            return fallback == null ? "" : fallback;
         }
-
-        String bestPrefix = config.getString("default-prefix", "&7");
-        int bestWeight = -1;
-
-        for (String key : prefixes.getKeys(false)) {
-            ConfigurationSection section = prefixes.getConfigurationSection(key);
-            if (section == null) {
-                continue;
-            }
-            String permission = section.getString("permission");
-            if (permission != null && player.hasPermission(permission)) {
-                int weight = section.getInt("weight", 0);
-                if (weight > bestWeight) {
-                    bestWeight = weight;
-                    bestPrefix = section.getString("prefix", bestPrefix);
-                }
-            }
+        String resolved = MessageUtil.applyPapi(player, placeholder);
+        if (resolved == null || resolved.equals(placeholder)) {
+            return fallback == null ? "" : fallback;
         }
-
-        return MessageUtil.colorize(bestPrefix);
+        return resolved;
     }
 }

@@ -13,10 +13,14 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitTask;
@@ -33,6 +37,7 @@ public class PvpModule implements Module, Listener {
     private final Map<UUID, Long> lastEnterSecond = new HashMap<>();
     private final Map<UUID, Long> lastLeaveSecond = new HashMap<>();
     private final Set<UUID> inPvp = new HashSet<>();
+    private final Set<UUID> dyingPlayers = new HashSet<>();
     private final Map<UUID, ItemStack[]> savedInventories = new HashMap<>();
     private final Map<UUID, ItemStack[]> savedArmor = new HashMap<>();
     private final Map<UUID, GameMode> savedGameModes = new HashMap<>();
@@ -316,12 +321,103 @@ public class PvpModule implements Module, Listener {
         leaveTrackers.remove(uuid);
         lastEnterSecond.remove(uuid);
         lastLeaveSecond.remove(uuid);
+        dyingPlayers.remove(uuid);
         if (inPvp.contains(uuid)) {
             restoreLobbyInventory(player, uuid, false);
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onDeath(PlayerDeathEvent event) {
+        Player player = event.getEntity();
+        UUID uuid = player.getUniqueId();
+        if (!inPvp.contains(uuid)) {
+            return;
+        }
+
+        dyingPlayers.add(uuid);
+        event.setKeepInventory(true);
+        event.setKeepLevel(true);
+        event.getDrops().clear();
+        event.setDroppedExp(0);
+
+        String deathMessage = config.getString("messages.death", "&#FF256E🗡 &#FF256E%player% &fdied")
+                .replace("%player%", player.getName());
+        event.setDeathMessage(null);
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            for (Player online : Bukkit.getOnlinePlayers()) {
+                MessageUtil.sendFormatted(online, deathMessage);
+            }
+        });
+
+        // Leave PVP immediately so they cannot be hit while dead / on respawn
+        inPvp.remove(uuid);
+        enterTrackers.remove(uuid);
+        leaveTrackers.remove(uuid);
+        lastEnterSecond.remove(uuid);
+        lastLeaveSecond.remove(uuid);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onDamageWhileDying(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof Player victim)) {
+            return;
+        }
+        UUID uuid = victim.getUniqueId();
+        if (dyingPlayers.contains(uuid) || victim.isDead() || victim.getHealth() <= 0) {
+            event.setCancelled(true);
+            return;
+        }
+        if (!inPvp.contains(uuid)) {
+            // Outside PVP — world protection handles this, but block if dying/left mid-fight
+            Player attacker = null;
+            if (event.getDamager() instanceof Player p) {
+                attacker = p;
+            } else if (event.getDamager() instanceof org.bukkit.entity.Projectile projectile
+                    && projectile.getShooter() instanceof Player shooter) {
+                attacker = shooter;
+            }
+            if (attacker != null && !inPvp.contains(attacker.getUniqueId())) {
+                return;
+            }
+            if (attacker != null) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onRespawn(PlayerRespawnEvent event) {
+        Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
+        dyingPlayers.remove(uuid);
+
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            if (!player.isOnline()) {
+                return;
+            }
+            // Ensure lobby inventory after death (not PVP kit)
+            if (!inPvp.contains(uuid)) {
+                if (savedInventories.containsKey(uuid)) {
+                    restoreLobbyInventory(player, uuid, false);
+                } else {
+                    DefaultItemsModule defaultItems = (DefaultItemsModule) plugin.getModuleManager().getModule("default-items");
+                    if (defaultItems != null) {
+                        defaultItems.giveItems(player);
+                    }
+                }
+                player.teleport(plugin.getSpawnManager().getSpawn());
+                player.setHealth(20.0);
+                player.setFoodLevel(20);
+            }
+        });
+    }
+
     public boolean isInPvp(UUID uuid) {
-        return inPvp.contains(uuid);
+        return inPvp.contains(uuid) && !dyingPlayers.contains(uuid);
+    }
+
+    public boolean isDying(UUID uuid) {
+        return dyingPlayers.contains(uuid);
     }
 }
