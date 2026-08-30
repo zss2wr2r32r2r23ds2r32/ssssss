@@ -1,0 +1,162 @@
+# How many vaults exist in total. 45 is the maximum, that is how many
+# permissions the plugin.yml declares.
+vaults: 45
+
+# Vaults every player owns without any permission at all.
+default-vaults: 0
+
+# Permissions work the same way as homes: shardedcore.vault.10 unlocks vault 1 to 10.
+# Losing the permission never deletes anything, the vault just locks again and the
+# items wait inside until the rank comes back.
+#
+# NEVER give out shardedcore.vault.* to a rank. That wildcard also covers
+# shardedcore.vault.admin, which opens and edits the vaults of every other player.
+# Always give the exact number instead, for example shardedcore.vault.10
+
+# Opening a vault while combat tagged is refused, and a vault that is already open
+# closes itself the moment the tag lands.
+# shardedcore.combat.bypass ignores both.
+block-in-combat: true
+
+# Items that may not be put into a vault. Empty means everything is allowed.
+# Only checked when an item goes in, so nothing already stored is ever thrown out.
+blocked-materials: []
+
+menu:
+  title: "&8Private Vaults"
+  admin-title: "&8Private Vaults | %player%"
+  rows: 3
+  admin-rows: 6
+  vault-slots: "0-17"
+  admin-vault-slots: "0-44"
+  admin-close-slot: 49
+
+  filler:
+    enabled: true
+    material: BLACK_STAINED_GLASS_PANE
+    name: " "
+    lore: []
+    amount: 1
+    glow: false
+    custom-model-data: 0
+
+  close:
+    enabled: true
+    slot: 22
+    material: BARRIER
+    amount: 1
+    glow: false
+    custom-model-data: 0
+    name: "&#FF0000&lCLOSE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000¦ &fClick on me to"
+      - "&#FF0000¦ &fclose the &#FF0000main menu&f!"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Close"
+
+  previous:
+    slot: 19
+    material: RED_DYE
+    name: "&#FF007B&lPREVIOUS PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF007BInformation:"
+      - "&#FF007B¦ &fGo back a page."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
+
+  next:
+    slot: 25
+    material: LIME_DYE
+    name: "&#45FF17&lNEXT PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&&#45FF17Information:"
+      - "&#45FF17¦ &fGo to the next page."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
+
+  unlocked:
+    material: PURPLE_SHULKER_BOX
+    amount: 1
+    glow: false
+    custom-model-data: 0
+    name: "&#A370EE&lVAULT #%number%"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#A370EEInformation:"
+      - "&#A370EE¦ &fThis vault is &#A370EEunlocked"
+      - "&#A370EE¦ &fand available to access"
+      - ""
+      - "&#A370EE¦ &fSlots Used: &#A370EE%used%"
+      - "&#A370EE¦ &fMax Slots: &#A370EE%max%"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
+
+  locked:
+    material: RED_SHULKER_BOX
+    amount: 1
+    glow: false
+    custom-model-data: 0
+    name: "&#FF0000&lVAULT #%number%"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#A370EE¦ &fThis vault has not"
+      - "&#A370EE¦ &fbeen unlocked yet."
+      - ""
+      - "&#A370EE¦ &fStatus: &#A370EELocked"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Unlock"
+
+vault:
+  title: "&8Vault #%number%"
+  admin-title: "&8Vault #%number% | %player%"
+  rows: 6
+
+sounds:
+  open:
+    enabled: true
+    sound: "block.chest.open"
+    volume: 0.7
+    pitch: 1.2
+  vault:
+    enabled: true
+    sound: "block.barrel.open"
+    volume: 0.7
+    pitch: 1.2
+  close:
+    enabled: true
+    sound: "block.barrel.close"
+    volume: 0.7
+    pitch: 0.8
+  click:
+    enabled: true
+    sound: "ui.button.click"
+    volume: 1.0
+    pitch: 1.2
+  error:
+    enabled: true
+    sound: "block.note_block.bass"
+    volume: 0.8
+    pitch: 0.8
+
+messages:
+  locked: "&#FF0000&lERROR &8▷ &fVault &#FF0000#%number% &fis not unlocked yet."
+  in-combat: "&#FF0000&lERROR &8▷ &fYou cannot open a vault while you are in combat."
+  in-use: "&#FF0000&lERROR &8▷ &fVault &#FF0000#%number% &fis already open."
+  blocked-item: "&#FF0000&lERROR &8▷ &fThat item cannot be stored in a vault."
+  load-failed: "&#FF0000&lERROR &8▷ &fVault &#FF0000#%number% &fcould not be opened, try again."
+  too-small: "&#FF0000&lERROR &8▷ &fVault &#FF0000#%number% &fholds more than it is allowed to right now."
+  unknown-vault: "&#FF0000&lERROR &8▷ &fThat vault does not exist."
+  unknown-player: "&#FF0000&lERROR &8▷ &f&#00E1FF%player% &fhas never joined this server."
+  players-only: "&#FF0000&lERROR &8▷ &fOnly players can open a vault."
+  usage: "&#A370EE&lVAULT &8▷ &f/vault"
+  no-permission: "&#FF0000&lERROR &8▷ &fYou do not have permission."

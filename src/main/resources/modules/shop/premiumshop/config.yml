@@ -1,0 +1,180 @@
+# The premium shop. Its icon, its slot and its permission sit in ../config.yml
+# The netherite tier and the things that are hard to come by otherwise.
+
+menu:
+  title: "&8Shop Menu | Premium"
+  rows: 4
+  pages: 1
+
+item-template:
+  name: ""
+  lore:
+    - ""
+    - "&#99ff00&l$&r &fPrice &8▷ &#99ff00$&r&#99ff00%price%"
+    - ""
+    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
+
+buttons:
+
+  previous:
+    slot: 30
+    material: RED_STAINED_GLASS_PANE
+    name: "&#FF0000&lPREVIOUS PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000¦ &fGo one page back."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
+
+  return:
+    slot: 31
+    material: GUSTER_BANNER_PATTERN
+    name: "&#FFD900&lRETURN BACK"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFD900Information:"
+      - "&#FFD900¦ &fGo back to the"
+      - "&#FFD900¦ &f&#FFD900shop menu&f."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Return"
+
+  next:
+    slot: 32
+    material: LIME_STAINED_GLASS_PANE
+    name: "&#99ff00&lUPCOMING PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#99ff00Information:"
+      - "&#99ff00¦ &fGo one page forward."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
+
+items:
+
+  netheritehelmet:
+    page: 1
+    slot: 10
+    material: NETHERITE_HELMET
+    price: 750000
+    enchantments:
+      - "protection:4"
+      - "aqua_affinity:1"
+      - "unbreaking:3"
+      - "mending:1"
+  netheritechestplate:
+    page: 1
+    slot: 11
+    material: NETHERITE_CHESTPLATE
+    price: 750000
+    enchantments:
+      - "protection:4"
+      - "unbreaking:3"
+      - "mending:1"
+  netheriteleggings:
+    page: 1
+    slot: 12
+    material: NETHERITE_LEGGINGS
+    price: 750000
+    enchantments:
+      - "blast_protection:4"
+      - "unbreaking:3"
+      - "mending:1"
+  netheriteboots:
+    page: 1
+    slot: 13
+    material: NETHERITE_BOOTS
+    price: 750000
+    enchantments:
+      - "protection:4"
+      - "unbreaking:3"
+      - "mending:1"
+  elytra:
+    page: 1
+    slot: 14
+    material: ELYTRA
+    price: 1500000
+    enchantments:
+      - "unbreaking:3"
+      - "mending:1"
+  mace:
+    page: 1
+    slot: 15
+    material: MACE
+    price: 1200000
+    enchantments:
+      - "density:5"
+      - "unbreaking:3"
+      - "mending:1"
+  trident:
+    page: 1
+    slot: 16
+    material: TRIDENT
+    price: 500000
+    enchantments:
+      - "loyalty:3"
+      - "impaling:5"
+      - "unbreaking:3"
+      - "mending:1"
+
+  netheritesword:
+    page: 1
+    slot: 19
+    material: NETHERITE_SWORD
+    price: 900000
+    enchantments:
+      - "sharpness:5"
+      - "knockback:2"
+      - "unbreaking:3"
+      - "mending:1"
+  netheriteaxe:
+    page: 1
+    slot: 20
+    material: NETHERITE_AXE
+    price: 850000
+    enchantments:
+      - "sharpness:5"
+      - "efficiency:5"
+      - "unbreaking:3"
+      - "mending:1"
+  netheritepickaxe:
+    page: 1
+    slot: 21
+    material: NETHERITE_PICKAXE
+    price: 850000
+    enchantments:
+      - "silk_touch:1"
+      - "efficiency:5"
+      - "unbreaking:3"
+      - "mending:1"
+  netheriteshovel:
+    page: 1
+    slot: 22
+    material: NETHERITE_SHOVEL
+    price: 700000
+    enchantments:
+      - "efficiency:5"
+      - "unbreaking:3"
+      - "mending:1"
+  netheritehoe:
+    page: 1
+    slot: 23
+    material: NETHERITE_HOE
+    price: 650000
+    enchantments:
+      - "efficiency:5"
+      - "unbreaking:3"
+      - "mending:1"
+  netheriteupgrade:
+    page: 1
+    slot: 24
+    material: NETHERITE_UPGRADE_SMITHING_TEMPLATE
+    price: 80000
+  conduit:
+    page: 1
+    slot: 25
+    material: CONDUIT
+    price: 400000

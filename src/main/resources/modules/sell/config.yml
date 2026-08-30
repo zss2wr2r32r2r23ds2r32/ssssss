@@ -1,0 +1,131 @@
+# The sell menu and everything the sell system shares.
+# Multiplier in multiplier.yml, price menu in worth.yml, prices in prices.yml.
+
+menu:
+  title: "&8Sell Menu"
+  # Everything above the last row is free to drop items into.
+  rows: 5
+
+filler:
+  material: BLACK_STAINED_GLASS_PANE
+  name: " "
+  lore: []
+
+# Gone when multiplier.yml has enabled: false, the last row is then all filler.
+multiplier-button:
+  slot: 40
+  material: EMERALD
+  name: "&#80ee0b&lSELL MULTIPLIER"
+  lore:
+    - "&8Description"
+    - ""
+    - "&#80ee0bInformation:"
+    - "&#80ee0b¦ &fSell items to level"
+    - "&#80ee0b¦ &fyour own &#80ee0bmultiplier&f."
+    - ""
+    - "&#80ee0b☀ &fProgress &8▷ &#80ee0b%percent%%"
+    - "&#FFD900★ &fNext &8▷ &#FFD900%next%x"
+    - ""
+    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
+
+rules:
+  # Only untouched items are sold. Enchanted, renamed, damaged and filled
+  # containers are refused, that is what keeps duped gear out of the economy.
+  plain-only: true
+  # Sold anyway, even with extra data on them.
+  ignore-data:
+    - FIREWORK_ROCKET
+  # Refuses a sale paying out more than this at once. 0 turns it off.
+  max-payout: 0
+  # An item never pays more than this share of what the shop charges for it,
+  # no matter how high the multiplier is. That is what stops buying in the
+  # shop and selling straight back. 0 turns it off, do not turn it off.
+  shop-ceiling: 0.9
+  # Walks every recipe on boot and warns in the console when something
+  # sells for more than it costs to craft, or more than the shop asks.
+  check-recipes: true
+
+sounds:
+  open:
+    enabled: true
+    sound: "block.barrel.open"
+    volume: 0.7
+    pitch: 1.2
+  click:
+    enabled: true
+    sound: "ui.button.click"
+    volume: 1.0
+    pitch: 1.2
+  sell:
+    enabled: true
+    sound: "entity.player.levelup"
+    volume: 1.0
+    pitch: 1.4
+  error:
+    enabled: true
+    sound: "block.note_block.bass"
+    volume: 0.8
+    pitch: 0.8
+
+history:
+  title: "&8Sell History [%page%]"
+  time-format: "dd.MM.yyyy HH:mm"
+  # Sales older than this are deleted. 0 keeps everything.
+  # A busy server writes a few hundred thousand rows a day, so keep this low.
+  keep-days: 14
+
+  entry:
+    name: "&#80ee0b%amount%x %item%"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#80ee0bInformation:"
+      - "&#80ee0b| &fA sale from the"
+      - "&#80ee0b| &fsell &#80ee0bmenu&f."
+      - ""
+      - "&#22AFFBℹ &fPlayer: &#22AFFB%player%"
+      - "&#80ee0b&l$&r &fWorth &8▷ &#80ee0b$%base%"
+      - "&#FFD900★ &fMulti: &#FFD900%multi%x"
+      - "&#80ee0b&l$&r &fPaid &8▷ &#80ee0b$%total%"
+      - "&#FFD900⌛ &fWhen: &#FFD900%time%"
+
+  previous:
+    slot: 48
+    material: RED_STAINED_GLASS_PANE
+    name: "&#FF0000&lPREVIOUS PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000| &fGo one page back."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
+
+  next:
+    slot: 50
+    material: LIME_STAINED_GLASS_PANE
+    name: "&#80ee0b&lNEXT PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#80ee0bInformation:"
+      - "&#80ee0b| &fGo one page forward."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
+
+messages:
+  sold: "&#80ee0b&lSELL &8▷ &fSold &#80ee0b%items% items &ffor &#80ee0b$%total%&f."
+  sold-multiplied: "&#80ee0b&lSELL &8▷ &fSold &#80ee0b%items% items &ffor &#80ee0b$%total% &7(&#FFD900%multi%x&7)"
+  # Sent on top of the chat line. Leave empty to only use the chat.
+  sold-bar: "&#80ee0b+$%total%"
+  sold-multiplied-bar: "&#80ee0b&lSELL &8▷ &f+$%total% &7(&#FFD900%multi%x&7)"
+  # Left empty on purpose, closing an empty menu says nothing.
+  nothing-sold: ""
+  not-sellable: "&#FF0000&lERROR &8▷ &fThat item cannot be sold."
+  no-economy: "&#FF0000&lERROR &8▷ &fThe sell system is not ready yet."
+  too-much: "&#FF0000&lERROR &8▷ &fYou cannot sell more than &#80ee0b$%total% &fat once."
+  sell-failed: "&#FF0000&lERROR &8▷ &fYour balance could not take that."
+  no-prices: "&#FF0000&lERROR &8▷ &fNothing can be sold yet."
+  no-multiplier: "&#FF0000&lERROR &8▷ &fThe sell multiplier is turned off."
+  players-only: "&#FF0000&lERROR &8▷ &fOnly players can do that."
+  history-empty: "&#80ee0b&lSELL &8▷ &fNothing has been sold yet."

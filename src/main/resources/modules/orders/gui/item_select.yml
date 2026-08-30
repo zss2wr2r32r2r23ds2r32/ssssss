@@ -1,0 +1,100 @@
+title: '&8🔥 Orders | Select Item'
+size: 54
+none: '-'
+no-extras: '-'
+previous:
+  slot: 45
+  material: RED_STAINED_GLASS_PANE
+  name: '&#FF007B&lPREVIOUS PAGE'
+  lore:
+  - '&8Description'
+  - ''
+  - '&#FF007BInformation:'
+  - '&fClick here, to go'
+  - '&fto the previous page.'
+  - ''
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+next:
+  slot: 53
+  material: LIME_STAINED_GLASS_PANE
+  name: '&#45FF17&lNEXT PAGE'
+  lore:
+  - '&8Description'
+  - ''
+  - '&#45FF17Information:'
+  - '&fClick here, to go'
+  - '&fto the next page.'
+  - ''
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+back:
+  material: RED_DYE
+  slot: 46
+  name: '&#FF0000&lBACK'
+  lore:
+  - '&8Description'
+  - ''
+  - '&#FF0000Information:'
+  - '&fClick here, to go'
+  - '&fone step back.'
+  - ''
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Return'
+sort:
+  slot: 48
+  material: CAULDRON
+  name: '&#F90EC2&lSORTING'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#F90EC2Information:'
+    - '&fClick to change sorting.'
+    - ''
+    - '&#F90EC2| &fCurrent: &#F90EC2%sort%'
+filter:
+  slot: 49
+  material: HOPPER
+  name: '&#019BEE&lFILTER'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#019BEEInformation:'
+    - '&fClick to filter items.'
+    - ''
+    - '&#019BEE| &fCurrent: &#019BEE%filter%'
+search:
+  slot: 50
+  material: OAK_SIGN
+  name: '&#FB7B0B&lSEARCH'
+  lore:
+  - '&8Description'
+  - ''
+  - '&#FB7B0BInformation:'
+  - '&fClick to search for'
+  - '&fa specific order.'
+  - ''
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Search'
+item:
+  name: '&f%item%'
+  lore: &id001
+  - ''
+active: '&#F90EC2● '
+inactive: '&f● '
+filter-active: '&#019BEE● '
+sort-names:
+  alphabetical_az: Alphabetical A-Z
+  alphabetical_za: Alphabetical Z-A
+filter-names:
+  all: All
+  blocks: Blocks
+  tools: Tools
+  combat: Combat
+  food: Food
+  potions: Potions
+  books: Books
+  ingredients: Ingredients
+  other: Other
+no-search: '-'
+potion:
+  title: '&8🔥 Orders | Select Effect'
+  item:
+    name: '&#00FF89%effect%'
+    lore: *id001

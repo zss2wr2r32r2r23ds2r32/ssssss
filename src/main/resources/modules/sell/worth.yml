@@ -1,0 +1,84 @@
+# The /worth menu. 45 items per page, the last row holds the buttons.
+# Prices themselves live in prices.yml.
+
+menu:
+  title: "&8Sell Menu | Item Prices &7[%page%/%pages%]"
+
+entry:
+  name: "&f%item%"
+  lore:
+    - ""
+    - "&#80ee0b&l$&r &fWorth &8▷ &#80ee0b$%price%"
+
+buttons:
+
+  previous:
+    slot: 45
+    material: RED_STAINED_GLASS_PANE
+    name: "&#FF0000&lPREVIOUS PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000| &fGo one page back."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
+
+  next:
+    slot: 53
+    material: LIME_STAINED_GLASS_PANE
+    name: "&#80ee0b&lNEXT PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#80ee0bInformation:"
+      - "&#80ee0b| &fGo one page forward."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
+
+  refresh:
+    slot: 49
+    material: BELL
+    name: "&#FFD900&lREFRESH PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFD900Information:"
+      - "&#FFD900| &fLoad this page again."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Refresh"
+
+  # Left click steps forward, right click steps back.
+  sorting:
+    slot: 48
+    material: CAULDRON
+    name: "&#FFD900&lSORTING"
+    lore: 
+      - "&8Description"
+      - ""
+    active: "&#FFD900● &f%name%"
+    inactive: "&8● &7%name%"
+    names:
+      highest: "Highest Price"
+      lowest: "Lowest Price"
+      name: "Name"
+
+  filter:
+    slot: 50
+    material: HOPPER
+    name: "&#22AFFB&lFILTER"
+    lore: 
+      - "&8Description"
+      - ""
+    active: "&#22AFFB● &f%name%"
+    inactive: "&8● &7%name%"
+    names:
+      all: "All"
+      blocks: "Blocks"
+      tools: "Tools"
+      food: "Food"
+      combat: "Combat"
+      potions: "Potions"
+      books: "Books"
+      ingredients: "Ingredients"
+      utilities: "Utilities"

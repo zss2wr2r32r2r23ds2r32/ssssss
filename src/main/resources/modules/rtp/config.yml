@@ -1,0 +1,231 @@
+# Random teleport. Safe spots are looked for in the background and kept ready,
+# so a click does not have to search first.
+
+countdown-seconds: 5
+cooldown-seconds: 10
+
+# Costs nothing at 0. Uses the same amounts as /pay, so 10k works too.
+cost: 0
+
+# How many finished spots are kept per world and how often they are topped up.
+pool-size: 8
+refill-seconds: 10
+
+# Block lookups that actually hit the world stay on the server thread.
+# Keep this at 1 so RTP never spikes the tick. The drain task only runs when
+# a search actually needs the main thread, so idle RTP stays off Spark.
+main-checks-per-tick: 1
+ocean-nearby: false
+
+# Never more searches than this at once, so thirty clicks cannot generate
+# thirty areas at the same time.
+concurrent-searches: 1
+attempts: 30
+
+# The first attempts only take chunks that already exist. Pre generate the world
+# with Chunky and a teleport never has to create terrain.
+prefer-generated: true
+generated-attempts: 20
+
+# Hard ceiling on how many chunks the whole server may generate for teleports in
+# one minute. Once it is used up only existing chunks are looked at. 0 never
+# generates at all, which is the right setting on a pre generated world.
+generate-per-minute: 30
+
+# No fall damage and slow falling for this long after landing.
+safe-landing-seconds: 5
+
+blocked-biomes:
+  - OCEAN
+  - DEEP_OCEAN
+  - COLD_OCEAN
+  - DEEP_COLD_OCEAN
+  - FROZEN_OCEAN
+  - DEEP_FROZEN_OCEAN
+  - LUKEWARM_OCEAN
+  - DEEP_LUKEWARM_OCEAN
+  - WARM_OCEAN
+  - RIVER
+  - FROZEN_RIVER
+  - BEACH
+  - SNOWY_BEACH
+  - STONY_SHORE
+  - MUSHROOM_FIELDS
+
+blocked-blocks:
+  - WATER
+  - LAVA
+  - ICE
+  - PACKED_ICE
+  - BLUE_ICE
+  - KELP
+  - KELP_PLANT
+  - SEAGRASS
+  - TALL_SEAGRASS
+  - SEA_PICKLE
+  - LILY_PAD
+  - MAGMA_BLOCK
+  - CACTUS
+  - LEAVES
+  - LOG
+  - STEM
+  - WOOD
+  - FENCE
+  - WALL
+  - SLAB
+  - STAIRS
+  - GLASS_PANE
+  - CARPET
+  - SNOW
+  - POWDER_SNOW
+
+menu:
+  title: "&8Random Teleport"
+  rows: 3
+  filler:
+    material: BLACK_STAINED_GLASS_PANE
+    name: " "
+    lore: []
+
+  queue:
+    slot: 15
+    material: SPYGLASS
+    name: "&#22AFFB&lRTP QUEUE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#22AFFBDescription:"
+      - "&#22AFFB| &fQueue with another player"
+      - "&#22AFFB| &fand teleport together."
+      - ""
+      - "&#22AFFBℹ &fAccess: &#22AFFB/rtpqueue"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Queue"
+
+worlds:
+  overworld:
+    display: "Overworld"
+    world: world
+    mv-command: "mv tp %player% world"
+    slot: 11
+    material: MOSS_BLOCK
+    radius: 50000
+    center-x: 0
+    center-z: 0
+    min-y: 50
+    name: "&#97F900&lOVERWORLD"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#97F900Description:"
+      - "&#97F900| &fClick to randomly teleport"
+      - "&#97F900| &fsomewhere inside the &#97F900Overworld&f!"
+      - ""
+      - "&#97F900⚓ &fPlayers: &#97F900%players%"
+      - "&#97F900⚡ &fRadius: &#97F90020K"
+      - "&#97F900✉ &fBorder: &#97F900%border%"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
+
+  nether:
+    display: "Nether"
+    world: world_nether
+    mv-command: "mv tp %player% world_nether"
+    slot: 12
+    material: NETHER_WART_BLOCK
+    radius: 10000
+    center-x: 0
+    center-z: 0
+    min-y: 32
+    max-y: 120
+    name: "&#FF0000&lNETHER"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Description:"
+      - "&#FF0000| &fClick to randomly teleport"
+      - "&#FF0000| &fsomewhere inside the &#FF0000Nether&f!"
+      - ""
+      - "&#FF0000⚓ &fPlayers: &#FF0000%players%"
+      - "&#FF0000⚡ &fRadius: &#FF0000%radius%"
+      - "&#FF0000✉ &fBorder: &#FF0000%border%"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
+
+  end:
+    display: "The End"
+    world: world_end
+    mv-command: "mv tp %player% world_end"
+    slot: 13
+    material: END_STONE
+    radius: 20000
+    center-x: 0
+    center-z: 0
+    min-y: 40
+    name: "&#FFEF12&lEND"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFEF12Description:"
+      - "&#FFEF12| &fClick to randomly teleport"
+      - "&#FFEF12| &fsomewhere inside &#FFEF12The End&f!"
+      - ""
+      - "&#FFEF12⚓ &fPlayers: &#FFEF12%players%"
+      - "&#FFEF12⚡ &fRadius: &#FFEF12%radius%"
+      - "&#FFEF12✉ &fBorder: &#FFEF12%border%"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
+
+sounds:
+  menu-open:
+    enabled: true
+    sound: "block.note_block.pling"
+    volume: 1.0
+    pitch: 1.2
+  countdown:
+    enabled: true
+    sound: "block.note_block.hat"
+    volume: 1.0
+    pitch: 1.0
+  teleport:
+    enabled: true
+    sound: "entity.enderman.teleport"
+    volume: 1.0
+    pitch: 1.0
+  error:
+    enabled: true
+    sound: "block.note_block.bass"
+    volume: 1.0
+    pitch: 0.8
+
+messages:
+  actionbar: true
+  countdown: "&#97F900&lRTP &8▷ &fTeleporting you away in &#97F900%seconds%&f."
+  teleported: "&#97F900&lRTP &8▷ &fYou have been &#22AFFBteleported &faway"
+  searching: "&#97F900&lRTP &8▷ &fLooking for a safe spot..."
+  cancelled: "&#FF0000&lERROR &8▷ &fYou moved, the teleport was stopped."
+
+  cooldown: "&#FF0000&lERROR &8▷ &fWait &#97F900%time%s &fbefore the next teleport."
+  already-teleporting: "&#FF0000&lERROR &8▷ &fYou are already being teleported."
+  restricted: "&#FF0000&lERROR &8▷ &fYou cannot teleport right now."
+  cannot-afford: "&#FF0000&lERROR &8▷ &fA teleport costs &#97F900%amount%&f."
+  not-found: "&#FF0000&lERROR &8▷ &fNo safe spot was found, try again."
+  world-missing: "&#FF0000&lERROR &8▷ &fThat world does not exist on this server."
+  players-only: "&#FF0000&lERROR &8▷ &fOnly a player can use that."
+
+queue:
+  # Player toggle /rtpqueuetoggle only hides chat (join broadcast / requests). Countdown stays.
+  messages: true
+  broadcast-join: true
+  join-broadcast: "&#22AFFB&lRTP QUEUE &8▷ &#22AFFB%player% &fHas Joined an Rtp Queue &7(/rtpqueue)"
+  countdown-seconds: 5
+  offset: 8
+  looking: "&#22AFFB&lRTP QUEUE &8▷ &fLooking for Player"
+  found: "&#22AFFB&lRTP QUEUE &8▷ &fFound Player, Teleporting in &#22AFFB&n%seconds%s"
+  cancelled: "&#22AFFB&lRTP QUEUE &8▷ &fYou left the queue."
+  not-in: "&#22AFFB&lRTP QUEUE &8▷ &fYou are not in the queue."
+  requested: "&#22AFFB&lRTP QUEUE &8▷ &fAsked &#22AFFB%player% &fto queue with you."
+  incoming: "&#22AFFB&lRTP QUEUE &8▷ &#22AFFB%player% &fwants to RTP with you. Type &#22AFFB/rtpqueue accept&f."
+  no-request: "&#22AFFB&lRTP QUEUE &8▷ &fYou have no pending request."
+  offline: "&#FF0000&lERROR &8▷ &fThat player is not online."
+  self: "&#FF0000&lERROR &8▷ &fYou cannot queue with yourself."

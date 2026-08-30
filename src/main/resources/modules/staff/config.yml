@@ -1,0 +1,331 @@
+prefix: "&#FF0000☄ &#FF0000&lSTAFF &8▷ &r"
+staff-chat-format: "&#FF0000☄ &#FF0000&lSTAFF &8▷ &f%player%&7: &f%message%"
+staff-permission: shardedcore.staff.mode
+stafflist-permission: shardedcore.staff.mode
+see-vanished: shardedcore.staff.seevanished
+audit-permission: shardedcore.staff.audit
+discord: discord.gg/shardedmc
+repeat-offender-threshold: 3
+request-cooldown-seconds: 30
+screenshare-seconds: 120
+screenshare-ban-reason: Refusing to SS
+screenshare-ban-duration: 7d
+screenshare:
+  title: "&#FF0000&lSCREENSHARE"
+  subtitle: "&fPlease Do not log out"
+  actionbar: "&fJoin #Screenshare @ discord.gg/shardedmc"
+offend-reason: Ban-Evasion
+offend-duration: permanent
+default-reason: Unfair Modifications
+snapshot-interval-minutes: 5
+max-snapshots: 20
+
+# Bans, mutes, and staff state. type: mariadb | mysql | sqlite
+# If MariaDB is down, staff falls back to the shared SQLite file.
+database:
+  type: mariadb
+  mariadb:
+    host: localhost
+    port: 3306
+    database: shardedcore
+    username: root
+    password: ""
+  mysql:
+    host: localhost
+    port: 3306
+    database: shardedcore
+    username: root
+    password: ""
+
+vanish:
+  fly: true
+  disable-pickup: true
+
+staffmode:
+  vanish-on-enter: true
+  disable-eglow-command: eglow:eglow disable
+  items:
+    vanish:
+      slot: 0
+      material: LIME_DYE
+      vanished-material: GRAY_DYE
+      name: "&#FF8300&lVANISH"
+      vanished-name: "&#8B8B8B&lVANISHED"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#FF8300Information:"
+        - "&#FF8300| &fHide yourself from"
+        - "&#FF8300| &fplayers on the server"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle"
+      vanished-lore:
+        - "&8Description"
+        - ""
+        - "&#8B8B8BInformation:"
+        - "&#8B8B8B| &fYou are currently vanished"
+        - "&#8B8B8B| &fClick to show yourself"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle"
+    freeze:
+      slot: 1
+      material: PACKED_ICE
+      name: "&#00C1FF&lFREEZE"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#00C1FFInformation:"
+        - "&#00C1FF| &fRight click a player"
+        - "&#00C1FF| &fto freeze them"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Use"
+    punish:
+      slot: 2
+      material: NETHERITE_AXE
+      name: "&#FF0000&lPUNISH"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#FF0000Information:"
+        - "&#FF0000| &fHit a player"
+        - "&#FF0000| &fto open ban mute kick"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Use"
+    randomtp:
+      slot: 3
+      material: COMPASS
+      name: "&#00A2FF&lRANDOM TP"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#00A2FFInformation:"
+        - "&#00A2FF| &fTeleport to a random"
+        - "&#00A2FF| &fonline player"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
+    exit:
+      slot: 8
+      material: BARRIER
+      name: "&#FF0000&lEXIT STAFF"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#FF0000Information:"
+        - "&#FF0000| &fLeave staff mode and"
+        - "&#FF0000| &frestore your inventory"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Exit"
+
+punish:
+  title: "Punish"
+  rows: 3
+  ban:
+    slot: 11
+    material: IRON_BARS
+    name: "&#FF0000&lBAN"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000| &fChoose a ban reason"
+      - "&#FF0000| &ffor %player%"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
+  mute:
+    slot: 13
+    material: BOOK
+    name: "&#FFBA00&lMUTE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFBA00Information:"
+      - "&#FFBA00| &fChoose a mute reason"
+      - "&#FFBA00| &ffor %player%"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
+  kick:
+    slot: 15
+    material: LEATHER_BOOTS
+    name: "&#FF8300&lKICK"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF8300Information:"
+      - "&#FF8300| &fChoose a kick reason"
+      - "&#FF8300| &ffor %player%"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open"
+  close:
+    slot: 26
+
+# Add more reasons here. A list opens a duration picker. A single value bans/mutes immediately.
+reasons:
+  X-Ray:
+    - 7d
+    - 14d
+    - 30d
+  Fly-Hack: 30d
+  Killaura: 30d
+  ESP: 14d
+  Reach: 14d
+  Scaffold: 30d
+  AutoClicker: 14d
+  Anti-Knockback: 30d
+  Nuker: 30d
+  Chat-Behavior: 1d
+  Advertising: 7d
+  Hate-Speech: 30d
+  Scamming: 7d
+  Griefing: 7d
+  Bug-Abuse: 7d
+  Ban-Evasion: permanent
+  Duping: permanent
+  Doxxing: permanent
+  doxxing: permanent
+
+mute-reasons:
+  Spam:
+    - 1h
+    - 6h
+    - 1d
+  Caps-Spam: 30m
+  Chat-Behavior: 3h
+  Disrespect: 3h
+  Toxicity: 6h
+  Advertising: 1d
+  Filter-Bypass: 1d
+  Inappropriate: 1d
+  Hate-Speech: 7d
+  Spoiler: 1h
+
+kick-reasons:
+  Cheating: kick
+  Toxicity: kick
+  Advertising: kick
+
+audit:
+  enabled: true
+  permission: shardedcore.staff.audit
+  staff-only: true
+  commands:
+    - staffmode
+    - sfmode
+    - vanish
+    - freeze
+    - unfreeze
+    - punish
+    - ban
+    - mute
+    - kick
+    - offend
+    - banip
+    - unban
+    - unbanip
+    - unmute
+    - pardon
+    - alts
+    - screenshare
+    - ss
+    - invrollback
+    - revokepunishment
+    - gmc
+    - gms
+    - gmsp
+    - gma
+    - staffchat
+    - sc
+    - randomtp
+    - stafflist
+    - staff
+
+ban-screen:
+  - "&#AD4EFF&lSHARDEDMC"
+  - "&cYou have been banned!"
+  - ""
+  - "&fBy: &#AD4EFF%staff%"
+  - "&fReason: &#FF007B%reason%"
+  - "&fDuration: &#45FF17%time%"
+  - ""
+  - "&#FFF300APPEAL @ %discord%"
+
+mute-commands:
+  - msg
+  - r
+  - reply
+  - tell
+  - whisper
+
+sounds:
+  open:
+    enabled: true
+    sound: ui.button.click
+    volume: 0.6
+    pitch: 1.2
+  click:
+    enabled: true
+    sound: ui.button.click
+    volume: 0.5
+    pitch: 1.0
+  error:
+    enabled: true
+    sound: block.note_block.bass
+    volume: 0.7
+    pitch: 0.8
+
+messages:
+  players-only: "%prefix%&#FF2727Only players can use this command."
+  no-permission: "%prefix%&#FF2727You don't have permission."
+  player-not-found: "%prefix%&#FF2727Player not found."
+  usage-player: "%prefix%&#FF2727Usage: &f/%command% <player>"
+  usage-unbanip: "%prefix%&#FF2727Usage: &f/unbanip <ip|player|list>"
+  staffmode-on: "%prefix%&#9FFF00Staff mode enabled."
+  staffmode-off: "%prefix%&#FF2727Staff mode disabled."
+  vanish-on: "%prefix%&#9FFF00You are now vanished."
+  vanish-off: "%prefix%&#FF2727You are no longer vanished."
+  freeze-on: "%prefix%&#9FFF00Froze &f%player%&#9FFF00."
+  freeze-off: "%prefix%&#9FFF00Unfroze &f%player%&#9FFF00."
+  frozen: "%prefix%&#FF2727You have been frozen."
+  unfrozen: "%prefix%&#9FFF00You have been unfrozen."
+  gamemode: "%prefix%&#9FFF00Gamemode set to &f%mode%&#9FFF00."
+  staffchat-on: "%prefix%&#AD4EFFStaff chat enabled."
+  staffchat-off: "%prefix%&#AD4EFFStaff chat disabled."
+  stafflist-empty: "%prefix%&#FF2727No staff online."
+  stafflist-header: "%prefix%&#FF8300Online staff (&f%count%&#FF8300):"
+  stafflist-entry: "%prefix% &7- &f%player% &8(%status%)"
+  randomtp: "%prefix%&#9FFF00Teleported to &f%player%&#9FFF00."
+  randomtp-none: "%prefix%&#FF2727No players available."
+  banned: "%prefix%&#9FFF00Banned &f%player% &7(&f%reason%&7, &f%time%&7)"
+  muted: "%prefix%&#9FFF00Muted &f%player% &7(&f%reason%&7, &f%time%&7)"
+  muted-chat: "%prefix%&#FF2727You are muted (&f%reason%&#FF2727)."
+  kicked: "%prefix%&#9FFF00Kicked &f%player% &7(&f%reason%&7)"
+  ip-banned: "%prefix%&#9FFF00IP banned &f%player% &7(&f%reason%&7)"
+  unbanned: "%prefix%&#9FFF00Unbanned &f%player%&#9FFF00."
+  unmuted: "%prefix%&#9FFF00Unmuted &f%player%&#9FFF00."
+  pardoned: "%prefix%&#9FFF00Pardoned &f%player%&#9FFF00."
+  unbanip-done: "%prefix%&#9FFF00Removed IP ban for &f%ip%&#9FFF00."
+  unbanip-missing: "%prefix%&#FF2727No active IP ban for &f%ip%&#FF2727."
+  unbanip-list: "%prefix%&#9FFF00Active IP bans (&f%count%&#9FFF00):"
+  screenshare-start: "%prefix%&#FF0000Screensharing &f%player%&#FF0000."
+  screenshare-target: "%prefix%&#FF0000A staff member is screensharing you. Do not log out."
+  screenshare-done: "%prefix%&#9FFF00Screenshare ended for &f%player%&#9FFF00."
+  screenshare-refuse: "%prefix%&#FF0000%player% logged out during SS and was banned."
+  rollback-usage: "%prefix%&#FF2727Usage: &f/invrollback <player>"
+  rollback-empty: "%prefix%&#FF2727No snapshots for &f%player%&#FF2727."
+  rollback-restored: "%prefix%&#9FFF00Restored &f%player%&#9FFF00's inventory."
+  request-sent: "%prefix%&#9FFF00Staff have been notified."
+  request-cooldown: "%prefix%&#FF2727Wait before requesting staff again."
+  request-staff: "%prefix%&#FF8300%player% requested staff. Click to teleport."
+  request-hover: "&7Click to teleport to %player%"
+  goto: "%prefix%&#9FFF00Teleported to &f%player%&#9FFF00."
+  revoke-done: "%prefix%&#9FFF00Revoked &f%count% &7punishments."
+  alts-header: "%prefix%&#FF8300Alts for &f%player%&7:"
+  alts-none: "%prefix%&#FF2727No alts found."
+  alts-entry: "%prefix% &7- &f%name% &8(%status%)"
+  broadcast: "%prefix%&#FF2727%action% &f%player% &7by &f%staff% &7— &f%reason%"
+  staff-header: "%prefix%&#00A2FFStaff Commands:"
+  punish-title: "Punish"
+  reason-title: "%type% Reasons"
+  rollback-title: "Rollback"
+  alts-title: "%players% Alts"
+  revoke-title: "Revoke Punishments"
+  audit: "%prefix%&#FF8300%player% &fused &f%command%"

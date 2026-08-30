@@ -1,0 +1,5 @@
+trash-title: "&8Trash"
+trash-rows: 4
+messages:
+  players-only: "&#FF0000&lERROR &8▷ &fOnly a player can use that."
+  no-permission: "&#FF0000&lERROR &8▷ &fYou do not have permission."

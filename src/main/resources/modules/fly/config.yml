@@ -1,0 +1,17 @@
+# Flight is only allowed in this world, inside the region from /fly pos1 /fly pos2 /fly setregion.
+world: spawn
+default-permission: true
+
+messages:
+  on: "&#A370EE&lFLY &8▷ &fFlight enabled."
+  off: "&#A370EE&lFLY &8▷ &fFlight disabled."
+  left: "&#A370EE&lFLY &8▷ &fYou left the fly region."
+  denied: "&#FF0000&lERROR &8▷ &fYou can only fly in the spawn fly region."
+  pos1: "&#A370EE&lFLY &8▷ &fPosition 1 set to &#A370EE%x% %y% %z%&f."
+  pos2: "&#A370EE&lFLY &8▷ &fPosition 2 set to &#A370EE%x% %y% %z%&f."
+  region-set: "&#A370EE&lFLY &8▷ &fFly region saved."
+  need-positions: "&#FF0000&lERROR &8▷ &fSet /fly pos1 and /fly pos2 first."
+  same-world: "&#FF0000&lERROR &8▷ &fBoth positions must be in the same world."
+  usage: "&#A370EE&lFLY &8▷ &f/fly &7| &fpos1 &7| &fpos2 &7| &fsetregion"
+  no-permission: "&#FF0000&lERROR &8▷ &fYou do not have permission."
+  players-only: "&#FF0000&lERROR &8▷ &fOnly a player can use that."

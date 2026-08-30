@@ -1,0 +1,207 @@
+# The gear shop. Its icon and its slot in the main menu sit in ../config.yml
+# enchantments: takes name:level, the level may go past the vanilla limit.
+# flight: sets the flight duration of a firework rocket.
+
+menu:
+  title: "&8Shop Menu | Gear"
+  rows: 5
+  pages: 1
+
+# Shorter than the shared one, the enchantments and the armour values
+# already stand in the tooltip. An empty name keeps the vanilla one.
+item-template:
+  name: ""
+  lore:
+    - ""
+    - "&#99ff00&l$&r &fPrice &8▷ &#99ff00$&r&#99ff00%price%"
+    - ""
+    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
+
+buttons:
+
+  previous:
+    slot: 39
+    material: RED_STAINED_GLASS_PANE
+    name: "&#FF0000&lPREVIOUS PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000¦ &fGo one page back."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
+
+  return:
+    slot: 40
+    material: GUSTER_BANNER_PATTERN
+    name: "&#FFD900&lRETURN BACK"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFD900Information:"
+      - "&#FFD900¦ &fGo back to the"
+      - "&#FFD900¦ &f&#FFD900shop menu&f."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Return"
+
+  next:
+    slot: 41
+    material: LIME_STAINED_GLASS_PANE
+    name: "&#99ff00&lUPCOMING PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#99ff00Information:"
+      - "&#99ff00¦ &fGo one page forward."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
+
+items:
+
+  diamondhelmet:
+    page: 1
+    slot: 10
+    material: DIAMOND_HELMET
+    price: 250000
+    enchantments:
+      - "protection:4"
+      - "aqua_affinity:1"
+      - "unbreaking:3"
+      - "mending:1"
+  diamondchestplate:
+    page: 1
+    slot: 11
+    material: DIAMOND_CHESTPLATE
+    price: 250000
+    enchantments:
+      - "protection:4"
+      - "unbreaking:3"
+      - "mending:1"
+  diamondleggings:
+    page: 1
+    slot: 12
+    material: DIAMOND_LEGGINGS
+    price: 250000
+    enchantments:
+      - "blast_protection:4"
+      - "unbreaking:3"
+      - "mending:1"
+  diamondboots:
+    page: 1
+    slot: 13
+    material: DIAMOND_BOOTS
+    price: 250000
+    enchantments:
+      - "protection:4"
+      - "unbreaking:3"
+      - "mending:1"
+  endcrystal:
+    page: 1
+    slot: 14
+    material: END_CRYSTAL
+    price: 1500
+  glowstone:
+    page: 1
+    slot: 15
+    material: GLOWSTONE
+    price: 1200
+  enderchest:
+    page: 1
+    slot: 16
+    material: ENDER_CHEST
+    price: 2800
+
+  enderpearl:
+    page: 1
+    slot: 19
+    material: ENDER_PEARL
+    price: 600
+  bottleoenchanting:
+    page: 1
+    slot: 20
+    material: EXPERIENCE_BOTTLE
+    price: 900
+  goldenapple:
+    page: 1
+    slot: 21
+    material: GOLDEN_APPLE
+    price: 600
+  totemofundying:
+    page: 1
+    slot: 22
+    material: TOTEM_OF_UNDYING
+    price: 3200
+  obsidian:
+    page: 1
+    slot: 23
+    material: OBSIDIAN
+    price: 2300
+  respawnanchor:
+    page: 1
+    slot: 24
+    material: RESPAWN_ANCHOR
+    price: 1800
+  shulkerbox:
+    page: 1
+    slot: 25
+    material: SHULKER_BOX
+    price: 2800
+
+  windcharge:
+    page: 1
+    slot: 28
+    material: WIND_CHARGE
+    price: 1900
+  shield:
+    page: 1
+    slot: 29
+    material: SHIELD
+    price: 200000
+    enchantments:
+      - "unbreaking:3"
+      - "mending:1"
+  fireworkrocket:
+    page: 1
+    slot: 30
+    material: FIREWORK_ROCKET
+    price: 3000
+    flight: 1
+  diamondshovel:
+    page: 1
+    slot: 31
+    material: DIAMOND_SHOVEL
+    price: 220000
+    enchantments:
+      - "efficiency:4"
+      - "unbreaking:3"
+      - "mending:1"
+  diamondaxe:
+    page: 1
+    slot: 32
+    material: DIAMOND_AXE
+    price: 280000
+    enchantments:
+      - "sharpness:4"
+      - "efficiency:4"
+      - "unbreaking:3"
+      - "mending:1"
+  diamondpickaxe:
+    page: 1
+    slot: 33
+    material: DIAMOND_PICKAXE
+    price: 280000
+    enchantments:
+      - "silk_touch:1"
+      - "efficiency:4"
+      - "unbreaking:3"
+      - "mending:1"
+  diamondsword:
+    page: 1
+    slot: 34
+    material: DIAMOND_SWORD
+    price: 290000
+    enchantments:
+      - "sharpness:4"
+      - "knockback:1"
+      - "unbreaking:3"
+      - "mending:1"

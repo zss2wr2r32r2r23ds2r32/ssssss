@@ -1,0 +1,157 @@
+# Custom chat colors. Players set one with /chatcolor set <name>.
+# Admins create them with /chatcolor create <name> <hex>
+# Gradients: /chatcolor gradient create <name> <hex> <hex>
+
+prefix: "&#A370EE&lCHATCOLOR &8▷ &r"
+
+colors:
+  default:
+    type: solid
+    hex: "AAAAAA"
+  red:
+    type: solid
+    hex: "FF0000"
+  yellow:
+    type: solid
+    hex: "FFF800"
+  green:
+    type: solid
+    hex: "8AFF00"
+  blue:
+    type: solid
+    hex: "00C1FF"
+  light_blue:
+    type: solid
+    hex: "7EE8FF"
+  purple:
+    type: solid
+    hex: "8000FF"
+  pink:
+    type: solid
+    hex: "FF74DF"
+  blossom:
+    type: gradient
+    hex: "FF74DF"
+    hex2: "FFB6C1"
+  amethyst:
+    type: gradient
+    hex: "9B59B6"
+    hex2: "E0B0FF"
+  warden:
+    type: gradient
+    hex: "0A3D3A"
+    hex2: "3EE6D0"
+  sharded:
+    type: gradient
+    hex: "A370EE"
+    hex2: "00A2FF"
+  neon:
+    type: gradient
+    hex: "39FF14"
+    hex2: "00F0FF"
+  roses:
+    type: gradient
+    hex: "FF4D6D"
+    hex2: "FFB3C1"
+  blood:
+    type: gradient
+    hex: "6B0000"
+    hex2: "FF1A1A"
+
+gui:
+  title: "Chat Colors"
+  guide: "Chat Colors"
+  preview-name: "Chat Colors"
+  rows: 4
+  default-color: "0083FF"
+  default-description: "&8Description"
+  colored-bundles: true
+  item-material: BUNDLE
+  item-name: "%color%&l%name%"
+  status-owned: "&#94FF00&l&nOWNED"
+  status-locked: "&#FF0000&l&nLOCKED"
+  click-footer: "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip"
+  lore:
+    - "&8Description"
+    - ""
+    - "%color%Information:"
+    - "%color%| &fClick to equip"
+    - "%color%| &fthis color"
+    - ""
+    - "%color%⚓ &fStatus: %status%"
+    - ""
+    - "%click%"
+  filler:
+    material: BLACK_STAINED_GLASS_PANE
+    name: " "
+    lore: []
+  previous:
+    slot: 30
+  next:
+    slot: 32
+  close:
+    enabled: true
+    slot: 31
+    material: RED_STAINED_GLASS_PANE
+    name: "&#FF0000&lCLOSE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000| &fClick To"
+      - "&#FF0000| &fClose this GUI"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Close"
+  extra:
+    enabled: false
+  clear:
+    enabled: true
+    slot: 4
+    material: BARRIER
+    name: "&#FF0000&lCLEAR CHATCOLOR"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000| &fDont want a chat color?"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Remove"
+
+sounds:
+  open:
+    enabled: true
+    sound: "ui.button.click"
+    volume: 0.6
+    pitch: 1.2
+  click:
+    enabled: true
+    sound: "ui.button.click"
+    volume: 0.5
+    pitch: 1.0
+  equip:
+    enabled: true
+    sound: "item.armor.equip_leather"
+    volume: 0.8
+    pitch: 1.2
+  error:
+    enabled: true
+    sound: "block.note_block.bass"
+    volume: 0.7
+    pitch: 0.8
+
+messages:
+  usage: "%prefix%&f/chatcolor create <name> <hex> &8| &fset <name> &8| &fremove <name>"
+  usage-create: "%prefix%&f/chatcolor create <name> <hex>"
+  usage-set: "%prefix%&f/chatcolor set <name>"
+  usage-remove: "%prefix%&f/chatcolor remove <name>"
+  usage-gradient: "%prefix%&f/chatcolor gradient create <name> <hex> <hex>"
+  created: "%prefix%&fCreated &#A370EE%color% &f(%hex%)."
+  created-gradient: "%prefix%&fCreated gradient &#A370EE%color% &f(%from% → %to%)."
+  set: "%prefix%&fYour chat color is now %color%&f."
+  removed: "%prefix%&fRemoved &#A370EE%color%&f."
+  cleared: "%prefix%&fYour chat color was cleared."
+  missing: "&#FF0000&lERROR &8▷ &fUnknown color &#A370EE%color%&f."
+  locked: "&#FF0000&lERROR &8▷ &fYou have not unlocked &#A370EE%color%&f."
+  invalid: "&#FF0000&lERROR &8▷ &fThat name or hex is not valid."
+  no-permission: "&#FF0000&lERROR &8▷ &fYou do not have permission."
+  players-only: "&#FF0000&lERROR &8▷ &fOnly a player can use that."

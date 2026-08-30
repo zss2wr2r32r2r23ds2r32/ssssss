@@ -1,0 +1,40 @@
+expire-seconds: 60
+countdown-seconds: 5
+cancel-on-move: true
+title: "&8Teleport Request"
+filler:
+  material: BLACK_STAINED_GLASS_PANE
+  name: " "
+messages:
+  sent: "&#00A2FF&lTPA &8▷ &fRequest sent to &#00A2FF%player%&f."
+  received: "&#00A2FF&lTPA &8▷ &#00A2FF%player% &fwants to teleport to you. /tpaccept"
+  here-received: "&#00A2FF&lTPA &8▷ &#00A2FF%player% &fwants you to teleport to them. /tpaccept"
+  accepted: "&#00A2FF&lTPA &8▷ &fTeleport accepted."
+  denied: "&#00A2FF&lTPA &8▷ &fTeleport cancelled."
+  none: "&#FF0000&lERROR &8▷ &fYou have no pending requests."
+  expired: "&#FF0000&lERROR &8▷ &fThat request expired."
+  disabled: "&#FF0000&lERROR &8▷ &fThat player is not accepting teleport requests."
+  self: "&#FF0000&lERROR &8▷ &fYou cannot teleport to yourself."
+  offline: "&#FF0000&lERROR &8▷ &fThat player is not online."
+  usage: "&#00A2FF&lTPA &8▷ &fUse /tpa <player>"
+  usage-here: "&#00A2FF&lTPA &8▷ &fUse /tpahere <player>"
+  teleporting: "&#00A2FF&lTPA &8▷ &fTeleporting in &#00A2FF%seconds%s"
+  cancelled-move: "&#00A2FF&lTPA &8▷ &fTeleport cancelled, you moved."
+  combat: "&#FF0000&lERROR &8▷ &fYou cannot teleport in combat."
+  players-only: "&#FF0000&lERROR &8▷ &fOnly a player can use that."
+
+# Shown on the TPA confirm menu. Keys are locale codes (en_us) or language (en).
+regions:
+  always-default: true
+  default: "EU"
+  en_us: "NA"
+  en_ca: "NA"
+  es_mx: "NA"
+  pt_br: "SA"
+  ja: "AS"
+  ko: "AS"
+  zh: "AS"
+  zh_cn: "AS"
+  zh_tw: "AS"
+  en_au: "OC"
+  en_nz: "OC"

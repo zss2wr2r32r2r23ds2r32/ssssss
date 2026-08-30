@@ -1,0 +1,285 @@
+# Coinflip. The bet is taken when the game is created and paid back on /cf delete.
+# Open games survive a restart, they are stored in the database.
+
+minimum: 10
+# 0 means no upper limit.
+maximum: 0
+block-in-combat: true
+# Stops a macro from spamming create and delete. 0 turns it off.
+cooldown-seconds: 3
+
+menu:
+  title: "&8Coinflip Games"
+  rows: 5
+
+  border:
+    material: BLACK_STAINED_GLASS_PANE
+    name: " "
+
+  head:
+    name: "&#FFE925%player%'s Bet"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFE925Information:"
+      - "&#FFE925| &fClick here to play"
+      - "&#FFE925| &fthis game."
+      - ""
+      - "&#80ee0b&l$&r &fAmount: &#80ee0b%amount%"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Join"
+
+  stats:
+    slot: 4
+    material: GUSTER_BANNER_PATTERN
+    name: "&#FFE925&lCOINFLIP &#FFE925Stats"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFE925Information:"
+      - "&#FFE925| &fHere you can see"
+      - "&#FFE925| &fyour coinflip stats."
+      - ""
+      - "&#80ee0b☀ &fWins: &#80ee0b%wins%"
+      - "&#FF0000☠ &fLosses: &#FF0000%losses%"
+
+  empty:
+    slot: 22
+    material: MINECART
+    name: "&#FF0000&lNO GAMES FOUND"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000| &fNobody has a coinflip"
+      - "&#FF0000| &fopen right now."
+      - ""
+      - "&#FF0000▷ &fUse &#FF0000/cf create <amount>"
+
+  refresh:
+    slot: 40
+    material: CLOCK
+    name: "&#FFE925&lREFRESH"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFE925Information:"
+      - "&#FFE925| &fClick here to reload"
+      - "&#FFE925| &fthe current page."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Refresh"
+
+  previous:
+    slot: 39
+    material: RED_STAINED_GLASS_PANE
+    name: "&#FF0000&lPREVIOUS PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000| &fClick here to return"
+      - "&#FF0000| &fto page &#FF0000%page%&f."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue"
+
+  next:
+    slot: 41
+    material: LIME_STAINED_GLASS_PANE
+    name: "&#80ee0b&lNEXT PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#80ee0bDescription:"
+      - "&#80ee0b| &fClick here to open"
+      - "&#80ee0b| &fpage &#80ee0b%page%&f."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue"
+
+history:
+  title: "&8Coinflip History [%page%]"
+  rows: 6
+  time-format: "dd.MM.yyyy HH:mm"
+  # Flips older than this are deleted. 0 keeps everything.
+  keep-days: 30
+
+  entry:
+    name: "&#80ee0b&l$%amount%"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFE925Information:"
+      - "&#FFE925| &fOne finished game"
+      - "&#FFE925| &fbetween two players."
+      - ""
+      - "&#80ee0b☀ &fWinner: &#80ee0b%winner%"
+      - "&#FF0000☠ &fLoser: &#FF0000%loser%"
+      - "&#FFD900⌛ &fWhen: &#FFD900%time%"
+
+  previous:
+    slot: 48
+    material: RED_STAINED_GLASS_PANE
+    name: "&#FF0000&lPREVIOUS PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000| &fClick here to return"
+      - "&#FF0000| &fto page &#FF0000%page%&f."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue"
+
+  search:
+    slot: 49
+    material: NAME_TAG
+    name: "&#FFD900&lSEARCH"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFD900Information:"
+      - "&#FFD900| &fLook for the games"
+      - "&#FFD900| &fof one player."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Search"
+
+  next:
+    slot: 50
+    material: LIME_STAINED_GLASS_PANE
+    name: "&#80ee0b&lNEXT PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#80ee0bInformation:"
+      - "&#80ee0b| &fClick here to open"
+      - "&#80ee0b| &fpage &#80ee0b%page%&f."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue"
+
+animation:
+  title: "&8Flipping Coin..."
+  rows: 3
+  slot: 13
+  steps: 12
+  interval-ticks: 10
+  hold-ticks: 20
+
+  # The whole menu flashes through these while the head in the middle jumps.
+  frames:
+    - YELLOW_STAINED_GLASS_PANE
+    - ORANGE_STAINED_GLASS_PANE
+    - RED_STAINED_GLASS_PANE
+    - PINK_STAINED_GLASS_PANE
+    - PURPLE_STAINED_GLASS_PANE
+    - BLUE_STAINED_GLASS_PANE
+    - LIGHT_BLUE_STAINED_GLASS_PANE
+    - LIME_STAINED_GLASS_PANE
+
+  # Fills the menu once the winner is shown.
+  reveal:
+    material: LIME_STAINED_GLASS_PANE
+    name: " "
+
+  head:
+    name: "&#FFE925&l%player%"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFE925Information:"
+      - "&#FFE925| &fThe coin is still"
+      - "&#FFE925| &fin the air."
+      - ""
+      - "&#80ee0b&l$&r &fAmount: &#80ee0b%amount%"
+
+sounds:
+  flip:
+    enabled: true
+    sound: "block.wooden_button.click_on"
+    volume: 1.0
+    pitch: 1.0
+  win:
+    enabled: true
+    sound: "entity.player.levelup"
+    volume: 1.0
+    pitch: 1.0
+  lose:
+    enabled: true
+    sound: "entity.villager.no"
+    volume: 1.0
+    pitch: 1.0
+  create:
+    enabled: true
+    sound: "entity.experience_orb.pickup"
+    volume: 1.0
+    pitch: 1.2
+  delete:
+    enabled: true
+    sound: "block.note_block.bass"
+    volume: 1.0
+    pitch: 0.8
+  menu-open:
+    enabled: true
+    sound: "block.note_block.pling"
+    volume: 1.0
+    pitch: 1.2
+  page:
+    enabled: true
+    sound: "ui.button.click"
+    volume: 1.0
+    pitch: 1.2
+  toggle:
+    enabled: true
+    sound: "block.note_block.hat"
+    volume: 1.0
+    pitch: 1.4
+  error:
+    enabled: true
+    sound: "block.note_block.bass"
+    volume: 1.0
+    pitch: 0.8
+
+win:
+  - ""
+  - "&#80ee0b&lYOU WON"
+  - "&8Description"
+  - ""
+  - "&#80ee0b| &fYou won a Coinflip"
+  - "&#80ee0b| &fagainst &#FF256E%player%&f."
+  - ""
+  - "&#80ee0b&l$&r &fAmount: &#80ee0b%amount%"
+
+lose:
+  - ""
+  - "&#FF0000&lYOU LOST"
+  - "&8Description"
+  - ""
+  - "&#FF0000| &fYou lost a Coinflip"
+  - "&#FF0000| &fagainst &#FF256E%player%&f."
+  - ""
+  - "&#80ee0b&l$&r &fAmount: &#80ee0b%amount%"
+
+messages:
+  created: "&#FFE925&lCOINFLIP &8▷ &#22AFFB%player% &fcreated a Coinflip of &#80ee0b$%amount%"
+  won-broadcast: "&#FFE925&lCOINFLIP &8▷ &#80ee0b%winner% &fjust beat &#FF0000%loser% &fIn a Coinflip worth &#80ee0b$%amount%"
+  gone: "&#FFE925&lCOINFLIP &8▷ &fThis game is &#FF0000no longer &favailable."
+
+  created-self: "&#FFE925&lCOINFLIP &8▷ &fYour Coinflip of &#80ee0b$%amount% &fis open."
+  deleted: "&#FFE925&lCOINFLIP &8▷ &fYour Coinflip was closed, &#80ee0b$%amount% &fis back."
+  toggle-on: "&#FFE925&lCOINFLIP &8▷ &fYou can see Coinflip messages again."
+  toggle-off: "&#FFE925&lCOINFLIP &8▷ &fYou will no longer see Coinflip messages."
+
+  self: "&#FF0000&lERROR &8▷ &fYou cannot play your own game."
+  already-open: "&#FFE925&lCOINFLIP &8▷ &fYou already have a Coinflip open."
+  no-game: "&#FFE925&lCOINFLIP &8▷ &fYou have no Coinflip open."
+  invalid-amount: "&#FFE925&lCOINFLIP &8▷ &fThat is not a valid amount."
+  minimum: "&#FFE925&lCOINFLIP &8▷ &fThe smallest bet is &#80ee0b$%amount%&f."
+  maximum: "&#FFE925&lCOINFLIP &8▷ &fThe biggest bet is &#80ee0b$%amount%&f."
+  cannot-afford: "&#FFE925&lCOINFLIP &8▷ &fYou cannot afford that bet."
+  frozen: "&#FFE925&lCOINFLIP &8▷ &fYour balance is frozen."
+  in-combat: "&#FFE925&lCOINFLIP &8▷ &fYou cannot play while in combat."
+  no-economy: "&#FFE925&lCOINFLIP &8▷ &fThe economy is not available."
+  too-fast: "&#FFE925&lCOINFLIP &8▷ &fSlow down a moment."
+  search-prompt: "&#FFD900&lSEARCH &8▷ &fType a name in the chat, or &#FF0000cancel&f."
+  players-only: "&#FFE925&lCOINFLIP &8▷ &fOnly a player can use that."
+
+  usage: "&#FFE925&lCOINFLIP &8▷ &fUse /cf, /cf create <amount>, /cf delete or /cf toggle"
+  usage-history: "&#FFE925&lCOINFLIP &8▷ &fUse /cf history [player]"
+  usage-create: "&#FFE925&lCOINFLIP &8▷ &fUse /cf create <amount>"

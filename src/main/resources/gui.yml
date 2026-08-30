@@ -1,0 +1,114 @@
+# Shared buttons used by every ShardedCore GUI.
+# Change materials, names, lores, and slots here — modules read this file.
+
+title-format: "%name%"
+
+filler:
+  material: BLACK_STAINED_GLASS_PANE
+  name: " "
+  lore: []
+
+cancel:
+  slot: 11
+  material: RED_STAINED_GLASS_PANE
+  name: "&#FF0000&lCANCEL"
+  lore:
+    - "&8Description"
+    - ""
+    - "&#FF0000Information:"
+    - "&#FF0000| &fClick To"
+    - "&#FF0000| &fClose this GUI"
+    - ""
+    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Close"
+
+close:
+  slot: 31
+  material: RED_STAINED_GLASS_PANE
+  name: "&#FF0000&lCLOSE"
+  lore:
+    - "&8Description"
+    - ""
+    - "&#FF0000Information:"
+    - "&#FF0000| &fClick To"
+    - "&#FF0000| &fClose this GUI"
+    - ""
+    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Close"
+
+back:
+  slot: 31
+  material: FLOWER_BANNER_PATTERN
+  name: "&#FF0000&lBACK"
+  lore:
+    - "&8Description"
+    - ""
+    - "&#FF0000Information:"
+    - "&#FF0000| &fClick To"
+    - "&#FF0000| &fGo Back"
+    - ""
+    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Return"
+
+confirm:
+  slot: 15
+  material: LIME_STAINED_GLASS_PANE
+  name: "&#94FF00&lCONFIRM"
+  lore:
+    - "&8Description"
+    - ""
+    - "&#94FF00Information:"
+    - "&#94FF00| &fClick To"
+    - "&#94FF00| &fConfirm this Action"
+    - ""
+    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Confirm"
+
+previous:
+  slot: 48
+  material: LIME_DYE
+  name: "&#94FF00&lPREVIOUS PAGE"
+  lore:
+    - "&8Description"
+    - ""
+    - "&#94FF00Information:"
+    - "&#94FF00| &fClick To"
+    - "&#94FF00| &fGo back to the Previous Page"
+    - ""
+    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Return"
+
+next:
+  slot: 50
+  material: LIME_DYE
+  name: "&#94FF00&lNEXT PAGE"
+  lore:
+    - "&8Description"
+    - ""
+    - "&#94FF00Information:"
+    - "&#94FF00| &fClick To"
+    - "&#94FF00| &fGo to the Next Page"
+    - ""
+    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Continue"
+
+sounds:
+  open:
+    enabled: true
+    sound: "ui.button.click"
+    volume: 0.6
+    pitch: 1.2
+  click:
+    enabled: true
+    sound: "ui.button.click"
+    volume: 0.5
+    pitch: 1.0
+  confirm:
+    enabled: true
+    sound: "entity.player.levelup"
+    volume: 0.5
+    pitch: 1.4
+  error:
+    enabled: true
+    sound: "block.note_block.bass"
+    volume: 0.7
+    pitch: 0.8
+  equip:
+    enabled: true
+    sound: "item.armor.equip_leather"
+    volume: 0.8
+    pitch: 1.2

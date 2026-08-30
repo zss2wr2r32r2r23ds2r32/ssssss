@@ -1,0 +1,174 @@
+menu:
+  title: 'Guide'
+  rows: 4
+  filler:
+    enabled: true
+    material: BLACK_STAINED_GLASS_PANE
+    name: ' '
+  filler-slots: ''
+
+close-on-click: true
+
+sounds:
+  open:
+    enabled: true
+    sound: 'block.note_block.harp'
+    volume: 0.7
+    pitch: 1.4
+  click:
+    enabled: true
+    sound: 'ui.button.click'
+    volume: 1.0
+    pitch: 1.2
+
+messages:
+  empty: "&#FF0000&lERROR &8▷ &fThe guide has nothing in it yet."
+  players-only: "&#FF0000&lERROR &8▷ &fOnly players can open the guide."
+  blocked: "&#FF0000&lERROR &8▷ &fYou cannot use that right now."
+
+# command runs as the player. permission empty means everyone sees the entry.
+entries:
+
+  teams:
+    enabled: true
+    slot: 11
+    material: PINK_BANNER
+    name: '&#FF3EA5&lTEAMS'
+    command: 'team'
+    permission: ''
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF3EA5Information'
+      - '&#FF3EA5| &fClick here to create'
+      - '&#FF3EA5| &fa Team'
+      - ''
+      - '&#FF3EA5☀ &fCommand: &#FF3EA5/team'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Create'
+
+  crystal-shop:
+    enabled: true
+    slot: 12
+    material: AMETHYST_SHARD
+    name: '&#AD4EFF&lCRYSTAL SHOP'
+    command: 'crystalshop'
+    permission: ''
+    lore:
+      - '&8Description'
+      - ''
+      - '&#AD4EFFInformation'
+      - '&#AD4EFF| &fClick here to purchase'
+      - '&#AD4EFF| &fCosmetics From the Crystal Shop'
+      - ''
+      - '&#AD4EFF☀ &fCommand: &#AD4EFF/crystalshop'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Travel'
+
+  server-shop:
+    enabled: true
+    slot: 13
+    material: SPYGLASS
+    name: '&#FFC42B&lSERVER SHOP'
+    command: 'shop'
+    permission: ''
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FFC42BInformation'
+      - '&#FFC42B| &fClick Here to purchase'
+      - '&#FFC42B| &fPowerful Gear &fTo fight'
+      - ''
+      - '&#FFC42B☀ &fCommand: &#FFC42B/shop'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Travel'
+
+  random-teleport:
+    enabled: true
+    slot: 14
+    material: MOSS_BLOCK
+    name: '&#45FF17&lRANDOM TELEPORT'
+    command: 'rtp'
+    permission: ''
+    lore:
+      - '&8Description'
+      - ''
+      - '&#45FF17Information'
+      - '&#45FF17| &fClick here to randomly'
+      - '&#45FF17| &fTeleport in any dimensions'
+      - ''
+      - '&#45FF17☀ &fCommand: &#45FF17/rtp'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Travel'
+
+  leaderboards:
+    enabled: true
+    slot: 15
+    material: GUSTER_BANNER_PATTERN
+    name: '&#FF3EA5&lLEADERBOARDS'
+    command: 'leaderboard'
+    permission: ''
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF3EA5Information'
+      - '&#FF3EA5| &fClick here to view'
+      - '&#FF3EA5| &fThe server Leaderboards'
+      - ''
+      - '&#FF3EA5☀ &fCommand: &#FF3EA5/leaderboard'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Travel'
+
+  webstore:
+    enabled: true
+    slot: 21
+    material: LIME_HARNESS
+    name: '&#26E07A&lWEBSTORE'
+    command: 'store'
+    permission: ''
+    lore:
+      - '&8Description'
+      - ''
+      - '&#26E07AInformation'
+      - '&#26E07A| &fClick here to support'
+      - '&#26E07A| &fYour favorite Network'
+      - ''
+      - '&#26E07A☀ &fCommand: &#26E07A/store'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Travel'
+
+  rules:
+    enabled: true
+    slot: 22
+    material: PINK_BUNDLE
+    name: '&#FF5C8A&lRULES'
+    command: 'rules'
+    permission: ''
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF5C8AInformation'
+      - '&#FF5C8A| &fClick here to view'
+      - '&#FF5C8A| &fThe server &fRules'
+      - ''
+      - '&#FF5C8A☀ &fCommand: &#FF5C8A/rules'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Travel'
+
+  discord:
+    enabled: true
+    slot: 23
+    material: LIGHT_BLUE_SHULKER_BOX
+    name: '&#5AA1D8&lDISCORD'
+    command: 'discord'
+    permission: ''
+    lore:
+      - '&8Description'
+      - ''
+      - '&#5AA1D8Information'
+      - '&#5AA1D8| &fClick here to join'
+      - '&#5AA1D8| &fOur official &fDiscord'
+      - ''
+      - '&#5AA1D8☀ &fCommand: &#5AA1D8/discord'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Travel'

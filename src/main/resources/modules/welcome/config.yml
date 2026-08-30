@@ -1,0 +1,36 @@
+message: "&#FFE925&lWELCOME &8▷ &fType &#FFE925/w %player% &fin chat to &#80ee0bwelcome &fthem and earn a &#FFE925reward"
+window: 120
+chat-line: "welcome %player%"
+max-rewards: 0
+
+reward:
+  amount: 1
+  commands:
+    - "crystal give %player% %amount%"
+
+sound:
+  enabled: true
+  sound: "entity.experience_orb.pickup"
+  volume: 0.6
+  pitch: 1.4
+
+sounds:
+  reward:
+    enabled: true
+    sound: "entity.player.levelup"
+    volume: 1.0
+    pitch: 1.4
+  error:
+    enabled: true
+    sound: "block.note_block.bass"
+    volume: 0.8
+    pitch: 0.8
+
+messages:
+  rewarded: "&#FFE925&lWELCOME &8▷ &fYou welcomed &#FFE925%player% &fand earned &#FFE925%amount% Crystal&f."
+  already: "&#FF0000&lERROR &8▷ &fYou already welcomed &#FFE925%player%&f."
+  self: "&#FF0000&lERROR &8▷ &fYou cannot welcome yourself."
+  unknown: "&#FF0000&lERROR &8▷ &f&#FFE925%player% &fis not a new player right now."
+  full: "&#FF0000&lERROR &8▷ &fToo many players welcomed &#FFE925%player% &falready."
+  usage: "&#FFE925&lWELCOME &8▷ &f/w <player>"
+  players-only: "&#FF0000&lERROR &8▷ &fOnly players can do that."

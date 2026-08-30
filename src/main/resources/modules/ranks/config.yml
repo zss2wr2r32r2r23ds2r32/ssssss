@@ -1,0 +1,39 @@
+prefix: "&#FFBA00&lRANKS &8▷ &r"
+usage-promote: "%prefix%Use /promote <player> <role>"
+usage-demote: "%prefix%Use /demote <player> <role>"
+promoted: "%prefix%Promoted &#FFBA00%player% &fto &#FFBA00%role%&f."
+demoted: "%prefix%Set &#FFBA00%player% &fto &#FFBA00%role%&f."
+promoted-self: "%prefix%Your rank is now &#FFBA00%role%&f."
+demoted-self: "%prefix%Your rank is now &#FFBA00%role%&f."
+player-missing: "&#FF0000&lERROR &8▷ &fUnknown player."
+luckperms-missing: "&#FF0000&lERROR &8▷ &fLuckPerms is not loaded."
+no-permission: "&#FF0000&lERROR &8▷ &fYou do not have permission."
+
+# Promote/demote history. type: mariadb | mysql | sqlite
+database:
+  type: mariadb
+  mariadb:
+    host: localhost
+    port: 3306
+    database: shardedcore
+    username: root
+    password: ""
+
+# Tab-complete extras. Loaded LuckPerms groups are added automatically.
+groups:
+  - default
+  - booster
+  - prism
+  - crystal
+  - amethyst
+  - sharded
+  - shardedplus
+  - helper
+  - srhelper
+  - mod
+  - srmod
+  - admin
+  - sradmin
+  - manager
+  - director
+  - owner
