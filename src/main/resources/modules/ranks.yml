@@ -1,13 +1,16 @@
 # Ranks Module
 # /promote <player> <role> and /demote <player> <role>
 # Requires LuckPerms. Roles must match existing LuckPerms group names.
+#
+# Tip: give each staff group a higher weight than the one below it, and prefer
+# primary-group-calculation: stored in LuckPerms config.yml so /promote sticks.
 
 enabled: true
 notify-target: true
 allow-offline: true
 
-# Console command used to apply the rank (%player% %role%)
-luckperms-command: "lp user %player% parent set %role%"
+# After API apply, also run lp parent clear + parent set (keeps multi-server sync happy)
+also-run-console-commands: true
 
 # Tab-complete role list (must exist as LuckPerms groups)
 roles:
@@ -30,7 +33,9 @@ messages:
   unknown-role: "&#FF0000&lERROR &8▷ &fUnknown role &#FF0000%role%&f."
   player-offline: "&#FF0000&lERROR &8▷ &fPlayer &#FF0000%player% &fis not online."
   no-luckperms: "&#FF0000&lERROR &8▷ &fLuckPerms is not installed."
+  group-missing: "&#FF0000&lERROR &8▷ &fLuckPerms group &#FF0000%role% &fdoes not exist."
   failed: "&#FF0000&lERROR &8▷ &fFailed to update rank. Check console."
+  primary-mismatch: "&#FFB600&lRANKS &8▷ &fSet &#FFB600%role% &fbut LuckPerms primary is &#FFB600%primary%&f. Check group weights."
   promoted: "&#94FF00&lRANKS &8▷ &fPromoted &#94FF00%player% &fto &#94FF00%role%&f."
   demoted: "&#FFB600&lRANKS &8▷ &fDemoted &#FFB600%player% &fto &#FFB600%role%&f."
   target-promoted: "&#94FF00&lRANKS &8▷ &fYour rank is now &#94FF00%role%&f."

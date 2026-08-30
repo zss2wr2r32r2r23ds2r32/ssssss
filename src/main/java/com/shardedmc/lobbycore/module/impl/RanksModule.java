@@ -3,6 +3,12 @@ package com.shardedmc.lobbycore.module.impl;
 import com.shardedmc.lobbycore.ShardedLobbyCore;
 import com.shardedmc.lobbycore.module.Module;
 import com.shardedmc.lobbycore.util.MessageUtil;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.group.Group;
+import net.luckperms.api.model.user.User;
+import net.luckperms.api.node.NodeType;
+import net.luckperms.api.node.types.InheritanceNode;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,10 +22,12 @@ import org.bukkit.event.Listener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * /promote and /demote — sets LuckPerms primary group via console LP commands.
+ * /promote and /demote — clears existing parent groups, sets the target
+ * LuckPerms group as the only parent + primary group, then saves.
  */
 public class RanksModule implements Module, Listener, CommandExecutor, TabCompleter {
 
@@ -97,14 +105,11 @@ public class RanksModule implements Module, Listener, CommandExecutor, TabComple
         }
 
         Player target = Bukkit.getPlayerExact(targetName);
-        if (target == null) {
-            // Allow offline by name for LP console command
-            if (!config.getBoolean("allow-offline", true)) {
-                MessageUtil.sendRaw(sender, config.getString("messages.player-offline",
-                                "&#FF0000&lERROR &8▷ &fPlayer &#FF0000%player% &fis not online.")
-                        .replace("%player%", targetName));
-                return true;
-            }
+        if (target == null && !config.getBoolean("allow-offline", true)) {
+            MessageUtil.sendRaw(sender, config.getString("messages.player-offline",
+                            "&#FF0000&lERROR &8▷ &fPlayer &#FF0000%player% &fis not online.")
+                    .replace("%player%", targetName));
+            return true;
         }
 
         if (!Bukkit.getPluginManager().isPluginEnabled("LuckPerms")) {
@@ -115,34 +120,134 @@ public class RanksModule implements Module, Listener, CommandExecutor, TabComple
 
         boolean promote = "promote".equalsIgnoreCase(command.getName());
         String playerArg = target != null ? target.getName() : targetName;
-
-        // parent set = replace primary parent group (safe public LP command, no reflection)
-        String lpCommand = config.getString("luckperms-command", "lp user %player% parent set %role%")
-                .replace("%player%", playerArg)
-                .replace("%role%", role);
-
-        boolean ok = Bukkit.dispatchCommand(Bukkit.getConsoleSender(), lpCommand);
-        if (!ok) {
-            MessageUtil.sendRaw(sender, config.getString("messages.failed",
-                    "&#FF0000&lERROR &8▷ &fFailed to update rank. Check console."));
-            return true;
-        }
-
-        String path = promote ? "messages.promoted" : "messages.demoted";
-        String fallback = promote
-                ? "&#94FF00&lRANKS &8▷ &fPromoted &#94FF00%player% &fto &#94FF00%role%&f."
-                : "&#FFB600&lRANKS &8▷ &fDemoted &#FFB600%player% &fto &#FFB600%role%&f.";
-        MessageUtil.sendRaw(sender, config.getString(path, fallback)
-                .replace("%player%", playerArg)
-                .replace("%role%", role));
-
-        if (target != null && config.getBoolean("notify-target", true)) {
-            String targetMsg = config.getString("messages.target-" + (promote ? "promoted" : "demoted"),
-                            "&#94FF00&lRANKS &8▷ &fYour rank is now &#94FF00%role%&f.")
-                    .replace("%role%", role);
-            MessageUtil.sendFormatted(target, targetMsg);
-        }
+        applyRank(sender, playerArg, target, role, promote);
         return true;
+    }
+
+    private void applyRank(CommandSender sender, String playerName, Player online, String role, boolean promote) {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                LuckPerms api = LuckPermsProvider.get();
+
+                Group group = resolveGroup(api, role);
+                if (group == null) {
+                    sync(() -> MessageUtil.sendRaw(sender, config.getString("messages.group-missing",
+                                    "&#FF0000&lERROR &8▷ &fLuckPerms group &#FF0000%role% &fdoes not exist.")
+                            .replace("%role%", role)));
+                    return;
+                }
+                String groupName = group.getName();
+
+                UUID uuid = resolveUuid(api, playerName, online);
+                if (uuid == null) {
+                    sync(() -> MessageUtil.sendRaw(sender, config.getString("messages.player-offline",
+                                    "&#FF0000&lERROR &8▷ &fPlayer &#FF0000%player% &fis not online.")
+                            .replace("%player%", playerName)));
+                    return;
+                }
+
+                User user = api.getUserManager().loadUser(uuid).join();
+                if (user == null) {
+                    sync(() -> MessageUtil.sendRaw(sender, config.getString("messages.failed",
+                            "&#FF0000&lERROR &8▷ &fFailed to update rank. Check console.")));
+                    return;
+                }
+
+                // Drop every parent group (any context), then assign only the target rank.
+                // parent set alone can leave weight-based primary pointing at a leftover group.
+                user.data().clear(NodeType.INHERITANCE.predicate());
+                user.data().add(InheritanceNode.builder(groupName).build());
+
+                var primaryResult = user.setPrimaryGroup(groupName);
+                if (!primaryResult.wasSuccessful()) {
+                    plugin.getLogger().warning("setPrimaryGroup(" + groupName + ") for "
+                            + playerName + " returned " + primaryResult);
+                }
+
+                api.getUserManager().saveUser(user).join();
+                user.getCachedData().invalidate();
+                api.getMessagingService().ifPresent(ms -> ms.pushUserUpdate(user));
+
+                String effective = user.getPrimaryGroup();
+                boolean mismatch = effective != null && !effective.equalsIgnoreCase(groupName);
+                boolean alsoConsole = config.getBoolean("also-run-console-commands", true);
+
+                sync(() -> {
+                    // Clear leftovers then set — stronger than parent set alone.
+                    if (alsoConsole) {
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+                                "lp user " + playerName + " parent clear");
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+                                "lp user " + playerName + " parent set " + groupName);
+                    }
+
+                    if (mismatch) {
+                        MessageUtil.sendRaw(sender, config.getString("messages.primary-mismatch",
+                                        "&#FFB600&lRANKS &8▷ &fSet &#FFB600%role% &fbut LuckPerms primary is &#FFB600%primary%&f. "
+                                                + "Check group weights / primary-group-calculation.")
+                                .replace("%role%", groupName)
+                                .replace("%primary%", effective));
+                        plugin.getLogger().warning("Rank set to " + groupName + " for " + playerName
+                                + " but effective primary group is " + effective
+                                + ". Ensure the " + groupName + " group exists with a higher weight than "
+                                + effective + ", or set primary-group-calculation: stored in LuckPerms config.");
+                    }
+
+                    String path = promote ? "messages.promoted" : "messages.demoted";
+                    String fallback = promote
+                            ? "&#94FF00&lRANKS &8▷ &fPromoted &#94FF00%player% &fto &#94FF00%role%&f."
+                            : "&#FFB600&lRANKS &8▷ &fDemoted &#FFB600%player% &fto &#FFB600%role%&f.";
+                    MessageUtil.sendRaw(sender, config.getString(path, fallback)
+                            .replace("%player%", playerName)
+                            .replace("%role%", groupName));
+
+                    if (online != null && online.isOnline() && config.getBoolean("notify-target", true)) {
+                        String targetMsg = config.getString(
+                                        "messages.target-" + (promote ? "promoted" : "demoted"),
+                                        "&#94FF00&lRANKS &8▷ &fYour rank is now &#94FF00%role%&f.")
+                                .replace("%role%", groupName);
+                        MessageUtil.sendFormatted(online, targetMsg);
+                    }
+                });
+            } catch (Exception ex) {
+                plugin.getLogger().warning("Rank update failed for " + playerName + ": " + ex.getMessage());
+                sync(() -> MessageUtil.sendRaw(sender, config.getString("messages.failed",
+                        "&#FF0000&lERROR &8▷ &fFailed to update rank. Check console.")));
+            }
+        });
+    }
+
+    private Group resolveGroup(LuckPerms api, String role) {
+        Group group = api.getGroupManager().getGroup(role);
+        if (group != null) {
+            return group;
+        }
+        for (Group loaded : api.getGroupManager().getLoadedGroups()) {
+            if (loaded.getName().equalsIgnoreCase(role)) {
+                return loaded;
+            }
+        }
+        return null;
+    }
+
+    private UUID resolveUuid(LuckPerms api, String playerName, Player online) {
+        if (online != null) {
+            return online.getUniqueId();
+        }
+        try {
+            return api.getUserManager().lookupUniqueId(playerName).join();
+        } catch (Exception ex) {
+            plugin.getLogger().warning("UUID lookup failed for " + playerName + ": " + ex.getMessage());
+            return null;
+        }
+    }
+
+    private void sync(Runnable task) {
+        if (Bukkit.isPrimaryThread()) {
+            task.run();
+        } else {
+            Bukkit.getScheduler().runTask(plugin, task);
+        }
     }
 
     @Override
