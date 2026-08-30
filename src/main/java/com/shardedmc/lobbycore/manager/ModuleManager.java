@@ -39,6 +39,7 @@ public class ModuleManager {
         register(new JoinActionsModule());
         register(new ChatFilterModule());
         register(new CommandWhitelistModule());
+        register(new RanksModule());
         register(new AntiSwearModule());
         register(new ModerationModule());
         register(new WorldProtectionModule());

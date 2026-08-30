@@ -36,6 +36,7 @@ public class ConfigManager {
             "join-actions",
             "chat-filter",
             "command-whitelist",
+            "ranks",
             "anti-swear",
             "moderation",
             "world-protection"

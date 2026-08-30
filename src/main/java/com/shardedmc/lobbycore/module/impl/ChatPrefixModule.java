@@ -46,18 +46,10 @@ public class ChatPrefixModule implements Module, Listener {
         }
 
         Player player = event.getPlayer();
-        String prefix = resolvePlaceholder(player,
-                config.getString("prefix-placeholder", "%luckperms_prefix%"),
-                config.getString("default-prefix", "&7"));
-        String suffix = resolvePlaceholder(player,
-                config.getString("suffix-placeholder", "%luckperms_suffix%"),
-                config.getString("default-suffix", ""));
-        String tag = resolvePlaceholder(player,
-                config.getString("tag-placeholder", "%shardedcore_tag%"),
-                config.getString("default-tag", ""));
-        String name = resolvePlaceholder(player,
-                config.getString("name-placeholder", "%player_name%"),
-                player.getName());
+        String prefix = resolvePrefix(player);
+        String suffix = resolveSuffix(player);
+        String tag = resolveTag(player);
+        String name = resolveName(player);
 
         String format = config.getString("format", "{prefix}{name}{tag} &8▷ &r{message}")
                 .replace("{prefix}", prefix)
@@ -76,19 +68,96 @@ public class ChatPrefixModule implements Module, Listener {
         }
 
         String colored = MessageUtil.colorize(format);
-        // Escape % for String.format, but keep %2$s
         colored = colored.replace("%", "%%").replace("%%2$s", "%2$s").replace("%%1$s", "%1$s");
         event.setFormat(colored);
     }
 
+    private String resolvePrefix(Player player) {
+        String fromPapi = resolvePlaceholder(player,
+                config.getString("prefix-placeholder", "%luckperms_prefix%"), null);
+        if (fromPapi != null && !fromPapi.isBlank()) {
+            return ensureTrailingSpace(fromPapi);
+        }
+        String fromLp = luckPermsMeta(player, "prefix");
+        if (fromLp != null && !fromLp.isBlank()) {
+            return ensureTrailingSpace(fromLp);
+        }
+        String fallback = config.getString("default-prefix", "");
+        return fallback == null ? "" : fallback;
+    }
+
+    private String resolveSuffix(Player player) {
+        String fromPapi = resolvePlaceholder(player,
+                config.getString("suffix-placeholder", "%luckperms_suffix%"), null);
+        if (fromPapi != null && !fromPapi.isBlank()) {
+            return fromPapi;
+        }
+        String fromLp = luckPermsMeta(player, "suffix");
+        if (fromLp != null && !fromLp.isBlank()) {
+            return fromLp;
+        }
+        String fallback = config.getString("default-suffix", "");
+        return fallback == null ? "" : fallback;
+    }
+
+    private String resolveTag(Player player) {
+        String fromPapi = resolvePlaceholder(player,
+                config.getString("tag-placeholder", "%shardedcore_tag%"), null);
+        if (fromPapi != null && !fromPapi.isBlank()) {
+            return fromPapi;
+        }
+        String fallback = config.getString("default-tag", "");
+        return fallback == null ? "" : fallback;
+    }
+
+    private String resolveName(Player player) {
+        String fromPapi = resolvePlaceholder(player,
+                config.getString("name-placeholder", "%player_name%"), null);
+        if (fromPapi != null && !fromPapi.isBlank()) {
+            return fromPapi;
+        }
+        return player.getName();
+    }
+
+    private String ensureTrailingSpace(String value) {
+        if (value.isEmpty() || value.endsWith(" ")) {
+            return value;
+        }
+        // Rank prefixes usually need a space before the name
+        return value + " ";
+    }
+
     private String resolvePlaceholder(Player player, String placeholder, String fallback) {
         if (placeholder == null || placeholder.isEmpty()) {
-            return fallback == null ? "" : fallback;
+            return fallback;
         }
         String resolved = MessageUtil.applyPapi(player, placeholder);
         if (resolved == null || resolved.equals(placeholder)) {
-            return fallback == null ? "" : fallback;
+            return fallback;
         }
         return resolved;
+    }
+
+    private String luckPermsMeta(Player player, String type) {
+        if (!Bukkit.getPluginManager().isPluginEnabled("LuckPerms")) {
+            return null;
+        }
+        try {
+            Class<?> provider = Class.forName("net.luckperms.api.LuckPermsProvider");
+            Object api = provider.getMethod("get").invoke(null);
+            Object adapter = api.getClass().getMethod("getPlayerAdapter", Class.class).invoke(api, Player.class);
+            Object user = adapter.getClass().getMethod("getUser", Player.class).invoke(adapter, player);
+            Object cached = user.getClass().getMethod("getCachedData").invoke(user);
+            Object meta = cached.getClass().getMethod("getMetaData").invoke(cached);
+            if ("prefix".equals(type)) {
+                return (String) meta.getClass().getMethod("getPrefix").invoke(meta);
+            }
+            if ("suffix".equals(type)) {
+                return (String) meta.getClass().getMethod("getSuffix").invoke(meta);
+            }
+        } catch (ReflectiveOperationException ex) {
+            plugin.getLogger().warning("LuckPerms chat meta lookup failed: " + ex.getMessage());
+        }
+        return null;
     }
 }

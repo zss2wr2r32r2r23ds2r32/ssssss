@@ -31,6 +31,12 @@ commands:
     description: Chat filter admin tools
     aliases: [cf, filter]
     permission: shardedlobbycore.chatfilter.admin
+  promote:
+    description: Promote a player to a LuckPerms rank
+    permission: shardedlobbycore.ranks.manage
+  demote:
+    description: Demote a player to a LuckPerms rank
+    permission: shardedlobbycore.ranks.manage
 
 permissions:
   shardedlobbycore.admin:
@@ -68,6 +74,9 @@ permissions:
     default: false
   shardedlobbycore.fly:
     description: Toggle flight in lobby
+    default: op
+  shardedlobbycore.ranks.manage:
+    description: Use /promote and /demote
     default: op
   shardedlobbycore.chatprefix.*:
     description: Chat prefix permissions

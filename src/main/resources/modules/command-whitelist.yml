@@ -1,5 +1,5 @@
 # Command Whitelist Module
-# Non-whitelisted commands appear RED in chat and are blocked.
+# Non-whitelisted commands are REMOVED from the client list (appear red if typed).
 # Players with shardedlobbycore.bypass.commandwhitelist skip this.
 
 enabled: true
@@ -20,10 +20,11 @@ whitelist:
   - "server"
   - "servers"
   - "music"
-  - "ajparkour"
   - "fly"
+  - "promote"
+  - "demote"
 
-# Always blocked even if somehow suggested
+# Always stripped even if listed above
 blocked:
   - "plugins"
   - "pl"
@@ -32,10 +33,10 @@ blocked:
   - "version"
   - "ver"
   - "about"
-  - "bukkit:plugins"
-  - "bukkit:help"
-  - "bukkit:version"
-  - "minecraft:help"
+  - "paper"
+  - "spigot"
+  - "bukkit"
+  - "minecraft"
   - "icanhasbukkit"
   - "op"
   - "deop"

@@ -4,16 +4,18 @@ import com.shardedmc.lobbycore.ShardedLobbyCore;
 import com.shardedmc.lobbycore.module.Module;
 import com.shardedmc.lobbycore.util.MessageUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerCommandSendEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.server.TabCompleteEvent;
 import org.bukkit.plugin.EventExecutor;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -45,8 +47,15 @@ public class CommandWhitelistModule implements Module, Listener {
         this.config = config;
         compileLists();
         Bukkit.getPluginManager().registerEvents(this, plugin);
-        registerCommandSendListener();
-        registerAsyncTabCompleteListener();
+        registerAsyncBrigadierFilter();
+        // Refresh already-online players so filter applies immediately after reload
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                if (!canBypass(player)) {
+                    player.updateCommands();
+                }
+            }
+        }, 20L);
         plugin.getLogger().info("Command whitelist active with " + whitelist.size() + " allowed roots");
     }
 
@@ -57,28 +66,26 @@ public class CommandWhitelistModule implements Module, Listener {
 
     private void compileLists() {
         whitelist = config.getStringList("whitelist").stream()
-                .map(this::normalize)
+                .map(this::normalizeRoot)
                 .filter(s -> !s.isEmpty())
                 .collect(Collectors.toCollection(HashSet::new));
         blocked = config.getStringList("blocked").stream()
-                .map(this::normalize)
+                .map(this::normalizeRoot)
                 .filter(s -> !s.isEmpty())
                 .collect(Collectors.toCollection(HashSet::new));
-        // Always strip these by default
-        blocked.addAll(List.of("plugins", "pl", "help", "?", "version", "ver", "about", "icanhasbukkit"));
+        blocked.addAll(List.of(
+                "plugins", "pl", "help", "?", "version", "ver", "about",
+                "icanhasbukkit", "paper", "spigot", "bukkit", "minecraft"
+        ));
     }
 
-    private String normalize(String command) {
+    private String normalizeRoot(String command) {
         if (command == null || command.isEmpty()) {
             return "";
         }
         String value = command.trim().toLowerCase(Locale.ROOT);
         if (value.startsWith("/")) {
             value = value.substring(1);
-        }
-        int colon = value.indexOf(':');
-        if (colon >= 0) {
-            value = value.substring(colon + 1);
         }
         return value.split(" ")[0];
     }
@@ -90,24 +97,28 @@ public class CommandWhitelistModule implements Module, Listener {
         return config.getBoolean("bypass-for-op", false) && player.isOp();
     }
 
-    private boolean isAllowed(String command) {
-        String root = normalize(command);
-        if (root.isEmpty()) {
+    /**
+     * Command labels from PlayerCommandSendEvent can be "msg" or "essentials:msg".
+     * Only exact whitelist roots are allowed — namespaced aliases must also be listed
+     * or match the un-namespaced root if that root is whitelisted.
+     */
+    private boolean isAllowedLabel(String label) {
+        if (label == null || label.isEmpty()) {
             return false;
         }
-        if (blocked.contains(root)) {
+        String root = normalizeRoot(label);
+        String bare = root.contains(":") ? root.substring(root.indexOf(':') + 1) : root;
+
+        if (blocked.contains(root) || blocked.contains(bare)) {
             return false;
         }
-        return whitelist.contains(root);
+        return whitelist.contains(root) || whitelist.contains(bare);
     }
 
-    private void registerCommandSendListener() {
-        if (!config.getBoolean("filter-command-send", true)) {
-            return;
-        }
+    private void registerAsyncBrigadierFilter() {
         String[] classes = {
-                "com.destroystokyo.paper.event.brigadier.PlayerCommandSendEvent",
-                "io.papermc.paper.event.player.PlayerCommandSendEvent"
+                "com.destroystokyo.paper.event.brigadier.AsyncPlayerSendCommandsEvent",
+                "io.papermc.paper.event.brigadier.AsyncPlayerSendCommandsEvent"
         };
         for (String className : classes) {
             if (tryRegister(className, (listener, event) -> {
@@ -116,50 +127,38 @@ public class CommandWhitelistModule implements Module, Listener {
                     if (canBypass(player)) {
                         return;
                     }
+                    // Only mutate once (event can fire sync + async)
+                    try {
+                        boolean hasFiredAsync = (boolean) event.getClass().getMethod("hasFiredAsync").invoke(event);
+                        boolean async = event.getClass().getMethod("isAsynchronous").invoke(event) instanceof Boolean b && b;
+                        if (!async && hasFiredAsync) {
+                            return;
+                        }
+                    } catch (NoSuchMethodException ignored) {
+                    }
+
+                    Object root = event.getClass().getMethod("getCommandNode").invoke(event);
                     @SuppressWarnings("unchecked")
-                    Collection<String> commands = (Collection<String>) event.getClass()
-                            .getMethod("getCommands").invoke(event);
-                    List<String> allowed = commands.stream()
-                            .filter(this::isAllowed)
-                            .collect(Collectors.toList());
-                    commands.clear();
-                    commands.addAll(allowed);
+                    Map<String, ?> children = (Map<String, ?>) root.getClass().getMethod("getChildren").invoke(root);
+                    // getChildren often returns unmodifiable view — collect names then remove
+                    List<String> toRemove = new ArrayList<>();
+                    for (Object child : new ArrayList<>(children.values())) {
+                        String name = (String) child.getClass().getMethod("getName").invoke(child);
+                        if (!isAllowedLabel(name)) {
+                            toRemove.add(name);
+                        }
+                    }
+                    for (String name : toRemove) {
+                        root.getClass().getMethod("removeChild", String.class).invoke(root, name);
+                    }
                 } catch (ReflectiveOperationException ex) {
-                    plugin.getLogger().warning("Command whitelist send filter error: " + ex.getMessage());
+                    plugin.getLogger().warning("Brigadier command filter error: " + ex.getMessage());
                 }
             })) {
-                plugin.getLogger().info("Hooked PlayerCommandSendEvent for red command filtering");
+                plugin.getLogger().info("Hooked AsyncPlayerSendCommandsEvent for command filtering");
                 return;
             }
         }
-        plugin.getLogger().warning("Could not hook PlayerCommandSendEvent — commands may not appear red");
-    }
-
-    private void registerAsyncTabCompleteListener() {
-        if (!config.getBoolean("filter-tab-complete", true)) {
-            return;
-        }
-        tryRegister("com.destroystokyo.paper.event.server.AsyncTabCompleteEvent", (listener, event) -> {
-            try {
-                Object sender = event.getClass().getMethod("getSender").invoke(event);
-                if (!(sender instanceof Player player) || canBypass(player)) {
-                    return;
-                }
-                boolean isCommand = (boolean) event.getClass().getMethod("isCommand").invoke(event);
-                if (!isCommand) {
-                    return;
-                }
-                String buffer = (String) event.getClass().getMethod("getBuffer").invoke(event);
-                if (buffer == null || !buffer.startsWith("/")) {
-                    return;
-                }
-                @SuppressWarnings("unchecked")
-                List<String> completions = (List<String>) event.getClass().getMethod("getCompletions").invoke(event);
-                filterCompletions(buffer, completions);
-            } catch (ReflectiveOperationException ex) {
-                plugin.getLogger().warning("Async tab complete filter error: " + ex.getMessage());
-            }
-        });
     }
 
     private boolean tryRegister(String className, EventExecutor executor) {
@@ -172,25 +171,60 @@ public class CommandWhitelistModule implements Module, Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onCommandSend(PlayerCommandSendEvent event) {
+        if (!config.getBoolean("enabled", true) || !config.getBoolean("filter-command-send", true)) {
+            return;
+        }
+        if (canBypass(event.getPlayer())) {
+            return;
+        }
+        // Paper docs: only remove entries — do not clear/addAll
+        event.getCommands().removeIf(label -> !isAllowedLabel(label));
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (player.isOnline() && !canBypass(player)) {
+                player.updateCommands();
+            }
+        }, 40L);
+    }
+
     private void filterCompletions(String buffer, List<String> completions) {
         String typed = buffer.substring(1).toLowerCase(Locale.ROOT);
         boolean hasSpace = typed.contains(" ");
-        String root = normalize(hasSpace ? typed.split(" ")[0] : typed);
+        String root = normalizeRoot(hasSpace ? typed.split(" ")[0] : typed);
+        String bare = root.contains(":") ? root.substring(root.indexOf(':') + 1) : root;
 
         if (hasSpace) {
-            if (!isAllowed(root)) {
+            if (!isAllowedLabel(root)) {
                 completions.clear();
             }
             return;
         }
 
-        completions.clear();
-        for (String allowed : whitelist) {
-            if (root.isEmpty() || allowed.startsWith(root)) {
-                if (!blocked.contains(allowed)) {
-                    completions.add(allowed);
+        completions.removeIf(completion -> {
+            String label = normalizeRoot(completion);
+            return !isAllowedLabel(label) || !(bare.isEmpty() || label.startsWith(bare) ||
+                    (label.contains(":") && label.substring(label.indexOf(':') + 1).startsWith(bare)));
+        });
+
+        // If vanilla still left junk, replace with whitelist-only matches
+        if (completions.isEmpty() || completions.stream().anyMatch(c -> !isAllowedLabel(c))) {
+            List<String> allowed = new ArrayList<>();
+            for (String entry : whitelist) {
+                if (blocked.contains(entry)) {
+                    continue;
+                }
+                if (bare.isEmpty() || entry.startsWith(bare)) {
+                    allowed.add(entry);
                 }
             }
+            completions.clear();
+            completions.addAll(allowed);
         }
     }
 
@@ -204,7 +238,7 @@ public class CommandWhitelistModule implements Module, Listener {
             return;
         }
         String command = event.getMessage().substring(1);
-        if (isAllowed(command)) {
+        if (isAllowedLabel(command)) {
             return;
         }
         event.setCancelled(true);

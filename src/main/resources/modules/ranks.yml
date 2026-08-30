@@ -1,0 +1,29 @@
+# Ranks Module
+# /promote <player> <role> and /demote <player> <role>
+# Requires LuckPerms. Roles must match existing LuckPerms group names.
+
+enabled: true
+notify-target: true
+
+# Tab-complete role list (must exist as LuckPerms groups)
+roles:
+  - "default"
+  - "vip"
+  - "mvp"
+  - "helper"
+  - "mod"
+  - "admin"
+  - "owner"
+
+messages:
+  no-permission: "&#FF0000&lERROR &8▷ &fNo permission."
+  usage-promote: "&#FF0000&lERROR &8▷ &fUse &#FF0000/promote <player> <role>&f."
+  usage-demote: "&#FF0000&lERROR &8▷ &fUse &#FF0000/demote <player> <role>&f."
+  unknown-role: "&#FF0000&lERROR &8▷ &fUnknown role &#FF0000%role%&f."
+  player-offline: "&#FF0000&lERROR &8▷ &fPlayer &#FF0000%player% &fis not online."
+  no-luckperms: "&#FF0000&lERROR &8▷ &fLuckPerms is not installed."
+  group-missing: "&#FF0000&lERROR &8▷ &fLuckPerms group &#FF0000%role% &fdoes not exist."
+  promoted: "&#94FF00&lRANKS &8▷ &fPromoted &#94FF00%player% &fto &#94FF00%role%&f."
+  demoted: "&#FFB600&lRANKS &8▷ &fDemoted &#FFB600%player% &fto &#FFB600%role%&f."
+  target-promoted: "&#94FF00&lRANKS &8▷ &fYour rank is now &#94FF00%role%&f."
+  target-demoted: "&#FFB600&lRANKS &8▷ &fYour rank is now &#FFB600%role%&f."
