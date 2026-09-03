@@ -152,7 +152,15 @@ public final class DeathModule extends EventModule {
 
     // ---------------------------------------------------------------- release
 
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    /**
+     * Releases a head's stash on right click.
+     *
+     * <p>Deliberately not {@code ignoreCancelled}: Bukkit routinely delivers
+     * {@link PlayerInteractEvent} already cancelled for right-click-air and for
+     * right clicks against blocks that have no interaction of their own, so
+     * skipping cancelled events here would drop most real right clicks.</p>
+     */
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onInteract(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
@@ -170,6 +178,8 @@ public final class DeathModule extends EventModule {
         if (owner == null) {
             return;
         }
+        // Stop the head being planted as a block by the same click.
+        event.setUseItemInHand(org.bukkit.event.Event.Result.DENY);
         event.setCancelled(true);
         release(event.getPlayer(), held, event.getHand(), owner);
     }
