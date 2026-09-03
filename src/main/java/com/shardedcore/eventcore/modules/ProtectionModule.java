@@ -126,6 +126,11 @@ public final class ProtectionModule extends EventModule {
         if (!plugin.state().toggleValue(Setting.SPAWN_PROTECTION)) {
             return false;
         }
+        ConfigurationSection protection = config().raw().getConfigurationSection("spawn-protection");
+        if (protection != null && protection.getBoolean("only-before-start", false)
+                && plugin.state().running()) {
+            return false;
+        }
         SpawnModule spawnModule = plugin.modules().byType(SpawnModule.class);
         if (spawnModule == null || !spawnModule.isEnabled()) {
             return false;

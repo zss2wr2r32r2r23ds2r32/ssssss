@@ -86,6 +86,12 @@ click** and **flips its own on/off state on right click**, so a destructive
 action is always one deliberate click away while still having a `%status%` you
 can read and place in the lore.
 
+One thing worth knowing: spawn protection stays active after `/start`, so a
+player standing at spawn cannot be hurt. That is usually right for a gathering
+area, but set `spawn-protection.only-before-start: true` in
+`modules/protection.yml` if you would rather the bubble vanish the moment the
+event unlocks.
+
 ### World border prompt
 
 Clicking the barrier asks for a size in chat. The number is the **full width**,

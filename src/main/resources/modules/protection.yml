@@ -37,7 +37,13 @@ lobby-lock:
   block-item-drop: false
 
 # What is blocked inside the bubble around the selected gamemode's spawn.
+#
+# Note this stays active once the event is running, so a player standing at
+# spawn cannot be hurt. That is usually what you want for a gathering area, but
+# set only-before-start to true if you would rather the bubble disappear the
+# moment /start unlocks the event.
 spawn-protection:
+  only-before-start: false
   radius: 16.0
   vertical-radius: 24.0
   block-damage: true
