@@ -1,0 +1,541 @@
+# ==========================================================================
+#  /settings menus
+#  ------------------------------------------------------------------------
+#  Every icon below is fully editable: change "slot", "material", "name" and
+#  "lore" to rearrange or restyle a menu without touching the plugin.
+#
+#  Placeholders available in names and lore:
+#    %status%   ENABLED / DISABLED, taken from the "status" section below
+#    %state%    the same value, if you prefer that name
+#    %enabled%  raw true / false
+#    %mode%     crystal or diasmp
+#    %selected% whether this gamemode / kit / countdown is the selected one
+#    %phase%    lobby, countdown, running or ended
+#    %alive%    players still alive        %dead%   players eliminated
+#    %size%     current world border size  (world-border icon)
+#    %seconds%  selected countdown length  (countdown icon)
+#    %kit%      selected kit name          (kits icon)
+#    %tracked%  player-placed blocks being tracked (clear-blocks icon)
+#    %progress% bedrock drop progress percent      (bedrock-drop icon)
+#    %count%    supply drops per activation        (supply-drops icon)
+#
+#  Each icon may carry a "selected:" block. Only the keys you set inside it
+#  are used when the entry is selected or enabled, so you can change just the
+#  lore and keep the material and name.
+#
+#  Clicking rules:
+#    pvp / locator-bar / spawn-protection   any click flips the toggle
+#    everything else                        left click runs it,
+#                                           right click flips its toggle
+# ==========================================================================
+
+status:
+  enabled: '&a&lENABLED'
+  disabled: '&c&lDISABLED'
+  none: '&7none'
+
+# Background panes, used by every menu unless a menu overrides it.
+filler:
+  enabled: true
+  material: GRAY_STAINED_GLASS_PANE
+  name: ' '
+
+# --------------------------------------------------------------------------
+#  /settings  -  pick a gamemode
+# --------------------------------------------------------------------------
+selector:
+  title: 'Settings Selector - '
+  rows: 3
+  # Selecting a gamemode also opens its settings board.
+  open-on-select: true
+
+  items:
+    crystal:
+      slot: 12
+      material: END_CRYSTAL
+      name: '&#FF0067&lCRYSTAL SETTINGS'
+      lore:
+        - '&8Description'
+        - ''
+        - '&#FF0067Information:'
+        - '&#FF0067| &fClick here'
+        - '&#FF0067| &fSelect The Gamemode'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Select'
+      selected:
+        name: '&#9FFF00&lSELECTED'
+        lore:
+          - '&8Descriptions'
+          - ''
+          - '&#9FFF00Information:'
+          - '&#9FFF00| &fYou Have selected'
+          - '&#9FFF00| &fThis gamemode'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Unselect'
+
+    diasmp:
+      slot: 14
+      material: DIAMOND_SWORD
+      name: '&#008DFF&lDIAMONDSMP SETTINGS'
+      lore:
+        - '&8Description'
+        - ''
+        - '&#008DFFInformation:'
+        - '&#008DFF| &fClick here'
+        - '&#008DFF| &fSelect The Gamemode'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Select'
+      selected:
+        name: '&#9FFF00&lSELECTED'
+        lore:
+          - '&8Descriptions'
+          - ''
+          - '&#9FFF00Information:'
+          - '&#9FFF00| &fYou Have selected'
+          - '&#9FFF00| &fThis gamemode'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Unselect'
+
+# --------------------------------------------------------------------------
+#  The per-gamemode settings boards
+# --------------------------------------------------------------------------
+modes:
+
+  crystal:
+    title: 'Crystal Settings - '
+    rows: 5
+    back:
+      enabled: true
+      slot: 40
+      material: ARROW
+      name: '&#FF0067&lBACK'
+      lore:
+        - '&8Description'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Go Back'
+
+    items:
+      pvp:
+        slot: 11
+        material: NETHERITE_SWORD
+        name: '&#FF0067&lPVP'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#FF0067Information:'
+          - '&#FF0067| &fStatus: %status%'
+          - '&#FF0067| &fLets players fight'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+
+      locator-bar:
+        slot: 13
+        material: SPYGLASS
+        name: '&#FF0067&lLOCATOR BAR'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#FF0067Information:'
+          - '&#FF0067| &fStatus: %status%'
+          - '&#FF0067| &fShows players on the bar'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+
+      spawn-protection:
+        slot: 15
+        material: BRUSH
+        name: '&#FF0067&lSPAWN PROTECTION'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#FF0067Information:'
+          - '&#FF0067| &fStatus: %status%'
+          - '&#FF0067| &fNo hitting, building or'
+          - '&#FF0067| &fdamage around spawn'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+
+      kits:
+        slot: 20
+        material: NETHERITE_HELMET
+        # true: open the kit chooser. false: hand out the "kit" below straight away.
+        menu: true
+        kit: singleprot
+        name: '&#FF0067&lKITS'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#FF0067Information:'
+          - '&#FF0067| &fStatus: %status%'
+          - '&#FF0067| &fSelected kit: &7%kit%'
+          - '&#FF0067| &fArmour and offhand auto-equip'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open'
+
+      world-border:
+        slot: 22
+        material: BARRIER
+        name: '&#FF0067&lWORLD BORDER'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#FF0067Information:'
+          - '&#FF0067| &fStatus: %status%'
+          - '&#FF0067| &fCurrent size: &7%size%'
+          - '&#FF0067| &fType &7<size> <time> &fin chat'
+          - '&#FF0067| &fExample: &71000 1s'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Resize'
+
+      revive:
+        slot: 24
+        material: TOTEM_OF_UNDYING
+        name: '&#FF0067&lREVIVE ALL'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#FF0067Information:'
+          - '&#FF0067| &fStatus: %status%'
+          - '&#FF0067| &fBrings back &7%dead% &fplayers'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Revive'
+
+      bedrock-drop:
+        slot: 29
+        material: BEDROCK
+        name: '&#FF0067&lDROP TO BEDROCK'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#FF0067Information:'
+          - '&#FF0067| &fStatus: %status%'
+          - '&#FF0067| &fClears the bordered area'
+          - '&#FF0067| &fdown to the bedrock floor'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Drop'
+
+      clear-blocks:
+        slot: 31
+        material: OBSIDIAN
+        name: '&#FF0067&lCLEAR PLACED BLOCKS'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#FF0067Information:'
+          - '&#FF0067| &fStatus: %status%'
+          - '&#FF0067| &fTracking &7%tracked% &fblocks'
+          - '&#FF0067| &fObsidian and crystals only'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Clear'
+
+      countdown:
+        slot: 33
+        material: CLOCK
+        name: '&#FF0067&lCOUNTDOWN'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#FF0067Information:'
+          - '&#FF0067| &fStatus: %status%'
+          - '&#FF0067| &fSelected: &7%seconds%s'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open'
+
+  diasmp:
+    title: 'DiamondSMP Settings - '
+    rows: 5
+    back:
+      enabled: true
+      slot: 40
+      material: ARROW
+      name: '&#008DFF&lBACK'
+      lore:
+        - '&8Description'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Go Back'
+
+    items:
+      pvp:
+        slot: 11
+        material: DIAMOND_SWORD
+        name: '&#008DFF&lPVP'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#008DFFInformation:'
+          - '&#008DFF| &fStatus: %status%'
+          - '&#008DFF| &fLets players fight'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+
+      locator-bar:
+        slot: 13
+        material: SPYGLASS
+        name: '&#008DFF&lLOCATOR BAR'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#008DFFInformation:'
+          - '&#008DFF| &fStatus: %status%'
+          - '&#008DFF| &fShows players on the bar'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+
+      spawn-protection:
+        slot: 15
+        material: BRUSH
+        name: '&#008DFF&lSPAWN PROTECTION'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#008DFFInformation:'
+          - '&#008DFF| &fStatus: %status%'
+          - '&#008DFF| &fNo hitting, building or'
+          - '&#008DFF| &fdamage around spawn'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+
+      kits:
+        slot: 20
+        material: DIAMOND_HELMET
+        # false: clicking hands the kit below to everyone online.
+        menu: false
+        kit: diasmp
+        name: '&#008DFF&lDIAMOND KIT'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#008DFFInformation:'
+          - '&#008DFF| &fStatus: %status%'
+          - '&#008DFF| &fGives everyone the &7%kit% &fkit'
+          - '&#008DFF| &fMake it with &7/kit create diasmp'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Give'
+
+      world-border:
+        slot: 22
+        material: BARRIER
+        name: '&#008DFF&lWORLD BORDER'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#008DFFInformation:'
+          - '&#008DFF| &fStatus: %status%'
+          - '&#008DFF| &fCurrent size: &7%size%'
+          - '&#008DFF| &fType &7<size> <time> &fin chat'
+          - '&#008DFF| &fExample: &7500 15s'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Resize'
+
+      revive:
+        slot: 24
+        material: TOTEM_OF_UNDYING
+        name: '&#008DFF&lREVIVE ALL'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#008DFFInformation:'
+          - '&#008DFF| &fStatus: %status%'
+          - '&#008DFF| &fBrings back &7%dead% &fplayers'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Revive'
+
+      supply-drops:
+        slot: 29
+        material: CHEST
+        name: '&#008DFF&lSUPPLY DROPS'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#008DFFInformation:'
+          - '&#008DFF| &fStatus: %status%'
+          - '&#008DFF| &fSpawns &7%count% &floot chests'
+          - '&#008DFF| &fLoot is set in the module file'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Spawn'
+
+      clear-blocks:
+        slot: 31
+        material: OBSIDIAN
+        name: '&#008DFF&lCLEAR PLACED BLOCKS'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#008DFFInformation:'
+          - '&#008DFF| &fStatus: %status%'
+          - '&#008DFF| &fTracking &7%tracked% &fblocks'
+          - '&#008DFF| &fObsidian and crystals only'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Clear'
+
+      countdown:
+        slot: 33
+        material: CLOCK
+        name: '&#008DFF&lCOUNTDOWN'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#008DFFInformation:'
+          - '&#008DFF| &fStatus: %status%'
+          - '&#008DFF| &fSelected: &7%seconds%s'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open'
+
+# --------------------------------------------------------------------------
+#  Kit chooser  (opened by the armour icon)
+#  "kit" is the name used with /kit create <kit>.
+# --------------------------------------------------------------------------
+kit-menu:
+  title: 'Kit Selector - '
+  rows: 3
+  back:
+    enabled: true
+    slot: 22
+    material: ARROW
+    name: '&#FF0067&lBACK'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Go Back'
+
+  items:
+    singleprot:
+      slot: 12
+      material: NETHERITE_LEGGINGS
+      kit: singleprot
+      name: '&#FF0067&lSINGLE PROTECTION'
+      lore:
+        - '&8Description'
+        - ''
+        - '&#FF0067Information:'
+        - '&#FF0067| &fGives everyone the'
+        - '&#FF0067| &fsingle protection kit'
+        - '&#FF0067| &fMake it with &7/kit create singleprot'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Select'
+      selected:
+        name: '&#9FFF00&lSELECTED'
+        lore:
+          - '&8Descriptions'
+          - ''
+          - '&#9FFF00Information:'
+          - '&#9FFF00| &fYou Have selected'
+          - '&#9FFF00| &fThis gamemode'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Unselect'
+
+    doubleprot:
+      slot: 14
+      material: NETHERITE_BOOTS
+      kit: doubleprot
+      name: '&#FF0067&lDOUBLE BLAST PROTECTION'
+      lore:
+        - '&8Description'
+        - ''
+        - '&#FF0067Information:'
+        - '&#FF0067| &fGives everyone the'
+        - '&#FF0067| &fdouble blast protection kit'
+        - '&#FF0067| &fMake it with &7/kit create doubleprot'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Select'
+      selected:
+        name: '&#9FFF00&lSELECTED'
+        lore:
+          - '&8Descriptions'
+          - ''
+          - '&#9FFF00Information:'
+          - '&#9FFF00| &fYou Have selected'
+          - '&#9FFF00| &fThis gamemode'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Unselect'
+
+# --------------------------------------------------------------------------
+#  Countdown chooser  (opened by the clock icon)
+#  Left click selects the length /start will use.
+#  Right click selects it and starts the countdown immediately.
+# --------------------------------------------------------------------------
+countdown-menu:
+  title: 'Countdown Selector - '
+  rows: 3
+  back:
+    enabled: true
+    slot: 22
+    material: ARROW
+    name: '&#AD4EFF&lBACK'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Go Back'
+
+  items:
+    '3':
+      slot: 11
+      material: CLOCK
+      seconds: 3
+      name: '&#AD4EFF&l3 SECONDS'
+      lore:
+        - '&8Description'
+        - ''
+        - '&#AD4EFFInformation:'
+        - '&#AD4EFF| &fA &73 second &fcountdown'
+        - '&#AD4EFF| &fRight-click to run it now'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Select'
+      selected:
+        name: '&#9FFF00&lSELECTED'
+        lore:
+          - '&8Descriptions'
+          - ''
+          - '&#9FFF00Information:'
+          - '&#9FFF00| &fYou Have selected'
+          - '&#9FFF00| &fThis countdown'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Run Now'
+
+    '10':
+      slot: 13
+      material: CLOCK
+      seconds: 10
+      name: '&#AD4EFF&l10 SECONDS'
+      lore:
+        - '&8Description'
+        - ''
+        - '&#AD4EFFInformation:'
+        - '&#AD4EFF| &fA &710 second &fcountdown'
+        - '&#AD4EFF| &fRight-click to run it now'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Select'
+      selected:
+        name: '&#9FFF00&lSELECTED'
+        lore:
+          - '&8Descriptions'
+          - ''
+          - '&#9FFF00Information:'
+          - '&#9FFF00| &fYou Have selected'
+          - '&#9FFF00| &fThis countdown'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Run Now'
+
+    '15':
+      slot: 15
+      material: CLOCK
+      seconds: 15
+      name: '&#AD4EFF&l15 SECONDS'
+      lore:
+        - '&8Description'
+        - ''
+        - '&#AD4EFFInformation:'
+        - '&#AD4EFF| &fA &715 second &fcountdown'
+        - '&#AD4EFF| &fRight-click to run it now'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Select'
+      selected:
+        name: '&#9FFF00&lSELECTED'
+        lore:
+          - '&8Descriptions'
+          - ''
+          - '&#9FFF00Information:'
+          - '&#9FFF00| &fYou Have selected'
+          - '&#9FFF00| &fThis countdown'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Run Now'

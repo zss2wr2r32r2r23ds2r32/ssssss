@@ -1,0 +1,72 @@
+# /countdown <seconds|preset|stop>
+#
+# The title shows the remaining seconds through %seconds%. When a countdown
+# reaches zero the event is started, exactly as if /start had been run.
+enabled: true
+
+# Used by /countdown with no argument, and by /start when no length is chosen
+# in the countdown menu.
+default-seconds: 10
+
+# Offered by tab completion alongside the presets below.
+tab-complete:
+  - 3
+  - 10
+  - 15
+
+title: '&#AD4EFF&l%seconds%'
+subtitle: '&fRe organise your Inventory'
+
+# Ticks. A stay of 25 with a 20-tick period keeps the title on screen
+# continuously instead of blinking between seconds.
+times:
+  fade-in: 0
+  stay: 25
+  fade-out: 5
+
+# Replace the subtitle for specific remaining seconds.
+subtitle-overrides:
+  '1': '&fGet Ready'
+
+sound:
+  tick:
+    enabled: true
+    key: 'minecraft:block.note_block.hat'
+    volume: 0.7
+    pitch: 1.0
+  # Used for the last few seconds instead of "tick".
+  final-tick:
+    enabled: true
+    key: 'minecraft:block.note_block.pling'
+    volume: 1.0
+    pitch: 1.5
+  final-tick-threshold: 3
+  finish:
+    enabled: true
+    key: 'minecraft:entity.player.levelup'
+    volume: 1.0
+    pitch: 1.0
+
+# Shown once the countdown hits zero.
+finish:
+  title: '&#9FFF00&lGO'
+  subtitle: '&fThe event has begun!'
+  times:
+    fade-in: 0
+    stay: 30
+    fade-out: 10
+
+# Run the /start unlock (PvP, damage, building) when a countdown ends.
+start-event-on-finish: true
+
+# Named countdowns, used as /countdown <name>. Anything not set here falls
+# back to the values above, so a preset only needs the keys that differ.
+presets:
+  rest:
+    seconds: 30
+    title: '&#AD4EFF&l%seconds%'
+    subtitle: '&fRe organise your Inventory'
+    start-event-on-finish: true
+    finish:
+      title: '&#9FFF00&lGO'
+      subtitle: '&fThe event has begun!'

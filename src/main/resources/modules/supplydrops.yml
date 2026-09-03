@@ -1,0 +1,62 @@
+# Supply drops: random loot containers for the DiamondSMP mode.
+#
+# Only the entries in the loot table below can ever appear in a drop.
+enabled: true
+
+# Which world to drop into. Empty means the world border's world.
+world: ''
+
+# How many containers one activation places. Shift-clicking the chest icon
+# doubles this.
+count: 5
+
+area:
+  # BORDER stays inside the live world border. FIXED uses the values below.
+  mode: 'BORDER'
+  centre-x: 0.0
+  centre-z: 0.0
+  size: 200.0
+  # Keep drops this far inside the border edge.
+  inset: 8.0
+
+# Minimum spacing between two drops in the same batch.
+min-distance-between: 16.0
+
+# The container block that gets placed.
+container: 'CHEST'
+
+# Refuse to place below this height. Remove to allow any height.
+#min-y: 0
+
+# Tell everyone where a drop landed.
+announce: true
+
+loot:
+  # How many loot rolls go into one container.
+  min-stacks: 3
+  max-stacks: 6
+
+  # Each roll picks one entry (by weight), then a random amount between
+  # min and max. "chance" is a final 0.0-1.0 gate on that roll.
+  items:
+    - material: GOLDEN_APPLE
+      min: 1
+      max: 8
+      chance: 1.0
+      weight: 3
+    - material: EXPERIENCE_BOTTLE
+      min: 4
+      max: 16
+      chance: 1.0
+      weight: 3
+    - material: COBWEB
+      min: 2
+      max: 12
+      chance: 1.0
+      weight: 3
+
+# Drop containers automatically while the event is running.
+auto:
+  enabled: false
+  interval-seconds: 120
+  count: 3

@@ -1,0 +1,55 @@
+# The world border, driven by the barrier icon in /settings.
+#
+# Clicking the barrier asks for "<size> [duration]" in chat:
+#
+#   1000 1s     ->  a 1000 block wide border, reached over one second
+#   500 15s     ->  shrink to 500 blocks over fifteen seconds
+#   1000        ->  1000 blocks, applied instantly
+#
+# The number you type is the full width of the border, not a radius, so 1000
+# gives a 1000 block border rather than 500.
+#
+# The current size is available as %shardedcore_border% via PlaceholderAPI and
+# counts down smoothly: 1000, 999, 998 ...
+enabled: true
+
+# Which world the border belongs to. Empty means the world holding the
+# selected gamemode's spawn, falling back to the main world.
+world: ''
+
+# Where the border is centred when it is resized.
+#   SPAWN         the selected gamemode's spawn point
+#   WORLD_CENTRE  the world spawn
+#   FIXED         the centre-x / centre-z below
+#   NONE          leave the existing centre alone
+centre:
+  mode: 'SPAWN'
+  x: 0.0
+  z: 0.0
+
+recentre-on-resize: true
+
+min-size: 1.0
+max-size: 60000000.0
+
+# Used when a size is given without a duration.
+default-duration-millis: 0
+
+warning-distance: 0
+# Warning time in ticks (20 ticks = 1 second).
+warning-time-ticks: 0
+damage-amount: 0.2
+damage-buffer: 5.0
+
+# How long the chat prompt waits for an answer.
+prompt-timeout-seconds: 60
+
+placeholder:
+  # 0 gives whole numbers (1000, 999, 998).
+  decimals: 0
+
+# Optionally force a border when the event starts.
+on-event-start:
+  enabled: false
+  size: 1000.0
+  duration: '0'

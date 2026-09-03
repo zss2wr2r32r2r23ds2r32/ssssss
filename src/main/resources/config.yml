@@ -1,0 +1,47 @@
+# ==========================================================================
+#  ShardedEventCore
+#  ------------------------------------------------------------------------
+#  This file holds the plugin-wide options. Everything else lives in:
+#
+#    messages.yml      every chat message, with colour codes
+#    settings.yml      the /settings menus: slots, icons, names and lore
+#    kits.yml          kits captured with /kit create (generated)
+#    data.yml          selections, toggles and spawn points (generated)
+#    modules/*.yml     one file per module, each with its own "enabled" flag
+#
+#  Colour codes: legacy (&a), hex (&#AD4EFF) and repeated hex
+#  (&x&F&F&B&A&0&0) are all supported anywhere a string is shown to a player.
+# ==========================================================================
+
+# Chat prompts, such as the world border size prompt.
+prompts:
+  # Typing this instead of a value aborts the prompt.
+  cancel-word: 'cancel'
+
+settings:
+  # The state a fresh install (or a wiped data.yml) starts from.
+  # These are only defaults: once a toggle is flipped in /settings the choice
+  # is stored in data.yml and this section is no longer consulted.
+  defaults:
+    crystal:
+      pvp: false
+      locator-bar: false
+      spawn-protection: true
+      kits: true
+      world-border: true
+      revive: true
+      bedrock-drop: true
+      supply-drops: false
+      clear-blocks: true
+      countdown: true
+    diasmp:
+      pvp: false
+      locator-bar: false
+      spawn-protection: true
+      kits: true
+      world-border: true
+      revive: true
+      bedrock-drop: false
+      supply-drops: true
+      clear-blocks: true
+      countdown: true

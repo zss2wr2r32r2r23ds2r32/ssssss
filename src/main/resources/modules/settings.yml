@@ -1,0 +1,5 @@
+# The /settings menus.
+#
+# The layout, icons, names and lore all live in the top-level settings.yml.
+# This file only controls whether the menus exist at all.
+enabled: true

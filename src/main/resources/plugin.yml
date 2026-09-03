@@ -1,0 +1,117 @@
+name: ShardedEventCore
+version: '${project.version}'
+main: com.shardedcore.eventcore.ShardedEventCore
+api-version: '1.21'
+authors: [ Sharded ]
+description: Modular event core for Crystal and DiamondSMP events.
+website: https://github.com/
+softdepend: [ PlaceholderAPI ]
+folia-supported: false
+
+commands:
+  shardedeventcore:
+    description: Reload the plugin, inspect the event state and run the settings actions.
+    aliases: [ shardedcore, sec ]
+    usage: /<command> <reload|status|select|border|bedrockdrop|clearblocks|supplydrops|revive>
+    permission: shardedcore.admin
+  module:
+    description: Enable, disable and inspect the plugin modules.
+    aliases: [ modules, secmodule ]
+    usage: /<command> <list|enable|disable|toggle|info|reload> [module]
+    permission: shardedcore.module
+  announce:
+    description: Show a server-wide announcement title.
+    aliases: [ secannounce ]
+    usage: /<command> <text>
+    permission: shardedcore.announce
+  countdown:
+    description: Run an on-screen countdown that starts the event when it ends.
+    aliases: [ seccountdown ]
+    usage: /<command> <seconds|rest|stop>
+    permission: shardedcore.countdown
+  setspawn:
+    description: Set the spawn point of an event gamemode.
+    aliases: [ secsetspawn ]
+    usage: /<command> <crystal|diasmp>
+    permission: shardedcore.setspawn
+  spawn:
+    description: Teleport to, or send everyone to, an event spawn.
+    aliases: [ secspawn ]
+    usage: /<command> [crystal|diasmp|all]
+    permission: shardedcore.spawn
+  settings:
+    description: Open the event settings menus.
+    aliases: [ secsettings, eventsettings ]
+    usage: /<command> [crystal|diasmp]
+    permission: shardedcore.settings
+  kit:
+    description: Create, give and manage event kits.
+    aliases: [ seckit ]
+    usage: /<command> <create|give|delete|list> [kit] [player|all]
+    permission: shardedcore.kit
+  start:
+    description: Start the event after the configured countdown.
+    aliases: [ secstart ]
+    usage: /<command> [now]
+    permission: shardedcore.start
+  end:
+    description: End the event and send everyone back to the lobby.
+    aliases: [ secend ]
+    usage: /<command>
+    permission: shardedcore.end
+
+permissions:
+  shardedcore.*:
+    description: Grants every ShardedEventCore permission, including the lockdown bypass.
+    # Deliberately not op-defaulted. Every command permission below is already
+    # granted to operators individually, so the only thing this node adds is
+    # shardedcore.bypass -- and silently exempting every op from the pre-start
+    # lockdown and spawn protection is rarely what an event host wants.
+    default: false
+    children:
+      shardedcore.admin: true
+      shardedcore.module: true
+      shardedcore.announce: true
+      shardedcore.countdown: true
+      shardedcore.setspawn: true
+      shardedcore.spawn: true
+      shardedcore.settings: true
+      shardedcore.kit: true
+      shardedcore.start: true
+      shardedcore.end: true
+      shardedcore.bypass: true
+  shardedcore.admin:
+    description: Reload the plugin and read its status.
+    default: op
+  shardedcore.module:
+    description: Toggle modules at runtime.
+    default: op
+  shardedcore.announce:
+    description: Use /announce.
+    default: op
+  shardedcore.countdown:
+    description: Use /countdown.
+    default: op
+  shardedcore.setspawn:
+    description: Use /setspawn.
+    default: op
+  shardedcore.spawn:
+    description: Use /spawn.
+    default: op
+  shardedcore.settings:
+    description: Open the settings menus.
+    default: op
+  shardedcore.kit:
+    description: Manage kits.
+    default: op
+  shardedcore.start:
+    description: Use /start.
+    default: op
+  shardedcore.end:
+    description: Use /end.
+    default: op
+  shardedcore.bypass:
+    description: Ignore the pre-start lockdown and spawn protection.
+    # Not granted to operators by default: event hosts usually play too, and
+    # silently exempting every op from the lockdown is rarely what you want.
+    default: false

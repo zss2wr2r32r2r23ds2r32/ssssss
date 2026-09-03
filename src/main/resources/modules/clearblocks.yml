@@ -1,0 +1,32 @@
+# "Clear placed blocks": removes what players built, and nothing else.
+#
+# Placements are recorded as they happen, so a clear only touches blocks that
+# players actually placed. Natural terrain is never affected. Removal is spread
+# over ticks with physics disabled, so there is no TPS dip.
+enabled: true
+
+# Only these materials are tracked and removed. Add anything you want the
+# obsidian icon to clean up.
+materials:
+  - OBSIDIAN
+  - CRYING_OBSIDIAN
+  - RESPAWN_ANCHOR
+
+# Entities removed alongside the blocks.
+entity-types:
+  - END_CRYSTAL
+
+# true  : only remove entities a player placed during this event
+# false : sweep every matching entity in every world
+only-player-placed: true
+
+# Leave off: block updates cost far more than the removal itself, and a
+# player-placed obsidian tower has nothing to fall on it.
+apply-physics: false
+
+# Per-tick budget.
+max-millis-per-tick: 6
+max-blocks-per-tick: 20000
+
+# Safety cap on how many placements are remembered at once.
+max-tracked-blocks: 500000

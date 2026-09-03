@@ -1,0 +1,57 @@
+# PvP, locator bar, spawn protection and the pre-start lockdown.
+#
+# Before /start (and during a countdown) players cannot break, place, hit or
+# take damage. Once the event is running, the PvP toggle in /settings decides
+# whether players can fight.
+enabled: true
+
+# Worlds these rules apply to. Leave empty for every loaded world.
+worlds: []
+
+# Keep the vanilla "pvp" game rule in step with the /settings toggle, so other
+# plugins reading it see the same answer. The plugin enforces PvP itself either
+# way, so this is safe to turn off if another plugin owns that game rule.
+apply-pvp-game-rule: true
+
+# Players with this permission ignore the lockdown and spawn protection.
+bypass-permission: 'shardedcore.bypass'
+
+# Let players still hurt themselves (fall damage, their own crystal) even while
+# PvP is off.
+allow-self-damage: true
+
+# Crystals and TNT carry no recoverable owner, so gate them on the PvP toggle.
+treat-explosions-as-pvp: true
+
+# How often a player can be told "you cannot do that", in milliseconds.
+notice-cooldown-millis: 1500
+
+# What is blocked before the event starts.
+lobby-lock:
+  enabled: true
+  block-damage: true
+  block-break: true
+  block-place: true
+  block-pvp: true
+  block-hunger: true
+  block-item-drop: false
+
+# What is blocked inside the bubble around the selected gamemode's spawn.
+#
+# Note this stays active once the event is running, so a player standing at
+# spawn cannot be hurt. That is usually what you want for a gathering area, but
+# set only-before-start to true if you would rather the bubble disappear the
+# moment /start unlocks the event.
+spawn-protection:
+  only-before-start: false
+  radius: 16.0
+  vertical-radius: 24.0
+  block-damage: true
+  block-break: true
+  block-place: true
+  block-pvp: true
+
+locator-bar:
+  # Drive the vanilla "locatorBar" game rule from the /settings toggle.
+  # Turn this off if another plugin owns that game rule.
+  apply-game-rule: true
