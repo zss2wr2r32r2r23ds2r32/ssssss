@@ -1,0 +1,20 @@
+# PlaceholderAPI expansion, registered under the "shardedcore" identifier.
+#
+# Available placeholders:
+#   %shardedcore_alive%            players still alive
+#   %shardedcore_dead%             players eliminated
+#   %shardedcore_total%            alive + eliminated
+#   %shardedcore_border%           current world border size (1000, 999, 998 ...)
+#   %shardedcore_border_centre_x%  border centre X
+#   %shardedcore_border_centre_z%  border centre Z
+#   %shardedcore_mode%             crystal, diasmp or none
+#   %shardedcore_phase%            lobby, countdown, running or ended
+#   %shardedcore_running%          true / false
+#   %shardedcore_countdown%        seconds left on the countdown
+#   %shardedcore_tracked_blocks%   player-placed blocks being tracked
+#   %shardedcore_setting_<id>%     e.g. %shardedcore_setting_pvp%
+#   %shardedcore_spawn_set_<mode>% e.g. %shardedcore_spawn_set_crystal%
+#   %shardedcore_kit_<mode>%       e.g. %shardedcore_kit_diasmp%
+#
+# PlaceholderAPI is optional; without it the plugin simply skips this module.
+enabled: true

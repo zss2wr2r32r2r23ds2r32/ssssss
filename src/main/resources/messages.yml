@@ -1,0 +1,155 @@
+# ==========================================================================
+#  Messages
+#  ------------------------------------------------------------------------
+#  Every string here supports legacy (&a), hex (&#AD4EFF) and repeated hex
+#  (&x&F&F&B&A&0&0) colour codes. %prefix% is available everywhere.
+#
+#  Set a value to '' to silence that message completely.
+#  A value may also be a list, in which case each entry is sent as its own line.
+# ==========================================================================
+
+prefix: '&#AD4EFF&lSHARDED &8» &f'
+
+no-permission: '%prefix%&cYou need &f%permission% &cto do that.'
+module-disabled: '%prefix%&cThe &f%module% &cmodule is disabled.'
+players-only: '%prefix%&cOnly players can use that.'
+player-not-found: '%prefix%&cCould not find &f%player%&c.'
+
+root:
+  usage:
+    - '%prefix%&fShardedEventCore &7v%version%'
+    - '&#AD4EFF| &f/%label% reload &7- reload every configuration file'
+    - '&#AD4EFF| &f/%label% status &7- show the current event state'
+  reloaded: '%prefix%&aReloaded every configuration file.'
+  status:
+    - '%prefix%&fStatus &7(v%version%)'
+    - '&#AD4EFF| &fGamemode: &7%mode%'
+    - '&#AD4EFF| &fPhase: &7%phase%'
+    - '&#AD4EFF| &fAlive: &7%alive% &8/ &fDead: &7%dead%'
+    - '&#AD4EFF| &fBorder: &7%border%'
+    - '&#AD4EFF| &fPvP: &7%pvp%'
+    - '&#AD4EFF| &fModules: &7%modules%&8/&7%modules-total%'
+
+module:
+  usage:
+    - '%prefix%&fModules'
+    - '&#AD4EFF| &f/%label% list'
+    - '&#AD4EFF| &f/%label% enable <module>'
+    - '&#AD4EFF| &f/%label% disable <module>'
+    - '&#AD4EFF| &f/%label% toggle <module>'
+    - '&#AD4EFF| &f/%label% info <module>'
+    - '&#AD4EFF| &f/%label% reload'
+  list-header: '%prefix%&f%count% &7modules'
+  list-entry: '&#AD4EFF| &f%module% &8- %status% &8- &7%description%'
+  info:
+    - '%prefix%&f%module% &8- %status%'
+    - '&#AD4EFF| &7%description%'
+    - '&#AD4EFF| &fFile: &7%file%'
+  unknown: '%prefix%&cThere is no module called &f%module%&c.'
+  changed: '%prefix%&fModule &#AD4EFF%module% &fis now %status%&f.'
+  unchanged: '%prefix%&fModule &#AD4EFF%module% &fwas already %status%&f.'
+  reloaded: '%prefix%&aReloaded every module configuration.'
+  status-enabled: '&aENABLED'
+  status-disabled: '&cDISABLED'
+
+announce:
+  usage: '%prefix%&cUsage: &f/%label% <text>'
+  sent: '%prefix%&aAnnounced: &f%text%'
+
+countdown:
+  started: '%prefix%&fStarting a &#AD4EFF%seconds%s &fcountdown.'
+  started-preset: '%prefix%&fStarting the &#AD4EFF%preset% &fcountdown.'
+  stopped: '%prefix%&fCountdown stopped.'
+  invalid: '%prefix%&cCould not read &f%input% &cas a countdown length.'
+  selected: '%prefix%&fCountdown set to &#AD4EFF%seconds%s&f.'
+
+spawn:
+  set-usage: '%prefix%&cUsage: &f/%label% <crystal|diasmp>'
+  unknown-mode: '%prefix%&cUnknown gamemode &f%input%&c. Use &fcrystal &cor &fdiasmp&c.'
+  set:
+    - '%prefix%&fSpawn for &#AD4EFF%mode% &fset to &7%x%, %y%, %z% &8(%world%)'
+    - '&#AD4EFF| &fThe whitelist has been turned &aoff&f.'
+  not-set: '%prefix%&cNo spawn has been set for &f%mode%&c.'
+  no-selection: '%prefix%&cSelect a gamemode in &f/settings &cfirst.'
+  teleported-self: '%prefix%&fTeleported you to the event spawn.'
+  teleported-all: '%prefix%&fSent &#AD4EFF%players% &fplayers to the &#AD4EFF%mode% &fspawn.'
+
+settings:
+  selected: '%prefix%&fSelected the &#9FFF00%mode% &fgamemode.'
+  unselected: '%prefix%&fUnselected the &f%mode% &fgamemode.'
+  toggled: '%prefix%&f%setting% &7(%mode%) &fis now %status%&f.'
+  action-disabled: '%prefix%&c%setting% &cis disabled. Right-click it to enable it first.'
+  no-action: '%prefix%&c%setting% &chas no click action.'
+  module-disabled: '%prefix%&cThe &f%module% &cmodule is disabled, so that does nothing.'
+
+kits:
+  usage:
+    - '%prefix%&fKits'
+    - '&#AD4EFF| &f/%label% create <kit> &7- save your inventory as a kit'
+    - '&#AD4EFF| &f/%label% give <kit> [player|all]'
+    - '&#AD4EFF| &f/%label% delete <kit>'
+    - '&#AD4EFF| &f/%label% list'
+  create-usage: '%prefix%&cUsage: &f/%label% create <singleprot|doubleprot|diasmp>'
+  give-usage: '%prefix%&cUsage: &f/%label% give <kit> [player|all]'
+  delete-usage: '%prefix%&cUsage: &f/%label% delete <kit>'
+  created: '%prefix%&fSaved your inventory as the &#9FFF00%kit% &fkit.'
+  given: '%prefix%&fGave the &#9FFF00%kit% &fkit to &f%player%&f.'
+  given-all: '%prefix%&fGave the &#9FFF00%kit% &fkit to &#AD4EFF%players% &fplayers.'
+  deleted: '%prefix%&fDeleted the &f%kit% &fkit.'
+  missing: '%prefix%&cThere is no kit called &f%kit%&c. Create it with &f/kit create %kit%&c.'
+  list: '%prefix%&f%count% &fkits: &7%kits%'
+  list-empty: '%prefix%&cNo kits have been created yet.'
+  none-selected: '%prefix%&cNo kit is selected for this gamemode.'
+  unselected: '%prefix%&fUnselected the &f%kit% &fkit.'
+
+worldborder:
+  prompt:
+    - '%prefix%&fType the new border size in chat.'
+    - '&#AD4EFF| &fFormat: &7<size> [duration]'
+    - '&#AD4EFF| &fExample: &71000 1s &8- 1000 blocks wide over one second'
+    - '&#AD4EFF| &fExample: &7500 15s &8- shrink to 500 over fifteen seconds'
+    - '&#AD4EFF| &fCurrent: &7%current% &8- type &f%cancel% &8to abort'
+  applied: '%prefix%&fBorder set to &#AD4EFF%size% &fover &#AD4EFF%duration%&f.'
+  invalid: '%prefix%&cCould not read &f%input%&c. Try &f1000 1s&c.'
+  cancelled: '%prefix%&fBorder change cancelled.'
+  no-world: '%prefix%&cNo world is available for the border.'
+
+bedrockdrop:
+  started: '%prefix%&fClearing the bordered area down to bedrock.'
+  finished: '%prefix%&fRemoved &#AD4EFF%blocks% &fblocks.'
+  busy: '%prefix%&cA bedrock drop is already running.'
+
+clearblocks:
+  started: '%prefix%&fRemoving player-placed blocks.'
+  finished: '%prefix%&fRemoved &#AD4EFF%blocks% &fblocks and &#AD4EFF%entities% &fentities.'
+  busy: '%prefix%&cA block clear is already running.'
+
+supplydrops:
+  started: '%prefix%&fSpawning &#AD4EFF%count% &fsupply drops.'
+  finished: '%prefix%&fPlaced &#AD4EFF%count% &fsupply drops.'
+  failed: '%prefix%&cCould not spawn supply drops. Check the loot table in modules/supplydrops.yml.'
+  spawned: '%prefix%&fA supply drop landed at &#008DFF%x%, %y%, %z%&f.'
+
+death:
+  head-empty: '%prefix%&cThat head has already been emptied.'
+  head-released: '%prefix%&fReleased &#AD4EFF%items% &fstacks from the head.'
+
+game:
+  started: '%prefix%&fThe event is live with &#AD4EFF%players% &fplayers. Good luck!'
+  ended: '%prefix%&fThe event has ended.'
+  start-queued: '%prefix%&fStarting the event.'
+  start-immediate: '%prefix%&fEvent unlocked immediately.'
+  start-failed: '%prefix%&cSelect a gamemode in &f/settings &cbefore starting.'
+  already-running: '%prefix%&cThe event is already running.'
+  end-triggered: '%prefix%&fEnding the event and sending players to the lobby.'
+  revived: '%prefix%&fYou have been revived.'
+  revived-all: '%prefix%&fRevived &#AD4EFF%players% &fplayers.'
+  dead-chat-blocked: '%prefix%&cEliminated players cannot talk during the event.'
+
+protection:
+  locked-break: '%prefix%&cYou cannot break blocks until the event starts.'
+  locked-place: '%prefix%&cYou cannot place blocks until the event starts.'
+  spawn-break: '%prefix%&cYou cannot break blocks inside spawn protection.'
+  spawn-place: '%prefix%&cYou cannot place blocks inside spawn protection.'
+  pvp-disabled: '%prefix%&cPvP is disabled right now.'
+  spawn-pvp: '%prefix%&cThat player is protected at spawn.'

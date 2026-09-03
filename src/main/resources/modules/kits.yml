@@ -1,0 +1,35 @@
+# /kit create|give|delete|list
+#
+# "/kit create <name>" saves your current inventory, armour and offhand as that
+# kit. Saved kits live in kits.yml. Giving a kit re-equips armour and offhand
+# automatically, so it does not matter where in the inventory you built it.
+enabled: true
+
+# Empty the target's inventory before applying a kit.
+clear-inventory-first: true
+
+# Move any armour still in the main inventory into the matching armour slot.
+auto-equip: true
+
+# Move the first of these found in the inventory into the offhand,
+# if the offhand is empty. Order matters: the first match wins.
+auto-offhand: true
+auto-offhand-priority:
+  - TOTEM_OF_UNDYING
+  - SHIELD
+
+# Select this hotbar slot after giving a kit (0 is the far left).
+select-hotbar-slot: true
+hotbar-slot: 0
+
+# Restore health, hunger and put out fire when a kit is given.
+heal-on-give: true
+
+# Skip spectators when a kit goes out to everyone.
+skip-spectators: true
+
+# Offered by tab completion for /kit create even before they exist.
+known-kits:
+  - singleprot
+  - doubleprot
+  - diasmp
