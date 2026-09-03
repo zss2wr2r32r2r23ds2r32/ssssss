@@ -62,8 +62,12 @@ commands:
 
 permissions:
   shardedcore.*:
-    description: Grants every ShardedEventCore permission.
-    default: op
+    description: Grants every ShardedEventCore permission, including the lockdown bypass.
+    # Deliberately not op-defaulted. Every command permission below is already
+    # granted to operators individually, so the only thing this node adds is
+    # shardedcore.bypass -- and silently exempting every op from the pre-start
+    # lockdown and spawn protection is rarely what an event host wants.
+    default: false
     children:
       shardedcore.admin: true
       shardedcore.module: true
