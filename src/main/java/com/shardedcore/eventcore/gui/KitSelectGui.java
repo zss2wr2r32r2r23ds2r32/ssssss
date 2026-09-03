@@ -70,7 +70,8 @@ public final class KitSelectGui extends Gui {
 
     private void renderEntry(SettingsModule module, String key, ConfigurationSection section, int fallbackSlot) {
         String kit = section.getString("kit", key);
-        boolean selected = kit.equalsIgnoreCase(String.valueOf(plugin.state().selectedKit(mode)));
+        String active = plugin.state().selectedKit(mode);
+        boolean selected = active != null && active.equalsIgnoreCase(kit);
 
         ItemDefinition definition = ItemDefinition.of(section, Material.NETHERITE_LEGGINGS, fallbackSlot);
         if (selected) {

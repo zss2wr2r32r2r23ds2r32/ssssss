@@ -51,7 +51,8 @@ public final class Items {
         ItemStack[] out = new ItemStack[size];
         int limit = Math.min(size, encoded.size());
         for (int index = 0; index < limit; index++) {
-            out[index] = decode(encoded.get(index));
+            ItemStack decoded = decode(encoded.get(index));
+            out[index] = isEmpty(decoded) ? null : decoded;
         }
         return out;
     }

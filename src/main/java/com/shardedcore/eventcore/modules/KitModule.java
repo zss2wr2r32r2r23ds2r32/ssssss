@@ -138,20 +138,21 @@ public final class KitModule extends EventModule {
 
     // ----------------------------------------------------------------- create
 
-    /** Captures {@code player}'s inventory, armour and offhand as a named kit. */
+    /**
+     * Captures {@code player}'s inventory, armour and offhand as a named kit.
+     *
+     * <p>The captured stacks are deep-copied. Bukkit hands back live mirrors of
+     * the underlying inventory, so keeping those references would let a later
+     * {@code /clear} — which zeroes stacks in place — empty the cached kit.</p>
+     */
     public void create(String name, Player player) {
         String key = name.toLowerCase(Locale.ROOT);
         PlayerInventory inventory = player.getInventory();
 
-        ItemStack[] storage = new ItemStack[STORAGE_SIZE];
-        System.arraycopy(inventory.getStorageContents(), 0, storage, 0,
-                Math.min(STORAGE_SIZE, inventory.getStorageContents().length));
-
-        ItemStack[] armor = new ItemStack[ARMOR_SIZE];
-        System.arraycopy(inventory.getArmorContents(), 0, armor, 0,
-                Math.min(ARMOR_SIZE, inventory.getArmorContents().length));
-
-        ItemStack offhand = inventory.getItemInOffHand();
+        ItemStack[] storage = snapshot(inventory.getStorageContents(), STORAGE_SIZE);
+        ItemStack[] armor = snapshot(inventory.getArmorContents(), ARMOR_SIZE);
+        ItemStack offhand = Items.isEmpty(inventory.getItemInOffHand())
+                ? null : inventory.getItemInOffHand().clone();
 
         ConfigurationSection section = kitsFile.section("kits." + key);
         section.set("storage", Items.encodeAll(storage));
@@ -159,7 +160,17 @@ public final class KitModule extends EventModule {
         section.set("offhand", Items.encode(offhand));
         kitsFile.save();
 
-        cache.put(key, new Kit(name, storage, armor, Items.isEmpty(offhand) ? null : offhand));
+        cache.put(key, new Kit(name, storage, armor, offhand));
+    }
+
+    /** Copies a live inventory array into a detached, fixed-size array. */
+    private static ItemStack[] snapshot(ItemStack[] source, int size) {
+        ItemStack[] out = new ItemStack[size];
+        int limit = Math.min(size, source.length);
+        for (int index = 0; index < limit; index++) {
+            out[index] = Items.isEmpty(source[index]) ? null : source[index].clone();
+        }
+        return out;
     }
 
     public boolean delete(String name) {
