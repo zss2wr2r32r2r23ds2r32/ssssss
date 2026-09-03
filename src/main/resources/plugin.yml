@@ -10,9 +10,9 @@ folia-supported: false
 
 commands:
   shardedeventcore:
-    description: Reload the plugin and inspect the current event state.
+    description: Reload the plugin, inspect the event state and run the settings actions.
     aliases: [ shardedcore, sec ]
-    usage: /<command> <reload|status>
+    usage: /<command> <reload|status|select|border|bedrockdrop|clearblocks|supplydrops|revive>
     permission: shardedcore.admin
   module:
     description: Enable, disable and inspect the plugin modules.

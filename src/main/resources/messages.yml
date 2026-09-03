@@ -20,6 +20,12 @@ root:
     - '%prefix%&fShardedEventCore &7v%version%'
     - '&#AD4EFF| &f/%label% reload &7- reload every configuration file'
     - '&#AD4EFF| &f/%label% status &7- show the current event state'
+    - '&#AD4EFF| &f/%label% select <crystal|diasmp|none>'
+    - '&#AD4EFF| &f/%label% border <size> [duration] &7- e.g. 1000 1s'
+    - '&#AD4EFF| &f/%label% bedrockdrop &7- clear down to bedrock'
+    - '&#AD4EFF| &f/%label% clearblocks &7- remove player-placed blocks'
+    - '&#AD4EFF| &f/%label% supplydrops [count]'
+    - '&#AD4EFF| &f/%label% revive &7- revive every eliminated player'
   reloaded: '%prefix%&aReloaded every configuration file.'
   status:
     - '%prefix%&fStatus &7(v%version%)'
