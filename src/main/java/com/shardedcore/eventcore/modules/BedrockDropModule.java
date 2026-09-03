@@ -317,8 +317,12 @@ public final class BedrockDropModule extends EventModule {
             if (stopped) {
                 return;
             }
-            fetch();
-            apply();
+            // One deadline covers both stages. Taking a chunk snapshot is main-thread
+            // work too, so it has to come out of the same budget as the block writes,
+            // otherwise a tick can cost the budget plus several snapshots.
+            long deadline = System.nanoTime() + budgetNanos;
+            apply(deadline);
+            fetch(deadline);
 
             if (fetchDone && inFlight.get() == 0 && ready.isEmpty() && current == null) {
                 long cleared = blocksCleared;
@@ -334,12 +338,15 @@ public final class BedrockDropModule extends EventModule {
         }
 
         /** Keeps a small number of snapshots queued without letting memory grow. */
-        private void fetch() {
+        private void fetch(long deadline) {
             if (fetchDone) {
                 return;
             }
             int requests = 0;
             while (requests < fetchesPerTick && ready.size() + inFlight.get() < maxPendingChunks) {
+                if (!instant && System.nanoTime() >= deadline) {
+                    return;
+                }
                 if (cursorZ > bounds.chunkMaxZ()) {
                     fetchDone = true;
                     return;
@@ -443,8 +450,7 @@ public final class BedrockDropModule extends EventModule {
         }
 
         /** Main thread: write air until the tick budget or block cap is spent. */
-        private void apply() {
-            long deadline = System.nanoTime() + budgetNanos;
+        private void apply(long deadline) {
             int written = 0;
             int sinceCheck = 0;
 
