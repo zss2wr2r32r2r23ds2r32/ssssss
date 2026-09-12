@@ -1,20 +1,21 @@
-# Nautical Fortnite Launcher
+# Avix Launcher
 
-Premium Windows desktop utility for competitive Fortnite sessions. Dark nautical aesthetic, profile-based setup, and a secure Electron shell.
+Windows desktop utility for competitive Fortnite sessions. Dark navy/purple shell, magenta accents, and a secure Electron host.
 
-Nautical is a **normal Windows application**. It uses documented OS and Epic config-file APIs only. It does **not** inject into Fortnite, read game memory, touch packets, bypass Easy Anti-Cheat, automate aim/recoil, or collect credentials.
+Avix is a **normal Windows application**. It uses documented OS and Epic config-file APIs only. It does **not** inject into Fortnite, read game memory, touch packets, bypass Easy Anti-Cheat, automate aim/recoil, or collect credentials.
 
 ## Features
 
-- **Home** — install status, active profile, stretched/display resolution, crosshair + macro state, large **LAUNCH FORTNITE**
-- **Launch sequence** — refuse a second session if Fortnite is already running → apply active profile Fortnite-only config → optional safe cleanup → start the configured executable → start overlay/macro when enabled → monitor the process → on close/crash stop overlay + macro and restore temporary display/config
-- **Path detection** — searches common Epic/Fortnite locations and launcher manifests; browse + validate `Fortnite.exe` / `FortniteClient-Win64-Shipping.exe`; persist JSON
+- **Home** — Believer Beach hero, last-used skin preview (local Fortnite logs or an uploaded image), install detect/browse, large **LAUNCH FORTNITE**
+- **Launch sequence** — refuse a second session if Fortnite is already running → apply active profile Fortnite-only config → start the configured executable → start overlay/macro when enabled → monitor the process → on close/crash stop overlay + macro and restore temporary display/config
+- **Path detection** — Epic `.item` manifests + `LauncherInstalled.dat`; prefers `FortniteClient-Win64-Shipping.exe` → `FortniteBootstrapper.exe` → `Fortnite.exe`
 - **Crosshair overlay** — always-on-top, click-through, centered on the primary display, exclude-from-capture when Windows allows it
 - **Resolution** — example presets, custom apply/test, native backup, Fortnite `GameUserSettings.ini` backup, GPU scaling notes (not FOV, not “best res”)
-- **Performance** — Epic-cited PC competitive helpers + optional cleanup with a hard whitelist
-- **Macro** — interval key/mouse repeat with focus gate and a prominent Epic rules warning
+- **Performance** — live CPU, RAM, and GPU usage from OS counters, plus Avix’s own process footprint. No FPS claims and no “close Discord/Chrome” cleanup on this page
+- **Macro** — interval key/mouse/scroll-wheel repeat with focus gate and a prominent Epic rules warning
+- **Scrim alert** — enable per org/format (Noble Elite, Poyo Elite, Ladder Elite, Duos Elite, Solos Elite, plus custom). In-app toast plus an optional Discord webhook you configure. v1 polls optional HTTPS status URLs (`{ "live": true }` or the word `live`) or fires a manual Test — there is no official Epic/org API
 - **Profiles** — Competitive / Aggressive / Native seeds, CRUD, duplicate, default
-- **First-run wizard** — Welcome to Nautical → detect → install → monitor → resolution → crosshair → Home
+- **First-run wizard** — Welcome to Avix → detect → install → monitor → resolution → crosshair → Home
 
 Version **1.0.0**.
 
@@ -26,15 +27,18 @@ Version **1.0.0**.
 | Preload | Typed `contextBridge` only — no `fs`, `shell`, or `child_process` |
 | IPC | Channel whitelist + Zod validation on every payload |
 | External links | HTTPS Discord hosts only |
+| Webhooks | User-supplied `discord.com/api/webhooks/…` URL stored locally |
 | Windows work | Main process modules only |
 | Forbidden | Memory/packet/anti-cheat/aim/recoil/bot/injection/ESP/wallhacks/credentials |
 
-Config lives in the Electron user-data folder as pretty-printed `nautical-config.json`.
+Config lives in the Electron user-data folder as pretty-printed `avix-config.json`. Older `nautical-config.json` files are migrated on first launch.
+
+The renderer preload API remains `window.nautical` for compatibility.
 
 ## Requirements
 
 - Node.js 20+
-- Windows 10/11 for display changes, process cleanup, overlay capture exclusion, and Fortnite launch
+- Windows 10/11 for display changes, overlay capture exclusion, and Fortnite launch
 - Linux/macOS can run the UI and unit tests; Windows-specific actions degrade gracefully
 
 ## Scripts
@@ -59,9 +63,11 @@ npm run dist:portable
 ## Honesty / safety notes
 
 - Resolution examples are **not** claimed to be best. Epic competitive play is **16:9**. Display scaling ≠ FOV.
-- Cleanup frees background CPU/RAM. It is **not** an FPS guarantee. System, drivers, security, GPU, audio, Explorer, Fortnite, and Epic auth are never killed.
+- Performance meters report OS resource usage. They are **not** an FPS guarantee.
+- Last-used skin is read from local Fortnite log files when a `CID_*` cosmetic id appears there. If that is missing, upload a preview image. No memory injection.
 - Macros may violate Epic rules. The control stays off until you acknowledge that.
 - Windows settings are temporary unless you explicitly save. Emergency **Restore Native** is always available.
+- Scrim alerts never scrape Discord without your webhook and never touch Fortnite.
 
 ## License
 

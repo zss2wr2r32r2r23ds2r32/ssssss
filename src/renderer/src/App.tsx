@@ -7,6 +7,7 @@ import { HomePage } from './pages/Home'
 import { MacroPage } from './pages/Macro'
 import { PerformancePage } from './pages/Performance'
 import { ResolutionPage } from './pages/Resolution'
+import { ScrimsPage } from './pages/Scrims'
 import { SettingsPage } from './pages/Settings'
 import { Wizard } from './pages/Wizard'
 import { useApp } from './store/AppState'
@@ -17,6 +18,7 @@ const PAGES = {
   resolution: ResolutionPage,
   performance: PerformancePage,
   macro: MacroPage,
+  scrims: ScrimsPage,
   settings: SettingsPage
 }
 
@@ -25,13 +27,13 @@ export function App() {
 
   if (config) {
     document.documentElement.style.setProperty('--accent', config.appearance.accent)
-    document.documentElement.style.setProperty('--panel', `rgba(10, 20, 36, ${config.appearance.transparency})`)
+    document.documentElement.style.setProperty('--panel', `rgba(34, 31, 46, ${config.appearance.transparency})`)
   }
 
   if (!ready || !config) {
     return (
       <div className="wizard">
-        <div className="hint">Starting Nautical…</div>
+        <div className="hint">Starting Avix…</div>
       </div>
     )
   }

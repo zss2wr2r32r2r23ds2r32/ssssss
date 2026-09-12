@@ -43,24 +43,36 @@ function mouseFlag(button: MacroSettings['mouseButton'], down: boolean): number 
   return null
 }
 
+function wheelDelta(button: MacroSettings['mouseButton']): number | null {
+  if (button === 'wheel-up') return 120
+  if (button === 'wheel-down') return -120
+  return null
+}
+
 async function sendOnce(settings: MacroSettings): Promise<void> {
   if (!isWindows) return
   const parts: string[] = []
   const vk = vkFor(settings.key)
   if (vk !== null) {
     parts.push(`
-      [NauticalInput]::keybd_event(${vk}, 0, 0, [UIntPtr]::Zero)
+      [AvixInput]::keybd_event(${vk}, 0, 0, [UIntPtr]::Zero)
       Start-Sleep -Milliseconds 12
-      [NauticalInput]::keybd_event(${vk}, 0, 2, [UIntPtr]::Zero)
+      [AvixInput]::keybd_event(${vk}, 0, 2, [UIntPtr]::Zero)
     `)
   }
   const down = mouseFlag(settings.mouseButton, true)
   const up = mouseFlag(settings.mouseButton, false)
   if (down !== null && up !== null) {
     parts.push(`
-      [NauticalInput]::mouse_event(${down}, 0, 0, 0, [UIntPtr]::Zero)
+      [AvixInput]::mouse_event(${down}, 0, 0, 0, [UIntPtr]::Zero)
       Start-Sleep -Milliseconds 12
-      [NauticalInput]::mouse_event(${up}, 0, 0, 0, [UIntPtr]::Zero)
+      [AvixInput]::mouse_event(${up}, 0, 0, 0, [UIntPtr]::Zero)
+    `)
+  }
+  const wheel = wheelDelta(settings.mouseButton)
+  if (wheel !== null) {
+    parts.push(`
+      [AvixInput]::mouse_event(0x0800, 0, 0, ${wheel}, [UIntPtr]::Zero)
     `)
   }
   if (!parts.length) return
@@ -68,7 +80,7 @@ async function sendOnce(settings: MacroSettings): Promise<void> {
     Add-Type @"
       using System;
       using System.Runtime.InteropServices;
-      public class NauticalInput {
+      public class AvixInput {
         [DllImport("user32.dll")] public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
         [DllImport("user32.dll")] public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData, UIntPtr dwExtraInfo);
       }
@@ -112,9 +124,11 @@ export function startMacro(settings: MacroSettings): OperationResult {
   if (!settings.enabled) {
     return { ok: false, message: 'Macro is disabled in the active profile.' }
   }
+  const hasWheel = settings.mouseButton === 'wheel-up' || settings.mouseButton === 'wheel-down'
   if (!(ALLOWED_MACRO_KEYS as readonly string[]).includes(settings.key) && settings.mouseButton === 'none') {
-    return { ok: false, message: 'Choose a supported key or mouse button.' }
+    return { ok: false, message: 'Choose a supported key, mouse button, or scroll wheel.' }
   }
+  void hasWheel
   const interval = Math.min(2, Math.max(0.1, settings.intervalSec))
   current = { ...settings, intervalSec: interval }
   if (timer) clearInterval(timer)

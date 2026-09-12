@@ -1,5 +1,5 @@
 export const APP_VERSION = '1.0.0'
-export const APP_NAME = 'Nautical Fortnite Launcher'
+export const APP_NAME = 'Avix Launcher'
 
 export type LaunchStatus =
   | 'NOT_RUNNING'
@@ -14,6 +14,7 @@ export type NavPage =
   | 'resolution'
   | 'performance'
   | 'macro'
+  | 'scrims'
   | 'settings'
 
 export type GpuVendor = 'NVIDIA' | 'AMD' | 'Intel' | 'Unknown'
@@ -92,7 +93,7 @@ export interface MacroSettings {
   mode: MacroMode
   activationKey: string
   onlyWhileFortniteFocused: boolean
-  mouseButton: 'none' | 'left' | 'right' | 'middle'
+  mouseButton: 'none' | 'left' | 'right' | 'middle' | 'wheel-up' | 'wheel-down'
 }
 
 export interface Profile {
@@ -110,11 +111,34 @@ export interface Profile {
 export interface GeneralSettings {
   startWithWindows: boolean
   trayEnabled: boolean
+  closeToTray: boolean
   startMinimized: boolean
   autoLaunchFortnite: boolean
   checkUpdates: boolean
   hardwareAcceleration: boolean
   discordUrl: string
+  displayName: string
+  discordWebhookUrl: string
+}
+
+export interface SkinPreview {
+  name: string | null
+  image: string | null
+  source: 'log' | 'upload' | 'placeholder'
+  cosmeticId: string | null
+}
+
+export interface ScrimSource {
+  id: string
+  name: string
+  enabled: boolean
+  statusUrl: string | null
+  lastLiveAt: string | null
+}
+
+export interface ScrimSettings {
+  pollSeconds: number
+  sources: ScrimSource[]
 }
 
 export interface AppearanceSettings {
@@ -142,6 +166,8 @@ export interface AppConfig {
   general: GeneralSettings
   appearance: AppearanceSettings
   lastNativeResolution: NativeResolution | null
+  skin: SkinPreview
+  scrims: ScrimSettings
 }
 
 export interface FortniteInstallInfo {
@@ -190,6 +216,8 @@ export interface MonitorSnapshot {
   gpuName: string | null
   ramUsedMb: number | null
   ramTotalMb: number | null
+  appCpu: number | null
+  appRssMb: number | null
   resolution: { width: number; height: number } | null
   fortnite: {
     status: LaunchStatus

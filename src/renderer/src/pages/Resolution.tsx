@@ -34,7 +34,7 @@ export function ResolutionPage() {
         <div>
           <h2>Resolution</h2>
           <p>
-            Examples only — Nautical does not claim a “best” competitive resolution. Epic competitive play is 16:9.
+            Examples only — Avix does not claim a “best” competitive resolution. Epic competitive play is 16:9.
             Display scaling is not the same as FOV.
           </p>
         </div>

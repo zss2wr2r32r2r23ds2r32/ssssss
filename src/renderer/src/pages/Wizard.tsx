@@ -52,8 +52,8 @@ export function Wizard() {
           <motion.div key={step} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }}>
             {step === 0 && (
               <>
-                <p className="hint">Welcome to Nautical</p>
-                <h2 className="hero-word" style={{ fontSize: 72 }}>Nautical</h2>
+                <p className="hint">Welcome to Avix</p>
+                <h2 className="hero-word" style={{ fontSize: 72 }}>Avix</h2>
                 <p className="hero-sub">Your Fortnite competitive setup, all in one place.</p>
                 <p className="hint">
                   Path detection, profiles, a click-through crosshair overlay, temporary resolution handling, honest
@@ -64,7 +64,7 @@ export function Wizard() {
             {step === 1 && (
               <>
                 <h2>Detect Fortnite</h2>
-                <p className="hint">Nautical searches common Epic locations and launcher manifests. Nothing is hardcoded as the only path.</p>
+                <p className="hint">Avix searches common Epic locations and launcher manifests. Nothing is hardcoded as the only path.</p>
                 <div className="card" style={{ margin: '16px 0' }}>
                   <strong>{config.fortnitePath ? 'Install candidate ready' : 'Not found yet'}</strong>
                   <div className="hint">{config.fortnitePath ?? 'You can browse on the next step if auto-detect misses.'}</div>

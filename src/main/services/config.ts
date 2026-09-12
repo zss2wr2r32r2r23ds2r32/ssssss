@@ -8,6 +8,10 @@ import { APP_VERSION } from '../../shared/types'
 let cached: AppConfig | null = null
 
 export function configPath(): string {
+  return path.join(app.getPath('userData'), 'avix-config.json')
+}
+
+function legacyConfigPath(): string {
   return path.join(app.getPath('userData'), 'nautical-config.json')
 }
 
@@ -36,7 +40,7 @@ function deepMerge<T>(base: T, incoming: Partial<T>): T {
 
 export function loadConfig(): AppConfig {
   if (cached) return cached
-  const file = configPath()
+  const file = existsSync(configPath()) ? configPath() : legacyConfigPath()
   const fallback = createDefaultConfig()
   if (!existsSync(file)) {
     cached = fallback
@@ -57,6 +61,11 @@ export function loadConfig(): AppConfig {
     }
     if (!merged.profiles.some((p) => p.id === merged.defaultProfileId)) {
       merged.defaultProfileId = merged.profiles[0].id
+    }
+    if (!merged.skin) merged.skin = fallback.skin
+    if (!merged.scrims) merged.scrims = fallback.scrims
+    if (merged.appearance?.accent?.toLowerCase() === '#3ee0ff') {
+      merged.appearance.accent = '#FF4D9D'
     }
     cached = merged
     return cached

@@ -6,6 +6,8 @@ import { detectGpu } from './resolution'
 import { isWindows, runPowerShell } from './windows-api'
 
 let lastCpu = os.cpus().map((cpu) => cpu.times)
+let lastAppCpu = process.cpuUsage()
+let lastAppAt = Date.now()
 
 function cpuLoad(): number {
   const current = os.cpus()
@@ -52,6 +54,12 @@ export async function snapshot(): Promise<MonitorSnapshot> {
   const free = os.freemem()
   const gpu = await detectGpu()
   const temps = await windowsTemps()
+  const now = Date.now()
+  const usage = process.cpuUsage(lastAppCpu)
+  const elapsed = Math.max(1, now - lastAppAt)
+  lastAppCpu = process.cpuUsage()
+  lastAppAt = now
+  const appCpu = Math.max(0, Math.min(100, Math.round(((usage.user + usage.system) / 1000 / elapsed) * 100)))
   return {
     cpuLoad: cpuLoad(),
     cpuTemp: temps.cpu,
@@ -60,6 +68,8 @@ export async function snapshot(): Promise<MonitorSnapshot> {
     gpuName: gpu.name,
     ramUsedMb: Math.round((total - free) / 1024 / 1024),
     ramTotalMb: Math.round(total / 1024 / 1024),
+    appCpu,
+    appRssMb: Math.round(process.memoryUsage().rss / 1024 / 1024),
     resolution: { width: display.size.width, height: display.size.height },
     fortnite: {
       status: getLaunchStatus(),

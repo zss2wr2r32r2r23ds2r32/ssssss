@@ -1,9 +1,9 @@
 {
-  "name": "nautical-fortnite-launcher",
+  "name": "avix-launcher",
   "version": "1.0.0",
-  "description": "Nautical Fortnite Launcher — a premium competitive Fortnite utility for Windows.",
+  "description": "Avix Launcher — a premium competitive Fortnite utility for Windows.",
   "main": "out/main/index.js",
-  "author": "Nautical",
+  "author": "Avix",
   "license": "MIT",
   "private": true,
   "type": "module",

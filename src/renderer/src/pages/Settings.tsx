@@ -1,4 +1,4 @@
-import { APP_VERSION } from '../../../shared/types'
+import { APP_NAME, APP_VERSION } from '../../../shared/types'
 import { ProfileBar } from '../components/profiles/ProfileBar'
 import { Toggle } from '../components/ui/Toggle'
 import { api } from '../lib/api'
@@ -9,6 +9,9 @@ export function SettingsPage() {
   if (!config || !profile) return null
   const g = config.general
   const a = config.appearance
+
+  const applyGeneral = (patch: Partial<typeof g>) =>
+    api.applyGeneral({ ...g, ...patch }).then(setConfig)
 
   return (
     <div>
@@ -25,30 +28,75 @@ export function SettingsPage() {
       <div className="grid grid-2">
         <section className="card">
           <h3>General</h3>
-          <Toggle checked={g.startWithWindows} onChange={(startWithWindows) => void api.applyGeneral({ ...g, startWithWindows }).then(setConfig)} label="Start with Windows" />
-          <Toggle checked={g.trayEnabled} onChange={(trayEnabled) => void api.applyGeneral({ ...g, trayEnabled }).then(setConfig)} label="Minimize to tray" />
-          <Toggle checked={g.startMinimized} onChange={(startMinimized) => void api.applyGeneral({ ...g, startMinimized }).then(setConfig)} label="Start minimized" />
-          <Toggle checked={g.autoLaunchFortnite} onChange={(autoLaunchFortnite) => void api.applyGeneral({ ...g, autoLaunchFortnite }).then(setConfig)} label="Auto-launch Fortnite after Nautical starts" />
-          <Toggle checked={g.checkUpdates} onChange={(checkUpdates) => void api.applyGeneral({ ...g, checkUpdates }).then(setConfig)} label="Check for updates on start" />
+          <div className="field">
+            <label>Display name</label>
+            <input
+              maxLength={32}
+              value={g.displayName}
+              onChange={(event) => void applyGeneral({ displayName: event.target.value || 'competitor' })}
+            />
+          </div>
+          <Toggle
+            checked={g.startWithWindows}
+            onChange={(startWithWindows) => void applyGeneral({ startWithWindows })}
+            label="Start with Windows"
+          />
+          <Toggle
+            checked={g.trayEnabled}
+            onChange={(trayEnabled) => void applyGeneral({ trayEnabled })}
+            label="Show tray icon"
+          />
+          <Toggle
+            checked={g.closeToTray}
+            onChange={(closeToTray) => void applyGeneral({ closeToTray })}
+            label="Close button hides to tray"
+            hint="Off by default so the title-bar X quits Avix."
+          />
+          <Toggle
+            checked={g.startMinimized}
+            onChange={(startMinimized) => void applyGeneral({ startMinimized })}
+            label="Start minimized"
+          />
+          <Toggle
+            checked={g.autoLaunchFortnite}
+            onChange={(autoLaunchFortnite) => void applyGeneral({ autoLaunchFortnite })}
+            label="Auto-launch Fortnite after Avix starts"
+          />
+          <Toggle
+            checked={g.checkUpdates}
+            onChange={(checkUpdates) => void applyGeneral({ checkUpdates })}
+            label="Check for updates on start"
+          />
           <Toggle
             checked={g.hardwareAcceleration}
-            onChange={(hardwareAcceleration) => void api.applyGeneral({ ...g, hardwareAcceleration }).then(setConfig)}
+            onChange={(hardwareAcceleration) => void applyGeneral({ hardwareAcceleration })}
             label="Hardware acceleration"
-            hint="Takes effect the next time Nautical starts."
+            hint="Takes effect the next time Avix starts."
           />
           <div className="field">
             <label>Discord URL</label>
             <input
               value={g.discordUrl}
-              onChange={(event) => void api.applyGeneral({ ...g, discordUrl: event.target.value }).then(setConfig)}
+              onChange={(event) => void applyGeneral({ discordUrl: event.target.value })}
             />
+          </div>
+          <div className="field">
+            <label>Scrim Discord webhook (optional)</label>
+            <input
+              type="password"
+              autoComplete="off"
+              placeholder="https://discord.com/api/webhooks/…"
+              value={g.discordWebhookUrl}
+              onChange={(event) => void applyGeneral({ discordWebhookUrl: event.target.value })}
+            />
+            <div className="hint">Stored only in your local avix-config.json. Never hardcoded. Leave blank to toast in-app only.</div>
           </div>
           <button
             type="button"
             className="btn"
             onClick={async () => {
               const result = await api.checkUpdates()
-              pushToast({ tone: 'info', title: `Nautical ${result.current}`, body: result.message })
+              pushToast({ tone: 'info', title: `${APP_NAME} ${result.current}`, body: result.message })
             }}
           >
             Check updates
@@ -59,7 +107,7 @@ export function SettingsPage() {
           <div className="field">
             <label>Theme</label>
             <select value={a.theme} disabled>
-              <option value="dark">Dark (nautical)</option>
+              <option value="dark">Dark (Avix)</option>
             </select>
           </div>
           <div className="field">
@@ -83,7 +131,7 @@ export function SettingsPage() {
               value={a.transparency}
               onChange={(event) => {
                 const transparency = Number(event.target.value)
-                document.documentElement.style.setProperty('--panel', `rgba(10, 20, 36, ${transparency})`)
+                document.documentElement.style.setProperty('--panel', `rgba(34, 31, 46, ${transparency})`)
                 void api.updateConfig({ appearance: { ...a, transparency } }).then(setConfig)
               }}
             />
@@ -92,7 +140,11 @@ export function SettingsPage() {
             <label>Animation intensity</label>
             <select
               value={a.animationIntensity}
-              onChange={(event) => void api.updateConfig({ appearance: { ...a, animationIntensity: event.target.value as typeof a.animationIntensity } }).then(setConfig)}
+              onChange={(event) =>
+                void api
+                  .updateConfig({ appearance: { ...a, animationIntensity: event.target.value as typeof a.animationIntensity } })
+                  .then(setConfig)
+              }
             >
               <option value="full">Full</option>
               <option value="subtle">Subtle</option>
@@ -120,7 +172,7 @@ export function SettingsPage() {
         </section>
       </div>
       <p className="hint" style={{ marginTop: 18 }}>
-        Nautical {APP_VERSION} stores human-readable JSON in the app user-data folder. No cheats, no injection, documented
+        {APP_NAME} {APP_VERSION} stores human-readable JSON in the app user-data folder. No cheats, no injection, documented
         Windows APIs only.
       </p>
     </div>

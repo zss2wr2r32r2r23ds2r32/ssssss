@@ -53,7 +53,7 @@ export async function launchFromActiveProfile(): Promise<LaunchResult> {
       ok: false,
       status: 'RUNNING',
       code: 'ALREADY_RUNNING',
-      message: 'Fortnite is already running. Nautical will not start a second session.'
+      message: 'Fortnite is already running. Avix will not start a second session.'
     }
   }
 

@@ -11,13 +11,15 @@ import type {
   MonitorSnapshot,
   OperationResult,
   ResolutionSettings,
+  ScrimSettings,
+  SkinPreview,
   StatusEvent,
   ToastPayload
 } from '../../../shared/types'
 
 function invoke<T>(channel: string, payload?: unknown): Promise<T> {
   if (!window.nautical) {
-    throw new Error('Nautical preload bridge is unavailable.')
+    throw new Error('Avix preload bridge is unavailable.')
   }
   return window.nautical.invoke(channel, payload) as Promise<T>
 }
@@ -57,8 +59,16 @@ export const api = {
   updateMacro: (settings: MacroSettings) => invoke<AppConfig>('macro:update', settings),
   monitor: () => invoke<MonitorSnapshot>('monitor:snapshot'),
   minimize: () => invoke<void>('window:minimize'),
+  maximize: () => invoke<void>('window:maximize'),
   close: () => invoke<void>('window:close'),
   openExternal: (url: string) => invoke<OperationResult>('window:open-external', { url }),
+  detectSkin: () => invoke<SkinPreview>('skin:detect'),
+  importSkin: () => invoke<OperationResult<SkinPreview>>('skin:import'),
+  updateSkin: (skin: SkinPreview) => invoke<AppConfig>('skin:update', skin),
+  listScrims: () => invoke<ScrimSettings>('scrims:list'),
+  updateScrims: (scrims: ScrimSettings) => invoke<ScrimSettings>('scrims:update', scrims),
+  refreshScrims: () => invoke<ScrimSettings>('scrims:refresh'),
+  testScrim: (id: string) => invoke<OperationResult>('scrims:test', { id }),
   applyGeneral: (general: AppConfig['general']) => invoke<AppConfig>('settings:apply-general', general),
   completeWizard: () => invoke<AppConfig>('wizard:complete'),
   checkUpdates: () => invoke<{ ok: boolean; current: string; latest: string; message: string }>('updates:check')

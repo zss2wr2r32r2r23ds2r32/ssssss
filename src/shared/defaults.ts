@@ -7,7 +7,9 @@ import {
   type MacroSettings,
   type PerformanceSettings,
   type Profile,
-  type ResolutionSettings
+  type ResolutionSettings,
+  type ScrimSettings,
+  type SkinPreview
 } from './types'
 
 export const DEFAULT_DISCORD_URL = 'https://discord.com/invite/fortnite'
@@ -16,7 +18,7 @@ export const DEFAULT_CROSSHAIR: CrosshairSettings = {
   enabled: false,
   onlyWhileFortnite: true,
   presetId: 'classic-dot',
-  color: '#7EE8FF',
+  color: '#FF4D9D',
   opacity: 0.95,
   size: 4,
   thickness: 2,
@@ -71,12 +73,36 @@ export const DEFAULT_MACRO: MacroSettings = {
 
 export const DEFAULT_GENERAL: GeneralSettings = {
   startWithWindows: false,
-  trayEnabled: true,
+  trayEnabled: false,
+  closeToTray: false,
   startMinimized: false,
   autoLaunchFortnite: false,
   checkUpdates: true,
   hardwareAcceleration: true,
-  discordUrl: DEFAULT_DISCORD_URL
+  discordUrl: DEFAULT_DISCORD_URL,
+  displayName: 'competitor',
+  discordWebhookUrl: ''
+}
+
+export const DEFAULT_SKIN: SkinPreview = {
+  name: null,
+  image: null,
+  source: 'placeholder',
+  cosmeticId: null
+}
+
+export function seedScrims(): ScrimSettings {
+  const names = ['Noble Elite', 'Poyo Elite', 'Ladder Elite', 'Duos Elite', 'Solos Elite']
+  return {
+    pollSeconds: 60,
+    sources: names.map((name) => ({
+      id: name.toLowerCase().replace(/\s+/g, '-'),
+      name,
+      enabled: name === 'Noble Elite',
+      statusUrl: null,
+      lastLiveAt: null
+    }))
+  }
 }
 
 export function nowIso(): string {
@@ -212,11 +238,13 @@ export function createDefaultConfig(): AppConfig {
     general: { ...DEFAULT_GENERAL },
     appearance: {
       theme: 'dark',
-      accent: '#3EE0FF',
-      transparency: 0.86,
+      accent: '#FF4D9D',
+      transparency: 0.94,
       animationIntensity: 'full'
     },
-    lastNativeResolution: null
+    lastNativeResolution: null,
+    skin: { ...DEFAULT_SKIN },
+    scrims: seedScrims()
   }
 }
 

@@ -1,6 +1,6 @@
-appId: com.nautical.fortnite-launcher
-productName: Nautical Fortnite Launcher
-copyright: Copyright © 2026 Nautical
+appId: com.avix.launcher
+productName: Avix Launcher
+copyright: Copyright © 2026 Avix
 artifactName: ${productName}-${version}-${os}-${arch}.${ext}
 asar: true
 directories:
@@ -33,8 +33,8 @@ nsis:
   allowToChangeInstallationDirectory: true
   createDesktopShortcut: true
   createStartMenuShortcut: true
-  shortcutName: Nautical Fortnite Launcher
-  uninstallDisplayName: Nautical Fortnite Launcher
+  shortcutName: Avix Launcher
+  uninstallDisplayName: Avix Launcher
   installerLanguages:
     - en_US
   deleteAppDataOnUninstall: false

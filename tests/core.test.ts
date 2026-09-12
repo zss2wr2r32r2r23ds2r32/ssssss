@@ -3,9 +3,9 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { buildCrosshair } from '../src/shared/crosshair-draw'
-import { createDefaultConfig, getActiveProfile, seedProfiles } from '../src/shared/defaults'
-import { isAllowedExternalUrl, isIpcChannel } from '../src/shared/ipc'
-import { CROSSHAIR_PRESETS, RESOLUTION_PRESETS } from '../src/shared/types'
+import { createDefaultConfig, getActiveProfile, seedProfiles, seedScrims } from '../src/shared/defaults'
+import { isAllowedExternalUrl, isDiscordWebhookUrl, isIpcChannel } from '../src/shared/ipc'
+import { APP_NAME, CROSSHAIR_PRESETS, RESOLUTION_PRESETS } from '../src/shared/types'
 import {
   collectHintsFromManifestText,
   executablesForInstall,
@@ -28,6 +28,31 @@ describe('profiles', () => {
     expect(getActiveProfile(config).name).toBe('Competitive')
     expect(config.version).toBe('1.0.0')
     expect(config.wizardCompleted).toBe(false)
+    expect(APP_NAME).toBe('Avix Launcher')
+    expect(config.appearance.accent).toBe('#FF4D9D')
+    expect(config.general.closeToTray).toBe(false)
+    expect(config.skin.source).toBe('placeholder')
+    expect(config.scrims.sources.map((s) => s.name)).toEqual([
+      'Noble Elite',
+      'Poyo Elite',
+      'Ladder Elite',
+      'Duos Elite',
+      'Solos Elite'
+    ])
+    expect(getActiveProfile(config).macro.mouseButton).toBe('none')
+  })
+})
+
+describe('scrim + webhook helpers', () => {
+  it('seeds the default elite formats', () => {
+    expect(seedScrims().sources).toHaveLength(5)
+  })
+
+  it('accepts only Discord webhook URLs', () => {
+    expect(isDiscordWebhookUrl('https://discord.com/api/webhooks/123/abc-token')).toBe(true)
+    expect(isDiscordWebhookUrl('https://discordapp.com/api/webhooks/123/abc_token')).toBe(true)
+    expect(isDiscordWebhookUrl('https://discord.com/invite/fortnite')).toBe(false)
+    expect(isDiscordWebhookUrl('https://evil.example/api/webhooks/1/x')).toBe(false)
   })
 })
 
@@ -124,6 +149,10 @@ describe('security helpers', () => {
 
   it('whitelists IPC channels', () => {
     expect(isIpcChannel('fortnite:launch')).toBe(true)
+    expect(isIpcChannel('window:maximize')).toBe(true)
+    expect(isIpcChannel('window:close')).toBe(true)
+    expect(isIpcChannel('skin:detect')).toBe(true)
+    expect(isIpcChannel('scrims:test')).toBe(true)
     expect(isIpcChannel('fs:write')).toBe(false)
   })
 })

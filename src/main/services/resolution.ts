@@ -55,7 +55,7 @@ export async function detectGpu(): Promise<GpuInfo> {
     return {
       vendor: 'Unknown',
       name: `${process.platform} (GPU detection is Windows-only)`,
-      details: ['Run Nautical on Windows to read the installed graphics adapter.']
+      details: ['Run Avix on Windows to read the installed graphics adapter.']
     }
   }
   try {

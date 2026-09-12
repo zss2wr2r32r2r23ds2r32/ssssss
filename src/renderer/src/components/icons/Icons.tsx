@@ -94,6 +94,23 @@ export function CloseIcon(props: IconProps) {
   )
 }
 
+export function MaximizeIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" width="14" height="14" {...base} {...props}>
+      <rect x="7" y="7" width="10" height="10" rx="1.4" />
+    </svg>
+  )
+}
+
+export function BellIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" width="20" height="20" {...base} {...props}>
+      <path d="M6 16h12l-1.2-2.1V11a4.8 4.8 0 1 0-9.6 0v2.9z" />
+      <path d="M10 17.5a2 2 0 0 0 4 0" />
+    </svg>
+  )
+}
+
 export function LaunchIcon(props: IconProps) {
   return (
     <svg viewBox="0 0 24 24" width="22" height="22" {...base} {...props}>

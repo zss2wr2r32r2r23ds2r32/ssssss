@@ -57,7 +57,7 @@ export const macroSchema = z.object({
   mode: z.enum(['hold', 'toggle', 'fortnite-focus']),
   activationKey: z.string().min(1).max(16),
   onlyWhileFortniteFocused: z.boolean(),
-  mouseButton: z.enum(['none', 'left', 'right', 'middle'])
+  mouseButton: z.enum(['none', 'left', 'right', 'middle', 'wheel-up', 'wheel-down'])
 })
 
 export const profilePatchSchema = z.object({
@@ -79,11 +79,14 @@ export const configPatchSchema = z.object({
     .object({
       startWithWindows: z.boolean().optional(),
       trayEnabled: z.boolean().optional(),
+      closeToTray: z.boolean().optional(),
       startMinimized: z.boolean().optional(),
       autoLaunchFortnite: z.boolean().optional(),
       checkUpdates: z.boolean().optional(),
       hardwareAcceleration: z.boolean().optional(),
-      discordUrl: z.string().min(8).max(300).optional()
+      discordUrl: z.string().min(8).max(300).optional(),
+      displayName: z.string().max(32).optional(),
+      discordWebhookUrl: z.string().max(400).optional()
     })
     .optional(),
   appearance: z

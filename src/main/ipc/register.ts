@@ -12,7 +12,10 @@ import {
   updateActiveProfile,
   updateConfig
 } from '../services/config'
+import { requestQuit } from '../quit'
 import { detectFortniteInstall, persistFortnitePath, validateFortnitePath, getLaunchStatus } from '../services/fortnite'
+import { fireScrimAlert, refreshScrims, updateScrims } from '../services/scrims'
+import { detectLastUsedSkin, importSkinPreview } from '../services/skin'
 import { FORTNITE_DIALOG_FILTERS, fortniteBrowseStartDir } from '../services/windows-api'
 import { launchFromActiveProfile } from '../services/launcher'
 import { startMacro, stopMacro, updateMacroRuntime } from '../services/macro'
@@ -289,24 +292,57 @@ export function registerIpc(getWindow: () => BrowserWindow | null): void {
 
   ipcMain.handle('monitor:snapshot', () => snapshot())
   ipcMain.handle('window:minimize', () => {
+    getWindow()?.minimize()
+  })
+  ipcMain.handle('window:maximize', () => {
     const win = getWindow()
-    const config = loadConfig()
-    if (config.general.trayEnabled) {
-      win?.hide()
-    } else {
-      win?.minimize()
-    }
+    if (!win) return
+    if (win.isMaximized()) win.unmaximize()
+    else win.maximize()
   })
   ipcMain.handle('window:close', () => {
-    getWindow()?.close()
+    requestQuit()
   })
   ipcMain.handle('window:open-external', async (_event, raw) => {
     const { url } = urlSchema.parse(raw)
     if (!isAllowedExternalUrl(url)) {
-      return { ok: false, message: 'Only Discord HTTPS links can be opened from Nautical.' }
+      return { ok: false, message: 'Only Discord HTTPS links can be opened from Avix.' }
     }
     await shell.openExternal(url)
     return { ok: true, message: 'Opened Discord.' }
+  })
+  ipcMain.handle('skin:detect', () => detectLastUsedSkin())
+  ipcMain.handle('skin:import', () => importSkinPreview(getWindow()))
+  ipcMain.handle('skin:update', (_event, raw) => {
+    const parsed = z.object({
+      name: z.string().max(64).nullable(),
+      image: z.string().nullable(),
+      source: z.enum(['log', 'upload', 'placeholder']),
+      cosmeticId: z.string().max(80).nullable()
+    }).parse(raw)
+    return updateConfig({ skin: parsed })
+  })
+  ipcMain.handle('scrims:list', () => loadConfig().scrims)
+  ipcMain.handle('scrims:update', (_event, raw) => {
+    const parsed = z.object({
+      pollSeconds: z.number().min(20).max(600),
+      sources: z.array(z.object({
+        id: z.string().min(1).max(80),
+        name: z.string().min(1).max(48),
+        enabled: z.boolean(),
+        statusUrl: z.string().nullable(),
+        lastLiveAt: z.string().nullable()
+      })).max(24)
+    }).parse(raw)
+    return updateScrims(parsed)
+  })
+  ipcMain.handle('scrims:refresh', () => refreshScrims())
+  ipcMain.handle('scrims:test', async (_event, raw) => {
+    const { id } = idSchema.parse(raw)
+    const source = loadConfig().scrims.sources.find((item) => item.id === id)
+    if (!source) return { ok: false, message: 'Unknown scrim source.' }
+    await fireScrimAlert(source)
+    return { ok: true, message: `Alert fired for ${source.name}.` }
   })
 
   ipcMain.handle('settings:apply-general', (_event, raw) => {
@@ -322,6 +358,6 @@ export function registerIpc(getWindow: () => BrowserWindow | null): void {
     ok: true,
     current: APP_VERSION,
     latest: APP_VERSION,
-    message: `You are running Nautical ${APP_VERSION}. Manual updates are used for this release.`
+    message: `You are running Avix ${APP_VERSION}. Manual updates are used for this release.`
   }))
 }

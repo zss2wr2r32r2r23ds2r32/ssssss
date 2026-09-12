@@ -8,11 +8,12 @@ import { loadConfig } from './services/config'
 import { attachDisplayListeners } from './services/overlay'
 import { detectFortniteInstall, onStatus } from './services/fortnite'
 import { launchFromActiveProfile } from './services/launcher'
+import { onScrimAlert, startScrimPoller } from './services/scrims'
 import { applyLoginItem, shouldStartHidden } from './services/settings-os'
+import { isAppQuitting, markQuitting, requestQuit } from './quit'
 
 let mainWindow: BrowserWindow | null = null
 let tray: Tray | null = null
-let isQuiting = false
 
 function resolvePreload(name: string): string {
   const candidates = [`${name}.js`, `${name}.mjs`, `${name}.cjs`].map((file) =>
@@ -52,7 +53,7 @@ function createWindow(): BrowserWindow {
     minWidth: 1100,
     minHeight: 700,
     frame: false,
-    backgroundColor: '#070b14',
+    backgroundColor: '#16141f',
     title: APP_NAME,
     icon: icon ?? undefined,
     show: false,
@@ -78,7 +79,7 @@ function createWindow(): BrowserWindow {
   })
 
   win.on('close', (event) => {
-    if (loadConfig().general.trayEnabled && !isQuiting) {
+    if (loadConfig().general.closeToTray && !isAppQuitting()) {
       event.preventDefault()
       win.hide()
     }
@@ -96,7 +97,7 @@ function createTray(): void {
   tray.setToolTip(`${APP_NAME} ${APP_VERSION}`)
   tray.setContextMenu(
     Menu.buildFromTemplate([
-      { label: 'Open Nautical', click: () => mainWindow?.show() },
+      { label: 'Open Avix', click: () => mainWindow?.show() },
       {
         label: 'Launch Fortnite',
         click: () => {
@@ -107,8 +108,7 @@ function createTray(): void {
       {
         label: 'Quit',
         click: () => {
-          isQuiting = true
-          app.quit()
+          requestQuit()
         }
       }
     ])
@@ -135,7 +135,9 @@ if (!gotLock) {
   const earlyConfig = (() => {
     try {
       const userData = app.getPath('userData')
-      const file = join(userData, 'nautical-config.json')
+      const file = existsSync(join(userData, 'avix-config.json'))
+        ? join(userData, 'avix-config.json')
+        : join(userData, 'nautical-config.json')
       if (!existsSync(file)) return null
       return JSON.parse(readFileSync(file, 'utf8')) as { general?: { hardwareAcceleration?: boolean } }
     } catch {
@@ -156,6 +158,15 @@ if (!gotLock) {
     const config = loadConfig()
     applyLoginItem(config.general)
     if (config.general.trayEnabled) createTray()
+    startScrimPoller()
+    onScrimAlert((title, body) => {
+      mainWindow?.webContents.send('toast:show', {
+        id: `scrim-${Date.now()}`,
+        tone: 'warn',
+        title,
+        body
+      })
+    })
 
     onStatus((event) => {
       mainWindow?.webContents.send('status:changed', event)
@@ -184,7 +195,7 @@ if (!gotLock) {
   })
 
   app.on('before-quit', () => {
-    isQuiting = true
+    markQuitting()
   })
 
   app.on('activate', () => {

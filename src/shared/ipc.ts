@@ -33,8 +33,16 @@ export const IPC_CHANNELS = [
   'macro:update',
   'monitor:snapshot',
   'window:minimize',
+  'window:maximize',
   'window:close',
   'window:open-external',
+  'skin:detect',
+  'skin:import',
+  'skin:update',
+  'scrims:list',
+  'scrims:update',
+  'scrims:refresh',
+  'scrims:test',
   'settings:apply-general',
   'wizard:complete',
   'updates:check'
@@ -64,6 +72,17 @@ export function isAllowedExternalUrl(url: string): boolean {
     const parsed = new URL(url)
     if (parsed.protocol !== 'https:') return false
     return (ALLOWED_EXTERNAL_HOSTS as readonly string[]).includes(parsed.hostname)
+  } catch {
+    return false
+  }
+}
+
+export function isDiscordWebhookUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url)
+    if (parsed.protocol !== 'https:') return false
+    const hostOk = parsed.hostname === 'discord.com' || parsed.hostname === 'discordapp.com'
+    return hostOk && /^\/api\/webhooks\/\d+\/[A-Za-z0-9_-]+$/.test(parsed.pathname)
   } catch {
     return false
   }

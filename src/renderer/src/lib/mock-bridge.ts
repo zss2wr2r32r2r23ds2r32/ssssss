@@ -1,6 +1,6 @@
 import { createDefaultConfig, getActiveProfile } from '../../../shared/defaults'
 import { IPC_CHANNELS, IPC_EVENTS, isAllowedExternalUrl } from '../../../shared/ipc'
-import { APP_VERSION, type AppConfig, type LaunchStatus } from '../../../shared/types'
+import { APP_NAME, APP_VERSION, type AppConfig, type LaunchStatus } from '../../../shared/types'
 
 export function installMockBridge(): void {
   if (typeof navigator !== 'undefined' && /Electron/i.test(navigator.userAgent)) return
@@ -45,7 +45,20 @@ export function installMockBridge(): void {
         case 'performance:candidates':
           return []
         case 'monitor:snapshot':
-          return { cpuLoad: 12, cpuTemp: null, gpuLoad: null, gpuTemp: null, gpuName: 'Preview', ramUsedMb: 8000, ramTotalMb: 16000, resolution: { width: 1920, height: 1080 }, fortnite: { status, pid: null, uptimeSec: null }, timestamp: Date.now() }
+          return {
+            cpuLoad: 12,
+            cpuTemp: null,
+            gpuLoad: null,
+            gpuTemp: null,
+            gpuName: 'Preview',
+            ramUsedMb: 8000,
+            ramTotalMb: 16000,
+            appCpu: 1,
+            appRssMb: 180,
+            resolution: { width: 1920, height: 1080 },
+            fortnite: { status, pid: null, uptimeSec: null },
+            timestamp: Date.now()
+          }
         case 'wizard:complete':
           config = { ...config, wizardCompleted: true }
           return config
@@ -56,16 +69,36 @@ export function installMockBridge(): void {
           config = { ...config, defaultProfileId: (payload as { id: string }).id }
           return config
         case 'profiles:create':
-          return config
         case 'profiles:duplicate':
-          return config
-        case 'profiles:delete':
-          return { ok: false, message: 'Preview keeps seeded profiles.' }
         case 'profiles:update':
         case 'crosshair:update':
         case 'macro:update':
         case 'settings:apply-general':
+        case 'skin:update':
           return config
+        case 'profiles:delete':
+          return { ok: false, message: 'Preview keeps seeded profiles.' }
+        case 'skin:detect':
+          return config.skin
+        case 'skin:import':
+          return { ok: false, message: 'Vite UI preview cannot import files. Use the Electron app.' }
+        case 'scrims:list':
+        case 'scrims:refresh':
+          return config.scrims
+        case 'scrims:update':
+          config = { ...config, scrims: payload as AppConfig['scrims'] }
+          return config.scrims
+        case 'scrims:test': {
+          const id = (payload as { id: string }).id
+          const source = config.scrims.sources.find((item) => item.id === id)
+          const name = source?.name ?? 'scrim'
+          emit('toast:show', { id: `preview-${Date.now()}`, tone: 'warn', title: 'Scrim alert', body: `Scrim is on — ${name}` })
+          return { ok: true, message: `Alert fired for ${name}.` }
+        }
+        case 'window:minimize':
+        case 'window:maximize':
+        case 'window:close':
+          return undefined
         case 'window:open-external': {
           const url = (payload as { url: string }).url
           if (!isAllowedExternalUrl(url)) return { ok: false, message: 'Only Discord HTTPS links.' }
@@ -73,7 +106,7 @@ export function installMockBridge(): void {
           return { ok: true, message: 'Opened Discord.' }
         }
         case 'updates:check':
-          return { ok: true, current: APP_VERSION, latest: APP_VERSION, message: `Nautical ${APP_VERSION}` }
+          return { ok: true, current: APP_VERSION, latest: APP_VERSION, message: `You are running ${APP_NAME} ${APP_VERSION}.` }
         default:
           return { ok: true, message: 'Preview stub', data: getActiveProfile(config) }
       }

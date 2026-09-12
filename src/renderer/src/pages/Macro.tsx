@@ -22,7 +22,7 @@ export function MacroPage() {
       </div>
       <div className="notice danger">
         <strong>Epic Games rules risk.</strong> Using macros in Fortnite can violate Epic’s rules and may result in penalties
-        including account action. You are responsible for compliance. Nautical does not bypass Easy Anti-Cheat, does not
+        including account action. You are responsible for compliance. Avix does not bypass Easy Anti-Cheat, does not
         read Fortnite memory, and does not automate aiming. Leave this page disabled if you play in environments that
         forbid macros.
       </div>
@@ -52,6 +52,8 @@ export function MacroPage() {
               <option value="left">Left click</option>
               <option value="right">Right click</option>
               <option value="middle">Middle click</option>
+              <option value="wheel-up">Scroll wheel up</option>
+              <option value="wheel-down">Scroll wheel down</option>
             </select>
           </div>
           <div className="field">
