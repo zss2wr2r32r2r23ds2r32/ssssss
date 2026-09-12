@@ -22,6 +22,7 @@ export type ScalingMethod = 'gpu' | 'display' | 'automatic' | 'fortnite-only'
 export type MacroMode = 'hold' | 'toggle' | 'fortnite-focus'
 export type AnimationIntensity = 'off' | 'subtle' | 'full'
 export type ThemeId = 'dark'
+export type LaunchMethod = 'epic' | 'bootstrapper' | 'shipping'
 export type CrosshairShape =
   | 'dot'
   | 'cross'
@@ -119,6 +120,7 @@ export interface GeneralSettings {
   discordUrl: string
   displayName: string
   discordWebhookUrl: string
+  launchMethod: LaunchMethod
 }
 
 export interface SkinPreview {
@@ -126,6 +128,11 @@ export interface SkinPreview {
   image: string | null
   source: 'log' | 'upload' | 'placeholder'
   cosmeticId: string | null
+}
+
+export interface AvatarSettings {
+  fileName: string | null
+  mime: string | null
 }
 
 export interface ScrimSource {
@@ -167,6 +174,7 @@ export interface AppConfig {
   appearance: AppearanceSettings
   lastNativeResolution: NativeResolution | null
   skin: SkinPreview
+  avatar: AvatarSettings
   scrims: ScrimSettings
 }
 
@@ -240,6 +248,9 @@ export interface LaunchResult {
     | 'MACRO_FAILED'
     | 'ADMIN_REQUIRED'
     | 'MACRO_NOT_ACKNOWLEDGED'
+    | 'EPIC_REQUIRED'
+    | 'AUTH_REQUIRED'
+    | 'LAUNCH_TIMEOUT'
   message: string
 }
 

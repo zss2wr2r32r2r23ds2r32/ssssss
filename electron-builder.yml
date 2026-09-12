@@ -48,4 +48,8 @@ mac:
   icon: resources/icon.png
   target:
     - dir
-publish: null
+publish:
+  provider: github
+  owner: zss2wr2r32r2r23ds2r32
+  repo: ssssss
+  releaseType: release

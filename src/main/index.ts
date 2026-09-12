@@ -4,13 +4,17 @@ import { join } from 'node:path'
 import { APP_NAME, APP_VERSION } from '../shared/types'
 import { registerIpc } from './ipc/register'
 import { applySessionGuards } from './security'
-import { loadConfig } from './services/config'
+import { flushConfig, loadConfig } from './services/config'
 import { attachDisplayListeners } from './services/overlay'
 import { detectFortniteInstall, onStatus } from './services/fortnite'
 import { launchFromActiveProfile } from './services/launcher'
 import { onScrimAlert, startScrimPoller } from './services/scrims'
+import { checkForUpdates } from './services/updates'
 import { applyLoginItem, shouldStartHidden } from './services/settings-os'
 import { isAppQuitting, markQuitting, requestQuit } from './quit'
+import { migrateUserDataIfNeeded, stabilizeUserData } from './user-data'
+
+stabilizeUserData()
 
 let mainWindow: BrowserWindow | null = null
 let tray: Tray | null = null
@@ -150,6 +154,7 @@ if (!gotLock) {
   }
 
   app.whenReady().then(async () => {
+    migrateUserDataIfNeeded()
     applySessionGuards()
     Menu.setApplicationMenu(null)
     registerIpc(() => mainWindow)
@@ -170,17 +175,28 @@ if (!gotLock) {
 
     onStatus((event) => {
       mainWindow?.webContents.send('status:changed', event)
-      if (event.message) {
+      if (event.unexpected && event.message) {
         mainWindow?.webContents.send('toast:show', {
           id: `status-${Date.now()}`,
-          tone: event.unexpected ? 'warn' : 'info',
-          title: event.unexpected ? 'Fortnite closed unexpectedly' : 'Fortnite status',
+          tone: 'warn',
+          title: 'Fortnite closed unexpectedly',
           body: event.message
         })
       }
     })
 
     void detectFortniteInstall()
+    if (config.general.checkUpdates) {
+      void checkForUpdates().then((result) => {
+        if (!result.newer) return
+        mainWindow?.webContents.send('toast:show', {
+          id: `update-${Date.now()}`,
+          tone: 'info',
+          title: 'Update available',
+          body: result.message
+        })
+      })
+    }
     if (config.general.autoLaunchFortnite && config.wizardCompleted) {
       setTimeout(() => {
         void launchFromActiveProfile()
@@ -196,6 +212,11 @@ if (!gotLock) {
 
   app.on('before-quit', () => {
     markQuitting()
+    try {
+      flushConfig()
+    } catch {
+      // Quit anyway.
+    }
   })
 
   app.on('activate', () => {

@@ -82,6 +82,17 @@ export function installMockBridge(): void {
           return config.skin
         case 'skin:import':
           return { ok: false, message: 'Vite UI preview cannot import files. Use the Electron app.' }
+        case 'avatar:get':
+          return null
+        case 'avatar:import':
+          return { ok: false, message: 'Vite UI preview cannot import files. Use the Electron app.' }
+        case 'avatar:clear':
+          config = { ...config, avatar: { fileName: null, mime: null } }
+          return { ok: true, message: 'Profile picture removed.', data: config.avatar }
+        case 'app:info':
+          return { configPath: 'preview/avix-config.json', userData: 'preview', version: APP_VERSION }
+        case 'updates:open':
+          return { ok: true, message: 'Opened the download page.' }
         case 'scrims:list':
         case 'scrims:refresh':
           return config.scrims
@@ -106,7 +117,15 @@ export function installMockBridge(): void {
           return { ok: true, message: 'Opened Discord.' }
         }
         case 'updates:check':
-          return { ok: true, current: APP_VERSION, latest: APP_VERSION, message: `You are running ${APP_NAME} ${APP_VERSION}.` }
+          return {
+            ok: true,
+            current: APP_VERSION,
+            latest: APP_VERSION,
+            newer: false,
+            downloadUrl: 'https://github.com/zss2wr2r32r2r23ds2r32/ssssss/releases',
+            releasesUrl: 'https://github.com/zss2wr2r32r2r23ds2r32/ssssss/releases',
+            message: `You are running ${APP_NAME} ${APP_VERSION}.`
+          }
         default:
           return { ok: true, message: 'Preview stub', data: getActiveProfile(config) }
       }

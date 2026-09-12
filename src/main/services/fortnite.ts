@@ -1,4 +1,5 @@
 import { spawn } from 'node:child_process'
+import { shell } from 'electron'
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
 import {
@@ -6,12 +7,19 @@ import {
   executablesForInstall,
   rankFortniteCandidates
 } from '../../shared/fortnite-detect'
+import {
+  commonEpicLauncherPaths,
+  FORTNITE_EPIC_URI,
+  FORTNITE_GAME_PROCESS_NAMES,
+  FORTNITE_HELPER_PROCESS_NAMES,
+  resolveLaunchTargets,
+  type LaunchMethod
+} from '../../shared/fortnite-launch'
 import type { FortniteInstallInfo, LaunchStatus, StatusEvent } from '../../shared/types'
 import { loadConfig, updateConfig } from './config'
 import {
   commonFortniteCandidates,
   epicManifestDirs,
-  FORTNITE_PROCESS_NAMES,
   isWindows,
   launcherInstalledPath,
   looksLikeFortniteExecutable,
@@ -164,17 +172,17 @@ export async function persistFortnitePath(filePath: string): Promise<FortniteIns
   return info
 }
 
-export async function listFortnitePids(): Promise<number[]> {
+async function listPidsByNames(names: readonly string[]): Promise<number[]> {
   if (!isWindows) {
     return trackedPid ? [trackedPid] : []
   }
   try {
-    const names = FORTNITE_PROCESS_NAMES.map((n) => `'${n.replace(/\.exe$/i, '')}'`).join(',')
+    const list = names.map((n) => `'${n.replace(/\.exe$/i, '')}'`).join(',')
     const script = `
-      $names = @(${names})
+      $names = @(${list})
       Get-Process -ErrorAction SilentlyContinue | Where-Object { $names -contains $_.ProcessName } | Select-Object -ExpandProperty Id
     `
-    const out = await runPowerShell(script)
+    const out = await runPowerShell(script, 8000)
     return out
       .split(/\s+/)
       .map((v) => Number(v))
@@ -184,9 +192,34 @@ export async function listFortnitePids(): Promise<number[]> {
   }
 }
 
+export async function listFortnitePids(): Promise<number[]> {
+  return listPidsByNames(FORTNITE_GAME_PROCESS_NAMES)
+}
+
+export async function listLaunchHelperPids(): Promise<number[]> {
+  return listPidsByNames(FORTNITE_HELPER_PROCESS_NAMES)
+}
+
+export async function listEpicLauncherPids(): Promise<number[]> {
+  return listPidsByNames(['EpicGamesLauncher.exe', 'EpicGamesLauncher-Win64-Shipping.exe'])
+}
+
 export async function isFortniteRunning(): Promise<boolean> {
   const pids = await listFortnitePids()
   return pids.length > 0
+}
+
+export async function isEpicLauncherPresent(): Promise<boolean> {
+  return (await listEpicLauncherPids()).length > 0 || Boolean(findEpicLauncher())
+}
+
+export function findEpicLauncher(): string | null {
+  return commonEpicLauncherPaths().find((file) => existsSync(file)) ?? null
+}
+
+export function findBootstrapper(installPath: string | null): string | null {
+  const { bootstrapper } = resolveLaunchTargets(installPath)
+  return bootstrapper && existsSync(bootstrapper) ? bootstrapper : null
 }
 
 export async function isFortniteFocused(): Promise<boolean> {
@@ -216,28 +249,122 @@ export async function isFortniteFocused(): Promise<boolean> {
   }
 }
 
-export async function launchExecutable(filePath: string): Promise<{ pid: number | null; message: string }> {
-  if (!existsSync(filePath)) {
-    throw new Error('Fortnite path no longer exists.')
-  }
-  const child = spawn(filePath, [], {
+function spawnDetached(filePath: string, args: string[] = []): { pid: number | null } {
+  const child = spawn(filePath, args, {
     detached: true,
     stdio: 'ignore',
     cwd: path.dirname(filePath),
     windowsHide: false
   })
   child.unref()
-  trackedPid = child.pid ?? null
-  startedAt = Date.now()
-  return { pid: trackedPid, message: 'Fortnite launch requested.' }
+  return { pid: child.pid ?? null }
+}
+
+export async function launchExecutable(filePath: string, args: string[] = []): Promise<{ pid: number | null; message: string }> {
+  if (!existsSync(filePath)) {
+    throw new Error(`Path no longer exists: ${filePath}`)
+  }
+  const launched = spawnDetached(filePath, args)
+  return { pid: launched.pid, message: 'Process started.' }
+}
+
+export async function waitForGameProcess(timeoutMs = 75000): Promise<number | null> {
+  const started = Date.now()
+  while (Date.now() - started < timeoutMs) {
+    const pids = await listFortnitePids()
+    if (pids[0]) return pids[0]
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+  }
+  return null
+}
+
+export async function startFortniteViaMethod(
+  installPath: string,
+  method: LaunchMethod
+): Promise<{ ok: boolean; code?: 'EPIC_REQUIRED' | 'SPAWN_FAILED' | 'INVALID_PATH'; message: string; used: string }> {
+  if (!existsSync(installPath)) {
+    return { ok: false, code: 'INVALID_PATH', message: 'Fortnite path no longer exists. Detect or browse again.', used: 'none' }
+  }
+  const { shipping, bootstrapper } = resolveLaunchTargets(installPath)
+  const epic = findEpicLauncher()
+  const bootstrapperPath = bootstrapper && existsSync(bootstrapper) ? bootstrapper : null
+  const shippingPath = shipping && existsSync(shipping) ? shipping : existsSync(installPath) ? installPath : null
+
+  const tryEpicUri = async (): Promise<boolean> => {
+    if (!isWindows) return false
+    if (epic) {
+      spawnDetached(epic, [FORTNITE_EPIC_URI])
+      return true
+    }
+    try {
+      await shell.openExternal(FORTNITE_EPIC_URI)
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  if (method === 'epic') {
+    const started = await tryEpicUri()
+    if (started) {
+      return {
+        ok: true,
+        message: 'Asked Epic Games Launcher to start Fortnite.',
+        used: epic ? 'epic-launcher' : 'epic-uri'
+      }
+    }
+    if (bootstrapperPath) {
+      spawnDetached(bootstrapperPath)
+      return { ok: true, message: 'Started FortniteBootstrapper (Epic protocol was not available).', used: 'bootstrapper' }
+    }
+    return {
+      ok: false,
+      code: 'EPIC_REQUIRED',
+      message: 'Epic Games Launcher was not found. Install/start Epic, or switch launch method to Bootstrapper.',
+      used: 'none'
+    }
+  }
+
+  if (method === 'bootstrapper') {
+    if (!bootstrapperPath) {
+      const started = await tryEpicUri()
+      if (started) {
+        return { ok: true, message: 'FortniteBootstrapper.exe is missing — started via Epic instead.', used: 'epic' }
+      }
+      return {
+        ok: false,
+        code: 'INVALID_PATH',
+        message: 'FortniteBootstrapper.exe was not found next to the Shipping executable.',
+        used: 'none'
+      }
+    }
+    spawnDetached(bootstrapperPath)
+    return { ok: true, message: 'Started FortniteBootstrapper.', used: 'bootstrapper' }
+  }
+
+  if (!shippingPath) {
+    return { ok: false, code: 'INVALID_PATH', message: 'Shipping executable was not found.', used: 'none' }
+  }
+  spawnDetached(shippingPath)
+  return {
+    ok: true,
+    message: 'Started FortniteClient-Win64-Shipping.exe directly. If it exits immediately, use Epic / Bootstrapper.',
+    used: 'shipping'
+  }
 }
 
 export function startProcessPoll(onExit: (unexpected: boolean) => void): void {
   stopProcessPoll()
+  let misses = 0
   pollTimer = setInterval(async () => {
-    if (status !== 'RUNNING' && status !== 'LAUNCHING') return
+    if (status !== 'RUNNING') return
     const running = await isFortniteRunning()
-    if (!running && status === 'RUNNING') {
+    if (running) {
+      misses = 0
+      return
+    }
+    misses += 1
+    if (misses >= 3) {
       onExit(true)
     }
   }, 2500)

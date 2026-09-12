@@ -6,8 +6,8 @@ Avix is a **normal Windows application**. It uses documented OS and Epic config-
 
 ## Features
 
-- **Home** — Believer Beach hero, last-used skin preview (local Fortnite logs or an uploaded image), install detect/browse, large **LAUNCH FORTNITE**
-- **Launch sequence** — refuse a second session if Fortnite is already running → apply active profile Fortnite-only config → start the configured executable → start overlay/macro when enabled → monitor the process → on close/crash stop overlay + macro and restore temporary display/config
+- **Home** — Believer Beach hero, user profile picture stored in app userData, install detect/browse, large **LAUNCH FORTNITE**
+- **Launch sequence** — prefer Epic Games Launcher URI / FortniteBootstrapper (Shipping.exe alone often exits without an Epic session) → wait until `FortniteClient-Win64-Shipping.exe` is actually running before showing Running → start overlay/macro when enabled → restore temporary display/config on a real session close
 - **Path detection** — Epic `.item` manifests + `LauncherInstalled.dat`; prefers `FortniteClient-Win64-Shipping.exe` → `FortniteBootstrapper.exe` → `Fortnite.exe`
 - **Crosshair overlay** — always-on-top, click-through, centered on the primary display, exclude-from-capture when Windows allows it
 - **Resolution** — example presets, custom apply/test, native backup, Fortnite `GameUserSettings.ini` backup, GPU scaling notes (not FOV, not “best res”)

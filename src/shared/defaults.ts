@@ -3,6 +3,7 @@ import {
   type AppConfig,
   type CrosshairSettings,
   type FortniteGraphicsSettings,
+  type AvatarSettings,
   type GeneralSettings,
   type MacroSettings,
   type PerformanceSettings,
@@ -81,7 +82,13 @@ export const DEFAULT_GENERAL: GeneralSettings = {
   hardwareAcceleration: true,
   discordUrl: DEFAULT_DISCORD_URL,
   displayName: 'competitor',
-  discordWebhookUrl: ''
+  discordWebhookUrl: '',
+  launchMethod: 'epic'
+}
+
+export const DEFAULT_AVATAR: AvatarSettings = {
+  fileName: null,
+  mime: null
 }
 
 export const DEFAULT_SKIN: SkinPreview = {
@@ -244,6 +251,7 @@ export function createDefaultConfig(): AppConfig {
     },
     lastNativeResolution: null,
     skin: { ...DEFAULT_SKIN },
+    avatar: { ...DEFAULT_AVATAR },
     scrims: seedScrims()
   }
 }

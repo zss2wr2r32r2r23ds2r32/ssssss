@@ -39,6 +39,11 @@ export const IPC_CHANNELS = [
   'skin:detect',
   'skin:import',
   'skin:update',
+  'avatar:get',
+  'avatar:import',
+  'avatar:clear',
+  'app:info',
+  'updates:open',
   'scrims:list',
   'scrims:update',
   'scrims:refresh',
@@ -64,7 +69,9 @@ export const ALLOWED_EXTERNAL_HOSTS = [
   'discord.com',
   'discord.gg',
   'canary.discord.com',
-  'ptb.discord.com'
+  'ptb.discord.com',
+  'github.com',
+  'api.github.com'
 ] as const
 
 export function isAllowedExternalUrl(url: string): boolean {

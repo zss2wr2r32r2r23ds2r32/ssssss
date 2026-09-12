@@ -122,6 +122,14 @@ img { max-width: 100%; }
   background: var(--bg-0);
 }
 
+.page-hidden {
+  display: none !important;
+}
+
+.page-visible {
+  display: block;
+}
+
 .page-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 20px; }
 .page-head h2 {
   margin: 0;

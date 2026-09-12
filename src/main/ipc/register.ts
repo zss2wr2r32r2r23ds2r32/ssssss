@@ -7,6 +7,7 @@ import { isAllowedExternalUrl } from '../../shared/ipc'
 import { APP_VERSION, type AppConfig, type SavedCrosshairPreset } from '../../shared/types'
 import {
   activeProfile,
+  configPath,
   loadConfig,
   saveConfig,
   updateActiveProfile,
@@ -16,6 +17,8 @@ import { requestQuit } from '../quit'
 import { detectFortniteInstall, persistFortnitePath, validateFortnitePath, getLaunchStatus } from '../services/fortnite'
 import { fireScrimAlert, refreshScrims, updateScrims } from '../services/scrims'
 import { detectLastUsedSkin, importSkinPreview } from '../services/skin'
+import { clearAvatar, importAvatar, readAvatarDataUrl } from '../services/avatar'
+import { checkForUpdates, openReleasesPage } from '../services/updates'
 import { FORTNITE_DIALOG_FILTERS, fortniteBrowseStartDir } from '../services/windows-api'
 import { launchFromActiveProfile } from '../services/launcher'
 import { startMacro, stopMacro, updateMacroRuntime } from '../services/macro'
@@ -313,6 +316,22 @@ export function registerIpc(getWindow: () => BrowserWindow | null): void {
   })
   ipcMain.handle('skin:detect', () => detectLastUsedSkin())
   ipcMain.handle('skin:import', () => importSkinPreview(getWindow()))
+  ipcMain.handle('avatar:get', () => readAvatarDataUrl())
+  ipcMain.handle('avatar:import', () => importAvatar(getWindow()))
+  ipcMain.handle('avatar:clear', () => {
+    const avatar = clearAvatar()
+    return { ok: true, message: 'Profile picture removed.', data: avatar }
+  })
+  ipcMain.handle('app:info', () => ({
+    configPath: configPath(),
+    userData: path.dirname(configPath()),
+    version: APP_VERSION
+  }))
+  ipcMain.handle('updates:open', async (_event, raw) => {
+    const parsed = z.object({ url: z.string().url().optional() }).parse(raw ?? {})
+    await openReleasesPage(parsed.url)
+    return { ok: true, message: 'Opened the download page.' }
+  })
   ipcMain.handle('skin:update', (_event, raw) => {
     const parsed = z.object({
       name: z.string().max(64).nullable(),
@@ -354,10 +373,5 @@ export function registerIpc(getWindow: () => BrowserWindow | null): void {
   })
 
   ipcMain.handle('wizard:complete', () => updateConfig({ wizardCompleted: true }))
-  ipcMain.handle('updates:check', () => ({
-    ok: true,
-    current: APP_VERSION,
-    latest: APP_VERSION,
-    message: `You are running Avix ${APP_VERSION}. Manual updates are used for this release.`
-  }))
+  ipcMain.handle('updates:check', () => checkForUpdates())
 }

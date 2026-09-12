@@ -1,6 +1,4 @@
-import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import type { SkinPreview } from '../../../shared/types'
 import banner from '../assets/home-banner.png'
 import { LaunchIcon } from '../components/icons/Icons'
 import { api } from '../lib/api'
@@ -9,16 +7,20 @@ import { useApp } from '../store/AppState'
 export function HomePage() {
   const { config, profile, status, setConfig, setPage, pushToast } = useApp()
   const [busy, setBusy] = useState(false)
-  const [skin, setSkin] = useState<SkinPreview | null>(config?.skin ?? null)
+  const [avatar, setAvatar] = useState<string | null>(null)
 
   useEffect(() => {
-    void api.detectSkin().then((next) => {
-      setSkin(next)
-    })
-  }, [])
+    if (!config?.avatar.fileName) {
+      setAvatar(null)
+      return
+    }
+    void api.getAvatar().then(setAvatar)
+  }, [config?.avatar.fileName])
 
   if (!config || !profile) return null
   const name = config.general.displayName || 'competitor'
+  const launching = busy || status === 'LAUNCHING' || status === 'CLOSING'
+  const running = status === 'RUNNING'
 
   const launch = async () => {
     setBusy(true)
@@ -26,7 +28,7 @@ export function HomePage() {
       const result = await api.launch()
       pushToast({
         tone: result.ok ? (result.code ? 'warn' : 'success') : 'error',
-        title: result.ok ? 'Launch sequence' : 'Could not launch',
+        title: result.ok ? 'Launch' : 'Could not launch',
         body: result.message
       })
     } finally {
@@ -38,31 +40,29 @@ export function HomePage() {
     <div>
       <section className="hero-banner" style={{ backgroundImage: `url(${banner})` }}>
         <div className="hero-banner-inner">
-          <div className={`skin-portrait ${skin?.image ? '' : 'placeholder'}`}>
-            {skin?.image ? <img src={skin.image} alt={skin.name ?? 'Skin'} /> : 'A'}
+          <div className={`skin-portrait ${avatar ? '' : 'placeholder'}`}>
+            {avatar ? <img src={avatar} alt={name} /> : name.slice(0, 1).toUpperCase()}
           </div>
           <div className="hero-copy">
             <h2>What's up, {name}?</h2>
-            <p>
-              {skin?.name
-                ? `Last used look: ${skin.name}${skin.source === 'log' ? ' (from local Fortnite logs)' : ''}`
-                : 'Last used skin isn’t in local files — upload a preview if you want it here.'}
-            </p>
+            <p>Your photo, your session. Avix starts Fortnite through Epic so the game can stay signed in.</p>
             <div className="row" style={{ marginTop: 12 }}>
-              <button type="button" className="btn" onClick={() => void api.detectSkin().then(setSkin)}>
-                Refresh skin
-              </button>
               <button
                 type="button"
                 className="btn"
                 onClick={async () => {
-                  const result = await api.importSkin()
-                  if (result.data) setSkin(result.data)
-                  if (result.data) setConfig(await api.getConfig())
-                  pushToast({ tone: result.ok ? 'success' : 'warn', title: 'Skin preview', body: result.message })
+                  const result = await api.importAvatar()
+                  if (result.data) {
+                    setAvatar(result.data.image)
+                    setConfig(await api.getConfig())
+                  }
+                  pushToast({ tone: result.ok ? 'success' : 'warn', title: 'Profile picture', body: result.message })
                 }}
               >
-                Upload preview
+                Change photo
+              </button>
+              <button type="button" className="btn" onClick={() => setPage('settings')}>
+                Settings
               </button>
             </div>
           </div>
@@ -113,15 +113,28 @@ export function HomePage() {
           <span>Session</span>
           <strong>{profile.name}</strong>
           <div className="hint">
-            {profile.resolution.width}×{profile.resolution.height} · Crosshair {profile.crosshair.enabled ? 'on' : 'off'} · Macro{' '}
-            {profile.macro.enabled ? 'armed' : 'off'}
+            {profile.resolution.width}×{profile.resolution.height} · Launch via {config.general.launchMethod ?? 'epic'}
           </div>
           <div className="row" style={{ marginTop: 10 }}>
             <button type="button" className="btn" onClick={() => setPage('scrims')}>
               Scrim alerts
             </button>
-            <button type="button" className="btn" onClick={() => setPage('settings')}>
-              Settings
+            <button
+              type="button"
+              className="btn"
+              onClick={async () => {
+                const result = await api.checkUpdates()
+                pushToast({
+                  tone: result.newer ? 'warn' : result.ok ? 'info' : 'error',
+                  title: result.newer ? 'Update available' : 'Updates',
+                  body: result.message
+                })
+                if (result.newer && result.downloadUrl) {
+                  await api.openUpdates(result.downloadUrl)
+                }
+              }}
+            >
+              Check updates
             </button>
           </div>
         </div>
@@ -148,17 +161,9 @@ export function HomePage() {
       </div>
 
       <div className="row" style={{ marginTop: 16 }}>
-        <motion.button
-          type="button"
-          className="launch"
-          style={{ flex: 1 }}
-          whileHover={{ scale: 1.01 }}
-          whileTap={{ scale: 0.99 }}
-          disabled={busy || status === 'LAUNCHING' || status === 'CLOSING'}
-          onClick={() => void launch()}
-        >
-          <LaunchIcon /> {busy || status === 'LAUNCHING' ? 'LAUNCHING…' : 'LAUNCH FORTNITE'}
-        </motion.button>
+        <button type="button" className="launch" style={{ flex: 1 }} disabled={launching || running} onClick={() => void launch()}>
+          <LaunchIcon /> {running ? 'FORTNITE RUNNING' : launching ? 'LAUNCHING…' : 'LAUNCH FORTNITE'}
+        </button>
       </div>
     </div>
   )

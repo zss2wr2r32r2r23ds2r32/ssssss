@@ -7,6 +7,11 @@ import {
   looksLikeFortniteName,
   PREFERRED_FORTNITE_EXES
 } from '../../shared/fortnite-detect'
+import {
+  EPIC_LAUNCHER_PROCESS_NAMES,
+  FORTNITE_GAME_PROCESS_NAMES,
+  FORTNITE_HELPER_PROCESS_NAMES
+} from '../../shared/fortnite-launch'
 
 const execFileAsync = promisify(execFile)
 
@@ -76,13 +81,13 @@ export function fortniteConfigPath(): string | null {
 }
 
 export const FORTNITE_PROCESS_NAMES = [
-  'FortniteClient-Win64-Shipping.exe',
-  'FortniteClient-Win64-Shipping_EAC.exe',
-  'FortniteClient-Win64-Shipping_BE.exe',
-  'FortniteBootstrapper.exe',
-  'Fortnite.exe',
-  'FortniteLauncher.exe'
+  ...FORTNITE_GAME_PROCESS_NAMES,
+  ...FORTNITE_HELPER_PROCESS_NAMES
 ]
+
+export const FORTNITE_GAME_PROCESSES = [...FORTNITE_GAME_PROCESS_NAMES]
+export const FORTNITE_HELPER_PROCESSES = [...FORTNITE_HELPER_PROCESS_NAMES]
+export { EPIC_LAUNCHER_PROCESS_NAMES }
 
 export const EPIC_AUTH_PROCESS_NAMES = [
   'EpicGamesLauncher.exe',

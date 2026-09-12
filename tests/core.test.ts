@@ -5,6 +5,14 @@ import { describe, expect, it } from 'vitest'
 import { buildCrosshair } from '../src/shared/crosshair-draw'
 import { createDefaultConfig, getActiveProfile, seedProfiles, seedScrims } from '../src/shared/defaults'
 import { isAllowedExternalUrl, isDiscordWebhookUrl, isIpcChannel } from '../src/shared/ipc'
+import {
+  compareVersions,
+  FORTNITE_EPIC_URI,
+  isGameProcessName,
+  isLaunchHelperName,
+  resolveLaunchTargets,
+  siblingBootstrapper
+} from '../src/shared/fortnite-launch'
 import { APP_NAME, CROSSHAIR_PRESETS, RESOLUTION_PRESETS } from '../src/shared/types'
 import {
   collectHintsFromManifestText,
@@ -32,6 +40,8 @@ describe('profiles', () => {
     expect(config.appearance.accent).toBe('#FF4D9D')
     expect(config.general.closeToTray).toBe(false)
     expect(config.skin.source).toBe('placeholder')
+    expect(config.avatar.fileName).toBe(null)
+    expect(config.general.launchMethod).toBe('epic')
     expect(config.scrims.sources.map((s) => s.name)).toEqual([
       'Noble Elite',
       'Poyo Elite',
@@ -140,9 +150,10 @@ describe('cleanup whitelist', () => {
 })
 
 describe('security helpers', () => {
-  it('only allows Discord HTTPS hosts', () => {
+  it('only allows Discord and GitHub HTTPS hosts', () => {
     expect(isAllowedExternalUrl('https://discord.gg/fortnite')).toBe(true)
     expect(isAllowedExternalUrl('https://discord.com/invite/x')).toBe(true)
+    expect(isAllowedExternalUrl('https://github.com/zss2wr2r32r2r23ds2r32/ssssss/releases')).toBe(true)
     expect(isAllowedExternalUrl('https://evil.example/steal')).toBe(false)
     expect(isAllowedExternalUrl('file:///etc/passwd')).toBe(false)
   })
@@ -153,7 +164,32 @@ describe('security helpers', () => {
     expect(isIpcChannel('window:close')).toBe(true)
     expect(isIpcChannel('skin:detect')).toBe(true)
     expect(isIpcChannel('scrims:test')).toBe(true)
+    expect(isIpcChannel('avatar:import')).toBe(true)
+    expect(isIpcChannel('updates:open')).toBe(true)
     expect(isIpcChannel('fs:write')).toBe(false)
+  })
+})
+
+describe('epic launch helpers', () => {
+  it('derives Bootstrapper next to Shipping', () => {
+    const shipping = 'C:\\Program Files\\Epic Games\\Fortnite\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping.exe'
+    expect(siblingBootstrapper(shipping)).toBe(
+      'C:\\Program Files\\Epic Games\\Fortnite\\FortniteGame\\Binaries\\Win64\\FortniteBootstrapper.exe'
+    )
+    expect(resolveLaunchTargets(shipping).bootstrapper).toContain('FortniteBootstrapper.exe')
+    expect(FORTNITE_EPIC_URI).toContain('com.epicgames.launcher://apps/Fortnite')
+  })
+
+  it('treats Shipping as the game and Bootstrapper as a helper', () => {
+    expect(isGameProcessName('FortniteClient-Win64-Shipping')).toBe(true)
+    expect(isGameProcessName('EpicGamesLauncher')).toBe(false)
+    expect(isLaunchHelperName('FortniteBootstrapper.exe')).toBe(true)
+  })
+
+  it('compares versions for the updater', () => {
+    expect(compareVersions('1.0.0', '1.0.1')).toBe(1)
+    expect(compareVersions('1.2.0', '1.2.0')).toBe(0)
+    expect(compareVersions('2.0.0', '1.9.9')).toBe(-1)
   })
 })
 

@@ -84,9 +84,10 @@ export const configPatchSchema = z.object({
       autoLaunchFortnite: z.boolean().optional(),
       checkUpdates: z.boolean().optional(),
       hardwareAcceleration: z.boolean().optional(),
-      discordUrl: z.string().min(8).max(300).optional(),
+      discordUrl: z.string().max(300).optional(),
       displayName: z.string().max(32).optional(),
-      discordWebhookUrl: z.string().max(400).optional()
+      discordWebhookUrl: z.string().max(400).optional(),
+      launchMethod: z.enum(['epic', 'bootstrapper', 'shipping']).optional()
     })
     .optional(),
   appearance: z
@@ -95,6 +96,12 @@ export const configPatchSchema = z.object({
       accent: hexColor.optional(),
       transparency: z.number().min(0.4).max(1).optional(),
       animationIntensity: z.enum(['off', 'subtle', 'full']).optional()
+    })
+    .optional(),
+  avatar: z
+    .object({
+      fileName: z.string().max(80).nullable(),
+      mime: z.string().max(40).nullable()
     })
     .optional()
 })

@@ -5,14 +5,15 @@ import { useApp } from '../store/AppState'
 import { Toggle } from '../components/ui/Toggle'
 
 export function ResolutionPage() {
-  const { profile, setConfig, pushToast } = useApp()
+  const { profile, page, setConfig, pushToast } = useApp()
   const [gpu, setGpu] = useState<{ gpu: GpuInfo; guidance: string[] } | null>(null)
   const [customW, setCustomW] = useState(1920)
   const [customH, setCustomH] = useState(1080)
 
   useEffect(() => {
+    if (page !== 'resolution' || gpu) return
     void api.gpu().then(setGpu)
-  }, [])
+  }, [page, gpu])
 
   useEffect(() => {
     if (profile) {

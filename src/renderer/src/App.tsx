@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion'
+import { useEffect, useState, type ReactElement } from 'react'
 import { Sidebar } from './components/layout/Sidebar'
 import { TitleBar } from './components/layout/TitleBar'
 import { Toasts } from './components/ui/Toasts'
@@ -11,8 +11,9 @@ import { ScrimsPage } from './pages/Scrims'
 import { SettingsPage } from './pages/Settings'
 import { Wizard } from './pages/Wizard'
 import { useApp } from './store/AppState'
+import type { NavPage } from '../../shared/types'
 
-const PAGES = {
+const PAGES: Record<NavPage, () => ReactElement | null> = {
   home: HomePage,
   crosshair: CrosshairPage,
   resolution: ResolutionPage,
@@ -24,6 +25,11 @@ const PAGES = {
 
 export function App() {
   const { ready, config, page, toasts, dismissToast } = useApp()
+  const [visited, setVisited] = useState<NavPage[]>(['home'])
+
+  useEffect(() => {
+    setVisited((current) => (current.includes(page) ? current : [...current, page]))
+  }, [page])
 
   if (config) {
     document.documentElement.style.setProperty('--accent', config.appearance.accent)
@@ -48,24 +54,20 @@ export function App() {
     )
   }
 
-  const Page = PAGES[page]
   return (
     <div className="app-root">
       <div className="shell">
         <TitleBar />
         <Sidebar />
         <main className="content">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={page}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: config.appearance.animationIntensity === 'off' ? 0 : 0.22 }}
-            >
-              <Page />
-            </motion.div>
-          </AnimatePresence>
+          {visited.map((id) => {
+            const Page = PAGES[id]
+            return (
+              <div key={id} className={id === page ? 'page-visible' : 'page-hidden'} hidden={id !== page}>
+                <Page />
+              </div>
+            )
+          })}
         </main>
       </div>
       <Toasts toasts={toasts} onDismiss={dismissToast} />

@@ -1,5 +1,6 @@
 import type {
   AppConfig,
+  AvatarSettings,
   CleanupCandidate,
   CrosshairSettings,
   DisplayInfo,
@@ -65,13 +66,27 @@ export const api = {
   detectSkin: () => invoke<SkinPreview>('skin:detect'),
   importSkin: () => invoke<OperationResult<SkinPreview>>('skin:import'),
   updateSkin: (skin: SkinPreview) => invoke<AppConfig>('skin:update', skin),
+  getAvatar: () => invoke<string | null>('avatar:get'),
+  importAvatar: () => invoke<OperationResult<{ avatar: AvatarSettings; image: string }>>('avatar:import'),
+  clearAvatar: () => invoke<OperationResult<AvatarSettings>>('avatar:clear'),
+  appInfo: () => invoke<{ configPath: string; userData: string; version: string }>('app:info'),
+  openUpdates: (url?: string) => invoke<OperationResult>('updates:open', url ? { url } : {}),
   listScrims: () => invoke<ScrimSettings>('scrims:list'),
   updateScrims: (scrims: ScrimSettings) => invoke<ScrimSettings>('scrims:update', scrims),
   refreshScrims: () => invoke<ScrimSettings>('scrims:refresh'),
   testScrim: (id: string) => invoke<OperationResult>('scrims:test', { id }),
   applyGeneral: (general: AppConfig['general']) => invoke<AppConfig>('settings:apply-general', general),
   completeWizard: () => invoke<AppConfig>('wizard:complete'),
-  checkUpdates: () => invoke<{ ok: boolean; current: string; latest: string; message: string }>('updates:check')
+  checkUpdates: () =>
+    invoke<{
+      ok: boolean
+      current: string
+      latest: string | null
+      newer: boolean
+      downloadUrl: string | null
+      releasesUrl: string
+      message: string
+    }>('updates:check')
 }
 
 export function onStatus(listener: (event: StatusEvent) => void): () => void {

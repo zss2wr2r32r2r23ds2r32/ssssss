@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { MonitorSnapshot } from '../../../shared/types'
 import { api } from '../lib/api'
+import { useApp } from '../store/AppState'
 
 function Meter({ value }: { value: number | null }) {
   return (
@@ -11,9 +12,11 @@ function Meter({ value }: { value: number | null }) {
 }
 
 export function PerformancePage() {
+  const { page } = useApp()
   const [snap, setSnap] = useState<MonitorSnapshot | null>(null)
 
   useEffect(() => {
+    if (page !== 'performance') return
     let alive = true
     const tick = async () => {
       try {
@@ -29,7 +32,7 @@ export function PerformancePage() {
       alive = false
       clearInterval(id)
     }
-  }, [])
+  }, [page])
 
   const ramPct =
     snap?.ramUsedMb && snap.ramTotalMb ? Math.round((snap.ramUsedMb / snap.ramTotalMb) * 100) : null

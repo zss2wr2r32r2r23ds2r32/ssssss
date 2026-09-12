@@ -1,5 +1,5 @@
 import { app } from 'electron'
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { closeSync, existsSync, fsyncSync, mkdirSync, openSync, readFileSync, writeSync } from 'node:fs'
 import path from 'node:path'
 import { createDefaultConfig, getActiveProfile } from '../../shared/defaults'
 import type { AppConfig, Profile } from '../../shared/types'
@@ -63,7 +63,9 @@ export function loadConfig(): AppConfig {
       merged.defaultProfileId = merged.profiles[0].id
     }
     if (!merged.skin) merged.skin = fallback.skin
+    if (!merged.avatar) merged.avatar = fallback.avatar
     if (!merged.scrims) merged.scrims = fallback.scrims
+    if (!merged.general.launchMethod) merged.general.launchMethod = fallback.general.launchMethod
     if (merged.appearance?.accent?.toLowerCase() === '#3ee0ff') {
       merged.appearance.accent = '#FF4D9D'
     }
@@ -79,8 +81,19 @@ export function saveConfig(next: AppConfig): AppConfig {
   cached = next
   const file = configPath()
   mkdirSync(path.dirname(file), { recursive: true })
-  writeFileSync(file, `${JSON.stringify(next, null, 2)}\n`, 'utf8')
+  const payload = `${JSON.stringify(next, null, 2)}\n`
+  const fd = openSync(file, 'w')
+  try {
+    writeSync(fd, payload, 0, 'utf8')
+    fsyncSync(fd)
+  } finally {
+    closeSync(fd)
+  }
   return cached
+}
+
+export function flushConfig(): AppConfig {
+  return saveConfig(loadConfig())
 }
 
 export function updateConfig(partial: Record<string, unknown> | Partial<AppConfig>): AppConfig {

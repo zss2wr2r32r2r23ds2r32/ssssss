@@ -1,4 +1,5 @@
-import { APP_NAME, APP_VERSION } from '../../../shared/types'
+import { useEffect, useState } from 'react'
+import { APP_NAME, APP_VERSION, type LaunchMethod } from '../../../shared/types'
 import { ProfileBar } from '../components/profiles/ProfileBar'
 import { Toggle } from '../components/ui/Toggle'
 import { api } from '../lib/api'
@@ -6,21 +7,79 @@ import { useApp } from '../store/AppState'
 
 export function SettingsPage() {
   const { config, profile, setConfig, pushToast } = useApp()
+  const [avatar, setAvatar] = useState<string | null>(null)
+  const [configPath, setConfigPath] = useState<string>('')
+  const [updateNote, setUpdateNote] = useState<string>('')
+
+  useEffect(() => {
+    void api.appInfo().then((info) => setConfigPath(info.configPath))
+  }, [])
+
+  useEffect(() => {
+    if (!config?.avatar.fileName) {
+      setAvatar(null)
+      return
+    }
+    void api.getAvatar().then(setAvatar)
+  }, [config?.avatar.fileName])
+
   if (!config || !profile) return null
   const g = config.general
   const a = config.appearance
 
-  const applyGeneral = (patch: Partial<typeof g>) =>
-    api.applyGeneral({ ...g, ...patch }).then(setConfig)
+  const applyGeneral = async (patch: Partial<typeof g>) => {
+    try {
+      setConfig(await api.applyGeneral({ ...g, launchMethod: g.launchMethod ?? 'epic', ...patch }))
+    } catch (error) {
+      pushToast({
+        tone: 'error',
+        title: 'Could not save settings',
+        body: error instanceof Error ? error.message : 'Write failed.'
+      })
+    }
+  }
 
   return (
     <div>
       <div className="page-head">
         <div>
           <h2>Settings</h2>
-          <p>Local JSON config, profiles, and appearance. Nothing here phones home except a version check you opt into.</p>
+          <p>Saved to disk on every change, and again when Avix quits. Portable and installed builds share this folder.</p>
         </div>
       </div>
+      <section className="card" style={{ marginBottom: 16 }}>
+        <h3>Profile picture</h3>
+        <div className="row">
+          <div className={`skin-portrait ${avatar ? '' : 'placeholder'}`} style={{ width: 72, height: 72 }}>
+            {avatar ? <img src={avatar} alt="Profile" /> : (g.displayName || 'A').slice(0, 1).toUpperCase()}
+          </div>
+          <button
+            type="button"
+            className="btn primary"
+            onClick={async () => {
+              const result = await api.importAvatar()
+              if (result.data) {
+                setAvatar(result.data.image)
+                setConfig(await api.getConfig())
+              }
+              pushToast({ tone: result.ok ? 'success' : 'warn', title: 'Profile picture', body: result.message })
+            }}
+          >
+            Upload photo
+          </button>
+          <button
+            type="button"
+            className="btn"
+            onClick={async () => {
+              await api.clearAvatar()
+              setAvatar(null)
+              setConfig(await api.getConfig())
+            }}
+          >
+            Remove
+          </button>
+        </div>
+      </section>
       <section className="card" style={{ marginBottom: 16 }}>
         <h3>Profiles</h3>
         <ProfileBar />
@@ -32,9 +91,20 @@ export function SettingsPage() {
             <label>Display name</label>
             <input
               maxLength={32}
-              value={g.displayName}
-              onChange={(event) => void applyGeneral({ displayName: event.target.value || 'competitor' })}
+              defaultValue={g.displayName}
+              onBlur={(event) => void applyGeneral({ displayName: event.target.value.trim() || 'competitor' })}
             />
+          </div>
+          <div className="field">
+            <label>How to start Fortnite</label>
+            <select
+              value={g.launchMethod ?? 'epic'}
+              onChange={(event) => void applyGeneral({ launchMethod: event.target.value as LaunchMethod })}
+            >
+              <option value="epic">Epic Games Launcher / URI (recommended)</option>
+              <option value="bootstrapper">FortniteBootstrapper.exe</option>
+              <option value="shipping">Shipping.exe only (often exits without Epic)</option>
+            </select>
           </div>
           <Toggle
             checked={g.startWithWindows}
@@ -75,10 +145,7 @@ export function SettingsPage() {
           />
           <div className="field">
             <label>Discord URL</label>
-            <input
-              value={g.discordUrl}
-              onChange={(event) => void applyGeneral({ discordUrl: event.target.value })}
-            />
+            <input defaultValue={g.discordUrl} onBlur={(event) => void applyGeneral({ discordUrl: event.target.value })} />
           </div>
           <div className="field">
             <label>Scrim Discord webhook (optional)</label>
@@ -86,21 +153,11 @@ export function SettingsPage() {
               type="password"
               autoComplete="off"
               placeholder="https://discord.com/api/webhooks/…"
-              value={g.discordWebhookUrl}
-              onChange={(event) => void applyGeneral({ discordWebhookUrl: event.target.value })}
+              defaultValue={g.discordWebhookUrl}
+              onBlur={(event) => void applyGeneral({ discordWebhookUrl: event.target.value })}
             />
-            <div className="hint">Stored only in your local avix-config.json. Never hardcoded. Leave blank to toast in-app only.</div>
+            <div className="hint">Stored only in your local avix-config.json. Never hardcoded.</div>
           </div>
-          <button
-            type="button"
-            className="btn"
-            onClick={async () => {
-              const result = await api.checkUpdates()
-              pushToast({ tone: 'info', title: `${APP_NAME} ${result.current}`, body: result.message })
-            }}
-          >
-            Check updates
-          </button>
         </section>
         <section className="card">
           <h3>Appearance</h3>
@@ -151,29 +208,40 @@ export function SettingsPage() {
               <option value="off">Off</option>
             </select>
           </div>
-        </section>
-      </div>
-      <div className="grid grid-3" style={{ marginTop: 16 }}>
-        <section className="card">
-          <h3>Crosshair</h3>
-          <p className="hint">Enabled: {profile.crosshair.enabled ? 'yes' : 'no'} · {profile.crosshair.presetId}</p>
-        </section>
-        <section className="card">
-          <h3>Resolution</h3>
-          <p className="hint">
-            {profile.resolution.width}×{profile.resolution.height} · {profile.resolution.method}
-          </p>
-        </section>
-        <section className="card">
-          <h3>Macro</h3>
-          <p className="hint">
-            {profile.macro.enabled ? `${profile.macro.key} @ ${profile.macro.intervalSec}s` : 'Disabled'}
-          </p>
+          <h3 style={{ marginTop: 22 }}>Updates</h3>
+          <p className="hint">Current version {APP_VERSION}. Checks GitHub releases for {`zss2wr2r32r2r23ds2r32/ssssss`}.</p>
+          {updateNote ? <p className="hint">{updateNote}</p> : null}
+          <div className="row" style={{ marginTop: 10 }}>
+            <button
+              type="button"
+              className="btn primary"
+              onClick={async () => {
+                const result = await api.checkUpdates()
+                setUpdateNote(result.message)
+                pushToast({
+                  tone: result.newer ? 'warn' : result.ok ? 'info' : 'error',
+                  title: result.newer ? 'Update available' : `${APP_NAME} ${result.current}`,
+                  body: result.message
+                })
+              }}
+            >
+              Check for updates
+            </button>
+            <button
+              type="button"
+              className="btn"
+              onClick={async () => {
+                const result = await api.checkUpdates()
+                await api.openUpdates(result.downloadUrl ?? result.releasesUrl)
+              }}
+            >
+              Open download page
+            </button>
+          </div>
         </section>
       </div>
       <p className="hint" style={{ marginTop: 18 }}>
-        {APP_NAME} {APP_VERSION} stores human-readable JSON in the app user-data folder. No cheats, no injection, documented
-        Windows APIs only.
+        {APP_NAME} {APP_VERSION} writes {configPath || 'avix-config.json'} and flushes it on quit. No cheats, no injection.
       </p>
     </div>
   )
