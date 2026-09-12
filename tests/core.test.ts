@@ -16,6 +16,7 @@ import {
 } from '../src/shared/fortnite-launch'
 import { centerOverlayOnRect, overlayMarkSize, rectFromCorners } from '../src/shared/overlay-center'
 import { APP_NAME, CROSSHAIR_PRESETS, RESOLUTION_PRESETS } from '../src/shared/types'
+import { parseTasklistCsv, PROCESS_POLL_WHEN_RUNNING_MS } from '../src/shared/process-list'
 import {
   collectHintsFromManifestText,
   executablesForInstall,
@@ -45,6 +46,8 @@ describe('profiles', () => {
     expect(config.avatar.fileName).toBe(null)
     expect(config.general.launchMethod).toBe('bootstrapper')
     expect(config.general.hideEpicAfterLaunch).toBe(true)
+    expect(config.general.hardwareAcceleration).toBe(false)
+    expect(config.appearance.animationIntensity).toBe('off')
     expect(getActiveProfile(config).resolution.method).toBe('display')
     expect(getActiveProfile(config).resolution.applyOnLaunch).toBe(true)
     expect(config.scrims.sources.map((s) => s.name)).toEqual([
@@ -171,6 +174,9 @@ describe('security helpers', () => {
     expect(isIpcChannel('scrims:test')).toBe(true)
     expect(isIpcChannel('avatar:import')).toBe(true)
     expect(isIpcChannel('updates:open')).toBe(true)
+    expect(isIpcChannel('updates:download')).toBe(true)
+    expect(isIpcChannel('updates:install')).toBe(true)
+    expect(isIpcChannel('updates:from-file')).toBe(true)
     expect(isIpcChannel('fs:write')).toBe(false)
   })
 })
@@ -253,5 +259,16 @@ describe('launch method + overlay center', () => {
     const placed = centerOverlayOnRect(rect, 80)
     expect(placed.x + placed.width / 2).toBe(192 + 1728 / 2)
     expect(placed.y + placed.height / 2).toBe(1080 / 2)
+  })
+
+  it('parses tasklist CSV without a win32 host', () => {
+    const raw = [
+      '"FortniteClient-Win64-Shipping.exe","37000","RDP-Tcp#0","2","1,234 K"',
+      '"Avix Launcher.exe","14700","Console","5","180,000 K"',
+      '"EpicGamesLauncher.exe","2200","Console","2","80,000 K"'
+    ].join('\n')
+    expect(parseTasklistCsv(raw, ['FortniteClient-Win64-Shipping.exe'])).toEqual([37000])
+    expect(parseTasklistCsv(raw, ['EpicGamesLauncher.exe'])).toEqual([2200])
+    expect(PROCESS_POLL_WHEN_RUNNING_MS).toBeGreaterThanOrEqual(10_000)
   })
 })

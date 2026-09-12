@@ -150,7 +150,7 @@ export function SettingsPage() {
             checked={g.hardwareAcceleration}
             onChange={(hardwareAcceleration) => void applyGeneral({ hardwareAcceleration })}
             label="Hardware acceleration"
-            hint="Takes effect the next time Avix starts. Turn off if Avix competes with Fortnite for GPU time."
+            hint="Off by default so Avix stays cheap while Fortnite runs. Takes effect the next time Avix starts."
           />
           <div className="field">
             <label>Discord URL</label>
@@ -218,7 +218,11 @@ export function SettingsPage() {
             </select>
           </div>
           <h3 style={{ marginTop: 22 }}>Updates</h3>
-          <p className="hint">Current version {APP_VERSION}. Checks GitHub releases for {`zss2wr2r32r2r23ds2r32/ssssss`}.</p>
+          <p className="hint">
+            Current version {APP_VERSION}. In-app install uses GitHub Releases for {`zss2wr2r32r2r23ds2r32/ssssss`}.
+            Publish a Release (NSIS + portable) so Check → Download → Install and restart can run. Until then, use
+            Install from file.
+          </p>
           {updateNote ? <p className="hint">{updateNote}</p> : null}
           <div className="row" style={{ marginTop: 10 }}>
             <button
@@ -240,11 +244,44 @@ export function SettingsPage() {
               type="button"
               className="btn"
               onClick={async () => {
+                const result = await api.downloadUpdate()
+                setUpdateNote(result.message)
+                pushToast({ tone: result.ok ? 'info' : 'warn', title: 'Download update', body: result.message })
+              }}
+            >
+              Download
+            </button>
+            <button
+              type="button"
+              className="btn primary"
+              onClick={async () => {
+                const result = await api.installUpdate()
+                pushToast({ tone: result.ok ? 'success' : 'warn', title: 'Install and restart', body: result.message })
+              }}
+            >
+              Install and restart
+            </button>
+          </div>
+          <div className="row" style={{ marginTop: 8 }}>
+            <button
+              type="button"
+              className="btn"
+              onClick={async () => {
+                const result = await api.installUpdateFromFile()
+                pushToast({ tone: result.ok ? 'success' : 'info', title: 'Install from file', body: result.message })
+              }}
+            >
+              Install from file
+            </button>
+            <button
+              type="button"
+              className="btn"
+              onClick={async () => {
                 const result = await api.checkUpdates()
                 await api.openUpdates(result.downloadUrl ?? result.releasesUrl)
               }}
             >
-              Open download page
+              Open releases page
             </button>
           </div>
         </section>

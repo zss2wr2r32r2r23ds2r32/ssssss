@@ -15,7 +15,8 @@ import type {
   ScrimSettings,
   SkinPreview,
   StatusEvent,
-  ToastPayload
+  ToastPayload,
+  UpdateCheck
 } from '../../../shared/types'
 
 function invoke<T>(channel: string, payload?: unknown): Promise<T> {
@@ -77,16 +78,11 @@ export const api = {
   testScrim: (id: string) => invoke<OperationResult>('scrims:test', { id }),
   applyGeneral: (general: AppConfig['general']) => invoke<AppConfig>('settings:apply-general', general),
   completeWizard: () => invoke<AppConfig>('wizard:complete'),
-  checkUpdates: () =>
-    invoke<{
-      ok: boolean
-      current: string
-      latest: string | null
-      newer: boolean
-      downloadUrl: string | null
-      releasesUrl: string
-      message: string
-    }>('updates:check')
+  checkUpdates: () => invoke<UpdateCheck>('updates:check'),
+  downloadUpdate: () => invoke<UpdateCheck>('updates:download'),
+  installUpdate: () => invoke<OperationResult>('updates:install'),
+  installUpdateFromFile: () => invoke<OperationResult>('updates:from-file'),
+  updateStatus: () => invoke<UpdateCheck>('updates:status')
 }
 
 export function onStatus(listener: (event: StatusEvent) => void): () => void {

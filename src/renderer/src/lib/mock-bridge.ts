@@ -117,6 +117,8 @@ export function installMockBridge(): void {
           return { ok: true, message: 'Opened Discord.' }
         }
         case 'updates:check':
+        case 'updates:download':
+        case 'updates:status':
           return {
             ok: true,
             current: APP_VERSION,
@@ -124,8 +126,14 @@ export function installMockBridge(): void {
             newer: false,
             downloadUrl: 'https://github.com/zss2wr2r32r2r23ds2r32/ssssss/releases',
             releasesUrl: 'https://github.com/zss2wr2r32r2r23ds2r32/ssssss/releases',
-            message: `You are running ${APP_NAME} ${APP_VERSION}.`
+            message: `You are running ${APP_NAME} ${APP_VERSION}.`,
+            state: 'none',
+            downloaded: false,
+            progress: null
           }
+        case 'updates:install':
+        case 'updates:from-file':
+          return { ok: false, message: 'Vite UI preview cannot install updates. Use the packaged app.' }
         default:
           return { ok: true, message: 'Preview stub', data: getActiveProfile(config) }
       }

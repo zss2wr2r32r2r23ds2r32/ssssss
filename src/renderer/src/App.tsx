@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactElement } from 'react'
+import type { ReactElement } from 'react'
 import { Sidebar } from './components/layout/Sidebar'
 import { TitleBar } from './components/layout/TitleBar'
 import { Toasts } from './components/ui/Toasts'
@@ -26,11 +26,7 @@ const PAGES: Record<NavPage, () => ReactElement | null> = {
 export function App() {
   const { ready, config, page, status, toasts, dismissToast } = useApp()
   const reducedMotion = status === 'RUNNING' || status === 'LAUNCHING' || config?.appearance.animationIntensity === 'off'
-  const [visited, setVisited] = useState<NavPage[]>(['home'])
-
-  useEffect(() => {
-    setVisited((current) => (current.includes(page) ? current : [...current, page]))
-  }, [page])
+  const Page = PAGES[page]
 
   if (config) {
     document.documentElement.style.setProperty('--accent', config.appearance.accent)
@@ -61,14 +57,7 @@ export function App() {
         <TitleBar />
         <Sidebar />
         <main className="content">
-          {visited.map((id) => {
-            const Page = PAGES[id]
-            return (
-              <div key={id} className={id === page ? 'page-visible' : 'page-hidden'} hidden={id !== page}>
-                <Page />
-              </div>
-            )
-          })}
+          <Page />
         </main>
       </div>
       <Toasts toasts={toasts} onDismiss={dismissToast} reducedMotion={reducedMotion} />

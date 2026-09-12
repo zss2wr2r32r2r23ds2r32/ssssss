@@ -10,7 +10,7 @@ import { attachDisplayListeners } from './services/overlay'
 import { detectFortniteInstall, onStatus } from './services/fortnite'
 import { launchFromActiveProfile } from './services/launcher'
 import { onScrimAlert, startScrimPoller } from './services/scrims'
-import { checkForUpdates } from './services/updates'
+import { checkForUpdates, setupAutoUpdater } from './services/updates'
 import { applyLoginItem, shouldStartHidden } from './services/settings-os'
 import { isAppQuitting, markQuitting, requestQuit } from './quit'
 import { migrateUserDataIfNeeded, stabilizeUserData } from './user-data'
@@ -69,7 +69,8 @@ function createWindow(): BrowserWindow {
       nodeIntegration: false,
       sandbox: true,
       webSecurity: true,
-      spellcheck: false
+      spellcheck: false,
+      backgroundThrottling: true
     }
   })
 
@@ -125,6 +126,8 @@ function trayFallback(): string {
   return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAANlBMVEUAAAAAOlr///8/q8RBb5NAtM5Db5lCbpVAtM5CbpVCbpVAtM5CbpX///9CbpVAtM5CbpX////09PQAOlrX0n0IAAAAEnRSTlMAECAwQFBgcICPn6+/z9/vIxq9owAAAIRJREFUOMvd0ckOgCAMBNBhX1H6/392E4mJ2IJePJvJSwetAKjUqFGj/gHMzMwAZmYGmJmZAWZmZoCZmRlgZmYGmJmZAWZmZoCZmRlgZmYGmJmZAWZmZoCZmRlgZmYGmJmZAWZmZoCZmRlgZmYGmJmZAWZmZoCZmRlgZmYGmJmZ+QPzA7gB3gQhC0c7zQwAAAAASUVORK5CYII='
 }
 
+app.setAppUserModelId('com.avix.launcher')
+
 const gotLock = app.requestSingleInstanceLock()
 if (!gotLock) {
   app.quit()
@@ -159,6 +162,7 @@ if (!gotLock) {
     applySessionGuards()
     Menu.setApplicationMenu(null)
     registerIpc(() => mainWindow)
+    setupAutoUpdater()
     attachDisplayListeners()
     mainWindow = createWindow()
     const config = loadConfig()

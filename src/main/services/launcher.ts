@@ -81,19 +81,22 @@ export async function launchFromActiveProfile(): Promise<LaunchResult> {
   setStatus('LAUNCHING')
 
   try {
+    let resolutionNote = ''
     if (profile.resolution.applyOnLaunch) {
-      const applied = await applyResolution(profile.resolution, false)
-      if (!applied.ok) {
-        setStatus('NOT_RUNNING')
-        return {
-          ok: false,
-          status: 'NOT_RUNNING',
-          code: 'APPLY_FAILED',
-          message: applied.message
+      try {
+        const applied = await applyResolution(profile.resolution, false)
+        if (!applied.ok) {
+          resolutionNote = ` Display mode was not applied (${applied.message}). Fortnite still starts.`
         }
+      } catch (error) {
+        resolutionNote = ` Display helper was unavailable (${error instanceof Error ? error.message : 'unknown'}). Fortnite still starts.`
       }
     } else if (profile.resolution.applyGameUserSettings && profile.resolution.method === 'fortnite-only') {
-      await applyResolution({ ...profile.resolution, applyOnLaunch: true, method: 'fortnite-only' }, false)
+      try {
+        await applyResolution({ ...profile.resolution, applyOnLaunch: true, method: 'fortnite-only' }, false)
+      } catch {
+        /* GameUserSettings is optional. */
+      }
     }
 
     if (profile.performance.cleanupOnLaunch && profile.performance.selectedApps.length) {
@@ -188,15 +191,17 @@ export async function launchFromActiveProfile(): Promise<LaunchResult> {
       }
     }
 
+    const base =
+      started.used === 'bootstrapper'
+        ? 'FortniteBootstrapper handed off. Fortnite is running. Epic login was not bypassed.'
+        : started.used === 'shipping'
+          ? 'Shipping executable is running. If it closes next time, stay signed into Epic or use Bootstrapper.'
+          : 'Fortnite is running.'
     return {
       ok: true,
       status: 'RUNNING',
-      message:
-        started.used === 'bootstrapper'
-          ? 'FortniteBootstrapper handed off. Fortnite is running. Epic login was not bypassed.'
-          : started.used === 'shipping'
-            ? 'Shipping executable is running. If it closes next time, stay signed into Epic or use Bootstrapper.'
-            : 'Fortnite is running.'
+      code: resolutionNote ? 'APPLY_FAILED' : undefined,
+      message: `${base}${resolutionNote}`
     }
   } catch (error) {
     setStatus('NOT_RUNNING')

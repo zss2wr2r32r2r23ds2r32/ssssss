@@ -24,6 +24,7 @@
   "dependencies": {
     "@fontsource/inter": "^5.2.6",
     "@fontsource/rajdhani": "^5.2.6",
+    "electron-updater": "^6.8.9",
     "framer-motion": "^12.23.12",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

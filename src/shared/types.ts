@@ -262,6 +262,19 @@ export interface OperationResult<T = undefined> {
   data?: T
 }
 
+export interface UpdateCheck {
+  ok: boolean
+  current: string
+  latest: string | null
+  newer: boolean
+  downloadUrl: string | null
+  releasesUrl: string
+  message: string
+  state: 'idle' | 'checking' | 'available' | 'downloading' | 'ready' | 'none' | 'error'
+  downloaded: boolean
+  progress: number | null
+}
+
 export interface ToastPayload {
   id: string
   tone: 'info' | 'success' | 'warn' | 'error'

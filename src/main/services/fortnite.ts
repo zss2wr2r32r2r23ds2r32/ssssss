@@ -24,7 +24,9 @@ import {
   looksLikeFortniteExecutable,
   runPowerShell
 } from './windows-api'
-import { hostEpicPids, hostFocus, hostGamePids, hostHelperPids } from './win32-host'
+import { listEpicPids, listGamePids, listHelperPids } from './process-list'
+import { PROCESS_POLL_WHEN_RUNNING_MS, PROCESS_WAIT_INTERVAL_MS } from '../../shared/process-list'
+import { hostFocus } from './win32-host'
 
 export const SHIPPING_MINIMAL_ARGS = ['-epicapp=Fortnite', '-epicenv=Prod', '-epicportal']
 
@@ -177,7 +179,7 @@ export async function persistFortnitePath(filePath: string): Promise<FortniteIns
 export async function listFortnitePids(): Promise<number[]> {
   if (!isWindows) return trackedPid ? [trackedPid] : []
   try {
-    return await hostGamePids()
+    return await listGamePids()
   } catch {
     return []
   }
@@ -186,7 +188,7 @@ export async function listFortnitePids(): Promise<number[]> {
 export async function listLaunchHelperPids(): Promise<number[]> {
   if (!isWindows) return []
   try {
-    return await hostHelperPids()
+    return await listHelperPids()
   } catch {
     return []
   }
@@ -195,7 +197,7 @@ export async function listLaunchHelperPids(): Promise<number[]> {
 export async function listEpicLauncherPids(): Promise<number[]> {
   if (!isWindows) return []
   try {
-    return await hostEpicPids()
+    return await listEpicPids()
   } catch {
     return []
   }
@@ -257,7 +259,7 @@ export async function waitForGameProcess(timeoutMs = 75000): Promise<number | nu
   while (Date.now() - started < timeoutMs) {
     const pids = await listFortnitePids()
     if (pids[0]) return pids[0]
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, PROCESS_WAIT_INTERVAL_MS))
   }
   return null
 }
@@ -373,7 +375,7 @@ export function startProcessPoll(onExit: (unexpected: boolean) => void): void {
     if (misses >= 2) {
       onExit(true)
     }
-  }, 5000)
+  }, PROCESS_POLL_WHEN_RUNNING_MS)
 }
 
 export function stopProcessPoll(): void {

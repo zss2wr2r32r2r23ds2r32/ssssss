@@ -18,7 +18,14 @@ import { detectFortniteInstall, persistFortnitePath, validateFortnitePath, getLa
 import { fireScrimAlert, refreshScrims, updateScrims } from '../services/scrims'
 import { detectLastUsedSkin, importSkinPreview } from '../services/skin'
 import { clearAvatar, importAvatar, readAvatarDataUrl } from '../services/avatar'
-import { checkForUpdates, openReleasesPage } from '../services/updates'
+import {
+  checkForUpdates,
+  downloadUpdate,
+  getUpdateStatus,
+  installDownloadedUpdate,
+  installFromFile,
+  openReleasesPage
+} from '../services/updates'
 import { FORTNITE_DIALOG_FILTERS, fortniteBrowseStartDir } from '../services/windows-api'
 import { launchFromActiveProfile } from '../services/launcher'
 import { startMacro, stopMacro, updateMacroRuntime } from '../services/macro'
@@ -151,10 +158,7 @@ export function registerIpc(getWindow: () => BrowserWindow | null): void {
     return persistFortnitePath(result.filePaths[0])
   })
   ipcMain.handle('fortnite:launch', async () => {
-    const win = getWindow()
-    const result = await launchFromActiveProfile()
-    sendToast(win, result.ok ? (result.code ? 'warn' : 'success') : 'error', result.ok ? 'Launch' : 'Launch blocked', result.message)
-    return result
+    return launchFromActiveProfile()
   })
   ipcMain.handle('fortnite:status', () => getLaunchStatus())
 
@@ -374,4 +378,8 @@ export function registerIpc(getWindow: () => BrowserWindow | null): void {
 
   ipcMain.handle('wizard:complete', () => updateConfig({ wizardCompleted: true }))
   ipcMain.handle('updates:check', () => checkForUpdates())
+  ipcMain.handle('updates:download', () => downloadUpdate())
+  ipcMain.handle('updates:install', () => installDownloadedUpdate())
+  ipcMain.handle('updates:from-file', () => installFromFile(getWindow()))
+  ipcMain.handle('updates:status', () => getUpdateStatus())
 }

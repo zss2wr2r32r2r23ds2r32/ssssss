@@ -5,12 +5,14 @@ import type { DisplayInfo, GpuInfo, GpuVendor, OperationResult, ResolutionSettin
 import { backupsDir, loadConfig, updateConfig } from './config'
 import { fortniteConfigPath, isWindows, runPowerShell } from './windows-api'
 import {
-  hostChangeDisplay,
-  hostCurrentMode,
-  hostDeviceAt,
-  hostListModes,
-  hostRestoreDisplay
-} from './win32-host'
+  displayChange,
+  displayCurrentMode,
+  displayDeviceAt,
+  displayHelperPresent,
+  displayListModes,
+  displayRestore,
+  nvidiaProbe
+} from './windows-display'
 import { recenterOverlay } from './overlay'
 
 interface RestoreState {
@@ -41,7 +43,7 @@ export async function getDisplayInfo(): Promise<DisplayInfo[]> {
   let enumerated: Array<{ width: number; height: number }> = []
   if (isWindows) {
     try {
-      enumerated = (await hostListModes('')).map((mode) => ({ width: mode.width, height: mode.height }))
+      enumerated = (await displayListModes('')).map((mode) => ({ width: mode.width, height: mode.height }))
     } catch {
       enumerated = []
     }
@@ -121,14 +123,16 @@ function scalingCopy(vendor: GpuVendor): string[] {
   const common = [
     'Avix changes the Windows display mode for this Fortnite session only. It does not attach to the Fortnite process.',
     'Native mode is saved first and restored when Fortnite exits, crashes, or you click Restore Native.',
-    'If Windows rejects a custom size (for example 1720×1080), add that mode in your GPU control panel first, then apply it here.',
-    'GPU scaling (NVIDIA/AMD/Intel) stretches the desktop to the monitor. That is a driver setting, not Fortnite FOV.',
+    'If the size is not in the NVIDIA/Windows mode list, create that custom resolution once in the GPU control panel, then Avix can select it.',
+    'GPU scaling stretches the desktop to the monitor. That is a driver setting, not Fortnite FOV.',
     'Epic competitive play uses 16:9. Stretched desktop resolutions are a display-scale choice, not a claimed advantage.'
   ]
   if (vendor === 'NVIDIA') {
     return [
       ...common,
-      'NVIDIA: Control Panel → Display → Adjust desktop size and position → Perform scaling on GPU. Use Full-screen scaling for stretch.'
+      'NVIDIA path: Avix selects a mode Windows/NVIDIA already exposes, then applies it with ChangeDisplaySettingsEx (CDS_FULLSCREEN) for this session.',
+      'Create a missing size once: NVIDIA Control Panel → Change resolution → Customize → Create Custom Resolution. Then set Adjust desktop size and position → Perform scaling on: GPU, Scaling mode: Full-screen.',
+      'Avix probes nvapi64.dll to confirm the NVIDIA driver is present. It does not inject into Fortnite or write Epic credentials.'
     ]
   }
   if (vendor === 'AMD') {
@@ -233,7 +237,7 @@ async function resolveGamingDevice(): Promise<string> {
   if (!isWindows) return ''
   try {
     const point = gamingPhysicalPoint()
-    return (await hostDeviceAt(point.x, point.y)).trim()
+    return (await displayDeviceAt(point.x, point.y)).trim()
   } catch {
     return ''
   }
@@ -245,7 +249,7 @@ async function changeDisplay(width: number, height: number): Promise<OperationRe
   }
   rememberNativeIfNeeded()
   const device = await resolveGamingDevice()
-  const current = await hostCurrentMode(device).catch(() => null)
+  const current = await displayCurrentMode(device).catch(() => null)
   if (!restoreState.display && current) {
     restoreState.display = { width: current.width, height: current.height, device }
   } else if (!restoreState.display) {
@@ -262,21 +266,38 @@ async function changeDisplay(width: number, height: number): Promise<OperationRe
     })
   }
 
-  const modes = await hostListModes(device).catch(() => [])
+  const modes = await displayListModes(device).catch(() => [])
   const matches = modes.filter((mode) => mode.width === width && mode.height === height)
   const listed = matches.length > 0
   const freq = listed ? Math.max(...matches.map((mode) => mode.freq)) : 0
+  const gpu = await detectGpu()
+  const nvidia = gpu.vendor === 'NVIDIA' ? await nvidiaProbe().catch(() => 'MISSING') : 'SKIP'
+
+  if (!displayHelperPresent()) {
+    return {
+      ok: false,
+      code: 'APPLY_FAILED',
+      message:
+        'The Avix display helper is missing from this install. Reinstall Avix (portable or NSIS). Fortnite can still be launched from Home.'
+    }
+  }
 
   try {
-    const result = await hostChangeDisplay(device, width, height, freq)
+    const result = await displayChange(device, width, height, freq)
     if (result === 'OK' || result.startsWith('OK')) {
       restoreState.appliedTemporary = true
       void recenterOverlay()
+      const nvidiaNote =
+        gpu.vendor === 'NVIDIA'
+          ? nvidia === 'OK'
+            ? ' NVIDIA driver responded (nvapi64). Keep GPU / Full-screen scaling in NVIDIA Control Panel.'
+            : ' NVIDIA custom modes must already exist in NVIDIA Control Panel before Avix can select them.'
+          : ''
       return {
         ok: true,
         message: listed
-          ? `Windows display set to ${width}×${height}${freq ? ` @ ${freq}Hz` : ''} on the gaming monitor. Native mode restores when Fortnite closes.`
-          : `Windows accepted ${width}×${height} even though EnumDisplaySettings did not list it. Native mode restores when Fortnite closes.`
+          ? `Display set to ${width}×${height}${freq ? ` @ ${freq}Hz` : ''} on the gaming monitor.${nvidiaNote} Native mode restores when Fortnite closes.`
+          : `Windows accepted ${width}×${height} even though it was not listed.${nvidiaNote} Native mode restores when Fortnite closes.`
       }
     }
     return {
@@ -284,7 +305,9 @@ async function changeDisplay(width: number, height: number): Promise<OperationRe
       code: 'UNSUPPORTED_RES',
       message: listed
         ? `Windows rejected ${width}×${height} (${result}).`
-        : `Windows does not list ${width}×${height} on this monitor (${result}). Add that custom mode in NVIDIA/AMD/Intel control panel, then apply again.`
+        : gpu.vendor === 'NVIDIA'
+          ? `${width}×${height} is not in the NVIDIA/Windows mode list (${result}). NVIDIA Control Panel → Change resolution → Customize → Create Custom Resolution, then Apply again. Also set scaling to GPU / Full-screen.`
+          : `Windows does not list ${width}×${height} (${result}). Add that custom mode in your GPU control panel, then apply again.`
     }
   } catch (error) {
     return { ok: false, code: 'APPLY_FAILED', message: error instanceof Error ? error.message : 'Display change failed.' }
@@ -331,14 +354,14 @@ export async function restoreNativeDisplay(): Promise<OperationResult> {
   }
   if (isWindows) {
     try {
-      const restored = await hostRestoreDisplay(device)
+      const restored = await displayRestore(device)
       if (restored === 'OK' || restored.startsWith('OK')) {
         messages.push('Restored the native Windows display mode.')
       } else {
         const width = native?.width ?? saved?.width
         const height = native?.height ?? saved?.height
         if (width && height) {
-          const fallback = await hostChangeDisplay(device, width, height, 0)
+          const fallback = await displayChange(device, width, height, 0)
           messages.push(
             fallback === 'OK' || fallback.startsWith('OK')
               ? `Restored ${width}×${height}.`

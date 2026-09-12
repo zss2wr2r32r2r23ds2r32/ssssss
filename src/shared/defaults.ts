@@ -79,7 +79,7 @@ export const DEFAULT_GENERAL: GeneralSettings = {
   startMinimized: false,
   autoLaunchFortnite: false,
   checkUpdates: true,
-  hardwareAcceleration: true,
+  hardwareAcceleration: false,
   discordUrl: DEFAULT_DISCORD_URL,
   displayName: 'competitor',
   discordWebhookUrl: '',
@@ -249,7 +249,7 @@ export function createDefaultConfig(): AppConfig {
       theme: 'dark',
       accent: '#FF4D9D',
       transparency: 0.94,
-      animationIntensity: 'full'
+      animationIntensity: 'off'
     },
     lastNativeResolution: null,
     skin: { ...DEFAULT_SKIN },

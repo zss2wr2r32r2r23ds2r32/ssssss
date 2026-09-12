@@ -115,6 +115,7 @@ export function HomePage() {
           <div className="hint">
             {profile.resolution.width}×{profile.resolution.height} · Launch via {config.general.launchMethod ?? 'bootstrapper'}
           </div>
+          <div className="hint">Avix {config.version}. Several Electron helper processes in Task Manager are one instance, not five copies.</div>
           <div className="row" style={{ marginTop: 10 }}>
             <button type="button" className="btn" onClick={() => setPage('scrims')}>
               Scrim alerts

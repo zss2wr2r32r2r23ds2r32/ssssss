@@ -114,10 +114,13 @@ export async function refreshScrims(): Promise<ScrimSettings> {
 
 export function startScrimPoller(): void {
   stopScrimPoller()
+  const config = loadConfig()
+  const active = config.scrims.sources.some((source) => source.enabled && source.statusUrl)
+  if (!active) return
   const tick = () => {
     void refreshScrims()
   }
-  const seconds = Math.min(600, Math.max(20, loadConfig().scrims.pollSeconds || 60))
+  const seconds = Math.min(600, Math.max(20, config.scrims.pollSeconds || 60))
   pollTimer = setInterval(tick, seconds * 1000)
 }
 
