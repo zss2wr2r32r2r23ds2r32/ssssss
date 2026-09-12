@@ -1,4 +1,4 @@
-import { BrowserWindow, dialog, ipcMain, shell } from 'electron'
+import { BrowserWindow, dialog, ipcMain, shell, type OpenDialogOptions } from 'electron'
 import { z } from 'zod'
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
@@ -13,6 +13,7 @@ import {
   updateConfig
 } from '../services/config'
 import { detectFortniteInstall, persistFortnitePath, validateFortnitePath, getLaunchStatus } from '../services/fortnite'
+import { FORTNITE_DIALOG_FILTERS, fortniteBrowseStartDir } from '../services/windows-api'
 import { launchFromActiveProfile } from '../services/launcher'
 import { startMacro, stopMacro, updateMacroRuntime } from '../services/macro'
 import { snapshot } from '../services/monitor'
@@ -131,17 +132,13 @@ export function registerIpc(getWindow: () => BrowserWindow | null): void {
   ipcMain.handle('fortnite:set-path', (_event, raw) => persistFortnitePath(pathSchema.parse(raw).path))
   ipcMain.handle('fortnite:browse', async () => {
     const win = getWindow()
-    const result = await (win
-      ? dialog.showOpenDialog(win, {
-          title: 'Select Fortnite executable',
-          properties: ['openFile'],
-          filters: [{ name: 'Fortnite', extensions: ['exe'] }]
-        })
-      : dialog.showOpenDialog({
-          title: 'Select Fortnite executable',
-          properties: ['openFile'],
-          filters: [{ name: 'Fortnite', extensions: ['exe'] }]
-        }))
+    const options: OpenDialogOptions = {
+      title: 'Select FortniteClient-Win64-Shipping.exe, FortniteBootstrapper.exe, or Fortnite.exe',
+      properties: ['openFile'],
+      filters: FORTNITE_DIALOG_FILTERS,
+      defaultPath: fortniteBrowseStartDir()
+    }
+    const result = await (win ? dialog.showOpenDialog(win, options) : dialog.showOpenDialog(options))
     if (result.canceled || !result.filePaths[0]) {
       return { found: false, path: null, version: null, valid: false, source: 'browse', reason: 'Browse cancelled.' }
     }

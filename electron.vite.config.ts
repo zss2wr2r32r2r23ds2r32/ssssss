@@ -20,6 +20,11 @@ export default defineConfig({
         input: {
           index: resolve(__dirname, 'src/preload/index.ts'),
           overlay: resolve(__dirname, 'src/preload/overlay.ts')
+        },
+        output: {
+          format: 'cjs',
+          entryFileNames: '[name].js',
+          chunkFileNames: '[name].js'
         }
       }
     }

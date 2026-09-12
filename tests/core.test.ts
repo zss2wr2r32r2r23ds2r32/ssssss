@@ -6,6 +6,14 @@ import { buildCrosshair } from '../src/shared/crosshair-draw'
 import { createDefaultConfig, getActiveProfile, seedProfiles } from '../src/shared/defaults'
 import { isAllowedExternalUrl, isIpcChannel } from '../src/shared/ipc'
 import { CROSSHAIR_PRESETS, RESOLUTION_PRESETS } from '../src/shared/types'
+import {
+  collectHintsFromManifestText,
+  executablesForInstall,
+  isAllowedFortniteExecutableName,
+  isDebugPreviewMessage,
+  looksLikeFortniteName,
+  rankFortniteCandidates
+} from '../src/shared/fortnite-detect'
 import { looksLikeFortniteExecutable } from '../src/main/services/windows-api'
 import { isProtectedProcess } from '../src/main/services/performance'
 
@@ -32,11 +40,63 @@ describe('fortnite path validation', () => {
     expect(looksLikeFortniteExecutable('C:\\Windows\\notepad.exe').valid).toBe(false)
   })
 
+  it('accepts shipping, bootstrapper, and Fortnite.exe names', () => {
+    const names = [
+      'C:\\Program Files\\Epic Games\\Fortnite\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping.exe',
+      'C:\\Program Files\\Epic Games\\Fortnite\\FortniteGame\\Binaries\\Win64\\FortniteBootstrapper.exe',
+      'C:\\Program Files\\Epic Games\\Fortnite\\Fortnite.exe'
+    ]
+    for (const file of names) {
+      expect(isAllowedFortniteExecutableName(file)).toBe(true)
+      expect(looksLikeFortniteName(file).valid).toBe(true)
+    }
+  })
+
   it('accepts a Fortnite-named file that exists', () => {
     const dir = mkdtempSync(join(tmpdir(), 'nautical-'))
     const file = join(dir, 'FortniteClient-Win64-Shipping.exe')
     writeFileSync(file, 'mz')
     expect(looksLikeFortniteExecutable(file).valid).toBe(true)
+    const bootstrapper = join(dir, 'FortniteBootstrapper.exe')
+    writeFileSync(bootstrapper, 'mz')
+    expect(looksLikeFortniteExecutable(bootstrapper).valid).toBe(true)
+  })
+})
+
+describe('epic manifest resolution', () => {
+  it('parses Fortnite .item InstallLocation + LaunchExecutable', () => {
+    const raw = JSON.stringify({
+      AppName: 'Fortnite',
+      DisplayName: 'Fortnite',
+      InstallLocation: 'C:\\Program Files\\Epic Games\\Fortnite',
+      LaunchExecutable: 'FortniteGame/Binaries/Win64/FortniteBootstrapper.exe'
+    })
+    const hints = collectHintsFromManifestText(raw)
+    expect(hints).toHaveLength(1)
+    expect(hints[0].installLocation).toBe('C:\\Program Files\\Epic Games\\Fortnite')
+    const candidates = rankFortniteCandidates(executablesForInstall(hints[0].installLocation, hints[0].launchExecutable))
+    expect(candidates[0]).toBe(
+      'C:\\Program Files\\Epic Games\\Fortnite\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping.exe'
+    )
+    expect(candidates).toContain(
+      'C:\\Program Files\\Epic Games\\Fortnite\\FortniteGame\\Binaries\\Win64\\FortniteBootstrapper.exe'
+    )
+  })
+
+  it('parses LauncherInstalled.dat InstallationList', () => {
+    const raw = JSON.stringify({
+      InstallationList: [
+        { InstallLocation: 'C:\\Games\\Other', AppName: 'Celeste' },
+        { InstallLocation: 'C:\\Program Files\\Epic Games\\Fortnite', AppName: 'Fortnite' }
+      ]
+    })
+    const hints = collectHintsFromManifestText(raw)
+    expect(hints.map((h) => h.appName)).toEqual(['Fortnite'])
+  })
+
+  it('blocks leftover preview debug toast copy', () => {
+    expect(isDebugPreviewMessage('Browser preview: detect on Windows from the packaged app.')).toBe(true)
+    expect(isDebugPreviewMessage('Fortnite was not found in Epic manifests.')).toBe(false)
   })
 })
 

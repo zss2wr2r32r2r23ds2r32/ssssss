@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { getActiveProfile } from '../../../shared/defaults'
+import { isDebugPreviewMessage } from '../../../shared/fortnite-detect'
 import type { AppConfig, LaunchStatus, NavPage, Profile, ToastPayload } from '../../../shared/types'
 import { api, onConfig, onStatus, onToast } from '../lib/api'
 
@@ -44,6 +45,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }
 
   const pushToast = (toast: Omit<ToastPayload, 'id'> & { id?: string }) => {
+    if (isDebugPreviewMessage(toast.title) || isDebugPreviewMessage(toast.body)) return
+    if (toast.title === 'Detect' || toast.title === 'Browse') return
     const id = toast.id ?? `t-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`
     setToasts((current) => [...current.slice(-4), { ...toast, id }])
     setTimeout(() => dismissToast(id), 5200)

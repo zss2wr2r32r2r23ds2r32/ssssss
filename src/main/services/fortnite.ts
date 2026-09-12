@@ -1,13 +1,19 @@
 import { spawn } from 'node:child_process'
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
+import {
+  collectHintsFromManifestText,
+  executablesForInstall,
+  rankFortniteCandidates
+} from '../../shared/fortnite-detect'
 import type { FortniteInstallInfo, LaunchStatus, StatusEvent } from '../../shared/types'
 import { loadConfig, updateConfig } from './config'
 import {
   commonFortniteCandidates,
-  epicManifestDir,
+  epicManifestDirs,
   FORTNITE_PROCESS_NAMES,
   isWindows,
+  launcherInstalledPath,
   looksLikeFortniteExecutable,
   runPowerShell
 } from './windows-api'
@@ -58,27 +64,32 @@ export function setStatus(next: LaunchStatus, extra: Partial<StatusEvent> = {}):
   })
 }
 
-function parseManifests(): string[] {
-  const dir = epicManifestDir()
-  if (!dir) return []
+function parseEpicSources(): string[] {
   const found: string[] = []
-  try {
-    for (const file of readdirSync(dir)) {
-      if (!file.endsWith('.item') && !file.endsWith('.json')) continue
-      const raw = readFileSync(path.join(dir, file), 'utf8')
-      if (!/fortnite/i.test(raw)) continue
-      const install = raw.match(/"InstallLocation"\s*:\s*"([^"]+)"/)
-      const launch = raw.match(/"LaunchExecutable"\s*:\s*"([^"]+)"/)
-      if (install?.[1]) {
-        const installPath = install[1].replace(/\\\\/g, '\\')
-        if (launch?.[1]) {
-          found.push(path.join(installPath, launch[1].replace(/\\\\/g, '\\')))
-        }
-        found.push(path.join(installPath, 'FortniteGame', 'Binaries', 'Win64', 'FortniteClient-Win64-Shipping.exe'))
-      }
+  const ingest = (raw: string) => {
+    for (const hint of collectHintsFromManifestText(raw)) {
+      found.push(...executablesForInstall(hint.installLocation, hint.launchExecutable))
     }
-  } catch {
-    // Manifests are optional hints.
+  }
+
+  const installed = launcherInstalledPath()
+  if (installed) {
+    try {
+      ingest(readFileSync(installed, 'utf8'))
+    } catch {
+      // Optional catalog.
+    }
+  }
+
+  for (const dir of epicManifestDirs()) {
+    try {
+      for (const file of readdirSync(dir)) {
+        if (!file.endsWith('.item') && !file.endsWith('.json') && !file.endsWith('.dat')) continue
+        ingest(readFileSync(path.join(dir, file), 'utf8'))
+      }
+    } catch {
+      // Manifests are optional hints.
+    }
   }
   return found
 }
@@ -124,9 +135,8 @@ export async function detectFortniteInstall(): Promise<FortniteInstallInfo> {
     }
   }
 
-  const candidates = [...parseManifests(), ...commonFortniteCandidates()]
+  const candidates = rankFortniteCandidates([...parseEpicSources(), ...commonFortniteCandidates()])
   for (const candidate of candidates) {
-    if (!candidate.toLowerCase().endsWith('.exe')) continue
     if (!existsSync(candidate)) continue
     const validated = await validateFortnitePath(candidate)
     if (validated.valid) {
@@ -141,7 +151,8 @@ export async function detectFortniteInstall(): Promise<FortniteInstallInfo> {
     version: config.fortniteVersion,
     valid: false,
     source: config.fortnitePath ? 'config' : null,
-    reason: 'Fortnite was not found in common Epic locations. Browse to Fortnite.exe to set it.'
+    reason:
+      'Fortnite was not found in Epic manifests or common install folders. Browse to FortniteClient-Win64-Shipping.exe, FortniteBootstrapper.exe, or Fortnite.exe.'
   }
 }
 

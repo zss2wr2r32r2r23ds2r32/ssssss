@@ -2,6 +2,11 @@ import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { existsSync } from 'node:fs'
 import path from 'node:path'
+import {
+  commonFortniteCandidatePaths,
+  looksLikeFortniteName,
+  PREFERRED_FORTNITE_EXES
+} from '../../shared/fortnite-detect'
 
 const execFileAsync = promisify(execFile)
 
@@ -34,35 +39,35 @@ export async function runCmd(args: string[], timeout = 10000): Promise<string> {
 }
 
 export function commonFortniteCandidates(): string[] {
-  const drives = ['C', 'D', 'E', 'F']
-  const roots = [
-    'Program Files\\Epic Games\\Fortnite\\FortniteGame\\Binaries\\Win64',
-    'Program Files (x86)\\Epic Games\\Fortnite\\FortniteGame\\Binaries\\Win64',
-    'Epic Games\\Fortnite\\FortniteGame\\Binaries\\Win64',
-    'Games\\Epic Games\\Fortnite\\FortniteGame\\Binaries\\Win64',
-    'Fortnite\\FortniteGame\\Binaries\\Win64'
-  ]
-  const exes = ['FortniteClient-Win64-Shipping.exe', 'Fortnite.exe']
-  const out: string[] = []
-  for (const drive of drives) {
-    for (const root of roots) {
-      for (const exe of exes) {
-        out.push(`${drive}:\\${root}\\${exe}`)
-      }
-    }
-  }
-  const local = process.env.LOCALAPPDATA
-  if (local) {
-    out.push(path.join(local, 'FortniteGame', 'Saved', 'StagedBuilds'))
-  }
-  return out
+  return commonFortniteCandidatePaths(process.env)
 }
 
-export function epicManifestDir(): string | null {
+export function epicManifestDirs(): string[] {
   const programData = process.env.PROGRAMDATA ?? 'C:\\ProgramData'
-  const dir = path.join(programData, 'Epic', 'EpicGamesLauncher', 'Data', 'Manifests')
-  return existsSync(dir) ? dir : null
+  return [
+    path.join(programData, 'Epic', 'EpicGamesLauncher', 'Data', 'Manifests')
+  ].filter((dir) => existsSync(dir))
 }
+
+export function launcherInstalledPath(): string | null {
+  const programData = process.env.PROGRAMDATA ?? 'C:\\ProgramData'
+  const file = path.join(programData, 'Epic', 'UnrealEngineLauncher', 'LauncherInstalled.dat')
+  return existsSync(file) ? file : null
+}
+
+export function fortniteBrowseStartDir(): string | undefined {
+  const guesses = commonFortniteCandidatePaths(process.env)
+    .map((file) => path.dirname(file))
+    .filter((dir) => existsSync(dir))
+  return guesses[0]
+}
+
+export const FORTNITE_DIALOG_FILTERS = [
+  { name: 'FortniteClient-Win64-Shipping.exe', extensions: ['exe'] },
+  { name: 'FortniteBootstrapper.exe', extensions: ['exe'] },
+  { name: 'Fortnite.exe', extensions: ['exe'] },
+  { name: 'Fortnite executables', extensions: ['exe'] }
+]
 
 export function fortniteConfigPath(): string | null {
   const local = process.env.LOCALAPPDATA
@@ -74,6 +79,7 @@ export const FORTNITE_PROCESS_NAMES = [
   'FortniteClient-Win64-Shipping.exe',
   'FortniteClient-Win64-Shipping_EAC.exe',
   'FortniteClient-Win64-Shipping_BE.exe',
+  'FortniteBootstrapper.exe',
   'Fortnite.exe',
   'FortniteLauncher.exe'
 ]
@@ -85,26 +91,12 @@ export const EPIC_AUTH_PROCESS_NAMES = [
 ]
 
 export function looksLikeFortniteExecutable(filePath: string): { valid: boolean; reason?: string } {
-  const base = path.basename(filePath).toLowerCase()
-  if (!base.endsWith('.exe')) {
-    return { valid: false, reason: 'Selected file is not an .exe' }
-  }
-  const fortniteNamed =
-    base.includes('fortnite') ||
-    base === 'fortniteclient-win64-shipping.exe'
-  const parent = filePath.toLowerCase()
-  const inFortniteTree =
-    parent.includes('fortnitegame') ||
-    parent.includes('\\fortnite\\') ||
-    parent.includes('/fortnite/')
-  if (!fortniteNamed && !inFortniteTree) {
-    return {
-      valid: false,
-      reason: 'File does not look like Fortnite (name or install folder mismatch).'
-    }
-  }
+  const named = looksLikeFortniteName(filePath)
+  if (!named.valid) return named
   if (!existsSync(filePath)) {
     return { valid: false, reason: 'File does not exist.' }
   }
   return { valid: true }
 }
+
+export { PREFERRED_FORTNITE_EXES }

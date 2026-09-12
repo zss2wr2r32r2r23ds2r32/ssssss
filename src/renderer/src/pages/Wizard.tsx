@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CROSSHAIR_PRESETS, RESOLUTION_PRESETS } from '../../../shared/types'
 import { CrosshairMark } from '../components/crosshair/CrosshairMark'
 import { api } from '../lib/api'
@@ -8,9 +8,32 @@ import { useApp } from '../store/AppState'
 const STEPS = ['Welcome', 'Detect', 'Install', 'Monitor', 'Resolution', 'Crosshair', 'Finish'] as const
 
 export function Wizard() {
-  const { config, profile, setConfig, pushToast } = useApp()
+  const { config, profile, setConfig } = useApp()
   const [step, setStep] = useState(0)
   const [detecting, setDetecting] = useState(false)
+  const [detectNote, setDetectNote] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (step !== 1 || !config || config.fortnitePath) return
+    let cancelled = false
+    setDetecting(true)
+    void api
+      .detectFortnite()
+      .then(async (info) => {
+        if (cancelled) return
+        setConfig(await api.getConfig())
+        setDetectNote(info.valid ? `Found ${info.path}` : info.reason ?? 'Not found. You can browse on the next step.')
+        setDetecting(false)
+      })
+      .catch(() => {
+        if (cancelled) return
+        setDetectNote('Could not search for Fortnite.')
+        setDetecting(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [step, config?.fortnitePath, setConfig])
 
   if (!config || !profile) return null
 
@@ -45,6 +68,7 @@ export function Wizard() {
                 <div className="card" style={{ margin: '16px 0' }}>
                   <strong>{config.fortnitePath ? 'Install candidate ready' : 'Not found yet'}</strong>
                   <div className="hint">{config.fortnitePath ?? 'You can browse on the next step if auto-detect misses.'}</div>
+                  {detectNote ? <div className="hint" style={{ marginTop: 8 }}>{detectNote}</div> : null}
                 </div>
                 <button
                   type="button"
@@ -54,7 +78,7 @@ export function Wizard() {
                     setDetecting(true)
                     const info = await api.detectFortnite()
                     setConfig(await api.getConfig())
-                    pushToast({ tone: info.valid ? 'success' : 'warn', title: 'Detect', body: info.reason ?? info.path ?? '' })
+                    setDetectNote(info.valid ? `Found ${info.path}` : info.reason ?? 'Not found. You can browse on the next step.')
                     setDetecting(false)
                   }}
                 >
@@ -65,15 +89,23 @@ export function Wizard() {
             {step === 2 && (
               <>
                 <h2>Install path</h2>
-                <p className="hint">Validate Fortnite.exe / FortniteClient-Win64-Shipping.exe. Missing installs are fine — the app still opens.</p>
+                <p className="hint">
+                  Accepts FortniteClient-Win64-Shipping.exe, FortniteBootstrapper.exe, or Fortnite.exe. Missing installs are
+                  fine — the app still opens.
+                </p>
                 <div className="hint" style={{ margin: '12px 0' }}>{config.fortnitePath ?? 'No path stored'}</div>
+                {detectNote ? <div className="hint">{detectNote}</div> : null}
                 <div className="row">
                   <button type="button" className="btn" onClick={async () => {
                     const info = await api.browseFortnite()
                     setConfig(await api.getConfig())
-                    pushToast({ tone: info.valid ? 'success' : 'warn', title: 'Browse', body: info.reason ?? info.path ?? '' })
+                    if (info.valid) {
+                      setDetectNote(`Using ${info.path}`)
+                    } else if (info.reason && info.reason !== 'Browse cancelled.') {
+                      setDetectNote(info.reason)
+                    }
                   }}>
-                    Browse for Fortnite.exe
+                    Browse for Fortnite executable
                   </button>
                 </div>
               </>

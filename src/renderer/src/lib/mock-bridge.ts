@@ -3,6 +3,8 @@ import { IPC_CHANNELS, IPC_EVENTS, isAllowedExternalUrl } from '../../../shared/
 import { APP_VERSION, type AppConfig, type LaunchStatus } from '../../../shared/types'
 
 export function installMockBridge(): void {
+  if (typeof navigator !== 'undefined' && /Electron/i.test(navigator.userAgent)) return
+  if (!import.meta.env.DEV) return
   if (window.nautical) return
   let config = createDefaultConfig()
   let status: LaunchStatus = 'NOT_RUNNING'
@@ -24,9 +26,16 @@ export function installMockBridge(): void {
           return config
         case 'fortnite:detect':
         case 'fortnite:browse':
-          return { found: false, path: null, version: null, valid: false, source: 'auto', reason: 'Browser preview: detect on Windows from the packaged app.' }
+          return {
+            found: false,
+            path: null,
+            version: null,
+            valid: false,
+            source: 'auto',
+            reason: 'Vite UI preview cannot scan Windows. Run the Electron app to detect Fortnite.'
+          }
         case 'fortnite:launch':
-          return { ok: false, status, code: 'MISSING_INSTALL', message: 'Browser preview cannot launch Fortnite. Use the Windows build.' }
+          return { ok: false, status, code: 'MISSING_INSTALL', message: 'Vite UI preview cannot launch Fortnite. Use the Electron app.' }
         case 'fortnite:status':
           return status
         case 'resolution:info':

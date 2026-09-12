@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import { isDebugPreviewMessage } from '../../../shared/fortnite-detect'
 import { api } from '../lib/api'
 import { useApp } from '../store/AppState'
 import { LaunchIcon } from '../components/icons/Icons'
@@ -81,10 +82,15 @@ export function HomePage() {
                 onClick={async () => {
                   const info = await api.detectFortnite()
                   setConfig(await api.getConfig())
+                  const body = info.valid
+                    ? `Found ${info.path}`
+                    : isDebugPreviewMessage(info.reason)
+                      ? 'Could not reach the launcher process. Restart Nautical.'
+                      : info.reason
                   pushToast({
-                    tone: info.valid ? 'success' : 'warn',
-                    title: 'Fortnite path',
-                    body: info.valid ? `Found ${info.path}` : info.reason
+                    tone: info.valid ? 'success' : 'error',
+                    title: info.valid ? 'Fortnite found' : 'Fortnite not found',
+                    body
                   })
                 }}
               >
@@ -96,10 +102,16 @@ export function HomePage() {
                 onClick={async () => {
                   const info = await api.browseFortnite()
                   setConfig(await api.getConfig())
+                  if (info.reason === 'Browse cancelled.') return
+                  const body = info.valid
+                    ? `Using ${info.path}`
+                    : isDebugPreviewMessage(info.reason)
+                      ? 'Could not reach the launcher process. Restart Nautical.'
+                      : info.reason
                   pushToast({
-                    tone: info.valid ? 'success' : 'warn',
-                    title: 'Browse',
-                    body: info.valid ? `Using ${info.path}` : info.reason
+                    tone: info.valid ? 'success' : 'error',
+                    title: info.valid ? 'Fortnite path set' : 'Invalid Fortnite executable',
+                    body
                   })
                 }}
               >
