@@ -41,8 +41,8 @@ export const DEFAULT_CROSSHAIR: CrosshairSettings = {
 export const DEFAULT_RESOLUTION: ResolutionSettings = {
   width: 1920,
   height: 1080,
-  method: 'fortnite-only',
-  applyOnLaunch: false,
+  method: 'display',
+  applyOnLaunch: true,
   temporary: true,
   applyGameUserSettings: true
 }
@@ -83,7 +83,8 @@ export const DEFAULT_GENERAL: GeneralSettings = {
   discordUrl: DEFAULT_DISCORD_URL,
   displayName: 'competitor',
   discordWebhookUrl: '',
-  launchMethod: 'epic'
+  launchMethod: 'bootstrapper',
+  hideEpicAfterLaunch: true
 }
 
 export const DEFAULT_AVATAR: AvatarSettings = {
@@ -150,7 +151,7 @@ export function seedProfiles(): Profile[] {
       width: 1920,
       height: 1080,
       applyOnLaunch: true,
-      method: 'fortnite-only'
+      method: 'display'
     },
     crosshair: {
       ...DEFAULT_CROSSHAIR,
@@ -181,7 +182,7 @@ export function seedProfiles(): Profile[] {
       width: 1728,
       height: 1080,
       applyOnLaunch: true,
-      method: 'fortnite-only'
+      method: 'display'
     },
     crosshair: {
       ...DEFAULT_CROSSHAIR,
@@ -215,7 +216,8 @@ export function seedProfiles(): Profile[] {
       width: 1920,
       height: 1080,
       applyOnLaunch: false,
-      method: 'fortnite-only'
+      method: 'display',
+      temporary: true
     },
     crosshair: {
       ...DEFAULT_CROSSHAIR,

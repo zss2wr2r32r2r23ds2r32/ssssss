@@ -5,6 +5,7 @@ import { APP_NAME, APP_VERSION } from '../shared/types'
 import { registerIpc } from './ipc/register'
 import { applySessionGuards } from './security'
 import { flushConfig, loadConfig } from './services/config'
+import { disposeWin32Host } from './services/win32-host'
 import { attachDisplayListeners } from './services/overlay'
 import { detectFortniteInstall, onStatus } from './services/fortnite'
 import { launchFromActiveProfile } from './services/launcher'
@@ -214,6 +215,11 @@ if (!gotLock) {
     markQuitting()
     try {
       flushConfig()
+    } catch {
+      // Quit anyway.
+    }
+    try {
+      disposeWin32Host()
     } catch {
       // Quit anyway.
     }

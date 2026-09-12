@@ -24,7 +24,8 @@ const PAGES: Record<NavPage, () => ReactElement | null> = {
 }
 
 export function App() {
-  const { ready, config, page, toasts, dismissToast } = useApp()
+  const { ready, config, page, status, toasts, dismissToast } = useApp()
+  const reducedMotion = status === 'RUNNING' || status === 'LAUNCHING' || config?.appearance.animationIntensity === 'off'
   const [visited, setVisited] = useState<NavPage[]>(['home'])
 
   useEffect(() => {
@@ -49,7 +50,7 @@ export function App() {
       <div className="app-root">
         <TitleBar />
         <Wizard />
-        <Toasts toasts={toasts} onDismiss={dismissToast} />
+        <Toasts toasts={toasts} onDismiss={dismissToast} reducedMotion={reducedMotion} />
       </div>
     )
   }
@@ -70,7 +71,7 @@ export function App() {
           })}
         </main>
       </div>
-      <Toasts toasts={toasts} onDismiss={dismissToast} />
+      <Toasts toasts={toasts} onDismiss={dismissToast} reducedMotion={reducedMotion} />
     </div>
   )
 }

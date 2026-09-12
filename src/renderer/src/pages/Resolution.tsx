@@ -35,8 +35,8 @@ export function ResolutionPage() {
         <div>
           <h2>Resolution</h2>
           <p>
-            Examples only — Avix does not claim a “best” competitive resolution. Epic competitive play is 16:9.
-            Display scaling is not the same as FOV.
+            Avix changes the Windows display mode for this Fortnite session (temporary desktop resolution), then
+            restores native when the game exits. It does not attach to Fortnite. Epic competitive play is 16:9.
           </p>
         </div>
         <button type="button" className="btn danger" onClick={() => void api.restoreNative()}>
@@ -108,18 +108,19 @@ export function ResolutionPage() {
           <div className="field">
             <label>Method</label>
             <select value={r.method} onChange={(event) => void persist({ method: event.target.value as ResolutionSettings['method'] })}>
-              <option value="fortnite-only">Fortnite-only (preferred, GameUserSettings)</option>
-              <option value="display">Display mode (Windows, temporary)</option>
-              <option value="gpu">GPU scaling + display mode</option>
-              <option value="automatic">Automatic (let Windows/GPU decide)</option>
+              <option value="display">Windows display mode (recommended — actually changes the monitor)</option>
+              <option value="gpu">Windows display + GPU scaling notes</option>
+              <option value="automatic">Automatic (same as Windows display)</option>
+              <option value="fortnite-only">GameUserSettings.ini only (does not change Windows)</option>
             </select>
           </div>
           <Toggle checked={r.applyOnLaunch} onChange={(applyOnLaunch) => void persist({ applyOnLaunch })} label="Apply with Launch Fortnite" />
           <Toggle checked={r.temporary} onChange={(temporary) => void persist({ temporary })} label="Temporary — restore when Fortnite exits" />
           <Toggle checked={r.applyGameUserSettings} onChange={(applyGameUserSettings) => void persist({ applyGameUserSettings })} label="Edit Fortnite GameUserSettings.ini" hint="Always backed up first. Never overwritten permanently without confirmation." />
           <div className="notice" style={{ marginTop: 12 }}>
-            Native resolution is saved before the first change. Unexpected Fortnite close restores temporary display and config.
-            Unsupported modes are rejected by Windows and shown as a toast — they are not forced.
+            Native mode is saved before apply. Fortnite exit/crash and Restore Native put the monitor back.
+            Custom sizes such as 1728×1080 or 1720×1080 are allowed. If Windows EnumDisplaySettings does not list a mode,
+            Avix warns and does not force it — add the custom mode in NVIDIA/AMD/Intel first.
           </div>
         </section>
       </div>

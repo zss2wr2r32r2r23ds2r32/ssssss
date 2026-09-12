@@ -1,9 +1,14 @@
 import { app, BrowserWindow, screen } from 'electron'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
+import { DEFAULT_CROSSHAIR } from '../../shared/defaults'
+import { centerOverlayOnRect, overlayMarkSize, rectFromCorners } from '../../shared/overlay-center'
 import type { CrosshairSettings } from '../../shared/types'
+import { hostFortniteRect } from './win32-host'
 
 let overlay: BrowserWindow | null = null
+let lastSettings: CrosshairSettings = DEFAULT_CROSSHAIR
+const recenterTimeouts = new Set<NodeJS.Timeout>()
 
 function overlayPreload(): string {
   const candidates = ['overlay.js', 'overlay.mjs', 'overlay.cjs'].map((file) =>
@@ -20,18 +25,32 @@ function overlayUrl(): string {
 }
 
 function gamingDisplay() {
-  const primary = screen.getPrimaryDisplay()
-  return primary
+  try {
+    return screen.getDisplayNearestPoint(screen.getCursorScreenPoint())
+  } catch {
+    return screen.getPrimaryDisplay()
+  }
 }
 
-function applyBounds(win: BrowserWindow): void {
+async function computePlacement(): Promise<{ x: number; y: number; width: number; height: number }> {
+  const mark = overlayMarkSize(lastSettings.size)
+  try {
+    const raw = await hostFortniteRect()
+    if (raw) {
+      const topLeft = screen.screenToDipPoint({ x: raw.left, y: raw.top })
+      const bottomRight = screen.screenToDipPoint({ x: raw.right, y: raw.bottom })
+      return centerOverlayOnRect(rectFromCorners(topLeft.x, topLeft.y, bottomRight.x, bottomRight.y), mark)
+    }
+  } catch {
+    /* Fall back to the gaming display. */
+  }
   const display = gamingDisplay()
-  win.setBounds({
-    x: display.bounds.x,
-    y: display.bounds.y,
-    width: display.bounds.width,
-    height: display.bounds.height
-  })
+  return centerOverlayOnRect(display.bounds, mark)
+}
+
+function clearRecenterTimers(): void {
+  for (const timer of recenterTimeouts) clearTimeout(timer)
+  recenterTimeouts.clear()
 }
 
 export function isOverlayOpen(): boolean {
@@ -39,16 +58,18 @@ export function isOverlayOpen(): boolean {
 }
 
 export async function startOverlay(settings: CrosshairSettings): Promise<void> {
+  lastSettings = settings
   if (isOverlayOpen()) {
     updateOverlay(settings)
+    await recenterOverlay()
     return
   }
-  const display = gamingDisplay()
+  const bounds = await computePlacement()
   overlay = new BrowserWindow({
-    x: display.bounds.x,
-    y: display.bounds.y,
-    width: display.bounds.width,
-    height: display.bounds.height,
+    x: bounds.x,
+    y: bounds.y,
+    width: bounds.width,
+    height: bounds.height,
     frame: false,
     transparent: true,
     backgroundColor: '#00000000',
@@ -65,7 +86,8 @@ export async function startOverlay(settings: CrosshairSettings): Promise<void> {
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: true,
-      webSecurity: true
+      webSecurity: true,
+      backgroundThrottling: true
     }
   })
   overlay.setAlwaysOnTop(true, 'screen-saver')
@@ -78,32 +100,54 @@ export async function startOverlay(settings: CrosshairSettings): Promise<void> {
   }
   overlay.on('closed', () => {
     overlay = null
+    clearRecenterTimers()
   })
   await overlay.loadURL(overlayUrl())
   overlay.showInactive()
   overlay.webContents.send('overlay:settings', settings)
+  scheduleRecenter()
 }
 
 export function updateOverlay(settings: CrosshairSettings): void {
+  lastSettings = settings
   if (!isOverlayOpen() || !overlay) return
   overlay.webContents.send('overlay:settings', settings)
+  void recenterOverlay()
 }
 
 export function stopOverlay(): void {
+  clearRecenterTimers()
   if (overlay && !overlay.isDestroyed()) {
     overlay.close()
   }
   overlay = null
 }
 
-export function recenterOverlay(): void {
-  if (overlay && !overlay.isDestroyed()) {
-    applyBounds(overlay)
+export async function recenterOverlay(): Promise<void> {
+  if (!overlay || overlay.isDestroyed()) return
+  const bounds = await computePlacement()
+  overlay.setBounds(bounds)
+}
+
+function scheduleRecenter(): void {
+  clearRecenterTimers()
+  for (const ms of [400, 1600, 4000]) {
+    const timer = setTimeout(() => {
+      recenterTimeouts.delete(timer)
+      void recenterOverlay()
+    }, ms)
+    recenterTimeouts.add(timer)
   }
 }
 
 export function attachDisplayListeners(): void {
-  screen.on('display-metrics-changed', recenterOverlay)
-  screen.on('display-added', recenterOverlay)
-  screen.on('display-removed', recenterOverlay)
+  screen.on('display-metrics-changed', () => {
+    void recenterOverlay()
+  })
+  screen.on('display-added', () => {
+    void recenterOverlay()
+  })
+  screen.on('display-removed', () => {
+    void recenterOverlay()
+  })
 }

@@ -2,10 +2,44 @@ import { app } from 'electron'
 import { closeSync, existsSync, fsyncSync, mkdirSync, openSync, readFileSync, writeSync } from 'node:fs'
 import path from 'node:path'
 import { createDefaultConfig, getActiveProfile } from '../../shared/defaults'
+import { normalizeLaunchMethod } from '../../shared/fortnite-launch'
 import type { AppConfig, Profile } from '../../shared/types'
 import { APP_VERSION } from '../../shared/types'
 
 let cached: AppConfig | null = null
+let writeTimer: NodeJS.Timeout | null = null
+const WRITE_DEBOUNCE_MS = 400
+
+function migrateLoadedConfig(merged: AppConfig, fallback: AppConfig): AppConfig {
+  merged.version = APP_VERSION
+  if (!merged.profiles?.length) {
+    merged.profiles = fallback.profiles
+    merged.activeProfileId = fallback.activeProfileId
+    merged.defaultProfileId = fallback.defaultProfileId
+  }
+  if (!merged.profiles.some((p) => p.id === merged.activeProfileId)) {
+    merged.activeProfileId = merged.profiles[0].id
+  }
+  if (!merged.profiles.some((p) => p.id === merged.defaultProfileId)) {
+    merged.defaultProfileId = merged.profiles[0].id
+  }
+  if (!merged.skin) merged.skin = fallback.skin
+  if (!merged.avatar) merged.avatar = fallback.avatar
+  if (!merged.scrims) merged.scrims = fallback.scrims
+  merged.general.launchMethod = normalizeLaunchMethod(merged.general.launchMethod)
+  if (merged.general.hideEpicAfterLaunch === undefined) {
+    merged.general.hideEpicAfterLaunch = true
+  }
+  if (merged.appearance?.accent?.toLowerCase() === '#3ee0ff') {
+    merged.appearance.accent = '#FF4D9D'
+  }
+  for (const profile of merged.profiles) {
+    if (profile.resolution?.method === 'fortnite-only' && profile.resolution.applyOnLaunch) {
+      profile.resolution.method = 'display'
+    }
+  }
+  return merged
+}
 
 export function configPath(): string {
   return path.join(app.getPath('userData'), 'avix-config.json')
@@ -44,31 +78,12 @@ export function loadConfig(): AppConfig {
   const fallback = createDefaultConfig()
   if (!existsSync(file)) {
     cached = fallback
-    saveConfig(cached)
+    flushConfig()
     return cached
   }
   try {
     const raw = JSON.parse(readFileSync(file, 'utf8')) as Partial<AppConfig>
-    const merged = deepMerge(fallback, raw)
-    merged.version = APP_VERSION
-    if (!merged.profiles?.length) {
-      merged.profiles = fallback.profiles
-      merged.activeProfileId = fallback.activeProfileId
-      merged.defaultProfileId = fallback.defaultProfileId
-    }
-    if (!merged.profiles.some((p) => p.id === merged.activeProfileId)) {
-      merged.activeProfileId = merged.profiles[0].id
-    }
-    if (!merged.profiles.some((p) => p.id === merged.defaultProfileId)) {
-      merged.defaultProfileId = merged.profiles[0].id
-    }
-    if (!merged.skin) merged.skin = fallback.skin
-    if (!merged.avatar) merged.avatar = fallback.avatar
-    if (!merged.scrims) merged.scrims = fallback.scrims
-    if (!merged.general.launchMethod) merged.general.launchMethod = fallback.general.launchMethod
-    if (merged.appearance?.accent?.toLowerCase() === '#3ee0ff') {
-      merged.appearance.accent = '#FF4D9D'
-    }
+    const merged = migrateLoadedConfig(deepMerge(fallback, raw), fallback)
     cached = merged
     return cached
   } catch {
@@ -77,8 +92,7 @@ export function loadConfig(): AppConfig {
   }
 }
 
-export function saveConfig(next: AppConfig): AppConfig {
-  cached = next
+function writeNow(next: AppConfig): void {
   const file = configPath()
   mkdirSync(path.dirname(file), { recursive: true })
   const payload = `${JSON.stringify(next, null, 2)}\n`
@@ -89,11 +103,26 @@ export function saveConfig(next: AppConfig): AppConfig {
   } finally {
     closeSync(fd)
   }
+}
+
+export function saveConfig(next: AppConfig): AppConfig {
+  cached = next
+  if (writeTimer) clearTimeout(writeTimer)
+  writeTimer = setTimeout(() => {
+    writeTimer = null
+    if (cached) writeNow(cached)
+  }, WRITE_DEBOUNCE_MS)
   return cached
 }
 
 export function flushConfig(): AppConfig {
-  return saveConfig(loadConfig())
+  if (writeTimer) {
+    clearTimeout(writeTimer)
+    writeTimer = null
+  }
+  const next = cached ?? loadConfig()
+  writeNow(next)
+  return next
 }
 
 export function updateConfig(partial: Record<string, unknown> | Partial<AppConfig>): AppConfig {

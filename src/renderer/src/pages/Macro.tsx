@@ -17,7 +17,10 @@ export function MacroPage() {
       <div className="page-head">
         <div>
           <h2>Macro</h2>
-          <p>Simple interval key/mouse repeat. No memory, packets, injection, aim, recoil, ESP, or anti-cheat interaction.</p>
+          <p>
+            OS-level SendInput only. No memory, packets, injection, or attaching to Fortnite. If Fortnite is running
+            elevated, start Avix as Administrator so input is allowed through UIPI.
+          </p>
         </div>
       </div>
       <div className="notice danger">
@@ -98,7 +101,7 @@ export function MacroPage() {
             checked={m.onlyWhileFortniteFocused}
             onChange={(onlyWhileFortniteFocused) => void persist({ onlyWhileFortniteFocused })}
             label="Focus gate"
-            hint="Even in hold/toggle modes, repeats stay gated to a focused Fortnite window by default."
+            hint="Repeats only while FortniteClient-Win64-Shipping / UnrealWindow is focused. Nothing is sent when you tab out."
           />
           <div className="row" style={{ marginTop: 12 }}>
             <button

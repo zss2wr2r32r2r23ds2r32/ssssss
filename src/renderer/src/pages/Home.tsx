@@ -45,7 +45,7 @@ export function HomePage() {
           </div>
           <div className="hero-copy">
             <h2>What's up, {name}?</h2>
-            <p>Your photo, your session. Avix starts Fortnite through Epic so the game can stay signed in.</p>
+            <p>Your photo, your session. Avix starts Fortnite via Bootstrapper by default so Epic’s window stays out of the way — you still need to be signed in.</p>
             <div className="row" style={{ marginTop: 12 }}>
               <button
                 type="button"
@@ -113,7 +113,7 @@ export function HomePage() {
           <span>Session</span>
           <strong>{profile.name}</strong>
           <div className="hint">
-            {profile.resolution.width}×{profile.resolution.height} · Launch via {config.general.launchMethod ?? 'epic'}
+            {profile.resolution.width}×{profile.resolution.height} · Launch via {config.general.launchMethod ?? 'bootstrapper'}
           </div>
           <div className="row" style={{ marginTop: 10 }}>
             <button type="button" className="btn" onClick={() => setPage('scrims')}>

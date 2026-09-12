@@ -1,6 +1,12 @@
 import { fortniteExecutableName, joinWin, normalizeWindowsPath } from './fortnite-detect'
 
-export type LaunchMethod = 'epic' | 'bootstrapper' | 'shipping'
+export type LaunchMethod = 'bootstrapper' | 'shipping' | 'epic-uri'
+
+export function normalizeLaunchMethod(value: unknown): LaunchMethod {
+  if (value === 'shipping') return 'shipping'
+  if (value === 'epic-uri' || value === 'epic') return 'epic-uri'
+  return 'bootstrapper'
+}
 
 export const FORTNITE_EPIC_URI = 'com.epicgames.launcher://apps/Fortnite?action=launch'
 

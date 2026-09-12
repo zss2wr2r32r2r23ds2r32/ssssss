@@ -22,7 +22,7 @@ export type ScalingMethod = 'gpu' | 'display' | 'automatic' | 'fortnite-only'
 export type MacroMode = 'hold' | 'toggle' | 'fortnite-focus'
 export type AnimationIntensity = 'off' | 'subtle' | 'full'
 export type ThemeId = 'dark'
-export type LaunchMethod = 'epic' | 'bootstrapper' | 'shipping'
+export type LaunchMethod = 'bootstrapper' | 'shipping' | 'epic-uri'
 export type CrosshairShape =
   | 'dot'
   | 'cross'
@@ -121,6 +121,7 @@ export interface GeneralSettings {
   displayName: string
   discordWebhookUrl: string
   launchMethod: LaunchMethod
+  hideEpicAfterLaunch: boolean
 }
 
 export interface SkinPreview {
@@ -278,6 +279,7 @@ export interface StatusEvent {
 export const RESOLUTION_PRESETS = [
   { id: '1920x1080', width: 1920, height: 1080, label: '1920×1080 Native', note: 'Standard 16:9 example' },
   { id: '1728x1080', width: 1728, height: 1080, label: '1728×1080', note: 'Example stretched width' },
+  { id: '1720x1080', width: 1720, height: 1080, label: '1720×1080', note: 'Example custom stretch' },
   { id: '1600x1080', width: 1600, height: 1080, label: '1600×1080', note: 'Example stretched width' },
   { id: '1620x1080', width: 1620, height: 1080, label: '1620×1080', note: 'Example stretched width' },
   { id: '1500x1080', width: 1500, height: 1080, label: '1500×1080', note: 'Example stretched width' },

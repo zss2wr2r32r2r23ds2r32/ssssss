@@ -87,7 +87,8 @@ export const configPatchSchema = z.object({
       discordUrl: z.string().max(300).optional(),
       displayName: z.string().max(32).optional(),
       discordWebhookUrl: z.string().max(400).optional(),
-      launchMethod: z.enum(['epic', 'bootstrapper', 'shipping']).optional()
+      launchMethod: z.enum(['bootstrapper', 'shipping', 'epic-uri']).optional(),
+      hideEpicAfterLaunch: z.boolean().optional()
     })
     .optional(),
   appearance: z

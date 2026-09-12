@@ -29,7 +29,7 @@ export function SettingsPage() {
 
   const applyGeneral = async (patch: Partial<typeof g>) => {
     try {
-      setConfig(await api.applyGeneral({ ...g, launchMethod: g.launchMethod ?? 'epic', ...patch }))
+      setConfig(await api.applyGeneral({ ...g, launchMethod: g.launchMethod ?? 'bootstrapper', ...patch }))
     } catch (error) {
       pushToast({
         tone: 'error',
@@ -98,14 +98,23 @@ export function SettingsPage() {
           <div className="field">
             <label>How to start Fortnite</label>
             <select
-              value={g.launchMethod ?? 'epic'}
+              value={g.launchMethod ?? 'bootstrapper'}
               onChange={(event) => void applyGeneral({ launchMethod: event.target.value as LaunchMethod })}
             >
-              <option value="epic">Epic Games Launcher / URI (recommended)</option>
-              <option value="bootstrapper">FortniteBootstrapper.exe</option>
-              <option value="shipping">Shipping.exe only (often exits without Epic)</option>
+              <option value="bootstrapper">FortniteBootstrapper.exe (default — no Epic window)</option>
+              <option value="shipping">Shipping.exe + Epic handoff args</option>
+              <option value="epic-uri">Epic URI fallback (minimized)</option>
             </select>
+            <div className="hint">
+              Bootstrapper starts Fortnite without leaving Epic Games Launcher in front. You still must be signed into Epic — Avix does not bypass login.
+            </div>
           </div>
+          <Toggle
+            checked={g.hideEpicAfterLaunch !== false}
+            onChange={(hideEpicAfterLaunch) => void applyGeneral({ hideEpicAfterLaunch })}
+            label="Hide Epic Launcher after Fortnite is up"
+            hint="Minimizes Epic’s window only. It does not skip Epic authentication."
+          />
           <Toggle
             checked={g.startWithWindows}
             onChange={(startWithWindows) => void applyGeneral({ startWithWindows })}
@@ -141,7 +150,7 @@ export function SettingsPage() {
             checked={g.hardwareAcceleration}
             onChange={(hardwareAcceleration) => void applyGeneral({ hardwareAcceleration })}
             label="Hardware acceleration"
-            hint="Takes effect the next time Avix starts."
+            hint="Takes effect the next time Avix starts. Turn off if Avix competes with Fortnite for GPU time."
           />
           <div className="field">
             <label>Discord URL</label>

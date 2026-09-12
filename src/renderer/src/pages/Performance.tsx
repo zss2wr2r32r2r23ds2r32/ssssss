@@ -12,7 +12,7 @@ function Meter({ value }: { value: number | null }) {
 }
 
 export function PerformancePage() {
-  const { page } = useApp()
+  const { page, status } = useApp()
   const [snap, setSnap] = useState<MonitorSnapshot | null>(null)
 
   useEffect(() => {
@@ -27,12 +27,13 @@ export function PerformancePage() {
       }
     }
     void tick()
-    const id = setInterval(() => void tick(), 1500)
+    const intervalMs = status === 'RUNNING' || status === 'LAUNCHING' ? 5000 : 4000
+    const id = setInterval(() => void tick(), intervalMs)
     return () => {
       alive = false
       clearInterval(id)
     }
-  }, [page])
+  }, [page, status])
 
   const ramPct =
     snap?.ramUsedMb && snap.ramTotalMb ? Math.round((snap.ramUsedMb / snap.ramTotalMb) * 100) : null
@@ -42,7 +43,9 @@ export function PerformancePage() {
       <div className="page-head">
         <div>
           <h2>Performance</h2>
-          <p>Live system resource usage from Windows/OS counters. No Fortnite injection, no “FPS magic,” no closing other apps.</p>
+          <p>
+            OS counters only — polled while this page is open. No attaching to Fortnite, no injection, no FPS “boost.”
+          </p>
         </div>
       </div>
       <div className="grid grid-3">

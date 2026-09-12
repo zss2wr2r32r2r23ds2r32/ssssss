@@ -1,13 +1,15 @@
 import type { MacroSettings, OperationResult } from '../../shared/types'
 import { ALLOWED_MACRO_KEYS } from '../../shared/types'
 import { isFortniteFocused } from './fortnite'
-import { isWindows, runPowerShell } from './windows-api'
+import { isWindows } from './windows-api'
+import { hostClick, hostSendKey, hostWheel } from './win32-host'
 
 let timer: NodeJS.Timeout | null = null
 let running = false
 let current: MacroSettings | null = null
 let toggleOn = false
 let activationHeld = false
+let ticking = false
 
 const VIRTUAL_KEYS: Record<string, number> = {
   Space: 0x20,
@@ -36,13 +38,6 @@ function vkFor(key: string): number | null {
   return null
 }
 
-function mouseFlag(button: MacroSettings['mouseButton'], down: boolean): number | null {
-  if (button === 'left') return down ? 0x0002 : 0x0004
-  if (button === 'right') return down ? 0x0008 : 0x0010
-  if (button === 'middle') return down ? 0x0020 : 0x0040
-  return null
-}
-
 function wheelDelta(button: MacroSettings['mouseButton']): number | null {
   if (button === 'wheel-up') return 120
   if (button === 'wheel-down') return -120
@@ -51,57 +46,36 @@ function wheelDelta(button: MacroSettings['mouseButton']): number | null {
 
 async function sendOnce(settings: MacroSettings): Promise<void> {
   if (!isWindows) return
-  const parts: string[] = []
   const vk = vkFor(settings.key)
   if (vk !== null) {
-    parts.push(`
-      [AvixInput]::keybd_event(${vk}, 0, 0, [UIntPtr]::Zero)
-      Start-Sleep -Milliseconds 12
-      [AvixInput]::keybd_event(${vk}, 0, 2, [UIntPtr]::Zero)
-    `)
+    await hostSendKey(vk, true)
+    await new Promise((resolve) => setTimeout(resolve, 12))
+    await hostSendKey(vk, false)
   }
-  const down = mouseFlag(settings.mouseButton, true)
-  const up = mouseFlag(settings.mouseButton, false)
-  if (down !== null && up !== null) {
-    parts.push(`
-      [AvixInput]::mouse_event(${down}, 0, 0, 0, [UIntPtr]::Zero)
-      Start-Sleep -Milliseconds 12
-      [AvixInput]::mouse_event(${up}, 0, 0, 0, [UIntPtr]::Zero)
-    `)
+  if (settings.mouseButton === 'left' || settings.mouseButton === 'right' || settings.mouseButton === 'middle') {
+    await hostClick(settings.mouseButton)
   }
   const wheel = wheelDelta(settings.mouseButton)
   if (wheel !== null) {
-    parts.push(`
-      [AvixInput]::mouse_event(0x0800, 0, 0, ${wheel}, [UIntPtr]::Zero)
-    `)
+    await hostWheel(wheel)
   }
-  if (!parts.length) return
-  const script = `
-    Add-Type @"
-      using System;
-      using System.Runtime.InteropServices;
-      public class AvixInput {
-        [DllImport("user32.dll")] public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
-        [DllImport("user32.dll")] public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData, UIntPtr dwExtraInfo);
-      }
-"@
-    ${parts.join('\n')}
-  `
-  await runPowerShell(script, 4000)
 }
 
 async function tick(): Promise<void> {
-  if (!running || !current) return
-  if (current.onlyWhileFortniteFocused || current.mode === 'fortnite-focus') {
-    const focused = await isFortniteFocused()
-    if (!focused) return
-  }
-  if (current.mode === 'hold' && !activationHeld) return
-  if (current.mode === 'toggle' && !toggleOn) return
+  if (!running || !current || ticking) return
+  ticking = true
   try {
+    if (current.onlyWhileFortniteFocused || current.mode === 'fortnite-focus') {
+      const focused = await isFortniteFocused()
+      if (!focused) return
+    }
+    if (current.mode === 'hold' && !activationHeld) return
+    if (current.mode === 'toggle' && !toggleOn) return
     await sendOnce(current)
   } catch {
     // Swallow send failures; next tick retries.
+  } finally {
+    ticking = false
   }
 }
 
@@ -124,11 +98,9 @@ export function startMacro(settings: MacroSettings): OperationResult {
   if (!settings.enabled) {
     return { ok: false, message: 'Macro is disabled in the active profile.' }
   }
-  const hasWheel = settings.mouseButton === 'wheel-up' || settings.mouseButton === 'wheel-down'
   if (!(ALLOWED_MACRO_KEYS as readonly string[]).includes(settings.key) && settings.mouseButton === 'none') {
     return { ok: false, message: 'Choose a supported key, mouse button, or scroll wheel.' }
   }
-  void hasWheel
   const interval = Math.min(2, Math.max(0.1, settings.intervalSec))
   current = { ...settings, intervalSec: interval }
   if (timer) clearInterval(timer)
@@ -141,7 +113,7 @@ export function startMacro(settings: MacroSettings): OperationResult {
   return {
     ok: true,
     message: isWindows
-      ? `Macro armed (${settings.key}${settings.mouseButton !== 'none' ? ` + ${settings.mouseButton}` : ''} every ${interval.toFixed(2)}s).`
+      ? `Macro armed (${settings.key}${settings.mouseButton !== 'none' ? ` + ${settings.mouseButton}` : ''} every ${interval.toFixed(2)}s). Uses SendInput from Avix — run Avix as Administrator if Fortnite is elevated.`
       : 'Macro armed in preview mode. Key sending is Windows-only.'
   }
 }

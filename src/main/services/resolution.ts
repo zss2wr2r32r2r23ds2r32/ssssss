@@ -4,9 +4,17 @@ import { screen } from 'electron'
 import type { DisplayInfo, GpuInfo, GpuVendor, OperationResult, ResolutionSettings } from '../../shared/types'
 import { backupsDir, loadConfig, updateConfig } from './config'
 import { fortniteConfigPath, isWindows, runPowerShell } from './windows-api'
+import {
+  hostChangeDisplay,
+  hostCurrentMode,
+  hostDeviceAt,
+  hostListModes,
+  hostRestoreDisplay
+} from './win32-host'
+import { recenterOverlay } from './overlay'
 
 interface RestoreState {
-  display: { width: number; height: number } | null
+  display: { width: number; height: number; device: string } | null
   gameUserSettings: string | null
   appliedTemporary: boolean
 }
@@ -17,7 +25,27 @@ const restoreState: RestoreState = {
   appliedTemporary: false
 }
 
-export function getDisplayInfo(): DisplayInfo[] {
+function uniqueModes(modes: Array<{ width: number; height: number }>): Array<{ width: number; height: number }> {
+  const seen = new Set<string>()
+  const out: Array<{ width: number; height: number }> = []
+  for (const mode of modes) {
+    const key = `${mode.width}x${mode.height}`
+    if (seen.has(key)) continue
+    seen.add(key)
+    out.push({ width: mode.width, height: mode.height })
+  }
+  return out
+}
+
+export async function getDisplayInfo(): Promise<DisplayInfo[]> {
+  let enumerated: Array<{ width: number; height: number }> = []
+  if (isWindows) {
+    try {
+      enumerated = (await hostListModes('')).map((mode) => ({ width: mode.width, height: mode.height }))
+    } catch {
+      enumerated = []
+    }
+  }
   return screen.getAllDisplays().map((display, index) => ({
     id: display.id,
     label: display.label || `Display ${index + 1}`,
@@ -27,13 +55,11 @@ export function getDisplayInfo(): DisplayInfo[] {
     primary: display.id === screen.getPrimaryDisplay().id,
     currentWidth: display.size.width,
     currentHeight: display.size.height,
-    availableModes: (display.displayFrequency ? [{ width: display.size.width, height: display.size.height }] : [
-      { width: display.size.width, height: display.size.height }
-    ]).concat(
-      [1920, 1728, 1600, 1620, 1500, 1440, 1280]
-        .map((width) => ({ width, height: 1080 }))
-        .filter((mode) => mode.width !== display.size.width || mode.height !== display.size.height)
-    )
+    availableModes: uniqueModes([
+      { width: display.size.width, height: display.size.height },
+      ...enumerated,
+      ...[1920, 1728, 1720, 1600, 1620, 1500, 1440, 1280].map((width) => ({ width, height: 1080 }))
+    ])
   }))
 }
 
@@ -50,13 +76,19 @@ export function rememberNativeIfNeeded(): void {
   })
 }
 
+let cachedGpu: GpuInfo | null = null
+let cachedGpuAt = 0
+
 export async function detectGpu(): Promise<GpuInfo> {
+  if (cachedGpu && Date.now() - cachedGpuAt < 10 * 60 * 1000) return cachedGpu
   if (!isWindows) {
-    return {
+    cachedGpu = {
       vendor: 'Unknown',
       name: `${process.platform} (GPU detection is Windows-only)`,
       details: ['Run Avix on Windows to read the installed graphics adapter.']
     }
+    cachedGpuAt = Date.now()
+    return cachedGpu
   }
   try {
     const script = `
@@ -73,38 +105,42 @@ export async function detectGpu(): Promise<GpuInfo> {
         : /intel/i.test(name)
           ? 'Intel'
           : 'Unknown'
-    return {
+    cachedGpu = {
       vendor,
       name,
       details: items.map((i) => `${i.Name ?? 'GPU'}${i.DriverVersion ? ` · driver ${i.DriverVersion}` : ''}`)
     }
   } catch {
-    return { vendor: 'Unknown', name: 'Unable to query GPU', details: [] }
+    cachedGpu = { vendor: 'Unknown', name: 'Unable to query GPU', details: [] }
   }
+  cachedGpuAt = Date.now()
+  return cachedGpu
 }
 
 function scalingCopy(vendor: GpuVendor): string[] {
   const common = [
-    'Display scaling changes how the desktop is stretched to the monitor. It does not change Fortnite FOV by itself.',
-    'Epic competitive play uses 16:9. Stretched desktop resolutions are a display-scale choice, not a claimed advantage.',
-    'Prefer Fortnite-only GameUserSettings changes when you want temporary, game-scoped handling.'
+    'Avix changes the Windows display mode for this Fortnite session only. It does not attach to the Fortnite process.',
+    'Native mode is saved first and restored when Fortnite exits, crashes, or you click Restore Native.',
+    'If Windows rejects a custom size (for example 1720×1080), add that mode in your GPU control panel first, then apply it here.',
+    'GPU scaling (NVIDIA/AMD/Intel) stretches the desktop to the monitor. That is a driver setting, not Fortnite FOV.',
+    'Epic competitive play uses 16:9. Stretched desktop resolutions are a display-scale choice, not a claimed advantage.'
   ]
   if (vendor === 'NVIDIA') {
     return [
       ...common,
-      'NVIDIA: Control Panel → Display → Adjust desktop size and position. GPU scaling stretches in the GPU; Display scaling uses the monitor.'
+      'NVIDIA: Control Panel → Display → Adjust desktop size and position → Perform scaling on GPU. Use Full-screen scaling for stretch.'
     ]
   }
   if (vendor === 'AMD') {
     return [
       ...common,
-      'AMD: Radeon Software → Display → Scaling Mode. GPU vs Display vs Preserve Aspect Ratio are driver settings, not Fortnite FOV.'
+      'AMD: Radeon Software → Display → Scaling Mode → Full panel. GPU scaling stretches in the driver, not inside Fortnite.'
     ]
   }
   if (vendor === 'Intel') {
     return [
       ...common,
-      'Intel: Graphics Command Center → Display → Scale. Full-screen scale is a display option, not a Fortnite setting.'
+      'Intel: Graphics Command Center → Display → Scale → Full screen. This is a display option, not a Fortnite setting.'
     ]
   }
   return common
@@ -166,7 +202,7 @@ export function applyFortniteConfig(settings: ResolutionSettings, graphics: {
     content = upsertIni(content, 'ResolutionSizeY', String(settings.height))
     content = upsertIni(content, 'LastUserConfirmedResolutionSizeX', String(settings.width))
     content = upsertIni(content, 'LastUserConfirmedResolutionSizeY', String(settings.height))
-    content = upsertIni(content, 'FullscreenMode', settings.method === 'fortnite-only' ? '0' : '0')
+    content = upsertIni(content, 'FullscreenMode', '0')
     content = upsertIni(content, 'PreferredFullscreenMode', '0')
   }
   content = upsertIni(content, 'bUseVSync', graphics.vsync ? 'True' : 'False')
@@ -180,53 +216,75 @@ export function applyFortniteConfig(settings: ResolutionSettings, graphics: {
   return { ok: true, message: permanent ? 'Fortnite config saved.' : 'Temporary Fortnite config applied. It will restore when Fortnite closes.' }
 }
 
+function gamingPhysicalPoint(): { x: number; y: number } {
+  try {
+    const dip = screen.getCursorScreenPoint()
+    return screen.dipToScreenPoint(dip)
+  } catch {
+    const primary = screen.getPrimaryDisplay()
+    return {
+      x: Math.round(primary.bounds.x + primary.bounds.width / 2),
+      y: Math.round(primary.bounds.y + primary.bounds.height / 2)
+    }
+  }
+}
+
+async function resolveGamingDevice(): Promise<string> {
+  if (!isWindows) return ''
+  try {
+    const point = gamingPhysicalPoint()
+    return (await hostDeviceAt(point.x, point.y)).trim()
+  } catch {
+    return ''
+  }
+}
+
 async function changeDisplay(width: number, height: number): Promise<OperationResult> {
   if (!isWindows) {
     return { ok: false, code: 'APPLY_FAILED', message: 'Display mode changes require Windows.' }
   }
   rememberNativeIfNeeded()
-  const primary = screen.getPrimaryDisplay()
-  if (!restoreState.display) {
-    restoreState.display = { width: primary.size.width, height: primary.size.height }
+  const device = await resolveGamingDevice()
+  const current = await hostCurrentMode(device).catch(() => null)
+  if (!restoreState.display && current) {
+    restoreState.display = { width: current.width, height: current.height, device }
+  } else if (!restoreState.display) {
+    const primary = screen.getPrimaryDisplay()
+    restoreState.display = { width: primary.size.width, height: primary.size.height, device }
   }
-  const script = `
-    Add-Type @"
-      using System;
-      using System.Runtime.InteropServices;
-      public class NauticalDisplay {
-        [StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
-        public struct DEVMODE {
-          [MarshalAs(UnmanagedType.ByValTStr, SizeConst=32)] public string dmDeviceName;
-          public short dmSpecVersion, dmDriverVersion, dmSize, dmDriverExtra;
-          public int dmFields, dmPositionX, dmPositionY, dmDisplayOrientation, dmDisplayFixedOutput;
-          public short dmColor, dmDuplex, dmYResolution, dmTTOption, dmCollate;
-          [MarshalAs(UnmanagedType.ByValTStr, SizeConst=32)] public string dmFormName;
-          public short dmLogPixels;
-          public int dmBitsPerPel, dmPelsWidth, dmPelsHeight, dmDisplayFlags, dmDisplayFrequency, dmICMMethod, dmICMIntent, dmMediaType, dmDitherType, dmReserved1, dmReserved2, dmPanningWidth, dmPanningHeight;
-        }
-        [DllImport("user32.dll")] public static extern int ChangeDisplaySettings(ref DEVMODE devMode, int flags);
-        [DllImport("user32.dll")] public static extern int EnumDisplaySettings(string deviceName, int modeNum, ref DEVMODE devMode);
+  if (!loadConfig().lastNativeResolution && restoreState.display) {
+    updateConfig({
+      lastNativeResolution: {
+        width: restoreState.display.width,
+        height: restoreState.display.height,
+        savedAt: new Date().toISOString()
       }
-"@
-      $mode = New-Object NauticalDisplay+DEVMODE
-      $mode.dmSize = [System.Runtime.InteropServices.Marshal]::SizeOf($mode)
-      [void][NauticalDisplay]::EnumDisplaySettings($null, -1, [ref]$mode)
-      $mode.dmPelsWidth = ${width}
-      $mode.dmPelsHeight = ${height}
-      $mode.dmFields = 0x80000 -bor 0x100000
-      $result = [NauticalDisplay]::ChangeDisplaySettings([ref]$mode, 0)
-      $result
-  `
+    })
+  }
+
+  const modes = await hostListModes(device).catch(() => [])
+  const matches = modes.filter((mode) => mode.width === width && mode.height === height)
+  const listed = matches.length > 0
+  const freq = listed ? Math.max(...matches.map((mode) => mode.freq)) : 0
+
   try {
-    const result = await runPowerShell(script)
-    if (result.trim() === '0') {
+    const result = await hostChangeDisplay(device, width, height, freq)
+    if (result === 'OK' || result.startsWith('OK')) {
       restoreState.appliedTemporary = true
-      return { ok: true, message: `Display set to ${width}×${height}. Native mode will restore when Fortnite closes unless you save permanently.` }
+      void recenterOverlay()
+      return {
+        ok: true,
+        message: listed
+          ? `Windows display set to ${width}×${height}${freq ? ` @ ${freq}Hz` : ''} on the gaming monitor. Native mode restores when Fortnite closes.`
+          : `Windows accepted ${width}×${height} even though EnumDisplaySettings did not list it. Native mode restores when Fortnite closes.`
+      }
     }
     return {
       ok: false,
       code: 'UNSUPPORTED_RES',
-      message: `Windows rejected ${width}×${height} (ChangeDisplaySettings ${result}). The mode may be unsupported on this display.`
+      message: listed
+        ? `Windows rejected ${width}×${height} (${result}).`
+        : `Windows does not list ${width}×${height} on this monitor (${result}). Add that custom mode in NVIDIA/AMD/Intel control panel, then apply again.`
     }
   } catch (error) {
     return { ok: false, code: 'APPLY_FAILED', message: error instanceof Error ? error.message : 'Display change failed.' }
@@ -238,23 +296,30 @@ export async function applyResolution(settings: ResolutionSettings, permanent: b
   if (settings.width < 640 || settings.height < 480 || settings.width > 7680 || settings.height > 4320) {
     return { ok: false, code: 'UNSUPPORTED_RES', message: 'Resolution is outside a safe range.' }
   }
-  if (settings.method === 'display' || settings.method === 'gpu' || settings.method === 'automatic') {
+  const messages: string[] = []
+  if (settings.method !== 'fortnite-only') {
     const displayResult = await changeDisplay(settings.width, settings.height)
     if (!displayResult.ok) return displayResult
+    messages.push(displayResult.message)
   }
-  if (settings.applyGameUserSettings || settings.method === 'fortnite-only') {
+  if (settings.applyGameUserSettings) {
     const config = loadConfig()
     const profile = config.profiles.find((p) => p.id === config.activeProfileId)
     if (profile) {
-      return applyFortniteConfig(settings, profile.graphics, permanent)
+      const ini = applyFortniteConfig(settings, profile.graphics, permanent)
+      if (!ini.ok && settings.method === 'fortnite-only') return ini
+      if (ini.message) messages.push(ini.message)
     }
   }
-  return { ok: true, message: 'Resolution preference applied.' }
+  void recenterOverlay()
+  return { ok: true, message: messages.join(' ') || 'Resolution preference applied.' }
 }
 
 export async function restoreNativeDisplay(): Promise<OperationResult> {
   const config = loadConfig()
-  const native = config.lastNativeResolution ?? restoreState.display
+  const native = config.lastNativeResolution
+  const saved = restoreState.display
+  const device = saved?.device ?? ''
   const messages: string[] = []
   if (restoreState.gameUserSettings) {
     const target = fortniteConfigPath()
@@ -264,17 +329,38 @@ export async function restoreNativeDisplay(): Promise<OperationResult> {
     }
     restoreState.gameUserSettings = null
   }
-  if (native && isWindows) {
-    const result = await changeDisplay(native.width, native.height)
-    messages.push(result.message)
-    if (!result.ok) {
-      return { ok: false, code: result.code, message: messages.join(' ') }
+  if (isWindows) {
+    try {
+      const restored = await hostRestoreDisplay(device)
+      if (restored === 'OK' || restored.startsWith('OK')) {
+        messages.push('Restored the native Windows display mode.')
+      } else {
+        const width = native?.width ?? saved?.width
+        const height = native?.height ?? saved?.height
+        if (width && height) {
+          const fallback = await hostChangeDisplay(device, width, height, 0)
+          messages.push(
+            fallback === 'OK' || fallback.startsWith('OK')
+              ? `Restored ${width}×${height}.`
+              : `Display restore returned ${restored} / ${fallback}.`
+          )
+        } else {
+          messages.push(`Display restore returned ${restored}.`)
+        }
+      }
+    } catch (error) {
+      return {
+        ok: false,
+        code: 'APPLY_FAILED',
+        message: error instanceof Error ? error.message : 'Display restore failed.'
+      }
     }
-  } else if (!isWindows) {
+  } else {
     messages.push('Display restore is a no-op outside Windows.')
   }
   restoreState.display = null
   restoreState.appliedTemporary = false
+  void recenterOverlay()
   return { ok: true, message: messages.join(' ') || 'Nothing to restore.' }
 }
 

@@ -122,7 +122,7 @@ export function Wizard() {
             {step === 4 && (
               <>
                 <h2>Resolution preference</h2>
-                <p className="hint">Pick an example. This is stored on your profile and applied only when you ask — preferably Fortnite-only and temporary.</p>
+                <p className="hint">Pick an example. Launch applies a temporary Windows display mode for Fortnite, then restores native. Custom widths such as 1720×1080 are allowed if Windows lists the mode.</p>
                 <div className="row" style={{ marginTop: 12 }}>
                   {RESOLUTION_PRESETS.slice(0, 4).map((preset) => (
                     <button

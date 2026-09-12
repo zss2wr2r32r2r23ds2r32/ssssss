@@ -10,9 +10,11 @@ import {
   FORTNITE_EPIC_URI,
   isGameProcessName,
   isLaunchHelperName,
+  normalizeLaunchMethod,
   resolveLaunchTargets,
   siblingBootstrapper
 } from '../src/shared/fortnite-launch'
+import { centerOverlayOnRect, overlayMarkSize, rectFromCorners } from '../src/shared/overlay-center'
 import { APP_NAME, CROSSHAIR_PRESETS, RESOLUTION_PRESETS } from '../src/shared/types'
 import {
   collectHintsFromManifestText,
@@ -41,7 +43,10 @@ describe('profiles', () => {
     expect(config.general.closeToTray).toBe(false)
     expect(config.skin.source).toBe('placeholder')
     expect(config.avatar.fileName).toBe(null)
-    expect(config.general.launchMethod).toBe('epic')
+    expect(config.general.launchMethod).toBe('bootstrapper')
+    expect(config.general.hideEpicAfterLaunch).toBe(true)
+    expect(getActiveProfile(config).resolution.method).toBe('display')
+    expect(getActiveProfile(config).resolution.applyOnLaunch).toBe(true)
     expect(config.scrims.sources.map((s) => s.name)).toEqual([
       'Noble Elite',
       'Poyo Elite',
@@ -216,7 +221,37 @@ describe('crosshair + resolution catalogs', () => {
   })
 
   it('includes example resolutions without claiming they are best', () => {
-    expect(RESOLUTION_PRESETS).toHaveLength(6)
+    expect(RESOLUTION_PRESETS).toHaveLength(7)
     expect(RESOLUTION_PRESETS[0]).toMatchObject({ width: 1920, height: 1080 })
+    expect(RESOLUTION_PRESETS.some((preset) => preset.width === 1720 && preset.height === 1080)).toBe(true)
+    expect(RESOLUTION_PRESETS.some((preset) => preset.width === 1728 && preset.height === 1080)).toBe(true)
+  })
+})
+
+describe('launch method + overlay center', () => {
+  it('migrates legacy epic to epic-uri and defaults to bootstrapper', () => {
+    expect(normalizeLaunchMethod('epic')).toBe('epic-uri')
+    expect(normalizeLaunchMethod('epic-uri')).toBe('epic-uri')
+    expect(normalizeLaunchMethod('shipping')).toBe('shipping')
+    expect(normalizeLaunchMethod('bootstrapper')).toBe('bootstrapper')
+    expect(normalizeLaunchMethod(undefined)).toBe('bootstrapper')
+    expect(normalizeLaunchMethod('unknown')).toBe('bootstrapper')
+  })
+
+  it('centers a tiny overlay on the geometric midpoint of the target rect', () => {
+    const rect = rectFromCorners(0, 0, 1728, 1080)
+    const mark = overlayMarkSize(4)
+    const placed = centerOverlayOnRect(rect, mark)
+    expect(placed.width).toBe(mark)
+    expect(placed.height).toBe(mark)
+    expect(placed.x).toBe(Math.round(1728 / 2 - mark / 2))
+    expect(placed.y).toBe(Math.round(1080 / 2 - mark / 2))
+  })
+
+  it('keeps the mark on-center after a non-16:9 stretch origin', () => {
+    const rect = { x: 192, y: 0, width: 1728, height: 1080 }
+    const placed = centerOverlayOnRect(rect, 80)
+    expect(placed.x + placed.width / 2).toBe(192 + 1728 / 2)
+    expect(placed.y + placed.height / 2).toBe(1080 / 2)
   })
 })

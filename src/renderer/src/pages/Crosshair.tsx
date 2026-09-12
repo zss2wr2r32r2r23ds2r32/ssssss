@@ -20,7 +20,10 @@ export function CrosshairPage() {
       <div className="page-head">
         <div>
           <h2>Crosshair</h2>
-          <p>Always-on-top, click-through overlay. Prefer exclude-from-capture when Windows allows it.</p>
+          <p>
+            Separate always-on-top click-through window, centered on the Fortnite monitor. Avix does not attach to the
+            game process.
+          </p>
         </div>
       </div>
       <div className="grid grid-2">

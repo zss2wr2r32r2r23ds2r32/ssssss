@@ -10,8 +10,7 @@ import {
 import {
   commonEpicLauncherPaths,
   FORTNITE_EPIC_URI,
-  FORTNITE_GAME_PROCESS_NAMES,
-  FORTNITE_HELPER_PROCESS_NAMES,
+  normalizeLaunchMethod,
   resolveLaunchTargets,
   type LaunchMethod
 } from '../../shared/fortnite-launch'
@@ -25,6 +24,9 @@ import {
   looksLikeFortniteExecutable,
   runPowerShell
 } from './windows-api'
+import { hostEpicPids, hostFocus, hostGamePids, hostHelperPids } from './win32-host'
+
+export const SHIPPING_MINIMAL_ARGS = ['-epicapp=Fortnite', '-epicenv=Prod', '-epicportal']
 
 type Listener = (event: StatusEvent) => void
 
@@ -172,36 +174,31 @@ export async function persistFortnitePath(filePath: string): Promise<FortniteIns
   return info
 }
 
-async function listPidsByNames(names: readonly string[]): Promise<number[]> {
-  if (!isWindows) {
-    return trackedPid ? [trackedPid] : []
-  }
+export async function listFortnitePids(): Promise<number[]> {
+  if (!isWindows) return trackedPid ? [trackedPid] : []
   try {
-    const list = names.map((n) => `'${n.replace(/\.exe$/i, '')}'`).join(',')
-    const script = `
-      $names = @(${list})
-      Get-Process -ErrorAction SilentlyContinue | Where-Object { $names -contains $_.ProcessName } | Select-Object -ExpandProperty Id
-    `
-    const out = await runPowerShell(script, 8000)
-    return out
-      .split(/\s+/)
-      .map((v) => Number(v))
-      .filter((n) => Number.isFinite(n) && n > 0)
+    return await hostGamePids()
   } catch {
     return []
   }
 }
 
-export async function listFortnitePids(): Promise<number[]> {
-  return listPidsByNames(FORTNITE_GAME_PROCESS_NAMES)
-}
-
 export async function listLaunchHelperPids(): Promise<number[]> {
-  return listPidsByNames(FORTNITE_HELPER_PROCESS_NAMES)
+  if (!isWindows) return []
+  try {
+    return await hostHelperPids()
+  } catch {
+    return []
+  }
 }
 
 export async function listEpicLauncherPids(): Promise<number[]> {
-  return listPidsByNames(['EpicGamesLauncher.exe', 'EpicGamesLauncher-Win64-Shipping.exe'])
+  if (!isWindows) return []
+  try {
+    return await hostEpicPids()
+  } catch {
+    return []
+  }
 }
 
 export async function isFortniteRunning(): Promise<boolean> {
@@ -225,36 +222,23 @@ export function findBootstrapper(installPath: string | null): string | null {
 export async function isFortniteFocused(): Promise<boolean> {
   if (!isWindows) return status === 'RUNNING'
   try {
-    const script = `
-      Add-Type @"
-        using System;
-        using System.Runtime.InteropServices;
-        using System.Text;
-        public class NauticalFocus {
-          [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
-          [DllImport("user32.dll")] public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
-        }
-"@
-      $hwnd = [NauticalFocus]::GetForegroundWindow()
-      $procId = 0
-      [void][NauticalFocus]::GetWindowThreadProcessId($hwnd, [ref]$procId)
-      if ($procId -eq 0) { 'false'; exit }
-      $p = Get-Process -Id $procId -ErrorAction SilentlyContinue
-      if ($p -and ($p.ProcessName -match 'Fortnite')) { 'true' } else { 'false' }
-    `
-    const out = await runPowerShell(script)
-    return out.trim().toLowerCase() === 'true'
+    const focus = await hostFocus()
+    const name = focus.processName
+    const shipping =
+      /FortniteClient-Win64-Shipping/i.test(name) && !/EAC|_BE/i.test(name)
+    const unreal = /UnrealWindow/i.test(focus.className) || /Unreal/i.test(focus.className)
+    return shipping || (unreal && /Fortnite/i.test(name))
   } catch {
     return false
   }
 }
 
-function spawnDetached(filePath: string, args: string[] = []): { pid: number | null } {
+function spawnDetached(filePath: string, args: string[] = [], hide = true): { pid: number | null } {
   const child = spawn(filePath, args, {
     detached: true,
     stdio: 'ignore',
     cwd: path.dirname(filePath),
-    windowsHide: false
+    windowsHide: hide
   })
   child.unref()
   return { pid: child.pid ?? null }
@@ -280,11 +264,12 @@ export async function waitForGameProcess(timeoutMs = 75000): Promise<number | nu
 
 export async function startFortniteViaMethod(
   installPath: string,
-  method: LaunchMethod
-): Promise<{ ok: boolean; code?: 'EPIC_REQUIRED' | 'SPAWN_FAILED' | 'INVALID_PATH'; message: string; used: string }> {
+  method: LaunchMethod | 'epic'
+): Promise<{ ok: boolean; code?: 'EPIC_REQUIRED' | 'SPAWN_FAILED' | 'INVALID_PATH' | 'AUTH_REQUIRED'; message: string; used: string }> {
   if (!existsSync(installPath)) {
     return { ok: false, code: 'INVALID_PATH', message: 'Fortnite path no longer exists. Detect or browse again.', used: 'none' }
   }
+  const resolved = normalizeLaunchMethod(method)
   const { shipping, bootstrapper } = resolveLaunchTargets(installPath)
   const epic = findEpicLauncher()
   const bootstrapperPath = bootstrapper && existsSync(bootstrapper) ? bootstrapper : null
@@ -293,7 +278,7 @@ export async function startFortniteViaMethod(
   const tryEpicUri = async (): Promise<boolean> => {
     if (!isWindows) return false
     if (epic) {
-      spawnDetached(epic, [FORTNITE_EPIC_URI])
+      spawnDetached(epic, ['-silent', FORTNITE_EPIC_URI], true)
       return true
     }
     try {
@@ -304,52 +289,73 @@ export async function startFortniteViaMethod(
     }
   }
 
-  if (method === 'epic') {
+  if (resolved === 'bootstrapper') {
+    if (bootstrapperPath) {
+      spawnDetached(bootstrapperPath)
+      return {
+        ok: true,
+        message:
+          'Started FortniteBootstrapper.exe. Stay signed into Epic Games — Avix does not bypass Epic login.',
+        used: 'bootstrapper'
+      }
+    }
+    if (shippingPath) {
+      spawnDetached(shippingPath, SHIPPING_MINIMAL_ARGS)
+      return {
+        ok: true,
+        message:
+          'FortniteBootstrapper.exe was missing — started Shipping with Epic handoff args. Sign into Epic if the game exits.',
+        used: 'shipping'
+      }
+    }
     const started = await tryEpicUri()
     if (started) {
       return {
         ok: true,
-        message: 'Asked Epic Games Launcher to start Fortnite.',
-        used: epic ? 'epic-launcher' : 'epic-uri'
+        message:
+          'Bootstrapper was not found. Started via Epic URI in the background. Sign into Epic if Fortnite does not appear.',
+        used: 'epic-uri'
       }
-    }
-    if (bootstrapperPath) {
-      spawnDetached(bootstrapperPath)
-      return { ok: true, message: 'Started FortniteBootstrapper (Epic protocol was not available).', used: 'bootstrapper' }
     }
     return {
       ok: false,
-      code: 'EPIC_REQUIRED',
-      message: 'Epic Games Launcher was not found. Install/start Epic, or switch launch method to Bootstrapper.',
+      code: 'INVALID_PATH',
+      message: 'FortniteBootstrapper.exe was not found next to the Shipping executable.',
       used: 'none'
     }
   }
 
-  if (method === 'bootstrapper') {
-    if (!bootstrapperPath) {
-      const started = await tryEpicUri()
-      if (started) {
-        return { ok: true, message: 'FortniteBootstrapper.exe is missing — started via Epic instead.', used: 'epic' }
-      }
-      return {
-        ok: false,
-        code: 'INVALID_PATH',
-        message: 'FortniteBootstrapper.exe was not found next to the Shipping executable.',
-        used: 'none'
-      }
+  if (resolved === 'shipping') {
+    if (!shippingPath) {
+      return { ok: false, code: 'INVALID_PATH', message: 'Shipping executable was not found.', used: 'none' }
     }
-    spawnDetached(bootstrapperPath)
-    return { ok: true, message: 'Started FortniteBootstrapper.', used: 'bootstrapper' }
+    spawnDetached(shippingPath, SHIPPING_MINIMAL_ARGS)
+    return {
+      ok: true,
+      message:
+        'Started FortniteClient-Win64-Shipping.exe with Epic handoff args. If it exits immediately, stay signed into Epic or use Bootstrapper.',
+      used: 'shipping'
+    }
   }
 
-  if (!shippingPath) {
-    return { ok: false, code: 'INVALID_PATH', message: 'Shipping executable was not found.', used: 'none' }
+  const started = await tryEpicUri()
+  if (started) {
+    return {
+      ok: true,
+      message:
+        'Asked Epic to start Fortnite in the background. The launcher window is minimized when possible — you still need to be signed in.',
+      used: epic ? 'epic-uri' : 'epic-uri'
+    }
   }
-  spawnDetached(shippingPath)
+  if (bootstrapperPath) {
+    spawnDetached(bootstrapperPath)
+    return { ok: true, message: 'Epic protocol was not available — started FortniteBootstrapper instead.', used: 'bootstrapper' }
+  }
   return {
-    ok: true,
-    message: 'Started FortniteClient-Win64-Shipping.exe directly. If it exits immediately, use Epic / Bootstrapper.',
-    used: 'shipping'
+    ok: false,
+    code: 'EPIC_REQUIRED',
+    message: 'Epic Games Launcher was not found. Install Epic, sign in, then retry — or switch launch method to Bootstrapper.',
+    used: 'none'
   }
 }
 
@@ -364,10 +370,10 @@ export function startProcessPoll(onExit: (unexpected: boolean) => void): void {
       return
     }
     misses += 1
-    if (misses >= 3) {
+    if (misses >= 2) {
       onExit(true)
     }
-  }, 2500)
+  }, 5000)
 }
 
 export function stopProcessPoll(): void {

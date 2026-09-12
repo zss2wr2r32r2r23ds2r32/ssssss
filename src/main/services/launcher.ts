@@ -1,4 +1,5 @@
 import { getActiveProfile } from '../../shared/defaults'
+import { normalizeLaunchMethod } from '../../shared/fortnite-launch'
 import type { LaunchResult } from '../../shared/types'
 import { loadConfig } from './config'
 import {
@@ -16,9 +17,10 @@ import {
   waitForGameProcess
 } from './fortnite'
 import { startMacro, stopMacro } from './macro'
+import { startOverlay, stopOverlay, recenterOverlay } from './overlay'
 import { applyCleanup, restoreCleanup } from './performance'
 import { applyResolution, restoreTemporaryIfNeeded } from './resolution'
-import { startOverlay, stopOverlay } from './overlay'
+import { hostHideEpic } from './win32-host'
 
 let shuttingDown = false
 
@@ -43,9 +45,6 @@ async function teardown(unexpected: boolean, message?: string): Promise<void> {
 
 export function attachExitHandler(): void {
   onStatus(() => undefined)
-  startProcessPoll((unexpected) => {
-    void teardown(unexpected, unexpected ? 'Fortnite closed unexpectedly. Overlay, macro, and temporary display/config were restored.' : undefined)
-  })
 }
 
 export async function launchFromActiveProfile(): Promise<LaunchResult> {
@@ -55,7 +54,7 @@ export async function launchFromActiveProfile(): Promise<LaunchResult> {
     return {
       ok: false,
       status: 'LAUNCHING',
-      message: 'Avix is already starting Fortnite. Wait for Epic to finish signing in.'
+      message: 'Avix is already starting Fortnite.'
     }
   }
   if (status === 'RUNNING' || (await isFortniteRunning())) {
@@ -78,6 +77,7 @@ export async function launchFromActiveProfile(): Promise<LaunchResult> {
   }
 
   const profile = getActiveProfile(current)
+  const launchMethod = normalizeLaunchMethod(current.general.launchMethod)
   setStatus('LAUNCHING')
 
   try {
@@ -92,7 +92,7 @@ export async function launchFromActiveProfile(): Promise<LaunchResult> {
           message: applied.message
         }
       }
-    } else if (profile.resolution.applyGameUserSettings) {
+    } else if (profile.resolution.applyGameUserSettings && profile.resolution.method === 'fortnite-only') {
       await applyResolution({ ...profile.resolution, applyOnLaunch: true, method: 'fortnite-only' }, false)
     }
 
@@ -100,7 +100,7 @@ export async function launchFromActiveProfile(): Promise<LaunchResult> {
       await applyCleanup(profile.performance.selectedApps)
     }
 
-    const started = await startFortniteViaMethod(path, current.general.launchMethod ?? 'epic')
+    const started = await startFortniteViaMethod(path, launchMethod)
     if (!started.ok) {
       setStatus('NOT_RUNNING')
       return {
@@ -117,7 +117,7 @@ export async function launchFromActiveProfile(): Promise<LaunchResult> {
       const epicPids = await listEpicLauncherPids()
       const epicInstalled = Boolean(findEpicLauncher())
       setStatus('NOT_RUNNING')
-      if (!epicInstalled && current.general.launchMethod === 'epic') {
+      if (!epicInstalled && launchMethod === 'epic-uri') {
         return {
           ok: false,
           status: 'NOT_RUNNING',
@@ -130,7 +130,8 @@ export async function launchFromActiveProfile(): Promise<LaunchResult> {
           ok: false,
           status: 'NOT_RUNNING',
           code: 'AUTH_REQUIRED',
-          message: 'Fortnite did not start. Open Epic Games Launcher, sign in, then try Launch again. Raw Shipping.exe usually exits without an Epic session.'
+          message:
+            'Fortnite did not start. Stay signed into Epic Games Launcher (Avix does not bypass Epic login), then try Launch again.'
         }
       }
       return {
@@ -138,7 +139,7 @@ export async function launchFromActiveProfile(): Promise<LaunchResult> {
         status: 'NOT_RUNNING',
         code: 'LAUNCH_TIMEOUT',
         message:
-          'Epic/Bootstrapper started but FortniteClient-Win64-Shipping.exe never stayed running. Sign into Epic and accept any update, then retry.'
+          'A helper started but FortniteClient-Win64-Shipping.exe never stayed running. Sign into Epic, accept any update, then retry.'
       }
     }
 
@@ -149,6 +150,18 @@ export async function launchFromActiveProfile(): Promise<LaunchResult> {
         unexpected ? 'Fortnite closed unexpectedly. Overlay, macro, and temporary display/config were restored.' : undefined
       )
     })
+
+    if (current.general.hideEpicAfterLaunch !== false) {
+      void hostHideEpic()
+      setTimeout(() => {
+        void hostHideEpic()
+      }, 2500)
+    }
+
+    void recenterOverlay()
+    setTimeout(() => {
+      void recenterOverlay()
+    }, 1500)
 
     if (profile.crosshair.enabled) {
       try {
@@ -178,9 +191,12 @@ export async function launchFromActiveProfile(): Promise<LaunchResult> {
     return {
       ok: true,
       status: 'RUNNING',
-      message: started.used === 'shipping'
-        ? 'FortniteClient-Win64-Shipping.exe is running. If it closes immediately next time, switch launch method to Epic.'
-        : 'Fortnite is running.'
+      message:
+        started.used === 'bootstrapper'
+          ? 'FortniteBootstrapper handed off. Fortnite is running. Epic login was not bypassed.'
+          : started.used === 'shipping'
+            ? 'Shipping executable is running. If it closes next time, stay signed into Epic or use Bootstrapper.'
+            : 'Fortnite is running.'
     }
   } catch (error) {
     setStatus('NOT_RUNNING')
