@@ -1,5 +1,5 @@
 import type { NavPage } from '../../../../shared/types'
-import logo from '../../assets/logo.png'
+import logo from '../../assets/brand-icon.png'
 import { api } from '../../lib/api'
 import { useApp } from '../../store/AppState'
 import { BellIcon, CompassIcon, CrosshairIcon, DiscordIcon, DisplayIcon, GaugeIcon, GearIcon, KeyIcon } from '../icons/Icons'

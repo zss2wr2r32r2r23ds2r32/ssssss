@@ -56,8 +56,8 @@ export function Wizard() {
                 <h2 className="hero-word" style={{ fontSize: 72 }}>Avix</h2>
                 <p className="hero-sub">Your Fortnite competitive setup, all in one place.</p>
                 <p className="hint">
-                  Path detection, profiles, a click-through crosshair overlay, temporary resolution handling, honest
-                  performance cleanup, and a rules-aware key repeater — without touching anti-cheat or Fortnite memory.
+                  Path detection, profiles, a click-through crosshair overlay, temporary resolution handling, live
+                  resource meters, and a rules-aware key repeater — without touching anti-cheat or Fortnite memory.
                 </p>
               </>
             )}
