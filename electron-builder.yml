@@ -1,0 +1,51 @@
+appId: com.nautical.fortnite-launcher
+productName: Nautical Fortnite Launcher
+copyright: Copyright © 2026 Nautical
+artifactName: ${productName}-${version}-${os}-${arch}.${ext}
+asar: true
+directories:
+  output: release
+  buildResources: resources
+files:
+  - out/**/*
+  - package.json
+extraMetadata:
+  main: out/main/index.js
+extraResources:
+  - from: resources
+    to: resources
+    filter:
+      - '**/*'
+win:
+  icon: resources/icon.ico
+  target:
+    - target: nsis
+      arch:
+        - x64
+    - target: portable
+      arch:
+        - x64
+  requestedExecutionLevel: asInvoker
+  signAndEditExecutable: false
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Nautical Fortnite Launcher
+  uninstallDisplayName: Nautical Fortnite Launcher
+  installerLanguages:
+    - en_US
+  deleteAppDataOnUninstall: false
+portable:
+  artifactName: ${productName}-${version}-portable.${ext}
+linux:
+  icon: resources/icon.png
+  target:
+    - dir
+mac:
+  icon: resources/icon.png
+  target:
+    - dir
+publish: null
