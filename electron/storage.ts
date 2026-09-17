@@ -56,6 +56,14 @@ export class StorageService {
   }
 
   async saveApp(draft: AppDraft): Promise<AppConfig> {
+    if (
+      draft.type === "discord" &&
+      draft.env.some((item) => /(^|_)TOKEN($|_)/i.test(item.key.trim()))
+    ) {
+      throw new Error(
+        "Discord tokens cannot be stored as plain environment variables. Use Protected Bot Token instead.",
+      );
+    }
     const existing = draft.id ? this.getApp(draft.id) : undefined;
     const saved: AppConfig = {
       ...draft,

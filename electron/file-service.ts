@@ -133,6 +133,13 @@ export class FileService {
     );
   }
 
+  async copyOut(appId: string, relativePath: string, destination: string) {
+    const source = this.resolvePath(appId, relativePath);
+    const stat = await fs.stat(source);
+    if (!stat.isFile()) throw new Error("Only files can be downloaded.");
+    await fs.copyFile(source, destination);
+  }
+
   private getRoot(appId: string) {
     const config = this.storage.getApp(appId);
     if (!config?.directory) throw new Error("Choose an application directory first.");

@@ -194,13 +194,10 @@ function registerIpc() {
     },
   );
   ipcMain.handle("files:download", async (_event, id: string, relativePath: string) => {
-    const config = storage.getApp(id);
-    if (!config) throw new Error("Application not found.");
-    const source = path.resolve(config.directory, relativePath);
     const result = await dialog.showSaveDialog(mainWindow!, {
       defaultPath: path.basename(relativePath),
     });
-    if (!result.canceled && result.filePath) await fs.copyFile(source, result.filePath);
+    if (!result.canceled && result.filePath) await files.copyOut(id, relativePath, result.filePath);
     return !result.canceled;
   });
 

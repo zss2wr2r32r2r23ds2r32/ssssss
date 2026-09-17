@@ -115,6 +115,38 @@ export function ApplicationForm({
       advanced: { ...current.advanced, [key]: value },
     }));
 
+  const setMinecraftRam = (ramLimitMb: number) =>
+    setDraft((current) => ({
+      ...current,
+      ramLimitMb,
+      startCommand: current.startCommand.replace(/-Xmx\d+[MG]/i, `-Xmx${ramLimitMb}M`),
+    }));
+
+  const setMinecraftJar = (jarFile?: string) =>
+    setDraft((current) => {
+      const previous = current.advanced.jarFile;
+      return {
+        ...current,
+        startCommand:
+          previous && jarFile
+            ? current.startCommand.replace(`-jar ${previous}`, `-jar ${jarFile}`)
+            : current.startCommand,
+        advanced: { ...current.advanced, jarFile },
+      };
+    });
+
+  const setJavaPath = (javaPath: string) =>
+    setDraft((current) => {
+      const previous = current.advanced.javaPath || "java";
+      return {
+        ...current,
+        startCommand: current.startCommand.startsWith(`${previous} `)
+          ? `${javaPath}${current.startCommand.slice(previous.length)}`
+          : current.startCommand,
+        advanced: { ...current.advanced, javaPath },
+      };
+    });
+
   const save = async () => {
     setSaving(true);
     try {
@@ -239,7 +271,7 @@ export function ApplicationForm({
                 max={16384}
                 step={512}
                 value={draft.ramLimitMb ?? 2048}
-                onChange={(event) => patch("ramLimitMb", Number(event.target.value))}
+                onChange={(event) => setMinecraftRam(Number(event.target.value))}
               />
             </label>
             <label>
@@ -247,14 +279,14 @@ export function ApplicationForm({
               <div className="input-with-button compact">
                 <input
                   value={draft.advanced.jarFile ?? ""}
-                  onChange={(event) => patchAdvanced("jarFile", event.target.value)}
+                  onChange={(event) => setMinecraftJar(event.target.value)}
                   placeholder="server.jar"
                 />
                 <button
                   className="icon-button field-button"
                   onClick={async () => {
                     const selected = await window.haven.dialog.file(["jar"]);
-                    if (selected) patchAdvanced("jarFile", selected.split(/[\\/]/).pop());
+                    if (selected) setMinecraftJar(selected.split(/[\\/]/).pop());
                   }}
                   aria-label="Choose JAR"
                 >
@@ -332,7 +364,7 @@ export function ApplicationForm({
                   <span>Java executable</span>
                   <input
                     value={draft.advanced.javaPath ?? "java"}
-                    onChange={(event) => patchAdvanced("javaPath", event.target.value)}
+                    onChange={(event) => setJavaPath(event.target.value)}
                   />
                 </label>
                 <label>
