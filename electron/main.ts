@@ -33,7 +33,8 @@ const processes = new ProcessManager(storage, vault, (channel, payload) => {
 });
 
 const emitState = () => {
-  if (!mainWindow?.isDestroyed()) mainWindow.webContents.send("state:changed", storage.getState());
+  const window = mainWindow;
+  if (window && !window.isDestroyed()) window.webContents.send("state:changed", storage.getState());
 };
 
 async function quitApplication() {
@@ -354,7 +355,8 @@ if (!hasSingleInstanceLock) {
       void system
         .metrics()
         .then((metrics) => {
-          if (!mainWindow?.isDestroyed()) mainWindow.webContents.send("system:metrics", metrics);
+          const window = mainWindow;
+          if (window && !window.isDestroyed()) window.webContents.send("system:metrics", metrics);
         })
         .catch(() => undefined);
     }, 2_000);
