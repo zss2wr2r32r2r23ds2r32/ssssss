@@ -325,7 +325,10 @@ function ConsoleView({
   const output = useRef<HTMLDivElement>(null);
   useEffect(() => { void window.haven.process.getConsole(app.id).then(setLines).catch(onError); }, [app.id, onError]);
   useEffect(() => setLines(liveLines), [liveLines]);
-  useEffect(() => output.current?.scrollTo({ top: output.current.scrollHeight, behavior: "smooth" }), [lines]);
+  useEffect(() => {
+    const element = output.current;
+    if (element) element.scrollTop = element.scrollHeight;
+  }, [lines]);
 
   const send = async () => {
     if (!command.trim()) return;
