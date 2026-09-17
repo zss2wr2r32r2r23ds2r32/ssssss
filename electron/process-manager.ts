@@ -119,6 +119,9 @@ export class ProcessManager {
     const config = this.requireApp(appId);
     const managed = this.processes.get(appId);
     if (!managed?.child || managed.status === "offline") return this.getMetric(config);
+    const child = managed.child;
+    const pid = child.pid;
+    if (!pid) throw new Error("The process did not provide a valid process ID.");
     managed.intentionalStop = true;
     managed.status = "stopping";
     if (managed.restartTimer) clearTimeout(managed.restartTimer);
@@ -127,21 +130,21 @@ export class ProcessManager {
 
     const stopCommand = config.stopCommand.trim();
     if (stopCommand && stopCommand.toUpperCase() !== "CTRL+C") {
-      managed.child.stdin.write(`${stopCommand}\n`);
+      child.stdin.write(`${stopCommand}\n`);
       await new Promise((resolve) => setTimeout(resolve, 1_500));
-      if (managed.child.exitCode === null) await this.killTree(managed.child.pid);
+      if (child.exitCode === null) await this.killTree(pid);
     } else if (process.platform === "win32") {
-      managed.child.kill("SIGINT");
+      child.kill("SIGINT");
       await new Promise((resolve) => setTimeout(resolve, 1_200));
-      if (managed.child.exitCode === null) await this.killTree(managed.child.pid);
+      if (child.exitCode === null) await this.killTree(pid);
     } else {
       try {
-        process.kill(-managed.child.pid, "SIGINT");
+        process.kill(-pid, "SIGINT");
       } catch {
-        managed.child.kill("SIGINT");
+        child.kill("SIGINT");
       }
       await new Promise((resolve) => setTimeout(resolve, 1_200));
-      if (managed.child.exitCode === null) await this.killTree(managed.child.pid);
+      if (child.exitCode === null) await this.killTree(pid);
     }
     return this.getMetric(config);
   }

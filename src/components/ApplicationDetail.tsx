@@ -37,6 +37,7 @@ import {
   Wrench,
   X,
 } from "lucide-react";
+import type { ComponentType } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type {
   AppConfig,
@@ -131,14 +132,14 @@ export function ApplicationDetail({
       </section>
 
       <nav className="detail-tabs glass" aria-label="Application sections">
-        {[
-          ["overview", Activity, "Overview"],
-          ["console", TerminalSquare, "Console"],
-          ["files", FolderOpen, "Files"],
-          ["backups", HardDrive, "Backups"],
-          ["configuration", Wrench, "Configuration"],
-        ].map(([id, Icon, label]) => (
-          <button key={id as string} className={tab === id ? "active" : ""} onClick={() => setTab(id as DetailTab)}>
+        {([
+          { id: "overview", icon: Activity, label: "Overview" },
+          { id: "console", icon: TerminalSquare, label: "Console" },
+          { id: "files", icon: FolderOpen, label: "Files" },
+          { id: "backups", icon: HardDrive, label: "Backups" },
+          { id: "configuration", icon: Wrench, label: "Configuration" },
+        ] satisfies { id: DetailTab; icon: ComponentType<{ size?: number }>; label: string }[]).map(({ id, icon: Icon, label }) => (
+          <button key={id} className={tab === id ? "active" : ""} onClick={() => setTab(id)}>
             <Icon size={17} /> {label}
           </button>
         ))}
@@ -298,11 +299,11 @@ function CpuIcon({ size = 20 }: { size?: number }) {
   return <Activity size={size} />;
 }
 
-function MetricCard({ icon: Icon, label, value }: { icon: typeof Activity; label: string; value: string }) {
+function MetricCard({ icon: Icon, label, value }: { icon: ComponentType<{ size?: number }>; label: string; value: string }) {
   return <div className="metric-card glass"><span><Icon size={19} /></span><div><small>{label}</small><strong>{value}</strong></div></div>;
 }
 
-function Capability({ icon: Icon, label, value }: { icon: typeof Activity; label: string; value: string }) {
+function Capability({ icon: Icon, label, value }: { icon: ComponentType<{ size?: number }>; label: string; value: string }) {
   return <div className="capability"><span><Icon size={18} /></span><div><small>{label}</small><strong title={value}>{value}</strong></div></div>;
 }
 
