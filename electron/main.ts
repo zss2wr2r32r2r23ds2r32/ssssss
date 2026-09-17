@@ -120,12 +120,24 @@ function createTray() {
 }
 
 function registerIpc() {
-  ipcMain.handle("app:bootstrap", async () => ({
-    state: storage.getState(),
-    metrics: processes.getMetrics(),
-    system: await system.metrics(),
-    runtimes: await system.runtimes(),
-  }));
+  ipcMain.handle("app:bootstrap", async () => {
+    const systemMetrics = await system.metrics().catch(() => ({
+      cpu: 0,
+      memoryUsed: 0,
+      memoryTotal: 0,
+      diskUsed: 0,
+      diskTotal: 0,
+      networkRx: 0,
+      networkTx: 0,
+      timestamp: Date.now(),
+    }));
+    return {
+      state: storage.getState(),
+      metrics: processes.getMetrics(),
+      system: systemMetrics,
+      runtimes: await system.runtimes(),
+    };
+  });
   ipcMain.handle("app:version", () => app.getVersion());
   ipcMain.handle("app:paths", () => ({
     data: app.getPath("userData"),

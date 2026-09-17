@@ -38,7 +38,24 @@ export class StorageService {
       const raw = await fs.readFile(this.statePath, "utf8");
       this.state = validatePersistedState(JSON.parse(raw));
     } catch (error) {
-      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+        await fs.rename(
+          this.statePath,
+          `${this.statePath}.invalid-${Date.now()}`,
+        ).catch(() => undefined);
+        this.state = {
+          ...structuredClone(EMPTY_STATE),
+          activity: [
+            {
+              id: crypto.randomUUID(),
+              level: "warning",
+              title: "Configuration recovered",
+              message: "An invalid local state file was preserved and Haven reset to safe defaults.",
+              timestamp: new Date().toISOString(),
+            },
+          ],
+        };
+      }
       await this.persist();
     }
   }
@@ -289,7 +306,17 @@ function validatePersistedState(value: unknown): PersistedState {
   });
   return {
     apps,
-    settings: { ...DEFAULT_SETTINGS, ...settings },
+    settings: {
+      theme: settings.theme,
+      accent: settings.accent,
+      customBackground: settings.customBackground,
+      startWithWindows: settings.startWithWindows,
+      minimizeToTray: settings.minimizeToTray,
+      confirmBeforeStop: settings.confirmBeforeStop,
+      confirmBeforeDelete: settings.confirmBeforeDelete,
+      notifications: settings.notifications,
+      debugMode: settings.debugMode,
+    },
     activity,
   };
 }

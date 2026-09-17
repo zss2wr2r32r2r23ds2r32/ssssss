@@ -1724,6 +1724,7 @@ input[type="range"] {
 }
 
 .loading-screen strong { font-size: 12px; letter-spacing: .03em; }
+.loading-screen > p { max-width: 460px; color: #a9afbc; font-size: 10px; line-height: 1.6; text-align: center; }
 .loading-screen > i { width: 55px; height: 2px; overflow: hidden; border-radius: 2px; background: rgba(255, 255, 255, 0.07); }
 .loading-screen > i::after { content: ""; display: block; width: 50%; height: 100%; background: #ff6678; animation: loading 1s ease-in-out infinite alternate; }
 

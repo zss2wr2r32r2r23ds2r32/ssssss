@@ -89,8 +89,8 @@ export function SettingsPage({
           </SettingsSection>
 
           <SettingsSection icon={ShieldCheck} title="Safety" subtitle="Confirmation before destructive actions">
-            <SettingRow title="Confirm before stopping" description="Avoid accidentally interrupting a running service" icon={ShieldCheck}><Switch checked={settings.confirmBeforeStop} onChange={(value) => void save({ confirmBeforeStop: value })} /></SettingRow>
-            <SettingRow title="Confirm before deleting" description="Confirm application, file, and backup deletion" icon={ShieldCheck}><Switch checked={settings.confirmBeforeDelete} onChange={(value) => void save({ confirmBeforeDelete: value })} /></SettingRow>
+            <SettingRow title="Confirm before stopping" description="Avoid accidentally interrupting a running service" icon={ShieldCheck}><span className="secure-pill"><ShieldCheck size={13} />Always on</span></SettingRow>
+            <SettingRow title="Confirm before deleting" description="Confirm application, file, and backup deletion" icon={ShieldCheck}><span className="secure-pill"><ShieldCheck size={13} />Always on</span></SettingRow>
           </SettingsSection>
 
           <SettingsSection icon={Database} title="Local data" subtitle="Configuration and logs stay on this PC">

@@ -491,12 +491,12 @@ function Backups({
       <section className="panel glass">
         <div className="panel-heading">
           <div><h3>Application backups</h3><p>Full local snapshots · newest first · maximum {app.advanced.maxBackups ?? 5}</p></div>
-          <button className="button primary" disabled={busy || !app.directory} onClick={async () => {
+          <button className="button primary" disabled={busy || !app.directory || online} onClick={async () => {
             setBusy(true);
             try { await window.haven.backups.create(app.id); await refresh(); onSuccess("Backup created."); } catch (error) { onError(error); } finally { setBusy(false); }
           }}><Plus size={16} />{busy ? "Creating…" : "Create backup"}</button>
         </div>
-        {online && <div className="backup-warning"><Activity size={17} />For consistent backups, stop applications that actively write files before creating a snapshot.</div>}
+        {online && <div className="backup-warning"><Activity size={17} />Stop this application before creating or restoring a consistent snapshot.</div>}
         <div className="backup-list">
           {entries.map((entry) => (
             <article key={entry.id}>

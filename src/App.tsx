@@ -40,6 +40,7 @@ const EMPTY_SYSTEM: SystemMetrics = {
 
 export default function App() {
   const [snapshot, setSnapshot] = useState<AppSnapshot>();
+  const [bootstrapError, setBootstrapError] = useState<string>();
   const [metrics, setMetrics] = useState<ProcessMetrics[]>([]);
   const [system, setSystem] = useState<SystemMetrics>(EMPTY_SYSTEM);
   const [history, setHistory] = useState<SystemMetrics[]>([]);
@@ -81,7 +82,11 @@ export default function App() {
           }),
         ];
       })
-      .catch(showError);
+      .catch((error) => {
+        const message = friendlyError(error);
+        setBootstrapError(message);
+        showError(error);
+      });
     return () => cleanups.forEach((cleanup) => cleanup());
   }, []);
 
@@ -157,8 +162,7 @@ export default function App() {
   };
 
   const requestStop = (app: AppConfig) => {
-    if (snapshot?.state.settings.confirmBeforeStop) setStopTarget(app);
-    else void stop(app);
+    setStopTarget(app);
   };
 
   const stop = async (app: AppConfig) => {
@@ -208,8 +212,13 @@ export default function App() {
     return (
       <div className="loading-screen">
         <span className="brand-mark large"><span /><span /><span /></span>
-        <strong>Opening Haven</strong>
-        <i />
+        <strong>{bootstrapError ? "Haven could not open" : "Opening Haven"}</strong>
+        {bootstrapError ? (
+          <>
+            <p>{bootstrapError}</p>
+            <button className="button primary" onClick={() => window.location.reload()}>Try again</button>
+          </>
+        ) : <i />}
       </div>
     );
   }
