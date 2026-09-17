@@ -13,6 +13,7 @@ interface EncryptedSecret {
 export class SecretVault {
   private readonly vaultPath = path.join(app.getPath("userData"), "secrets.vault");
   private secrets: Record<string, EncryptedSecret> = {};
+  private writeQueue: Promise<void> = Promise.resolve();
 
   async initialize() {
     try {
@@ -43,9 +44,9 @@ export class SecretVault {
     await this.persist();
   }
 
-  decrypt(appId: string, password: string): string | undefined {
+  decrypt(appId: string, password: string): string {
     const encrypted = this.secrets[appId];
-    if (!encrypted) return undefined;
+    if (!encrypted) throw new Error("The encrypted token is missing. Save the bot token again.");
     try {
       const key = crypto.scryptSync(password, Buffer.from(encrypted.salt, "base64"), 32);
       const decipher = crypto.createDecipheriv(
@@ -68,10 +69,27 @@ export class SecretVault {
     await this.persist();
   }
 
+  async retain(appIds: string[]) {
+    const allowed = new Set(appIds);
+    this.secrets = Object.fromEntries(
+      Object.entries(this.secrets).filter(([appId]) => allowed.has(appId)),
+    );
+    await this.persist();
+  }
+
+  async clear() {
+    this.secrets = {};
+    await this.persist();
+  }
+
   private async persist() {
-    await fs.writeFile(this.vaultPath, JSON.stringify(this.secrets), {
-      encoding: "utf8",
-      mode: 0o600,
+    const serialized = JSON.stringify(this.secrets);
+    const write = this.writeQueue.then(async () => {
+      const temporaryPath = `${this.vaultPath}.${process.pid}.tmp`;
+      await fs.writeFile(temporaryPath, serialized, { encoding: "utf8", mode: 0o600 });
+      await fs.rename(temporaryPath, this.vaultPath);
     });
+    this.writeQueue = write.catch(() => undefined);
+    await write;
   }
 }

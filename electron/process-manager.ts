@@ -16,6 +16,7 @@ import type { StorageService } from "./storage";
 import type { SecretVault } from "./security";
 
 interface ManagedProcess {
+  generation: number;
   child?: ChildProcessWithoutNullStreams;
   status: ProcessStatus;
   startedAt?: number;
@@ -39,7 +40,9 @@ export class ProcessManager {
   ) {}
 
   startMonitoring() {
-    this.metricsTimer = setInterval(() => void this.broadcastMetrics(), 2_000);
+    this.metricsTimer = setInterval(() => {
+      void this.broadcastMetrics().catch(() => undefined);
+    }, 2_000);
   }
 
   dispose() {
@@ -81,7 +84,9 @@ export class ProcessManager {
     const directoryStats = await fs.stat(directory).catch(() => undefined);
     if (!directoryStats?.isDirectory()) throw new Error("The working directory does not exist.");
 
+    if (existing?.restartTimer) clearTimeout(existing.restartTimer);
     const managed: ManagedProcess = {
+      generation: (existing?.generation ?? 0) + 1,
       status: "starting",
       intentionalStop: false,
       runtimeSecret,
@@ -111,14 +116,26 @@ export class ProcessManager {
     child.stdout.on("data", (data: Buffer) => this.writeOutput(config.id, "stdout", data));
     child.stderr.on("data", (data: Buffer) => this.writeOutput(config.id, "stderr", data));
     child.on("error", (error) => this.writeLine(config.id, "stderr", error.message));
-    child.on("close", (code) => void this.handleExit(config.id, code));
+    const generation = managed.generation;
+    child.on("close", (code) => void this.handleExit(config.id, code, generation));
     return this.getMetric(config);
   }
 
   async stop(appId: string) {
     const config = this.requireApp(appId);
     const managed = this.processes.get(appId);
-    if (!managed?.child || managed.status === "offline") return this.getMetric(config);
+    if (managed?.restartTimer) {
+      clearTimeout(managed.restartTimer);
+      managed.restartTimer = undefined;
+    }
+    if (!managed?.child || managed.status === "offline") {
+      if (managed) {
+        managed.intentionalStop = true;
+        managed.status = "offline";
+        managed.runtimeSecret = undefined;
+      }
+      return this.getMetric(config);
+    }
     const child = managed.child;
     const pid = child.pid;
     if (!pid) throw new Error("The process did not provide a valid process ID.");
@@ -134,9 +151,9 @@ export class ProcessManager {
       await new Promise((resolve) => setTimeout(resolve, 1_500));
       if (child.exitCode === null) await this.killTree(pid);
     } else if (process.platform === "win32") {
-      child.kill("SIGINT");
-      await new Promise((resolve) => setTimeout(resolve, 1_200));
-      if (child.exitCode === null) await this.killTree(pid);
+      child.stdin.write("\x03");
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      await this.killTree(pid);
     } else {
       try {
         process.kill(-pid, "SIGINT");
@@ -152,7 +169,9 @@ export class ProcessManager {
   async restart(appId: string, password?: string) {
     const previousSecret = this.processes.get(appId)?.runtimeSecret;
     await this.stop(appId);
-    await this.waitUntilStopped(appId);
+    if (!(await this.waitUntilStopped(appId))) {
+      throw new Error("The previous process did not stop, so restart was cancelled.");
+    }
     const config = this.requireApp(appId);
     if (config.hasSecret && previousSecret) return this.spawnProcess(config, previousSecret);
     return this.start(appId, password);
@@ -169,10 +188,15 @@ export class ProcessManager {
 
   async stopAll() {
     await Promise.allSettled(
-      [...this.processes.entries()]
-        .filter(([, managed]) => managed.child && managed.status !== "offline")
-        .map(([appId]) => this.stop(appId)),
+      [...this.processes.keys()].map((appId) => this.stop(appId)),
     );
+  }
+
+  forget(appId: string) {
+    const managed = this.processes.get(appId);
+    if (managed?.restartTimer) clearTimeout(managed.restartTimer);
+    this.processes.delete(appId);
+    this.consoleLines.delete(appId);
   }
 
   getMetrics() {
@@ -182,10 +206,10 @@ export class ProcessManager {
       .sort((a, b) => a.appId.localeCompare(b.appId));
   }
 
-  private async handleExit(appId: string, code: number | null) {
+  private async handleExit(appId: string, code: number | null, generation: number) {
     const managed = this.processes.get(appId);
     const config = this.storage.getApp(appId);
-    if (!managed || !config) return;
+    if (!managed || !config || managed.generation !== generation) return;
     const crashed = !managed.intentionalStop && code !== 0;
     managed.child = undefined;
     managed.exitCode = code;
@@ -207,6 +231,8 @@ export class ProcessManager {
       const delay = Math.max(1, config.restartDelaySeconds) * 1_000;
       this.writeLine(appId, "system", `Auto-restarting in ${delay / 1_000}s…`);
       managed.restartTimer = setTimeout(() => {
+        if (this.processes.get(appId) !== managed || !this.storage.getApp(appId)) return;
+        managed.restartTimer = undefined;
         void this.spawnProcess(config, managed.runtimeSecret).catch((error: Error) => {
           this.writeLine(appId, "stderr", `Auto-restart failed: ${error.message}`);
         });
@@ -253,7 +279,7 @@ export class ProcessManager {
         // A process can exit between the status check and this sample.
       }
     }
-    metric.portOpen = config.port ? await this.checkPort(config.port) : false;
+    metric.portOpen = config.port ? await this.checkPort(config.port).catch(() => false) : false;
     const managed = this.processes.get(config.id);
     if (
       managed?.status === "online" &&
@@ -288,11 +314,13 @@ export class ProcessManager {
   }
 
   private writeLine(appId: string, stream: ConsoleLine["stream"], text: string) {
+    const secret = this.processes.get(appId)?.runtimeSecret;
+    const safeText = secret ? text.split(secret).join("[REDACTED TOKEN]") : text;
     const line: ConsoleLine = {
       id: crypto.randomUUID(),
       appId,
       stream,
-      text,
+      text: safeText,
       timestamp: new Date().toISOString(),
     };
     const lines = this.consoleLines.get(appId) ?? [];
@@ -302,7 +330,8 @@ export class ProcessManager {
     const logPath = this.getLogPath(appId);
     void fs
       .mkdir(path.dirname(logPath), { recursive: true })
-      .then(() => fs.appendFile(logPath, `[${line.timestamp}] [${stream}] ${text}\n`, "utf8"));
+      .then(() => fs.appendFile(logPath, `[${line.timestamp}] [${stream}] ${safeText}\n`, "utf8"))
+      .catch(() => undefined);
   }
 
   private getLogPath(appId: string) {
@@ -354,5 +383,6 @@ export class ProcessManager {
     while (this.processes.get(appId)?.child && Date.now() - started < 5_000) {
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
+    return !this.processes.get(appId)?.child;
   }
 }

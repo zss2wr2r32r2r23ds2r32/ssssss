@@ -1586,7 +1586,7 @@ input[type="range"] {
 .monitor-card small { color: var(--muted); font-size: 8px; }
 .monitor-card strong { overflow: hidden; margin-top: 3px; font-size: 15px; text-overflow: ellipsis; white-space: nowrap; }
 .monitor-card div > span { color: var(--faint); font-size: 7px; }
-.ring { display: grid; width: 48px; height: 48px; place-items: center; border-radius: 50%; background: conic-gradient(var(--ring) var(--percent), rgba(255, 255, 255, 0.055) 0); }
+.ring { position: relative; display: grid; width: 48px; height: 48px; place-items: center; border-radius: 50%; background: conic-gradient(var(--ring) var(--percent), rgba(255, 255, 255, 0.055) 0); }
 .ring::before { content: ""; position: absolute; width: 38px; height: 38px; border-radius: 50%; background: #202432; }
 .ring i { position: relative; z-index: 1; font-size: 8px; font-style: normal; font-weight: 700; }
 

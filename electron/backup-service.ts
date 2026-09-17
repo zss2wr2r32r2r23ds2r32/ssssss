@@ -1,6 +1,7 @@
 import { app } from "electron";
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import crypto from "node:crypto";
 import type { BackupEntry } from "../src/shared/types";
 import type { StorageService } from "./storage";
 
@@ -10,11 +11,12 @@ export class BackupService {
   constructor(private readonly storage: StorageService) {}
 
   async list(appId: string): Promise<BackupEntry[]> {
+    this.validateAppId(appId);
     const directory = path.join(this.root, appId);
     const entries = await fs.readdir(directory, { withFileTypes: true }).catch(() => []);
     const backups = await Promise.all(
       entries
-        .filter((entry) => entry.isDirectory())
+        .filter((entry) => entry.isDirectory() && this.isBackupId(entry.name))
         .map(async (entry): Promise<BackupEntry> => {
           const backupPath = path.join(directory, entry.name);
           const stat = await fs.stat(backupPath);
@@ -32,20 +34,29 @@ export class BackupService {
 
   async create(appId: string) {
     const config = this.requireApp(appId);
-    const source = path.resolve(config.directory);
+    const source = await fs.realpath(path.resolve(config.directory));
     const sourceStat = await fs.stat(source).catch(() => undefined);
     if (!sourceStat?.isDirectory()) throw new Error("The application directory does not exist.");
     const id = new Date().toISOString().replaceAll(":", "-").replaceAll(".", "-");
     const destination = path.join(this.root, appId, id);
+    const staging = path.join(this.root, appId, `.partial-${id}`);
     if (destination.startsWith(`${source}${path.sep}`)) {
       throw new Error("Move the Process Manager data folder outside this application directory.");
     }
     await fs.mkdir(path.dirname(destination), { recursive: true });
-    await fs.cp(source, destination, {
-      recursive: true,
-      preserveTimestamps: true,
-      filter: (candidate) => !candidate.includes(`${path.sep}node_modules${path.sep}.cache`),
-    });
+    try {
+      await fs.cp(source, staging, {
+        recursive: true,
+        preserveTimestamps: true,
+        filter: async (candidate) =>
+          !candidate.includes(`${path.sep}node_modules${path.sep}.cache`) &&
+          !(await fs.lstat(candidate)).isSymbolicLink(),
+      });
+      await fs.rename(staging, destination);
+    } catch (error) {
+      await fs.rm(staging, { recursive: true, force: true });
+      throw error;
+    }
     await this.enforceLimit(appId, config.advanced.maxBackups ?? 5);
     return (await this.list(appId)).find((backup) => backup.id === id);
   }
@@ -56,14 +67,27 @@ export class BackupService {
     if (destination === path.parse(destination).root) {
       throw new Error("Restoring into a drive root is not allowed.");
     }
-    const source = this.resolveBackup(appId, backupId);
-    const entries = await fs.readdir(destination);
-    await Promise.all(entries.map((entry) => fs.rm(path.join(destination, entry), { recursive: true })));
-    await fs.cp(source, destination, { recursive: true, preserveTimestamps: true });
+    const source = await this.resolveBackup(appId, backupId);
+    const destinationStat = await fs.stat(destination).catch(() => undefined);
+    if (!destinationStat?.isDirectory()) throw new Error("The application directory does not exist.");
+    const rollback = path.join(
+      path.dirname(destination),
+      `${path.basename(destination)}.haven-rollback-${crypto.randomUUID()}`,
+    );
+    await fs.rename(destination, rollback);
+    try {
+      await fs.mkdir(destination, { recursive: false });
+      await fs.cp(source, destination, { recursive: true, preserveTimestamps: true });
+      await fs.rm(rollback, { recursive: true, force: true });
+    } catch (error) {
+      await fs.rm(destination, { recursive: true, force: true });
+      await fs.rename(rollback, destination);
+      throw error;
+    }
   }
 
   async delete(appId: string, backupId: string) {
-    await fs.rm(this.resolveBackup(appId, backupId), { recursive: true, force: false });
+    await fs.rm(await this.resolveBackup(appId, backupId), { recursive: true, force: false });
   }
 
   private requireApp(appId: string) {
@@ -72,9 +96,13 @@ export class BackupService {
     return config;
   }
 
-  private resolveBackup(appId: string, backupId: string) {
-    if (!/^[\w.-]+$/.test(backupId)) throw new Error("Invalid backup.");
-    return path.join(this.root, appId, backupId);
+  private async resolveBackup(appId: string, backupId: string) {
+    this.validateAppId(appId);
+    if (!this.isBackupId(backupId)) throw new Error("Invalid backup.");
+    const appRoot = path.resolve(this.root, appId);
+    const target = await fs.realpath(path.join(appRoot, backupId));
+    if (!target.startsWith(`${appRoot}${path.sep}`)) throw new Error("Invalid backup path.");
+    return target;
   }
 
   private async enforceLimit(appId: string, maxCount: number) {
@@ -90,9 +118,18 @@ export class BackupService {
     const entries = await fs.readdir(directory, { withFileTypes: true });
     let total = 0;
     for (const entry of entries) {
+      if (entry.isSymbolicLink()) continue;
       const fullPath = path.join(directory, entry.name);
       total += entry.isDirectory() ? await this.directorySize(fullPath) : (await fs.stat(fullPath)).size;
     }
     return total;
+  }
+
+  private validateAppId(appId: string) {
+    if (!/^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(appId)) throw new Error("Invalid application ID.");
+  }
+
+  private isBackupId(backupId: string) {
+    return /^[0-9TZ-]{20,40}$/.test(backupId);
   }
 }

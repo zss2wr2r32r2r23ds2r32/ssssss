@@ -32,7 +32,16 @@ const processes = new ProcessManager(storage, vault, (channel, payload) => {
   if (!mainWindow?.isDestroyed()) mainWindow?.webContents.send(channel, payload);
 });
 
-const emitState = () => mainWindow?.webContents.send("state:changed", storage.getState());
+const emitState = () => {
+  if (!mainWindow?.isDestroyed()) mainWindow.webContents.send("state:changed", storage.getState());
+};
+
+async function quitApplication() {
+  if (quitting) return;
+  quitting = true;
+  await processes.stopAll();
+  app.quit();
+}
 
 async function createWindow() {
   const isDevelopment = Boolean(process.env.VITE_DEV_SERVER_URL);
@@ -54,16 +63,27 @@ async function createWindow() {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
       nodeIntegration: false,
-      sandbox: false,
+      sandbox: true,
     },
   });
   mainWindow.setMenuBarVisibility(false);
   mainWindow.once("ready-to-show", () => mainWindow?.show());
+  mainWindow.webContents.on("will-navigate", (event) => event.preventDefault());
+  mainWindow.webContents.setWindowOpenHandler(() => ({ action: "deny" }));
+  mainWindow.webContents.session.setPermissionRequestHandler((_contents, _permission, callback) =>
+    callback(false),
+  );
   mainWindow.on("close", (event) => {
     if (!quitting && storage.getState().settings.minimizeToTray) {
       event.preventDefault();
       mainWindow?.hide();
+    } else if (!quitting) {
+      event.preventDefault();
+      void quitApplication();
     }
+  });
+  mainWindow.on("closed", () => {
+    mainWindow = undefined;
   });
   if (isDevelopment) {
     await mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL!);
@@ -82,13 +102,15 @@ function createTray() {
   tray.setToolTip("Haven Process Manager");
   tray.setContextMenu(
     Menu.buildFromTemplate([
-      { label: "Open Haven", click: () => mainWindow?.show() },
+      {
+        label: "Open Haven",
+        click: () => (mainWindow ? mainWindow.show() : void createWindow()),
+      },
       { type: "separator" },
       {
         label: "Quit",
         click: () => {
-          quitting = true;
-          app.quit();
+          void quitApplication();
         },
       },
     ]),
@@ -116,6 +138,7 @@ function registerIpc() {
   });
   ipcMain.handle("apps:delete", async (_event, id: string) => {
     await processes.stop(id);
+    processes.forget(id);
     await storage.removeApp(id);
     await vault.remove(id);
     emitState();
@@ -146,14 +169,19 @@ function registerIpc() {
   ipcMain.handle(
     "secret:set",
     async (_event, id: string, token: string, password: string) => {
-      await vault.set(id, token, password);
-      await storage.setHasSecret(id, true);
+      try {
+        await vault.set(id, token, password);
+        await storage.setHasSecret(id, true);
+      } catch (error) {
+        await vault.remove(id).catch(() => undefined);
+        throw error;
+      }
       emitState();
     },
   );
   ipcMain.handle("secret:remove", async (_event, id: string) => {
-    await vault.remove(id);
     await storage.setHasSecret(id, false);
+    await vault.remove(id);
     emitState();
   });
 
@@ -202,10 +230,18 @@ function registerIpc() {
   });
 
   ipcMain.handle("backups:list", (_event, id: string) => backups.list(id));
-  ipcMain.handle("backups:create", (_event, id: string) => backups.create(id));
+  ipcMain.handle("backups:create", async (_event, id: string) => {
+    const metric = processes.getMetrics().find((item) => item.appId === id);
+    if (metric && !["offline", "crashed"].includes(metric.status)) {
+      throw new Error("Stop the application before creating a consistent backup.");
+    }
+    return backups.create(id);
+  });
   ipcMain.handle("backups:restore", async (_event, id: string, backupId: string) => {
     const metric = processes.getMetrics().find((item) => item.appId === id);
-    if (metric?.status === "online") throw new Error("Stop the application before restoring a backup.");
+    if (metric && !["offline", "crashed"].includes(metric.status)) {
+      throw new Error("Stop the application before restoring a backup.");
+    }
     await backups.restore(id, backupId);
   });
   ipcMain.handle("backups:delete", (_event, id: string, backupId: string) =>
@@ -273,6 +309,8 @@ function registerIpc() {
     if (!result.canceled) {
       await processes.stopAll();
       await storage.importState(result.filePaths[0]);
+      await vault.retain(storage.getState().apps.filter((item) => item.hasSecret).map((item) => item.id));
+      app.setLoginItemSettings({ openAtLogin: storage.getState().settings.startWithWindows });
       emitState();
     }
     return !result.canceled;
@@ -280,6 +318,8 @@ function registerIpc() {
   ipcMain.handle("config:reset", async () => {
     await processes.stopAll();
     await storage.reset();
+    await vault.clear();
+    app.setLoginItemSettings({ openAtLogin: false });
     emitState();
   });
   ipcMain.handle("activity:clear", async () => {
@@ -288,21 +328,42 @@ function registerIpc() {
   });
 }
 
-app.whenReady().then(async () => {
-  await storage.initialize();
-  await vault.initialize();
-  registerIpc();
-  await createWindow();
-  createTray();
-  processes.startMonitoring();
-  systemTimer = setInterval(async () => {
-    mainWindow?.webContents.send("system:metrics", await system.metrics());
-  }, 2_000);
+const hasSingleInstanceLock = app.requestSingleInstanceLock();
+if (!hasSingleInstanceLock) {
+  app.quit();
+} else {
+  app.on("second-instance", () => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.show();
+      mainWindow.focus();
+    } else {
+      void createWindow();
+    }
+  });
 
-  for (const config of storage.getState().apps.filter((item) => item.autoStart && !item.hasSecret)) {
-    void processes.start(config.id).catch(() => undefined);
-  }
-});
+  app.whenReady().then(async () => {
+    await storage.initialize();
+    await vault.initialize();
+    app.setLoginItemSettings({ openAtLogin: storage.getState().settings.startWithWindows });
+    registerIpc();
+    await createWindow();
+    createTray();
+    processes.startMonitoring();
+    systemTimer = setInterval(() => {
+      void system
+        .metrics()
+        .then((metrics) => {
+          if (!mainWindow?.isDestroyed()) mainWindow.webContents.send("system:metrics", metrics);
+        })
+        .catch(() => undefined);
+    }, 2_000);
+
+    for (const config of storage.getState().apps.filter((item) => item.autoStart && !item.hasSecret)) {
+      void processes.start(config.id).catch(() => undefined);
+    }
+  });
+}
 
 app.on("activate", () => {
   if (!mainWindow) void createWindow();

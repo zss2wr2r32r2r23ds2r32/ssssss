@@ -30,17 +30,13 @@ const EMPTY_STATE: PersistedState = {
 export class StorageService {
   private readonly statePath = path.join(app.getPath("userData"), "state.json");
   private state: PersistedState = structuredClone(EMPTY_STATE);
+  private writeQueue: Promise<void> = Promise.resolve();
 
   async initialize() {
     await fs.mkdir(app.getPath("userData"), { recursive: true });
     try {
       const raw = await fs.readFile(this.statePath, "utf8");
-      const parsed = JSON.parse(raw) as Partial<PersistedState>;
-      this.state = {
-        apps: parsed.apps ?? [],
-        settings: { ...DEFAULT_SETTINGS, ...(parsed.settings ?? {}) },
-        activity: parsed.activity ?? [],
-      };
+      this.state = validatePersistedState(JSON.parse(raw));
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
       await this.persist();
@@ -56,6 +52,7 @@ export class StorageService {
   }
 
   async saveApp(draft: AppDraft): Promise<AppConfig> {
+    validateDraft(draft);
     if (
       draft.type === "discord" &&
       draft.env.some((item) => /(^|_)TOKEN($|_)/i.test(item.key.trim()))
@@ -114,7 +111,10 @@ export class StorageService {
   }
 
   async saveSettings(settings: Partial<AppSettings>) {
-    this.state.settings = { ...this.state.settings, ...settings };
+    this.state.settings = validatePersistedState({
+      ...this.state,
+      settings: { ...this.state.settings, ...settings },
+    }).settings;
     await this.persist();
     return structuredClone(this.state.settings);
   }
@@ -139,15 +139,7 @@ export class StorageService {
   }
 
   async importState(source: string) {
-    const parsed = JSON.parse(await fs.readFile(source, "utf8")) as PersistedState;
-    if (!Array.isArray(parsed.apps) || !parsed.settings) {
-      throw new Error("That file is not a valid process manager configuration.");
-    }
-    this.state = {
-      apps: parsed.apps,
-      settings: { ...DEFAULT_SETTINGS, ...parsed.settings },
-      activity: Array.isArray(parsed.activity) ? parsed.activity : [],
-    };
+    this.state = validatePersistedState(JSON.parse(await fs.readFile(source, "utf8")));
     await this.persist();
   }
 
@@ -157,8 +149,147 @@ export class StorageService {
   }
 
   private async persist() {
-    const temporaryPath = `${this.statePath}.tmp`;
-    await fs.writeFile(temporaryPath, JSON.stringify(this.state, null, 2), "utf8");
-    await fs.rename(temporaryPath, this.statePath);
+    const serialized = JSON.stringify(this.state, null, 2);
+    const write = this.writeQueue.then(async () => {
+      const temporaryPath = `${this.statePath}.${process.pid}.tmp`;
+      await fs.writeFile(temporaryPath, serialized, "utf8");
+      await fs.rename(temporaryPath, this.statePath);
+    });
+    this.writeQueue = write.catch(() => undefined);
+    await write;
   }
+}
+
+const APP_TYPES = new Set(["minecraft", "discord", "website", "custom"]);
+const STATUSES = new Set(["info", "success", "warning", "error"]);
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+function validateDraft(draft: AppDraft) {
+  if (!draft || typeof draft !== "object") throw new Error("Invalid application configuration.");
+  if (!APP_TYPES.has(draft.type)) throw new Error("Choose a supported application type.");
+  if (typeof draft.name !== "string" || !draft.name.trim() || draft.name.length > 120) {
+    throw new Error("Application name must be between 1 and 120 characters.");
+  }
+  for (const value of [draft.icon, draft.directory, draft.startCommand, draft.stopCommand]) {
+    if (typeof value !== "string") throw new Error("Application configuration contains invalid text.");
+  }
+  if (draft.port !== undefined && (!Number.isInteger(draft.port) || draft.port < 1 || draft.port > 65_535)) {
+    throw new Error("Port must be a whole number between 1 and 65535.");
+  }
+  if (
+    draft.ramLimitMb !== undefined &&
+    (!Number.isFinite(draft.ramLimitMb) || draft.ramLimitMb < 128 || draft.ramLimitMb > 262_144)
+  ) {
+    throw new Error("RAM limit must be between 128 MB and 256 GB.");
+  }
+  if (!Number.isFinite(draft.restartDelaySeconds) || draft.restartDelaySeconds < 1 || draft.restartDelaySeconds > 86_400) {
+    throw new Error("Restart delay must be between 1 second and 24 hours.");
+  }
+  if (![draft.autoStart, draft.autoRestart, draft.pinned].every((value) => typeof value === "boolean")) {
+    throw new Error("Application switches contain invalid values.");
+  }
+  if (
+    !Array.isArray(draft.env) ||
+    draft.env.some(
+      (item) =>
+        !item ||
+        typeof item.key !== "string" ||
+        typeof item.value !== "string" ||
+        item.key.length > 200 ||
+        item.value.length > 32_768,
+    )
+  ) {
+    throw new Error("Environment variables are invalid.");
+  }
+  if (!draft.advanced || typeof draft.advanced !== "object" || Array.isArray(draft.advanced)) {
+    throw new Error("Advanced configuration is invalid.");
+  }
+  if (
+    draft.advanced.maxBackups !== undefined &&
+    (!Number.isInteger(draft.advanced.maxBackups) ||
+      draft.advanced.maxBackups < 1 ||
+      draft.advanced.maxBackups > 50)
+  ) {
+    throw new Error("Maximum backups must be between 1 and 50.");
+  }
+  if (
+    draft.advanced.scheduledRestartHours !== undefined &&
+    (!Number.isFinite(draft.advanced.scheduledRestartHours) ||
+      draft.advanced.scheduledRestartHours <= 0 ||
+      draft.advanced.scheduledRestartHours > 8_760)
+  ) {
+    throw new Error("Scheduled restart must be between 1 hour and 1 year.");
+  }
+}
+
+function validatePersistedState(value: unknown): PersistedState {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new Error("That file is not a valid Haven configuration.");
+  }
+  const candidate = value as Partial<PersistedState>;
+  if (!Array.isArray(candidate.apps) || !candidate.settings || typeof candidate.settings !== "object") {
+    throw new Error("That file is not a valid Haven configuration.");
+  }
+  const ids = new Set<string>();
+  const apps = candidate.apps.map((application, index) => {
+    validateDraft(application);
+    if (!UUID.test(application.id) || ids.has(application.id)) {
+      throw new Error("Application IDs in this configuration are invalid.");
+    }
+    ids.add(application.id);
+    if (
+      typeof application.createdAt !== "string" ||
+      typeof application.order !== "number" ||
+      typeof application.hasSecret !== "boolean"
+    ) {
+      throw new Error("An application record is incomplete.");
+    }
+    return { ...application, order: index };
+  });
+  const settings = candidate.settings as Partial<AppSettings>;
+  if (
+    settings.theme !== "dark" &&
+    settings.theme !== "light"
+  ) {
+    throw new Error("Theme setting is invalid.");
+  }
+  if (typeof settings.accent !== "string" || !/^#[0-9a-f]{6}$/i.test(settings.accent)) {
+    throw new Error("Accent colour is invalid.");
+  }
+  for (const key of [
+    "startWithWindows",
+    "minimizeToTray",
+    "confirmBeforeStop",
+    "confirmBeforeDelete",
+    "notifications",
+    "debugMode",
+  ] as const) {
+    if (typeof settings[key] !== "boolean") throw new Error(`Setting ${key} is invalid.`);
+  }
+  if (
+    settings.customBackground !== undefined &&
+    (typeof settings.customBackground !== "string" ||
+      !/^data:image\/(png|jpeg|webp);base64,/.test(settings.customBackground))
+  ) {
+    throw new Error("Custom background is invalid.");
+  }
+  const activity = (candidate.activity ?? []).map((event) => {
+    if (
+      !event ||
+      !UUID.test(event.id) ||
+      (event.appId !== undefined && !UUID.test(event.appId)) ||
+      !STATUSES.has(event.level) ||
+      typeof event.title !== "string" ||
+      typeof event.message !== "string" ||
+      typeof event.timestamp !== "string"
+    ) {
+      throw new Error("Activity history contains an invalid record.");
+    }
+    return event;
+  });
+  return {
+    apps,
+    settings: { ...DEFAULT_SETTINGS, ...settings },
+    activity,
+  };
 }
