@@ -52,6 +52,7 @@ async function createWindow() {
     minWidth: 1060,
     minHeight: 680,
     show: false,
+    icon: path.join(__dirname, "../assets/icon.png"),
     titleBarStyle: "hidden",
     titleBarOverlay: {
       color: "#11141ce6",
