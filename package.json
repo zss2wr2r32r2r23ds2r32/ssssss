@@ -1,0 +1,39 @@
+{
+  "name": "avix-studios",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Avix Studios — a Minecraft Java config helper",
+  "author": "Avix Studios",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "concurrently -k -n vite,app -c gray,red \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173 && electron .\"",
+    "dev:web": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "icons": "node scripts/make-icon.mjs",
+    "build:win": "npm run icons && vite build && electron-builder --win",
+    "build:win:dir": "npm run icons && vite build && electron-builder --win dir --config.win.signAndEditExecutable=false",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "preview": "vite preview --host 127.0.0.1"
+  },
+  "dependencies": {
+    "@fontsource/jetbrains-mono": "^5.2.5",
+    "@fontsource/outfit": "^5.2.5",
+    "js-yaml": "^4.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.2",
+    "electron": "^33.4.0",
+    "electron-builder": "^25.1.8",
+    "typescript": "^5.7.3",
+    "vite": "^6.2.0",
+    "vitest": "^3.0.8",
+    "wait-on": "^8.0.2"
+  }
+}
