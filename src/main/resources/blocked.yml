@@ -1,0 +1,18 @@
+# Word lists for the chat filter. Masked hits are replaced by the mask in chat-filter.yml.
+# action: MASK replaces the hit and still sends the message.
+# action: CANCEL drops the message.
+rules:
+  blocked:
+    action: CANCEL
+    words: []
+    regex: []
+  advertising:
+    action: CANCEL
+    words: []
+    regex:
+      - "(?i)discord\\.gg/[A-Za-z0-9-]+"
+      - "(?i)discord\\.com/invite/[A-Za-z0-9-]+"
+  masked:
+    action: MASK
+    words: []
+    regex: []

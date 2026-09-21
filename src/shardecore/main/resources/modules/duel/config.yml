@@ -1,0 +1,50 @@
+config-version: 3
+message-mode: chat
+
+# Players always duel with their own inventory — no kits.
+use-own-inventory: true
+return-after-duel: true
+
+requests-expire-seconds: 60
+countdown-seconds: 5
+countdown-actionbar: "&#FFB800Duel starts in &f%seconds%&#FFB800..."
+fight-actionbar: "&#9FFF00&lFIGHT!"
+
+# Keep gear on death during duels (own inventory mode).
+cancel-drops: true
+
+banned-materials:
+  - MACE
+
+# Legacy single-arena fallback (used only if arenas: is empty).
+arena:
+  enabled: false
+  pos1:
+    world: spawn
+    x: 0.5
+    y: 100.0
+    z: 0.5
+    yaw: 0
+    pitch: 0
+  pos2:
+    world: spawn
+    x: 10.5
+    y: 100.0
+    z: 0.5
+    yaw: 180
+    pitch: 0
+
+# Op-managed arenas. Create with:
+#   /duels arena create <name>
+#   /duels arena setspawn1 <name>
+#   /duels arena setspawn2 <name>
+arenas: {}
+
+match-end-commands:
+  winner: []
+  loser: []
+
+elo:
+  start: 1000
+  k-factor: 32
+  top-limit: 10

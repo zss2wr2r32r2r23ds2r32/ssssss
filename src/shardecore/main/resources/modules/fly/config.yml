@@ -1,0 +1,27 @@
+# Fly module - region-restricted flight.
+#
+# /fly only works inside the region below, in the configured world.
+# Set the region in-game with: /fly pos1, /fly pos2, /fly setregion
+# If the region is not set, /fly will not work at all.
+#
+# Permissions:
+#   sharded.fly.use      - use /fly inside the region
+#   sharded.fly.speed    - use /fly speed <1-10> [player]
+#   sharded.fly.others   - toggle flight for other players (/fly <player>)
+#   sharded.fly.anywhere - bypass the region and world checks
+#   sharded.fly.admin    - set the region
+#
+# Players in creative or spectator are never force-cancelled.
+
+config-version: 4
+message-mode: chat
+world: spawn
+
+region:
+  set: false
+  x1: 0.0
+  y1: 0.0
+  z1: 0.0
+  x2: 0.0
+  y2: 0.0
+  z2: 0.0

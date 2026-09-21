@@ -1,0 +1,7 @@
+config-version: 1
+prefix: '%prefix%'
+players-only: '%prefix%&#FF2727Only players can use this command.'
+no-permission: '%prefix%&#FF2727You don''t have permission.'
+lp-missing: '%prefix%&#FF2727LuckPerms is required for ability purchases.'
+not-enough-tokens: '%prefix%&#FF2727You need &f%missing% &#FF2727more tokens!'
+purchased: '%prefix%&#9FFF00Unlocked &f%ability% &#9FFF00for &f%days% days&#9FFF00!'

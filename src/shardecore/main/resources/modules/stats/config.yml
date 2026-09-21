@@ -1,0 +1,141 @@
+# Stats GUI configuration
+# slots: inventory slot indices (0-based). Row 1 = 0-8, row 2 = 9-17, etc.
+# Place shards under deaths (30 under 21) and money under totems (32 under 23).
+# Lore placeholders: %player%, %you_or_player%, %your_or_player%, %have_or_has%,
+# %team_subject_line%, %subject%, %verb%, %first_join%, %joins%, %kills%, %deaths%,
+# %playtime%, %totems%, %team%, %shards%, %money%
+
+lore-version: 6
+refresh-interval-seconds: 120
+
+gui-title: "&8%player%'s Stats"
+rows: 5
+message-channel: chat
+filler-style: glass
+
+slots:
+  head: 13
+  kills: 20
+  deaths: 21
+  playtime: 22
+  totems: 23
+  team: 24
+  tokens: 31
+  refresh: 40
+  money: -1
+
+
+items:
+  head:
+    name: "&#0098FF%player%"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#0098FFInformation:"
+      - "&#0098FF| &fView Your own"
+      - "&#0098FF| &fPersonal &#0098FF&nStats"
+      - ""
+      - "&#0098FF☀ &fFirst Join: &#0098FF%first_join%"
+      - "&#0098FF🌊 &fJoins: &#0098FF%joins%"
+    lore-other:
+      - "&8Description"
+      - ""
+      - "&#0098FFInformation:"
+      - "&#0098FF| &fView %player%'s"
+      - "&#0098FF| &fPersonal &#0098FF&nStats"
+      - ""
+      - "&#0098FF☀ &fFirst Join: &#0098FF%first_join%"
+      - "&#0098FF🌊 &fJoins: &#0098FF%joins%"
+  kills:
+    material: NETHERITE_SWORD
+    name: "&#FF0000&lKILLS"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000| &fHow many times"
+      - "&#FF0000| &f%you_or_player% %have_or_has% Killed Someone"
+      - ""
+      - "&#FF0000🗡 &fKills: &#FF0000%kills%"
+  deaths:
+    material: SKELETON_SKULL
+    name: "&#FF8600&lDEATHS"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF8600Information:"
+      - "&#FF8600| &fHow many times"
+      - "&#FF8600| &f%you_or_player% %have_or_has% Died"
+      - ""
+      - "&#FF8600☠ &fDeaths: &#FF8600%deaths%"
+  playtime:
+    material: CLOCK
+    name: "&#FCFF00&lPLAYTIME"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FCFF00Information:"
+      - "&#FCFF00| &fHow Long"
+      - "&#FCFF00| &f%you_or_player% %have_or_has% Played"
+      - ""
+      - "&#FCFF00⏳ &fPlaytime: &#FCFF00%playtime%"
+  totems:
+    material: TRIDENT
+    name: "&#FFD900&lTOTEM POPS"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFD900Information:"
+      - "&#FFD900| &fHow Many Totems"
+      - "&#FFD900| &f%you_or_player% %have_or_has% Popped"
+      - ""
+      - "&#FFD900🔱 &fTotems: &#FFD900%totems%"
+  team:
+    material: LIGHT_BLUE_BANNER
+    fallback: WHITE_BANNER
+    name: "&#00ACFF&lTEAM"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#00ACFFInformation:"
+      - "&#00ACFF| &fWhat Team"
+      - "&#00ACFF| &f%team_subject_line%"
+      - ""
+      - "&#00ACFF⚔ &fTeam: &#00ACFF%team%"
+  tokens:
+    material: LIGHT_BLUE_BUNDLE
+    fallback: BUNDLE
+    name: "&x&5&C&9&4&F&C&lTOKENS"
+    lore:
+      - "&8Description"
+      - ""
+      - "&x&5&C&9&4&F&CInformation:"
+      - "&x&5&C&9&4&F&C| &fHow Much Tokens"
+      - "&x&5&C&9&4&F&C| &f%you_or_player% %have_or_has%"
+      - ""
+      - "&x&5&C&9&4&F&C⛃ &fTokens: &x&5&C&9&4&F&C%tokens%"
+  refresh:
+    material: CLOCK
+    name: "&#FCFF00&lREFRESHES IN &f%time%"
+    lore:
+      - "&8Stats"
+      - ""
+      - "&#FCFF00Information:"
+      - "&#FCFF00| &fStats refresh every 2 minutes"
+      - "&#FCFF00| &flike the leaderboard holograms."
+      - ""
+      - "&#FCFF00☀ &fTime: &#FCFF00%time%"
+  money:
+    material: LIME_BUNDLE
+    fallback: BUNDLE
+    name: "&#9FFF00&lBALANCE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#9FFF00Information:"
+      - "&#9FFF00| &fHow Much Money"
+      - "&#9FFF00| &f%you_or_player% %have_or_has%"
+      - ""
+      - "&#9FFF00&l$ &fBalance: &#9FFF00%money%"
+
+sound-open: "block.note_block.pling"

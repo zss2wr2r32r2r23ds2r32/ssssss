@@ -1,0 +1,139 @@
+# Default hologram boards. They spawn after /leaderboard setlocation <name>
+# Copy matches the old topper boards. Placeholders are ShardedCore:
+#   %leaderboard_<stat>_name_N%  %leaderboard_<stat>_value_N%
+#   %leaderboard_<stat>_rank%    %leaderboard_<stat>_self%
+# The duels board tracks ELO (%leaderboard_elo_*%).
+config-version: 3
+boards:
+  kills:
+    statistic: kills
+    entries: 10
+    hologram:
+      enabled: true
+      title: "&#FF007B🗡 &lMOST KILLS&r&#FF007B 🗡"
+      lines:
+        - "&7ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅs"
+        - "&#AAAAAARefreshes in &f%leaderboard_refresh%"
+        - "&r"
+        - "&#FF007B#1 &f%leaderboard_kills_name_1% &7| &#FF007B🗡 &#FF007B%leaderboard_kills_value_1%"
+        - "&#FF007B#2 &f%leaderboard_kills_name_2% &7| &#FF007B🗡 &#FF007B%leaderboard_kills_value_2%"
+        - "&#FF007B#3 &f%leaderboard_kills_name_3% &7| &#FF007B🗡 &#FF007B%leaderboard_kills_value_3%"
+        - "&#FF007B#4 &f%leaderboard_kills_name_4% &7| &#FF007B🗡 &#FF007B%leaderboard_kills_value_4%"
+        - "&#FF007B#5 &f%leaderboard_kills_name_5% &7| &#FF007B🗡 &#FF007B%leaderboard_kills_value_5%"
+        - "&#FF007B#6 &f%leaderboard_kills_name_6% &7| &#FF007B🗡 &#FF007B%leaderboard_kills_value_6%"
+        - "&#FF007B#7 &f%leaderboard_kills_name_7% &7| &#FF007B🗡 &#FF007B%leaderboard_kills_value_7%"
+        - "&#FF007B#8 &f%leaderboard_kills_name_8% &7| &#FF007B🗡 &#FF007B%leaderboard_kills_value_8%"
+        - "&#FF007B#9 &f%leaderboard_kills_name_9% &7| &#FF007B🗡 &#FF007B%leaderboard_kills_value_9%"
+        - "&#FF007B#10 &f%leaderboard_kills_name_10% &7| &#FF007B🗡 &#FF007B%leaderboard_kills_value_10%"
+        - "&r"
+        - "&#FF007B#%leaderboard_kills_rank% &7| &f%player_name% &7| &#FF007B🗡&#FF007B%leaderboard_kills_self%"
+  tokens:
+    statistic: tokens
+    entries: 10
+    hologram:
+      enabled: true
+      title: "&#5C94FC&l⛃ MOST TOKENS &l⛃"
+      lines:
+        - "&7ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅs"
+        - "&#AAAAAARefreshes in &f%leaderboard_refresh%"
+        - "&r"
+        - "&#5C94FC#1 &f%leaderboard_tokens_name_1% &7| &#5C94FC&l⛃&#5C94FC %leaderboard_tokens_value_1%"
+        - "&#5C94FC#2 &f%leaderboard_tokens_name_2% &7| &#5C94FC&l⛃&#5C94FC %leaderboard_tokens_value_2%"
+        - "&#5C94FC#3 &f%leaderboard_tokens_name_3% &7| &#5C94FC&l⛃&#5C94FC %leaderboard_tokens_value_3%"
+        - "&#5C94FC#4 &f%leaderboard_tokens_name_4% &7| &#5C94FC&l⛃&#5C94FC %leaderboard_tokens_value_4%"
+        - "&#5C94FC#5 &f%leaderboard_tokens_name_5% &7| &#5C94FC&l⛃&#5C94FC %leaderboard_tokens_value_5%"
+        - "&#5C94FC#6 &f%leaderboard_tokens_name_6% &7| &#5C94FC&l⛃&#5C94FC %leaderboard_tokens_value_6%"
+        - "&#5C94FC#7 &f%leaderboard_tokens_name_7% &7| &#5C94FC&l⛃&#5C94FC %leaderboard_tokens_value_7%"
+        - "&#5C94FC#8 &f%leaderboard_tokens_name_8% &7| &#5C94FC&l⛃&#5C94FC %leaderboard_tokens_value_8%"
+        - "&#5C94FC#9 &f%leaderboard_tokens_name_9% &7| &#5C94FC&l⛃&#5C94FC %leaderboard_tokens_value_9%"
+        - "&#5C94FC#10 &f%leaderboard_tokens_name_10% &7| &#5C94FC&l⛃&#5C94FC %leaderboard_tokens_value_10%"
+        - "&r"
+        - "&#5C94FC#%leaderboard_tokens_rank% &7| &f%player_name% &7| &#5C94FC⛃ %leaderboard_tokens_self%"
+  deaths:
+    statistic: deaths
+    entries: 10
+    hologram:
+      enabled: true
+      title: "&#FF5300☠ &lMOST DEATHS&r&#FF5300 ☠"
+      lines:
+        - "&7ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅs"
+        - "&#AAAAAARefreshes in &f%leaderboard_refresh%"
+        - "&r"
+        - "&#FF5300#1 &f%leaderboard_deaths_name_1% &7| &#FF5300☠ %leaderboard_deaths_value_1%"
+        - "&#FF5300#2 &f%leaderboard_deaths_name_2% &7| &#FF5300☠ %leaderboard_deaths_value_2%"
+        - "&#FF5300#3 &f%leaderboard_deaths_name_3% &7| &#FF5300☠ %leaderboard_deaths_value_3%"
+        - "&#FF5300#4 &f%leaderboard_deaths_name_4% &7| &#FF5300☠ %leaderboard_deaths_value_4%"
+        - "&#FF5300#5 &f%leaderboard_deaths_name_5% &7| &#FF5300☠ %leaderboard_deaths_value_5%"
+        - "&#FF5300#6 &f%leaderboard_deaths_name_6% &7| &#FF5300☠ %leaderboard_deaths_value_6%"
+        - "&#FF5300#7 &f%leaderboard_deaths_name_7% &7| &#FF5300☠ %leaderboard_deaths_value_7%"
+        - "&#FF5300#8 &f%leaderboard_deaths_name_8% &7| &#FF5300☠ %leaderboard_deaths_value_8%"
+        - "&#FF5300#9 &f%leaderboard_deaths_name_9% &7| &#FF5300☠ %leaderboard_deaths_value_9%"
+        - "&#FF5300#10 &f%leaderboard_deaths_name_10% &7| &#FF5300☠ %leaderboard_deaths_value_10%"
+        - "&r"
+        - "&#FF5300#%leaderboard_deaths_rank% &7| &f%player_name% &7| &#FF5300☠ %leaderboard_deaths_self%"
+  killstreaks:
+    statistic: killstreaks
+    entries: 10
+    hologram:
+      enabled: true
+      title: "&#FF0000🪓 &lHIGHEST KILLSTREAK&r&#FF0000 🪓"
+      lines:
+        - "&7ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅs"
+        - "&#AAAAAARefreshes in &f%leaderboard_refresh%"
+        - "&r"
+        - "&#FF0000#1 &f%leaderboard_killstreaks_name_1% &7| &#FF0000🪓 %leaderboard_killstreaks_value_1%"
+        - "&#FF0000#2 &f%leaderboard_killstreaks_name_2% &7| &#FF0000🪓 %leaderboard_killstreaks_value_2%"
+        - "&#FF0000#3 &f%leaderboard_killstreaks_name_3% &7| &#FF0000🪓 %leaderboard_killstreaks_value_3%"
+        - "&#FF0000#4 &f%leaderboard_killstreaks_name_4% &7| &#FF0000🪓 %leaderboard_killstreaks_value_4%"
+        - "&#FF0000#5 &f%leaderboard_killstreaks_name_5% &7| &#FF0000🪓 %leaderboard_killstreaks_value_5%"
+        - "&#FF0000#6 &f%leaderboard_killstreaks_name_6% &7| &#FF0000🪓 %leaderboard_killstreaks_value_6%"
+        - "&#FF0000#7 &f%leaderboard_killstreaks_name_7% &7| &#FF0000🪓 %leaderboard_killstreaks_value_7%"
+        - "&#FF0000#8 &f%leaderboard_killstreaks_name_8% &7| &#FF0000🪓 %leaderboard_killstreaks_value_8%"
+        - "&#FF0000#9 &f%leaderboard_killstreaks_name_9% &7| &#FF0000🪓 %leaderboard_killstreaks_value_9%"
+        - "&#FF0000#10 &f%leaderboard_killstreaks_name_10% &7| &#FF0000🪓 %leaderboard_killstreaks_value_10%"
+        - "&r"
+        - "&#FF0000#%leaderboard_killstreaks_rank% &7| &f%player_name% &7| &#FF0000🪓 %leaderboard_killstreaks_self%"
+  elo:
+    statistic: elo
+    entries: 10
+    hologram:
+      enabled: true
+      title: "&#FF007B🏹 &lHIGHEST ELO&r&#FF007B 🏹"
+      lines:
+        - "&7ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅs"
+        - "&#AAAAAARefreshes in &f%leaderboard_refresh%"
+        - "&r"
+        - "&#FF007B#1 &f%leaderboard_elo_name_1% &7| &#FF007B🏹 %leaderboard_elo_value_1%"
+        - "&#FF007B#2 &f%leaderboard_elo_name_2% &7| &#FF007B🏹 %leaderboard_elo_value_2%"
+        - "&#FF007B#3 &f%leaderboard_elo_name_3% &7| &#FF007B🏹 %leaderboard_elo_value_3%"
+        - "&#FF007B#4 &f%leaderboard_elo_name_4% &7| &#FF007B🏹 %leaderboard_elo_value_4%"
+        - "&#FF007B#5 &f%leaderboard_elo_name_5% &7| &#FF007B🏹 %leaderboard_elo_value_5%"
+        - "&#FF007B#6 &f%leaderboard_elo_name_6% &7| &#FF007B🏹 %leaderboard_elo_value_6%"
+        - "&#FF007B#7 &f%leaderboard_elo_name_7% &7| &#FF007B🏹 %leaderboard_elo_value_7%"
+        - "&#FF007B#8 &f%leaderboard_elo_name_8% &7| &#FF007B🏹 %leaderboard_elo_value_8%"
+        - "&#FF007B#9 &f%leaderboard_elo_name_9% &7| &#FF007B🏹 %leaderboard_elo_value_9%"
+        - "&#FF007B#10 &f%leaderboard_elo_name_10% &7| &#FF007B🏹 %leaderboard_elo_value_10%"
+        - "&r"
+        - "&#FF007B#%leaderboard_elo_rank% &7| &f%player_name% &7| &#FF007B🏹 %leaderboard_elo_self%"
+  playtime:
+    statistic: playtime
+    entries: 10
+    hologram:
+      enabled: true
+      title: "&#5C94FC⌚ &lMOST PLAYTIME&r&#5C94FC ⌚"
+      lines:
+        - "&7ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅs"
+        - "&#AAAAAARefreshes in &f%leaderboard_refresh%"
+        - "&r"
+        - "&#5C94FC#1 &f%leaderboard_playtime_name_1% &7| &#5C94FC⌚ %leaderboard_playtime_value_1%"
+        - "&#5C94FC#2 &f%leaderboard_playtime_name_2% &7| &#5C94FC⌚ %leaderboard_playtime_value_2%"
+        - "&#5C94FC#3 &f%leaderboard_playtime_name_3% &7| &#5C94FC⌚ %leaderboard_playtime_value_3%"
+        - "&#5C94FC#4 &f%leaderboard_playtime_name_4% &7| &#5C94FC⌚ %leaderboard_playtime_value_4%"
+        - "&#5C94FC#5 &f%leaderboard_playtime_name_5% &7| &#5C94FC⌚ %leaderboard_playtime_value_5%"
+        - "&#5C94FC#6 &f%leaderboard_playtime_name_6% &7| &#5C94FC⌚ %leaderboard_playtime_value_6%"
+        - "&#5C94FC#7 &f%leaderboard_playtime_name_7% &7| &#5C94FC⌚ %leaderboard_playtime_value_7%"
+        - "&#5C94FC#8 &f%leaderboard_playtime_name_8% &7| &#5C94FC⌚ %leaderboard_playtime_value_8%"
+        - "&#5C94FC#9 &f%leaderboard_playtime_name_9% &7| &#5C94FC⌚ %leaderboard_playtime_value_9%"
+        - "&#5C94FC#10 &f%leaderboard_playtime_name_10% &7| &#5C94FC⌚ %leaderboard_playtime_value_10%"
+        - "&r"
+        - "&#5C94FC#%leaderboard_playtime_rank% &7| &f%player_name% &7| &#5C94FC⌚ %leaderboard_playtime_self%"

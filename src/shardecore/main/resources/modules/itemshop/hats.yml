@@ -1,0 +1,6 @@
+config-version: 6
+# Hats sold in /itemshop. The hats:* pack hats (tophat, crown, propeller, clown mask, straw hat, dimmadome)
+# and somehats:pharaon_hat are removed and will never rotate.
+# Remaining wardrobe somehats:* are imported automatically.
+
+hats: {}

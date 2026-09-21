@@ -1,0 +1,76 @@
+# ShardedCore main config.
+# Chat filter lives in chat-filter.yml. Blocked words live in blocked.yml.
+
+spawn:
+  # Radius around the set spawn where captured mobs cannot be placed,
+  # and where hostile mobs / phantoms are suppressed.
+  region-radius: 50
+  # World spawn is used until /setspawn is run.
+  location: {}
+
+first-join:
+  # First join always teleports: main /setspawn if it exists, otherwise world spawn.
+  teleport: true
+
+pickup:
+  enabled: true
+  # Sneak + right-click a mob with an empty hand to capture it.
+  require-sneak: true
+  consume-hand: false
+  blocked-types:
+    - PLAYER
+    - ENDER_DRAGON
+    - WITHER
+    - WARDEN
+    - ARMOR_STAND
+
+portal-rtp:
+  enabled: true
+  # Entering a nether portal in these worlds random-teleports instead of changing dimension.
+  source-worlds:
+    - world
+  destination:
+    world: world
+    min-radius: 250
+    max-radius: 2500
+    center-x: 0
+    center-z: 0
+    max-tries: 24
+    min-y: 64
+    max-y: 320
+  cooldown-seconds: 8
+
+rtp:
+  enabled: true
+  world: world
+  min-radius: 250
+  max-radius: 2500
+  center-x: 0
+  center-z: 0
+  max-tries: 24
+  cooldown-seconds: 30
+
+graves:
+  enabled: true
+  # Players can reopen a grave as many times as they want until it is empty or it expires.
+  expire-minutes: 60
+  hologram: "{player}'s Grave"
+  keep-xp: false
+
+mob-toggle:
+  radius: 50
+  # Hostile mobs and phantoms are blocked near players with the toggle on,
+  # and inside the spawn region.
+  block-phantoms: true
+  protect-spawn-region: true
+
+rollback:
+  save-on-join: true
+  save-on-quit: true
+  save-on-death: true
+  keep-per-player: 20
+
+chat:
+  format: "{prefix}{name} &8▷ &r{message}"
+  prefix-placeholder: "%luckperms_prefix%"
+  suffix-placeholder: "%luckperms_suffix%"

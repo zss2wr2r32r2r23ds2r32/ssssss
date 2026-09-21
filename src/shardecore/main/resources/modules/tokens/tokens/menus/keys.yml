@@ -1,0 +1,70 @@
+config-version: 7
+menu_title: 'Token Shop &8| Keys'
+open_command: keys
+size: 27
+open_permission: tokenshop.use
+
+items:
+
+  back_button:
+    nav-override: true
+    slot: 26
+    left_click_commands:
+      - '[openguimenu] mainmenu'
+
+  cosmetic_key:
+    material: PURPLE_CANDLE
+    slot: 11
+    display_name: '&#AD4EFF&lSHARD &#AD4EFF&lCRATE &#AD4EFF&lKEY'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#AD4EFFInformation:'
+      - '&#AD4EFF| &fPurchase a &#AD4EFF&lShard Crate &#AD4EFFKey'
+      - ''
+      - '&#AD4EFF⚓ &fCost: &#AD4EFF&n500 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[tokens_take] 500'
+      - '[console] crate key give %player_name% shard 1'
+      - '[message] %token_prefix%&#9FFF00You purchased a &#AD4EFF&lShard Crate Key&#9FFF00!'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  kill_key:
+    material: RED_CANDLE
+    slot: 13
+    display_name: '&x&F&F&0&0&0&0&lKILL &x&F&F&0&0&0&0&lCRATE &x&F&F&0&0&0&0&lKEY'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&0&0&0Information:'
+      - '&x&F&F&0&0&0&0| &fPurchase a &x&F&F&0&0&0&0&lKill Crate &x&F&F&0&0&0&0Key'
+      - ''
+      - '&x&F&F&0&0&0&0⚓ &fCost: &x&F&F&0&0&0&0&n750 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[tokens_take] 750'
+      - '[console] crate key give %player_name% killkey 1'
+      - '[message] %token_prefix%&#9FFF00You purchased a &c&lKill Crate Key&#9FFF00!'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  astral_key:
+    material: BLUE_CANDLE
+    slot: 15
+    display_name: '&#0045FF&lASTRAL &#0045FF&lCRATE &#0045FF&lKEY'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#0045FFInformation:'
+      - '&#0045FF| &fPurchase an &#0045FF&lAstral Crate &#0045FFKey'
+      - ''
+      - '&#0045FF⚓ &fCost: &#0045FF&n1500 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[tokens_take] 2000'
+      - '[console] crate key give %player_name% astral 1'
+      - '[message] %token_prefix%&#9FFF00You purchased an &#0045FF&lAstral Crate Key&#9FFF00!'
+      - '[sound] ENTITY_PLAYER_LEVELUP'

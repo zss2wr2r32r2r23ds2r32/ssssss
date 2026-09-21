@@ -1,0 +1,15 @@
+config-version: 1
+prefix: '%prefix%'
+
+usage: '&fUsage: &#00B7FF/invrollback <player>'
+never-joined: '&#FF0000%player% has never joined this server.'
+none: '&fNo inventory backups stored for &#00B7FF%player%&7.'
+restored: '&fRestored &#00B7FF%player%&f''s inventory from the backup.'
+offline: '&#FF0000%player% must be online to restore their inventory.'
+given-shulker: '&fGave &#00B7FF%player% &f%count% shulker(s) of the backup in their %where%.'
+full: '&#FF0000Full, you can''t put this. &f%player%''s inventory has no free slots.'
+empty-backup: '&fThat backup is empty.'
+took: '&fTook &#00B7FF%amount%x &ffrom the backup.'
+full-self: '&#FF0000Your inventory is full.'
+no-permission: '%prefix%&#FF2727You don''t have permission.'
+players-only: '%prefix%&#FF2727Only players can use this command.'

@@ -1,0 +1,412 @@
+config-version: 18
+message-mode: chat
+fetch-limit: 5000
+refresh-interval-seconds: 120
+refresh-slot: -1
+refresh-name: '%color%&lMost %statistic%'
+refresh-lore:
+  - '&8Leaderboard'
+  - ''
+  - '%color%Information:'
+  - '%color%| &fRankings refresh in'
+  - '%color%| &f%time%'
+hub-refresh-slot: -1
+hub-refresh-name: '%color%&lREFRESHES IN'
+hub-refresh-lore:
+  - '&8Leaderboard'
+  - ''
+  - '%color%Information:'
+  - '%color%| &fRankings refresh in'
+  - '%color%| &f%time%'
+
+teams:
+  token-weight: 1
+  kill-weight: 100
+  playtime-hour-weight: 50
+
+stats:
+  no-team: 'None'
+
+gui:
+  hub-title: '&8Leaderboards'
+  board-title:
+    tokens: '&8Token Leaderboard'
+    kills: '&8Kills Leaderboard'
+    deaths: '&8Deaths Leaderboard'
+    killstreaks: '&8Killstreak Leaderboard'
+    playtime: '&8Playtime Leaderboard'
+    teams: '&8Team Leaderboard'
+    totems: '&8Totem Pops Leaderboard'
+    duels: '&8Duels Wins Leaderboard'
+  stats-title: '&8Stats'
+  entries-per-page: 10
+  unranked: 'Unranked'
+  previous-name: '&ePrevious Page'
+  next-name: '&eNext Page'
+  back-name: '&cBack'
+  close-name: '&cClose'
+  navigation:
+    use-global: true
+  colors:
+    tokens: '&x&5&C&9&4&F&C'
+    kills: '&x&F&F&0&0&0&0'
+    deaths: '&x&0&0&B&7&F&F'
+    killstreaks: '&x&F&F&0&0&5&D'
+    playtime: '&x&F&F&E&E&0&0'
+    teams: '&x&F&F&0&0&6&7'
+    totems: '&x&F&F&C&4&2&B'
+    duels: '&x&F&F&8&8&0&0'
+    stats: '&x&F&F&0&0&6&7'
+    team: '&x&F&F&0&0&6&7'
+  labels:
+    tokens: 'Tokens'
+    kills: 'Kills'
+    deaths: 'Deaths'
+    killstreaks: 'Best Streak'
+    playtime: 'Playtime'
+    teams: 'Score'
+    totems: 'Totem Pops'
+    duels: 'Wins'
+    team: 'Team'
+  hub-items:
+    tokens:
+      name: '&x&5&C&9&4&F&C&lTokens'
+      lore:
+        - '&8Leaderboard'
+        - ''
+        - '&x&5&C&9&4&F&CInformation:'
+        - '&x&5&C&9&4&F&C| &fView the richest players'
+        - '&x&5&C&9&4&F&C| &fon the server.'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+    kills:
+      name: '&x&F&F&0&0&0&0&lKills'
+      lore:
+        - '&8Leaderboard'
+        - ''
+        - '&x&F&F&0&0&0&0Information:'
+        - '&x&F&F&0&0&0&0| &fView the players with'
+        - '&x&F&F&0&0&0&0| &fthe most kills.'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+    deaths:
+      name: '&x&0&0&B&7&F&F&lDeaths'
+      lore:
+        - '&8Leaderboard'
+        - ''
+        - '&x&0&0&B&7&F&FInformation:'
+        - '&x&0&0&B&7&F&F| &fView the players with'
+        - '&x&0&0&B&7&F&F| &fthe most deaths.'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+    killstreaks:
+      name: '&x&F&F&0&0&5&D&lKillstreaks'
+      lore:
+        - '&8Leaderboard'
+        - ''
+        - '&x&F&F&0&0&5&DInformation:'
+        - '&x&F&F&0&0&5&D| &fView the highest killstreaks.'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+    playtime:
+      name: '&x&F&F&E&E&0&0&lPlaytime'
+      lore:
+        - '&8Leaderboard'
+        - ''
+        - '&x&F&F&E&E&0&0Information:'
+        - '&x&F&F&E&E&0&0| &fView the longest playtimes.'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+    teams:
+      name: '&x&F&F&0&0&6&7&lTeams'
+      lore:
+        - '&8Leaderboard'
+        - ''
+        - '&x&F&F&0&0&6&7Information:'
+        - '&x&F&F&0&0&6&7| &fView the top teams.'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+    totems:
+      name: '&x&F&F&C&4&2&B&lTotem Pops'
+      lore:
+        - '&8Leaderboard'
+        - ''
+        - '&x&F&F&C&4&2&BInformation:'
+        - '&x&F&F&C&4&2&B| &fView the most totem pops.'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+    duels:
+      name: '&x&F&F&8&8&0&0&lDuels Wins'
+      lore:
+        - '&8Leaderboard'
+        - ''
+        - '&x&F&F&8&8&0&0Information:'
+        - '&x&F&F&8&8&0&0| &fView the top duel wins.'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+  stats-head-name: '&x&F&F&0&0&6&7%name%'
+  stats-head-lore:
+    - '&8Statistics'
+    - ''
+    - '&x&F&F&0&0&6&7Information:'
+    - '&x&F&F&0&0&6&7| &fRank: %prefix%'
+  hologram:
+    token-line: '&a#%rank% &f%name% &7— &f%value% Tokens'
+    killstreak-line: '&c#%rank% &f%name% &7— &f%value% Streak'
+  stats-items:
+    kills:
+      name: '&x&F&F&0&0&0&0&lKills'
+      lore:
+        - '&8Statistics'
+        - ''
+        - '&x&F&F&0&0&0&0Information:'
+        - '&x&F&F&0&0&0&0| &fKills: &x&F&F&0&0&0&0%value%'
+    deaths:
+      name: '&x&0&0&B&7&F&F&lDeaths'
+      lore:
+        - '&8Statistics'
+        - ''
+        - '&x&0&0&B&7&F&FInformation:'
+        - '&x&0&0&B&7&F&F| &fDeaths: &x&0&0&B&7&F&F%value%'
+    killstreaks:
+      name: '&x&F&F&0&0&5&D&lKillstreaks'
+      lore:
+        - '&8Statistics'
+        - ''
+        - '&x&F&F&0&0&5&DInformation:'
+        - '&x&F&F&0&0&5&D| &fBest Streak: &x&F&F&0&0&5&D%value%'
+    tokens:
+      name: '&x&5&C&9&4&F&C&lTokens'
+      lore:
+        - '&8Statistics'
+        - ''
+        - '&x&5&C&9&4&F&CInformation:'
+        - '&x&5&C&9&4&F&C| &fTokens: &x&5&C&9&4&F&C%value%'
+    playtime:
+      name: '&x&F&F&E&E&0&0&lPlaytime'
+      lore:
+        - '&8Statistics'
+        - ''
+        - '&x&F&F&E&E&0&0Information:'
+        - '&x&F&F&E&E&0&0| &fPlaytime: &x&F&F&E&E&0&0%value%'
+
+# SetupCore-style leaderboard GUI (current ShardedCore boards)
+gui-title: "&8Leaderboards"
+board-title: "&8Leaderboards | %statistic%"
+lore-version: 5
+rows: 5
+board-rows: 6
+back-slot: 45
+you-slot: 49
+sound-open: "block.note_block.pling"
+board-slots: [19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43]
+
+# Extra player heads: slot -> rank on this board. Example shows #1 at slot 4.
+# position-heads:
+#   4: 1
+position-heads: {}
+
+main:
+  head-slot: 13
+  head-name: "&#0098FF%playername%"
+  head-lore:
+    - "&8Description"
+    - ""
+    - "&#0098FFInformation:"
+    - "&#0098FF| &fYour Ranking overall"
+    - "&#0098FF| &fThrough all leaderboards"
+    - ""
+    - "&#0098FF☀ &fRank: &#0098FF%rank%"
+
+category-lore:
+  - "&8Description"
+  - ""
+  - "%color%Information:"
+  - "%color%| &fClick here to View"
+  - "%color%| &fTop %statistic%"
+  - ""
+  - "%color%%symbol%&fYour Rank: %color%%rank%"
+  - "%color%☀ &fYour %score_label%: %color%%score%"
+
+entry-lore:
+  - "&8Description"
+  - "%color%Information:"
+  - "%color%%symbol%&fRank: %color%%rank%"
+  - "%color%☀ &f%score_label%: %color%%score%"
+  - ""
+  - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View Stats"
+
+you-name: '%color%&lYOUR %score_label%'
+you-lore:
+  - '&8Description'
+  - ''
+  - '%color%Information:'
+  - '%color%| &fYour %score_label% on this board'
+  - ''
+  - '%color%⚓ &fRank: %color%%rank%'
+  - '%color%☀ &f%score_label%: %color%%score%'
+  - ''
+  - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View Stats'
+
+boards:
+  kills:
+    slot: 20
+    material: NETHERITE_SWORD
+    name: "&#FF0000&lKILLS"
+    gui-title: "&8Kills Leaderboard"
+    lore:
+      - "&8Description"
+      - ""
+      - "%color%Information:"
+      - "%color%| &fClick here to View"
+      - "%color%| &fTop %statistic%"
+      - ""
+      - "%color%%symbol%&fYour Rank: %color%%rank%"
+      - "%color%☀ &fYour %score_label%: %color%%score%"
+    color: "&#FF0000"
+    symbol: "🗡"
+    title: "Kills"
+    statistic: "Kills"
+    score-label: "Kills"
+    you-label: "Kills"
+  playtime:
+    slot: 21
+    material: CLOCK
+    name: "&#FCFF00&lPLAYTIME"
+    gui-title: "&8Playtime Leaderboard"
+    lore:
+      - "&8Description"
+      - ""
+      - "%color%Information:"
+      - "%color%| &fClick here to View"
+      - "%color%| &fTop %statistic%"
+      - ""
+      - "%color%%symbol%&fYour Rank: %color%%rank%"
+      - "%color%☀ &fYour %score_label%: %color%%score%"
+    color: "&#FCFF00"
+    symbol: "⏳"
+    title: "Playtime"
+    statistic: "Playtime"
+    score-label: "Playtime"
+    you-label: "Playtime"
+  totems:
+    slot: 22
+    material: TOTEM_OF_UNDYING
+    name: "&#FFC42B&lTOTEM POPS"
+    gui-title: "&8Totem Pops Leaderboard"
+    lore:
+      - "&8Description"
+      - ""
+      - "%color%Information:"
+      - "%color%| &fClick here to View"
+      - "%color%| &fTop %statistic%"
+      - ""
+      - "%color%%symbol%&fYour Rank: %color%%rank%"
+      - "%color%☀ &fYour %score_label%: %color%%score%"
+    color: "&#FFC42B"
+    symbol: "☀"
+    title: "Totem Pops"
+    statistic: "Totem Pops"
+    score-label: "Totem Pops"
+    you-label: "Totem Pops"
+  killstreaks:
+    slot: 23
+    material: MACE
+    name: "&#FF005D&lKILLSTREAKS"
+    gui-title: "&8Killstreak Leaderboard"
+    lore:
+      - "&8Description"
+      - ""
+      - "%color%Information:"
+      - "%color%| &fClick here to View"
+      - "%color%| &fTop %statistic%"
+      - ""
+      - "%color%%symbol%&fYour Rank: %color%%rank%"
+      - "%color%☀ &fYour %score_label%: %color%%score%"
+    color: "&#FF005D"
+    symbol: "⚔"
+    title: "Killstreaks"
+    statistic: "Killstreaks"
+    score-label: "Best Streak"
+    you-label: "Killstreak"
+  teams:
+    slot: 24
+    material: PURPLE_BANNER
+    name: "&#FF3EA5&lTEAMS"
+    gui-title: "&8Team Leaderboard"
+    lore:
+      - "&8Description"
+      - ""
+      - "%color%Information:"
+      - "%color%| &fClick here to View"
+      - "%color%| &fTop %statistic%"
+      - ""
+      - "%color%%symbol%&fYour Rank: %color%%rank%"
+      - "%color%☀ &fYour %score_label%: %color%%score%"
+    color: "&#FF3EA5"
+    symbol: "⚑"
+    title: "Team"
+    statistic: "Teams"
+    score-label: "Score"
+    you-label: "Score"
+  deaths:
+    slot: 30
+    material: SKELETON_SKULL
+    name: "&#FF8600&lDEATHS"
+    gui-title: "&8Deaths Leaderboard"
+    lore:
+      - "&8Description"
+      - ""
+      - "%color%Information:"
+      - "%color%| &fClick here to View"
+      - "%color%| &fTop %statistic%"
+      - ""
+      - "%color%%symbol%&fYour Rank: %color%%rank%"
+      - "%color%☀ &fYour %score_label%: %color%%score%"
+    color: "&#FF8600"
+    symbol: "☠"
+    title: "Deaths"
+    statistic: "Deaths"
+    score-label: "Deaths"
+    you-label: "Deaths"
+  tokens:
+    slot: 32
+    material: LIGHT_BLUE_BUNDLE
+    name: "&x&5&C&9&4&F&C&lTOKENS"
+    gui-title: "&8Token Leaderboard"
+    lore:
+      - "&8Description"
+      - ""
+      - "%color%Information:"
+      - "%color%| &fClick here to View"
+      - "%color%| &fTop %statistic%"
+      - ""
+      - "%color%%symbol%&fYour Rank: %color%%rank%"
+      - "%color%☀ &fYour %score_label%: %color%%score%"
+    color: "&x&5&C&9&4&F&C"
+    symbol: "⛃"
+    title: "Tokens"
+    statistic: "Tokens"
+    score-label: "Tokens"
+    you-label: "Tokens"
+  duels:
+    slot: -1
+    material: NETHERITE_SWORD
+    name: "&#FF8800&lDUELS"
+    gui-title: "&8Duels Wins Leaderboard"
+    lore:
+      - "&8Description"
+      - ""
+      - "%color%Information:"
+      - "%color%| &fClick here to View"
+      - "%color%| &fTop %statistic%"
+      - ""
+      - "%color%%symbol%&fYour Rank: %color%%rank%"
+      - "%color%☀ &fYour %score_label%: %color%%score%"
+    color: "&#FF8800"
+    symbol: "✦"
+    title: "Duels"
+    statistic: "Duels Wins"
+    score-label: "Wins"
+    you-label: "Wins"
+

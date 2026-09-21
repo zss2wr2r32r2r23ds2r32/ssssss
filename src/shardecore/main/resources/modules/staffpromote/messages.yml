@@ -1,0 +1,12 @@
+config-version: 1
+prefix: '%prefix%'
+
+no-permission: '%prefix%&#FF2727You don''t have permission to use this command.'
+promote-usage: '%prefix%&#FF2727Usage: &f/promote <player> <role>'
+demote-usage: '%prefix%&#FF2727Usage: &f/demote <player> <role>'
+invalid-player: '%prefix%&#FF2727Invalid player name: &f%player%'
+invalid-role: '%prefix%&#FF2727Unknown role: &f%role%'
+database-error: '%prefix%&#FF2727The action was not applied because it could not be logged.'
+dispatch-failed: '%prefix%&#FF2727LuckPerms did not accept the role update command.'
+promote-success: '%prefix%&#9FFF00Set &f%player%&#9FFF00''s staff role to &f%role%&#9FFF00.'
+demote-success: '%prefix%&#9FFF00Demoted &f%player% &#9FFF00to &f%role%&#9FFF00.'

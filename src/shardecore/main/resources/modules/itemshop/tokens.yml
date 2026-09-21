@@ -1,0 +1,23 @@
+config-version: 2
+
+currency:
+  name: Tokens
+  name-singular: Token
+  symbol: '⛃'
+  display: '&x&5&C&9&4&F&C{symbol} {amount}'
+
+earn-sources:
+  enabled: true
+  lines:
+    - '&x&5&C&9&4&F&C| &fPlaytime rewards'
+    - '&x&5&C&9&4&F&C| &fDaily and weekly rewards'
+    - '&x&5&C&9&4&F&C| &fCrates and events'
+
+pay:
+  enabled: false
+  min-amount: 1
+  tax-percent: 0
+
+leaderboard:
+  enabled: true
+  size: 10

@@ -1,0 +1,108 @@
+config-version: 8
+
+refresh-seconds: 30
+scale: 1.0
+line-template: "&c#%rank% &f%name% &f| &c%value%"
+
+# [head] #rank NAME | value — head column at the place point, text measured
+# per line so every # starts in the same column right of the head.
+text-gap: 0.22
+head-x-offset: 0.0
+head-y-start: 0.08
+head-y-step: -0.26
+head-scale: 0.36
+head-flatness: 0.03
+flip-x: false
+
+placeholders:
+  - "%shardedcore_topper_tokens_1_name%"
+  - "%shardedcore_topper_tokens_1_value%"
+  - "%shardedcore_topper_tokens_2_name%"
+  - "%shardedcore_topper_tokens_2_value%"
+  - "%shardedcore_topper_tokens_3_name%"
+  - "%shardedcore_topper_tokens_3_value%"
+  - "%shardedcore_topper_kills_1_name%"
+  - "%shardedcore_topper_kills_1_value%"
+  - "%shardedcore_topper_deaths_1_name%"
+  - "%shardedcore_topper_deaths_1_value%"
+  - "%shardedcore_topper_playtime_1_name%"
+  - "%shardedcore_topper_playtime_1_value%"
+  - "%shardedcore_topper_killstreaks_1_name%"
+  - "%shardedcore_topper_killstreaks_1_value%"
+
+boards:
+  tokens:
+    type: tokens
+    entries: 10
+    header:
+      - "&c&lTOP TOKENS"
+    line: "&c#%rank% &f%name% &f| &c%value%"
+    empty-name: "---"
+    empty-value: "---"
+    text-gap: 0.22
+    head-y-start: 0.08
+    head-y-step: -0.26
+    head-scale: 0.36
+    placeholders:
+      name: "%shardedcore_lb_tokens_%rank%_name%"
+      value: "%shardedcore_lb_tokens_%rank%_value%"
+  kills:
+    type: kills
+    entries: 10
+    header:
+      - "&c&lTOP KILLS"
+    line: "&c#%rank% &f%name% &f| &c%value%"
+    empty-name: "---"
+    empty-value: "---"
+    text-gap: 0.22
+    head-y-start: 0.08
+    head-y-step: -0.26
+    head-scale: 0.36
+    placeholders:
+      name: "%shardedcore_lb_kills_%rank%_name%"
+      value: "%shardedcore_lb_kills_%rank%_value%"
+  deaths:
+    type: deaths
+    entries: 10
+    header:
+      - "&c&lTOP DEATHS"
+    line: "&c#%rank% &f%name% &f| &c%value%"
+    empty-name: "---"
+    empty-value: "---"
+    text-gap: 0.22
+    head-y-start: 0.08
+    head-y-step: -0.26
+    head-scale: 0.36
+    placeholders:
+      name: "%shardedcore_lb_deaths_%rank%_name%"
+      value: "%shardedcore_lb_deaths_%rank%_value%"
+  playtime:
+    type: playtime
+    entries: 10
+    header:
+      - "&c&lTOP PLAYTIME"
+    line: "&c#%rank% &f%name% &f| &c%value%"
+    empty-name: "---"
+    empty-value: "---"
+    text-gap: 0.22
+    head-y-start: 0.08
+    head-y-step: -0.26
+    head-scale: 0.36
+    placeholders:
+      name: "%shardedcore_lb_playtime_%rank%_name%"
+      value: "%shardedcore_lb_playtime_%rank%_value%"
+  killstreaks:
+    type: killstreaks
+    entries: 10
+    header:
+      - "&c&lTOP KILLSTREAKS"
+    line: "&c#%rank% &f%name% &f| &c%value%"
+    empty-name: "---"
+    empty-value: "---"
+    text-gap: 0.22
+    head-y-start: 0.08
+    head-y-step: -0.26
+    head-scale: 0.36
+    placeholders:
+      name: "%shardedcore_lb_killstreaks_%rank%_name%"
+      value: "%shardedcore_lb_killstreaks_%rank%_value%"

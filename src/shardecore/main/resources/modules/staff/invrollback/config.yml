@@ -1,0 +1,194 @@
+config-version: 1
+message-mode: chat
+
+title: "&8🔥 Inventory Rollback &8| %player%"
+
+snapshot-interval-minutes: 5
+max-snapshots: 20
+snapshots-per-tick: 5
+
+snapshot-on:
+  join: true
+  quit: true
+  death: true
+
+database:
+  type: sqlite
+  host: localhost
+  port: 3306
+  name: economyessentials
+  user: root
+  password: ""
+
+categories:
+  size: 27
+  title: "&8🔥 Rollback &8| %player%"
+  items:
+    auto:
+      material: CLOCK
+      slot: 10
+      display_name: "&#FF0000&lAUTO"
+      lore:
+        - '&8Description'
+        - ''
+        - '#FF0000Information:'
+        - '&#FF0000| &fHere you can restote the'
+        - '&#FF0000| &finv of the &#FF0000players&f last inv'
+        - ''
+        - '#FF0000Settings'
+        - "&#FF0000| &fPeriodic &#FF0000backups&f"
+        - "&#FF0000| &f%count% saved"
+        - ''
+        - '#FFD900▷ <u><bold>CLICK</bold></u>#FFD900 To Preview'
+    join:
+      material: LIME_DYE
+      slot: 12
+      display_name: "&#00B7FF&lJOINS"
+      lore:
+        - '&8Description'
+        - ''
+        - '#00B7FFInformation:'
+        - '&#00B7FF| &fHere you can restote the'
+        - '&#00B7FF| &finv of the &#00B7FFplayers&f last join'
+        - ''
+        - '#00B7FFSettings'
+        - "&#00B7FF| &fTaken when they join"
+        - "&#00B7FF| &f%count% saved"
+        - ''
+        - '#FFD900▷ <u><bold>CLICK</bold></u>#FFD900 To Preview'
+    quit:
+      material: ORANGE_DYE
+      slot: 14
+      display_name: "&#FF0000&lLEAVES"
+      lore:
+        - '&8Description'
+        - ''
+        - '#FF0000Information:'
+        - '&#FF0000| &fHere you can &#FF0000restore&f the'
+        - '&#FF0000| &finv of the &#FF0000players&f last leave'
+        - ''
+        - '#FF0000Settings'
+        - "&#FF0000| &fTaken when they leave"
+        - "&#FF0000| &f%count% saved"
+        - ''
+        - '#FFD900▷ <u><bold>CLICK</bold></u>#FFD900 To Preview'
+    death:
+      material: SKELETON_SKULL
+      slot: 16
+      display_name: "&#ff8000&lDEATHS"
+      lore:
+        - '&8Description'
+        - ''
+        - '#ff8000Information:'
+        - '&#ff8000| &fHere you can &#ff8000restore&f the'
+        - '&#ff8000| &finv of the &#ff8000players&f last death'
+        - ''
+        - '#ff8000Settings'
+        - "&#ff8000| &fTaken on death"
+        - "&#ff8000| &f%count% saved"
+        - ''
+        - '#FFD900▷ <u><bold>CLICK</bold></u>#FFD900 To Preview'
+
+item:
+  material: CHEST
+  display_name: "&#FF0000%date%"
+  lore:
+    - '&8Description'
+    - ''
+    - '#FF0000Information:'
+    - '&#FF0000| &fHere you can &#FF0000view&f the date'
+    - '&#FF0000| &fand restore the &#FF0000players&f inv!'
+    - ''
+    - '#FF0000Settings'
+    - "&#FF0000| &fItem &8| &f%items%"
+    - "&#FF0000| &fTrigger &8| &f%reason%"
+    - "&f%time%"
+    - ''
+    - '#FFD900▷ <u><bold>CLICK</bold></u>#FFD900 To Restore'
+
+preview:
+  title: "&8🔥 preview &8| %player%"
+  take-items: true
+  restore:
+    material: LIME_DYE
+    display_name: "&#00B7FF&lRESTORE &8| &7(Overwrite)"
+    slot: 48
+    lore:
+      - '&8Description'
+      - ''
+      - '#00B7FFInformation:'
+      - "&#00B7FF| &fReplace the &#00B7FFplayer&f's current"
+      - "&#00B7FF| &finventorywith this &#00B7FFbackup&f"
+      - ''
+      - '#FFD900▷ <u><bold>CLICK</bold></u>#FFD900 To Navigate'
+  to-inventory:
+    material: SHULKER_BOX
+    display_name: "&#ff8000&lINVENTORY &8| &7(Shulker)"
+    slot: 49
+    lore:
+      - '&8Description'
+      - ''
+      - '#ff8000Information:'
+      - "&#ff8000| &fPack this &#ff8000backup&f into a shulker"
+      - "&#ff8000| &fand put it in their &#ff8000inventory&f"
+      - ''
+      - '#FFD900▷ <u><bold>CLICK</bold></u>#FFD900 To Navigate'
+  to-enderchest:
+    material: ENDER_CHEST
+    display_name: "&#dd00ff&lENDERCHEST &8| &7(Shulker)"
+    slot: 50
+    lore:
+      - '&8Description'
+      - ''
+      - '#dd00ffInformation:'
+      - "&#dd00ff| &fPack this &#dd00ffbackup&f into a shulker"
+      - "&#dd00ff| &fand put it in their &#dd00ffender&f chest"
+      - ''
+      - '#FFD900▷ <u><bold>CLICK</bold></u>#FFD900 To Navigate'
+  back:
+    material: MOJANG_BANNER_PATTERN
+    display_name: "&#FF0000&lBACK"
+    slot: 53
+    lore:
+      - '&8Description'
+      - ''
+      - '#FF0000Information:'
+      - '&#FF0000| &fClick here to go'
+      - '&#FF0000| &fback to the main &#FF0000page&f!'
+      - ''
+      - '#FFD900▷ <u><bold>CLICK</bold></u>#FFD900 To Navigate'
+
+navigation:
+  previous:
+    material: RED_STAINED_GLASS_PANE
+    display_name: "&#FF0000&lPREVIOUS PAGE"
+    lore:
+      - '&8Description'
+      - ''
+      - '#FF0000Information:'
+      - '&#FF0000| &fClick here to &#FF0000navigate&f'
+      - '&#FF0000| &fto the previous &#FF0000page&f!'
+      - ''
+      - '#FFD900▷ <u><bold>CLICK</bold></u>#FFD900 To Navigate'
+  next:
+    material: LIME_STAINED_GLASS_PANE
+    display_name: "&#00B7FF&lNEXT PAGE"
+    lore:
+      - '&8Description'
+      - ''
+      - '#00B7FFInformation:'
+      - '&#00B7FF| &fClick here to &#00B7FFnavigate&f'
+      - '&#00B7FF| &fto the next &#00B7FFpage&f!'
+      - ''
+      - '#FFD900▷ <u><bold>CLICK</bold></u>#FFD900 To Navigate'
+  close:
+    material: MOJANG_BANNER_PATTERN
+    display_name: "&#FF0000&lCLOSE"
+    lore:
+      - '&8Description'
+      - ''
+      - '#FF0000Information:'
+      - '&#FF0000| &fClick here to go'
+      - '&#FF0000| &fclose this &#FF0000page&f!'
+      - ''
+      - '#FFD900▷ <u><bold>CLICK</bold></u>#FFD900 To Close'

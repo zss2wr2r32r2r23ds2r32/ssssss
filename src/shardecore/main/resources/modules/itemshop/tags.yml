@@ -1,0 +1,165 @@
+config-version: 4
+# Edit tags sold in /itemshop here. These match /tags. Extra tags in modules/tags/config.yml are imported too.
+
+tags:
+  sigma:
+    display-name: '&#00A2FF&lSIGMA'
+    description: Show this tag in chat and TAB.
+    tag: '&7[&#00A2FF⚓ &#00A2FF&lSIGMA&7]'
+    rarity: common
+    enabled: true
+    in-rotation: true
+    material: NAME_TAG
+  mummy:
+    display-name: '&#FF0086&lMUMMY'
+    description: Show this tag in chat and TAB.
+    tag: '&7[&#FF0086♡ &#FF0086&lMUMMY&7]'
+    rarity: common
+    enabled: true
+    in-rotation: true
+    material: NAME_TAG
+  swordmummy:
+    display-name: '&#FFEE00&lGOAT'
+    description: Show this tag in chat and TAB.
+    tag: '&7[&#FFEE00🗡 &#FFEE00&lGOAT&7]'
+    rarity: epic
+    enabled: true
+    in-rotation: true
+    material: NAME_TAG
+  sharded:
+    display-name: '&#A370EE&lSHARDED'
+    description: Show this tag in chat and TAB.
+    tag: '&7[&#A370EE⛨ &#A370EE&lSHARDED&7]'
+    rarity: legendary
+    enabled: true
+    in-rotation: true
+    material: NAME_TAG
+  one:
+    display-name: '&#A9FF00&l#1'
+    description: Show this tag in chat and TAB.
+    tag: '&7[&#A9FF00#&#A9FF00&l1&7]'
+    rarity: legendary
+    enabled: true
+    in-rotation: true
+    material: NAME_TAG
+  p2w:
+    display-name: '&#FCFF00&lP2W'
+    description: Show this tag in chat and TAB.
+    tag: '&7[&#FCFF00$ &#FCFF00&lP2W&7]'
+    rarity: rare
+    enabled: true
+    in-rotation: true
+    material: NAME_TAG
+  goty:
+    display-name: '&#FF2F2F&lGOTY'
+    description: Show this tag in chat and TAB.
+    tag: '&7[&#FF2F2F☄ &#FF2F2F&lGOTY&7]'
+    rarity: rare
+    enabled: true
+    in-rotation: true
+    material: NAME_TAG
+  hacker:
+    display-name: '&#FF0000&lHACKER'
+    description: Show this tag in chat and TAB.
+    tag: '&7[&#FF0000☆ &#FF0000&lHACKER&7]'
+    rarity: epic
+    enabled: true
+    in-rotation: true
+    material: NAME_TAG
+  skillissue:
+    display-name: '&#FF5C5C&lSKILL ISSUE'
+    description: Show this tag in chat and TAB.
+    tag: '&7[&#FF5C5C&lSKILL ISSUE&7]'
+    rarity: rare
+    enabled: true
+    in-rotation: true
+    material: NAME_TAG
+  freekill:
+    display-name: '&#FFC93C&lFREE KILL'
+    description: Show this tag in chat and TAB.
+    tag: '&7[&#FFC93C&lFREE KILL&7]'
+    rarity: rare
+    enabled: true
+    in-rotation: true
+    material: NAME_TAG
+  cooked:
+    display-name: '&#FF6B35&lCOOKED'
+    description: Show this tag in chat and TAB.
+    tag: '&7[&#FF6B35&lCOOKED&7]'
+    rarity: rare
+    enabled: true
+    in-rotation: true
+    material: NAME_TAG
+  ping999:
+    display-name: '&#8D99AE&lPING 999'
+    description: Show this tag in chat and TAB.
+    tag: '&7[&#8D99AE&lPING 999&7]'
+    rarity: common
+    enabled: true
+    in-rotation: true
+    material: NAME_TAG
+  lagabuser:
+    display-name: '&#00E5A0&lLAG ABUSER'
+    description: Show this tag in chat and TAB.
+    tag: '&7[&#00E5A0&lLAG ABUSER&7]'
+    rarity: common
+    enabled: true
+    in-rotation: true
+    material: NAME_TAG
+  onehp:
+    display-name: '&#E53935&l1 HP'
+    description: Show this tag in chat and TAB.
+    tag: '&7[&#E53935&l1 HP&7]'
+    rarity: common
+    enabled: true
+    in-rotation: true
+    material: NAME_TAG
+  missed:
+    display-name: '&#B0B0B0&lMISSED'
+    description: Show this tag in chat and TAB.
+    tag: '&7[&#B0B0B0&lMISSED&7]'
+    rarity: common
+    enabled: true
+    in-rotation: true
+    material: NAME_TAG
+  touchgrass:
+    display-name: '&#7CB342&lTOUCH GRASS'
+    description: Show this tag in chat and TAB.
+    tag: '&7[&#7CB342&lTOUCH GRASS&7]'
+    rarity: rare
+    enabled: true
+    in-rotation: true
+    material: NAME_TAG
+  lootgoblin:
+    display-name: '&#8BC34A&lLOOT GOBLIN'
+    description: Show this tag in chat and TAB.
+    tag: '&7[&#8BC34A&lLOOT GOBLIN&7]'
+    rarity: epic
+    enabled: true
+    in-rotation: true
+    material: NAME_TAG
+  downbad:
+    display-name: '&#EC407A&lDOWN BAD'
+    description: Show this tag in chat and TAB.
+    tag: '&7[&#EC407A&lDOWN BAD&7]'
+    rarity: epic
+    enabled: true
+    in-rotation: true
+    material: NAME_TAG
+  profrunner:
+    display-name: '&#4FC3F7&lPROFESSIONAL RUNNER'
+    description: Show this tag in chat and TAB.
+    tag: '&7[&#4FC3F7&lPROFESSIONAL RUNNER&7]'
+    rarity: epic
+    enabled: true
+    in-rotation: true
+    material: NAME_TAG
+  creator:
+    display-name: '&#FF0067&lCREATOR'
+    description: Creator-only chat tag. Not in daily rotation.
+    tag: '&7[&#FF0067&lCREATOR&7]'
+    rarity: legendary
+    enabled: true
+    in-rotation: false
+    permission: sharded.tag.creator
+    material: NAME_TAG

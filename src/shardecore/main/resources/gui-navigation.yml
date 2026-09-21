@@ -1,0 +1,128 @@
+config-version: 3
+
+# Global GUI defaults used by every ShardedCore menu unless a module overrides them.
+# Edit this file for: fillers, navigation items (slots are per-module), names, lores, and sounds.
+
+fillers:
+  inner:
+    material: GRAY_STAINED_GLASS_PANE
+    name: ' '
+    lore: []
+  border:
+    material: BLACK_STAINED_GLASS_PANE
+    name: ' '
+    lore: []
+  dark:
+    material: BLACK_STAINED_GLASS_PANE
+    name: ' '
+    lore: []
+
+sounds:
+  open: UI_BUTTON_CLICK
+  click: UI_BUTTON_CLICK
+  close: BLOCK_CHEST_CLOSE
+  navigate: UI_BUTTON_CLICK
+  toggle: UI_BUTTON_CLICK
+  success: ENTITY_EXPERIENCE_ORB_PICKUP
+  error: BLOCK_NOTE_BLOCK_BASS
+  volume: 1.0
+  pitch: 1.0
+
+# chat | actionbar | both — default for GUI toggle feedback when a module does not set message-mode
+message-mode: inherit
+
+back:
+  material: BARRIER
+  display_name: '&#FF0000&lBACK'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#FF0000Information:'
+    - '&#FF0000| &fClick here, to go'
+    - '&#FF0000| &fto the previous page.'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+
+previous:
+  material: RED_DYE
+  display_name: '&#FF005D&lPREVIOUS'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#FF005DInformation:'
+    - '&#FF005D| &fClick here, to go'
+    - '&#FF005D| &fto the previous page.'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+
+previous-page:
+  material: RED_STAINED_GLASS_PANE
+  display_name: '&#FF2121&lPREVIOUS PAGE'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#FF2121Information:'
+    - '&#FF2121| &fClick to Return'
+    - '&#FF2121| &fto the Previous Page'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+
+next:
+  material: LIME_DYE
+  display_name: '&#94FF00&lNEXT'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#94FF00Information:'
+    - '&#94FF00| &fClick here, to go'
+    - '&#94FF00| &fto the next page.'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+
+next-page:
+  material: LIME_STAINED_GLASS_PANE
+  display_name: '&#9FFF00&lNEXT PAGE'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#9FFF00Information:'
+    - '&#9FFF00| &fClick to Navigate'
+    - '&#9FFF00| &fTo The Next Page'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+
+close:
+  material: RED_DYE
+  display_name: '&#FF0000&lCLOSE'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#FF0000Information:'
+    - '&#FF0000| &fClick to'
+    - '&#FF0000| &fClose this GUI'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Close'
+
+confirm:
+  material: LIME_DYE
+  display_name: '&#9FFF00&lCONFIRM'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#9FFF00Information:'
+    - '&#9FFF00| &fClick to Confirm'
+    - '&#9FFF00| &f%price%'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Confirm'
+
+cancel:
+  material: RED_STAINED_GLASS_PANE
+  display_name: '&#FF2121&lCANCEL'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#FF2121Information:'
+    - '&#FF2121| &fClick to Cancel'
+    - '&#FF2121| &fand Return to the main GUI'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Cancel'

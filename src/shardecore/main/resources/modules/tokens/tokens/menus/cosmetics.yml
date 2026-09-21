@@ -1,0 +1,13 @@
+config-version: 9
+menu_title: 'Token Shop | Cosmetics'
+size: 27
+open_permission: tokenshop.use
+
+# Do not set open_command: hatshop — that steals /hatshop from the wardrobe hat GUI.
+
+items:
+  back_button:
+    nav-override: true
+    slot: 26
+    left_click_commands:
+      - '[openguimenu] mainmenu'

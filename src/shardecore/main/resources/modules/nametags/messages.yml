@@ -1,0 +1,6 @@
+config-version: 2
+
+info: '&#FF256E&lNAMETAGS &8▷ &fLines &#FF256E%lines% &7| &fOffset &#FF256E%offset% &7| &fGap &#FF256E%gap% &7| &fRefresh &#FF256E%refresh%'
+usage: '&#FF256E&lNAMETAGS &8▷ &fUse &#FF256E/nametags reload &fafter changing the file.'
+reloaded: '&#FF256E&lNAMETAGS &8▷ &fReloaded, &#FF256E%count% &ftags rebuilt.'
+no-permission: '&#FF0000&lERROR &8▷ &fYou do not have permission.'

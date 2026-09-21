@@ -1,0 +1,37 @@
+# Runs the arena reset on a timer. By default: /arenasync reset warzone every ten minutes.
+# Check the timer in game with /arenareset, force one with /arenareset now.
+
+config-version: 2
+
+# Set false to silence warning/finished chat broadcasts.
+broadcast-chat: true
+
+# Minutes between resets.
+interval-minutes: 10
+
+# Minutes to wait after a server start before the first reset.
+first-run-minutes: 10
+
+# Also run the commands once, 10 seconds after the server finishes loading.
+run-on-start: false
+
+# Commands run from console, in order. Leading slashes are optional.
+commands:
+  - "arenasync reset warzone"
+
+# Seconds before a reset at which players are warned. Empty list = silent.
+warn-seconds: [60, 10]
+
+# Leave a message empty to skip it.
+warning: "&#FF0067&lWARZONE &8▷ &fThe arena resets in &#FF0067%seconds%s&f."
+finished: "&#FF0067&lWARZONE &8▷ &fThe arena has been &#FF0067reset&f."
+
+# Only message players in this world. Empty = everyone.
+broadcast-world: ""
+
+status: "&#FF0067&lWARZONE &8▷ &fNext reset in &#FF0067%time% &8(&fevery &#FF0067%interval%m&8)"
+reset-now: "&#FF0067&lWARZONE &8▷ &fReset command sent."
+no-permission: "&#FF0000&lERROR &8▷ &fYou cannot do that."
+
+# Write each command to the server log.
+log: true

@@ -1,0 +1,8 @@
+config-version: 1
+prefix: "&#A370EE&lWEEKLY &8▷ &r"
+players-only: "&#FF0000&lERROR &8▷ &fOnly a player can claim weekly rewards."
+no-permission: "&#FF0000&lERROR &8▷ &fYou do not have permission."
+cooldown: "%prefix%&fCome back in &#A370EE%time%&f."
+already-claiming: "%prefix%&fYou are already spinning a reward."
+no-rewards: "&#FF0000&lERROR &8▷ &fNo weekly rewards are configured."
+won: "%prefix%&fYou won &#A370EE%reward% %rarity_color%[%rarity%&8 (%percent%%)&r%rarity_color%&f]!"

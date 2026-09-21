@@ -1,0 +1,4 @@
+prefix: "&#9FFF00&lSTATS &8▷ &r"
+player-not-found: "Player not found."
+players-only: "Players only."
+usage: "Usage: /stats [player]"

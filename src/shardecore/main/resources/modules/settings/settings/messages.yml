@@ -1,0 +1,13 @@
+prefix: "&#FCFF00&lSETTINGS &8▷ &r"
+toggled: "%setting% is now %status%."
+# Status labels used in the toggled message (%status% placeholder)
+status-enabled: "&#9FFF00enabled"
+status-disabled: "&#FF2121disabled"
+no-permission: "&#FF0000&lERROR &8▷ &fNo permission."
+players-only: "&#FF0000&lERROR &8▷ &fThis command is for players only."
+saved: "&#9FFF00Settings saved."
+toggled-enabled: "&#0083FF&lSETTINGS &8▷ &fYou Have &#9FFF00Enabled &f%setting%"
+toggled-disabled: "&#0083FF&lSETTINGS &8▷ &fYou Have &#FF2121Disabled &f%setting%"
+message-modes:
+  toggled-enabled: actionbar
+  toggled-disabled: actionbar

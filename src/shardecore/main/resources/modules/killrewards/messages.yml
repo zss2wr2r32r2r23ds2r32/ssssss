@@ -1,0 +1,6 @@
+players-only: "&#FF0000&lERROR &8▷ &fOnly players can have kills."
+no-permission: "&#FF0000&lERROR &8▷ &fYou do not have permission."
+claimed: "&#FFEE00&lKILLS &8▷ &fThe &#FFEE00%required% &fkill reward is yours."
+already-claimed: "&#FF0000&lERROR &8▷ &fYou already took that reward."
+ready: "&#FFEE00&lKILLS &8▷ &f&#FFEE00%amount% &freward(s) are ready. Use &#FFEE00/killrewards"
+not-unlocked: "&#FF0000&lERROR &8▷ &fYou need &#FFEE00%kills% &fkills for that reward."

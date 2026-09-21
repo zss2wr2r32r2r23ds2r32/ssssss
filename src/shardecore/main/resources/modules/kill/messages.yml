@@ -1,0 +1,6 @@
+config-version: 3
+prefix: '%prefix%'
+players-only: '%prefix%&#FF2727Only players can use this command.'
+no-permission: '%prefix%&#FF2727You don''t have permission to use /kill.'
+player-not-found: '%prefix%&#FF2727Player &f%player% &#FF2727is not online.'
+killed-other: '%prefix%&#FF2727Killed &f%player%&#FF2727.'

@@ -1,0 +1,11 @@
+config-version: 3
+message-mode: chat
+prefix: '&x&F&F&0&0&7&2&lRANKS &8▷ &r'
+main-menu: tempranks
+
+rank-order:
+- ruby
+- sapphire
+- onyx
+- aether
+- flawless

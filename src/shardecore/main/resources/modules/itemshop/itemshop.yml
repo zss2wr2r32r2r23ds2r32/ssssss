@@ -1,0 +1,294 @@
+config-version: 11
+prefix: '&#A370EE&lITEM SHOP &8▷ &r'
+
+server-id: CrystalPVP
+share-rotation-across-servers: false
+
+auto-equip-on-purchase: true
+
+hide-commands:
+  - hide
+  - vanish
+  - evanish
+
+hidden-worlds: []
+
+hats:
+  hidden-in-spectator: true
+  hidden-on-death: true
+
+rotation:
+  timezone: Europe/London
+  refresh-time: '00:00'
+  interval-hours: 24
+  hat-slots: 4
+  tag-slots: 4
+  no-repeat-window: 1
+  guaranteed-minimums:
+    epic-or-better: 0
+  broadcast:
+    enabled: true
+    message: '&#A370EE&lITEM SHOP &8▷ &fThe daily cosmetics have rotated. Use &#A370EE/itemshop&f.'
+    sound:
+      enabled: true
+      sound: block.amethyst_block.chime
+      volume: 0.8
+      pitch: 1.1
+
+countdown-format: '{hours}h {minutes}m {seconds}s'
+countdown-update-ticks: 20
+
+shop-layout: 3
+shop-item:
+  lore:
+    - '&7[ɪᴛᴇᴍsʜᴏᴘ]'
+    - ''
+    - '&x&5&C&9&4&F&CDescription:'
+    - '&x&5&C&9&4&F&C| &x&5&C&9&4&F&CClick Here,&f To'
+    - '&x&5&C&9&4&F&C| &fPurchase This &x&5&C&9&4&F&CCosmetic'
+    - ''
+    - '&x&5&C&9&4&F&C🌊 &fPrice: &x&5&C&9&4&F&C%price%'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+  status:
+    owned: '&#94FF00&lYOU ALREADY OWN THIS'
+    click-to-buy: '&#8aff00&lCLICK TO BUY'
+    not-enough: '&#FF2121&lNOT ENOUGH TOKENS'
+    locked: '&#FF2121&lLOCKED'
+
+sounds:
+  click:
+    enabled: true
+    sound: ui.button.click
+    volume: 0.5
+    pitch: 1.2
+  purchase-success:
+    enabled: true
+    sound: entity.player.levelup
+    volume: 0.7
+    pitch: 1.1
+  purchase-fail:
+    enabled: true
+    sound: block.note_block.bass
+    volume: 0.7
+    pitch: 0.7
+
+gui:
+  shop:
+    title: '&8Item Shop'
+    rows: 6
+    filler-material: BLACK_STAINED_GLASS_PANE
+    filler-name: ' '
+    rarity-borders: false
+    content-slots: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    frame-material: GRAY_STAINED_GLASS_PANE
+    frame-slots: [20, 21, 22, 23, 24, 31]
+    hat-slots: [19, 21, 23, 25]
+    tag-slots: [28, 30, 32, 34]
+    items:
+      countdown:
+        enabled: true
+        slot: 49
+        material: BELL
+        name: '&#ffe300&lREFRESH'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#ffe300Information:'
+          - '&#ffe300| &fItem Shop will refresh'
+          - '&#ffe300| &fEvery &#ffe30024 Hours'
+          - ''
+          - '&#ffe300🌊 &fRefreshes: &#ffe300%time%'
+      previous:
+        enabled: true
+        slot: 48
+        material: RED_STAINED_GLASS_PANE
+        name: '&#ff0000&lPREVIOUS PAGE'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#ff0000Information:'
+          - '&#ff0000| &#ff0000Click Here,&f To'
+          - '&#ff0000| &fGo to the &#ff0000Previous Page'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Turn'
+      next:
+        enabled: true
+        slot: 50
+        material: LIME_STAINED_GLASS_PANE
+        name: '&#80ff00&lNEXT PAGE'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#80ff00Information:'
+          - '&#80ff00| &#80ff00Click Here,&f To'
+          - '&#80ff00| &fGo to the &#80ff00Next Page'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Turn'
+      limited:
+        enabled: true
+        slot: 40
+        material: SPYGLASS
+        name: '&#ff0067&lLIMITED'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#ff0067Information:'
+          - '&#ff0067| &fView Limited Time Items'
+          - '&#ff0067| &fAnd Unlock &#ff0067Unique&f Cosmetics'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Browse'
+      back:
+        enabled: true
+        slot: 40
+        material: FLOWER_BANNER_PATTERN
+        name: '&#ff0000&lBACK'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#ff0000Information:'
+          - '&#ff0000| &#ff0000Click Here,&f To'
+          - '&#ff0000| &fGo Back to the Main &#ff0000Shop'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+      balance:
+        enabled: true
+        slot: 46
+        material: SUNFLOWER
+        name: '&x&5&C&9&4&F&C&lYOUR TOKENS'
+        lore:
+          - '&8Item Shop'
+          - ''
+          - '&x&5&C&9&4&F&CInformation:'
+          - '&x&5&C&9&4&F&C| &fSpend these on hats and tags.'
+          - ''
+          - '&x&5&C&9&4&F&C☀ &fBalance: &x&5&C&9&4&F&C{balance}'
+      my-cosmetics:
+        enabled: true
+        slot: 52
+        material: LIGHT_BLUE_HARNESS
+        name: '&#0079ff&lWARDROBE'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#0079ffInformation:'
+          - '&#0079ff| &#0079ffClick Here,&f To'
+          - '&#0079ff| &fOpen &#0079ffWardrobe'
+          - ''
+          - '&#0079ff🌊 &fCommand: &#0079ff&n/wardrobe'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+        command: 'wardrobe'
+      get-tokens:
+        enabled: false
+        slot: 13
+        material: EMERALD
+        name: '&#8aff00&lGET TOKENS'
+        lore:
+          - '&8Item Shop'
+          - ''
+          - '&x&5&C&9&4&F&CInformation:'
+          - '&x&5&C&9&4&F&C| &fOpen token methods.'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Open'
+        command: 'tokenmethods'
+      my-tags:
+        enabled: true
+        slot: 53
+        material: NAME_TAG
+        name: '&#ffee00&lTAGS'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#ffee00Information:'
+          - '&#ffee00| &#ffee00Click Here,&f To'
+          - '&#ffee00| &fOpen &#ffee00Tags'
+          - ''
+          - '&#ffee00🌊 &fCommand: &#ffee00&n/tags'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+        command: 'tags'
+      close:
+        enabled: false
+        slot: 49
+        material: BARRIER
+        name: '&#FF2121&lCLOSE'
+        lore:
+          - '&8Item Shop'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Close'
+  confirm:
+    enabled: true
+    title: '&8Confirm Purchase'
+    rows: 3
+    filler-material: BLACK_STAINED_GLASS_PANE
+    item-slot: 13
+    confirm:
+      slot: 11
+      material: LIME_STAINED_GLASS_PANE
+      name: '&#8aff00&lCONFIRM'
+      lore:
+        - '&8Item Shop'
+        - ''
+        - '&x&5&C&9&4&F&C| &fBuy for &x&5&C&9&4&F&C{price} {currency}'
+    cancel:
+      slot: 15
+      material: RED_STAINED_GLASS_PANE
+      name: '&#FF2121&lCANCEL'
+      lore:
+        - '&8Item Shop'
+        - ''
+        - '&7Back to the shop.'
+  cosmetics:
+    title: '&8My Cosmetics'
+    rows: 6
+    filler-material: BLACK_STAINED_GLASS_PANE
+    content-slots: [10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34]
+    filter-all:
+      slot: 2
+      material: ENDER_CHEST
+      name: '&#A370EE&lALL'
+    filter-hats:
+      slot: 3
+      material: LEATHER_HELMET
+      name: '&#A370EE&lHATS'
+    filter-tags:
+      slot: 5
+      material: NAME_TAG
+      name: '&#A370EE&lTAGS'
+    unequip-all:
+      slot: 6
+      material: BARRIER
+      name: '&#FF2121&lUNEQUIP ALL'
+      lore:
+        - '&7Clear your hat and tag.'
+    previous:
+      slot: 48
+      material: ARROW
+      name: '&#FF005D&lPREVIOUS'
+    next:
+      slot: 50
+      material: ARROW
+      name: '&#94FF00&lNEXT'
+    back:
+      slot: 49
+      material: BARRIER
+      name: '&#FF2121&lBACK'
+    equipped-lore: '&#94FF00| &fEquipped'
+    click-equip: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip'
+    click-unequip: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Unequip'
+
+limited:
+  active-season: halloween
+  daily-slots: 4
+  shown: []
+  shown-season: halloween
+  shown-expires: 0
+  shulkers:
+    halloween: ORANGE_SHULKER_BOX
+    christmas: GREEN_SHULKER_BOX
+    easter: PINK_SHULKER_BOX
+  seasons:
+    halloween: []
+    christmas: []
+    easter: []

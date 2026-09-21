@@ -1,0 +1,9 @@
+config-version: 1
+message-mode: chat
+
+lifetime-seconds: 3600
+gui-title: "&8%player%'s Grave"
+
+hologram-lines:
+  - "&#5C94FC&l%player%'s Grave"
+  - "&fExpires in &#FFB800%time%"

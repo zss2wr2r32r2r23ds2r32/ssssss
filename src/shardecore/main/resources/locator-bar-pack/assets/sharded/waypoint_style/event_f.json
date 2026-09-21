@@ -1,0 +1,7 @@
+{
+  "near_distance": 8,
+  "far_distance": 332,
+  "sprites": [
+    "sharded:event_f"
+  ]
+}

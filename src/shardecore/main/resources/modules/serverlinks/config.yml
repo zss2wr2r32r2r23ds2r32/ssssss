@@ -1,0 +1,125 @@
+config-version: 3
+message-mode: chat
+link-hover: "&fClick to open"
+
+links:
+  discord:
+    url: https://discord.gg/shardedmc
+    sound: block.note_block.pling
+    messages:
+      - ""
+      - "&#00BDF9✉ &lDISCORD SERVER&r &#00BDF9✉"
+      - "&7[ɪɴғᴏʀᴍᴀᴛɪᴏɴ]"
+      - ""
+      - "&#00BDF9¦ &fEverything happens on our &#00BDF9Discord&f,"
+      - "&#00BDF9¦ &ffrom &#00BDF9giveaways &fto &#00BDF9season news&f!"
+      - ""
+      - "&#00BDF9▷ &fLink: &#00BDF9&ndiscord.gg/shardedmc"
+  store:
+    url: https://store.shardedmc.net
+    sound: block.note_block.pling
+    messages:
+      - ""
+      - "&#97F900&l$ SERVER WEBSTORE $"
+      - "&7[ɪɴғᴏʀᴍᴀᴛɪᴏɴ]"
+      - ""
+      - "&#97F900¦ &fKeep the server alive and grab"
+      - "&#97F900¦ &#97F900ranks&f, &#97F900tokens &fand &#97F900keys &fin return!"
+      - ""
+      - "&#97F900▷ &fLink: &#97F900&nstore.shardedmc.net"
+
+broadcasts:
+  apply:
+    url: https://discord.gg/shardedmc
+    sound: block.note_block.pling
+    lines:
+      - ""
+      - "&#D66BFC✎ &lSTAFF APPLICATIONS&r &#D66BFC✎"
+      - "&7[ɪɴғᴏʀᴍᴀᴛɪᴏɴ]"
+      - ""
+      - "&#D66BFC¦ &fWant to join the &#D66BFCstaff team&f?"
+      - "&#D66BFC¦ &fApply on our &#D66BFCDiscord &fserver!"
+      - ""
+      - "&#D66BFC▷ &fLink: &#D66BFC&ndiscord.gg/shardedmc"
+  media:
+    url: https://discord.gg/shardedmc
+    sound: block.note_block.pling
+    lines:
+      - ""
+      - "&#FF256E☀ &lMEDIA RANK&r &#FF256E☀"
+      - "&7[ᴀɴɴᴏᴜɴᴄᴇᴍᴇɴᴛ]"
+      - ""
+      - "&#FF256E¦ &fApply for the &#FF256EMedia Rank"
+      - "&#FF256E¦ &finside our &#FF256EDiscord Server&f!"
+      - ""
+      - "&#FF256E▷ &fLink: &#FF256E&ndiscord.gg/shardedmc"
+
+gui:
+  media:
+    title: Media Requirements
+    rows: 3
+    items:
+      twitch:
+        slot: 4
+        material: basehead-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjI1ODA0ODliMmQ0NGU1ZDlhOWIzZjgzNmVmMjE5ZjAzMTI5OTJkNDBiMTRkOTlmNTZjNWFmMDVjNDBmNzE1In19fQ==
+        name: "&#9146FF&lTWITCH"
+        lore:
+          - "&8Descriptions"
+          - ""
+          - "&#9146FF&lREQUIREMENTS"
+          - "&#9146FF● &f10 Average &7(ʟɪᴠᴇ)"
+          - "&#9146FF● &f1 Hour Stream &7(ʟɪᴠᴇ)"
+          - "&#9146FF● &f50 Followers &7(ʟɪᴠᴇ)"
+          - ""
+          - "&#9146FF&lREWARDS"
+          - "&#9146FF● &#FB08B9&lMEDIA &fRank"
+          - "&#9146FF● &fAccess to (/live) command"
+          - ""
+          - "&#9146FF⚓ &fIP must be &#9146FFvisible"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply"
+        command: discord
+      youtube:
+        slot: 12
+        material: basehead-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDQ1NTg2MDY1ZjAyZTg1NTMwMTI1ZjQ2NmRmMTA3YzFjOGQzZTE0MzEwMTAzMmMyYjQ3ODA3MTE1YmJkYTJmMCJ9fX0=
+        name: "&#FF0000&lYOUTUBE"
+        lore:
+          - "&8Descriptions"
+          - ""
+          - "&#FF0000&lREQUIREMENTS"
+          - "&#FF0000● &f500 Views &7(ᴠɪᴅᴇᴏ)"
+          - "&#FF0000● &f50 Likes &7(ᴠɪᴅᴇᴏ)"
+          - "&#FF0000● &f10 Average &7(ʟɪᴠᴇ)"
+          - "&#FF0000● &f1 Hour Stream &7(ʟɪᴠᴇ)"
+          - "&#FF0000● &f100 followers &7(ʟɪᴠᴇ)"
+          - ""
+          - "&#FF0000&lREWARDS"
+          - "&#FF0000● &#FB08B9&lMEDIA &fRank"
+          - "&#FF0000● &fAccess to (/live) command"
+          - ""
+          - "&#FF0000⚓ &fIP must be &#FF0000visible"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply"
+        command: discord
+      tiktok:
+        slot: 14
+        material: basehead-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNThkMDI5ODRhNDNlNmM2OTEwZDBkOTA4YTU3ZTA0MWMzY2ZiMWRkODgxYjViNzIwYzU1NTYzZTY4MWY1OWUwZSJ9fX0=
+        name: "&#E43A96&lTIKTOK"
+        lore:
+          - "&8Descriptions"
+          - ""
+          - "&#E43A96&lREQUIREMENTS"
+          - "&#E43A96● &f1500 Views &7(ᴠɪᴅᴇᴏ)"
+          - "&#E43A96● &f75 Likes &7(ᴠɪᴅᴇᴏ)"
+          - "&#E43A96● &f10 Average &7(ʟɪᴠᴇ)"
+          - "&#E43A96● &f1 Hour Stream &7(ʟɪᴠᴇ)"
+          - "&#E43A96● &f100 Followers &7(ʟɪᴠᴇ)"
+          - ""
+          - "&#E43A96&lREWARDS"
+          - "&#E43A96● &#FB08B9&lMEDIA &fRank"
+          - "&#E43A96● &fAccess to (/live) command"
+          - ""
+          - "&#E43A96⚓ &fIP must be &#E43A96visible"
+          - ""
+          - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply"
+        command: discord

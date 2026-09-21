@@ -1,0 +1,26 @@
+# Join/quit messages module.
+# Each format has a permission node you give through LuckPerms, for example:
+#   /lp group vip permission set sharded.joinmessages.vip true
+# The highest 'priority' format the player has permission for is used.
+#
+# Placeholders: %player%, %rank% (LuckPerms prefix), %group%
+
+config-version: 3
+message-mode: chat
+formats:
+  default:
+    permission: '' # empty = everyone
+    priority: 0
+    join: '&#9FFF00+ &f%player%'
+    first-join: '&#0098FF⚓ &7Welcome &#0098FF%player% &7to the server!'
+    quit: '&#FF2727- &f%player%'
+  vip:
+    permission: sharded.joinmessages.vip
+    priority: 10
+    join: '&#9FFF00+ %rank%&f%player% &7joined the server!'
+    quit: '&#FF2727- %rank%&f%player% &7left the server.'
+  admin:
+    permission: sharded.joinmessages.admin
+    priority: 100
+    join: '&#9FFF00+ %rank%&f%player% &7has arrived.'
+    quit: '&#FF2727- %rank%&f%player% &7has left.'

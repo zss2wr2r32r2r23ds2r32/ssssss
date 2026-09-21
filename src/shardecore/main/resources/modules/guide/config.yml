@@ -1,0 +1,158 @@
+menu_title: Guide
+config-version: 11
+size: 36
+open_permission: sharded.guide.use
+
+filler:
+  auto-fill: true
+  material: BLACK_STAINED_GLASS_PANE
+  name: ' '
+
+open_commands:
+- '[sound] BLOCK_NOTE_BLOCK_HARP'
+
+items:
+  teams:
+    material: PINK_BANNER
+    slot: 11
+    display_name: '&#FF3EA5&lTEAMS'
+    lore:
+    - '&8Description'
+    - ''
+    - '&#FF3EA5Information'
+    - '&#FF3EA5| &fClick here to create'
+    - '&#FF3EA5| &fa Team'
+    - ''
+    - '&#FF3EA5☀ &fCommand: &#FF3EA5/team'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Create'
+    click_commands:
+    - '[close]'
+    - '[player] team'
+
+  tokenshop:
+    material: HEAVY_CORE
+    slot: 12
+    display_name: '&x&5&C&9&4&F&C&lTOKEN SHOP'
+    lore:
+    - '&8Description'
+    - ''
+    - '&x&5&C&9&4&F&CInformation'
+    - '&x&5&C&9&4&F&C| &fClick here to purchase'
+    - '&x&5&C&9&4&F&C| &fCosmetics From the Token Shop'
+    - ''
+    - '&x&5&C&9&4&F&C☀ &fCommand: &x&5&C&9&4&F&C/tokenshop'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Travel'
+    click_commands:
+    - '[close]'
+    - '[player] tokenshop'
+
+  rewards:
+    material: MINECART
+    fallback: MINECART
+    slot: 13
+    display_name: '&#9FFF00&lREWARDS'
+    lore:
+    - '&8Description'
+    - ''
+    - '&#9FFF00Information:'
+    - '&#9FFF00| &fClick to Visit'
+    - '&#9FFF00| &fRewards and Get &#9FFF00Started'
+    - ''
+    - '&#9FFF00ℹ &fCommand: &#9FFF00/rewards'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+    click_commands:
+    - '[close]'
+    - '[player] rewards'
+
+  random-teleport:
+    material: MOSS_BLOCK
+    slot: 14
+    display_name: '&#45FF17&lRANDOM TELEPORT'
+    lore:
+    - '&8Description'
+    - ''
+    - '&#45FF17Information'
+    - '&#45FF17| &fClick here to randomly'
+    - '&#45FF17| &fTeleport in any dimensions'
+    - ''
+    - '&#45FF17☀ &fCommand: &#45FF17/rtp'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Travel'
+    click_commands:
+    - '[close]'
+    - '[player] rtp'
+
+  leaderboards:
+    material: GUSTER_BANNER_PATTERN
+    slot: 15
+    display_name: '&#FF3EA5&lLEADERBOARDS'
+    lore:
+    - '&8Description'
+    - ''
+    - '&#FF3EA5Information'
+    - '&#FF3EA5| &fClick here to view'
+    - '&#FF3EA5| &fThe server Leaderboards'
+    - ''
+    - '&#FF3EA5☀ &fCommand: &#FF3EA5/leaderboard'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Travel'
+    click_commands:
+    - '[close]'
+    - '[player] leaderboard'
+
+  webstore:
+    material: LIME_HARNESS
+    slot: 21
+    display_name: '&#26E07A&lWEBSTORE'
+    lore:
+    - '&8Description'
+    - ''
+    - '&#26E07AInformation'
+    - '&#26E07A| &fClick here to support'
+    - '&#26E07A| &fYour favorite Network'
+    - ''
+    - '&#26E07A☀ &fCommand: &#26E07A/store'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Travel'
+    click_commands:
+    - '[close]'
+    - '[player] store'
+
+  rules:
+    material: PINK_BUNDLE
+    slot: 22
+    display_name: '&#FF5C8A&lRULES'
+    lore:
+    - '&8Description'
+    - ''
+    - '&#FF5C8AInformation'
+    - '&#FF5C8A| &fClick here to view'
+    - '&#FF5C8A| &fThe server &fRules'
+    - ''
+    - '&#FF5C8A☀ &fCommand: &#FF5C8A/rules'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Travel'
+    click_commands:
+    - '[close]'
+    - '[player] rules'
+
+  discord:
+    material: LIGHT_BLUE_SHULKER_BOX
+    slot: 23
+    display_name: '&#5AA1D8&lDISCORD'
+    lore:
+    - '&8Description'
+    - ''
+    - '&#5AA1D8Information'
+    - '&#5AA1D8| &fClick here to join'
+    - '&#5AA1D8| &fOur official &fDiscord'
+    - ''
+    - '&#5AA1D8☀ &fCommand: &#5AA1D8/discord'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Travel'
+    click_commands:
+    - '[close]'
+    - '[player] discord'

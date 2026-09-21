@@ -1,0 +1,60 @@
+# Homes GUI
+# bed-slots / set-slots: one slot per home index. Beds teleport (set) or set (empty).
+# Dye under a SET home opens a 3-row delete confirm GUI.
+# Materials: prefer GRAY_DYE / LIGHT_BLUE_DYE over bundles.
+
+gui-title: "&8Homes"
+rows: 6
+default-homes: 2
+max-homes: 14
+teleport-seconds: 5
+message-channel: chat
+sound-success: "entity.experience_orb.pickup"
+sound-teleport: "entity.enderman.teleport"
+sound-countdown: "block.note_block.hat"
+sound-cancel: "entity.villager.no"
+
+# Bed slots for homes 1-14 (two rows of 7)
+bed-slots: [10, 11, 12, 13, 14, 15, 16, 28, 29, 30, 31, 32, 33, 34]
+# Dye "set/delete" indicators under each bed
+set-slots: [19, 20, 21, 22, 23, 24, 25, 37, 38, 39, 40, 41, 42, 43]
+
+set-bed-material: BLUE_BED
+empty-bed-material: GRAY_BED
+set-bundle-material: LIGHT_BLUE_DYE
+empty-bundle-material: GRAY_DYE
+
+delete-confirm:
+  rows: 3
+  confirm-slot: 10
+  bed-slot: 13
+  cancel-slot: 15
+
+home-set-name: "&#0083FF&lHOME &#0083FF%index%"
+home-set-lore:
+  - "&8Description"
+  - ""
+  - "&#0083FFInformation:"
+  - "&#0083FF| &fClick to Teleport"
+  - "&#0083FF| &fTo Home &#0083FF&n%index%"
+  - ""
+  - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Teleport"
+home-delete-lore:
+  - "&8Description"
+  - ""
+  - "&#FF2121Information:"
+  - "&#FF2121| &fClick to Delete"
+  - "&#FF2121| &fThis &#FF2121&ncannot&r &#FF2121be undone"
+  - ""
+  - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Delete"
+home-empty-name: "&7&lNO HOME &7Set"
+home-empty-lore:
+  - "&8Description"
+  - ""
+  - "&7Information:"
+  - "&7| &fClick to Set"
+  - "&7| &fHome &7&n%index%"
+  - ""
+  - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Set"
+bundle-set-name: "&#0083FF&lDELETE"
+bundle-empty-name: "&7&lSET HOME"
