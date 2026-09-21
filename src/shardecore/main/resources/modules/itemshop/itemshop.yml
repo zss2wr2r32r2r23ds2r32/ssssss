@@ -127,7 +127,7 @@ gui:
           - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Turn'
       limited:
         enabled: true
-        slot: 40
+        slot: 46
         material: SPYGLASS
         name: '&#ff0067&lLIMITED'
         lore:
@@ -140,7 +140,7 @@ gui:
           - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Browse'
       back:
         enabled: true
-        slot: 40
+        slot: 46
         material: FLOWER_BANNER_PATTERN
         name: '&#ff0000&lBACK'
         lore:
@@ -152,8 +152,8 @@ gui:
           - ''
           - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
       balance:
-        enabled: true
-        slot: 46
+        enabled: false
+        slot: 47
         material: SUNFLOWER
         name: '&x&5&C&9&4&F&C&lYOUR TOKENS'
         lore:

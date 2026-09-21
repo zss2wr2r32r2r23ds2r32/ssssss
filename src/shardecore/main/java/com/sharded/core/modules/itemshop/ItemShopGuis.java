@@ -116,10 +116,10 @@ final class ItemShopGuis {
    }
 
    private void placeBackButton(Player player, Inventory inventory, ConfigurationSection gui) {
-      int slot = 40;
+      int slot = 46;
       ConfigurationSection limited = gui.getConfigurationSection("items.limited");
       if (limited != null) {
-         slot = limited.getInt("slot", 40);
+         slot = limited.getInt("slot", 46);
       }
       ItemStack item = ItemShopItems.fromSection(
          null,

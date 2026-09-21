@@ -212,7 +212,8 @@ public final class ItemShopModule extends Module implements CommandExecutor, Tab
       this.shop.set("gui.shop.items.next.slot", 50);
       this.shop.set("gui.shop.items.my-cosmetics.slot", 51);
       this.shop.set("gui.shop.items.my-tags.slot", 53);
-      this.shop.set("gui.shop.items.limited.slot", 40);
+      this.shop.set("gui.shop.items.limited.slot", 46);
+      this.shop.set("gui.shop.items.back.slot", 46);
       this.shop.set("limited.daily-slots", this.shop.getInt("limited.daily-slots", 4));
       this.shop.set("limited.shulkers.halloween", "ORANGE_SHULKER_BOX");
       this.shop.set("limited.shulkers.christmas", "GREEN_SHULKER_BOX");
