@@ -1,0 +1,233 @@
+config-version: 2
+
+message-mode: chat
+
+default-reason: 'Unfair Modifications'
+discord: '.gg/shardedmc'
+repeat-offender-threshold: 3
+revoke-console-scope: 'server:global'
+
+offend:
+  reason: Ban-Evasion
+  duration: permanent
+
+doxxing-reasons:
+  - Doxxing
+  - doxxing
+
+doxxing-webhook:
+  enabled: false
+  url: ''
+  title: 'Doxxing Ban'
+  description: '%player% was permanently banned for %reason% by %staff%.'
+  color: 16711680
+  footer: 'ShardedCore Punishments'
+  thumbnail-url: 'https://mc-heads.net/avatar/%uuid%'
+  reban-command: '/ban %player% Doxxing permanent'
+
+ban-evasion:
+  enabled: true
+
+ban-evasion-screen:
+  - '&#FF0000Ban evasion is not allowed on this server.'
+  - ''
+  - '&#FFF300You can''t join — an account on your IP is currently banned.'
+  - '&#FFF300If you believe this is false, join our Discord at %discord%'
+
+doxxing-deny-screen:
+  - '&#FF0000You are permanently banned for doxxing.'
+  - '&#FFF300This ban cannot be appealed.'
+
+public-broadcast:
+  enabled: true
+  actions:
+    - Ban
+    - Mute
+    - Kick
+
+ban-screen:
+  - '&#AD4EFF&lSHARDEDMC'
+  - '&cYou have been banned!'
+  - ''
+  - '&#AD4EFF⛨&r &fBy: &#AD4EFF%staff%'
+  - '&#FF007B⚐&r &fReason: &#FF007B%reason%'
+  - '&#45FF17☄&r &fDuration: &#45FF17%time_left%'
+  - ''
+  - '&#4498DB☀&r &fExpires on: &#4498DB%expires%'
+  - ''
+  - '&#FFF300&lAPPEAL @ %discord%'
+
+ban-screen-permanent:
+  - '&#AD4EFF&lSHARDEDMC'
+  - '&cYou have been permanently banned!'
+  - ''
+  - '&#AD4EFF⛨&r &fBy: &#AD4EFF%staff%'
+  - '&#FF007B⚐&r &fReason: &#FF007B%reason%'
+
+mute-screen:
+  - '&#AD4EFF&lSHARDEDMC'
+  - '&cYou have been muted!'
+  - ''
+  - '&#AD4EFF⛨&r &fBy: &#AD4EFF%staff%'
+  - '&#FF007B⚐&r &fReason: &#FF007B%reason%'
+  - '&#45FF17☄&r &fDuration: &#45FF17%time_left%'
+  - ''
+  - '&#4498DB☀&r &fExpires on: &#4498DB%expires%'
+
+mute-screen-permanent:
+  - '&#AD4EFF&lSHARDEDMC'
+  - '&cYou have been permanently muted!'
+  - ''
+  - '&#AD4EFF⛨&r &fBy: &#AD4EFF%staff%'
+  - '&#FF007B⚐&r &fReason: &#FF007B%reason%'
+
+mute-screen-title:
+  enabled: true
+  title: '&#FF2727&lMUTED'
+  subtitle: '&#FF007B%reason%'
+
+mute:
+  default-reason: Spam
+  blocked-commands:
+    - msg
+    - tell
+    - w
+    - whisper
+    - r
+    - reply
+    - me
+    - pm
+    - dm
+    - message
+    - say
+    - broadcast
+
+kick:
+  default-reason: 'No reason specified'
+
+kick-screen:
+  - '&8Description'
+  - ''
+  - '#00FFAAInformation:'
+  - '&fYou have been kicked for'
+  - '&fReason: &#FF0000%reason%'
+
+kick-reasons:
+  - AFK
+  - Inappropriate-Build
+  - Spamming
+  - Warning
+  - Staff-Decision
+  - Ban-Evasion
+
+reasons:
+  Unfair-Modifications: 30d
+  X-Ray:
+    - 7d
+    - 14d
+    - 30d
+  Fly-Hack: 30d
+  Killaura: 30d
+  Doxxing: permanent
+  Ban-Evasion: permanent
+  Duping: permanent
+
+mute-reasons:
+  Spam:
+    - 1h
+    - 6h
+    - 1d
+  Caps-Spam: 30m
+  Toxicity: 6h
+  Advertising: 1d
+  Hate-Speech: 7d
+
+punish:
+  reason-title: '&8🔥 %type% &8| &8%player%'
+  reason-item:
+    material: PAPER
+    display_name: '&#00FFAA%reason%'
+    lore:
+      - '&8Description'
+      - ''
+      - '#00FFAAInformation:'
+      - '&#00FFAA| &fClick here to &#00FFAAapply&f'
+      - '%durations%'
+  back:
+    material: RED_STAINED_GLASS_PANE
+    display_name: '&#FF0000&lPREVIOUS PAGE'
+    lore:
+      - '&#FF0000| &fClick here to go back'
+  menu:
+    title: '&8🔥 Punish &8| &8%player%'
+    filler:
+      enabled: true
+      material: GRAY_STAINED_GLASS_PANE
+    target:
+      material: PLAYER_HEAD
+      display_name: '&#00FFAA%player%'
+      lore:
+        - '&#00FFAA| &fChoose a punishment below'
+    ban:
+      material: NETHERITE_SWORD
+      display_name: '&#00FFAA&lBANS'
+      lore:
+        - '&#00FFAA| &fClick to view ban reasons'
+    mute:
+      material: BOOK
+      display_name: '&#00FFAA&lMUTES'
+      lore:
+        - '&#00FFAA| &fClick to view mute reasons'
+    ipban:
+      material: IRON_BARS
+      display_name: '&#00FFAA&lIP BAN'
+      lore:
+        - '&#00FFAA| &fClick to IP ban this player'
+
+wipe:
+  confirm-gui: true
+  title: '&8🔥 Confirm Wipe &8| &8%player%'
+  rows: 3
+  kick-screen:
+    - '&#FF0000Your player data has been wiped'
+    - ''
+    - '&fYou may now rejoin the server.'
+  filler:
+    enabled: true
+    material: GRAY_STAINED_GLASS_PANE
+    display_name: ' '
+  items:
+    cancel:
+      slot: 11
+      material: RED_STAINED_GLASS_PANE
+      display_name: '&#FF0000&lCANCEL WIPE'
+      lore:
+        - '&#FF0000| &fCancel the wipe process'
+    info:
+      slot: 13
+      material: PLAYER_HEAD
+      display_name: '&#8845EA%player%'
+      lore:
+        - '&#8845EA| &fThis permanently deletes inventory, stats, and tokens'
+    confirm:
+      slot: 15
+      material: LIME_STAINED_GLASS_PANE
+      display_name: '&#8845EA&lCONFIRM WIPE'
+      lore:
+        - '&#8845EA| &fConfirm the wipe process'
+  reasons:
+    default:
+      - '&#FF0000Your player data has been wiped'
+      - ''
+      - '&fYou may now rejoin the server.'
+    cheating:
+      - '&#FF0000Your account was wiped for cheating.'
+
+alts:
+  max-display: 50
+  chat:
+    header: '%prefix%&#FF8300Alts for &f%player%&7:'
+    entry: '%prefix% &7- &f%name% &8(%status%)'
+    none: '%prefix%&#FF2727No alts found.'
+    online: '&#9FFF00online'
+    offline: '&#FF2727offline'

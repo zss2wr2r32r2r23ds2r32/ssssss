@@ -1,0 +1,85 @@
+# Hologram leaderboards (TextDisplay).
+# Player GUI is still /leaderboard. These commands manage world holograms:
+#   /leaderboard create <name> <stat>
+#   /leaderboard delete <name>
+#   /leaderboard reload
+#   /leaderboard setlocation <name>
+#   /lbplace <name>            - same as setlocation
+#   /lbremove [near|all|orphans] - strip leftover holograms from the world
+#   /lbsetline <name>          - GUI to edit every line
+#   /lbsetline <name> <n> <text>
+# Stats: kills, killstreaks, deaths, tokens, playtime, elo
+# The old duels board now tracks ELO. Custom: /leaderboard create blocks papi:statistic_mine_block
+#
+# Placeholders (PlaceholderAPI identifier "leaderboard"):
+#   %leaderboard_<stat>_name_<n>%
+#   %leaderboard_<stat>_value_<n>%
+#   %leaderboard_<stat>_uuid_<n>%
+#   %leaderboard_<stat>_rank%
+#   %leaderboard_<stat>_self%
+#   %leaderboard_<stat>_head_<n>%   -> UUID (optional player head)
+config-version: 4
+refresh-seconds: 120
+cache-size: 100
+fetch-limit: 5000
+empty-name: "---"
+empty-value: "---"
+
+hologram:
+  scale: 1.0
+  line-height: 0.26
+  line-width: 400
+  view-range: 48
+  billboard: FIXED
+  text-gap: 0.22
+  head:
+    scale: 0.36
+    flatness: 0.03
+    offset-x: -0.45
+    offset-y: 0.08
+    offset-z: 0.0
+
+defaults:
+  entries: 10
+  title: "%color%%icon% &l%title%&r%color% %icon%"
+  subtitle: "&7ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅs"
+  blank: "&r"
+  line: "%color%#%rank% &f%leaderboard_%stat%_name_%rank% &7| %color%%icon% %color%%leaderboard_%stat%_value_%rank%"
+  you-line: "%color%#%leaderboard_%stat%_rank% &7| &f%player_name% &7| %color%%icon%%color%%leaderboard_%stat%_self%"
+
+statistics:
+  kills:
+    display-name: "MOST KILLS"
+    icon: "🗡"
+    color: "&#FF007B"
+    format: number
+  killstreaks:
+    display-name: "HIGHEST KILLSTREAK"
+    icon: "🪓"
+    color: "&#FF0000"
+    format: number
+  deaths:
+    display-name: "MOST DEATHS"
+    icon: "☠"
+    color: "&#FF5300"
+    format: number
+  tokens:
+    display-name: "MOST TOKENS"
+    icon: "⛃"
+    color: "&#5C94FC"
+    format: number
+  playtime:
+    display-name: "MOST PLAYTIME"
+    icon: "⌚"
+    color: "&#5C94FC"
+    format: playtime
+  elo:
+    display-name: "HIGHEST ELO"
+    icon: "🏹"
+    color: "&#FF007B"
+    format: number
+  duels:
+    display-name: "HIGHEST ELO"
+    icon: "🏹"
+    color: "&#FF007B"
+    format: number

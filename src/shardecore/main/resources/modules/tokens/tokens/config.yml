@@ -1,0 +1,94 @@
+config-version: 11
+prefix: '&x&5&C&9&4&F&C&lTOKENS &8▷ &r'
+message-mode: chat
+
+gui:
+  title: '&8Token Methods'
+  size: 27
+  filler-material: GRAY_STAINED_GLASS_PANE
+  click-footer: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+  methods:
+    koth:
+      order: 1
+      slot: 11
+      material: NETHERITE_SWORD
+      name: '&7[&#00b7ff⚑&7] &#00b7ff&lKOTH &7&o(#1)'
+      color: '&#00b7ff'
+      lore:
+      - '&7[ᴍᴇᴛʜᴏᴅs]'
+      - ''
+      - '&#00b7ffDescription:'
+      - '&#00b7ff| &#00b7ffFight&f On the Hill'
+      - '&#00b7ff| &fAnd Earn Points to win &#00b7ffTokens'
+      - ''
+      - '&#00b7ff⚑ &fNext Koth: &#00b7ff%nextkoth%'
+      command: /koth
+    outpost:
+      order: 2
+      slot: 12
+      material: BEACON
+      name: '&7[&#ff4800🗡&7] &#ff4800&lOUTPOST &7&o(#2)'
+      color: '&#ff4800'
+      lore:
+      - '&7[ᴍᴇᴛʜᴏᴅs]'
+      - ''
+      - '&#ff4800Description:'
+      - '&#ff4800| &#ff4800Capture&f The Outpost'
+      - '&#ff4800| &fFor a token &#ff4800Rewards'
+      - ''
+      - '&#ff4800🗡 &fNext Outpost: &#ff4800%nextoutpost%'
+      command: /outpost
+    killstreaks:
+      order: 3
+      slot: 13
+      material: HEAVY_CORE
+      name: '&7[&#ff0000🏹&7] &#ff4800&lKILLSTREAKS &7&o(#3)'
+      color: '&#ff0000'
+      lore:
+      - '&7[ᴍᴇᴛʜᴏᴅs]'
+      - ''
+      - '&#ff0000Description:'
+      - '&#ff0000| &#ff0000Gain&f Kill Streaks'
+      - '&#ff0000| &fAnd Get a &#ff0000Reward&f Of &#ff0000Tokens'
+      - ''
+      - '&#ff0000🏹 &fCurrent Killstreak: &#ff0000%killstreak%'
+      command: /killstreak
+    kill_rewards:
+      order: 4
+      slot: 14
+      material: MACE
+      name: '&7[&#ff007c🔱&7] &#ff007c&lKILL REWARDS &7&o(#4)'
+      color: '&#ff007c'
+      lore:
+      - '&7[ᴍᴇᴛʜᴏᴅs]'
+      - ''
+      - '&#ff007cDescription:'
+      - '&#ff007c| &#ff007cGain&f Kills And'
+      - '&#ff007c| &fAnd Get a &#ff007cReward&f For &#ff007cKills'
+      - ''
+      - '&#ff007c🔱 &fCurrent Kills: &#ff007c%kills%'
+      command: /stats
+    playtime:
+      order: 5
+      slot: 15
+      material: CLOCK
+      name: '&7[&#ffd900⏳&7] &#ffd900&lPLAYTIME REWARDS &7&o(#5)'
+      color: '&#ffd900'
+      lore:
+      - '&7[ᴍᴇᴛʜᴏᴅs]'
+      - ''
+      - '&#ffd900Description:'
+      - '&#ffd900| &fStay On the server'
+      - '&#ffd900| &fAnd Get a Playtime &#ffd900Rewards'
+      - ''
+      - '&#ffd900⏳ &fPlaytime: &#ffd900%playtime%'
+      command: /playtimerewards
+
+# Hourly auto-grant disabled — use /playtimerewards milestones instead.
+playtime-reward:
+  enabled: false
+  amount: 0
+  interval-minutes: 60
+  check-interval-seconds: 60
+
+main-menu: mainmenu

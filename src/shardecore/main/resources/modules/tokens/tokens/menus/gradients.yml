@@ -1,0 +1,202 @@
+config-version: 9
+menu_title: 'Token Shop | Name Gradients'
+open_command: namecolors
+size: 36
+open_permission: tokenshop.use
+
+items:
+
+  back_button:
+    nav-override: true
+    slot: 31
+    left_click_commands:
+      - '[openguimenu] mainmenu'
+
+  sharded_name:
+    material: PURPLE_DYE
+    slot: 10
+    display_name: '&#7B2FF7&lS&#8A45F9&lH&#995CFB&lA&#A872FC&lR&#B789FE&lD&#C69FFF&lE&#C86DD7&lD &#C86DD7&lName Gradient'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#7B2FF7Information:'
+      - '&#7B2FF7| &fUnlock &#7B2FF7&lSharded &#C86DD7&lgradient'
+      - '&#7B2FF7| &fEquip via &f/namegradients'
+      - ''
+      - '&#7B2FF7⚓ &fCost: &#7B2FF7600 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] sharded.namegradient.sharded'
+      - '[tokens_take] 600'
+      - '[console] lp user %player_name% permission set sharded.namegradient.sharded true'
+      - '[message] %token_prefix%&#9FFF00Unlocked Sharded! Use &f/namegradients&#9FFF00.'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  amethyst_name:
+    material: PURPLE_DYE
+    slot: 11
+    display_name: '&#9D4EDD&lA&#AE6BE4&lM&#BF88EB&lE&#D0A5F2&lT&#E0AAFF&lH&#E0AAFF&lY&#E0AAFF&lS&#E0AAFF&lT &#E0AAFF&lName Gradient'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#9D4EDDInformation:'
+      - '&#9D4EDD| &fUnlock &#9D4EDD&lAmethyst &fgradient'
+      - '&#9D4EDD| &fEquip via &f/namegradients'
+      - ''
+      - '&#9D4EDD⚓ &fCost: &#9D4EDD600 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] sharded.namegradient.amethyst'
+      - '[tokens_take] 600'
+      - '[console] lp user %player_name% permission set sharded.namegradient.amethyst true'
+      - '[message] %token_prefix%&#9FFF00Unlocked Amethyst! Use &f/namegradients&#9FFF00.'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  void_name:
+    material: BLACK_DYE
+    slot: 12
+    display_name: '&#240046&lV&#4F286F&lO&#7B2CBF&lI&#A155DF&lD &#C77DFF&lName Gradient'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#7B2CBFInformation:'
+      - '&#7B2CBF| &fUnlock &#7B2CBF&lVoid &fgradient'
+      - '&#7B2CBF| &fEquip via &f/namegradients'
+      - ''
+      - '&#7B2CBF⚓ &fCost: &#7B2CBF600 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] sharded.namegradient.void'
+      - '[tokens_take] 600'
+      - '[console] lp user %player_name% permission set sharded.namegradient.void true'
+      - '[message] %token_prefix%&#9FFF00Unlocked Void! Use &f/namegradients&#9FFF00.'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  prism_name:
+    material: MAGENTA_DYE
+    slot: 13
+    display_name: '&#FF0080&lP&#BC1469&lR&#7928CA&lI&#3C7EE4&lS&#00D4FF&lM &#00D4FF&lName Gradient'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF0080Information:'
+      - '&#FF0080| &fUnlock &#FF0080&lPrism &fgradient'
+      - '&#FF0080| &fEquip via &f/namegradients'
+      - ''
+      - '&#FF0080⚓ &fCost: &#FF0080700 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] sharded.namegradient.prism'
+      - '[tokens_take] 700'
+      - '[console] lp user %player_name% permission set sharded.namegradient.prism true'
+      - '[message] %token_prefix%&#9FFF00Unlocked Prism! Use &f/namegradients&#9FFF00.'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  nebula_name:
+    material: PURPLE_DYE
+    slot: 14
+    display_name: '&#6A00F4&lN&#9C1ED0&lE&#CE3CAC&lB&#FF3CAC&lU&#FF3CAC&lL&#FF3CAC&lA &#FF3CAC&lName Gradient'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#6A00F4Information:'
+      - '&#6A00F4| &fUnlock &#6A00F4&lNebula &fgradient'
+      - '&#6A00F4| &fEquip via &f/namegradients'
+      - ''
+      - '&#6A00F4⚓ &fCost: &#6A00F4700 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] sharded.namegradient.nebula'
+      - '[tokens_take] 700'
+      - '[console] lp user %player_name% permission set sharded.namegradient.nebula true'
+      - '[message] %token_prefix%&#9FFF00Unlocked Nebula! Use &f/namegradients&#9FFF00.'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  crystal_name:
+    material: LIGHT_BLUE_DYE
+    slot: 15
+    display_name: '&#7DE2FC&lC&#8BD8F5&lR&#9ACEEE&lY&#A8C4E7&lS&#B9B6E5&lT&#B9B6E5&lA&#B9B6E5&lL &#B9B6E5&lName Gradient'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#7DE2FCInformation:'
+      - '&#7DE2FC| &fUnlock &#7DE2FC&lCrystal &fgradient'
+      - '&#7DE2FC| &fEquip via &f/namegradients'
+      - ''
+      - '&#7DE2FC⚓ &fCost: &#7DE2FC600 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] sharded.namegradient.crystal'
+      - '[tokens_take] 600'
+      - '[console] lp user %player_name% permission set sharded.namegradient.crystal true'
+      - '[message] %token_prefix%&#9FFF00Unlocked Crystal! Use &f/namegradients&#9FFF00.'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  glacier_name:
+    material: CYAN_DYE
+    slot: 16
+    display_name: '&#00C6FF&lG&#008CFF&lL&#0072FF&lA&#0072FF&lC&#0072FF&lI&#0072FF&lE&#0072FF&lR &#0072FF&lName Gradient'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#00C6FFInformation:'
+      - '&#00C6FF| &fUnlock &#00C6FF&lGlacier &fgradient'
+      - '&#00C6FF| &fEquip via &f/namegradients'
+      - ''
+      - '&#00C6FF⚓ &fCost: &#00C6FF600 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] sharded.namegradient.glacier'
+      - '[tokens_take] 600'
+      - '[console] lp user %player_name% permission set sharded.namegradient.glacier true'
+      - '[message] %token_prefix%&#9FFF00Unlocked Glacier! Use &f/namegradients&#9FFF00.'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  sapphire_name:
+    material: BLUE_DYE
+    slot: 21
+    display_name: '&#1E3C72&lS&#243F82&lA&#2A5298&lP&#2A5298&lP&#2A5298&lH&#2A5298&lI&#2A5298&lR&#2A5298&lE &#2A5298&lName Gradient'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#2A5298Information:'
+      - '&#2A5298| &fUnlock &#2A5298&lSapphire &fgradient'
+      - '&#2A5298| &fEquip via &f/namegradients'
+      - ''
+      - '&#2A5298⚓ &fCost: &#2A5298700 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] sharded.namegradient.sapphire'
+      - '[tokens_take] 700'
+      - '[console] lp user %player_name% permission set sharded.namegradient.sapphire true'
+      - '[message] %token_prefix%&#9FFF00Unlocked Sapphire! Use &f/namegradients&#9FFF00.'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  aether_name:
+    material: LIGHT_BLUE_DYE
+    slot: 23
+    display_name: '&#7F7FD5&lA&#82A0DE&lE&#86A8E7&lT&#8BC9E5&lH&#91EAE4&lE&#91EAE4&lR &#91EAE4&lName Gradient'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#7F7FD5Information:'
+      - '&#7F7FD5| &fUnlock &#7F7FD5&lAether &fgradient'
+      - '&#7F7FD5| &fEquip via &f/namegradients'
+      - ''
+      - '&#7F7FD5⚓ &fCost: &#7F7FD5700 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[deny_if_permission] sharded.namegradient.aether'
+      - '[tokens_take] 700'
+      - '[console] lp user %player_name% permission set sharded.namegradient.aether true'
+      - '[message] %token_prefix%&#9FFF00Unlocked Aether! Use &f/namegradients&#9FFF00.'
+      - '[sound] ENTITY_PLAYER_LEVELUP'

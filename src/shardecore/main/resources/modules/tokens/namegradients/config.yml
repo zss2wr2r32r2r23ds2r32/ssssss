@@ -1,0 +1,150 @@
+config-version: 5
+prefix: "&#A370EE&lNAME GRADIENTS &8▷ &r"
+message-mode: chat
+
+gradients:
+  sharded:
+    slot: 10
+    name: "SHARDED"
+    type: gradient
+    hex: "7B2FF7"
+    hex2: "C86DD7"
+    permission: sharded.namegradient.sharded
+  amethyst:
+    slot: 11
+    name: "AMETHYST"
+    type: gradient
+    hex: "9D4EDD"
+    hex2: "E0AAFF"
+    permission: sharded.namegradient.amethyst
+  void:
+    slot: 12
+    name: "VOID"
+    type: gradient
+    hex: "240046"
+    hex2: "7B2CBF"
+    hex3: "C77DFF"
+    permission: sharded.namegradient.void
+  prism:
+    slot: 13
+    name: "PRISM"
+    type: gradient
+    hex: "FF0080"
+    hex2: "7928CA"
+    hex3: "00D4FF"
+    permission: sharded.namegradient.prism
+  nebula:
+    slot: 14
+    name: "NEBULA"
+    type: gradient
+    hex: "6A00F4"
+    hex2: "FF3CAC"
+    permission: sharded.namegradient.nebula
+  crystal:
+    slot: 15
+    name: "CRYSTAL"
+    type: gradient
+    hex: "7DE2FC"
+    hex2: "B9B6E5"
+    permission: sharded.namegradient.crystal
+  glacier:
+    slot: 16
+    name: "GLACIER"
+    type: gradient
+    hex: "00C6FF"
+    hex2: "0072FF"
+    permission: sharded.namegradient.glacier
+  sapphire:
+    slot: 21
+    name: "SAPPHIRE"
+    type: gradient
+    hex: "1E3C72"
+    hex2: "2A5298"
+    permission: sharded.namegradient.sapphire
+  aether:
+    slot: 23
+    name: "AETHER"
+    type: gradient
+    hex: "7F7FD5"
+    hex2: "86A8E7"
+    hex3: "91EAE4"
+    permission: sharded.namegradient.aether
+
+gui:
+  title: "Name Gradients"
+  rows: 4
+  colored-bundles: true
+  item-material: BUNDLE
+  item-name: "%color%&l%name%"
+  status-owned: "&#94FF00&l&nOWNED"
+  status-locked: "&#FF0000&l&nLOCKED"
+  click-footer: "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip"
+  lore:
+    - "&8Description"
+    - ""
+    - "%color%Information:"
+    - "%color%| &fClick to equip this"
+    - "%color%| &fname gradient"
+    - ""
+    - "%color%⚓ &fStatus: %status%"
+    - ""
+    - "%click%"
+
+filler:
+  material: GRAY_STAINED_GLASS_PANE
+  name: " "
+
+clear:
+  enabled: true
+  slot: 4
+  material: BARRIER
+  name: "&#FF0000&lCLEAR NAME GRADIENT"
+  lore:
+    - "&8Description"
+    - ""
+    - "&#FF0000Information:"
+    - "&#FF0000| &fRemove your name color"
+    - ""
+    - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Remove"
+
+close:
+  enabled: true
+  slot: 31
+  material: RED_STAINED_GLASS_PANE
+  name: "&#FF0000&lCLOSE"
+  lore:
+    - "&8Description"
+    - ""
+    - "&#FF0000| &fClose this menu"
+
+sounds:
+  open:
+    enabled: true
+    sound: "ui.button.click"
+    volume: 0.6
+    pitch: 1.2
+  click:
+    enabled: true
+    sound: "ui.button.click"
+    volume: 0.5
+    pitch: 1.0
+  equip:
+    enabled: true
+    sound: "item.armor.equip_leather"
+    volume: 0.8
+    pitch: 1.2
+  error:
+    enabled: true
+    sound: "block.note_block.bass"
+    volume: 0.7
+    pitch: 0.8
+
+messages:
+  usage: "%prefix%&f/namegradients &8| &fset <name> &8| &fclear"
+  set: "%prefix%&fYour name gradient is now %name%&f."
+  cleared: "%prefix%&fYour name gradient was cleared."
+  missing: "&#FF0000&lERROR &8▷ &fUnknown gradient &#A370EE%name%&f."
+  locked: "&#FF0000&lERROR &8▷ &fYou have not unlocked &#A370EE%name%&f."
+  no-permission: "&#FF0000&lERROR &8▷ &fYou do not have permission."
+  players-only: "&#FF0000&lERROR &8▷ &fOnly a player can use that."
+  open-error: "&#FF0000&lERROR &8▷ &fCould not open name gradients. Check console."

@@ -1,0 +1,16 @@
+# Copy this file to: plugins/ItemsAdder/contents/shardedcore/configs/esc_menu.yml
+# ShardedCore auto-installs this when ItemsAdder is present (see modules/client/config.yml).
+# Then run /iazip once.
+#
+# The pause menu UPPERCASES this string. Hex colours (§x / &#AD4EFF) print as
+# AD4EFFDISCONNECT…. Use legacy §d / §f — those survive uppercase.
+
+info:
+  namespace: shardedcore
+
+minecraft_lang_overwrite:
+  shardedcore_esc_menu:
+    entries:
+      "menu.disconnect": "§dDisconnect §fFrom §dShardedMC"
+    languages:
+      - ALL

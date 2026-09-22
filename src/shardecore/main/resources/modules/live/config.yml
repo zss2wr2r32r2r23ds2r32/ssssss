@@ -1,0 +1,37 @@
+config-version: 2
+message-mode: chat
+
+cooldown-seconds: 600
+
+platforms:
+  - twitch.tv
+  - youtube.com
+  - youtu.be
+  - tiktok.com
+  - kick.com
+  - rumble.com
+
+platform-domains:
+  twitch:
+    - twitch.tv
+  youtube:
+    - youtube.com
+    - youtu.be
+  tiktok:
+    - tiktok.com
+  kick:
+    - kick.com
+  rumble:
+    - rumble.com
+
+message:
+  - ""
+  - "&#FF256E🎥 &lLIVESTREAM&r &#FF256E🎥"
+  - "&7[ɪɴғᴏʀᴍᴀᴛɪᴏɴ]"
+  - ""
+  - "&#FF256E¦ &#FF256E%player% &fis streaming check them out"
+  - "&#FF256E¦ &fClick here for the link"
+  - ""
+  - "&#FF256E▷ &fWatch: &#FF256E&n%link%"
+
+link-hover: "&fClick to watch"

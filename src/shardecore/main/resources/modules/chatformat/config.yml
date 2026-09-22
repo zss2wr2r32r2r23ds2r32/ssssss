@@ -1,0 +1,7 @@
+# Chat format
+# %luckperms_prefix% %name_colour% %tag% %chat_colour% %message%
+# Tag is shown AFTER the name as &7[middle&r&7]
+config-version: 4
+format: '%luckperms_prefix%%name_colour% %tag% &8▷ &r%chat_colour%%message%'
+
+extra-placeholders: []

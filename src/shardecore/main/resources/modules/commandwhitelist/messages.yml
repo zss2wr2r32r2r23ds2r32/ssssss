@@ -1,0 +1,3 @@
+config-version: 1
+
+blocked: "&#FF0000&lCOMMAND &8▷ &fYou cannot use &#FF0000/%command%&f."

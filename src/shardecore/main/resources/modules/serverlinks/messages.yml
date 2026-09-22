@@ -1,0 +1,4 @@
+config-version: 1
+
+players-only: "&#FF0000&lERROR &8▷ &fPlayers only."
+missing: "&#FF0000&lLINKS &8▷ &fLink &#FF0000%link% &fis not configured."

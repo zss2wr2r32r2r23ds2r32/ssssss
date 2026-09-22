@@ -1,0 +1,6 @@
+config-version: 1
+message-mode: chat
+
+auto-reset:
+  enabled: true
+  interval-minutes: 15

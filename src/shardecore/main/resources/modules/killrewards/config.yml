@@ -1,0 +1,227 @@
+config-version: 5
+message-mode: chat
+no-next: "-"
+notify:
+  enabled: true
+  interval-seconds: 180
+menu:
+  title: "&8☀ Kill | Rewards"
+  rows: 6
+  reward-slots: "10-16,19-25,28-34,37-43"
+  filler:
+    enabled: true
+    material: GRAY_STAINED_GLASS_PANE
+    name: " "
+    lore: []
+  stats:
+    enabled: true
+    slot: 49
+    material: PLAYER_HEAD
+    name: "&#FFEE00&lYOUR KILLS"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFEE00Information:"
+      - "&#FFEE00¦ &fYou killed &#FFEE00%kills% &fplayers"
+      - "&#FFEE00¦ &fon this server so far."
+      - ""
+      - "&#FFEE00Progress:"
+      - "&#FFEE00¦ &fClaimed: &#FFEE00%claimed%&7/&#FFEE00%total%"
+      - "&#FFEE00¦ &fReady to claim: &#FFEE00%ready%"
+      - "&#FFEE00¦ &fNext reward in: &#FFEE00%next% &fkills"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Refresh"
+icons:
+  no-rewards: "&f- &7none"
+  locked:
+    material: CHEST_MINECART
+    name: "&#FF0000&lIN PROGRESS &r&#FF0000(%required% Kills)"
+    lore: ["&8Description","","&#FF0000Information:","&#FF0000¦ &fYou need &#FF0000%left% &fmore","&#FF0000¦ &fkills for this &#FF0000reward&f!","","&#FF0000Rewards:","☀ %rewards%","","&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Claim"]
+  ready:
+    material: CHEST_MINECART
+    glow: true
+    name: "&#FFEE00&lREADY &r&#FFEE00(%required% Kills)"
+    lore: ["&8Description","","&#FFEE00Information:","&#FFEE00¦ &fYou reached &#FFEE00%required% &fkills,","&#FFEE00¦ &fthis &#FFEE00reward &fis yours!","","&#FFEE00Rewards:","☀ %rewards%","","&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Claim"]
+  claimed:
+    material: MINECART
+    name: "&#80EE0B&lCLAIMED &r&#80EE0B(%required% Kills)"
+    lore: ["&8Description","","&#80EE0BInformation:","&#80EE0B¦ &fYou already took","&#80EE0B¦ &fthis &#80EE0Breward&f.","","&#80EE0BRewards:","%rewards%"]
+sounds:
+  open: {enabled: true, sound: "block.chest.open", volume: 0.7, pitch: 1.2}
+  claim: {enabled: true, sound: "entity.player.levelup", volume: 1.0, pitch: 1.4}
+  notify: {enabled: true, sound: "entity.experience_orb.pickup", volume: 1.0, pitch: 1.2}
+  error: {enabled: true, sound: "block.note_block.bass", volume: 1.0, pitch: 0.8}
+messages:
+  claimed: "&#FFEE00&lKILLS &8▷ &fThe &#FFEE00%required% &fkill reward is yours."
+  already-claimed: "&#FF0000&lERROR &8▷ &fYou already took that reward."
+  players-only: "&#FF0000&lERROR &8▷ &fOnly players can have kills."
+  ready: "&#FFEE00&lKILLS &8▷ &f&#FFEE00%amount% &freward(s) are ready. Use &#FFEE00/killrewards"
+rewards:
+  "01":
+    kills: 1
+    commands:
+      - "tokens give %player% 5"
+    display:
+      - "&f- &#5C94FC5x &lTOKENS"
+  "02":
+    kills: 5
+    commands:
+      - "tokens give %player% 8"
+    display:
+      - "&f- &#5C94FC8x &lTOKENS"
+  "03":
+    kills: 10
+    commands:
+      - "tokens give %player% 10"
+    display:
+      - "&f- &#5C94FC10x &lTOKENS"
+  "04":
+    kills: 20
+    commands:
+      - "tokens give %player% 14"
+    display:
+      - "&f- &#5C94FC14x &lTOKENS"
+  "05":
+    kills: 35
+    commands:
+      - "tokens give %player% 18"
+    display:
+      - "&f- &#5C94FC18x &lTOKENS"
+  "06":
+    kills: 50
+    commands:
+      - "tokens give %player% 22"
+    display:
+      - "&f- &#5C94FC22x &lTOKENS"
+  "07":
+    kills: 75
+    commands:
+      - "tokens give %player% 26"
+    display:
+      - "&f- &#5C94FC26x &lTOKENS"
+  "08":
+    kills: 100
+    commands:
+      - "tokens give %player% 30"
+    display:
+      - "&f- &#5C94FC30x &lTOKENS"
+  "09":
+    kills: 140
+    commands:
+      - "tokens give %player% 35"
+    display:
+      - "&f- &#5C94FC35x &lTOKENS"
+  "10":
+    kills: 180
+    commands:
+      - "tokens give %player% 40"
+    display:
+      - "&f- &#5C94FC40x &lTOKENS"
+  "11":
+    kills: 230
+    commands:
+      - "tokens give %player% 46"
+    display:
+      - "&f- &#5C94FC46x &lTOKENS"
+  "12":
+    kills: 290
+    commands:
+      - "tokens give %player% 52"
+    display:
+      - "&f- &#5C94FC52x &lTOKENS"
+  "13":
+    kills: 360
+    commands:
+      - "tokens give %player% 58"
+    display:
+      - "&f- &#5C94FC58x &lTOKENS"
+  "14":
+    kills: 440
+    commands:
+      - "tokens give %player% 65"
+    display:
+      - "&f- &#5C94FC65x &lTOKENS"
+  "15":
+    kills: 530
+    commands:
+      - "tokens give %player% 72"
+    display:
+      - "&f- &#5C94FC72x &lTOKENS"
+  "16":
+    kills: 630
+    commands:
+      - "tokens give %player% 80"
+    display:
+      - "&f- &#5C94FC80x &lTOKENS"
+  "17":
+    kills: 740
+    commands:
+      - "tokens give %player% 88"
+    display:
+      - "&f- &#5C94FC88x &lTOKENS"
+  "18":
+    kills: 860
+    commands:
+      - "tokens give %player% 96"
+    display:
+      - "&f- &#5C94FC96x &lTOKENS"
+  "19":
+    kills: 1000
+    commands:
+      - "tokens give %player% 105"
+    display:
+      - "&f- &#5C94FC105x &lTOKENS"
+  "20":
+    kills: 1150
+    commands:
+      - "tokens give %player% 115"
+    display:
+      - "&f- &#5C94FC115x &lTOKENS"
+  "21":
+    kills: 1310
+    commands:
+      - "tokens give %player% 125"
+    display:
+      - "&f- &#5C94FC125x &lTOKENS"
+  "22":
+    kills: 1480
+    commands:
+      - "tokens give %player% 136"
+    display:
+      - "&f- &#5C94FC136x &lTOKENS"
+  "23":
+    kills: 1660
+    commands:
+      - "tokens give %player% 148"
+    display:
+      - "&f- &#5C94FC148x &lTOKENS"
+  "24":
+    kills: 1850
+    commands:
+      - "tokens give %player% 160"
+    display:
+      - "&f- &#5C94FC160x &lTOKENS"
+  "25":
+    kills: 2050
+    commands:
+      - "tokens give %player% 175"
+    display:
+      - "&f- &#5C94FC175x &lTOKENS"
+  "26":
+    kills: 2200
+    commands:
+      - "tokens give %player% 190"
+    display:
+      - "&f- &#5C94FC190x &lTOKENS"
+  "27":
+    kills: 2350
+    commands:
+      - "tokens give %player% 205"
+    display:
+      - "&f- &#5C94FC205x &lTOKENS"
+  "28":
+    kills: 2500
+    commands:
+      - "tokens give %player% 225"
+    display:
+      - "&f- &#5C94FC225x &lTOKENS"

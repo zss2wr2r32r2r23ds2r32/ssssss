@@ -1,0 +1,19 @@
+config-version: 3
+prefix: '%prefix%'
+players-only: '%prefix%&#FF2727Only players can use this command.'
+no-permission: '%prefix%&#FF2727You don''t have permission.'
+not-owned: '%prefix%&#FF2727You don''t own %color%&#FF2727!'
+applied: '%prefix%&#9FFF00Name colour applied!'
+reset: '%prefix%&#9FFF00Name colour reset!'
+custom-prompt: '%prefix%&#9FFF00Type two hex colours in chat: &f#FF0053 #FFFFFF'
+custom-invalid: '%prefix%&#FF2727Invalid format. Use: &f#RRGGBB #RRGGBB'
+custom-set: '%prefix%&#9FFF00Gradient set to &f%gradient%&#9FFF00!'
+custom-reapplied: '%prefix%&#9FFF00Re-applied your saved gradient!'
+gradient-usage: '%prefix%&#FF2727Usage: &f/namecolor gradient <#hex> <#hex> &7or &f/namecolor gradient <name> <#hex> <#hex>'
+color-not-found: '%prefix%&#FF2727Colour &f%color% &#FF2727was not found.'
+color-created: '%prefix%&#9FFF00Colour &f%color% &#9FFF00created.'
+color-deleted: '%prefix%&#9FFF00Colour &f%color% &#9FFF00removed.'
+menu-full: '%prefix%&#FF2727The colour menu is full.'
+
+message-modes:
+  applied: actionbar

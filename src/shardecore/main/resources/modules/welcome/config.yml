@@ -1,0 +1,22 @@
+# /w <player> welcomes a player who just joined for the first time.
+# Tab complete only lists new joiners who are still online and eligible.
+
+config-version: 1
+
+# Minutes after their first join that others can still /w them.
+expire-minutes: 30
+# Also treat players under this many minutes of playtime as welcomeable.
+new-player-minutes: 5
+
+messages:
+  join-announce: "&#00D6FF&lWELCOME &8▷ &f%player% &7just joined! Type &#00D6FF/w %player% &7to welcome them."
+  broadcast: "&#FF256E⚓ &f%welcomer% &7welcomed &f%player% &7to the server!"
+  success: "&#FF256E&lWELCOME &8▷ &fYou welcomed &#FF256E%player%&f!"
+  usage: "&#FF256E&lWELCOME &8▷ &fUse &#FF256E/w <player>"
+  players-only: "&#FF0000&lERROR &8▷ &fOnly a player can use that."
+  no-permission: "&#FF0000&lERROR &8▷ &fYou cannot do that."
+  self: "&#FF0000&lERROR &8▷ &fYou cannot welcome yourself."
+  offline: "&#FF0000&lERROR &8▷ &fThat player is not online."
+  not-new: "&#FF0000&lERROR &8▷ &f%player% &fis not a new joiner right now."
+  already: "&#FF0000&lERROR &8▷ &fYou already welcomed &#FF256E%player%&f."
+  none-pending: "&#FF256E&lWELCOME &8▷ &fNo new players to welcome right now."

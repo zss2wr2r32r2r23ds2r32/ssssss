@@ -1,0 +1,4 @@
+prefix: '%prefix%'
+players-only: '%prefix%&#FF2727Players only.'
+no-permission: '%prefix%&#FF2727You do not have permission.'
+unknown-board: '%prefix%&#FF2727Unknown leaderboard: &f%type%'

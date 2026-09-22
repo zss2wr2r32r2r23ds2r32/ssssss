@@ -1,0 +1,95 @@
+name: ShardedCore
+version: ${version}
+main: dev.sharded.core.ShardedCore
+api-version: "1.21"
+description: "ShardedCore SMP core - spawn, RTP, graves, mobs, chat filter, rollback"
+author: Sharded
+website: https://github.com/jack-garner
+softdepend:
+  - PlaceholderAPI
+  - LuckPerms
+  - WorldGuard
+folia-supported: false
+commands:
+  spawn:
+    description: Teleport to the main spawn.
+    usage: /spawn
+  setspawn:
+    description: Set the main spawn to your location.
+    usage: /setspawn
+    permission: shardedcore.setspawn
+  rtp:
+    description: Randomly teleport into the survival world.
+    usage: /rtp
+    permission: shardedcore.rtp
+    aliases: [wild, randomtp]
+  mobtoggle:
+    description: Toggle hostile mobs (including phantoms) in a 50-block radius.
+    usage: /mobtoggle
+    permission: shardedcore.mobtoggle
+    aliases: [mtoggle, nomobs]
+  chatfilter:
+    description: Manage the chat filter.
+    usage: /chatfilter
+    permission: shardedcore.chatfilter.admin
+    aliases: [cf, filter]
+  chathistory:
+    description: View messages the filter caught.
+    usage: "/chathistory [player]"
+    permission: shardedcore.chatfilter.admin
+  invrollback:
+    description: Restore a saved inventory snapshot.
+    usage: "/invrollback <player> [list|latest|#]"
+    permission: shardedcore.invrollback
+    aliases: [invrb, rollbackinv]
+  shardedcore:
+    description: Core admin command.
+    usage: /shardedcore reload
+    permission: shardedcore.admin
+    aliases: [sc, score]
+permissions:
+  shardedcore.admin:
+    description: Full ShardedCore access.
+    default: op
+    children:
+      shardedcore.setspawn: true
+      shardedcore.rtp: true
+      shardedcore.mobtoggle: true
+      shardedcore.chatfilter.admin: true
+      shardedcore.chatfilter.alerts: true
+      shardedcore.invrollback: true
+      shardedcore.pickup.bypass: true
+      shardedcore.spawn.bypass: true
+  shardedcore.spawn:
+    description: Use /spawn.
+    default: true
+  shardedcore.spawn.bypass:
+    description: Bypass spawn region restrictions.
+    default: op
+  shardedcore.setspawn:
+    description: Use /setspawn.
+    default: op
+  shardedcore.rtp:
+    description: Use /rtp and portal RTP.
+    default: true
+  shardedcore.mobtoggle:
+    description: Toggle nearby hostile mobs.
+    default: op
+  shardedcore.pickup:
+    description: Pick up and place mobs.
+    default: true
+  shardedcore.pickup.bypass:
+    description: Place picked-up mobs inside the spawn region.
+    default: op
+  shardedcore.chatfilter.admin:
+    description: Chat filter commands and history.
+    default: op
+  shardedcore.chatfilter.alerts:
+    description: Receive chat filter alerts.
+    default: op
+  shardedcore.chatfilter.bypass:
+    description: Bypass the chat filter.
+    default: op
+  shardedcore.invrollback:
+    description: Roll back player inventories.
+    default: op

@@ -1,0 +1,14 @@
+config-version: 1
+prefix: "%prefix%&#5C94FC&lGRAVES &8▷ &r"
+
+created: "%prefix%&fYour items are safe at &#5C94FC%x%, %y%, %z% &ffor &#FFB800%time%&f."
+claimed: "%prefix%&#9FFF00Your grave has been fully claimed."
+expired: "%prefix%&#FF2727Your grave expired and its remaining items were dropped."
+not-yours: "%prefix%&#FF2727That grave does not belong to you."
+already-open: "%prefix%&#FF2727That grave is already being viewed."
+break-denied: "%prefix%&#FF2727Open the grave to recover its items."
+no-permission: "%prefix%&#FF2727You do not have permission to do that."
+usage: "%prefix%&fUsage: /graves [list|purge]"
+list-header: "%prefix%&fGraves: &#5C94FC%count%"
+list-line: "&8• &#5C94FC%player% &8— &f%world% %x%, %y%, %z% &8(&f%time%&8)"
+purged: "%prefix%&#9FFF00Removed %count% grave(s)."

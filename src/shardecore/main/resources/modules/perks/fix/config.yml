@@ -1,0 +1,6 @@
+# Fix module - /fix repairs the item you are holding.
+# Cooldown in seconds (21600 = 6 hours). Bypass permission: sharded.fix.bypass
+config-version: 3
+message-mode: chat
+cooldown-seconds: 21600
+play-sound: true

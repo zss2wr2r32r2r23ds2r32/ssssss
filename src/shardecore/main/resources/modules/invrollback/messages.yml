@@ -1,0 +1,14 @@
+config-version: 3
+prefix: '%prefix%'
+
+usage: '&fUsage: &#00B7FF/invrollback <player>&f'
+never-joined: '&#FF2727%player% &fhas not joined yet.'
+none: '&fNo &#00B7FF%reason% &fbackups stored for &#00B7FF%player%&f.'
+restored: '&fRestored &#00B7FF%player%&f''s inventory from &#00B7FF%when% &7(%reason%).'
+restored-target: '&fYour inventory was restored by &#00B7FF%staff% &7(backup from &#00B7FF%when%&7).'
+offline: '&#FF2727%player% &fmust be online to restore their inventory.'
+empty-backup: '&#FF2727That backup is empty or no longer exists.'
+packed-inv: '&fPacked backup into shulker(s) for &#00B7FF%player%&f.'
+packed-ender: '&fPacked backup into shulker(s) in &#00B7FF%player%&f''s ender chest.'
+no-permission: '%prefix%&#FF2727You don''t have permission.'
+players-only: '%prefix%&#FF2727Only players can use this command.'
