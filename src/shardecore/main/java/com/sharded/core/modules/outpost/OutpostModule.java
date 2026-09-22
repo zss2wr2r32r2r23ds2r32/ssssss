@@ -99,6 +99,10 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
       return this.coordinator == null ? 0L : this.coordinator.millisUntilOutpost();
    }
 
+   public long displayTimeMs() {
+      return this.active ? this.emptyTimeRemainingMs() : this.millisUntilStart();
+   }
+
    public boolean isActive() {
       return this.active;
    }
@@ -263,6 +267,9 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
       ignoreCancelled = true
    )
    public void onMove(PlayerMoveEvent event) {
+      if (!this.active || this.region == null || event.getTo() == null || !event.hasChangedBlock()) {
+         return;
+      }
       if (this.region != null && this.active && event.getTo() != null) {
          if (event.getFrom().getBlockX() != event.getTo().getBlockX()
             || event.getFrom().getBlockY() != event.getTo().getBlockY()

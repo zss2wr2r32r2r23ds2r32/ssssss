@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Locale;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 
@@ -76,23 +77,37 @@ public final class PlaceholderUtil {
       } else {
          OutpostModule outpostmodule = shardedcore.modules().get(OutpostModule.class);
          long i = outpostmodule == null ? 0L : outpostmodule.millisUntilStart();
-         String s = TimeFormat.hms(i);
+         long outpostLeft = outpostmodule == null ? 0L : outpostmodule.displayTimeMs();
+         String s = TimeFormat.hms(outpostLeft);
+         String nextOutpost = TimeFormat.hms(i);
          KothModule kothmodule = shardedcore.modules().get(KothModule.class);
          long j = kothmodule == null ? 0L : kothmodule.millisUntilStart();
+         long nextKoth = kothmodule == null ? 0L : kothmodule.millisUntilNext();
          String s1 = TimeFormat.hms(j);
+         String nextKothText = TimeFormat.hms(nextKoth);
          String s2 = input.replace("%shardedcore_outpost_time%", s)
-            .replace("%shardedcore_outpost_countdown%", s)
+            .replace("%shardedcore_outpost_countdown%", nextOutpost)
             .replace("%outpost_time%", s)
+            .replace("%next_outpost%", nextOutpost)
             .replace("%shardedcore_koth_time%", s1)
             .replace("%shardedcore_koth_countdown%", s1)
-            .replace("%koth_time%", s1);
+            .replace("%koth_time%", s1)
+            .replace("%next_koth%", nextKothText);
          if (outpostmodule != null) {
+            String percent = String.format(Locale.US, "%.0f", outpostmodule.capturePercent());
+            Location center = outpostmodule.regionCenter();
             s2 = s2.replace("%shardedcore_outpost_active%", outpostmodule.isActive() ? "true" : "false")
                .replace("%shardedcore_outpost_capturer%", outpostmodule.contestingName())
                .replace("%outpost_capturer%", outpostmodule.contestingName())
                .replace("%outpost_contesting%", outpostmodule.contestingName())
-               .replace("%shardedcore_outpost_percent%", String.format(Locale.US, "%.0f", outpostmodule.capturePercent()))
-               .replace("%outpost_percent%", String.format(Locale.US, "%.0f", outpostmodule.capturePercent()))
+               .replace("%outpost_player%", outpostmodule.capturerName())
+               .replace("%shardedcore_outpost_percent%", percent)
+               .replace("%outpost_percent%", percent)
+               .replace("%outpost_percentage%", percent)
+               .replace("%outpost_points%", percent)
+               .replace("%outpost_x%", center == null ? "0" : String.valueOf(center.getBlockX()))
+               .replace("%outpost_y%", center == null ? "0" : String.valueOf(center.getBlockY()))
+               .replace("%outpost_z%", center == null ? "0" : String.valueOf(center.getBlockZ()))
                .replace("%shardedcore_outpost_bar%", outpostmodule.progressBar())
                .replace("%outpost_bar%", outpostmodule.progressBar())
                .replace("%outpost_contested%", outpostmodule.isContested() ? "Contested" : "Uncontested")
@@ -100,10 +115,16 @@ public final class PlaceholderUtil {
          }
 
          if (kothmodule != null) {
+            Location center = kothmodule.regionCenter();
+            String points = String.format(Locale.US, "%.0f", kothmodule.leaderPoints());
             s2 = s2.replace("%shardedcore_koth_active%", kothmodule.isActive() ? "true" : "false")
                .replace("%shardedcore_koth_leader%", kothmodule.leaderName())
-               .replace("%shardedcore_koth_leader_points%", String.format(Locale.US, "%.0f", kothmodule.leaderPoints()))
-               .replace("%koth_points%", String.format(Locale.US, "%.0f", kothmodule.leaderPoints()))
+               .replace("%koth_player%", kothmodule.leaderName())
+               .replace("%shardedcore_koth_leader_points%", points)
+               .replace("%koth_points%", points)
+               .replace("%koth_x%", center == null ? "0" : String.valueOf(center.getBlockX()))
+               .replace("%koth_y%", center == null ? "0" : String.valueOf(center.getBlockY()))
+               .replace("%koth_z%", center == null ? "0" : String.valueOf(center.getBlockZ()))
                .replace("%koth_percent%", String.format(Locale.US, "%.0f", kothmodule.eventPercent()))
                .replace("%shardedcore_koth_percent%", String.format(Locale.US, "%.0f", kothmodule.eventPercent()))
                .replace("%koth_bar%", kothmodule.progressBar())

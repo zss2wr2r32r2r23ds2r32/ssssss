@@ -111,9 +111,10 @@ menu:
 
 # Shown instead of the normal item while a destination is locked.
 # Unlock with /rtpunlock <nether|end>, lock again with /rtplock <nether|end>.
+locked-display-version: 2
 locked-display:
   material: RED_STAINED_GLASS_PANE
-  name: "&#FF0000&l%display% &8(&#FF0000LOCKED&8)"
+  name: "&#FF0000&l%display% "
   lore:
     - "&7[ʀᴀɴᴅᴏᴍ ᴛᴇʟᴇᴘᴏʀᴛ]"
     - ""
@@ -121,7 +122,7 @@ locked-display:
     - "&#FF0000¦ &fThis destination is &#FF0000locked&f."
     - "&#FF0000¦ &fIt will open later on."
     - ""
-    - "&#FF0000✖ &fLocked"
+    - "&#FF0000▷ &l&nLOCKED"
 
 worlds:
   overworld:

@@ -168,14 +168,18 @@ public final class HomesModule extends SetupFeatureModule implements CommandExec
     }
 
     private int maxHomes(Player player) {
-        if (this.hasSetupPerm(player, "setupcore.homes.unlimited") || player.hasPermission("sharded.homes.unlimited")) {
-            return Math.max(2, config.getIntegerList("bed-slots").isEmpty() ? 14 : config.getIntegerList("bed-slots").size());
-        }
-        int max = Math.max(1, config.getInt("default-homes", 2));
         int cap = config.getIntegerList("bed-slots").isEmpty() ? 14 : config.getIntegerList("bed-slots").size();
-        for (int i = 3; i <= cap; i++) {
-            if (player.hasPermission("homes." + i) || player.hasPermission("sharded.homes." + i)) {
-                max = Math.max(max, i);
+        if (this.hasSetupPerm(player, "setupcore.homes.unlimited") || player.hasPermission("sharded.homes.unlimited")) {
+            return Math.max(1, cap);
+        }
+        int max = Math.max(1, config.getInt("default-homes", 1));
+        org.bukkit.configuration.ConfigurationSection limits = config.getConfigurationSection("home-limits");
+        if (limits != null) {
+            for (String permission : limits.getKeys(false)) {
+                int granted = limits.getInt(permission, 0);
+                if (granted > max && player.hasPermission(permission)) {
+                    max = granted;
+                }
             }
         }
         return Math.min(max, cap);
@@ -428,6 +432,9 @@ public final class HomesModule extends SetupFeatureModule implements CommandExec
 
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
+        if (sessions.isEmpty() || !event.hasChangedBlock()) {
+            return;
+        }
         TeleportSession session = sessions.get(event.getPlayer().getUniqueId());
         if (session == null) {
             return;

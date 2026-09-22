@@ -1,4 +1,4 @@
-config-version: 10
+config-version: 11
 prefix: '&x&5&C&9&4&F&C&lTOKENS &8▷ &r'
 message-mode: chat
 
@@ -27,52 +27,52 @@ gui:
       order: 2
       slot: 12
       material: BEACON
-      name: '&7[&#ff4800:dagger:&7] &#ff4800&lOUTPOST &7&o(#2)'
+      name: '&7[&#ff4800🗡&7] &#ff4800&lOUTPOST &7&o(#2)'
       color: '&#ff4800'
       lore:
       - '&7[ᴍᴇᴛʜᴏᴅs]'
       - ''
       - '&#ff4800Description:'
       - '&#ff4800| &#ff4800Capture&f The Outpost'
-      - '&#ff4800| &fFor a token &#00b7ffRewards'
+      - '&#ff4800| &fFor a token &#ff4800Rewards'
       - ''
-      - '&#ff4800:dagger: &fNext Outpost: &#ff4800%nextoutpost%'
+      - '&#ff4800🗡 &fNext Outpost: &#ff4800%nextoutpost%'
       command: /outpost
     killstreaks:
       order: 3
       slot: 13
-      material: GRAY_SHULKER_BOX
-      name: '&7[&#ff0000:bow_and_arrow:&7] &#ff4800&lKILLSTREAKS &7&o(#3)'
+      material: HEAVY_CORE
+      name: '&7[&#ff0000🏹&7] &#ff4800&lKILLSTREAKS &7&o(#3)'
       color: '&#ff0000'
       lore:
       - '&7[ᴍᴇᴛʜᴏᴅs]'
       - ''
       - '&#ff0000Description:'
       - '&#ff0000| &#ff0000Gain&f Kill Streaks'
-      - '&#ff0000| &fAnd Get a &#00b7ffReward&f Of &#ff0000Tokens'
+      - '&#ff0000| &fAnd Get a &#ff0000Reward&f Of &#ff0000Tokens'
       - ''
-      - '&#ff0000:bow_and_arrow: &fCurrent Killstreak: &#ff0000%killstreak%'
+      - '&#ff0000🏹 &fCurrent Killstreak: &#ff0000%killstreak%'
       command: /killstreak
     kill_rewards:
       order: 4
       slot: 14
       material: MACE
-      name: '&7[&#ff007c:trident:&7] &#ff007c&lKILL REWARDS &7&o(#4)'
+      name: '&7[&#ff007c🔱&7] &#ff007c&lKILL REWARDS &7&o(#4)'
       color: '&#ff007c'
       lore:
       - '&7[ᴍᴇᴛʜᴏᴅs]'
       - ''
       - '&#ff007cDescription:'
       - '&#ff007c| &#ff007cGain&f Kills And'
-      - '&#ff007c| &fAnd Get a &#00b7ffReward&f For &#ff007cKills'
+      - '&#ff007c| &fAnd Get a &#ff007cReward&f For &#ff007cKills'
       - ''
-      - '&#ff007c:trident: &fCurrent Kills: &#ff007c%kills%'
+      - '&#ff007c🔱 &fCurrent Kills: &#ff007c%kills%'
       command: /stats
     playtime:
       order: 5
       slot: 15
-      material: SOUL_TORCH
-      name: '&7[&#ffd900:hourglass_flowing_sand:&7] &#ffd900&lPLAYTIME REWARDS &7&o(#5)'
+      material: CLOCK
+      name: '&7[&#ffd900⏳&7] &#ffd900&lPLAYTIME REWARDS &7&o(#5)'
       color: '&#ffd900'
       lore:
       - '&7[ᴍᴇᴛʜᴏᴅs]'
@@ -81,7 +81,7 @@ gui:
       - '&#ffd900| &fStay On the server'
       - '&#ffd900| &fAnd Get a Playtime &#ffd900Rewards'
       - ''
-      - '&#ffd900:hourglass_flowing_sand: &fPlaytime: &#ffd900%playtime%'
+      - '&#ffd900⏳ &fPlaytime: &#ffd900%playtime%'
       command: /playtimerewards
 
 # Hourly auto-grant disabled — use /playtimerewards milestones instead.

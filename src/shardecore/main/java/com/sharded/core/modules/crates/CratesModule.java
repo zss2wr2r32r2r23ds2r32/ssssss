@@ -856,9 +856,7 @@ public final class CratesModule extends SetupFeatureModule implements CommandExe
     private void ensureMenuDefaults() {
         FileConfiguration bundled = loadBundledConfig();
         int jar = bundled != null ? bundled.getInt("config-version", 8) : 8;
-        boolean menuCurrent = config.getStringList("menu.items.keyall.lore").stream().anyMatch(line -> line != null && line.contains(":ocean:"))
-                && config.getInt("menu.items.spooky.slot", -1) == 16;
-        if (config.getInt("config-version", 0) >= jar && config.isConfigurationSection("menu.items") && menuCurrent) {
+        if (config.getInt("config-version", 0) >= jar && config.isConfigurationSection("menu.items")) {
             return;
         }
         if (bundled != null && bundled.isConfigurationSection("menu")) {

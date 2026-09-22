@@ -74,6 +74,7 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
       }
 
       this.saveDefaultConfig();
+      ConfigSync.deleteBackups(this);
       ConfigSync.syncMainConfig(this);
       this.disableRemovedModules();
       this.rewriteGuideMenu();
@@ -294,7 +295,8 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
       this.getConfig().set("modules.leaderboards", true);
       this.getConfig().set("modules.leaderboardboards", true);
       this.getConfig().set("modules.leaderboardtopper", false);
-      this.getConfig().set("modules.multiverse", true);
+      this.getConfig().set("modules.multiverse", false);
+      this.getConfig().set("modules.cold", false);
       this.getConfig().set("modules.chatformat", true);
       this.getConfig().set("modules.rules", true);
       this.getConfig().set("modules.graves", true);
@@ -314,13 +316,7 @@ public final class ShardedCore extends JavaPlugin implements TabCompleter {
    private void rewriteGuideMenu() {
       File file1 = new File(this.getDataFolder(), "modules/guide/config.yml");
       YamlConfiguration yamlconfiguration = file1.isFile() ? YamlConfiguration.loadConfiguration(file1) : new YamlConfiguration();
-      boolean flag = yamlconfiguration.getInt("config-version", 0) < 11
-         || yamlconfiguration.getInt("size", 0) != 36
-         || yamlconfiguration.getConfigurationSection("items.rewards") == null
-         || yamlconfiguration.getConfigurationSection("items.rules") == null
-         || yamlconfiguration.getConfigurationSection("items.tokenshop") == null
-         || yamlconfiguration.getConfigurationSection("items.teams") == null
-         || !"MOSS_BLOCK".equalsIgnoreCase(yamlconfiguration.getString("items.random-teleport.material", ""));
+      boolean flag = yamlconfiguration.getInt("config-version", 0) < 12;
       if (flag) {
          try {
             try (InputStream inputstream = this.getResource("modules/guide/config.yml")) {

@@ -18,7 +18,7 @@ sound-win: "entity.player.levelup"
 # Optional lore shown only in preview / selection GUIs (not on the real reward item). Leave empty for none.
 preview-lore: []
 select-lore: []
-config-version: 8
+config-version: 9
 
 menu:
   title: "&8Crates"
@@ -38,7 +38,7 @@ menu:
         - "&#80ff00| &fOpen The &#80ff00Keyall Crate"
         - "&#80ff00| &fTo Earn the &#80ff00Essentials"
         - ""
-        - "&#80ff00:ocean: &fYour Keys: &#80ff00&n%key%"
+        - "&#80ff00🌊 &fYour Keys: &#80ff00&n%key%"
         - ""
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nLEFT&x&F&F&B&A&0&0-CLICK&r &x&F&F&B&A&0&0To Preview &x&F&F&B&A&0&0◁"
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nRIGHT&x&F&F&B&A&0&0-CLICK&r &x&F&F&B&A&0&0To Open&x&F&F&B&A&0&0◁"
@@ -54,7 +54,7 @@ menu:
         - "&#8000ff| &fOpen The &#8000ffSharded Crate"
         - "&#8000ff| &fTo Earn Unique &#8000ffItems "
         - ""
-        - "&#8000ff:ocean: &fYour Keys: &#8000ff&n%key%"
+        - "&#8000ff🌊 &fYour Keys: &#8000ff&n%key%"
         - ""
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nLEFT&x&F&F&B&A&0&0-CLICK&r &x&F&F&B&A&0&0To Preview &x&F&F&B&A&0&0◁"
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nRIGHT&x&F&F&B&A&0&0-CLICK&r &x&F&F&B&A&0&0To Open&x&F&F&B&A&0&0◁"
@@ -70,7 +70,7 @@ menu:
         - "&#ff0000| &fOpen The &#ff0000Kill Crate"
         - "&#ff0000| &fTo Earn Unique &#ff0000Items "
         - ""
-        - "&#ff0000:ocean: &fYour Keys: &#ff0000&n%key%"
+        - "&#ff0000🌊 &fYour Keys: &#ff0000&n%key%"
         - ""
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nLEFT&x&F&F&B&A&0&0-CLICK&r &x&F&F&B&A&0&0To Preview &x&F&F&B&A&0&0◁"
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nRIGHT&x&F&F&B&A&0&0-CLICK&r &x&F&F&B&A&0&0To Open&x&F&F&B&A&0&0◁"
@@ -86,7 +86,7 @@ menu:
         - "&#005aff| &fOpen The &#005affAstral Crate"
         - "&#005aff| &fTo Earn Unique &#005affItems "
         - ""
-        - "&#005aff:ocean: &fYour Keys: &#005aff&n%key%"
+        - "&#005aff🌊 &fYour Keys: &#005aff&n%key%"
         - ""
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nLEFT&x&F&F&B&A&0&0-CLICK&r &x&F&F&B&A&0&0To Preview &x&F&F&B&A&0&0◁"
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nRIGHT&x&F&F&B&A&0&0-CLICK&r &x&F&F&B&A&0&0To Open&x&F&F&B&A&0&0◁"
@@ -102,8 +102,8 @@ menu:
         - "&#ff6700| &fOpen The &#ff6700Halloween Crate"
         - "&#ff6700| &fTo Earn &#ff6700Exclusive &#ff6700Items"
         - ""
-        - "&#ff6700:ocean: &fYour Keys: &#ff6700&n%key%"
-        - "&#ff6700:bow_and_arrow: &fOpened: &#ff6700&n%opened%"
+        - "&#ff6700🌊 &fYour Keys: &#ff6700&n%key%"
+        - "&#ff6700🏹 &fOpened: &#ff6700&n%opened%"
         - ""
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nLEFT&x&F&F&B&A&0&0-CLICK&r &x&F&F&B&A&0&0To Preview &x&F&F&B&A&0&0◁"
         - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nRIGHT&x&F&F&B&A&0&0-CLICK&r &x&F&F&B&A&0&0To Open&x&F&F&B&A&0&0◁"

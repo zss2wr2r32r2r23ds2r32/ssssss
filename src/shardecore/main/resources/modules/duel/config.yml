@@ -48,3 +48,85 @@ elo:
   start: 1000
   k-factor: 32
   top-limit: 10
+
+request-gui:
+  title: "&8Duel"
+  rows: 3
+  filler-material: BLACK_STAINED_GLASS_PANE
+  filler-name: " "
+  world-names:
+    world_nether: Nether
+    world_the_end: End
+  buttons:
+    cancel:
+      slot: 10
+      material: RED_STAINED_GLASS_PANE
+      name: "&#ff0000&lCANCEL"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#ff0000Information:"
+        - "&#ff0000| &#ff0000Click Here,&f To"
+        - "&#ff0000| &fCancel this &#ff0000Request"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Cancel"
+    world:
+      slot: 12
+      material: SPYGLASS
+      name: "&#ffe300&lWORLD"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#ffe300Information:"
+        - "&#ffe300| &fShows What world"
+        - "&#ffe300| &#ffe300%player%&f Is In"
+        - ""
+        - "&#ffe300🌊 &fWorld: &#ffe300%world%"
+    head:
+      slot: 13
+      material: PLAYER_HEAD
+      name: "&#ff0067%player%"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#ff0067Information:"
+        - "&#ff0067| &fThe Player you"
+        - "&#ff0067| &fAre wanting to &#ff0067Duel"
+        - ""
+        - "&#ff0067✎ &fPlayer: &#ff0067%player%"
+    elo:
+      slot: 14
+      material: HEAVY_CORE
+      name: "&#008dff&lELO"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#008dffInformation:"
+        - "&#008dff| &fThe amount of"
+        - "&#008dff| &#008dffElo %player%&f Has"
+        - ""
+        - "&#008dff☀ &fELO: &#008dff%elo%"
+    send:
+      slot: 16
+      material: LIME_STAINED_GLASS_PANE
+      name: "&#8aff00&lSEND"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#8aff00Information:"
+        - "&#8aff00| &#8aff00Click Here,&f To"
+        - "&#8aff00| &fSend an ongoing &#8aff00Request"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Send"
+    confirm:
+      slot: 16
+      material: LIME_STAINED_GLASS_PANE
+      name: "&#8aff00&lCONFIRM"
+      lore:
+        - "&8Description"
+        - ""
+        - "&#8aff00Information:"
+        - "&#8aff00| &#8aff00Click Here,&f To"
+        - "&#8aff00| &fConfirm The &#8aff00Duel"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Confirm"

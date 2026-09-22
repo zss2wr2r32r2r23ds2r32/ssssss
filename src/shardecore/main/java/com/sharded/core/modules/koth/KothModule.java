@@ -114,8 +114,12 @@ public final class KothModule extends Module implements CommandExecutor, TabComp
       if (this.active) {
          return Math.max(0L, this.eventEndsAt - System.currentTimeMillis());
       } else {
-         return this.coordinator == null ? 0L : this.coordinator.millisUntilKoth();
+         return this.millisUntilNext();
       }
+   }
+
+   public long millisUntilNext() {
+      return this.coordinator == null ? 0L : this.coordinator.millisUntilKoth();
    }
 
    public boolean isActive() {
@@ -271,6 +275,9 @@ public final class KothModule extends Module implements CommandExecutor, TabComp
       ignoreCancelled = true
    )
    public void onMove(PlayerMoveEvent event) {
+      if (!this.active || this.region == null || !event.hasChangedBlock()) {
+         return;
+      }
       if (this.active && this.region != null) {
          if (event.getFrom().getBlockX() != event.getTo().getBlockX()
             || event.getFrom().getBlockY() != event.getTo().getBlockY()

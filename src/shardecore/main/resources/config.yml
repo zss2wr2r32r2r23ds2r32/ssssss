@@ -63,7 +63,7 @@ modules:
   chatcolor: true
   namecolor: true
   wardrobe: true
-  cold: true
+  cold: false
   itemshop: true
   toolname: true
   bundles: true
@@ -112,4 +112,4 @@ modules:
   arenasync: true
   welcome: true
   staffpromote: true
-  multiverse: true
+  multiverse: false

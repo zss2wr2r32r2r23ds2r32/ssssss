@@ -421,12 +421,23 @@ public final class ArmorTrimsModule extends Module implements CommandExecutor {
    @EventHandler
    public void onClose(InventoryCloseEvent event) {
       ArmorTrimsModule.TrimHolder armortrimsmodule$trimholder = TrackedInventories.untrack(event.getInventory(), ArmorTrimsModule.TrimHolder.class);
-      if (armortrimsmodule$trimholder != null) {
-         ItemStack itemstack = event.getInventory().getItem(this.armorSlot);
-         if (itemstack != null && !itemstack.getType().isAir() && event.getPlayer() instanceof Player player) {
-            player.getInventory().addItem(new ItemStack[]{itemstack}).values().forEach(i -> player.getWorld().dropItemNaturally(player.getLocation(), i));
-         }
+      if (armortrimsmodule$trimholder == null && event.getInventory().getHolder() instanceof ArmorTrimsModule.TrimHolder held) {
+         armortrimsmodule$trimholder = held;
       }
+      if (armortrimsmodule$trimholder != null && event.getPlayer() instanceof Player player) {
+         ItemStack itemstack = event.getInventory().getItem(this.armorSlot);
+         event.getInventory().setItem(this.armorSlot, null);
+         this.returnTrimItem(player, itemstack);
+      }
+   }
+
+   private void returnTrimItem(Player player, ItemStack itemstack) {
+      if (itemstack == null || itemstack.getType().isAir()) {
+         return;
+      }
+      ItemStack returning = itemstack.clone();
+      java.util.HashMap<Integer, ItemStack> leftover = player.getInventory().addItem(returning);
+      leftover.values().forEach(item -> player.getWorld().dropItemNaturally(player.getLocation(), item));
    }
 
    private final class TrimHolder implements InventoryHolder {

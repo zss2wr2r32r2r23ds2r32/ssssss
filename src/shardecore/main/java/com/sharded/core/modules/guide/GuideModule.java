@@ -86,7 +86,14 @@ public final class GuideModule extends SetupFeatureModule implements CommandExec
         int rows = Math.max(1, size / 9);
         Inventory inventory = GuiHelper.create("guide", config.getString("menu_title", config.getString("gui-title", "&8Guide")), rows);
         if (config.getBoolean("filler.auto-fill", true)) {
-            GuiHelper.fillGlass(inventory);
+            Material fillerMat = MaterialUtil.resolve(config.getString("filler.material", "BLACK_STAINED_GLASS_PANE"));
+            if (fillerMat == null) {
+                fillerMat = Material.BLACK_STAINED_GLASS_PANE;
+            }
+            ItemStack filler = ItemBuilder.of(fillerMat).name(config.getString("filler.name", " ")).build();
+            for (int i = 0; i < inventory.getSize(); i++) {
+                inventory.setItem(i, filler.clone());
+            }
         }
         ConfigurationSection section = config.getConfigurationSection("items");
         if (section != null) {
@@ -118,7 +125,9 @@ public final class GuideModule extends SetupFeatureModule implements CommandExec
         for (String line : config.getStringList("open_commands")) {
             runAction(player, line);
         }
-        SoundUtil.play(player, config.getString("sound-open", "block.note_block.pling"));
+        if (config.contains("sound-open")) {
+            SoundUtil.play(player, config.getString("sound-open"));
+        }
     }
 
     @EventHandler(ignoreCancelled = true)

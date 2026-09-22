@@ -77,9 +77,9 @@ public final class NametagsModule extends Module implements CommandExecutor {
             }
          }, 20L);
          this.clampRefresh();
-         long i = Math.max(40L, this.config.getLong("refresh", 40L));
+         long i = Math.max(1L, this.config.getLong("refresh", 20L));
          if (!this.ride()) {
-            this.followTask = this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, this::followAll, 5L, 5L);
+            this.followTask = this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, this::followAll, i, i);
          }
          this.refreshTask = this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, () -> {
             this.tick.incrementAndGet();

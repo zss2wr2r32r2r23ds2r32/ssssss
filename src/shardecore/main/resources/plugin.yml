@@ -1,5 +1,5 @@
 name: ShardedCore
-version: '1.8.32'
+version: '1.8.33'
 main: com.sharded.core.ShardedCore
 api-version: '1.21'
 author: Sharded
@@ -81,10 +81,6 @@ commands:
   setspawn:
     description: Set main or vanilla spawn locations
     usage: /setspawn <main|vanilla>
-  mv:
-    description: Multiverse world import, teleport, and spawn
-    usage: /mv tp <world>
-    aliases: [multiverse]
   promote:
     description: Set a player's LuckPerms staff role
     usage: /promote <player> <role>
@@ -111,9 +107,6 @@ commands:
   wardrobe:
     description: Open your cosmetic hat wardrobe
     usage: /wardrobe [remove|limited|hide|show|delete]
-  cold:
-    description: Secret
-    usage: /cold
   hatshop:
     description: Open the token shop cosmetics hat menu
     usage: /hatshop
@@ -694,9 +687,6 @@ permissions:
     default: op
   sharded.spawn.admin:
     description: Set main and vanilla spawn locations
-    default: op
-  sharded.multiverse.admin:
-    description: Use /mv world commands
     default: op
   sharded.promote.use:
     description: Promote players to a staff role

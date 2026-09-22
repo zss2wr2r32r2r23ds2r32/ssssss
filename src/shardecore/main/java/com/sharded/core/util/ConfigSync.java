@@ -25,41 +25,93 @@ public final class ConfigSync {
       plugin.reloadConfig();
    }
 
+   public static void deleteBackups(ShardedCore plugin) {
+      File root = plugin.getDataFolder();
+      if (root == null || !root.exists()) {
+         return;
+      }
+      try (java.util.stream.Stream<java.nio.file.Path> paths = Files.walk(root.toPath())) {
+         paths.filter(path -> path.getFileName().toString().endsWith(".bak")).forEach(path -> {
+            try {
+               Files.deleteIfExists(path);
+            } catch (IOException ioexception) {
+               plugin.getLogger().warning("Could not delete " + path + ": " + ioexception.getMessage());
+            }
+         });
+      } catch (IOException ioexception) {
+         plugin.getLogger().warning("Could not scan for .bak files: " + ioexception.getMessage());
+      }
+   }
+
    public static YamlConfiguration load(ShardedCore plugin, File file, String resourcePath) {
       sync(plugin, file, resourcePath);
       if (!file.exists()) {
          return new YamlConfiguration();
-      } else {
-         try {
-            return YamlConfiguration.loadConfiguration(file);
-         } catch (Exception exception) {
-            plugin.getLogger().warning("Corrupt config at " + file.getPath() + ", replacing from jar: " + exception.getMessage());
-            backup(file);
-            if (plugin.getResource(resourcePath) != null) {
-               plugin.saveResource(resourcePath, true);
-            }
-
-            return file.exists() ? YamlConfiguration.loadConfiguration(file) : new YamlConfiguration();
-         }
+      }
+      try {
+         return YamlConfiguration.loadConfiguration(file);
+      } catch (Exception exception) {
+         plugin.getLogger().warning("Could not load " + file.getPath() + ". Keeping the file in place: " + exception.getMessage());
+         return new YamlConfiguration();
       }
    }
 
    public static void sync(ShardedCore plugin, File file, String resourcePath) {
-      InputStream inputstream = plugin.getResource(resourcePath);
-      if (inputstream == null) {
+      byte[] jarBytes = readResource(plugin, resourcePath);
+      if (jarBytes == null) {
          return;
       }
       File parent = file.getParentFile();
       if (parent != null && !parent.exists()) {
          parent.mkdirs();
       }
-      if (file.exists()) {
-         backup(file);
+      if (!file.exists()) {
+         writeBytes(plugin, file, jarBytes);
+         return;
+      }
+      int jarVersion = configVersion(jarBytes);
+      int diskVersion = diskConfigVersion(plugin, file);
+      if (jarVersion > diskVersion) {
+         writeBytes(plugin, file, jarBytes);
+      }
+   }
+
+   private static byte[] readResource(ShardedCore plugin, String resourcePath) {
+      InputStream inputstream = plugin.getResource(resourcePath);
+      if (inputstream == null) {
+         return null;
       }
       try (inputstream) {
-         Files.copy(inputstream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+         return inputstream.readAllBytes();
       } catch (IOException ioexception) {
-         plugin.getLogger().warning("Could not reset " + file.getPath() + " from jar defaults: " + ioexception.getMessage());
+         plugin.getLogger().warning("Could not read jar resource " + resourcePath + ": " + ioexception.getMessage());
+         return null;
+      }
+   }
+
+   private static void writeBytes(ShardedCore plugin, File file, byte[] bytes) {
+      try {
+         Files.write(file.toPath(), bytes);
+      } catch (IOException ioexception) {
+         plugin.getLogger().warning("Could not write " + file.getPath() + ": " + ioexception.getMessage());
+      }
+   }
+
+   private static int configVersion(byte[] yamlBytes) {
+      try {
+         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(new java.io.StringReader(new String(yamlBytes, StandardCharsets.UTF_8)));
+         return yaml.getInt("config-version", 0);
+      } catch (Exception exception) {
+         return 0;
+      }
+   }
+
+   private static int diskConfigVersion(ShardedCore plugin, File file) {
+      try {
+         return YamlConfiguration.loadConfiguration(file).getInt("config-version", 0);
+      } catch (Exception exception) {
+         plugin.getLogger().warning("Could not read config-version from " + file.getPath() + ". Leaving the file unchanged: " + exception.getMessage());
+         return Integer.MAX_VALUE;
       }
    }
 

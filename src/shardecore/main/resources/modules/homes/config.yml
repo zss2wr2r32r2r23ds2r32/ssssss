@@ -5,7 +5,12 @@
 
 gui-title: "&8Homes"
 rows: 6
-default-homes: 2
+default-homes: 1
+config-version: 2
+home-limits:
+  sharded.homes.2: 2
+  sharded.homes.3: 3
+  sharded.homes.5: 5
 max-homes: 14
 teleport-seconds: 5
 message-channel: chat

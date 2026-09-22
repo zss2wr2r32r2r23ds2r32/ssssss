@@ -1,4 +1,4 @@
-config-version: 4
+config-version: 5
 enabled: true
 refresh: 20
 display:
@@ -24,7 +24,7 @@ lines:
     interval: 0
     refresh: 100
     frames:
-      - '%luckperms_prefix%%colored_name%%shardedcore_tag% %luckperms_suffix%'
+      - '%luckperms_prefix%%colored_name% %shardedcore_tag% %luckperms_suffix%'
   bottom:
     enabled: true
     interval: 800

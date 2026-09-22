@@ -34,7 +34,6 @@ import com.sharded.core.modules.killstreaks.KillstreaksModule;
 import com.sharded.core.modules.koth.KothModule;
 import com.sharded.core.modules.leaderboards.LeaderboardsModule;
 import com.sharded.core.modules.media.MediaModule;
-import com.sharded.core.modules.multiverse.MultiverseModule;
 import com.sharded.core.modules.namecolor.NameColorModule;
 import com.sharded.core.modules.nightvision.NightVisionModule;
 import com.sharded.core.modules.outpost.OutpostModule;
@@ -91,7 +90,6 @@ public final class ModuleManager {
       this.register(new AutoSmeltModule(plugin));
       this.register(new PortalRtpModule(plugin));
       this.register(new SpawnSelectModule(plugin));
-      this.register(new MultiverseModule(plugin));
       this.register(new SettingsModule(plugin));
       this.register(new KillstreaksModule(plugin));
       this.register(new PetsModule(plugin));
@@ -105,7 +103,6 @@ public final class ModuleManager {
       this.register(new ChatColorModule(plugin));
       this.register(new NameColorModule(plugin));
       this.register(new WardrobeModule(plugin));
-      this.register(new com.sharded.core.modules.cold.ColdModule(plugin));
       this.register(new com.sharded.core.modules.itemshop.ItemShopModule(plugin));
       this.register(new ToolNameModule(plugin));
       this.register(new BundlesModule(plugin));

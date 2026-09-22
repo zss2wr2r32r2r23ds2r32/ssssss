@@ -1,5 +1,5 @@
 menu_title: Guide
-config-version: 11
+config-version: 12
 size: 36
 open_permission: sharded.guide.use
 
@@ -60,7 +60,7 @@ items:
     - '&#9FFF00| &fClick to Visit'
     - '&#9FFF00| &fRewards and Get &#9FFF00Started'
     - ''
-    - '&#9FFF00ℹ &fCommand: &#9FFF00/rewards'
+    - '&#9FFF00☀ &fCommand: &#9FFF00/rewards'
     - ''
     - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
     click_commands:

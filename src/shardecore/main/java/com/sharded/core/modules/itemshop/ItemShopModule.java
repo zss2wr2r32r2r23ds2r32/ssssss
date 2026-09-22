@@ -515,6 +515,85 @@ public final class ItemShopModule extends Module implements CommandExecutor, Tab
       return ids;
    }
 
+   List<ItemShopTypes.Cosmetic> shopHats(boolean limitedTab) {
+      return this.browserHats(limitedTab);
+   }
+
+   List<ItemShopTypes.Cosmetic> shopTags(boolean limitedTab) {
+      com.sharded.core.modules.tags.TagsModule tags = this.plugin.modules().get(com.sharded.core.modules.tags.TagsModule.class);
+      java.util.Set<String> seasonal = tags == null ? java.util.Set.of() : tags.seasonLimitedIds();
+      java.util.Set<String> active = tags == null ? java.util.Set.of() : tags.activeSeasonTagIds();
+      List<ItemShopTypes.Cosmetic> list = new ArrayList<>();
+      java.util.Set<String> seen = new java.util.HashSet<>();
+      for (ItemShopTypes.Cosmetic tag : this.catalog.tags()) {
+         if (!tag.enabled()) {
+            continue;
+         }
+         String id = tag.id().toLowerCase(Locale.ROOT);
+         boolean seasonalTag = seasonal.contains(id);
+         if (limitedTab) {
+            if (!active.contains(id)) {
+               continue;
+            }
+         } else if (seasonalTag) {
+            continue;
+         }
+         list.add(tag);
+         seen.add(id);
+      }
+      if (tags != null) {
+         for (String id : (limitedTab ? active : tags.allTagIds())) {
+            String key = id.toLowerCase(Locale.ROOT);
+            if (!seen.add(key)) {
+               continue;
+            }
+            if (!limitedTab && seasonal.contains(key)) {
+               continue;
+            }
+            if (limitedTab && !active.contains(key)) {
+               continue;
+            }
+            ItemShopTypes.Cosmetic cosmetic = this.catalog.tag(key);
+            if (cosmetic != null) {
+               if (cosmetic.enabled()) {
+                  list.add(cosmetic);
+               }
+               continue;
+            }
+            list.add(this.tagCosmetic(key, tags.tagLabel(key)));
+         }
+      }
+      return list;
+   }
+
+   private ItemShopTypes.Cosmetic tagCosmetic(String id, String label) {
+      return new ItemShopTypes.Cosmetic(
+         "tag",
+         id,
+         label == null || label.isBlank() ? id : label,
+         List.of("Equip this tag in chat."),
+         "common",
+         null,
+         true,
+         true,
+         false,
+         "sharded.tag." + id,
+         List.of(),
+         "NAME_TAG",
+         "",
+         "",
+         0.0,
+         0.55,
+         0.0,
+         0.4F,
+         0F,
+         0F,
+         0F,
+         "",
+         "before"
+      );
+   }
+
    List<ItemShopTypes.Cosmetic> browserHats(boolean limitedTab) {
       Set<String> limited = this.limitedIdSet();
       List<ItemShopTypes.Cosmetic> list = new ArrayList<>();

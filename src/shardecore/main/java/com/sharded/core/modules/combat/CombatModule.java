@@ -220,6 +220,9 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
       ignoreCancelled = true
    )
    public void onMove(PlayerMoveEvent event) {
+      if (this.taggedUntil.isEmpty() || !event.hasChangedBlock()) {
+         return;
+      }
       if (event.hasChangedBlock()) {
          if (this.isTagged(event.getPlayer()) && !CombatRules.bypassesCombatLock(event.getPlayer())) {
             CuboidRegion cuboidregion = this.combatRegion();
@@ -231,7 +234,8 @@ public final class CombatModule extends Module implements CommandExecutor, TabCo
                      if (cuboidregion.contains(location)) {
                         event.setCancelled(true);
                         Location location2 = cuboidregion.contains(location1) ? this.nearestOutside(cuboidregion, location1) : location1.clone();
-                        Bukkit.getScheduler().runTask(this.plugin, () -> this.pushBack(event.getPlayer(), location2, cuboidregion));
+                        event.setTo(location2);
+                        this.pushBack(event.getPlayer(), location2, cuboidregion);
                      }
                   }
                }

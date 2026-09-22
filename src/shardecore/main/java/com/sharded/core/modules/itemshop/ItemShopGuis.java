@@ -35,9 +35,8 @@ final class ItemShopGuis {
       YamlConfiguration shop = this.module.shop();
       ConfigurationSection gui = shop.getConfigurationSection("gui.shop");
       int rows = Math.max(1, Math.min(6, gui.getInt("rows", 6)));
-      int pages = this.pageCount(gui, false);
       ItemShopModule.ShopHolder holder = new ItemShopModule.ShopHolder();
-      holder.page = Math.max(0, Math.min(page, pages - 1));
+      holder.page = this.clampPage(page);
       Inventory inventory = Bukkit.createInventory(holder, rows * 9, Text.c(gui.getString("title", "&8Item Shop")));
       holder.inventory = inventory;
       TrackedInventories.track(inventory, holder);
@@ -55,17 +54,6 @@ final class ItemShopGuis {
       ItemStack filler = ItemShopItems.fromSection(gui, fillerMat, gui.getString("filler-name", " "), List.of());
       for (int i = 0; i < inventory.getSize(); i++) {
          inventory.setItem(i, filler.clone());
-      }
-      Material frameMat = ItemShopTypes.material(gui, "frame-material", Material.GRAY_STAINED_GLASS_PANE);
-      ItemStack frame = ItemShopItems.fromSection(null, frameMat, " ", List.of());
-      List<Integer> frameSlots = gui.getIntegerList("frame-slots");
-      if (frameSlots.isEmpty()) {
-         frameSlots = List.of(20, 21, 22, 23, 24, 31);
-      }
-      for (int slot : frameSlots) {
-         if (slot >= 0 && slot < inventory.getSize()) {
-            inventory.setItem(slot, frame.clone());
-         }
       }
       this.placeUtility(player, inventory, gui.getConfigurationSection("items.countdown"), "countdown");
       this.placeUtility(player, inventory, gui.getConfigurationSection("items.previous"), "previous");
@@ -85,16 +73,41 @@ final class ItemShopGuis {
       this.placeUtility(player, inventory, gui.getConfigurationSection("items.my-cosmetics"), "cosmetics");
       this.placeUtility(player, inventory, gui.getConfigurationSection("items.my-tags"), "tags");
       this.placeUtility(player, inventory, gui.getConfigurationSection("items.close"), "close");
+      List<Integer> featured = this.featuredSlots(gui);
+      List<ItemShopTypes.Cosmetic> hats = this.module.shopHats(limitedTab);
+      for (int i = 0; i < featured.size() && i < hats.size(); i++) {
+         int slot = featured.get(i);
+         if (slot >= 0 && slot < inventory.getSize()) {
+            inventory.setItem(slot, this.listingIcon(player, hats.get(i)));
+         }
+      }
+      List<ItemShopTypes.Cosmetic> pageItems = this.clampPage(page) == 0
+         ? hats.subList(Math.min(featured.size(), hats.size()), hats.size())
+         : this.module.shopTags(limitedTab);
       List<Integer> content = this.contentSlots(gui);
-      List<ItemShopTypes.Cosmetic> hats = this.module.browserHats(limitedTab);
-      int start = Math.max(0, page) * content.size();
-      for (int i = 0; i < content.size() && start + i < hats.size(); i++) {
+      for (int i = 0; i < content.size() && i < pageItems.size(); i++) {
          int slot = content.get(i);
          if (slot < 0 || slot >= inventory.getSize()) {
             continue;
          }
-         inventory.setItem(slot, this.listingIcon(player, hats.get(start + i)));
+         inventory.setItem(slot, this.listingIcon(player, pageItems.get(i)));
       }
+   }
+
+   private int clampPage(int page) {
+      int pages = Math.max(1, this.module.shop().getInt("gui.shop.pages", 2));
+      return Math.max(0, Math.min(page, pages - 1));
+   }
+
+   private List<Integer> featuredSlots(ConfigurationSection gui) {
+      List<Integer> slots = gui.getIntegerList("featured-slots");
+      if (slots.isEmpty()) {
+         slots = gui.getIntegerList("frame-slots");
+      }
+      if (slots.isEmpty()) {
+         return List.of(20, 21, 22, 23, 24, 31);
+      }
+      return slots;
    }
 
    private List<Integer> contentSlots(ConfigurationSection gui) {
@@ -110,9 +123,7 @@ final class ItemShopGuis {
    }
 
    private int pageCount(ConfigurationSection gui, boolean limitedTab) {
-      int per = Math.max(1, this.contentSlots(gui).size());
-      int count = this.module.browserHats(limitedTab).size();
-      return Math.max(1, (count + per - 1) / per);
+      return Math.max(1, this.module.shop().getInt("gui.shop.pages", 2));
    }
 
    private void placeBackButton(Player player, Inventory inventory, ConfigurationSection gui) {
@@ -455,9 +466,8 @@ final class ItemShopGuis {
       YamlConfiguration shop = this.module.shop();
       ConfigurationSection gui = shop.getConfigurationSection("gui.shop");
       int rows = gui == null ? 6 : Math.max(1, Math.min(6, gui.getInt("rows", 6)));
-      int pages = gui == null ? 1 : this.pageCount(gui, true);
       ItemShopModule.LimitedHolder holder = new ItemShopModule.LimitedHolder();
-      holder.page = Math.max(0, Math.min(page, pages - 1));
+      holder.page = this.clampPage(page);
       String title = gui == null ? "&8Item Shop" : gui.getString("title", "&8Item Shop");
       Inventory inventory = Bukkit.createInventory(holder, rows * 9, Text.c(title));
       holder.inventory = inventory;

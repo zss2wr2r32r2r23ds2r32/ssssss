@@ -531,6 +531,9 @@ public final class StaffModeManager implements Listener {
       ignoreCancelled = true
    )
    public void onFreezeMove(PlayerMoveEvent event) {
+      if (this.frozen.isEmpty()) {
+         return;
+      }
       if (this.frozen.contains(event.getPlayer().getUniqueId())) {
          if (event.getFrom().getBlockX() != event.getTo().getBlockX()
             || event.getFrom().getBlockY() != event.getTo().getBlockY()

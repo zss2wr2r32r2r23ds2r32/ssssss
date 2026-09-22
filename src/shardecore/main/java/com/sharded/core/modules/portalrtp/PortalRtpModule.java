@@ -6,6 +6,9 @@ import com.sharded.core.modules.duel.DuelModule;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
@@ -91,13 +94,15 @@ public final class PortalRtpModule extends Module implements CommandExecutor, Ta
       this.registerCommand("lock", this);
       this.registerCommand("rtpqueue", this);
       this.registerCommand("leave", this);
+      this.ensureLockedDisplay();
       this.triggers = new PortalTriggerStore(this.plugin, this.moduleFolder());
       this.portalWorldName = this.config.getString("portal-world", "spawn");
       this.loadDestinations();
       this.loadUnlockState();
       this.registerGuiActions();
       long i = Math.max(20L, this.config.getLong("refill-seconds", 10L) * 20L);
-      this.searchTask = this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, () -> this.tickSearches(), 20L, 1L);
+      long searchInterval = Math.max(1L, this.config.getLong("search-interval-ticks", 5L));
+      this.searchTask = this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, () -> this.tickSearches(), searchInterval, searchInterval);
       this.refillTask = this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, () -> this.refillPools(), 100L, i);
    }
 
@@ -415,6 +420,29 @@ public final class PortalRtpModule extends Module implements CommandExecutor, Ta
       } else {
          Material material = this.material(configurationsection.getString("material"), Material.BLACK_STAINED_GLASS_PANE);
          return material == Material.AIR ? null : this.item(material, configurationsection.getString("name", " "), configurationsection.getStringList("lore"));
+      }
+   }
+
+   private void ensureLockedDisplay() {
+      if (this.config.getInt("locked-display-version", 0) >= 2) {
+         return;
+      }
+      try (InputStream inputstream = this.plugin.getResource(this.jarResourcePath("config.yml"))) {
+         if (inputstream != null) {
+            YamlConfiguration yamlconfiguration = YamlConfiguration.loadConfiguration(new InputStreamReader(inputstream, StandardCharsets.UTF_8));
+            ConfigurationSection configurationsection = yamlconfiguration.getConfigurationSection("locked-display");
+            if (configurationsection != null) {
+               this.config.set("locked-display", configurationsection);
+            }
+         }
+      } catch (Exception exception) {
+         this.plugin.getLogger().warning("[portalrtp] Could not copy locked-display: " + exception.getMessage());
+      }
+      this.config.set("locked-display-version", 2);
+      try {
+         this.config.save(new File(this.moduleFolder(), "config.yml"));
+      } catch (Exception exception) {
+         this.plugin.getLogger().warning("[portalrtp] Could not save locked-display: " + exception.getMessage());
       }
    }
 

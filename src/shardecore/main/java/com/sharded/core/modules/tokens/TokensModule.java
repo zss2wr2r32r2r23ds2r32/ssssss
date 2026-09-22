@@ -51,10 +51,7 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
    }
 
    private void migrateMethods() {
-      if ("GRAY_SHULKER_BOX".equalsIgnoreCase(this.config.getString("gui.methods.killstreaks.material", ""))
-         && "MACE".equalsIgnoreCase(this.config.getString("gui.methods.kill_rewards.material", ""))
-         && "SOUL_TORCH".equalsIgnoreCase(this.config.getString("gui.methods.playtime.material", ""))
-         && this.config.getInt("config-version", 0) >= 10) {
+      if (this.config.getInt("config-version", 0) >= 11) {
          return;
       }
       try (InputStream input = this.plugin.getResource(this.jarResourcePath("config.yml"))) {
@@ -75,7 +72,7 @@ public final class TokensModule extends Module implements CommandExecutor, TabCo
             this.config.set("gui.filler-material", bundled.getString("gui.filler-material"));
          }
          this.config.set("gui.size", bundled.getInt("gui.size", this.config.getInt("gui.size", 27)));
-         this.config.set("config-version", 10);
+         this.config.set("config-version", 11);
          this.config.save(new File(this.moduleFolder(), "config.yml"));
       } catch (Exception exception) {
          this.plugin.getLogger().warning("[tokens] Could not update token methods: " + exception.getMessage());

@@ -25,6 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -241,7 +242,24 @@ public final class PlaceholderHook implements Listener {
    }
 
    private String outpostTime() {
-      return TimeFormat.hms(this.outpostMillis());
+      return TimeFormat.hms(this.outpostDisplayMillis());
+   }
+
+   private long outpostDisplayMillis() {
+      OutpostModule outpostmodule = this.cachedOutpost != null ? this.cachedOutpost : this.plugin.modules().get(OutpostModule.class);
+      return outpostmodule == null ? 0L : outpostmodule.displayTimeMs();
+   }
+
+   private String blockCoord(Location location, int axis) {
+      if (location == null || location.getWorld() == null) {
+         return "0";
+      }
+      int value = switch (axis) {
+         case 0 -> location.getBlockX();
+         case 1 -> location.getBlockY();
+         default -> location.getBlockZ();
+      };
+      return String.valueOf(value);
    }
 
    private String kothTime() {
@@ -333,8 +351,12 @@ public final class PlaceholderHook implements Listener {
 
             return switch (s) {
                case "time", "countdown" -> PlaceholderHook.this.kothTime();
+               case "next_koth", "next" -> TimeFormat.hms(kothmodule.millisUntilNext());
+               case "x" -> PlaceholderHook.this.blockCoord(kothmodule.regionCenter(), 0);
+               case "y" -> PlaceholderHook.this.blockCoord(kothmodule.regionCenter(), 1);
+               case "z" -> PlaceholderHook.this.blockCoord(kothmodule.regionCenter(), 2);
                case "active" -> kothmodule.isActive() ? "true" : "false";
-               case "leader" -> kothmodule.leaderName();
+               case "leader", "koth_player", "player" -> kothmodule.leaderName();
                case "leader_points", "points" -> String.format(Locale.US, "%.0f", kothmodule.leaderPoints());
                case "percent" -> String.format(Locale.US, "%.0f", kothmodule.eventPercent());
                case "bar", "progress" -> kothmodule.progressBar();
@@ -373,10 +395,15 @@ public final class PlaceholderHook implements Listener {
             String s = params.toLowerCase(Locale.ROOT);
 
             return switch (s) {
-               case "time", "countdown" -> PlaceholderHook.this.outpostTime();
+               case "time" -> PlaceholderHook.this.outpostTime();
+               case "countdown", "next_outpost", "next" -> TimeFormat.hms(outpostmodule.millisUntilStart());
+               case "x" -> PlaceholderHook.this.blockCoord(outpostmodule.regionCenter(), 0);
+               case "y" -> PlaceholderHook.this.blockCoord(outpostmodule.regionCenter(), 1);
+               case "z" -> PlaceholderHook.this.blockCoord(outpostmodule.regionCenter(), 2);
                case "active" -> outpostmodule.isActive() ? "true" : "false";
-               case "capturer", "capturing", "contesting" -> outpostmodule.contestingName();
-               case "percent" -> String.format(Locale.US, "%.0f", outpostmodule.capturePercent());
+               case "capturer", "capturing", "contesting", "outpost_player", "player" -> outpostmodule.capturerName();
+               case "percent", "percentage" -> String.format(Locale.US, "%.0f", outpostmodule.capturePercent());
+               case "points" -> String.format(Locale.US, "%.0f", outpostmodule.capturePercent());
                case "bar", "progress" -> outpostmodule.progressBar();
                case "contested" -> outpostmodule.isContested() ? "Contested" : "Uncontested";
                default -> null;

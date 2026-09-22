@@ -319,7 +319,101 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
       }
    }
 
+   public String activeTagSeason() {
+      String season = this.normalizeSeason(this.config.getString("seasons.active", "halloween"));
+      return season == null ? "halloween" : season;
+   }
+
+   public java.util.Set<String> seasonLimitedIds() {
+      java.util.Set<String> ids = new java.util.LinkedHashSet<>();
+      for (String season : List.of("christmas", "easter", "halloween")) {
+         for (String id : this.config.getStringList("seasons." + season)) {
+            if (id != null && !id.isBlank()) {
+               ids.add(id.toLowerCase(Locale.ROOT));
+            }
+         }
+      }
+      return ids;
+   }
+
+   public java.util.Set<String> activeSeasonTagIds() {
+      java.util.Set<String> ids = new java.util.LinkedHashSet<>();
+      for (String id : this.config.getStringList("seasons." + this.activeTagSeason())) {
+         if (id != null && !id.isBlank()) {
+            ids.add(id.toLowerCase(Locale.ROOT));
+         }
+      }
+      return ids;
+   }
+
+   public java.util.Set<String> allTagIds() {
+      java.util.Set<String> ids = new java.util.LinkedHashSet<>();
+      ids.addAll(this.tags.keySet());
+      ids.addAll(this.limited.keySet());
+      return ids;
+   }
+
+   public String tagLabel(String id) {
+      TagsModule.TagDef def = id == null ? null : this.tags.get(id.toLowerCase(Locale.ROOT));
+      if (def == null && id != null) {
+         def = this.limited.get(id.toLowerCase(Locale.ROOT));
+      }
+      if (def == null || def.name() == null || def.name().isBlank()) {
+         return id == null ? "" : id;
+      }
+      return def.name();
+   }
+
+   private String normalizeSeason(String raw) {
+      if (raw == null) {
+         return null;
+      }
+      return switch (raw.toLowerCase(Locale.ROOT)) {
+         case "christmas", "easter", "halloween" -> raw.toLowerCase(Locale.ROOT);
+         default -> null;
+      };
+   }
+
+   private boolean seasonCommand(CommandSender sender, String[] args) {
+      if (!sender.hasPermission("sharded.tags.admin") && !sender.isOp()) {
+         this.msg(sender, "no-permission");
+         return true;
+      }
+      if (args.length >= 2 && args[1].equalsIgnoreCase("limited")) {
+         if (args.length < 3) {
+            this.msg(sender, "usage");
+            return true;
+         }
+         String id = args[2].toLowerCase(Locale.ROOT);
+         if (!this.tags.containsKey(id) && !this.limited.containsKey(id)) {
+            this.msg(sender, "unknown-tag", "%tag%", id);
+            return true;
+         }
+         String season = this.activeTagSeason();
+         List<String> listed = new ArrayList<>(this.config.getStringList("seasons." + season));
+         if (listed.stream().noneMatch(id::equalsIgnoreCase)) {
+            listed.add(id);
+            this.config.set("seasons." + season, listed);
+            this.saveConfigFile();
+         }
+         sender.sendMessage(Text.c(this.config.getString("prefix", "") + "&fAdded &e" + id + "&f to the &e" + season + "&f limited tags."));
+         return true;
+      }
+      String season = args.length >= 2 ? this.normalizeSeason(args[1]) : null;
+      if (season == null) {
+         this.msg(sender, "usage");
+         return true;
+      }
+      this.config.set("seasons.active", season);
+      this.saveConfigFile();
+      sender.sendMessage(Text.c(this.config.getString("prefix", "") + "&fActive tag season set to &e" + season + "&f."));
+      return true;
+   }
+
    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+      if (args.length > 0 && args[0].equalsIgnoreCase("season")) {
+         return this.seasonCommand(sender, args);
+      }
       String s = command.getName().toLowerCase(Locale.ROOT);
       if (s.equals("tags")) {
          if (args.length >= 3 && args[0].equalsIgnoreCase("limited")) {
@@ -830,10 +924,17 @@ public final class TagsModule extends Module implements CommandExecutor, TabComp
    }
 
    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-      if (command.getName().equalsIgnoreCase("tags") && args.length == 1) {
-         return TabCompleteHelper.filter(args[0], "limited");
+      if (args.length == 2 && args[0].equalsIgnoreCase("season")) {
+         return TabCompleteHelper.filter(args[1], "christmas", "easter", "halloween", "limited");
+      } else if (args.length == 3 && args[0].equalsIgnoreCase("season") && args[1].equalsIgnoreCase("limited")) {
+         List<String> list = new ArrayList<>();
+         list.addAll(this.tags.keySet());
+         list.addAll(this.limited.keySet());
+         return TabCompleteHelper.filter(args[2], list);
+      } else if (command.getName().equalsIgnoreCase("tags") && args.length == 1) {
+         return TabCompleteHelper.filter(args[0], "limited", "season");
       } else if (command.getName().equalsIgnoreCase("tag") && args.length == 1) {
-         return TabCompleteHelper.filter(args[0], "create", "set", "remove", "clear");
+         return TabCompleteHelper.filter(args[0], "create", "set", "remove", "clear", "season");
       } else if (args.length == 2 && args[0].equalsIgnoreCase("set")) {
          List<String> list = new ArrayList<>();
          list.addAll(this.tags.keySet());

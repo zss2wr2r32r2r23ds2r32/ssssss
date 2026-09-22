@@ -2,9 +2,13 @@ package com.sharded.core.modules.duel;
 
 import com.sharded.core.ShardedCore;
 import com.sharded.core.module.Module;
+import com.sharded.core.util.ItemBuilder;
 import com.sharded.core.util.TabCompleteHelper;
 import com.sharded.core.util.Text;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -30,8 +34,10 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -39,9 +45,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -59,6 +70,7 @@ public final class DuelModule extends Module implements CommandExecutor, TabComp
    private Set<Material> bannedMaterials = Set.of(Material.MACE);
    private DuelModule.EloRepository elo;
    private String lastArenaEdit;
+   private NamespacedKey requestClick;
 
    public DuelModule(ShardedCore plugin) {
       super(plugin, "duel");
@@ -76,6 +88,8 @@ public final class DuelModule extends Module implements CommandExecutor, TabComp
          throw new IllegalStateException("Could not open duel Elo database", sqlexception);
       }
 
+      this.ensureRequestGui();
+      this.requestClick = new NamespacedKey(this.plugin, "duel-request");
       this.registerCommand("duels", this);
       this.registerCommand("duel", this);
       this.registerCommand("queue", this);
@@ -228,10 +242,11 @@ public final class DuelModule extends Module implements CommandExecutor, TabComp
                return this.showTop(player);
             } else if (!s.equals("queue") && (args.length <= 0 || !args[0].equalsIgnoreCase("queue"))) {
                if (args.length == 0) {
-                  this.send(player, "usage", new String[0]);
-                  return true;
+                  return this.queue(player);
+               } else if (args[0].equalsIgnoreCase("accept") && args.length >= 2) {
+                  return this.openRequestGui(player, args[1], true);
                } else if (!SUBCOMMANDS.contains(args[0].toLowerCase(Locale.ROOT)) && Bukkit.getPlayerExact(args[0]) != null) {
-                  return this.challenge(player, new String[]{"challenge", args[0]});
+                  return this.openRequestGui(player, args[0], false);
                } else {
                   String s1 = args[0].toLowerCase(Locale.ROOT);
 
@@ -575,6 +590,171 @@ public final class DuelModule extends Module implements CommandExecutor, TabComp
             );
       } else {
          return null;
+      }
+   }
+
+   private void ensureRequestGui() {
+      if (this.config.isConfigurationSection("request-gui.buttons.send")) {
+         return;
+      }
+      try (InputStream input = this.plugin.getResource(this.jarResourcePath("config.yml"))) {
+         if (input == null) {
+            return;
+         }
+         YamlConfiguration bundled = YamlConfiguration.loadConfiguration(new InputStreamReader(input, StandardCharsets.UTF_8));
+         ConfigurationSection section = bundled.getConfigurationSection("request-gui");
+         if (section != null) {
+            this.config.set("request-gui", section);
+            this.saveConfigFile();
+         }
+      } catch (Exception exception) {
+         this.plugin.getLogger().warning("[duel] Could not add request GUI defaults: " + exception.getMessage());
+      }
+   }
+
+   private boolean openRequestGui(Player viewer, String otherName, boolean confirm) {
+      Player other = Bukkit.getPlayerExact(otherName);
+      if (other == null || !other.isOnline()) {
+         this.send(viewer, "player-not-found", new String[]{"%player%", otherName});
+         return true;
+      }
+      if (confirm) {
+         DuelModule.DuelRequest request = this.requests.get(viewer.getUniqueId());
+         if (request == null || request.expired() || !request.challenger().equals(other.getUniqueId())) {
+            this.send(viewer, "no-request", new String[0]);
+            return true;
+         }
+      }
+      ConfigurationSection gui = this.config.getConfigurationSection("request-gui");
+      int rows = gui == null ? 3 : Math.max(1, Math.min(6, gui.getInt("rows", 3)));
+      DuelModule.RequestHolder holder = new DuelModule.RequestHolder();
+      holder.subject = other.getUniqueId();
+      holder.confirm = confirm;
+      Inventory inventory = Bukkit.createInventory(holder, rows * 9, Text.c(gui == null ? "&8Duel" : gui.getString("title", "&8Duel")));
+      holder.inventory = inventory;
+      Material fillerMat = Material.BLACK_STAINED_GLASS_PANE;
+      if (gui != null) {
+         Material parsed = Material.matchMaterial(gui.getString("filler-material", "BLACK_STAINED_GLASS_PANE"));
+         if (parsed != null) {
+            fillerMat = parsed;
+         }
+      }
+      ItemStack filler = this.requestButton(fillerMat, gui == null ? " " : gui.getString("filler-name", " "), List.of(), null);
+      for (int i = 0; i < inventory.getSize(); i++) {
+         inventory.setItem(i, filler.clone());
+      }
+      String world = this.worldLabel(other.getWorld() == null ? "" : other.getWorld().getName());
+      String name = other.getName();
+      String elo = String.valueOf(this.eloOf(other.getUniqueId()));
+      this.placeRequestButton(inventory, gui, "cancel", 10, Material.RED_STAINED_GLASS_PANE, "cancel", name, world, elo);
+      this.placeRequestButton(inventory, gui, "world", 12, Material.SPYGLASS, null, name, world, elo);
+      this.placeRequestHead(inventory, gui, other, name, world, elo);
+      this.placeRequestButton(inventory, gui, "elo", 14, Material.HEAVY_CORE, null, name, world, elo);
+      this.placeRequestButton(inventory, gui, confirm ? "confirm" : "send", 16, Material.LIME_STAINED_GLASS_PANE, confirm ? "confirm" : "send", name, world, elo);
+      viewer.openInventory(inventory);
+      return true;
+   }
+
+   private void placeRequestButton(
+      Inventory inventory, ConfigurationSection gui, String key, int fallbackSlot, Material fallback, String action, String player, String world, String elo
+   ) {
+      ConfigurationSection section = gui == null ? null : gui.getConfigurationSection("buttons." + key);
+      int slot = section == null ? fallbackSlot : section.getInt("slot", fallbackSlot);
+      Material material = fallback;
+      if (section != null) {
+         Material parsed = Material.matchMaterial(section.getString("material", fallback.name()));
+         if (parsed != null) {
+            material = parsed;
+         }
+      }
+      String name = this.fillRequest(section == null ? fallback.name() : section.getString("name", fallback.name()), player, world, elo);
+      List<String> lore = new ArrayList<>();
+      List<String> lines = section == null ? List.of() : section.getStringList("lore");
+      for (String line : lines) {
+         lore.add(this.fillRequest(line, player, world, elo));
+      }
+      if (slot >= 0 && slot < inventory.getSize()) {
+         inventory.setItem(slot, this.requestButton(material, name, lore, action));
+      }
+   }
+
+   private void placeRequestHead(Inventory inventory, ConfigurationSection gui, Player other, String player, String world, String elo) {
+      ConfigurationSection section = gui == null ? null : gui.getConfigurationSection("buttons.head");
+      int slot = section == null ? 13 : section.getInt("slot", 13);
+      String name = this.fillRequest(section == null ? "&#ff0067%player%" : section.getString("name", "&#ff0067%player%"), player, world, elo);
+      List<String> lore = new ArrayList<>();
+      List<String> lines = section == null ? List.of() : section.getStringList("lore");
+      for (String line : lines) {
+         lore.add(this.fillRequest(line, player, world, elo));
+      }
+      ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+      if (head.getItemMeta() instanceof SkullMeta skull) {
+         skull.setOwningPlayer(other);
+         skull.displayName(Text.c(name));
+         skull.itemName(null);
+         List<net.kyori.adventure.text.Component> components = new ArrayList<>();
+         for (String line : lore) {
+            components.add(Text.c(line));
+         }
+         skull.lore(components);
+         head.setItemMeta(skull);
+      }
+      if (slot >= 0 && slot < inventory.getSize()) {
+         inventory.setItem(slot, head);
+      }
+   }
+
+   private ItemStack requestButton(Material material, String name, List<String> lore, String action) {
+      ItemStack item = new ItemBuilder(material).name(name).lore(lore).build();
+      if (action != null && this.requestClick != null && item.getItemMeta() != null) {
+         item.editMeta(meta -> meta.getPersistentDataContainer().set(this.requestClick, PersistentDataType.STRING, action));
+      }
+      return item;
+   }
+
+   private String fillRequest(String line, String player, String world, String elo) {
+      if (line == null) {
+         return "";
+      }
+      return line.replace("%player%", player == null ? "" : player).replace("%world%", world == null ? "" : world).replace("%elo%", elo == null ? "" : elo);
+   }
+
+   private String worldLabel(String world) {
+      if (world == null || world.isBlank()) {
+         return "";
+      }
+      String mapped = this.config.getString("request-gui.world-names." + world);
+      if (mapped != null && !mapped.isBlank()) {
+         return mapped;
+      }
+      return switch (world.toLowerCase(Locale.ROOT)) {
+         case "world_nether" -> "Nether";
+         case "world_the_end" -> "End";
+         default -> world;
+      };
+   }
+
+   @EventHandler
+   public void onRequestClick(InventoryClickEvent event) {
+      if (!(event.getInventory().getHolder() instanceof DuelModule.RequestHolder holder)) {
+         return;
+      }
+      event.setCancelled(true);
+      if (!(event.getWhoClicked() instanceof Player player) || event.getCurrentItem() == null || this.requestClick == null || event.getCurrentItem().getItemMeta() == null) {
+         return;
+      }
+      String action = event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(this.requestClick, PersistentDataType.STRING);
+      if (action == null) {
+         return;
+      }
+      player.closeInventory();
+      if (action.equals("send")) {
+         Player target = Bukkit.getPlayer(holder.subject);
+         if (target != null) {
+            this.challenge(player, new String[]{"challenge", target.getName()});
+         }
+      } else if (action.equals("confirm")) {
+         this.accept(player);
       }
    }
 
@@ -1095,6 +1275,16 @@ public final class DuelModule extends Module implements CommandExecutor, TabComp
    }
 
    public static record DuelEloEntry(UUID uuid, String name, int elo, String rank) {
+   }
+
+   static final class RequestHolder implements InventoryHolder {
+      private Inventory inventory;
+      private UUID subject;
+      private boolean confirm;
+
+      public Inventory getInventory() {
+         return this.inventory;
+      }
    }
 
    private static record DuelRequest(UUID challenger, UUID target, long expiresAt) {
