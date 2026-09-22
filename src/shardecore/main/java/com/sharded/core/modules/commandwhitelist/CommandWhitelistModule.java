@@ -64,6 +64,7 @@ public final class CommandWhitelistModule extends Module {
          "rotatingshop",
          "crates",
          "crate",
+         "vcrates",
          "scrates"
       );
       this.removeListed(

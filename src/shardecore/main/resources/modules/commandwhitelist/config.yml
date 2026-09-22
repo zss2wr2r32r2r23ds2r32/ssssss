@@ -58,6 +58,7 @@ commands:
 - ranks
 - crates
 - crate
+- vcrates
 - scrates
 - itemshop
 - dailyitemshop

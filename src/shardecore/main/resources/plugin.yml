@@ -1,5 +1,5 @@
 name: ShardedCore
-version: '1.8.33'
+version: '1.8.34'
 main: com.sharded.core.ShardedCore
 api-version: '1.21'
 author: Sharded
@@ -280,7 +280,7 @@ commands:
   crates:
     description: Open the crates menu
     usage: /crates
-    aliases: [crate]
+    aliases: [crate, vcrates]
   scrates:
     description: Crate admin and keys
     usage: /scrates <create|delete|place|edit|key|...>
