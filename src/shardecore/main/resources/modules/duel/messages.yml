@@ -1,4 +1,4 @@
-config-version: 2
+config-version: 3
 prefix: "&#FFB800&lDUELS &8▷ &r"
 
 players-only: "%prefix%&#FF2727Only players can use duel commands."
@@ -24,12 +24,13 @@ request-cancelled: "%prefix%&fYour pending duel request was cancelled."
 banned-item: "%prefix%&#FF2727Remove banned item &f%material% &#FF2727before dueling."
 challenger-banned-item: "%prefix%&f%player% &#FF2727has banned item &f%material%&#FF2727. The duel was cancelled."
 target-banned-item: "%prefix%&f%player% &#FF2727has banned item &f%material%&#FF2727. The duel was cancelled."
-accepted: "%prefix%&fDuel with &#FFB800%player% &faccepted. Prepare to fight."
-fight-started: "%prefix%&#9FFF00The duel has started!"
+accepted: "&f%player% has accepted the duel."
+fight-started: "&fFIGHT!"
+no-arena: "&fNo duel arena is set."
 not-dueling: "%prefix%&#FF2727You are not in a duel."
 won: "%prefix%&#9FFF00You defeated &f%player%&#9FFF00. +%change% Elo &8(&f%elo%&8)"
 lost: "%prefix%&#FF2727You lost to &f%player%&#FF2727. -%change% Elo &8(&f%elo%&8)"
-broadcast: "%prefix%&#9FFF00%winner% &fdefeated &#FF2727%loser% &fin a duel."
+broadcast: "&f%winner% won the duel."
 elo: "%prefix%&#FFB800%player% &8— &fElo: &#FFB800%elo% &8| &e%rank% &8| &a%wins%W &8/ &c%losses%L"
 top-header: "%prefix%&#FFB800&lTOP DUELISTS"
 top-line: "&8#%position% &#FFB800%player% &8— &f%elo% Elo &8(&e%rank%&8) &8(&a%wins%W&8/&c%losses%L&8)"

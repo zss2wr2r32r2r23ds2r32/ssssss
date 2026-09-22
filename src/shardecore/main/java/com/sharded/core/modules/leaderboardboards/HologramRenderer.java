@@ -497,7 +497,7 @@ final class HologramRenderer implements Listener {
             s1 = s1.replace("%uuid_" + i + "%", cachedentry.getPlayerUUID() == null ? "" : cachedentry.getPlayerUUID().toString());
          }
 
-         return s1;
+         return com.sharded.core.util.EventPlaceholders.apply(s1);
       } else {
          return "";
       }

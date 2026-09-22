@@ -5,10 +5,10 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.sharded</groupId>
   <artifactId>ShardedCore</artifactId>
-  <version>1.8.34</version>
+  <version>1.8.35</version>
   <packaging>jar</packaging>
   <name>ShardedCore</name>
-  <description>Paper plugin build for ShardedCore 1.8.34</description>
+  <description>Paper plugin build for ShardedCore 1.8.35</description>
 
   <properties>
     <maven.compiler.release>21</maven.compiler.release>
@@ -54,7 +54,7 @@
   </dependencies>
 
   <build>
-    <finalName>ShardedCore-1.8.34</finalName>
+    <finalName>ShardedCore-1.8.35</finalName>
     <sourceDirectory>main/java</sourceDirectory>
     <resources>
       <resource>

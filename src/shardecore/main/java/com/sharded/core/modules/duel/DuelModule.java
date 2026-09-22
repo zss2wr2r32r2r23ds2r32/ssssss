@@ -45,6 +45,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
@@ -243,8 +244,8 @@ public final class DuelModule extends Module implements CommandExecutor, TabComp
             } else if (!s.equals("queue") && (args.length <= 0 || !args[0].equalsIgnoreCase("queue"))) {
                if (args.length == 0) {
                   return this.queue(player);
-               } else if (args[0].equalsIgnoreCase("accept") && args.length >= 2) {
-                  return this.openRequestGui(player, args[1], true);
+               } else if (args[0].equalsIgnoreCase("accept")) {
+                  return this.openAcceptGui(player, args);
                } else if (!SUBCOMMANDS.contains(args[0].toLowerCase(Locale.ROOT)) && Bukkit.getPlayerExact(args[0]) != null) {
                   return this.openRequestGui(player, args[0], false);
                } else {
@@ -252,7 +253,7 @@ public final class DuelModule extends Module implements CommandExecutor, TabComp
 
                   return switch (s1) {
                      case "challenge" -> this.challenge(player, args);
-                     case "accept" -> this.accept(player);
+                     case "accept" -> this.openAcceptGui(player, args);
                      case "deny" -> this.deny(player);
                      case "elo", "stats" -> this.showElo(player, args);
                      case "top", "elotop" -> this.showTop(player);
@@ -333,14 +334,32 @@ public final class DuelModule extends Module implements CommandExecutor, TabComp
       }
 
       DuelModule.ArenaSpawns duelmodule$arenaspawns = this.pickArena();
-      if (duelmodule$arenaspawns != null) {
-         if (duelmodule$activeduel != null) {
-            duelmodule$activeduel.arenaName = duelmodule$arenaspawns.name();
-         }
-
-         first.teleport(duelmodule$arenaspawns.pos1());
-         second.teleport(duelmodule$arenaspawns.pos2());
+      if (duelmodule$arenaspawns == null) {
+         this.send(first, "no-arena", new String[0]);
+         this.send(second, "no-arena", new String[0]);
+         return;
       }
+      if (duelmodule$activeduel != null) {
+         duelmodule$activeduel.arenaName = duelmodule$arenaspawns.name();
+      }
+
+      this.teleportNow(first, duelmodule$arenaspawns.pos1());
+      this.teleportNow(second, duelmodule$arenaspawns.pos2());
+   }
+
+   private void teleportNow(Player player, Location location) {
+      if (player == null || location == null || location.getWorld() == null) {
+         return;
+      }
+      location.getWorld().getChunkAt(location).load(true);
+      player.teleport(location, TeleportCause.PLUGIN);
+   }
+
+   private boolean isPlaceholderArena(Location location) {
+      return location != null
+         && Math.abs(location.getX() - 0.5) < 0.001
+         && Math.abs(location.getY() - 68.0) < 0.001
+         && Math.abs(location.getZ() - 0.5) < 0.001;
    }
 
    private DuelModule.ArenaSpawns pickArena() {
@@ -352,7 +371,7 @@ public final class DuelModule extends Module implements CommandExecutor, TabComp
             if (configurationsection1 != null && configurationsection1.getBoolean("enabled", true)) {
                Location location = this.readLocation("arenas." + s + ".pos1");
                Location location1 = this.readLocation("arenas." + s + ".pos2");
-               if (location != null && location1 != null) {
+               if (location != null && location1 != null && !this.isPlaceholderArena(location) && !this.isPlaceholderArena(location1)) {
                   list.add(new DuelModule.ArenaSpawns(s, location, location1));
                }
             }
@@ -362,7 +381,7 @@ public final class DuelModule extends Module implements CommandExecutor, TabComp
       if (list.isEmpty() && this.config.getBoolean("arena.enabled", false)) {
          Location location2 = this.readLocation("arena.pos1");
          Location location3 = this.readLocation("arena.pos2");
-         if (location2 != null && location3 != null) {
+         if (location2 != null && location3 != null && !this.isPlaceholderArena(location2) && !this.isPlaceholderArena(location3)) {
             list.add(new DuelModule.ArenaSpawns("default", location2, location3));
          }
       }
@@ -547,11 +566,11 @@ public final class DuelModule extends Module implements CommandExecutor, TabComp
          Player player = Bukkit.getPlayer(duel.first);
          Player player1 = Bukkit.getPlayer(duel.second);
          if (player != null && duel.returnFirst != null) {
-            player.teleport(duel.returnFirst);
+            this.teleportNow(player, duel.returnFirst);
          }
 
          if (player1 != null && duel.returnSecond != null) {
-            player1.teleport(duel.returnSecond);
+            this.teleportNow(player1, duel.returnSecond);
          }
       }
    }
@@ -610,6 +629,24 @@ public final class DuelModule extends Module implements CommandExecutor, TabComp
       } catch (Exception exception) {
          this.plugin.getLogger().warning("[duel] Could not add request GUI defaults: " + exception.getMessage());
       }
+   }
+
+   private boolean openAcceptGui(Player player, String[] args) {
+      String name = args.length >= 2 ? args[1] : null;
+      if (name == null) {
+         DuelModule.DuelRequest request = this.requests.get(player.getUniqueId());
+         if (request == null || request.expired()) {
+            this.send(player, "no-request", new String[0]);
+            return true;
+         }
+         Player challenger = Bukkit.getPlayer(request.challenger());
+         if (challenger == null || !challenger.isOnline()) {
+            this.send(player, "challenger-offline", new String[0]);
+            return true;
+         }
+         name = challenger.getName();
+      }
+      return this.openRequestGui(player, name, true);
    }
 
    private boolean openRequestGui(Player viewer, String otherName, boolean confirm) {
@@ -819,7 +856,7 @@ public final class DuelModule extends Module implements CommandExecutor, TabComp
                      this.activeDuels.put(target.getUniqueId(), duelmodule$activeduel);
                      this.teleportToArena(player, target);
                      this.send(player, "accepted", new String[]{"%player%", target.getName()});
-                     this.send(target, "accepted", new String[]{"%player%", player.getName()});
+                     this.send(target, "accepted", new String[]{"%player%", target.getName()});
                      this.startCountdown(duelmodule$activeduel);
                      return true;
                   }
@@ -986,10 +1023,15 @@ public final class DuelModule extends Module implements CommandExecutor, TabComp
                      this.cancel();
                      DuelModule.this.beginFight(duel);
                   } else {
-                     String s = DuelModule.this.config.getString("countdown-actionbar", "&#FFB800Duel starts in &f%seconds%&#FFB800...");
-                     String s1 = s.replace("%seconds%", String.valueOf(this.remaining));
+                     String seconds = "&#ff8c00" + this.remaining + "&f";
+                     String s = DuelModule.this.config.getString("countdown-actionbar", "&fDuel starts in &#ff8c00%seconds%&f...");
+                     String s1 = s.replace("%seconds%", seconds);
                      player.sendActionBar(Text.c(s1));
                      player1.sendActionBar(Text.c(s1));
+                     String chat = DuelModule.this.config.getString("countdown-chat", "&fDuel starts in &#ff8c00%seconds%&f...");
+                     String chatLine = chat.replace("%seconds%", seconds);
+                     player.sendMessage(Text.c(chatLine));
+                     player1.sendMessage(Text.c(chatLine));
                      this.remaining--;
                   }
                }
@@ -1213,7 +1255,11 @@ public final class DuelModule extends Module implements CommandExecutor, TabComp
       if (!sender.hasPermission("sharded.duel.use")) {
          return List.of();
       } else if (args.length == 1) {
-         return TabCompleteHelper.filter(args[0], SUBCOMMANDS);
+         List<String> options = new ArrayList<>(SUBCOMMANDS);
+         options.addAll(this.onlineNames(sender));
+         return TabCompleteHelper.filter(args[0], options);
+      } else if (args.length == 2 && (args[0].equalsIgnoreCase("accept") || args[0].equalsIgnoreCase("deny"))) {
+         return TabCompleteHelper.filter(args[1], this.onlineNames(sender));
       } else if (args.length == 2 && args[0].equalsIgnoreCase("arena")) {
          return TabCompleteHelper.filter(args[1], List.of("create", "setspawn1", "setspawn2", "delete", "list", "enable", "disable"));
       } else if (args.length == 2
@@ -1225,11 +1271,7 @@ public final class DuelModule extends Module implements CommandExecutor, TabComp
          )) {
          List<String> list = new ArrayList<>();
 
-         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (!(sender instanceof Player player1) || !player.getUniqueId().equals(player1.getUniqueId())) {
-               list.add(player.getName());
-            }
-         }
+         list.addAll(this.onlineNames(sender));
 
          list.sort(String.CASE_INSENSITIVE_ORDER);
          return TabCompleteHelper.filter(args[1], list);
@@ -1243,6 +1285,17 @@ public final class DuelModule extends Module implements CommandExecutor, TabComp
 
          return List.of();
       }
+   }
+
+   private List<String> onlineNames(CommandSender sender) {
+      List<String> list = new ArrayList<>();
+      for (Player player : Bukkit.getOnlinePlayers()) {
+         if (!(sender instanceof Player self) || !player.getUniqueId().equals(self.getUniqueId())) {
+            list.add(player.getName());
+         }
+      }
+      list.sort(String.CASE_INSENSITIVE_ORDER);
+      return list;
    }
 
    private static final class ActiveDuel {

@@ -7,8 +7,9 @@ return-after-duel: true
 
 requests-expire-seconds: 60
 countdown-seconds: 5
-countdown-actionbar: "&#FFB800Duel starts in &f%seconds%&#FFB800..."
-fight-actionbar: "&#9FFF00&lFIGHT!"
+countdown-actionbar: "&fDuel starts in &#ff8c00%seconds%&f..."
+countdown-chat: "&fDuel starts in &#ff8c00%seconds%&f..."
+fight-actionbar: "&fFIGHT!"
 
 # Keep gear on death during duels (own inventory mode).
 cancel-drops: true

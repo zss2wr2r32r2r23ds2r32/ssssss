@@ -12,6 +12,7 @@ import com.sharded.core.modules.teams.TeamDatabase;
 import com.sharded.core.modules.teams.TeamsModule;
 import com.sharded.core.modules.tokens.TokenDatabase;
 import com.sharded.core.modules.tokens.TokensModule;
+import com.sharded.core.util.EventPlaceholders;
 import com.sharded.core.util.EventTabScoreboard;
 import com.sharded.core.util.ColorUtil;
 import com.sharded.core.util.Numbers;
@@ -66,6 +67,13 @@ public final class PlaceholderHook implements Listener {
          this.expansions.add(new PlaceholderHook.PlayerPointsExpansion());
          this.expansions.add(new PlaceholderHook.KothExpansion());
          this.expansions.add(new PlaceholderHook.OutpostExpansion());
+         this.claimBarePlaceholder("time");
+         this.expansions.add(new PlaceholderHook.BareEventExpansion("x"));
+         this.expansions.add(new PlaceholderHook.BareEventExpansion("y"));
+         this.expansions.add(new PlaceholderHook.BareEventExpansion("z"));
+         this.expansions.add(new PlaceholderHook.BareEventExpansion("time"));
+         this.expansions.add(new PlaceholderHook.BareEventExpansion("points"));
+         this.expansions.add(new PlaceholderHook.BareEventExpansion("next"));
 
          for (PlaceholderExpansion placeholderexpansion1 : this.expansions) {
             if (placeholderexpansion1.register()) {
@@ -74,6 +82,19 @@ public final class PlaceholderHook implements Listener {
          }
 
          this.refreshModuleCache();
+      }
+   }
+
+   private void claimBarePlaceholder(String identifier) {
+      try {
+         me.clip.placeholderapi.expansion.manager.LocalExpansionManager manager = me.clip.placeholderapi.PlaceholderAPIPlugin.getInstance()
+            .getLocalExpansionManager();
+         PlaceholderExpansion existing = manager.getExpansion(identifier);
+         if (existing != null && !(existing instanceof PlaceholderHook.BareEventExpansion)) {
+            manager.unregister(existing);
+         }
+      } catch (Exception exception) {
+         this.plugin.getLogger().warning("Could not replace PlaceholderAPI %" + identifier + "%: " + exception.getMessage());
       }
    }
 
@@ -318,6 +339,47 @@ public final class PlaceholderHook implements Listener {
                );
             }
          }
+      }
+   }
+
+   private final class BareEventExpansion extends PlaceholderExpansion {
+      private final String identifier;
+
+      private BareEventExpansion(String identifier) {
+         this.identifier = identifier;
+      }
+
+      @NotNull
+      public String getIdentifier() {
+         return this.identifier;
+      }
+
+      @NotNull
+      public String getAuthor() {
+         return "Sharded";
+      }
+
+      @NotNull
+      public String getVersion() {
+         return PlaceholderHook.this.plugin.getDescription().getVersion();
+      }
+
+      public boolean persist() {
+         return true;
+      }
+
+      @Nullable
+      public String onRequest(OfflinePlayer player, @NotNull String params) {
+         String key = params == null ? "" : params.toLowerCase(Locale.ROOT);
+         return switch (this.identifier) {
+            case "x" -> "outpost".equals(key) ? EventPlaceholders.outpostCoord(0) : EventPlaceholders.kothCoord(0);
+            case "y" -> "outpost".equals(key) ? EventPlaceholders.outpostCoord(1) : EventPlaceholders.kothCoord(1);
+            case "z" -> "outpost".equals(key) ? EventPlaceholders.outpostCoord(2) : EventPlaceholders.kothCoord(2);
+            case "time" -> "outpost".equals(key) ? EventPlaceholders.outpostTime() : EventPlaceholders.kothTime();
+            case "points" -> "outpost".equals(key) ? EventPlaceholders.outpostPoints() : EventPlaceholders.kothPoints();
+            case "next" -> key.startsWith("outpost") ? EventPlaceholders.outpostNext() : EventPlaceholders.kothNext();
+            default -> null;
+         };
       }
    }
 

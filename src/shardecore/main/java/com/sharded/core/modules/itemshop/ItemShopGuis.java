@@ -73,24 +73,15 @@ final class ItemShopGuis {
       this.placeUtility(player, inventory, gui.getConfigurationSection("items.my-cosmetics"), "cosmetics");
       this.placeUtility(player, inventory, gui.getConfigurationSection("items.my-tags"), "tags");
       this.placeUtility(player, inventory, gui.getConfigurationSection("items.close"), "close");
+      boolean tagsPage = this.clampPage(page) > 0;
+      List<ItemShopTypes.Cosmetic> shown = tagsPage ? this.module.shopTags(limitedTab) : this.module.shopHats(limitedTab);
       List<Integer> featured = this.featuredSlots(gui);
-      List<ItemShopTypes.Cosmetic> hats = this.module.shopHats(limitedTab);
-      for (int i = 0; i < featured.size() && i < hats.size(); i++) {
+      for (int i = 0; i < featured.size() && i < shown.size(); i++) {
          int slot = featured.get(i);
-         if (slot >= 0 && slot < inventory.getSize()) {
-            inventory.setItem(slot, this.listingIcon(player, hats.get(i)));
-         }
-      }
-      List<ItemShopTypes.Cosmetic> pageItems = this.clampPage(page) == 0
-         ? hats.subList(Math.min(featured.size(), hats.size()), hats.size())
-         : this.module.shopTags(limitedTab);
-      List<Integer> content = this.contentSlots(gui);
-      for (int i = 0; i < content.size() && i < pageItems.size(); i++) {
-         int slot = content.get(i);
-         if (slot < 0 || slot >= inventory.getSize()) {
+         if (slot < 18 || slot >= inventory.getSize()) {
             continue;
          }
-         inventory.setItem(slot, this.listingIcon(player, pageItems.get(i)));
+         inventory.setItem(slot, this.listingIcon(player, shown.get(i)));
       }
    }
 

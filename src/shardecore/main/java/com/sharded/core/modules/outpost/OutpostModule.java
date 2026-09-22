@@ -5,6 +5,7 @@ import com.sharded.core.module.Module;
 import com.sharded.core.modules.tokens.TokenService;
 import com.sharded.core.util.CuboidRegion;
 import com.sharded.core.util.EventLocatorBar;
+import com.sharded.core.util.EventPlaceholders;
 import com.sharded.core.util.EventRewards;
 import com.sharded.core.util.EventSounds;
 import com.sharded.core.util.EventTabScoreboard;
@@ -307,9 +308,11 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
                this.capturePercent = Math.min(100.0, this.capturePercent + d0);
                Player player1 = Bukkit.getPlayer(uuid);
                if (player1 != null) {
-                  String s = this.config
-                     .getString("actionbar", "&7Outpost: &f%percent%%")
-                     .replace("%percent%", String.format(Locale.US, "%.0f", this.capturePercent));
+                  String s = EventPlaceholders.applyOutpost(
+                     this.config
+                        .getString("actionbar", "&7Outpost: &f%percent%%")
+                        .replace("%percent%", String.format(Locale.US, "%.0f", this.capturePercent))
+                  );
                   player1.sendActionBar(Text.c(this.modulePrefix() + s));
                }
 
@@ -347,17 +350,21 @@ public final class OutpostModule extends Module implements CommandExecutor, TabC
          String s1;
          double d0;
          if (this.inside.isEmpty()) {
-            s1 = this.config
-               .getString("bossbar-empty", "%prefix%&fN/A &8| &fEnds in &f%empty_time%")
-               .replace("%prefix%", this.modulePrefix())
-               .replace("%empty_time%", TimeFormat.hms(j));
+            s1 = EventPlaceholders.applyOutpost(
+               this.config
+                  .getString("bossbar-empty", "%prefix%&fN/A &8| &fEnds in &f%empty_time%")
+                  .replace("%prefix%", this.modulePrefix())
+                  .replace("%empty_time%", TimeFormat.hms(j))
+            );
             d0 = i <= 0L ? 0.0 : (double)j / (double)i;
          } else {
-            s1 = this.config
-               .getString("bossbar-active", "%prefix%&f%capturer% &8| &f%percent%%")
-               .replace("%prefix%", this.modulePrefix())
-               .replace("%capturer%", s)
-               .replace("%percent%", String.format(Locale.US, "%.0f", this.capturePercent));
+            s1 = EventPlaceholders.applyOutpost(
+               this.config
+                  .getString("bossbar-active", "%prefix%&f%capturer% &8| &f%percent%%")
+                  .replace("%prefix%", this.modulePrefix())
+                  .replace("%capturer%", s)
+                  .replace("%percent%", String.format(Locale.US, "%.0f", this.capturePercent))
+            );
             d0 = this.capturePercent / 100.0;
          }
 

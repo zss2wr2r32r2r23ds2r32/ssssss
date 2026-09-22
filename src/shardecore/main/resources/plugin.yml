@@ -1,5 +1,5 @@
 name: ShardedCore
-version: '1.8.34'
+version: '1.8.35'
 main: com.sharded.core.ShardedCore
 api-version: '1.21'
 author: Sharded

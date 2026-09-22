@@ -131,7 +131,7 @@ public final class PlaceholderUtil {
                .replace("%shardedcore_koth_bar%", kothmodule.progressBar());
          }
 
-         return s2;
+         return EventPlaceholders.apply(s2);
       }
    }
 }

@@ -5,6 +5,7 @@ import com.sharded.core.module.Module;
 import com.sharded.core.modules.tokens.TokenService;
 import com.sharded.core.util.CuboidRegion;
 import com.sharded.core.util.EventLocatorBar;
+import com.sharded.core.util.EventPlaceholders;
 import com.sharded.core.util.EventRewards;
 import com.sharded.core.util.EventSounds;
 import com.sharded.core.util.EventTabScoreboard;
@@ -313,10 +314,12 @@ public final class KothModule extends Module implements CommandExecutor, TabComp
                      this.addPoints(uuid, d0);
                      Player player = Bukkit.getPlayer(uuid);
                      if (player != null) {
-                        String s = this.config
-                           .getString("actionbar", "&dKOTH &7| &f%points% pts &7| &f%time%")
-                           .replace("%points%", String.format(Locale.US, "%.0f", this.points.getOrDefault(uuid, 0.0)))
-                           .replace("%time%", TimeFormat.hms(this.eventEndsAt - i));
+                        String s = EventPlaceholders.applyKoth(
+                           this.config
+                              .getString("actionbar", "&dKOTH &7| &f%points% pts &7| &f%time%")
+                              .replace("%points%", String.format(Locale.US, "%.0f", this.points.getOrDefault(uuid, 0.0)))
+                              .replace("%time%", TimeFormat.hms(this.eventEndsAt - i))
+                        );
                         player.sendActionBar(Text.c(this.modulePrefix() + s));
                      }
                   }
@@ -345,12 +348,14 @@ public final class KothModule extends Module implements CommandExecutor, TabComp
          long i = this.eventEndsAt - now;
          String s = this.leaderName();
          double d0 = this.leaderPoints();
-         String s1 = this.config
-            .getString("bossbar-active", "%prefix%&f%leader% &7(%points% pts) &8| &f%time%")
-            .replace("%prefix%", this.modulePrefix())
-            .replace("%leader%", s)
-            .replace("%points%", String.format(Locale.US, "%.0f", d0))
-            .replace("%time%", TimeFormat.hms(i));
+         String s1 = EventPlaceholders.applyKoth(
+            this.config
+               .getString("bossbar-active", "%prefix%&f%leader% &7(%points% pts) &8| &f%time%")
+               .replace("%prefix%", this.modulePrefix())
+               .replace("%leader%", s)
+               .replace("%points%", String.format(Locale.US, "%.0f", d0))
+               .replace("%time%", TimeFormat.hms(i))
+         );
          double d1 = this.eventDurationMs <= 0L ? 1.0 : (double)i / (double)this.eventDurationMs;
          this.coordinator.bossBar().show("koth", s1, BarColor.PINK, d1);
          this.coordinator.bossBar().syncPlayers();
