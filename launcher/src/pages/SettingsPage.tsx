@@ -85,7 +85,7 @@ function Account() {
   return (
     <div className="account">
       <div className="account-row">
-        <img src={user.avatar} alt="" className="avatar" />
+        <img src={user.avatar} alt="" className="avatar" draggable={false} />
         <div>
           <span className="kicker">Discord</span>
           <div className="discord-name">{user.discordName}</div>
@@ -181,11 +181,6 @@ function Appearance() {
           />
         ))}
       </div>
-      <label className="picker">
-        Custom
-        <input type="color" value={settings.accent.toLowerCase()} aria-label="Custom accent color" onChange={(event) => setAccent(event.target.value)} />
-        <code>{settings.accent.toUpperCase()}</code>
-      </label>
       <button type="button" className="btn primary sample">
         Sample button
       </button>

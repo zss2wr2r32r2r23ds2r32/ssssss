@@ -4,7 +4,7 @@ export function TitleBar() {
   return (
     <header className="titlebar">
       <div className="titlebar-brand">
-        <img src="/logo.png" alt="" className="titlebar-logo" />
+        <img src="/logo.png" alt="" className="titlebar-logo" draggable={false} />
         <span>Nexa</span>
       </div>
       <div className="titlebar-controls">

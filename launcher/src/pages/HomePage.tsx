@@ -59,15 +59,11 @@ export function HomePage() {
     }
   }
 
-  const skin = user?.equipped.skin;
-  const heroSrc = skin?.image || '/skin-default.png';
-  const heroName = skin?.name || 'Default skin';
-
   return (
     <div className="page home">
       <section className="hero">
         <div className="hero-skin">
-          <img src={heroSrc} alt={heroName} />
+          <img src="/skin-default.png" alt="Default skin" draggable={false} />
         </div>
         <div className="hero-copy">
           <h1>Welcome Back, {user?.discordName}!</h1>

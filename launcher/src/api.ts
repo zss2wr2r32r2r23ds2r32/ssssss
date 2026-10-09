@@ -21,9 +21,10 @@ export async function api<T>(path: string, opts: { method?: string; body?: unkno
     headers['Content-Type'] = 'application/json';
     body = JSON.stringify(opts.body);
   }
+  const base = window.nexa?.apiBase?.replace(/\/$/, '') || '';
   let response: Response;
   try {
-    response = await fetch(`/api${path}`, { method: opts.method || 'GET', headers, body });
+    response = await fetch(`${base}/api${path}`, { method: opts.method || 'GET', headers, body });
   } catch {
     throw new Error("Can't reach the Nexa API. Start it with npm run dev.");
   }

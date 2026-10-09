@@ -1,29 +1,42 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, dialog, ipcMain } = require('electron');
 const path = require('path');
 const http = require('http');
-const { spawn } = require('child_process');
 
-const PORT = process.env.PORT || '4177';
-let serverProcess = null;
+const PORT = String(process.env.PORT || '4177');
+process.env.PORT = PORT;
+
+if (process.env.NEXA_USER_DATA) {
+  app.setPath('userData', process.env.NEXA_USER_DATA);
+}
+if (process.env.NEXA_DEBUG_PORT) {
+  app.commandLine.appendSwitch('remote-debugging-port', process.env.NEXA_DEBUG_PORT);
+  app.commandLine.appendSwitch('remote-allow-origins', '*');
+}
+
+function packagedMode() {
+  return app.isPackaged || process.env.NEXA_PACKAGED_TEST === '1';
+}
+
+function resourcesRoot() {
+  if (app.isPackaged) return process.resourcesPath;
+  if (process.env.NEXA_RESOURCES) return process.env.NEXA_RESOURCES;
+  return path.join(__dirname, '..');
+}
 
 function iconPath() {
-  if (app.isPackaged) return path.join(process.resourcesPath, 'ui', 'logo.png');
+  if (packagedMode()) return path.join(resourcesRoot(), 'ui', 'logo.png');
   return path.join(__dirname, '..', 'launcher', 'public', 'logo.png');
 }
 
 function startPackagedServer() {
-  const entry = path.join(process.resourcesPath, 'server.cjs');
-  const env = {
-    ...process.env,
-    ELECTRON_RUN_AS_NODE: '1',
-    PORT,
-    NEXA_STATIC: path.join(process.resourcesPath, 'ui'),
-    NEXA_DATA_DIR: path.join(app.getPath('userData'), 'data'),
-  };
-  serverProcess = spawn(process.execPath, [entry], { env, stdio: 'inherit' });
-  serverProcess.on('exit', (code) => {
-    if (code && code !== 0) console.error(`[nexa] API exited with ${code}`);
-  });
+  const root = resourcesRoot();
+  process.env.PORT = PORT;
+  process.env.NEXA_STATIC = path.join(root, 'ui');
+  process.env.NEXA_DATA_DIR = path.join(app.getPath('userData'), 'data');
+  const entry = path.join(root, 'server.cjs');
+  // Load the API in this process. Spawning process.execPath fails on the
+  // portable Windows stub, which is not a Node binary.
+  require(entry);
 }
 
 function waitForServer() {
@@ -63,7 +76,7 @@ function createWindow() {
     },
   });
   win.setTitle('Nexa');
-  if (app.isPackaged) win.loadURL(`http://127.0.0.1:${PORT}/`);
+  if (packagedMode()) win.loadURL(`http://127.0.0.1:${PORT}/`);
   else win.loadURL(process.env.NEXA_DEV_URL || 'http://localhost:5173/');
 
   ipcMain.on('window:minimize', () => win.minimize());
@@ -75,14 +88,19 @@ function createWindow() {
 }
 
 app.whenReady().then(async () => {
-  if (app.isPackaged) {
-    startPackagedServer();
-    await waitForServer();
+  if (packagedMode()) {
+    try {
+      startPackagedServer();
+      await waitForServer();
+    } catch (error) {
+      dialog.showErrorBox('Nexa', error instanceof Error ? error.message : 'The local Nexa API did not start.');
+      app.quit();
+      return;
+    }
   }
   createWindow();
 });
 
 app.on('window-all-closed', () => {
-  if (serverProcess) serverProcess.kill();
   app.quit();
 });

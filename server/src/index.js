@@ -73,7 +73,21 @@ function requireAdmin(req, res, next) {
   next();
 }
 
+const BUNDLED_SKINS = {
+  chani: '/shop-chani.png',
+  default: '/skin-default.png',
+  portrait: '/skin-default.png',
+  'default portrait': '/skin-default.png',
+  'default skin': '/skin-default.png',
+};
+const LOCAL_IMAGES = new Set(['/shop-chani.png', '/skin-default.png']);
+
+function bundledImageForName(name) {
+  return BUNDLED_SKINS[String(name || '').trim().toLowerCase()] || '';
+}
+
 function validImage(image) {
+  if (LOCAL_IMAGES.has(image)) return true;
   if (typeof image !== 'string' || image.length < 12 || image.length > 1_500_000) return false;
   if (image.startsWith('data:image/')) return true;
   try {
@@ -192,7 +206,8 @@ app.post('/shop/items', requireAuth, requireAdmin, (req, res) => {
   const type = req.body?.type;
   const rarity = req.body?.rarity;
   const vbucks = Number(req.body?.vbucks);
-  const image = req.body?.image;
+  let image = typeof req.body?.image === 'string' ? req.body.image.trim() : '';
+  if (!image) image = bundledImageForName(name);
   if (name.length < 2 || name.length > 32) {
     return res.status(400).json({ error: 'Item name must be 2–32 characters.' });
   }
@@ -373,6 +388,11 @@ if (process.env.NEXA_STATIC) {
   });
 }
 
-app.listen(PORT, '127.0.0.1', () => {
+const httpServer = app.listen(PORT, '127.0.0.1', () => {
   console.log(`[nexa-api] listening on http://127.0.0.1:${PORT}`);
 });
+httpServer.on('error', (error) => {
+  console.error('[nexa-api] listen failed:', error.message);
+});
+
+export { httpServer };

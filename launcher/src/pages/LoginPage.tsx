@@ -27,7 +27,7 @@ export function LoginPage() {
   return (
     <div className="login">
       <section className="login-left">
-        <img src="/logo.png" alt="Nexa" className="login-logo" />
+        <img src="/logo.png" alt="Nexa" className="login-logo" draggable={false} />
         <div className="login-copy">
           <h1>Sign In with Discord</h1>
           <p>Link your Discord account to Nexa and pick up where you left off.</p>
@@ -39,7 +39,7 @@ export function LoginPage() {
         </div>
       </section>
       <section className="login-art" aria-hidden="true">
-        <img src="/banner-login.png" alt="" />
+        <img src="/banner-login.png" alt="" draggable={false} />
       </section>
     </div>
   );

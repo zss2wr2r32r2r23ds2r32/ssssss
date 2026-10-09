@@ -19,8 +19,20 @@ const RARITY: Record<Rarity, [string, string]> = {
 const TYPES: ItemType[] = ['skin', 'emote', 'pickaxe', 'glider'];
 const RARITIES: Rarity[] = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythic'];
 
+const BUNDLED_SKINS: Record<string, string> = {
+  chani: '/shop-chani.png',
+  default: '/skin-default.png',
+  portrait: '/skin-default.png',
+  'default portrait': '/skin-default.png',
+  'default skin': '/skin-default.png',
+};
+
+function bundledSkinImage(name: string) {
+  return BUNDLED_SKINS[name.trim().toLowerCase()] || '';
+}
+
 export function ShopPage() {
-  const { user, toast, refresh } = useSession();
+  const { user, toast } = useSession();
   const [items, setItems] = useState<ShopItem[]>([]);
   const [seconds, setSeconds] = useState<number | null>(null);
   const [adding, setAdding] = useState(false);
@@ -65,17 +77,6 @@ export function ShopPage() {
     };
   }, [toast]);
 
-  async function equip(item: ShopItem) {
-    playClick();
-    try {
-      await api('/shop/equip', { method: 'POST', body: { itemId: item.id } });
-      await refresh();
-      toast(`Equipped ${item.name}`);
-    } catch (err) {
-      toast(err instanceof Error ? err.message : 'Could not equip that item.');
-    }
-  }
-
   function onFile(file: File | undefined) {
     if (!file) return;
     const reader = new FileReader();
@@ -88,9 +89,10 @@ export function ShopPage() {
     playClick();
     setFormError('');
     try {
+      const picture = image.trim() || bundledSkinImage(name);
       await api('/shop/items', {
         method: 'POST',
-        body: { name, type, rarity, vbucks: Number(vbucks), image },
+        body: { name, type, rarity, vbucks: Number(vbucks), image: picture },
       });
       setAdding(false);
       setName('');
@@ -103,16 +105,14 @@ export function ShopPage() {
     }
   }
 
-  const equippedIds = new Set(
-    [user?.equipped.skin?.id, user?.equipped.emote?.id, user?.equipped.pickaxe?.id, user?.equipped.glider?.id].filter(Boolean),
-  );
+  const preview = image.trim() || bundledSkinImage(name);
 
   return (
     <div className="page shop">
       <header className="page-head">
         <div>
           <h1>Item Shop</h1>
-          <p>Original cosmetics for your locker. Equip one to pin it on Home.</p>
+          <p>Original cosmetics for your locker.</p>
         </div>
         <div className="head-actions">
           {user?.role === 'admin' ? (
@@ -138,17 +138,15 @@ export function ShopPage() {
         {items.map((item) => {
           const [top, bottom] = RARITY[item.rarity];
           return (
-            <button
+            <article
               key={item.id}
-              type="button"
-              className={equippedIds.has(item.id) ? 'item-card equipped' : 'item-card'}
+              className="item-card"
               style={{ background: `linear-gradient(180deg, ${top} 0%, ${bottom} 78%)` }}
-              onClick={() => equip(item)}
             >
               <span className="type-badge">
                 <IconType type={item.type} />
               </span>
-              <img src={item.image} alt="" />
+              <img src={item.image} alt="" draggable={false} />
               <span className="item-meta">
                 <span className="item-name">{item.name}</span>
                 {item.vbucks === 0 ? (
@@ -159,7 +157,7 @@ export function ShopPage() {
                   </span>
                 )}
               </span>
-            </button>
+            </article>
           );
         })}
       </div>
@@ -216,7 +214,7 @@ export function ShopPage() {
               Upload
               <input type="file" accept="image/*" onChange={(event) => onFile(event.target.files?.[0])} />
             </label>
-            {image ? <img className="upload-preview" src={image} alt="" /> : null}
+            {preview ? <img className="upload-preview" src={preview} alt="" draggable={false} /> : null}
             {formError ? <p className="form-error">{formError}</p> : null}
             <button type="submit" className="btn primary">
               Save item

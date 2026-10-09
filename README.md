@@ -62,7 +62,7 @@ https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&scope=bot%20applic
 
 ## Windows app
 
-`npm run pack:win` produces `release/Nexa.exe`. That file is not committed. The window title is Nexa and it uses the Nexa logo. The packaged app starts the local API itself and opens the same UI. In the browser, the title-bar buttons do nothing; in the Electron window they minimize, maximize, and close.
+`npm run pack:win` produces `release/Nexa.exe`. That file is not committed. The window title is Nexa and it uses the Nexa logo. The packaged app loads the API inside the Electron process before the window opens, then the UI calls that local server. Continue with Discord does not need a separate `npm run dev`. In the browser, the title-bar buttons do nothing; in the Electron window they minimize, maximize, and close.
 
 The home greeting uses the Discord username. The pencil in Settings changes the in-game name only.
 

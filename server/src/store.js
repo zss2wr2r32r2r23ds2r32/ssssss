@@ -3,9 +3,16 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { avatarDataUrl } from './art.js';
 
-const dataDir = process.env.NEXA_DATA_DIR
-  ? path.resolve(process.env.NEXA_DATA_DIR)
-  : path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'data');
+function dataDirectory() {
+  if (process.env.NEXA_DATA_DIR) return path.resolve(process.env.NEXA_DATA_DIR);
+  try {
+    return path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'data');
+  } catch {
+    return path.join(process.cwd(), 'server', 'data');
+  }
+}
+
+const dataDir = dataDirectory();
 const dbPath = path.join(dataDir, 'db.json');
 
 const DEFAULT_SETTINGS = {

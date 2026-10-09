@@ -41,6 +41,27 @@ export function App() {
     return () => window.removeEventListener('hashchange', sync);
   }, []);
 
+  useEffect(() => {
+    const lockImages = () => {
+      document.querySelectorAll('img').forEach((img) => {
+        img.draggable = false;
+      });
+    };
+    const blockDrag = (event: DragEvent) => {
+      const target = event.target;
+      if (target instanceof Element && target.closest('input, textarea, select')) return;
+      event.preventDefault();
+    };
+    lockImages();
+    const observer = new MutationObserver(lockImages);
+    observer.observe(document.body, { childList: true, subtree: true });
+    document.addEventListener('dragstart', blockDrag);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener('dragstart', blockDrag);
+    };
+  }, []);
+
   function go(next: Tab, settings?: SettingsTab) {
     playClick();
     const sub = settings || settingsTab;
