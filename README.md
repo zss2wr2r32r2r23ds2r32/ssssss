@@ -53,15 +53,24 @@ https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&scope=bot%20applic
 
 | Script | Purpose |
 | --- | --- |
-| `npm run dev` | API (4177) + launcher (5173) |
+| `npm run dev` | API (4177) + launcher (5173) in the browser |
 | `npm start` | API only |
 | `npm run bot` | Discord bot |
 | `npm run build` | Typecheck and build the launcher |
+| `npm run desktop` | Open the Electron window (start `npm run dev` first) |
+| `npm run pack:win` | Build a portable Windows `Nexa.exe` into `release/` |
+
+## Windows app
+
+`npm run pack:win` produces `release/Nexa.exe`. That file is not committed. The window title is Nexa and it uses the Nexa logo. The packaged app starts the local API itself and opens the same UI. In the browser, the title-bar buttons do nothing; in the Electron window they minimize, maximize, and close.
+
+The home greeting uses the Discord username. The pencil in Settings changes the in-game name only.
 
 ## Layout
 
-- `launcher/` — Vite, React, TypeScript. Syne + Outfit. Tab changes fade and slide.
+- `launcher/` — Vite, React, TypeScript. Plus Jakarta Sans. Tab changes fade and slide.
+- `electron/` — desktop window.
 - `server/` — Express. JSON file in `server/data/`.
 - `bot/` — discord.js.
 
-Window controls in the title bar are visual only. Accent color, display name, and the game toggles (Mobile builds, Reset on Release, Potato Graphics) are stored as settings. They do not edit a game install.
+Accent color, the in-game name, and the game toggles (Mobile builds, Reset on Release, Potato Graphics) are stored as settings. They do not edit a game install.

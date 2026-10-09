@@ -1,18 +1,49 @@
 {
   "name": "nexa",
+  "version": "0.1.0",
+  "description": "Nexa desktop launcher",
   "private": true,
   "workspaces": [
     "launcher",
     "server",
     "bot"
   ],
+  "main": "electron/main.cjs",
   "scripts": {
     "dev": "concurrently -n api,app -c blue,magenta \"npm run dev -w server\" \"npm run dev -w launcher\"",
     "start": "npm run start -w server",
     "bot": "npm run start -w bot",
-    "build": "npm run build -w launcher"
+    "build": "npm run build -w launcher",
+    "desktop": "electron .",
+    "pack:win": "npm run build && node scripts/bundle-server.mjs && electron-builder --win portable --x64"
   },
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "concurrently": "^9.1.2",
+    "electron": "^33.4.11",
+    "electron-builder": "^25.1.8",
+    "esbuild": "^0.25.1"
+  },
+  "build": {
+    "appId": "dev.nexa.launcher",
+    "productName": "Nexa",
+    "asar": true,
+    "files": [
+      "electron/main.cjs",
+      "electron/preload.cjs",
+      "package.json"
+    ],
+    "extraResources": [
+      { "from": "electron/server.cjs", "to": "server.cjs" },
+      { "from": "launcher/dist", "to": "ui" }
+    ],
+    "win": {
+      "target": [{ "target": "portable", "arch": ["x64"] }],
+      "icon": "build/icon.ico",
+      "artifactName": "Nexa.exe",
+      "signAndEditExecutable": false
+    },
+    "directories": {
+      "output": "release"
+    }
   }
 }

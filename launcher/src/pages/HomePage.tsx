@@ -60,17 +60,18 @@ export function HomePage() {
   }
 
   const skin = user?.equipped.skin;
+  const heroSrc = skin?.image || '/skin-default.png';
+  const heroName = skin?.name || 'Default skin';
 
   return (
     <div className="page home">
       <section className="hero">
-        <div className="hero-copy">
-          <h1>Welcome Back, {user?.displayName}!</h1>
-          <p>Experience Chapter 2 Season 2 With Nexa</p>
-        </div>
         <div className="hero-skin">
-          {skin ? <img src={skin.image} alt={skin.name} /> : <div className="hero-empty">No skin equipped</div>}
-          {skin ? <span className="skin-chip">{skin.name}</span> : null}
+          <img src={heroSrc} alt={heroName} />
+        </div>
+        <div className="hero-copy">
+          <h1>Welcome Back, {user?.discordName}!</h1>
+          <p>Experience Chapter 2 Season 2 With Nexa</p>
         </div>
       </section>
 
@@ -79,7 +80,7 @@ export function HomePage() {
           <header className="card-head">
             <h2>Statistics</h2>
           </header>
-          <div className="stat-grid">
+          <div className="stat-list">
             <Stat label="Eliminations" value={stats ? formatNum(stats.elims) : '—'} />
             <Stat label="Victory Royals" value={stats ? formatNum(stats.wins) : '—'} />
             <Stat label="Matches Played" value={stats ? formatNum(stats.matches) : '—'} />

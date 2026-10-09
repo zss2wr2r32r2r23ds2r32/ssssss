@@ -8,13 +8,13 @@ export function TitleBar() {
         <span>Nexa</span>
       </div>
       <div className="titlebar-controls">
-        <button type="button" className="win" aria-label="Minimize" title="Minimize">
+        <button type="button" className="win" aria-label="Minimize" title="Minimize" onClick={() => window.nexa?.minimize()}>
           <IconMin />
         </button>
-        <button type="button" className="win" aria-label="Maximize" title="Maximize">
+        <button type="button" className="win" aria-label="Maximize" title="Maximize" onClick={() => window.nexa?.maximize()}>
           <IconMax />
         </button>
-        <button type="button" className="win close" aria-label="Close" title="Close">
+        <button type="button" className="win close" aria-label="Close" title="Close" onClick={() => window.nexa?.close()}>
           <IconClose />
         </button>
       </div>

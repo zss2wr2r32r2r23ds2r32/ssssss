@@ -6,3 +6,6 @@ dist/
 bot/.env
 server/data/*.json
 launcher/dist/
+release/
+electron/server.cjs
+build/

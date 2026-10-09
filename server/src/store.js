@@ -1,9 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { avatarDataUrl, itemArt } from './art.js';
+import { avatarDataUrl } from './art.js';
 
-const dataDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'data');
+const dataDir = process.env.NEXA_DATA_DIR
+  ? path.resolve(process.env.NEXA_DATA_DIR)
+  : path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'data');
 const dbPath = path.join(dataDir, 'db.json');
 
 const DEFAULT_SETTINGS = {
@@ -13,73 +15,17 @@ const DEFAULT_SETTINGS = {
   potatoGraphics: false,
 };
 
+const CHANI = {
+  id: 'chani',
+  name: 'Chani',
+  type: 'skin',
+  rarity: 'epic',
+  vbucks: 1500,
+  image: '/shop-chani.png',
+};
+
 function seedItems() {
-  return [
-    {
-      id: 'nyx-vale',
-      name: 'Nyx Vale',
-      type: 'skin',
-      rarity: 'epic',
-      vbucks: 1500,
-      image: itemArt.nyxVale,
-    },
-    {
-      id: 'auric-warden',
-      name: 'Auric Warden',
-      type: 'skin',
-      rarity: 'mythic',
-      vbucks: 2000,
-      image: itemArt.auricWarden,
-    },
-    {
-      id: 'lumen-fox',
-      name: 'Lumen Fox',
-      type: 'skin',
-      rarity: 'rare',
-      vbucks: 1200,
-      image: itemArt.lumenFox,
-    },
-    {
-      id: 'cinder-pike',
-      name: 'Cinder Pike',
-      type: 'pickaxe',
-      rarity: 'legendary',
-      vbucks: 800,
-      image: itemArt.cinderPike,
-    },
-    {
-      id: 'grayline',
-      name: 'Grayline',
-      type: 'pickaxe',
-      rarity: 'common',
-      vbucks: 500,
-      image: itemArt.grayline,
-    },
-    {
-      id: 'orbit-veil',
-      name: 'Orbit Veil',
-      type: 'glider',
-      rarity: 'epic',
-      vbucks: 1200,
-      image: itemArt.orbitVeil,
-    },
-    {
-      id: 'signal-pop',
-      name: 'Signal Pop',
-      type: 'emote',
-      rarity: 'uncommon',
-      vbucks: 300,
-      image: itemArt.signalPop,
-    },
-    {
-      id: 'freewheel',
-      name: 'Freewheel',
-      type: 'emote',
-      rarity: 'epic',
-      vbucks: 0,
-      image: itemArt.freewheel,
-    },
-  ];
+  return [{ ...CHANI }];
 }
 
 function seed() {
@@ -93,9 +39,9 @@ function seed() {
       avatar: avatarDataUrl(),
       lastNameChangeAt: null,
       equipped: {
-        skin: 'nyx-vale',
+        skin: null,
         emote: null,
-        pickaxe: 'grayline',
+        pickaxe: null,
         glider: null,
       },
       stats: {
@@ -134,6 +80,15 @@ function load() {
     const parsed = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
     if (!parsed?.user || !Array.isArray(parsed.items)) throw new Error('bad db');
     parsed.settings = { ...DEFAULT_SETTINGS, ...(parsed.settings || {}) };
+    const shopReady = parsed.items.length === 1 && parsed.items[0]?.id === 'chani' && parsed.items[0]?.image === '/shop-chani.png';
+    if (!shopReady) {
+      parsed.items = seedItems();
+      if (parsed.user.equipped?.skin && parsed.user.equipped.skin !== 'chani') parsed.user.equipped.skin = null;
+      parsed.user.equipped.emote = null;
+      parsed.user.equipped.pickaxe = null;
+      parsed.user.equipped.glider = null;
+      fs.writeFileSync(dbPath, JSON.stringify(parsed, null, 2));
+    }
     return parsed;
   } catch (error) {
     console.error('[nexa-api] Could not read data file, reseeding.', error.message);

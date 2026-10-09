@@ -69,7 +69,7 @@ function Account() {
       await api('/me', { method: 'PATCH', body: { displayName: draft } });
       await refresh();
       setEditing(false);
-      toast('Display name updated');
+      toast('In-game name updated');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not update that name.');
     }
@@ -89,6 +89,7 @@ function Account() {
         <div>
           <span className="kicker">Discord</span>
           <div className="discord-name">{user.discordName}</div>
+          <span className="kicker in-game-label">In-game name</span>
           {editing ? (
             <form className="name-edit" onSubmit={save}>
               <input
@@ -96,7 +97,7 @@ function Account() {
                 onChange={(event) => setDraft(event.target.value)}
                 minLength={4}
                 maxLength={16}
-                aria-label="Display name"
+                aria-label="In-game name"
                 autoFocus
               />
               <button type="submit" className="btn primary">
@@ -120,7 +121,7 @@ function Account() {
               <button
                 type="button"
                 className="icon-btn"
-                aria-label="Edit display name"
+                aria-label="Edit in-game name"
                 onClick={() => {
                   playClick();
                   setDraft(user.displayName);

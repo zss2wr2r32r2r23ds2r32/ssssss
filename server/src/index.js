@@ -3,6 +3,7 @@ import cors from 'cors';
 import crypto from 'node:crypto';
 import { spawn } from 'node:child_process';
 import fs from 'node:fs';
+import path from 'node:path';
 import { getDb, save, DEFAULT_SETTINGS } from './store.js';
 import { cleanDisplayName, cooldownState, formatRemaining } from './profanity.js';
 import { shopRefresh } from './time.js';
@@ -13,6 +14,11 @@ const app = express();
 
 app.use(cors({ origin: [/^http:\/\/localhost:\d+$/, /^http:\/\/127\.0\.0\.1:\d+$/] }));
 app.use(express.json({ limit: '8mb' }));
+app.use((req, _res, next) => {
+  if (req.url === '/api') req.url = '/';
+  else if (req.url.startsWith('/api/')) req.url = req.url.slice(4);
+  next();
+});
 
 const TYPES = new Set(['skin', 'emote', 'pickaxe', 'glider']);
 const RARITIES = new Set(['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythic']);
@@ -348,9 +354,24 @@ app.get('/leaderboard', (req, res) => {
   res.json({ rows, by });
 });
 
-app.use((req, res) => {
-  res.status(404).json({ error: `No route ${req.method} ${req.path}` });
-});
+const API_PREFIXES = ['/auth', '/me', '/settings', '/stats', '/news', '/shop', '/builds', '/leaderboard', '/health'];
+
+if (process.env.NEXA_STATIC) {
+  const root = path.resolve(process.env.NEXA_STATIC);
+  app.use(express.static(root, { index: false }));
+  app.use((req, res) => {
+    const isApi = API_PREFIXES.some((prefix) => req.path === prefix || req.path.startsWith(`${prefix}/`));
+    if (req.method === 'GET' && !isApi) {
+      res.sendFile(path.join(root, 'index.html'));
+      return;
+    }
+    res.status(404).json({ error: `No route ${req.method} ${req.path}` });
+  });
+} else {
+  app.use((req, res) => {
+    res.status(404).json({ error: `No route ${req.method} ${req.path}` });
+  });
+}
 
 app.listen(PORT, '127.0.0.1', () => {
   console.log(`[nexa-api] listening on http://127.0.0.1:${PORT}`);
