@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+.env
+bot/.env
+server/data/*.json
+server/data/shop-art/
+launcher/dist/
+release/
+build/
+src-tauri/target/
+src-tauri/embed/
+src-tauri/gen/
