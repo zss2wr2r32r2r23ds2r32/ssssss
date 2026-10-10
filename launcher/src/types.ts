@@ -1,7 +1,7 @@
 export type ItemType = 'skin' | 'emote' | 'pickaxe' | 'glider';
 export type Rarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic';
 export type Tab = 'home' | 'library' | 'shop' | 'leaderboards' | 'donate' | 'settings';
-export type SettingsTab = 'account' | 'appearance' | 'game' | 'launcher';
+export type SettingsTab = 'account' | 'game' | 'launcher';
 
 export interface ShopItem {
   id: string;
@@ -69,6 +69,9 @@ export interface Build {
 export interface LeaderRow {
   id: string;
   name: string;
+  discordName: string;
+  displayName: string;
+  avatar: string;
   wins: number;
   elims: number;
   you: boolean;

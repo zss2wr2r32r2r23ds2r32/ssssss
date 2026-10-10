@@ -246,11 +246,12 @@ p { margin: 0; }
 .hero-copy {
   position: relative;
   z-index: 1;
-  padding: 14px 22px 14px;
-  margin-left: 156px;
+  width: 100%;
+  padding: 18px 48px 14px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
   text-shadow: 0 2px 18px rgba(0, 0, 0, 0.75);
 }
 .hero-copy h1 { font-size: 30px; line-height: 1.2; font-weight: 700; letter-spacing: -0.02em; }
@@ -317,6 +318,7 @@ p { margin: 0; }
 .news-list strong { display: block; margin-bottom: 4px; }
 .news-list p { color: var(--muted); white-space: pre-wrap; }
 .news-list time { color: var(--faint); font-size: 12px; flex: none; }
+.news-side { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex: none; }
 .launch-wrap { margin-top: auto; }
 .launch-meta { color: var(--faint); font-size: 12px; margin-bottom: 8px; letter-spacing: 0.04em; }
 .launch {
@@ -349,19 +351,20 @@ p { margin: 0; }
   position: fixed;
   right: 22px;
   bottom: 22px;
-  width: 54px;
-  height: 54px;
-  border: 0;
-  border-radius: 999px;
-  background: #f4f6fb;
-  color: #111318;
-  font-size: 34px;
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  background: #2a2d36;
+  color: #f5f7fb;
+  font-size: 30px;
+  font-weight: 500;
   line-height: 1;
   cursor: pointer;
   z-index: 5;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
 }
-.library-add:hover { background: #ffffff; }
+.library-add:hover { background: #353844; }
 .import-toast {
   position: fixed;
   top: 58px;
@@ -390,22 +393,30 @@ p { margin: 0; }
 }
 .build-grid {
   margin-top: 16px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
   gap: 14px;
 }
 .build-card {
   position: relative;
-  aspect-ratio: 16 / 9;
+  width: max-content;
+  height: max-content;
   border-radius: 16px;
   overflow: hidden;
   background: #0c0d11;
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
-.build-card img, .build-fallback { width: 100%; height: 100%; object-fit: cover; }
-.build-fallback { background: #101218; }
-.build-card img { transition: filter 0.18s ease, transform 0.18s ease; }
-.build-card:hover img { filter: blur(7px) brightness(0.55); transform: scale(1.05); }
+.build-card img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  object-fit: none;
+}
+.build-fallback { width: 320px; height: 180px; background: #101218; }
+.build-card:hover img { filter: blur(7px) brightness(0.55); }
 .play-hit {
   position: absolute;
   inset: 0;
@@ -505,22 +516,23 @@ p { margin: 0; }
 }
 .shop-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(168px, 180px));
   gap: 14px;
 }
 .item-card {
   display: flex;
   flex-direction: column;
+  width: 168px;
   border-radius: 10px;
   overflow: hidden;
   color: white;
   background: #101218;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
-.item-card.featured { width: 240px; flex: none; }
-.item-card.preview-card { width: 180px; }
-.item-art { position: relative; height: 168px; }
-.item-card.featured .item-art { height: 230px; }
+.item-card.featured { width: 196px; flex: none; }
+.item-card.preview-card { width: 168px; }
+.item-art { position: relative; height: 248px; }
+.item-card.featured .item-art { height: 286px; }
 .item-art img {
   position: absolute;
   left: 14px;
@@ -601,16 +613,13 @@ p { margin: 0; }
 .place-2 { color: #d5d8e2; }
 .place-3 { color: #d08a55; }
 .player { display: flex; align-items: center; gap: 10px; font-weight: 600; }
-.player i {
-  width: 32px;
-  height: 32px;
+.rank-avatar {
+  width: 36px;
+  height: 36px;
   border-radius: 999px;
-  display: grid;
-  place-items: center;
+  object-fit: cover;
   background: #1c1f28;
-  font-style: normal;
-  font-size: 11px;
-  letter-spacing: 0.04em;
+  flex: none;
 }
 .player em {
   font-style: normal;
@@ -655,18 +664,36 @@ p { margin: 0; }
 }
 .settings-panel h2 { font-size: 18px; }
 .settings-panel h3 { font-size: 16px; margin-bottom: 8px; }
-.account-row { display: flex; gap: 18px; align-items: flex-start; }
-.avatar { width: 84px; height: 84px; border-radius: 999px; background: #0b0d12; }
-.kicker { color: var(--faint); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
-.discord-name { font-size: 15px; color: var(--text); margin-top: 2px; font-weight: 600; }
-.in-game-label { display: block; margin-top: 12px; }
-.display-row { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
-.display-row strong { font-size: 16px; font-weight: 650; }
-.name-edit { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
-.name-edit input { max-width: 220px; }
-.hint { color: var(--faint); margin-top: 8px; font-size: 13px; }
-.discord-id { margin-top: 14px; display: flex; flex-direction: column; gap: 4px; }
-.discord-id span { color: var(--faint); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
+.account-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #16181f;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 14px 16px;
+}
+.account-main { min-width: 0; flex: 1; }
+.account-name { display: flex; align-items: center; gap: 6px; }
+.account-name strong { font-size: 18px; font-weight: 700; }
+.account-name .icon-btn { width: 28px; height: 28px; background: transparent; }
+.avatar { width: 56px; height: 56px; border-radius: 999px; object-fit: cover; background: #0b0d12; flex: none; }
+.discord-id { margin-top: 2px; color: var(--muted); font-size: 13px; }
+.sign-out {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  color: #f5f7fb;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 650;
+  cursor: pointer;
+  flex: none;
+}
+.sign-out:hover { color: white; }
 .discord-id code { font-family: var(--font-ui); font-size: 15px; color: var(--text); }
 .logout { margin-top: 28px; }
 .theme-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }

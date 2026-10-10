@@ -4,14 +4,13 @@ import { api } from '../api';
 import { playClick } from '../audio';
 import { IconPencil } from '../components/Icons';
 import { Modal } from '../components/Modal';
-import { formatRemaining, motionTransition, reducedMotion } from '../format';
+import { motionTransition, reducedMotion } from '../format';
+import { visibleName } from '../names';
 import { useSession } from '../session';
-import { THEMES } from '../themes';
 import type { SettingsTab } from '../types';
 
 const NAV: { id: SettingsTab; label: string }[] = [
   { id: 'account', label: 'Account' },
-  { id: 'appearance', label: 'Appearance' },
   { id: 'game', label: 'Game' },
   { id: 'launcher', label: 'Launcher' },
 ];
@@ -38,7 +37,6 @@ export function SettingsPage({ tab, onTab }: { tab: SettingsTab; onTab: (tab: Se
             transition={reducedMotion() ? { duration: 0 } : motionTransition}
           >
             {tab === 'account' ? <Account /> : null}
-            {tab === 'appearance' ? <Appearance /> : null}
             {tab === 'game' ? <Game /> : null}
             {tab === 'launcher' ? <Launcher /> : null}
           </motion.div>
@@ -74,17 +72,15 @@ function Account() {
   }
 
   if (!user) return null;
+  const shown = visibleName(user.discordName, user.displayName);
 
   return (
     <div className="account">
       <div className="account-row">
         <img src={user.avatar} alt="" className="avatar" draggable={false} />
-        <div>
-          <span className="kicker">Discord</span>
-          <div className="discord-name">{user.discordName}</div>
-          <span className="kicker in-game-label">Display name</span>
-          <div className="display-row">
-            <strong>{user.displayName}</strong>
+        <div className="account-main">
+          <div className="account-name">
+            <strong>{shown}</strong>
             <button
               type="button"
               className="icon-btn"
@@ -99,20 +95,15 @@ function Account() {
               <IconPencil />
             </button>
           </div>
-          <p className="hint">
-            {user.nameChange.allowed
-              ? 'First change is open. After that, the display name waits 14 days.'
-              : `You can change your name again in ${formatRemaining(user.nameChange.remainingMs)}.`}
-          </p>
-          <div className="discord-id">
-            <span>Discord ID</span>
-            <code>{user.discordId}</code>
-          </div>
+          <div className="discord-id">{user.discordId}</div>
         </div>
+        <button type="button" className="sign-out" onClick={onLogout}>
+          Sign Out
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M3 8h9M9 4.5 12.5 8 9 11.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
       </div>
-      <button type="button" className="btn ghost logout" onClick={onLogout}>
-        Log out
-      </button>
       {editing ? (
         <Modal
           title="Change display name"
@@ -153,42 +144,6 @@ function Account() {
           </form>
         </Modal>
       ) : null}
-    </div>
-  );
-}
-
-function Appearance() {
-  const { settings, updateSettings, toast } = useSession();
-
-  async function setTheme(theme: string) {
-    playClick();
-    try {
-      await updateSettings({ theme });
-    } catch (err) {
-      toast(err instanceof Error ? err.message : 'Could not save that theme.');
-    }
-  }
-
-  return (
-    <div className="stack">
-      <div>
-        <h2>Themes</h2>
-        <p className="lede">Changes the launcher background. Buttons stay the same.</p>
-      </div>
-      <div className="theme-grid">
-        {THEMES.map((theme) => (
-          <button
-            key={theme.id}
-            type="button"
-            className={settings.theme === theme.id ? 'theme-card on' : 'theme-card'}
-            style={{ background: theme.color }}
-            aria-label={theme.name}
-            onClick={() => setTheme(theme.id)}
-          >
-            <span>{theme.name}</span>
-          </button>
-        ))}
-      </div>
     </div>
   );
 }
@@ -249,7 +204,7 @@ function Launcher() {
   const { toast } = useSession();
   const [checking, setChecking] = useState(false);
   const [message, setMessage] = useState('');
-  const [version, setVersion] = useState('0.1.1');
+  const [version, setVersion] = useState('0.1.2');
 
   useEffect(() => {
     api<{ version: string }>('/launcher/version')

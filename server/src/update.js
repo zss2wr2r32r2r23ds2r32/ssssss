@@ -16,7 +16,7 @@ function readVersion() {
       /* try the next package.json */
     }
   }
-  return '0.1.1';
+  return '0.1.2';
 }
 
 export const APP_VERSION = readVersion();

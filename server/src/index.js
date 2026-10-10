@@ -152,12 +152,34 @@ app.get('/me', (req, res) => {
   res.json(presentUser(db));
 });
 
+function visibleName(discordName, displayName) {
+  const discord = String(discordName || '').trim();
+  const display = String(displayName || '').trim();
+  if (display && discord && display.toLowerCase() !== discord.toLowerCase()) return display;
+  return discord || display;
+}
+
+function nameTaken(db, name) {
+  const needle = name.toLowerCase();
+  return db.rivals.some((rival) => {
+    const shown = visibleName(rival.discordName, rival.displayName).toLowerCase();
+    return (
+      shown === needle ||
+      String(rival.displayName || '').toLowerCase() === needle ||
+      String(rival.discordName || '').toLowerCase() === needle
+    );
+  });
+}
+
 app.patch('/me', requireAuth, (req, res) => {
   const db = getDb();
   const cleaned = cleanDisplayName(req.body?.displayName);
   if (cleaned.error) return res.status(400).json({ error: cleaned.error });
   if (cleaned.name.toLowerCase() === db.user.displayName.toLowerCase()) {
     return res.status(400).json({ error: "That's already your display name." });
+  }
+  if (nameTaken(db, cleaned.name)) {
+    return res.status(400).json({ error: 'That display name is already used by another player.' });
   }
   const cooldown = cooldownState(db.user.lastNameChangeAt);
   if (!cooldown.allowed) {
@@ -224,6 +246,15 @@ app.post('/news', requireAuth, requireAdmin, (req, res) => {
   db.news = db.news.slice(0, 40);
   save();
   res.status(201).json(item);
+});
+
+app.delete('/news/:id', requireAuth, requireAdmin, (req, res) => {
+  const db = getDb();
+  const before = db.news.length;
+  db.news = db.news.filter((item) => item.id !== req.params.id);
+  if (db.news.length === before) return res.status(404).json({ error: 'Post not found.' });
+  save();
+  res.json({ news: db.news });
 });
 
 app.get('/shop/items', (_req, res) => {
@@ -358,17 +389,24 @@ app.post('/builds/launch', requireAuth, (req, res) => {
   const requested = typeof req.body?.id === 'string' ? req.body.id : db.selectedBuildId;
   const build = db.builds.find((entry) => entry.id === requested);
   if (!build) return res.status(400).json({ error: 'No build is selected.' });
-  const shippingName = path.basename(build.executablePath || '').toLowerCase();
-  if (shippingName !== 'fortniteclient-win64-shipping.exe' || !fs.existsSync(build.executablePath)) {
+  let executable = '';
+  try {
+    executable = fs.realpathSync(build.executablePath || '');
+  } catch {
+    executable = '';
+  }
+  const shippingName = path.basename(executable).toLowerCase();
+  if (shippingName !== 'fortniteclient-win64-shipping.exe' || shippingName.includes('epicgameslauncher')) {
     return res.status(400).json({ error: 'FortniteClient-Win64-Shipping.exe is missing for this build.' });
   }
   db.selectedBuildId = build.id;
   save();
-  const child = spawn(build.executablePath, [], {
+  const child = spawn(executable, [], {
     detached: true,
     stdio: 'ignore',
     windowsHide: true,
-    cwd: path.dirname(build.executablePath),
+    shell: false,
+    cwd: path.dirname(executable),
   });
   child.on('error', (error) => {
     console.error('[nexa-api] launch failed', error.message);
@@ -380,10 +418,22 @@ app.post('/builds/launch', requireAuth, (req, res) => {
 app.get('/leaderboard', (req, res) => {
   const db = getDb();
   const rows = [
-    ...db.rivals.map((rival) => ({ ...rival, you: false })),
+    ...db.rivals.map((rival) => ({
+      id: rival.id,
+      name: visibleName(rival.discordName, rival.displayName),
+      discordName: rival.discordName,
+      displayName: rival.displayName,
+      avatar: rival.avatar,
+      wins: rival.wins,
+      elims: rival.elims,
+      you: false,
+    })),
     {
       id: db.user.id,
-      name: db.user.displayName,
+      name: visibleName(db.user.discordName, db.user.displayName),
+      discordName: db.user.discordName,
+      displayName: db.user.displayName,
+      avatar: db.user.avatar,
       wins: db.user.stats.wins,
       elims: db.user.stats.elims,
       you: true,

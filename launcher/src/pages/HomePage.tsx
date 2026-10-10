@@ -33,6 +33,16 @@ export function HomePage() {
     load().catch((err: Error) => toast(err.message));
   }, [toast, user?.displayName]);
 
+  async function removeNews(id: string) {
+    playClick();
+    try {
+      const data = await api<{ news: NewsItem[] }>(`/news/${id}`, { method: 'DELETE' });
+      setNews(data.news);
+    } catch (err) {
+      toast(err instanceof Error ? err.message : 'Could not remove that post.');
+    }
+  }
+
   async function launch() {
     playClick();
     try {
@@ -115,9 +125,16 @@ export function HomePage() {
                     <p>{item.body}</p>
                     {item.image ? <img className="news-image" src={item.image} alt="" draggable={false} /> : null}
                   </div>
-                  <time dateTime={item.createdAt}>
-                    {new Date(item.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                  </time>
+                  <div className="news-side">
+                    {user?.role === 'admin' ? (
+                      <button type="button" className="text-btn" onClick={() => removeNews(item.id)}>
+                        Remove
+                      </button>
+                    ) : null}
+                    <time dateTime={item.createdAt}>
+                      {new Date(item.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                    </time>
+                  </div>
                 </li>
               ))}
             </ul>

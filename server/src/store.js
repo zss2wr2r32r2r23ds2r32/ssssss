@@ -22,6 +22,25 @@ const DEFAULT_SETTINGS = {
 
 const PLACEHOLDER_ID = '100000000000000001';
 
+function defaultAvatar(index) {
+  return `https://cdn.discordapp.com/embed/avatars/${index % 6}.png`;
+}
+
+function normalizeRivals(rivals) {
+  return (Array.isArray(rivals) ? rivals : []).map((rival, index) => {
+    const discordName = String(rival?.discordName || rival?.name || 'Player');
+    const displayName = String(rival?.displayName || discordName);
+    return {
+      id: String(rival?.id || `rival-${index}`),
+      discordName,
+      displayName,
+      avatar: rival?.avatar || defaultAvatar(index),
+      wins: Number(rival?.wins) || 0,
+      elims: Number(rival?.elims) || 0,
+    };
+  });
+}
+
 function seed() {
   return {
     user: {
@@ -51,13 +70,13 @@ function seed() {
     items: [],
     builds: [],
     selectedBuildId: null,
-    rivals: [
-      { id: 'vanta', name: 'Vanta', wins: 640, elims: 22110 },
-      { id: 'kite', name: 'Kite', wins: 512, elims: 18440 },
-      { id: 'mara', name: 'Mara Quin', wins: 151, elims: 9904 },
-      { id: 'solen', name: 'Solen', wins: 140, elims: 7420 },
-      { id: 'brack', name: 'Brack', wins: 88, elims: 4104 },
-    ],
+    rivals: normalizeRivals([
+      { id: 'vanta', discordName: 'Vanta', wins: 640, elims: 22110 },
+      { id: 'kite', discordName: 'Kite', wins: 512, elims: 18440 },
+      { id: 'mara', discordName: 'Mara Quin', wins: 151, elims: 9904 },
+      { id: 'solen', discordName: 'Solen', wins: 140, elims: 7420 },
+      { id: 'brack', discordName: 'Brack', wins: 88, elims: 4104 },
+    ]),
   };
 }
 
@@ -87,6 +106,7 @@ function load() {
     parsed.items = (Array.isArray(parsed.items) ? parsed.items : []).filter(
       (item) => item && item.id !== 'chani' && item.image !== '/shop-chani.png',
     );
+    parsed.rivals = normalizeRivals(parsed.rivals);
     return parsed;
   } catch (error) {
     console.error('[nexa-api] Could not read data file, reseeding.', error.message);

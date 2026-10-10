@@ -90,7 +90,7 @@ The home greeting uses the Discord username. The pencil opens a display-name dia
 
 ## Updates
 
-Settings → Launcher → **Check for updates** reads GitHub releases for `zss2wr2r32r2r23ds2r32/ssssss`. The tag it expects is `nexa-` plus the version, for example `nexa-0.1.1`. The release asset must be named `Nexa.exe`. The button compares that tag with the running version. A newer tag downloads `Nexa.exe`, replaces the portable app, and restarts it. The same version says you're on the latest.
+Settings → Launcher → **Check for updates** reads GitHub releases for `zss2wr2r32r2r23ds2r32/ssssss`. The tag it expects is `nexa-` plus the version, for example `nexa-0.1.2`. It uses the highest `nexa-` release, not an older tag. The release asset must be named `Nexa.exe`. The button compares that tag with the running version. A newer tag downloads `Nexa.exe`, replaces the portable app, and restarts it. The same version says you're on the latest.
 
 ## Layout
 

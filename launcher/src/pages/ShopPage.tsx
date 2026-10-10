@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { api } from '../api';
+import { cutoutFile } from '../cutout';
 import { playClick } from '../audio';
 import { Modal } from '../components/Modal';
 import { formatClock, formatNum } from '../format';
@@ -97,11 +98,14 @@ export function ShopPage() {
     };
   }, [toast]);
 
-  function onFile(file: File | undefined) {
+  async function onFile(file: File | undefined) {
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => setImage(String(reader.result || ''));
-    reader.readAsDataURL(file);
+    setFormError('');
+    try {
+      setImage(await cutoutFile(file));
+    } catch {
+      setFormError('Could not read that image.');
+    }
   }
 
   async function removeItem(item: ShopItem) {

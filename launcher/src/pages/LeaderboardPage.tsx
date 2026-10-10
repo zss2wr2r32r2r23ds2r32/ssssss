@@ -43,7 +43,7 @@ export function LeaderboardPage() {
           <li key={row.id} className={row.you ? 'rank you' : 'rank'}>
             <span className={`place place-${index + 1}`}>{index + 1}</span>
             <span className="player">
-              <i>{row.name.slice(0, 2).toUpperCase()}</i>
+              <img className="rank-avatar" src={row.avatar} alt="" draggable={false} />
               {row.name}
               {row.you ? <em>You</em> : null}
             </span>

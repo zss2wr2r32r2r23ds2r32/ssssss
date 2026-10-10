@@ -15,7 +15,7 @@ import { useSession } from './session';
 import type { SettingsTab, Tab } from './types';
 
 const TABS: Tab[] = ['home', 'library', 'shop', 'leaderboards', 'donate', 'settings'];
-const SETTINGS: SettingsTab[] = ['account', 'appearance', 'game', 'launcher'];
+const SETTINGS: SettingsTab[] = ['account', 'game', 'launcher'];
 
 function parseHash() {
   const raw = window.location.hash.replace(/^#\/?/, '');
