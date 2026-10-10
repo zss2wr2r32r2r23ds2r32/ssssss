@@ -96,7 +96,7 @@ If the code exchange cannot read the Discord user, the same window waits and `/l
 
 ## Windows app
 
-`npm run pack:win` produces `release/Nexa.exe`. That file is not committed. It is a Tauri window with the Nexa icon, so Windows can pin it to the taskbar. Inspect, the right-click menu, and F12 are off. The exe extracts its local API and opens that API in the window. Continue with Discord does not need a separate `npm run dev`. After Continue in the browser, the Nexa window shows “Finding you a spot” with one bar, then a blurred welcome, then home. Title-bar buttons minimize, maximize, and close that window.
+`npm run pack:win` produces `release/Nexa.exe`. That file is not committed. It is a Tauri window with the Nexa icon, so Windows can pin it to the taskbar. Inspect, the right-click menu, and F12 are off. The exe extracts its local API and opens that API in the window. Continue with Discord does not need a separate `npm run dev`. After Continue in the browser, the Nexa window shows the queue card. The spot, the line length, and the estimate come from launchers connected to this queue. One person alone is spot 1 of 1 while the bar fills, then a blurred welcome, then home. Title-bar buttons minimize, maximize, and close that window.
 
 The home greeting uses the visible name. The pencil opens a display-name dialog. A library folder has to contain both `FortniteGame` and `Engine`. Nexa launches `FortniteClient-Win64-Shipping.exe` (usually `FortniteGame/Binaries/Win64/FortniteClient-Win64-Shipping.exe`) from the card and from Launch Fortnite, with the working directory set to the folder that contains that exe. It does not start EpicGamesLauncher.exe and it does not pass `-noeac`. If `splash.bmp` is in that folder, the card shows that bitmap at its real aspect, large, with no gradient strip. When the build files include a version and changelist, the card shows them on two lines at the bottom left, such as `Fortnite 12.41` and `12.41-CL-12905309`. Nexa does not download game files.
 
@@ -104,7 +104,7 @@ The item shop refreshes every day at 01:00 Europe/London from the [Fortnite cosm
 
 ## Updates
 
-Settings → Launcher → **Check for updates** reads GitHub releases for `zss2wr2r32r2r23ds2r32/ssssss`. The tag it expects is `nexa-` plus the version, for example `nexa-0.1.6`. It uses the highest `nexa-` release, not an older tag. The release asset must be named `Nexa.exe`. When you are already on that version, the button does not start another process. It shows a dismissable toast: You’re on the latest version. When a newer tag exists, Nexa downloads that `Nexa.exe`, a hidden helper replaces the running app’s exe after the window closes, and Nexa starts again. That path does not open a command prompt.
+Settings → Launcher → **Check for updates** reads GitHub releases for `zss2wr2r32r2r23ds2r32/ssssss`. The tag it expects is `nexa-` plus the version, for example `nexa-0.1.7`. It uses the highest `nexa-` release, not an older tag. The release asset must be named `Nexa.exe`. When you are already on that version, the button does not start another process. It shows a dismissable toast: You’re on the latest version. When a newer tag exists, Nexa downloads that `Nexa.exe`, a hidden helper replaces the running app’s exe after the window closes, and Nexa starts again. That path does not open a command prompt.
 
 ## Layout
 

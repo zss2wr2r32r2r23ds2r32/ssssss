@@ -13,6 +13,7 @@ import { discordUserIsAdmin } from './roles.js';
 import { pullShopItems } from './shop-feed.js';
 import { cachedCosmetic, cosmeticImageUrl, imageType, presentShopItem, warmShopArt } from './shop-art.js';
 import { APP_VERSION, applyUpdate, updateStatus } from './update.js';
+import { queue } from './queue.js';
 
 const THEMES = new Set(['default', 'void', 'ember', 'frost', 'jade', 'bud', 'rose', 'sunset', 'aurora', 'tom', 'noir', 'dark']);
 
@@ -233,6 +234,21 @@ app.put('/settings', requireAuth, (req, res) => {
 
 app.get('/stats', (_req, res) => {
   res.json(getDb().user.stats);
+});
+
+app.post('/queue/join', (_req, res) => {
+  res.json(queue.join());
+});
+
+app.get('/queue/:id', (req, res) => {
+  const status = queue.touch(req.params.id);
+  if (!status) return res.status(404).json({ error: 'That queue spot expired.' });
+  res.json(status);
+});
+
+app.delete('/queue/:id', (req, res) => {
+  queue.leave(req.params.id);
+  res.json({ ok: true });
 });
 
 app.get('/news', (_req, res) => {
@@ -487,7 +503,7 @@ app.get('/leaderboard', (req, res) => {
   res.json({ rows, by });
 });
 
-const API_PREFIXES = ['/auth', '/me', '/settings', '/stats', '/news', '/shop', '/builds', '/leaderboard', '/health'];
+const API_PREFIXES = ['/auth', '/me', '/settings', '/stats', '/news', '/shop', '/builds', '/leaderboard', '/health', '/queue', '/launcher'];
 
 if (process.env.NEXA_STATIC) {
   const root = path.resolve(process.env.NEXA_STATIC);

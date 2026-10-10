@@ -41,6 +41,21 @@ function normalizeRivals(rivals) {
   });
 }
 
+export function emptyStats() {
+  return { elims: 0, wins: 0, matches: 0, vbucks: 0 };
+}
+
+export function applyZeroStats(parsed) {
+  let dirty = false;
+  const stats = parsed.user?.stats || {};
+  if (stats.elims !== 0 || stats.wins !== 0 || stats.matches !== 0 || stats.vbucks !== 0) dirty = true;
+  parsed.user.stats = emptyStats();
+  const source = Array.isArray(parsed.rivals) ? parsed.rivals : [];
+  if (source.some((rival) => Number(rival?.wins) || Number(rival?.elims))) dirty = true;
+  parsed.rivals = normalizeRivals(source).map((rival) => ({ ...rival, wins: 0, elims: 0 }));
+  return dirty;
+}
+
 function seed() {
   return {
     user: {
@@ -57,12 +72,7 @@ function seed() {
         pickaxe: null,
         glider: null,
       },
-      stats: {
-        elims: 4821,
-        wins: 186,
-        matches: 974,
-        vbucks: 1350,
-      },
+      stats: emptyStats(),
     },
     settings: { ...DEFAULT_SETTINGS },
     session: null,
@@ -71,11 +81,11 @@ function seed() {
     builds: [],
     selectedBuildId: null,
     rivals: normalizeRivals([
-      { id: 'vanta', discordName: 'Vanta', wins: 640, elims: 22110 },
-      { id: 'kite', discordName: 'Kite', wins: 512, elims: 18440 },
-      { id: 'mara', discordName: 'Mara Quin', wins: 151, elims: 9904 },
-      { id: 'solen', discordName: 'Solen', wins: 140, elims: 7420 },
-      { id: 'brack', discordName: 'Brack', wins: 88, elims: 4104 },
+      { id: 'vanta', discordName: 'Vanta', wins: 0, elims: 0 },
+      { id: 'kite', discordName: 'Kite', wins: 0, elims: 0 },
+      { id: 'mara', discordName: 'Mara Quin', wins: 0, elims: 0 },
+      { id: 'solen', discordName: 'Solen', wins: 0, elims: 0 },
+      { id: 'brack', discordName: 'Brack', wins: 0, elims: 0 },
     ]),
   };
 }
@@ -106,7 +116,8 @@ function load() {
     parsed.items = (Array.isArray(parsed.items) ? parsed.items : []).filter(
       (item) => item && item.id !== 'chani' && item.image !== '/shop-chani.png',
     );
-    parsed.rivals = normalizeRivals(parsed.rivals);
+    const zeroed = applyZeroStats(parsed);
+    if (zeroed) persist(parsed);
     return parsed;
   } catch (error) {
     console.error('[nexa-api] Could not read data file, reseeding.', error.message);
@@ -121,11 +132,15 @@ export function getDb() {
   return db;
 }
 
-export function save() {
+function persist(data) {
   fs.mkdirSync(dataDir, { recursive: true });
   const tmp = `${dbPath}.tmp`;
-  fs.writeFileSync(tmp, JSON.stringify(getDb(), null, 2));
+  fs.writeFileSync(tmp, JSON.stringify(data, null, 2));
   fs.renameSync(tmp, dbPath);
+}
+
+export function save() {
+  persist(getDb());
 }
 
 export { DEFAULT_SETTINGS };

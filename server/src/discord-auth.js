@@ -4,7 +4,7 @@ import http from 'node:http';
 import path from 'node:path';
 import { loadEnv } from './env.js';
 import { discordUserIsAdmin } from './roles.js';
-import { getDb, save } from './store.js';
+import { emptyStats, getDb, save } from './store.js';
 
 loadEnv();
 
@@ -88,6 +88,7 @@ async function applyProfile(profile) {
     db.user.displayName = String(profile.username || 'Player').slice(0, 16);
     db.user.lastNameChangeAt = null;
   }
+  if (!same) db.user.stats = emptyStats();
   const token = crypto.randomBytes(24).toString('hex');
   db.session = { token, userId: db.user.id };
   save();

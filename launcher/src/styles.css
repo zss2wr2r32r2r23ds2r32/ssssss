@@ -489,10 +489,28 @@ p { margin: 0; }
   transition: opacity 0.55s ease;
 }
 .arrival-layer.on { opacity: 1; }
-.spot-card { width: min(440px, calc(100% - 48px)); text-align: center; }
-.spot-card p { margin: 0 0 16px; font-size: 18px; font-weight: 650; }
-.spot-bar { height: 8px; border-radius: 999px; background: #2a2e38; overflow: hidden; }
-.spot-bar > div { height: 100%; background: #f4f6fb; }
+.qcard {
+  width: min(440px, calc(100% - 48px));
+  background: #12141c;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 28px 24px 22px;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+}
+.qcard-logo { width: 42px; height: auto; margin: 0 auto; }
+.qcard-status { margin: 14px 0; color: #d5dbe8; font-size: 15px; }
+.qcard-bar { height: 8px; border-radius: 999px; background: #2a2e38; overflow: hidden; }
+.qcard-bar > div {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #8ea0ff, #f5f7fb);
+  transition: width 0.35s linear;
+}
+.qcard-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 18px; }
+.qcard-stats strong { display: block; font-size: 18px; }
+.qcard-stats span { color: #8b93a7; font-size: 12px; }
+.qcard-note { margin: 16px 0 0; color: #8b93a7; font-size: 13px; }
 .arrival-bg {
   position: absolute;
   inset: -48px;
