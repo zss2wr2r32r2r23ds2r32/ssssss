@@ -32,12 +32,20 @@ export function Arrival({ user, onDone }: { user: User; onDone: () => void }) {
     let welcomeTimer = 0;
     let id = '';
 
+    const leave = (target: string) => {
+      if (!target) return;
+      void api(`/queue/${target}`, { method: 'DELETE' }).catch(() => undefined);
+    };
+
     const poll = async () => {
       try {
         const next = id
           ? await api<QueueStatus>(`/queue/${id}`)
           : await api<QueueStatus>('/queue/join', { method: 'POST' });
-        if (stopped) return;
+        if (stopped) {
+          leave(id || next.id);
+          return;
+        }
         id = next.id;
         setStatus(next);
         if (next.admitted) {
@@ -59,7 +67,7 @@ export function Arrival({ user, onDone }: { user: User; onDone: () => void }) {
       stopped = true;
       window.clearTimeout(timer);
       window.clearTimeout(welcomeTimer);
-      if (id) void api(`/queue/${id}`, { method: 'DELETE' }).catch(() => undefined);
+      leave(id);
     };
   }, [onDone]);
 
