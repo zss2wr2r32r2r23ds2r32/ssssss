@@ -1,0 +1,99 @@
+menu:
+  title: "&8Rules"
+  rows: 3
+  open-sound:
+    enabled: true
+    sound: "block.barrel.open"
+    volume: 0.7
+    pitch: 1.2
+
+click-command: discord
+click:
+  close: true
+
+frame:
+  enabled: true
+  slots: "auto"
+  material: BLACK_STAINED_GLASS_PANE
+  name: " "
+  lore: []
+
+categories:
+  client:
+    enabled: true
+    slot: 11
+    material: LIME_BUNDLE
+    name: "&#97F900&lCLIENT RULES"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#97F900Information:"
+      - "&#97F900| &fFollow these rules or"
+      - "&#97F900| &fyou will be &#97F900punished&f."
+      - ""
+      - "&#97F900● &fNo hacked or modified clients"
+      - "&#97F900● &fNo unfair advantages"
+      - "&#97F900● &fNo freecam"
+      - "&#97F900● &fNo xray or esp"
+      - "&#97F900● &fNo easy place"
+      - "&#97F900● &fNo minimap"
+      - "&#97F900● &fNo auto clicker or macros"
+      - "&#97F900● &fNo reach or hitbox mods"
+      - "&#97F900● &fNo auto totem"
+      - "&#97F900● &fFullbright is allowed"
+      - "&#97F900● &fCrystal and anchor optimizers are allowed"
+      - "&#97F900● &fFast xp is allowed"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0For Discord Link" 
+  general:
+    enabled: true
+    slot: 13
+    material: ORANGE_BUNDLE
+    name: "&#FF8A00&lGENERAL RULES"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF8A00Information:"
+      - "&#FF8A00¦ &fFollow these rules or"
+      - "&#FF8A00¦ &fyou will be &#FF8A00punished&f."
+      - ""
+      - "&#FF8A00● &fNo doxxing, swatting or threats"
+      - "&#FF8A00● &fNo exploiting bugs, glitches or dupes"
+      - "&#FF8A00● &fNo cross server trading"
+      - "&#FF8A00● &fNo real money trading"
+      - "&#FF8A00● &fNo lagging the server"
+      - "&#FF8A00● &fNo evading punishments"
+      - "&#FF8A00● &fReport every bug on our Discord"
+      - "&#FF8A00● &fNo seed finding or seed usage"
+      - "&#FF8A00● &fNo inappropriate item or mob names"
+      - "&#FF8A00● &fOne account per player, no alts"
+      - "&#FF8A00● &fNo griefing spawn or public builds"
+      - "&#FF8A00● &fNo scamming other players"
+      - "&#FF8A00● &fUse common sense"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0For Discord Link"  
+  chat:
+    enabled: true
+    slot: 15
+    material: RED_BUNDLE
+    name: "&#FF256E&lCHAT RULES"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF256EInformation:"
+      - "&#FF256E¦ &fFollow these rules or"
+      - "&#FF256E¦ &fyou will be &#FF256Epunished&f."
+      - ""
+      - "&#FF256E● &fNo advertising or self promotion"
+      - "&#FF256E● &fNo death threats or self harm talk"
+      - "&#FF256E● &fNo racism, hate speech or discrimination"
+      - "&#FF256E● &fNo spamming or flooding the chat"
+      - "&#FF256E● &fNo bypassing the chat filter"
+      - "&#FF256E● &fNo political or religious debates"
+      - "&#FF256E● &fNo bullying or targeting players"
+      - "&#FF256E● &fNo sharing personal information"
+      - "&#FF256E● &fKeep the chat in English"
+      - "&#FF256E● &fNo begging for items or ranks"
+      - "&#FF256E● &fNo impersonating staff"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0For Discord Link" 

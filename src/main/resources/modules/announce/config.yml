@@ -1,0 +1,14 @@
+# /announce and /announcement show a title plus subtitle.
+color: "&f"
+title: "&#A370EE&lANNOUNCEMENT"
+fade-in: 10
+stay: 70
+fade-out: 20
+
+sound:
+  enabled: true
+  sound: "entity.experience_orb.pickup"
+  volume: 1.0
+  pitch: 1.0
+
+messages: {}

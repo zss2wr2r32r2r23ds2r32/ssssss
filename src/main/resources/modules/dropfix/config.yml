@@ -1,0 +1,12 @@
+# Drops land on one pile instead of flying apart.
+
+# Items a player drops when they die.
+players: true
+# Loot from killed mobs.
+mobs: true
+
+# Drop on the middle of the block instead of the exact death spot.
+center-on-block: true
+
+# Put identical items into full stacks first, so fewer items lie around.
+merge-stacks: true

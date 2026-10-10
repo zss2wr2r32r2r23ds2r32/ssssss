@@ -1,0 +1,9 @@
+message: "&#A370EE⚓ &fWelcome &#A370EE%player% &fto &#A370EE&lSHARDEDMC&f! &7[&f#%counter%&7]"
+
+join:
+  enabled: true
+  message: "&#97F900+ &f%player%"
+
+leave:
+  enabled: true
+  message: "&#FF0000- &f%player%"

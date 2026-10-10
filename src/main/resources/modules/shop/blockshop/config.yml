@@ -1,0 +1,965 @@
+# The block shop. Its icon and its slot in the main menu sit in ../config.yml
+# Every item carries the page it belongs to, change page: to move it.
+
+menu:
+  title: "&8Shop Menu | Blocks"
+  rows: 6
+  # The lowest number of pages. More appear on their own as soon as an
+  # item sits on a higher one.
+  pages: 9
+
+buttons:
+
+  previous:
+    slot: 48
+    material: RED_STAINED_GLASS_PANE
+    name: "&#FF0000&lPREVIOUS PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000¦ &fGo one page back."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
+
+  return:
+    slot: 49
+    material: GUSTER_BANNER_PATTERN
+    name: "&#FFD900&lRETURN BACK"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFD900Information:"
+      - "&#FFD900¦ &fGo back to the"
+      - "&#FFD900¦ &f&#FFD900shop menu&f."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Return"
+
+  next:
+    slot: 50
+    material: LIME_STAINED_GLASS_PANE
+    name: "&#99ff00&lUPCOMING PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#99ff00Information:"
+      - "&#99ff00¦ &fGo one page forward."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
+
+# page and slot are yours. name, lore and label are optional and
+# fall back to the item-template in ../config.yml
+#
+# Page 1 stone, 2 deepslate and sand, 3 nether end and quartz,
+# 4 blackstone and ground, 5 logs and planks, 6 stripped and bamboo,
+# 7 terracotta and ice, 8 concrete and glass, 9 wool and light.
+items:
+
+  stone:
+    page: 1
+    slot: 11
+    material: STONE
+    price: 350
+  cobblestone:
+    page: 1
+    slot: 12
+    material: COBBLESTONE
+    price: 2000
+  mossystone:
+    page: 1
+    slot: 13
+    material: MOSSY_COBBLESTONE
+    price: 400
+  smoothstone:
+    page: 1
+    slot: 14
+    material: SMOOTH_STONE
+    price: 450
+  stonebricks:
+    page: 1
+    slot: 15
+    material: STONE_BRICKS
+    price: 450
+  mossystonebrick:
+    page: 1
+    slot: 20
+    material: MOSSY_STONE_BRICKS
+    price: 350
+  crackedstone:
+    page: 1
+    slot: 21
+    material: CRACKED_STONE_BRICKS
+    price: 400
+  chiseledstonebricks:
+    page: 1
+    slot: 22
+    material: CHISELED_STONE_BRICKS
+    price: 400
+  granite:
+    page: 1
+    slot: 23
+    material: GRANITE
+    price: 450
+  polishedgranite:
+    page: 1
+    slot: 24
+    material: POLISHED_GRANITE
+    price: 450
+  diorite:
+    page: 1
+    slot: 29
+    material: DIORITE
+    price: 350
+  polishediorite:
+    page: 1
+    slot: 30
+    material: POLISHED_DIORITE
+    price: 400
+  andesite:
+    page: 1
+    slot: 31
+    material: ANDESITE
+    price: 400
+  polishedandesite:
+    page: 1
+    slot: 32
+    material: POLISHED_ANDESITE
+    price: 450
+  calcite:
+    page: 1
+    slot: 33
+    material: CALCITE
+    price: 450
+  tuff:
+    page: 1
+    slot: 38
+    material: TUFF
+    price: 350
+  polishedtuff:
+    page: 1
+    slot: 39
+    material: POLISHED_TUFF
+    price: 400
+  tuffbricks:
+    page: 1
+    slot: 40
+    material: TUFF_BRICKS
+    price: 400
+  chiseledtuff:
+    page: 1
+    slot: 41
+    material: CHISELED_TUFF
+    price: 450
+  chiseledtuffbricks:
+    page: 1
+    slot: 42
+    material: CHISELED_TUFF_BRICKS
+    price: 450
+
+  deepslate:
+    page: 2
+    slot: 11
+    material: DEEPSLATE
+    price: 450
+  cobbleddeepslate:
+    page: 2
+    slot: 12
+    material: COBBLED_DEEPSLATE
+    price: 450
+  polisheddeepslate:
+    page: 2
+    slot: 13
+    material: POLISHED_DEEPSLATE
+    price: 500
+  deepslatebricks:
+    page: 2
+    slot: 14
+    material: DEEPSLATE_BRICKS
+    price: 550
+  crackeddeepslatebricks:
+    page: 2
+    slot: 15
+    material: CRACKED_DEEPSLATE_BRICKS
+    price: 550
+  deepslatetiles:
+    page: 2
+    slot: 20
+    material: DEEPSLATE_TILES
+    price: 450
+  crackeddeepslatetiles:
+    page: 2
+    slot: 21
+    material: CRACKED_DEEPSLATE_TILES
+    price: 450
+  chiseleddeepslate:
+    page: 2
+    slot: 22
+    material: CHISELED_DEEPSLATE
+    price: 500
+  sand:
+    page: 2
+    slot: 23
+    material: SAND
+    price: 350
+  sandstone:
+    page: 2
+    slot: 24
+    material: SANDSTONE
+    price: 350
+  cutsandstone:
+    page: 2
+    slot: 29
+    material: CUT_SANDSTONE
+    price: 400
+  chiseledsandstone:
+    page: 2
+    slot: 30
+    material: CHISELED_SANDSTONE
+    price: 400
+  smoothsandstone:
+    page: 2
+    slot: 31
+    material: SMOOTH_SANDSTONE
+    price: 450
+  redsand:
+    page: 2
+    slot: 32
+    material: RED_SAND
+    price: 350
+  redsandstone:
+    page: 2
+    slot: 33
+    material: RED_SANDSTONE
+    price: 350
+  cutredsandstone:
+    page: 2
+    slot: 38
+    material: CUT_RED_SANDSTONE
+    price: 400
+  chiseledredsandstone:
+    page: 2
+    slot: 39
+    material: CHISELED_RED_SANDSTONE
+    price: 400
+  smoothredsandstone:
+    page: 2
+    slot: 40
+    material: SMOOTH_RED_SANDSTONE
+    price: 400
+  bricks:
+    page: 2
+    slot: 41
+    material: BRICKS
+    price: 550
+  mudbricks:
+    page: 2
+    slot: 42
+    material: MUD_BRICKS
+    price: 550
+
+  packedmud:
+    page: 3
+    slot: 11
+    material: PACKED_MUD
+    price: 650
+  prismarine:
+    page: 3
+    slot: 12
+    material: PRISMARINE
+    price: 600
+  prismarinebricks:
+    page: 3
+    slot: 13
+    material: PRISMARINE_BRICKS
+    price: 650
+  darkprismarine:
+    page: 3
+    slot: 14
+    material: DARK_PRISMARINE
+    price: 600
+  netherbricks:
+    page: 3
+    slot: 15
+    material: NETHER_BRICKS
+    price: 550
+  rednetherbricks:
+    page: 3
+    slot: 20
+    material: RED_NETHER_BRICKS
+    price: 600
+  crackednetherbricks:
+    page: 3
+    slot: 21
+    material: CRACKED_NETHER_BRICKS
+    price: 550
+  chiselednetherbricks:
+    page: 3
+    slot: 22
+    material: CHISELED_NETHER_BRICKS
+    price: 500
+  endstone:
+    page: 3
+    slot: 23
+    material: END_STONE
+    price: 550
+  endstonebricks:
+    page: 3
+    slot: 24
+    material: END_STONE_BRICKS
+    price: 500
+  purpurblock:
+    page: 3
+    slot: 29
+    material: PURPUR_BLOCK
+    price: 600
+  purpurpillar:
+    page: 3
+    slot: 30
+    material: PURPUR_PILLAR
+    price: 600
+  blockofquartz:
+    page: 3
+    slot: 31
+    material: QUARTZ_BLOCK
+    price: 650
+  quartzbricks:
+    page: 3
+    slot: 32
+    material: QUARTZ_BRICKS
+    price: 500
+  smoothquartz:
+    page: 3
+    slot: 33
+    material: SMOOTH_QUARTZ
+    price: 550
+  chiseledquartzblock:
+    page: 3
+    slot: 38
+    material: CHISELED_QUARTZ_BLOCK
+    price: 550
+  quartzpillar:
+    page: 3
+    slot: 39
+    material: QUARTZ_PILLAR
+    price: 550
+  blackstone:
+    page: 3
+    slot: 40
+    material: BLACKSTONE
+    price: 450
+  polishedblackstone:
+    page: 3
+    slot: 41
+    material: POLISHED_BLACKSTONE
+    price: 500
+  polishedblackstonebricks:
+    page: 3
+    slot: 42
+    material: POLISHED_BLACKSTONE_BRICKS
+    price: 550
+
+  crackedpolishedblackstonebricks:
+    page: 4
+    slot: 11
+    material: CRACKED_POLISHED_BLACKSTONE_BRICKS
+    price: 550
+  chiseledpolishedblackstone:
+    page: 4
+    slot: 12
+    material: CHISELED_POLISHED_BLACKSTONE
+    price: 550
+  gildedblackstone:
+    page: 4
+    slot: 13
+    material: GILDED_BLACKSTONE
+    price: 900
+  basalt:
+    page: 4
+    slot: 14
+    material: BASALT
+    price: 400
+  polishedbasalt:
+    page: 4
+    slot: 15
+    material: POLISHED_BASALT
+    price: 450
+  smoothbasalt:
+    page: 4
+    slot: 20
+    material: SMOOTH_BASALT
+    price: 450
+  netherrack:
+    page: 4
+    slot: 21
+    material: NETHERRACK
+    price: 350
+  magmablock:
+    page: 4
+    slot: 22
+    material: MAGMA_BLOCK
+    price: 500
+  soulsand:
+    page: 4
+    slot: 23
+    material: SOUL_SAND
+    price: 400
+  soulsoil:
+    page: 4
+    slot: 24
+    material: SOUL_SOIL
+    price: 400
+  boneblock:
+    page: 4
+    slot: 29
+    material: BONE_BLOCK
+    price: 600
+  dripstoneblock:
+    page: 4
+    slot: 30
+    material: DRIPSTONE_BLOCK
+    price: 450
+  mossblock:
+    page: 4
+    slot: 31
+    material: MOSS_BLOCK
+    price: 450
+  clay:
+    page: 4
+    slot: 32
+    material: CLAY
+    price: 400
+  dirt:
+    page: 4
+    slot: 33
+    material: DIRT
+    price: 350
+  coarsedirt:
+    page: 4
+    slot: 38
+    material: COARSE_DIRT
+    price: 350
+  rooteddirt:
+    page: 4
+    slot: 39
+    material: ROOTED_DIRT
+    price: 400
+  gravel:
+    page: 4
+    slot: 40
+    material: GRAVEL
+    price: 350
+  mud:
+    page: 4
+    slot: 41
+    material: MUD
+    price: 350
+  obsidian:
+    page: 4
+    slot: 42
+    material: OBSIDIAN
+    price: 2500
+
+  oaklog:
+    page: 5
+    slot: 11
+    material: OAK_LOG
+    price: 400
+  sprucelog:
+    page: 5
+    slot: 12
+    material: SPRUCE_LOG
+    price: 400
+  birchlog:
+    page: 5
+    slot: 13
+    material: BIRCH_LOG
+    price: 400
+  junglelog:
+    page: 5
+    slot: 14
+    material: JUNGLE_LOG
+    price: 400
+  acacialog:
+    page: 5
+    slot: 15
+    material: ACACIA_LOG
+    price: 400
+  darkoaklog:
+    page: 5
+    slot: 20
+    material: DARK_OAK_LOG
+    price: 400
+  mangrovelog:
+    page: 5
+    slot: 21
+    material: MANGROVE_LOG
+    price: 400
+  cherrylog:
+    page: 5
+    slot: 22
+    material: CHERRY_LOG
+    price: 450
+  paleoaklog:
+    page: 5
+    slot: 23
+    material: PALE_OAK_LOG
+    price: 450
+  crimsonstem:
+    page: 5
+    slot: 24
+    material: CRIMSON_STEM
+    price: 500
+  warpedstem:
+    page: 5
+    slot: 29
+    material: WARPED_STEM
+    price: 500
+  oakplanks:
+    page: 5
+    slot: 30
+    material: OAK_PLANKS
+    price: 450
+  spruceplanks:
+    page: 5
+    slot: 31
+    material: SPRUCE_PLANKS
+    price: 450
+  birchplanks:
+    page: 5
+    slot: 32
+    material: BIRCH_PLANKS
+    price: 450
+  jungleplanks:
+    page: 5
+    slot: 33
+    material: JUNGLE_PLANKS
+    price: 450
+  acaciaplanks:
+    page: 5
+    slot: 38
+    material: ACACIA_PLANKS
+    price: 450
+  darkoakplanks:
+    page: 5
+    slot: 39
+    material: DARK_OAK_PLANKS
+    price: 450
+  mangroveplanks:
+    page: 5
+    slot: 40
+    material: MANGROVE_PLANKS
+    price: 450
+  cherryplanks:
+    page: 5
+    slot: 41
+    material: CHERRY_PLANKS
+    price: 500
+  paleoakplanks:
+    page: 5
+    slot: 42
+    material: PALE_OAK_PLANKS
+    price: 500
+
+  crimsonplanks:
+    page: 6
+    slot: 11
+    material: CRIMSON_PLANKS
+    price: 550
+  warpedplanks:
+    page: 6
+    slot: 12
+    material: WARPED_PLANKS
+    price: 550
+  bambooblock:
+    page: 6
+    slot: 13
+    material: BAMBOO_BLOCK
+    price: 450
+  bambooplanks:
+    page: 6
+    slot: 14
+    material: BAMBOO_PLANKS
+    price: 500
+  bamboomosaic:
+    page: 6
+    slot: 15
+    material: BAMBOO_MOSAIC
+    price: 550
+  strippedoaklog:
+    page: 6
+    slot: 20
+    material: STRIPPED_OAK_LOG
+    price: 500
+  strippedsprucelog:
+    page: 6
+    slot: 21
+    material: STRIPPED_SPRUCE_LOG
+    price: 500
+  strippedbirchlog:
+    page: 6
+    slot: 22
+    material: STRIPPED_BIRCH_LOG
+    price: 500
+  strippedjunglelog:
+    page: 6
+    slot: 23
+    material: STRIPPED_JUNGLE_LOG
+    price: 500
+  strippedacacialog:
+    page: 6
+    slot: 24
+    material: STRIPPED_ACACIA_LOG
+    price: 500
+  strippeddarkoaklog:
+    page: 6
+    slot: 29
+    material: STRIPPED_DARK_OAK_LOG
+    price: 500
+  strippedmangrovelog:
+    page: 6
+    slot: 30
+    material: STRIPPED_MANGROVE_LOG
+    price: 500
+  strippedcherrylog:
+    page: 6
+    slot: 31
+    material: STRIPPED_CHERRY_LOG
+    price: 550
+  strippedpaleoaklog:
+    page: 6
+    slot: 32
+    material: STRIPPED_PALE_OAK_LOG
+    price: 550
+  strippedcrimsonstem:
+    page: 6
+    slot: 33
+    material: STRIPPED_CRIMSON_STEM
+    price: 600
+  strippedwarpedstem:
+    page: 6
+    slot: 38
+    material: STRIPPED_WARPED_STEM
+    price: 600
+  strippedbambooblock:
+    page: 6
+    slot: 39
+    material: STRIPPED_BAMBOO_BLOCK
+    price: 550
+  oakwood:
+    page: 6
+    slot: 40
+    material: OAK_WOOD
+    price: 500
+  sprucewood:
+    page: 6
+    slot: 41
+    material: SPRUCE_WOOD
+    price: 500
+  birchwood:
+    page: 6
+    slot: 42
+    material: BIRCH_WOOD
+    price: 500
+
+  terracotta:
+    page: 7
+    slot: 11
+    material: TERRACOTTA
+    price: 600
+  whiteterracotta:
+    page: 7
+    slot: 12
+    material: WHITE_TERRACOTTA
+    price: 650
+  lightgrayterracotta:
+    page: 7
+    slot: 13
+    material: LIGHT_GRAY_TERRACOTTA
+    price: 650
+  grayterracotta:
+    page: 7
+    slot: 14
+    material: GRAY_TERRACOTTA
+    price: 650
+  blackterracotta:
+    page: 7
+    slot: 15
+    material: BLACK_TERRACOTTA
+    price: 650
+  brownterracotta:
+    page: 7
+    slot: 20
+    material: BROWN_TERRACOTTA
+    price: 650
+  redterracotta:
+    page: 7
+    slot: 21
+    material: RED_TERRACOTTA
+    price: 650
+  orangeterracotta:
+    page: 7
+    slot: 22
+    material: ORANGE_TERRACOTTA
+    price: 650
+  yellowterracotta:
+    page: 7
+    slot: 23
+    material: YELLOW_TERRACOTTA
+    price: 650
+  limeterracotta:
+    page: 7
+    slot: 24
+    material: LIME_TERRACOTTA
+    price: 650
+  greenterracotta:
+    page: 7
+    slot: 29
+    material: GREEN_TERRACOTTA
+    price: 650
+  cyanterracotta:
+    page: 7
+    slot: 30
+    material: CYAN_TERRACOTTA
+    price: 650
+  lightblueterracotta:
+    page: 7
+    slot: 31
+    material: LIGHT_BLUE_TERRACOTTA
+    price: 650
+  blueterracotta:
+    page: 7
+    slot: 32
+    material: BLUE_TERRACOTTA
+    price: 650
+  purpleterracotta:
+    page: 7
+    slot: 33
+    material: PURPLE_TERRACOTTA
+    price: 650
+  magentaterracotta:
+    page: 7
+    slot: 38
+    material: MAGENTA_TERRACOTTA
+    price: 650
+  pinkterracotta:
+    page: 7
+    slot: 39
+    material: PINK_TERRACOTTA
+    price: 650
+  ice:
+    page: 7
+    slot: 40
+    material: ICE
+    price: 500
+  packedice:
+    page: 7
+    slot: 41
+    material: PACKED_ICE
+    price: 800
+  blueice:
+    page: 7
+    slot: 42
+    material: BLUE_ICE
+    price: 1200
+
+  whiteconcrete:
+    page: 8
+    slot: 11
+    material: WHITE_CONCRETE
+    price: 700
+  lightgrayconcrete:
+    page: 8
+    slot: 12
+    material: LIGHT_GRAY_CONCRETE
+    price: 700
+  grayconcrete:
+    page: 8
+    slot: 13
+    material: GRAY_CONCRETE
+    price: 700
+  blackconcrete:
+    page: 8
+    slot: 14
+    material: BLACK_CONCRETE
+    price: 700
+  brownconcrete:
+    page: 8
+    slot: 15
+    material: BROWN_CONCRETE
+    price: 700
+  redconcrete:
+    page: 8
+    slot: 20
+    material: RED_CONCRETE
+    price: 700
+  orangeconcrete:
+    page: 8
+    slot: 21
+    material: ORANGE_CONCRETE
+    price: 700
+  yellowconcrete:
+    page: 8
+    slot: 22
+    material: YELLOW_CONCRETE
+    price: 700
+  limeconcrete:
+    page: 8
+    slot: 23
+    material: LIME_CONCRETE
+    price: 700
+  greenconcrete:
+    page: 8
+    slot: 24
+    material: GREEN_CONCRETE
+    price: 700
+  cyanconcrete:
+    page: 8
+    slot: 29
+    material: CYAN_CONCRETE
+    price: 700
+  lightblueconcrete:
+    page: 8
+    slot: 30
+    material: LIGHT_BLUE_CONCRETE
+    price: 700
+  blueconcrete:
+    page: 8
+    slot: 31
+    material: BLUE_CONCRETE
+    price: 700
+  purpleconcrete:
+    page: 8
+    slot: 32
+    material: PURPLE_CONCRETE
+    price: 700
+  magentaconcrete:
+    page: 8
+    slot: 33
+    material: MAGENTA_CONCRETE
+    price: 700
+  pinkconcrete:
+    page: 8
+    slot: 38
+    material: PINK_CONCRETE
+    price: 700
+  glass:
+    page: 8
+    slot: 39
+    material: GLASS
+    price: 550
+  tintedglass:
+    page: 8
+    slot: 40
+    material: TINTED_GLASS
+    price: 900
+  whitestainedglass:
+    page: 8
+    slot: 41
+    material: WHITE_STAINED_GLASS
+    price: 600
+  blackstainedglass:
+    page: 8
+    slot: 42
+    material: BLACK_STAINED_GLASS
+    price: 600
+
+  whitewool:
+    page: 9
+    slot: 11
+    material: WHITE_WOOL
+    price: 500
+  lightgraywool:
+    page: 9
+    slot: 12
+    material: LIGHT_GRAY_WOOL
+    price: 500
+  graywool:
+    page: 9
+    slot: 13
+    material: GRAY_WOOL
+    price: 500
+  blackwool:
+    page: 9
+    slot: 14
+    material: BLACK_WOOL
+    price: 500
+  brownwool:
+    page: 9
+    slot: 15
+    material: BROWN_WOOL
+    price: 500
+  redwool:
+    page: 9
+    slot: 20
+    material: RED_WOOL
+    price: 500
+  orangewool:
+    page: 9
+    slot: 21
+    material: ORANGE_WOOL
+    price: 500
+  yellowwool:
+    page: 9
+    slot: 22
+    material: YELLOW_WOOL
+    price: 500
+  limewool:
+    page: 9
+    slot: 23
+    material: LIME_WOOL
+    price: 500
+  greenwool:
+    page: 9
+    slot: 24
+    material: GREEN_WOOL
+    price: 500
+  cyanwool:
+    page: 9
+    slot: 29
+    material: CYAN_WOOL
+    price: 500
+  lightbluewool:
+    page: 9
+    slot: 30
+    material: LIGHT_BLUE_WOOL
+    price: 500
+  bluewool:
+    page: 9
+    slot: 31
+    material: BLUE_WOOL
+    price: 500
+  purplewool:
+    page: 9
+    slot: 32
+    material: PURPLE_WOOL
+    price: 500
+  magentawool:
+    page: 9
+    slot: 33
+    material: MAGENTA_WOOL
+    price: 500
+  pinkwool:
+    page: 9
+    slot: 38
+    material: PINK_WOOL
+    price: 500
+  glowstone:
+    page: 9
+    slot: 39
+    material: GLOWSTONE
+    price: 900
+  sealantern:
+    page: 9
+    slot: 40
+    material: SEA_LANTERN
+    price: 900
+  shroomlight:
+    page: 9
+    slot: 41
+    material: SHROOMLIGHT
+    price: 900
+  snowblock:
+    page: 9
+    slot: 42
+    material: SNOW_BLOCK
+    price: 400

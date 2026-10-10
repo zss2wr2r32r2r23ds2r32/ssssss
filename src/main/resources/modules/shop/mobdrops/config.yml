@@ -1,0 +1,125 @@
+# The mob drops shop. Its icon and its slot in the main menu sit in ../config.yml
+
+menu:
+  title: "&8Shop Menu | Mob Drops"
+  rows: 5
+  pages: 1
+
+buttons:
+
+  previous:
+    slot: 39
+    material: RED_STAINED_GLASS_PANE
+    name: "&#FF0000&lPREVIOUS PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000¦ &fGo one page back."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
+
+  return:
+    slot: 40
+    material: GUSTER_BANNER_PATTERN
+    name: "&#FFD900&lRETURN BACK"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFD900Information:"
+      - "&#FFD900¦ &fGo back to the"
+      - "&#FFD900¦ &f&#FFD900shop menu&f."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Return"
+
+  next:
+    slot: 41
+    material: LIME_STAINED_GLASS_PANE
+    name: "&#99ff00&lUPCOMING PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#99ff00Information:"
+      - "&#99ff00¦ &fGo one page forward."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
+
+items:
+
+  arrow:
+    page: 1
+    slot: 11
+    material: ARROW
+    price: 900
+  bone:
+    page: 1
+    slot: 12
+    material: BONE
+    price: 880
+  spidereye:
+    page: 1
+    slot: 13
+    material: SPIDER_EYE
+    price: 820
+  string:
+    page: 1
+    slot: 14
+    material: STRING
+    price: 750
+  gunpowder:
+    page: 1
+    slot: 15
+    material: GUNPOWDER
+    price: 780
+
+  slimeball:
+    page: 1
+    slot: 20
+    material: SLIME_BALL
+    price: 720
+  blazerod:
+    page: 1
+    slot: 21
+    material: BLAZE_ROD
+    price: 700
+  ghasttear:
+    page: 1
+    slot: 22
+    material: GHAST_TEAR
+    price: 700
+  phantommembrane:
+    page: 1
+    slot: 23
+    material: PHANTOM_MEMBRANE
+    price: 620
+  breezerod:
+    page: 1
+    slot: 24
+    material: BREEZE_ROD
+    price: 600
+
+  leather:
+    page: 1
+    slot: 29
+    material: LEATHER
+    price: 4500
+  shulkershell:
+    page: 1
+    slot: 30
+    material: SHULKER_SHELL
+    price: 3200
+  ironnugget:
+    page: 1
+    slot: 31
+    material: IRON_NUGGET
+    price: 650
+  inksac:
+    page: 1
+    slot: 32
+    material: INK_SAC
+    price: 2000
+  glowinksac:
+    page: 1
+    slot: 33
+    material: GLOW_INK_SAC
+    price: 2000

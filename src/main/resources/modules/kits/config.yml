@@ -1,0 +1,426 @@
+menu:
+  title: '&8☀ Server | Kits'
+  size: 27
+  filler:
+    material: GRAY_STAINED_GLASS_PANE
+    name: ' '
+    lore: []
+  filler-slots: []
+  previous:
+    slot: 18
+    material: RED_STAINED_GLASS_PANE
+    name: "&#FF0000&lPREVIOUS PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000¦ &fGo one page back."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
+  next:
+    slot: 26
+    material: LIME_STAINED_GLASS_PANE
+    name: "&#80ee0b&lNEXT PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#80ee0bInformation:"
+      - "&#80ee0b¦ &fGo one page forward."
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
+
+layout:
+  title: '&8☀ Kits | Preview'
+  rows: 6
+  filler:
+    material: GRAY_STAINED_GLASS_PANE
+    name: ' '
+    lore: []
+  filler-slots: []
+  back:
+    slot: 45
+    material: GUSTER_BANNER_PATTERN
+    name: '&#fc0052&lRETURN'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#00bffcInformation:'
+      - '&#fc0052Click here, &fto return'
+      - '&fback to the &#fc0052main &fpage'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Return'
+
+ready: '&#019BEEReady'
+no-cooldown: '&#019BEENone'
+
+# Old /kit claim names still work.
+aliases:
+  default: member
+  vip: prism
+  mvp: crystal
+  elite: amethyst
+  divine: sharded
+  legend: shardedplus
+  sharded_: shardedplus
+  immortal: patron
+
+kits:
+  member:
+    slot: 9
+    contents: default
+    cooldown: '1h'
+    permission: shardedcore.kit.member
+    item:
+      material: LIGHT_GRAY_CANDLE
+      name: '&7&lMEMBER KIT'
+      glow: false
+      lore:
+        - '&8Description'
+        - ''
+        - '&7Information:'
+        - "&7Click here, &fto claim"
+        - "&fthe &7&lMEMBER &7Kit"
+        - ""
+        - "&7☀ &fCooldown &7▷ %cooldown%"
+        - '&#019BEE⭐ &fReady in: &#019BEE%time%'
+        - ''
+        - '&#FFD900▷ &n&lLEFT CLICK&#FFD900 To Claim'
+        - '&#FFD900▷ &n&lRIGHT CLICK&#FFD900 To Arrange'
+    locked:
+      material: LIGHT_GRAY_CANDLE
+      name: '&7&lMEMBER KIT'
+      glow: false
+      lore:
+        - '&8Description'
+        - ''
+        - '&7Information:'
+        - "&7Click here, &fto claim"
+        - "&fthe &7&lMEMBER &7Kit"
+        - ""
+        - "&7☀ &fCooldown &7▷ %cooldown%"
+        - ''
+        - '&#FF0000▷ &n&lLOCKED'
+
+  supporter:
+    slot: 10
+    contents: supporter
+    cooldown: '1h'
+    permission: shardedcore.kit.supporter
+    item:
+      material: PINK_CANDLE
+      name: '&#FF6C9C&lSUPPORTER KIT'
+      glow: false
+      lore:
+        - '&8Description'
+        - ''
+        - '&#FF6C9CInformation:'
+        - "&#FF6C9CClick here, &fto claim"
+        - "&fthe &#FF6C9C&lSUPPORTER &#FF6C9CKit"
+        - ""
+        - "&#FF6C9C☀ &fCooldown &#FF6C9C▷ %cooldown%"
+        - '&#019BEE⭐ &fReady in: &#019BEE%time%'
+        - ''
+        - '&#FFD900▷ &n&lLEFT CLICK&#FFD900 To Claim'
+        - '&#FFD900▷ &n&lRIGHT CLICK&#FFD900 To Arrange'
+    locked:
+      material: PINK_CANDLE
+      name: '&#FF6C9C&lSUPPORTER KIT'
+      glow: false
+      lore:
+        - '&8Description'
+        - ''
+        - '&#FF6C9CInformation:'
+        - "&#FF6C9CClick here, &fto claim"
+        - "&fthe &#FF6C9C&lSUPPORTER &#FF6C9CKit"
+        - ""
+        - "&#FF6C9C☀ &fCooldown &#FF6C9C▷ %cooldown%"
+        - ''
+        - '&#FF0000▷ &n&lLOCKED'
+
+  prism:
+    slot: 11
+    contents: prism
+    cooldown: '1h'
+    permission: shardedcore.kit.prism
+    item:
+      material: YELLOW_CANDLE
+      name: '&#FBC400&lPRISM KIT'
+      glow: false
+      lore:
+        - '&8Description'
+        - ''
+        - '&#FBC400Information:'
+        - "&#FBC400Click here, &fto claim"
+        - "&fthe &#FBC400&lPRISM &#FBC400Kit"
+        - ""
+        - "&#FBC400☀ &fCooldown &#FBC400▷ %cooldown%"
+        - '&#019BEE⭐ &fReady in: &#019BEE%time%'
+        - ''
+        - '&#FFD900▷ &n&lLEFT CLICK&#FFD900 To Claim'
+        - '&#FFD900▷ &n&lRIGHT CLICK&#FFD900 To Arrange'
+    locked:
+      material: YELLOW_CANDLE
+      name: '&#FBC400&lPRISM KIT'
+      glow: false
+      lore:
+        - '&8Description'
+        - ''
+        - '&#FBC400Information:'
+        - "&#FBC400Click here, &fto claim"
+        - "&fthe &#FBC400&lPRISM &#FBC400Kit"
+        - ""
+        - "&#FBC400☀ &fCooldown &#FBC400▷ %cooldown%"
+        - ''
+        - '&#FF0000▷ &n&lLOCKED'
+
+  crystal:
+    slot: 12
+    contents: crystal
+    cooldown: '1h'
+    permission: shardedcore.kit.crystal
+    item:
+      material: LIGHT_BLUE_CANDLE
+      name: '&#4E9BFF&lCRYSTAL KIT'
+      glow: false
+      lore:
+        - '&8Description'
+        - ''
+        - '&#4E9BFFInformation:'
+        - "&#4E9BFFClick here, &fto claim"
+        - "&fthe &#4E9BFF&lCRYSTAL &#4E9BFFKit"
+        - ""
+        - "&#4E9BFF☀ &fCooldown &#4E9BFF▷ %cooldown%"
+        - '&#019BEE⭐ &fReady in: &#019BEE%time%'
+        - ''
+        - '&#FFD900▷ &n&lLEFT CLICK&#FFD900 To Claim'
+        - '&#FFD900▷ &n&lRIGHT CLICK&#FFD900 To Arrange'
+    locked:
+      material: LIGHT_BLUE_CANDLE
+      name: '&#4E9BFF&lCRYSTAL KIT'
+      glow: false
+      lore:
+        - '&8Description'
+        - ''
+        - '&#4E9BFFInformation:'
+        - "&#4E9BFFClick here, &fto claim"
+        - "&fthe &#4E9BFF&lCRYSTAL &#4E9BFFKit"
+        - ""
+        - "&#4E9BFF☀ &fCooldown &#4E9BFF▷ %cooldown%"
+        - ''
+        - '&#FF0000▷ &n&lLOCKED'
+
+  amethyst:
+    slot: 13
+    contents: amethyst
+    cooldown: '1h'
+    permission: shardedcore.kit.amethyst
+    item:
+      material: MAGENTA_CANDLE
+      name: '&#FF6CA2&lAMETHYST KIT'
+      glow: false
+      lore:
+        - '&8Description'
+        - ''
+        - '&#FF6CA2Information:'
+        - "&#FF6CA2Click here, &fto claim"
+        - "&fthe &#FF6CA2&lAMETHYST &#FF6CA2Kit"
+        - ""
+        - "&#FF6CA2☀ &fCooldown &#FF6CA2▷ %cooldown%"
+        - '&#019BEE⭐ &fReady in: &#019BEE%time%'
+        - ''
+        - '&#FFD900▷ &n&lLEFT CLICK&#FFD900 To Claim'
+        - '&#FFD900▷ &n&lRIGHT CLICK&#FFD900 To Arrange'
+    locked:
+      material: MAGENTA_CANDLE
+      name: '&#FF6CA2&lAMETHYST KIT'
+      glow: false
+      lore:
+        - '&8Description'
+        - ''
+        - '&#FF6CA2Information:'
+        - "&#FF6CA2Click here, &fto claim"
+        - "&fthe &#FF6CA2&lAMETHYST &#FF6CA2Kit"
+        - ""
+        - "&#FF6CA2☀ &fCooldown &#FF6CA2▷ %cooldown%"
+        - ''
+        - '&#FF0000▷ &n&lLOCKED'
+
+  sharded:
+    slot: 14
+    contents: sharded
+    cooldown: '1h'
+    permission: shardedcore.kit.sharded
+    item:
+      material: PURPLE_CANDLE
+      name: '&#AD4EFF&lSHARDED KIT'
+      glow: false
+      lore:
+        - '&8Description'
+        - ''
+        - '&#AD4EFFInformation:'
+        - "&#AD4EFFClick here, &fto claim"
+        - "&fthe &#AD4EFF&lSHARDED &#AD4EFFKit"
+        - ""
+        - "&#AD4EFF☀ &fCooldown &#AD4EFF▷ %cooldown%"
+        - '&#019BEE⭐ &fReady in: &#019BEE%time%'
+        - ''
+        - '&#FFD900▷ &n&lLEFT CLICK&#FFD900 To Claim'
+        - '&#FFD900▷ &n&lRIGHT CLICK&#FFD900 To Arrange'
+    locked:
+      material: PURPLE_CANDLE
+      name: '&#AD4EFF&lSHARDED KIT'
+      glow: false
+      lore:
+        - '&8Description'
+        - ''
+        - '&#AD4EFFInformation:'
+        - "&#AD4EFFClick here, &fto claim"
+        - "&fthe &#AD4EFF&lSHARDED &#AD4EFFKit"
+        - ""
+        - "&#AD4EFF☀ &fCooldown &#AD4EFF▷ %cooldown%"
+        - ''
+        - '&#FF0000▷ &n&lLOCKED'
+
+  shardedplus:
+    slot: 15
+    contents: sharded_
+    cooldown: '1h'
+    permission: shardedcore.kit.sharded+
+    item:
+      material: PURPLE_CANDLE
+      name: '&#AD4EFF&lS&#B359FF&lH&#BA65FF&lA&#C070FF&lR&#C77BFF&lD&#CD86FF&lE&#D492FF&lD&#DA9DFF+ &#AD4EFF&lKIT'
+      glow: false
+      lore:
+        - '&8Description'
+        - ''
+        - '&#AD4EFFInformation:'
+        - "&#AD4EFFClick here, &fto claim"
+        - "&fthe &#AD4EFF&lS&#B359FF&lH&#BA65FF&lA&#C070FF&lR&#C77BFF&lD&#CD86FF&lE&#D492FF&lD&#DA9DFF+ &#AD4EFFKit"
+        - ""
+        - "&#AD4EFF☀ &fCooldown &#AD4EFF▷ %cooldown%"
+        - '&#019BEE⭐ &fReady in: &#019BEE%time%'
+        - ''
+        - '&#FFD900▷ &n&lLEFT CLICK&#FFD900 To Claim'
+        - '&#FFD900▷ &n&lRIGHT CLICK&#FFD900 To Arrange'
+    locked:
+      material: PURPLE_CANDLE
+      name: '&#AD4EFF&lS&#B359FF&lH&#BA65FF&lA&#C070FF&lR&#C77BFF&lD&#CD86FF&lE&#D492FF&lD&#DA9DFF+ &#AD4EFF&lKIT'
+      glow: false
+      lore:
+        - '&8Description'
+        - ''
+        - '&#AD4EFFInformation:'
+        - "&#AD4EFFClick here, &fto claim"
+        - "&fthe &#AD4EFF&lS&#B359FF&lH&#BA65FF&lA&#C070FF&lR&#C77BFF&lD&#CD86FF&lE&#D492FF&lD&#DA9DFF+ &#AD4EFFKit"
+        - ""
+        - "&#AD4EFF☀ &fCooldown &#AD4EFF▷ %cooldown%"
+        - ''
+        - '&#FF0000▷ &n&lLOCKED'
+
+  patron:
+    slot: 16
+    contents: patron
+    cooldown: '1h'
+    permission: shardedcore.kit.patron
+    item:
+      material: WHITE_CANDLE
+      name: '&x&F&9&7&E&9&C&lP&x&F&9&9&7&A&F&lA&x&F&9&A&F&C&1&lT&x&F&9&C&8&D&4&lR&x&F&9&E&0&E&6&lO&x&F&9&F&9&F&9&lN &#F97E9C&lKIT'
+      glow: false
+      lore:
+        - '&8Description'
+        - ''
+        - '&#F97E9CInformation:'
+        - "&#F97E9CClick here, &fto claim"
+        - "&fthe &x&F&9&7&E&9&C&lP&x&F&9&9&7&A&F&lA&x&F&9&A&F&C&1&lT&x&F&9&C&8&D&4&lR&x&F&9&E&0&E&6&lO&x&F&9&F&9&F&9&lN &#F97E9CKit"
+        - ""
+        - "&#F97E9C☀ &fCooldown &#F97E9C▷ %cooldown%"
+        - '&#019BEE⭐ &fReady in: &#019BEE%time%'
+        - ''
+        - '&#FFD900▷ &n&lLEFT CLICK&#FFD900 To Claim'
+        - '&#FFD900▷ &n&lRIGHT CLICK&#FFD900 To Arrange'
+    locked:
+      material: WHITE_CANDLE
+      name: '&x&F&9&7&E&9&C&lP&x&F&9&9&7&A&F&lA&x&F&9&A&F&C&1&lT&x&F&9&C&8&D&4&lR&x&F&9&E&0&E&6&lO&x&F&9&F&9&F&9&lN &#F97E9C&lKIT'
+      glow: false
+      lore:
+        - '&8Description'
+        - ''
+        - '&#F97E9CInformation:'
+        - "&#F97E9CClick here, &fto claim"
+        - "&fthe &x&F&9&7&E&9&C&lP&x&F&9&9&7&A&F&lA&x&F&9&A&F&C&1&lT&x&F&9&C&8&D&4&lR&x&F&9&E&0&E&6&lO&x&F&9&F&9&F&9&lN &#F97E9CKit"
+        - ""
+        - "&#F97E9C☀ &fCooldown &#F97E9C▷ %cooldown%"
+        - ''
+        - '&#FF0000▷ &n&lLOCKED'
+
+sounds:
+  open:
+    enabled: true
+    sound: 'block.barrel.open'
+    volume: 0.7
+    pitch: 1.2
+  claim:
+    enabled: true
+    sound: 'entity.player.levelup'
+    volume: 0.8
+    pitch: 1.4
+  denied:
+    enabled: true
+    sound: 'block.note_block.bass'
+    volume: 0.8
+    pitch: 0.8
+  create:
+    enabled: true
+    sound: 'entity.player.levelup'
+    volume: 0.7
+    pitch: 1.3
+
+messages:
+  claimed: '&#45FF17&lKITS &8▷ &fYou claimed &#45FF17%kit%&f.'
+  created: '&#45FF17&lKITS &8▷ &f&#45FF17%kit% &fwas saved with &#45FF17%items% &fitem(s).'
+  deleted: '&#45FF17&lKITS &8▷ &f&#45FF17%kit% &fwas deleted.'
+  gave: '&#45FF17&lKITS &8▷ &f&#45FF17%player% &fgot &#45FF17%kit%&f.'
+  received: '&#45FF17&lKITS &8▷ &fYou received kit &#45FF17%kit%&f.'
+  layout-saved: '&#45FF17&lKITS &8▷ &fYour layout for &#45FF17%kit% &fwas saved.'
+  list: '&#45FF17&lKITS &8▷ &f&#45FF17%amount% &fkit(s): &#45FF17%kits%'
+  list-empty: '&#45FF17&lKITS &8▷ &fThere is no kit yet.'
+  none: '&#45FF17&lKITS &8▷ &fThere is no kit yet.'
+  cooldown: '&#FF0000&lERROR &8▷ &f&#FF0000%kit% &fis ready again in &#FF0000%time%&f.'
+  busy: '&#FF0000&lERROR &8▷ &f&#FF0000%kit% &fis already being handed to you.'
+  no-kit-permission: '&#FF0000&lERROR &8▷ &fYou do not have the kit &#FF0000%kit%&f.'
+  no-permission: '&#FF0000&lERROR &8▷ &fYou do not have permission.'
+  no-room: '&#FF0000&lERROR &8▷ &fMake room first, &#FF0000%kit% &fneeds its own slots free.'
+  no-room-other: '&#FF0000&lERROR &8▷ &f&#FF0000%player% &fhas no room for &#FF0000%kit%&f.'
+  not-ready: '&#FF0000&lERROR &8▷ &fThe kits are not loaded yet, try again in a moment.'
+  unknown: '&#FF0000&lERROR &8▷ &fThere is no kit called &#FF0000%kit%&f.'
+  missing: '&#FF0000&lERROR &8▷ &fThere is no kit called &#FF0000%kit%&f.'
+  unknown-player: '&#FF0000&lERROR &8▷ &f&#FF0000%player% &fis not online.'
+  player-offline: '&#FF0000&lERROR &8▷ &f&#FF0000%player% &fis not online.'
+  empty-inventory: '&#FF0000&lERROR &8▷ &fYour inventory is empty, there is nothing to save.'
+  empty-kit: '&#FF0000&lERROR &8▷ &fKit &#FF0000%kit% &fhas no items.'
+  no-space: '&#FF0000&lERROR &8▷ &fYou need more inventory space to claim &#FF0000%kit%&f.'
+  bad-name: '&#FF0000&lERROR &8▷ &f&#FF0000%kit% &fis not a usable name: letters, numbers, - and _ only, up to &#FF0000%limit% &fcharacters.'
+  invalid-name: '&#FF0000&lERROR &8▷ &fThat kit name is invalid.'
+  claim-failed: '&#FF0000&lERROR &8▷ &f&#FF0000%kit% &fcould not be given out, nothing was taken.'
+  create-failed: '&#FF0000&lERROR &8▷ &f&#FF0000%kit% &fcould not be saved.'
+  delete-failed: '&#FF0000&lERROR &8▷ &f&#FF0000%kit% &fcould not be deleted.'
+  layout-refused: '&#FF0000&lERROR &8▷ &fYour layout for &#FF0000%kit% &fdid not match the kit and was not saved.'
+  players-only: '&#FF0000&lERROR &8▷ &fOnly players can do that.'
+  usage: '&#45FF17&lKITS &8▷ &f/kit claim <name>  &8or  /kits'
+  usage-create: '&#FF0000&lERROR &8▷ &fUse &#FF0000/kit create <name>&f.'
+  usage-delete: '&#FF0000&lERROR &8▷ &fUse &#FF0000/kit delete <name>&f.'
+  usage-give: '&#FF0000&lERROR &8▷ &fUse &#FF0000/kit give <player> <name>&f.'
+  usage-claim: '&#FF0000&lERROR &8▷ &fUse &#FF0000/kit claim <name>&f.'
+  help:
+    - ''
+    - '&#45FF17✦ &lKITS&r &#45FF17✦'
+    - '&7[ɪɴғᴏʀᴍᴀᴛɪᴏɴ]'
+    - ''
+    - '&#45FF17¦ &f/kits'
+    - '&#45FF17¦ &f/kit claim &7<name>'
+    - '&#45FF17¦ &f/kit create &7<name>'
+    - '&#45FF17¦ &f/kit delete &7<name>'
+    - '&#45FF17¦ &f/kit give &7<player> <name>'
+    - '&#45FF17¦ &f/kit list'
+    - ''
+    - '&#45FF17▷ &fCreate one while holding the inventory you want.'

@@ -1,0 +1,157 @@
+# Chat tags. Shown in chat and above the nametag.
+# /tags opens the GUI. /tag create <name> <tag> makes a new one.
+# /tags limited <name> <tag> adds a limited-time tag.
+# Placeholder: %shardedcore_tag%
+
+prefix: "&#00D6FF&lTAGS &8▷ &r"
+
+tab:
+  enabled: false
+
+chat-format: " %tag%"
+tab-format: " %tag%"
+
+tags:
+  sigma:
+    tag: "&7[&#00A2FF⚓ &#00A2FF&lSIGMA&7]"
+    name: "SIGMA"
+    description: "&8Description"
+  mummy:
+    tag: "&7[&#FF0086♡ &#FF0086&lMUMMY&7]"
+    name: "MUMMY"
+    description: "&8Description"
+  swordmummy:
+    tag: "&7[&#FFEE00🗡 &#FFEE00&lGOAT&7]"
+    name: "GOAT"
+    description: "&8Description"
+  sharded:
+    tag: "&7[&#A370EE⛨ &#A370EE&lSHARDED&7]"
+    name: "SHARDED"
+    description: "&8Description"
+  one:
+    tag: "&7[&#A9FF00#&#A9FF00&l1&7]"
+    name: "#1"
+    description: "&8Description"
+  p2w:
+    tag: "&7[&#FCFF00$ &#FCFF00&lP2W&7]"
+    name: "P2W"
+    description: "&8Description"
+  goty:
+    tag: "&7[&#FF2F2F☄ &#FF2F2F&lGOTY&7]"
+    name: "GOTY"
+    description: "&8Description"
+  hacker:
+    tag: "&7[&#FF0000☆ &#FF0000&lHACKER&7]"
+    name: "HACKER"
+    description: "&8Description"
+  lucky:
+    tag: "&7[&#0098FF🌊 &#0098FF&lLUCKY&7]"
+    name: "LUCKY"
+    description: "&8Description"
+
+limited:
+  summer:
+    tag: "&7[&#FFE300☀ &#FFE300&lSUMMER&7]"
+    name: "SUMMER"
+    description: "&8Description"
+
+gui:
+  title: "Name Tags"
+  limited-title: "Limited Tags"
+  guide: "Name Tags"
+  preview-name: "Name Tags"
+  rows: 6
+  default-color: "A370EE"
+  default-description: "&8Description"
+  colored-bundles: true
+  item-material: BUNDLE
+  item-name: "%color%&l%name%"
+  status-owned: "&#94FF00&l&nOWNED"
+  status-locked: "&#FF0000&l&nLOCKED"
+  click-footer: "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Equip"
+  lore:
+    - "&8Description"
+    - ""
+    - "%color%Information:"
+    - "%color%| &fClick to equip"
+    - "%color%| &fthis tag"
+    - ""
+    - "%color%⚓ &fStatus: %status%"
+    - ""
+    - "%click%"
+  filler:
+    material: BLACK_STAINED_GLASS_PANE
+    name: " "
+    lore: []
+  previous:
+    slot: 48
+  next:
+    slot: 50
+  back:
+    slot: 49
+  limited-back:
+    slot: 49
+  extra:
+    enabled: true
+    slot: 49
+    material: CLOCK
+    name: "&#FFBA00&lLIMITED TAGS"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFBA00Information:"
+      - "&#FFBA00| &fView limited"
+      - "&#FFBA00| &ftime tags"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View"
+  clear:
+    enabled: true
+    slot: 4
+    material: BARRIER
+    name: "&#FF0000&lCLEAR TAG"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000| &fDont want a tag?"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Remove"
+
+sounds:
+  open:
+    enabled: true
+    sound: "ui.button.click"
+    volume: 0.6
+    pitch: 1.2
+  click:
+    enabled: true
+    sound: "ui.button.click"
+    volume: 0.5
+    pitch: 1.0
+  equip:
+    enabled: true
+    sound: "item.armor.equip_leather"
+    volume: 0.8
+    pitch: 1.2
+  error:
+    enabled: true
+    sound: "block.note_block.bass"
+    volume: 0.7
+    pitch: 0.8
+
+messages:
+  usage: "%prefix%&f/tag create <name> <tag> &8| &fset <name> &8| &fremove <name>"
+  usage-create: "%prefix%&f/tag create <name> <tag>"
+  usage-set: "%prefix%&f/tag set <name>"
+  usage-remove: "%prefix%&f/tag remove <name>"
+  usage-limited: "%prefix%&f/tags limited <name> <tag>"
+  created: "%prefix%&fCreated &#A370EE%name% &fas %tag%&f."
+  created-limited: "%prefix%&fAdded limited tag &#A370EE%name% &fas %tag%&f."
+  set: "%prefix%&fYour tag is now %tag%&f."
+  removed: "%prefix%&fRemoved &#A370EE%name%&f."
+  cleared: "%prefix%&fYour tag was cleared."
+  missing: "&#FF0000&lERROR &8▷ &fUnknown tag &#A370EE%name%&f."
+  locked: "&#FF0000&lERROR &8▷ &fYou have not unlocked &#A370EE%name%&f."
+  invalid: "&#FF0000&lERROR &8▷ &fThat tag is not valid."
+  no-permission: "&#FF0000&lERROR &8▷ &fYou do not have permission."
+  players-only: "&#FF0000&lERROR &8▷ &fOnly a player can use that."

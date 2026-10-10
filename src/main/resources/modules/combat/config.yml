@@ -1,0 +1,5 @@
+tag-seconds: 10
+kill-on-logout: true
+enderpearls-tag: false
+actionbar: "&#FF0000&lCOMBAT &8▷ &fYour in Combat for &#FF0000&n%seconds%s"
+blocked-command: "&#FF0000&lCOMBAT &8▷ &fYou cannot use commands in combat."

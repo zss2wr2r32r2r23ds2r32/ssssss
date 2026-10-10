@@ -1,0 +1,896 @@
+name: ShardedCore
+version: '${project.version}'
+main: com.shardedcore.ShardedCore
+api-version: '1.21'
+authors: [ShardedMC]
+description: Modular ShardedMC core
+softdepend: [LuckPerms, PlaceholderAPI, TAB, WorldGuard, eGlow, Multiverse-Core]
+
+commands:
+  shardedcore:
+    description: ShardedCore admin
+    aliases: [sharded]
+    permission: shardedcore.admin
+  modules:
+    description: Toggle modules
+    permission: shardedcore.admin
+  announce:
+    description: Broadcast a title
+    aliases: [announcement]
+    permission: shardedcore.announce
+  discord:
+    description: Discord link
+    permission: shardedcore.command.discord
+  store:
+    description: Store link
+    aliases: [webstore, website]
+    permission: shardedcore.command.store
+  apply:
+    description: Staff applications
+    permission: shardedcore.command.apply
+  media:
+    description: Media requirements
+    permission: shardedcore.command.media
+  chatfilter:
+    description: Chat filter admin
+    permission: shardedcore.chatfilter.admin
+  chathistory:
+    description: Chat filter history
+    permission: shardedcore.chatfilter.history
+  settings:
+    description: Player settings
+    aliases: [setting]
+    permission: shardedcore.settings
+  chattoggle:
+    description: Toggle public chat
+    permission: shardedcore.settings.chat
+  msgtoggle:
+    description: Toggle private messages
+    permission: shardedcore.settings.msg
+  livetoggle:
+    description: Toggle live messages
+    permission: shardedcore.settings.live
+  tpatoggle:
+    description: Toggle TPA requests
+    permission: shardedcore.settings.tpa
+  tpaheretoggle:
+    description: Toggle TPA here requests
+    permission: shardedcore.settings.tpahere
+  joinleavetoggle:
+    description: Toggle join/leave messages
+    aliases: [jointoggle]
+    permission: shardedcore.settings.joinleave
+  mobspawning:
+    description: Toggle nearby mob spawning
+    aliases: [mobtoggle]
+    permission: shardedcore.settings.mobs
+  deathtoggle:
+    description: Toggle death messages
+    permission: shardedcore.settings.death
+  paytoggle:
+    description: Toggle payments
+    permission: shardedcore.settings.pay
+  nvtoggle:
+    description: Toggle night vision
+    aliases: [nightvisiontoggle, nightvision, nv]
+    permission: shardedcore.settings.nightvision
+  tabbossbar:
+    description: Toggle TAB bossbar
+    permission: shardedcore.settings.bossbar
+  tabscoreboard:
+    description: Toggle TAB scoreboard
+    permission: shardedcore.settings.scoreboard
+  tpauto:
+    description: Auto-accept TPA
+    permission: shardedcore.settings.tpauto
+  crystaltoggle:
+    description: Toggle fast crystal
+    aliases: [fastcrystal]
+    permission: shardedcore.settings.crystal
+  cf:
+    description: Coinflip
+    aliases: [coinflip]
+    permission: shardedcore.coinflip
+  crate:
+    description: Crates
+    aliases: [crates]
+    permission: shardedcore.crates
+  ecofreeze:
+    description: Freeze a balance
+    permission: shardedcore.economy.admin
+  ecogive:
+    description: Give money
+    permission: shardedcore.economy.admin
+  ecoreset:
+    description: Reset a balance
+    permission: shardedcore.economy.admin
+  ecoset:
+    description: Set a balance
+    permission: shardedcore.economy.admin
+  ecotake:
+    description: Take money
+    permission: shardedcore.economy.admin
+  bal:
+    description: Balance
+    aliases: [balance, money]
+    permission: shardedcore.economy.balance
+  pay:
+    description: Pay a player
+    permission: shardedcore.economy.pay
+  baltop:
+    description: Balance top
+    permission: shardedcore.economy.balance
+  guide:
+    description: Server guide
+    permission: shardedcore.guide
+  home:
+    description: Teleport home
+    permission: shardedcore.homes
+  homes:
+    description: Homes GUI
+    permission: shardedcore.homes
+  sethome:
+    description: Set a home
+    permission: shardedcore.homes
+  delhome:
+    description: Delete a home
+    permission: shardedcore.homes
+  kit:
+    description: Kits
+    permission: shardedcore.kits
+  kits:
+    description: Kits GUI
+    permission: shardedcore.kits
+  live:
+    description: Livestream broadcast
+    permission: shardedcore.live
+  nametags:
+    description: Nametag admin
+    permission: shardedcore.nametags.admin
+  ping:
+    description: Show ping
+    permission: shardedcore.ping
+  rtp:
+    description: Random teleport
+    aliases: [wild]
+    permission: shardedcore.rtp
+  rtpqueue:
+    description: Queue for a 1v1 random teleport
+    aliases: [rtpq]
+    permission: shardedcore.rtp.queue
+    usage: /rtpqueue [player|leave|accept]
+  sell:
+    description: Sell menu
+    permission: shardedcore.sell
+  worth:
+    description: Sell prices
+    permission: shardedcore.sell
+  sellmulti:
+    description: Sell multiplier
+    permission: shardedcore.sell
+  sellhistory:
+    description: Sell history
+    permission: shardedcore.sell.history
+  spawn:
+    description: Teleport to spawn
+    permission: shardedcore.spawn
+  setspawn:
+    description: Set spawn
+    permission: shardedcore.spawn.admin
+  tpa:
+    description: Request teleport
+    permission: shardedcore.tpa
+  tpahere:
+    description: Request teleport here
+    permission: shardedcore.tpa.here
+  tpaccept:
+    description: Accept teleport
+    aliases: [tpyes]
+    permission: shardedcore.tpa
+  tpacancel:
+    description: Cancel teleport requests
+    aliases: [tpdeny, tpadeny]
+    permission: shardedcore.tpa
+  trash:
+    description: Trash menu
+    permission: shardedcore.trash
+  craft:
+    description: Workbench
+    aliases: [wb, workbench]
+    permission: shardedcore.craft
+  anvil:
+    description: Anvil
+    permission: shardedcore.anvil
+  toolsmith:
+    description: Smithing table
+    aliases: [smithing, smithingtable]
+    permission: shardedcore.toolsmith
+  msg:
+    description: Private message
+    aliases: [tell, whisper, m, message]
+    permission: shardedcore.msg
+  r:
+    description: Reply
+    aliases: [reply]
+    permission: shardedcore.msg
+  w:
+    description: Welcome a new player
+    permission: shardedcore.welcome
+  shop:
+    description: Server shop
+    permission: shardedcore.shop
+  rules:
+    description: Server rules
+    permission: shardedcore.rules
+  killrewards:
+    description: Kill rewards
+    aliases: [krewards]
+    permission: shardedcore.killrewards
+  playtimerewards:
+    description: Playtime rewards
+    aliases: [ptrewards]
+    permission: shardedcore.playtimerewards
+  playtime:
+    description: Show playtime
+    permission: shardedcore.playtimerewards
+  giveaway:
+    description: Public giveaways
+    aliases: [gws, gw, giveaways]
+    permission: shardedcore.giveaway
+  vault:
+    description: Private vaults
+    aliases: [vaults, pv]
+    permission: shardedcore.vault
+  pvadmin:
+    description: Vault admin
+    permission: shardedcore.vault.admin
+  leave:
+    description: Leave the RTP queue
+    aliases: [leavequeue, rtpleave, unqueue]
+    permission: shardedcore.rtp.queue
+  chatcolor:
+    description: Custom chat colors
+    aliases: [chatcolour, cc]
+    permission: shardedcore.chatcolor
+  chatcolorgradient:
+    description: Create a gradient chat color
+    permission: shardedcore.chatcolor.admin
+  tag:
+    description: Custom chat tags
+    aliases: [chattag]
+    permission: shardedcore.tag
+  tags:
+    description: Tags GUI
+    permission: shardedcore.tag
+  glows:
+    description: Glow cosmetics GUI
+    aliases: [glow]
+    permission: shardedcore.glow
+  cosmetics:
+    description: Cosmetics hub for tags, chat colors, and glows
+    aliases: [cosmetic]
+    permission: shardedcore.cosmetics
+  moneymethods:
+    description: Best ways to make money
+    aliases: [moneymethod, howtomakemoney]
+    permission: shardedcore.economy.balance
+  team:
+    description: Teams
+    aliases: [teams]
+    permission: shardedcore.team
+  wipe:
+    description: Wipe a player
+    permission: shardedcore.wipe
+  ec:
+    description: Ender chest
+    aliases: [enderchest, echest]
+    permission: shardedcore.ec
+  fly:
+    description: Toggle fly in the spawn region
+    permission: shardedcore.fly
+  shardedtool:
+    description: Give or remove sharded tools
+    aliases: [stool]
+    permission: shardedcore.shardedtool.admin
+  crystal:
+    description: Crystals currency
+    aliases: [crystals]
+    permission: shardedcore.crystal
+  crystalshop:
+    description: Crystal shop
+    permission: shardedcore.crystal.shop
+  staffmode:
+    description: Toggle staff mode
+    aliases: [sfmode]
+    permission: shardedcore.staff.mode
+  vanish:
+    description: Toggle vanish
+    permission: shardedcore.staff.vanish
+  freeze:
+    description: Freeze a player
+    permission: shardedcore.staff.freeze
+  unfreeze:
+    description: Unfreeze a player
+    permission: shardedcore.staff.freeze
+  stafflist:
+    description: List online staff
+    permission: shardedcore.staff.list
+  randomtp:
+    description: Teleport to a random player
+    permission: shardedcore.staff.randomtp
+  staffchat:
+    description: Toggle staff chat
+    aliases: [sc]
+    permission: shardedcore.staff.chat
+  gmc:
+    description: Creative gamemode
+    aliases: [gmcs]
+    permission: shardedcore.staff.gamemode
+  gms:
+    description: Survival gamemode
+    permission: shardedcore.staff.gamemode
+  gmsp:
+    description: Spectator gamemode
+    permission: shardedcore.staff.gamemode
+  gma:
+    description: Adventure gamemode
+    permission: shardedcore.staff.gamemode
+  punish:
+    description: Open punish menu
+    permission: shardedcore.staff.punish
+  ban:
+    description: Ban a player
+    permission: shardedcore.staff.ban
+  mute:
+    description: Mute a player
+    permission: shardedcore.staff.mute
+  kick:
+    description: Kick a player
+    permission: shardedcore.staff.kick
+  offend:
+    description: Ban a repeat offender
+    permission: shardedcore.staff.offend
+  banip:
+    description: IP ban a player
+    permission: shardedcore.staff.banip
+  unban:
+    description: Unban a player
+    permission: shardedcore.staff.unban
+  unbanip:
+    description: Remove an IP ban
+    aliases: [unban-ip]
+    permission: shardedcore.staff.unbanip
+  unmute:
+    description: Unmute a player
+    permission: shardedcore.staff.unmute
+  pardon:
+    description: Unban and unmute
+    permission: shardedcore.staff.pardon
+  alts:
+    description: Show linked alts
+    permission: shardedcore.staff.alts
+  screenshare:
+    description: Screenshare a player
+    aliases: [ss]
+    permission: shardedcore.staff.screenshare
+  invrollback:
+    description: Inventory rollback
+    permission: shardedcore.staff.invrollback
+  revokepunishment:
+    description: Mass revoke punishments
+    permission: shardedcore.staff.revoke
+  requeststaff:
+    description: Request staff help
+    permission: shardedcore.staff.request
+  staffgoto:
+    description: Teleport to a staff request
+    permission: shardedcore.staff
+  staff:
+    description: Staff command list
+    permission: shardedcore.staff
+  survival:
+    description: Switch to survival
+    permission: shardedcore.command.survival
+  events:
+    description: Switch to events
+    aliases: [event]
+    permission: shardedcore.command.events
+  diasmp:
+    description: Switch to diasmp
+    permission: shardedcore.command.diasmp
+  server:
+    description: Switch proxy server
+    permission: shardedcore.command.server
+  dev:
+    description: Switch to a dev server
+    permission: shardedcore.command.dev
+  patron:
+    description: Patron ranks
+    permission: shardedcore.command.patron
+  promote:
+    description: Promote a LuckPerms group
+    permission: shardedcore.promote
+  demote:
+    description: Demote a LuckPerms group
+    permission: shardedcore.demote
+  tools:
+    description: Sharded tools info
+    permission: shardedcore.tools
+  rtpqueuetoggle:
+    description: Toggle RTP queue messages
+    permission: shardedcore.settings.rtpqueue
+
+permissions:
+  shardedcore.admin:
+    default: op
+  shardedcore.announce:
+    default: op
+  shardedcore.command.discord:
+    default: true
+  shardedcore.command.store:
+    default: true
+  shardedcore.command.apply:
+    default: true
+  shardedcore.command.media:
+    default: true
+  shardedcore.command.bypass:
+    default: op
+  shardedcore.chatfilter.admin:
+    default: op
+  shardedcore.chatfilter.alerts:
+    default: op
+  shardedcore.chatfilter.history:
+    default: op
+  shardedcore.chatfilter.bypass:
+    default: op
+  shardedcore.chatfilter.bypass.advertising:
+    default: op
+  shardedcore.chatfilter.bypass.links:
+    default: op
+  shardedcore.settings:
+    default: true
+    children:
+      shardedcore.settings.chat: true
+      shardedcore.settings.msg: true
+      shardedcore.settings.live: true
+      shardedcore.settings.tpa: true
+      shardedcore.settings.tpahere: true
+      shardedcore.settings.joinleave: true
+      shardedcore.settings.mobs: true
+      shardedcore.settings.death: true
+      shardedcore.settings.pay: true
+      shardedcore.settings.nightvision: true
+      shardedcore.settings.bossbar: true
+      shardedcore.settings.scoreboard: true
+      shardedcore.settings.tpauto: true
+      shardedcore.settings.crystal: true
+      shardedcore.settings.rtpqueue: true
+  shardedcore.settings.chat:
+    default: true
+  shardedcore.settings.msg:
+    default: true
+  shardedcore.settings.live:
+    default: true
+  shardedcore.settings.tpa:
+    default: true
+  shardedcore.settings.tpahere:
+    default: true
+  shardedcore.settings.joinleave:
+    default: true
+  shardedcore.settings.mobs:
+    default: true
+  shardedcore.settings.death:
+    default: true
+  shardedcore.settings.pay:
+    default: true
+  shardedcore.settings.nightvision:
+    default: true
+  shardedcore.settings.bossbar:
+    default: true
+  shardedcore.settings.scoreboard:
+    default: true
+  shardedcore.settings.tpauto:
+    default: true
+  shardedcore.settings.crystal:
+    default: true
+  shardedcore.settings.rtpqueue:
+    default: true
+  shardedcore.coinflip:
+    default: true
+  shardedcore.crates:
+    default: true
+  shardedcore.crates.admin:
+    default: op
+  shardedcore.economy.admin:
+    default: op
+  shardedcore.economy.balance:
+    default: true
+  shardedcore.economy.pay:
+    default: true
+  shardedcore.guide:
+    default: true
+  shardedcore.homes:
+    default: true
+  shardedcore.homes.limit.3:
+    default: true
+  shardedcore.kits:
+    default: true
+  shardedcore.kits.all:
+    default: false
+  shardedcore.kits.admin:
+    default: op
+  shardedcore.kit.default:
+    default: true
+  shardedcore.kit.vip:
+    default: false
+  shardedcore.kit.mvp:
+    default: false
+  shardedcore.kit.elite:
+    default: false
+  shardedcore.kit.divine:
+    default: false
+  shardedcore.kit.legend:
+    default: false
+  shardedcore.kit.immortal:
+    default: false
+  shardedcore.live:
+    default: true
+  shardedcore.live.bypass:
+    default: op
+  shardedcore.nametags.admin:
+    default: op
+  shardedcore.ping:
+    default: true
+  shardedcore.rtp:
+    default: true
+  shardedcore.rtp.queue:
+    default: true
+  shardedcore.sell:
+    default: true
+  shardedcore.sell.history:
+    default: true
+  shardedcore.sell.history.admin:
+    default: op
+  shardedcore.spawn:
+    default: true
+  shardedcore.spawn.admin:
+    default: op
+  shardedcore.tpa:
+    default: true
+  shardedcore.tpa.here:
+    default: true
+  shardedcore.trash:
+    default: true
+  shardedcore.craft:
+    default: true
+  shardedcore.anvil:
+    default: true
+  shardedcore.toolsmith:
+    default: true
+  shardedcore.msg:
+    default: true
+  shardedcore.combat.bypass:
+    default: op
+  shardedcore.shop:
+    default: true
+  shardedcore.shop.premium:
+    default: false
+  shardedcore.shop.fastbuy:
+    default: false
+  shardedcore.rules:
+    default: true
+  shardedcore.welcome:
+    default: true
+  shardedcore.killrewards:
+    default: true
+  shardedcore.playtimerewards:
+    default: true
+  shardedcore.giveaway:
+    default: true
+  shardedcore.giveaway.admin:
+    default: op
+  shardedcore.vault:
+    default: true
+  shardedcore.vault.admin:
+    default: op
+  shardedcore.vault.1:
+    default: false
+  shardedcore.vault.2:
+    default: false
+  shardedcore.vault.3:
+    default: false
+  shardedcore.vault.4:
+    default: false
+  shardedcore.vault.5:
+    default: false
+  shardedcore.vault.6:
+    default: false
+  shardedcore.vault.7:
+    default: false
+  shardedcore.vault.8:
+    default: false
+  shardedcore.vault.9:
+    default: false
+  shardedcore.vault.10:
+    default: false
+  shardedcore.vault.11:
+    default: false
+  shardedcore.vault.12:
+    default: false
+  shardedcore.vault.13:
+    default: false
+  shardedcore.vault.14:
+    default: false
+  shardedcore.vault.15:
+    default: false
+  shardedcore.vault.16:
+    default: false
+  shardedcore.vault.17:
+    default: false
+  shardedcore.vault.18:
+    default: false
+  shardedcore.vault.19:
+    default: false
+  shardedcore.vault.20:
+    default: false
+  shardedcore.vault.21:
+    default: false
+  shardedcore.vault.22:
+    default: false
+  shardedcore.vault.23:
+    default: false
+  shardedcore.vault.24:
+    default: false
+  shardedcore.vault.25:
+    default: false
+  shardedcore.vault.26:
+    default: false
+  shardedcore.vault.27:
+    default: false
+  shardedcore.vault.28:
+    default: false
+  shardedcore.vault.29:
+    default: false
+  shardedcore.vault.30:
+    default: false
+  shardedcore.vault.31:
+    default: false
+  shardedcore.vault.32:
+    default: false
+  shardedcore.vault.33:
+    default: false
+  shardedcore.vault.34:
+    default: false
+  shardedcore.vault.35:
+    default: false
+  shardedcore.vault.36:
+    default: false
+  shardedcore.vault.37:
+    default: false
+  shardedcore.vault.38:
+    default: false
+  shardedcore.vault.39:
+    default: false
+  shardedcore.vault.40:
+    default: false
+  shardedcore.vault.41:
+    default: false
+  shardedcore.vault.42:
+    default: false
+  shardedcore.vault.43:
+    default: false
+  shardedcore.vault.44:
+    default: false
+  shardedcore.vault.45:
+    default: false
+  shardedcore.chatcolor:
+    default: true
+  shardedcore.chatcolor.admin:
+    default: op
+  shardedcore.tag:
+    default: true
+  shardedcore.tag.admin:
+    default: op
+  shardedcore.ec:
+    default: true
+  shardedcore.ec.3:
+    default: true
+  shardedcore.ec.4:
+    default: false
+  shardedcore.ec.5:
+    default: false
+  shardedcore.ec.6:
+    default: false
+  shardedcore.fly:
+    default: true
+  shardedcore.fly.admin:
+    default: op
+  shardedcore.fly.bypass:
+    default: op
+  shardedcore.shardedtool.admin:
+    default: op
+  shardedcore.crystal:
+    default: true
+  shardedcore.crystal.admin:
+    default: op
+  shardedcore.crystal.shop:
+    default: true
+  shardedcore.glow:
+    default: true
+  shardedcore.glow.admin:
+    default: op
+  shardedcore.cosmetics:
+    default: true
+  shardedcore.team:
+    default: true
+  shardedcore.wipe:
+    default: op
+  shardedcore.staff:
+    default: op
+    children:
+      shardedcore.staff.mode: true
+      shardedcore.staff.vanish: true
+      shardedcore.staff.freeze: true
+      shardedcore.staff.list: true
+      shardedcore.staff.randomtp: true
+      shardedcore.staff.chat: true
+      shardedcore.staff.gamemode: true
+      shardedcore.staff.punish: true
+      shardedcore.staff.ban: true
+      shardedcore.staff.mute: true
+      shardedcore.staff.kick: true
+      shardedcore.staff.offend: true
+      shardedcore.staff.banip: true
+      shardedcore.staff.unban: true
+      shardedcore.staff.unbanip: true
+      shardedcore.staff.unmute: true
+      shardedcore.staff.pardon: true
+      shardedcore.staff.alts: true
+      shardedcore.staff.screenshare: true
+      shardedcore.staff.invrollback: true
+      shardedcore.staff.revoke: true
+      shardedcore.staff.request: true
+      shardedcore.staff.seevanished: true
+      shardedcore.staff.audit: true
+  shardedcore.staff.mode:
+    default: op
+  shardedcore.staff.vanish:
+    default: op
+  shardedcore.staff.freeze:
+    default: op
+  shardedcore.staff.list:
+    default: op
+  shardedcore.staff.randomtp:
+    default: op
+  shardedcore.staff.chat:
+    default: op
+  shardedcore.staff.gamemode:
+    default: op
+  shardedcore.staff.punish:
+    default: op
+  shardedcore.staff.ban:
+    default: op
+  shardedcore.staff.mute:
+    default: op
+  shardedcore.staff.kick:
+    default: op
+  shardedcore.staff.offend:
+    default: op
+  shardedcore.staff.banip:
+    default: op
+  shardedcore.staff.unban:
+    default: op
+  shardedcore.staff.unbanip:
+    default: op
+  shardedcore.staff.unmute:
+    default: op
+  shardedcore.staff.pardon:
+    default: op
+  shardedcore.staff.alts:
+    default: op
+  shardedcore.staff.screenshare:
+    default: op
+  shardedcore.staff.invrollback:
+    default: op
+  shardedcore.staff.revoke:
+    default: op
+  shardedcore.staff.request:
+    default: true
+  shardedcore.staff.seevanished:
+    default: op
+  shardedcore.staff.audit:
+    default: op
+  shardedcore.commands.listed:
+    default: true
+    description: See the command whitelist
+  shardedcore.group.default:
+    default: true
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.booster:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.prism:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.crystal:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.amethyst:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.sharded:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.shardedplus:
+    default: false
+    description: sharded+
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.helper:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.srhelper:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.mod:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.srmod:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.admin:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.sradmin:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.dev:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.manager:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.director:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.group.owner:
+    default: false
+    children:
+      shardedcore.commands.listed: true
+  shardedcore.leave:
+    default: true
+  shardedcore.command.survival:
+    default: true
+  shardedcore.command.events:
+    default: true
+  shardedcore.command.diasmp:
+    default: true
+  shardedcore.command.server:
+    default: true
+  shardedcore.command.dev:
+    default: true
+  shardedcore.command.patron:
+    default: true
+  shardedcore.promote:
+    default: op
+  shardedcore.demote:
+    default: op
+  shardedcore.tools:
+    default: true
+  shardedcore.internal.disabled:
+    default: false

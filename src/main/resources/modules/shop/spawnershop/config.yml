@@ -1,0 +1,159 @@
+# The spawner shop. Its icon and its slot in the main menu sit in ../config.yml
+
+menu:
+  title: "Spawners"
+  rows: 3
+  pages: 1
+
+buttons:
+
+  previous:
+    slot: 21
+    material: LIME_DYE
+    name: "&#94FF00&lPREVIOUS PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#94FF00Information:"
+      - "&#94FF00| &fGo one page back"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
+
+  return:
+    slot: 22
+    material: FLOWER_BANNER_PATTERN
+    name: "&#FF0000&lBACK"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000| &fGo back to the"
+      - "&#FF0000| &fshop menu"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Return"
+
+  next:
+    slot: 23
+    material: LIME_DYE
+    name: "&#94FF00&lNEXT PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#94FF00Information:"
+      - "&#94FF00| &fGo one page forward"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate"
+
+items:
+  pig:
+    page: 1
+    slot: 10
+    name: "&#FFB6C1&lPIG SPAWNER"
+    material: SPAWNER
+    price: 800
+    command: "spawner give spawner %player% pig"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFB6C1Information:"
+      - "&#FFB6C1| &fGives a pig spawner"
+      - ""
+      - "&#FFB6C1⚓ &fPrice: &#FFB6C1$%price%"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
+  cow:
+    page: 1
+    slot: 11
+    name: "&#C4A484&lCOW SPAWNER"
+    material: SPAWNER
+    price: 900
+    command: "spawner give spawner %player% cow"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#C4A484Information:"
+      - "&#C4A484| &fGives a cow spawner"
+      - ""
+      - "&#C4A484⚓ &fPrice: &#C4A484$%price%"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
+  zombie:
+    page: 1
+    slot: 12
+    name: "&#80EE0B&lZOMBIE SPAWNER"
+    material: SPAWNER
+    price: 1000
+    command: "spawner give spawner %player% zombie"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#80EE0BInformation:"
+      - "&#80EE0B| &fGives a zombie spawner"
+      - ""
+      - "&#80EE0B⚓ &fPrice: &#80EE0B$%price%"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
+  skeleton:
+    page: 1
+    slot: 13
+    name: "&#E3E3E3&lSKELETON SPAWNER"
+    material: SPAWNER
+    price: 1200
+    command: "spawner give spawner %player% skeleton"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#E3E3E3Information:"
+      - "&#E3E3E3| &fGives a skeleton spawner"
+      - ""
+      - "&#E3E3E3⚓ &fPrice: &#E3E3E3$%price%"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
+  creeper:
+    page: 1
+    slot: 14
+    name: "&#007E20&lCREEPER SPAWNER"
+    material: SPAWNER
+    price: 1400
+    command: "spawner give spawner %player% creeper"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#007E20Information:"
+      - "&#007E20| &fGives a creeper spawner"
+      - ""
+      - "&#007E20⚓ &fPrice: &#007E20$%price%"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
+  blaze:
+    page: 1
+    slot: 15
+    name: "&#FFBA00&lBLAZE SPAWNER"
+    material: SPAWNER
+    price: 1800
+    command: "spawner give spawner %player% blaze"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFBA00Information:"
+      - "&#FFBA00| &fGives a blaze spawner"
+      - ""
+      - "&#FFBA00⚓ &fPrice: &#FFBA00$%price%"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
+  irongolem:
+    page: 1
+    slot: 16
+    name: "&7&lIRON GOLEM SPAWNER"
+    material: SPAWNER
+    price: 2500
+    command: "spawner give spawner %player% iron_golem"
+    lore:
+      - "&8Description"
+      - ""
+      - "&7Information:"
+      - "&7| &fGives an iron golem spawner"
+      - ""
+      - "&7⚓ &fPrice: &7$%price%"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy"
