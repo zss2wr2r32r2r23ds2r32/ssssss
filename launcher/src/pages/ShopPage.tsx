@@ -1,34 +1,52 @@
 import { useEffect, useRef, useState } from 'react';
 import { api } from '../api';
 import { playClick } from '../audio';
-import { IconType } from '../components/Icons';
 import { Modal } from '../components/Modal';
 import { formatClock, formatNum } from '../format';
 import { useSession } from '../session';
 import type { ItemType, Rarity, ShopItem } from '../types';
 
-const RARITY: Record<Rarity, [string, string]> = {
-  common: ['#c5cad3', '#3e4450'],
-  uncommon: ['#8ee7a8', '#146b38'],
-  rare: ['#8ec8ff', '#154e9e'],
-  epic: ['#e0b0ff', '#5b21b6'],
-  legendary: ['#ffc27a', '#b45309'],
-  mythic: ['#ffe7a3', '#a16207'],
+const RARITY: Record<Rarity, string> = {
+  common: '#8d93a0',
+  uncommon: '#2f8a4e',
+  rare: '#2a6fbe',
+  epic: '#7a35b8',
+  legendary: '#d08922',
+  mythic: '#d2a431',
 };
 
 const TYPES: ItemType[] = ['skin', 'emote', 'pickaxe', 'glider'];
 const RARITIES: Rarity[] = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythic'];
-
-const BUNDLED_SKINS: Record<string, string> = {
-  chani: '/shop-chani.png',
-  default: '/skin-default.png',
-  portrait: '/skin-default.png',
-  'default portrait': '/skin-default.png',
-  'default skin': '/skin-default.png',
+const TYPE_LABEL: Record<ItemType, string> = {
+  skin: 'Outfit',
+  emote: 'Emote',
+  pickaxe: 'Pickaxe',
+  glider: 'Glider',
 };
 
-function bundledSkinImage(name: string) {
-  return BUNDLED_SKINS[name.trim().toLowerCase()] || '';
+function ShopCard({ item, admin, onRemove }: { item: ShopItem; admin: boolean; onRemove: (item: ShopItem) => void }) {
+  return (
+    <article className={`item-card ${item.section === 'featured' ? 'featured' : 'daily'}`}>
+      <div className="item-art" style={{ background: RARITY[item.rarity] }}>
+        {admin ? (
+          <button type="button" className="item-remove" aria-label={`Remove ${item.name}`} onClick={() => onRemove(item)}>
+            Remove
+          </button>
+        ) : null}
+        <img src={item.image} alt="" draggable={false} />
+      </div>
+      <div className="item-bar">
+        <div>
+          <strong>{item.name}</strong>
+          <small>{TYPE_LABEL[item.type]}</small>
+        </div>
+        <span className="price">
+          {item.vbucks === 0 ? 'Free' : formatNum(item.vbucks)}
+          <img className="vbuck-icon" src="/vbucks.png" alt="" draggable={false} />
+        </span>
+      </div>
+    </article>
+  );
 }
 
 export function ShopPage() {
@@ -39,11 +57,13 @@ export function ShopPage() {
   const [name, setName] = useState('');
   const [type, setType] = useState<ItemType>('skin');
   const [rarity, setRarity] = useState<Rarity>('epic');
+  const [section, setSection] = useState<'featured' | 'daily'>('featured');
   const [vbucks, setVbucks] = useState('800');
   const [image, setImage] = useState('');
   const [formError, setFormError] = useState('');
   const left = useRef(0);
   const ready = useRef(false);
+  const admin = user?.role === 'admin';
 
   async function loadItems() {
     const data = await api<{ items: ShopItem[] }>('/shop/items');
@@ -99,16 +119,20 @@ export function ShopPage() {
     event.preventDefault();
     playClick();
     setFormError('');
+    if (!image.startsWith('data:image/')) {
+      setFormError('Import an image for this item.');
+      return;
+    }
     try {
-      const picture = image.trim() || bundledSkinImage(name);
       await api('/shop/items', {
         method: 'POST',
-        body: { name, type, rarity, vbucks: Number(vbucks), image: picture },
+        body: { name, type, rarity, vbucks: Number(vbucks), image, section },
       });
       setAdding(false);
       setName('');
       setImage('');
       setVbucks('800');
+      setSection('featured');
       await loadItems();
       toast('Item added');
     } catch (err) {
@@ -116,7 +140,8 @@ export function ShopPage() {
     }
   }
 
-  const preview = image.trim() || bundledSkinImage(name);
+  const featured = items.filter((item) => item.section === 'featured');
+  const daily = items.filter((item) => item.section !== 'featured');
 
   return (
     <div className="page shop">
@@ -126,7 +151,7 @@ export function ShopPage() {
           <p>Original cosmetics for your locker.</p>
         </div>
         <div className="head-actions">
-          {user?.role === 'admin' ? (
+          {admin ? (
             <button
               type="button"
               className="btn ghost"
@@ -145,38 +170,23 @@ export function ShopPage() {
         </div>
       </header>
 
-      <div className="shop-grid">
-        {items.map((item) => {
-          const [top, bottom] = RARITY[item.rarity];
-          return (
-            <article
-              key={item.id}
-              className="item-card"
-              style={{ background: `linear-gradient(180deg, ${top} 0%, ${bottom} 78%)` }}
-            >
-              {user?.role === 'admin' ? (
-                <button type="button" className="item-remove" aria-label={`Remove ${item.name}`} onClick={() => removeItem(item)}>
-                  Remove
-                </button>
-              ) : null}
-              <span className="type-badge">
-                <IconType type={item.type} />
-              </span>
-              <img src={item.image} alt="" draggable={false} />
-              <span className="item-meta">
-                <span className="item-name">{item.name}</span>
-                {item.vbucks === 0 ? (
-                  <span className="price free">Free</span>
-                ) : (
-                  <span className="price">
-                    {formatNum(item.vbucks)} <img className="vbuck-icon" src="/vbucks.png" alt="" draggable={false} />
-                  </span>
-                )}
-              </span>
-            </article>
-          );
-        })}
-      </div>
+      <section className="shop-block">
+        <h2>Featured</h2>
+        <div className="shop-row">
+          {featured.map((item) => (
+            <ShopCard key={item.id} item={item} admin={admin} onRemove={removeItem} />
+          ))}
+        </div>
+      </section>
+
+      <section className="shop-block">
+        <h2>Daily</h2>
+        <div className="shop-grid">
+          {daily.map((item) => (
+            <ShopCard key={item.id} item={{ ...item, section: 'daily' }} admin={admin} onRemove={removeItem} />
+          ))}
+        </div>
+      </section>
 
       {adding ? (
         <Modal title="Add item" onClose={() => setAdding(false)}>
@@ -191,7 +201,7 @@ export function ShopPage() {
                 <select value={type} onChange={(event) => setType(event.target.value as ItemType)}>
                   {TYPES.map((entry) => (
                     <option key={entry} value={entry}>
-                      {entry}
+                      {TYPE_LABEL[entry]}
                     </option>
                   ))}
                 </select>
@@ -207,30 +217,47 @@ export function ShopPage() {
                 </select>
               </label>
             </div>
+            <div className="split">
+              <label>
+                V-Bucks
+                <input
+                  type="number"
+                  min={0}
+                  max={100000}
+                  value={vbucks}
+                  onChange={(event) => setVbucks(event.target.value)}
+                  required
+                />
+              </label>
+              <label>
+                Placement
+                <select value={section} onChange={(event) => setSection(event.target.value as 'featured' | 'daily')}>
+                  <option value="featured">Featured</option>
+                  <option value="daily">Daily</option>
+                </select>
+              </label>
+            </div>
             <label>
-              V-Bucks
-              <input
-                type="number"
-                min={0}
-                max={100000}
-                value={vbucks}
-                onChange={(event) => setVbucks(event.target.value)}
-                required
-              />
-            </label>
-            <label>
-              Image URL
-              <input
-                value={image.startsWith('data:') ? '' : image}
-                onChange={(event) => setImage(event.target.value)}
-                placeholder="https://… or upload below"
-              />
-            </label>
-            <label>
-              Upload
+              Image
               <input type="file" accept="image/*" onChange={(event) => onFile(event.target.files?.[0])} />
             </label>
-            {preview ? <img className="upload-preview" src={preview} alt="" draggable={false} /> : null}
+            {image ? (
+              <article className="item-card preview-card">
+                <div className="item-art" style={{ background: RARITY[rarity] }}>
+                  <img src={image} alt="" draggable={false} />
+                </div>
+                <div className="item-bar">
+                  <div>
+                    <strong>{name || 'Name'}</strong>
+                    <small>{TYPE_LABEL[type]}</small>
+                  </div>
+                  <span className="price">
+                    {formatNum(Number(vbucks) || 0)}
+                    <img className="vbuck-icon" src="/vbucks.png" alt="" draggable={false} />
+                  </span>
+                </div>
+              </article>
+            ) : null}
             {formError ? <p className="form-error">{formError}</p> : null}
             <button type="submit" className="btn primary">
               Save item

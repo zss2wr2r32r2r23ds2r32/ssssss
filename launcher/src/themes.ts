@@ -1,19 +1,20 @@
 export const THEMES = [
-  { id: 'default', name: 'Default', gradient: 'linear-gradient(165deg, #07080c 0%, #151922 100%)' },
-  { id: 'void', name: 'Void', gradient: 'linear-gradient(160deg, #07010f 0%, #2a0d4a 48%, #100616 100%)' },
-  { id: 'ember', name: 'Ember', gradient: 'linear-gradient(155deg, #140804 0%, #8a2e12 46%, #2a0c08 100%)' },
-  { id: 'frost', name: 'Frost', gradient: 'linear-gradient(160deg, #071018 0%, #1c4d66 50%, #0b1c28 100%)' },
-  { id: 'jade', name: 'Jade', gradient: 'linear-gradient(160deg, #04110c 0%, #0f6b45 48%, #062018 100%)' },
-  { id: 'bud', name: 'Bud', gradient: 'linear-gradient(160deg, #10160a 0%, #6d8f2e 46%, #1a220e 100%)' },
-  { id: 'rose', name: 'Rose', gradient: 'linear-gradient(155deg, #16060e 0%, #a12358 48%, #2a0c16 100%)' },
-  { id: 'sunset', name: 'Sunset', gradient: 'linear-gradient(145deg, #1a0c18 0%, #c4552a 42%, #6a2a78 100%)' },
-  { id: 'aurora', name: 'Aurora', gradient: 'linear-gradient(140deg, #04140f 0%, #1d8a7a 38%, #3a3d9a 72%, #120818 100%)' },
-  { id: 'tom', name: 'Tom', gradient: 'linear-gradient(160deg, #0c1018 0%, #24507a 50%, #101820 100%)' },
-  { id: 'noir', name: 'Noir', gradient: 'linear-gradient(180deg, #000000 0%, #0a0a0a 100%)' },
-  { id: 'dark', name: 'Dark', gradient: 'linear-gradient(180deg, #0e0e12 0%, #1a1c22 100%)' },
+  { id: 'default', name: 'Default', color: '#07080c', edge: '#9aa3b5' },
+  { id: 'void', name: 'Void', color: '#120818', edge: '#c4a6f5' },
+  { id: 'ember', name: 'Ember', color: '#1a0c08', edge: '#f0a07a' },
+  { id: 'frost', name: 'Frost', color: '#07141c', edge: '#8ec8e8' },
+  { id: 'jade', name: 'Jade', color: '#071410', edge: '#7dcea0' },
+  { id: 'bud', name: 'Bud', color: '#12160c', edge: '#c6e07a' },
+  { id: 'rose', name: 'Rose', color: '#180810', edge: '#f0a0c0' },
+  { id: 'sunset', name: 'Sunset', color: '#1a100c', edge: '#f0b070' },
+  { id: 'aurora', name: 'Aurora', color: '#0c1218', edge: '#80d0c8' },
+  { id: 'tom', name: 'Tom', color: '#10141c', edge: '#8eb4e0' },
+  { id: 'noir', name: 'Noir', color: '#000000', edge: '#d7dbe4' },
+  { id: 'dark', name: 'Dark', color: '#14161c', edge: '#c5cad6' },
 ] as const;
 
 export function applyTheme(id: string) {
   const theme = THEMES.find((entry) => entry.id === id) || THEMES[0];
-  document.documentElement.style.setProperty('--shell-bg', theme.gradient);
+  document.documentElement.style.setProperty('--shell-bg', theme.color);
+  document.documentElement.style.setProperty('--theme-edge', theme.edge);
 }

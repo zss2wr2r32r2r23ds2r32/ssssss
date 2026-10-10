@@ -76,6 +76,30 @@ function buildTitle(exe) {
   return 'Fortnite';
 }
 
+const SHIPPING_EXE = 'fortniteclient-win64-shipping.exe';
+
+function findNamedDir(root, wanted) {
+  const stack = [root];
+  let seen = 0;
+  while (stack.length && seen < 4000) {
+    const dir = stack.pop();
+    let entries = [];
+    try {
+      entries = fs.readdirSync(dir, { withFileTypes: true });
+    } catch {
+      continue;
+    }
+    for (const entry of entries) {
+      if (!entry.isDirectory() || entry.name.startsWith('.') || SKIP_DIRS.has(entry.name)) continue;
+      seen += 1;
+      const full = path.join(dir, entry.name);
+      if (entry.name.toLowerCase() === wanted) return full;
+      stack.push(full);
+    }
+  }
+  return '';
+}
+
 export function findShippingBuild(folderPath) {
   if (!folderPath || typeof folderPath !== 'string') return { error: 'Choose a folder.' };
   const resolved = path.resolve(folderPath.trim());
@@ -88,6 +112,12 @@ export function findShippingBuild(folderPath) {
   } catch {
     return { error: 'That folder is not on this machine.' };
   }
+
+  const fortniteGame = findNamedDir(root, 'fortnitegame');
+  const engine = findNamedDir(root, 'engine');
+  if (!fortniteGame && !engine) return { error: 'That folder needs both FortniteGame and Engine.' };
+  if (!fortniteGame) return { error: 'That folder is missing FortniteGame.' };
+  if (!engine) return { error: 'That folder is missing Engine.' };
 
   const exes = [];
   const splashes = [];
@@ -112,13 +142,16 @@ export function findShippingBuild(folderPath) {
       if (!entry.isFile()) continue;
       seen += 1;
       const lower = entry.name.toLowerCase();
-      if (lower === 'fortniteshipping.exe') exes.push(full);
+      if (lower === SHIPPING_EXE) exes.push(full);
       if (lower === 'splash.bmp') splashes.push(full);
     }
   }
 
-  if (!exes.length) return { error: "Couldn't find FortniteShipping.exe in that folder." };
-  const executablePath = exes[0];
+  const executablePath =
+    exes.find((file) =>
+      file.replace(/\\/g, '/').toLowerCase().endsWith('fortnitegame/binaries/win64/fortniteclient-win64-shipping.exe'),
+    ) || exes[0];
+  if (!executablePath) return { error: 'FortniteClient-Win64-Shipping.exe is missing for this build.' };
   const splashPath = nearestTo(executablePath, splashes);
   const name = buildTitle(executablePath);
   const version = versionFromText(name) || versionFromText(path.basename(root)) || 'Local';

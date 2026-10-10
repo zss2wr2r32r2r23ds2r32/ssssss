@@ -16,9 +16,10 @@ if (!token) {
 }
 
 const commands = [
+  new SlashCommandBuilder().setName('login').setDescription('Finish Nexa sign-in as this Discord user'),
   new SlashCommandBuilder().setName('stats').setDescription('Show the linked Nexa profile stats'),
   new SlashCommandBuilder().setName('shop').setDescription('Show Nexa shop items and the next 01:00 UK refresh'),
-  new SlashCommandBuilder().setName('link').setDescription('Link this Discord user to the local Nexa admin profile'),
+  new SlashCommandBuilder().setName('link').setDescription('Show the Discord user currently signed in to Nexa'),
 ].map((command) => command.toJSON());
 
 async function api(pathname) {
@@ -51,7 +52,7 @@ client.once('ready', async () => {
     : Routes.applicationCommands(appId);
   try {
     await rest.put(route, { body: commands });
-    console.log(`[nexa-bot] Registered /stats /shop /link (${guildId ? `guild ${guildId}` : 'global'}).`);
+    console.log(`[nexa-bot] Registered /login /stats /shop /link (${guildId ? `guild ${guildId}` : 'global'}).`);
     if (!guildId) console.log('[nexa-bot] Global commands can take up to an hour to show up.');
   } catch (error) {
     console.error('[nexa-bot] Command registration failed:', error.message);
@@ -61,6 +62,30 @@ client.once('ready', async () => {
 client.on('interactionCreate', async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
   try {
+    if (interaction.commandName === 'login') {
+      const response = await fetch(`${apiBase}/auth/discord/bot`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: interaction.user.id,
+          username: interaction.user.username,
+          avatar: interaction.user.displayAvatarURL({ size: 128, extension: 'png' }),
+        }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        await interaction.reply({
+          content: data.error || 'Click Continue with Discord in Nexa first, then run /login again.',
+          ephemeral: true,
+        });
+        return;
+      }
+      await interaction.reply({
+        content: `Nexa has **${interaction.user.username}**. Return to the browser and press Continue on Ready to Play.`,
+        ephemeral: true,
+      });
+      return;
+    }
     if (interaction.commandName === 'stats') {
       const stats = await api('/stats');
       const me = await api('/me');

@@ -1,8 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { avatarDataUrl } from './art.js';
-
 function dataDirectory() {
   if (process.env.NEXA_DATA_DIR) return path.resolve(process.env.NEXA_DATA_DIR);
   try {
@@ -22,28 +20,17 @@ const DEFAULT_SETTINGS = {
   potatoGraphics: false,
 };
 
-const CHANI = {
-  id: 'chani',
-  name: 'Chani',
-  type: 'skin',
-  rarity: 'epic',
-  vbucks: 1500,
-  image: '/shop-chani.png',
-};
-
-function seedItems() {
-  return [{ ...CHANI }];
-}
+const PLACEHOLDER_ID = '100000000000000001';
 
 function seed() {
   return {
     user: {
-      id: '100000000000000001',
-      discordId: '100000000000000001',
-      discordName: 'Avix',
-      displayName: 'Avix',
-      role: 'admin',
-      avatar: avatarDataUrl(),
+      id: '',
+      discordId: '',
+      discordName: '',
+      displayName: '',
+      role: 'player',
+      avatar: '',
       lastNameChangeAt: null,
       equipped: {
         skin: null,
@@ -61,7 +48,7 @@ function seed() {
     settings: { ...DEFAULT_SETTINGS },
     session: null,
     news: [],
-    items: seedItems(),
+    items: [],
     builds: [],
     selectedBuildId: null,
     rivals: [
@@ -88,7 +75,18 @@ function load() {
     if (!parsed?.user || !Array.isArray(parsed.items)) throw new Error('bad db');
     parsed.settings = { ...DEFAULT_SETTINGS, ...(parsed.settings || {}) };
     if (!parsed.settings.theme) parsed.settings.theme = 'default';
-    if (!Array.isArray(parsed.items)) parsed.items = seedItems();
+    if (parsed.user.discordId === PLACEHOLDER_ID) {
+      parsed.session = null;
+      parsed.user.id = '';
+      parsed.user.discordId = '';
+      parsed.user.discordName = '';
+      parsed.user.displayName = '';
+      parsed.user.avatar = '';
+      parsed.user.role = 'player';
+    }
+    parsed.items = (Array.isArray(parsed.items) ? parsed.items : []).filter(
+      (item) => item && item.id !== 'chani' && item.image !== '/shop-chani.png',
+    );
     return parsed;
   } catch (error) {
     console.error('[nexa-api] Could not read data file, reseeding.', error.message);

@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { api } from '../api';
 import { playClick } from '../audio';
 import { IconPencil } from '../components/Icons';
@@ -181,7 +181,7 @@ function Appearance() {
             key={theme.id}
             type="button"
             className={settings.theme === theme.id ? 'theme-card on' : 'theme-card'}
-            style={{ background: theme.gradient }}
+            style={{ background: theme.color }}
             aria-label={theme.name}
             onClick={() => setTheme(theme.id)}
           >
@@ -246,30 +246,51 @@ function Toggle({ label, detail, on, onClick }: { label: string; detail: string;
 }
 
 function Launcher() {
+  const { toast } = useSession();
   const [checking, setChecking] = useState(false);
   const [message, setMessage] = useState('');
+  const [version, setVersion] = useState('0.1.1');
+
+  useEffect(() => {
+    api<{ version: string }>('/launcher/version')
+      .then((data) => setVersion(data.version))
+      .catch(() => undefined);
+  }, []);
 
   async function check() {
     playClick();
     setChecking(true);
     setMessage('');
-    await new Promise((resolve) => window.setTimeout(resolve, 700));
-    setChecking(false);
-    setMessage("You're on the latest version.");
+    try {
+      const status = await api<{ updateAvailable: boolean; latest: string; message: string }>('/launcher/update');
+      if (!status.updateAvailable) {
+        setMessage("You're on the latest version.");
+        return;
+      }
+      setMessage(`Updating to ${status.latest}…`);
+      const applied = await api<{ message: string }>('/launcher/update/apply', { method: 'POST' });
+      setMessage(applied.message);
+    } catch (err) {
+      const text = err instanceof Error ? err.message : 'Could not check for updates.';
+      setMessage(text);
+      toast(text);
+    } finally {
+      setChecking(false);
+    }
   }
 
   return (
     <div className="stack">
       <div>
         <h2>Launcher</h2>
-        <p className="version-tag">Version 0.1.0</p>
+        <p className="version-tag">Version {version}</p>
       </div>
       <div>
         <h3>What’s new</h3>
         <ul className="notes">
           <li>Desktop shell with home, library, shop, and leaderboards.</li>
-          <li>Local admin sign-in and a display name cooldown.</li>
-          <li>Item shop countdown aimed at 01:00 UK.</li>
+          <li>Discord sign-in and a display name cooldown.</li>
+          <li>Item shop with Featured and Daily rows.</li>
         </ul>
       </div>
       <button type="button" className="btn primary" onClick={check} disabled={checking}>

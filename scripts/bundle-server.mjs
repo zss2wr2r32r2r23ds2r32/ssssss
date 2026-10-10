@@ -30,5 +30,6 @@ await build({
   platform: 'node',
   format: 'cjs',
   outfile: 'electron/server.cjs',
+  external: ['electron'],
   logLevel: 'info',
 });

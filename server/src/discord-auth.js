@@ -55,6 +55,26 @@ function adminIds() {
     .filter(Boolean);
 }
 
+function roleFor(discordId) {
+  const ids = adminIds();
+  if (ids.length === 0) return 'admin';
+  return ids.includes(discordId) ? 'admin' : 'player';
+}
+
+export function submitBotIdentity(profile) {
+  const id = String(profile?.id || '');
+  const username = String(profile?.username || '').trim();
+  const picture = String(profile?.avatarUrl || profile?.avatar || '').trim();
+  if (!/^\d{15,22}$/.test(id) || !username) return { error: 'Discord user is missing.' };
+  const rows = [...pending.entries()].filter(([, row]) => row.status === 'waiting' || row.status === 'needs-bot');
+  if (!rows.length) return { error: 'Click Continue with Discord in Nexa first.' };
+  rows.sort((a, b) => b[1].createdAt - a[1].createdAt);
+  const [, row] = rows[0];
+  row.profile = { id, username, avatarUrl: picture || avatarUrl({ id, avatar: null }) };
+  row.status = 'authorized';
+  return { ok: true };
+}
+
 function avatarUrl(user) {
   if (user.avatar) {
     const ext = user.avatar.startsWith('a_') ? 'gif' : 'png';
@@ -74,9 +94,9 @@ function applyProfile(profile) {
   db.user.id = profile.id;
   db.user.discordId = profile.id;
   db.user.discordName = profile.username;
-  db.user.avatar = profile.avatarUrl;
-  db.user.role = adminIds().includes(profile.id) ? 'admin' : 'player';
-  if (!same) {
+  db.user.role = roleFor(profile.id);
+  db.user.avatar = profile.avatarUrl || avatarUrl({ id: profile.id, avatar: null });
+  if (!same || !db.user.displayName) {
     db.user.displayName = String(profile.username || 'Player').slice(0, 16);
     db.user.lastNameChangeAt = null;
   }
@@ -135,6 +155,57 @@ async function fetchIdentity(accessToken) {
     throw new Error('Discord did not return an identity for this login.');
   }
   return { id: String(data.id), username: String(data.username), avatarUrl: avatarUrl(data) };
+}
+
+function readBotToken() {
+  const fromEnv = process.env.DISCORD_TOKEN?.trim();
+  if (fromEnv) return fromEnv;
+  const candidates = [path.join(process.cwd(), 'bot', '.env'), path.join(process.cwd(), '..', 'bot', '.env')];
+  for (const file of candidates) {
+    try {
+      const line = fs
+        .readFileSync(file, 'utf8')
+        .split(/\r?\n/)
+        .find((entry) => entry.startsWith('DISCORD_TOKEN='));
+      const value = line?.slice('DISCORD_TOKEN='.length).trim().replace(/^['"]|['"]$/g, '');
+      if (value) return value;
+    } catch {
+      /* no bot env in this location */
+    }
+  }
+  return '';
+}
+
+function snowflakeTime(id) {
+  try {
+    return Number((BigInt(id) >> 22n) + 1420070400000n);
+  } catch {
+    return 0;
+  }
+}
+
+async function identityFromGuild(guildId) {
+  const token = readBotToken();
+  if (!token || !guildId) return null;
+  const response = await fetch(
+    `https://discord.com/api/v10/guilds/${guildId}/audit-logs?action_type=28&limit=5`,
+    { headers: { Authorization: `Bot ${token}` } },
+  );
+  if (!response.ok) return null;
+  const data = await response.json().catch(() => ({}));
+  const now = Date.now();
+  const entry = (data.audit_log_entries || []).find((row) => now - snowflakeTime(row.id) < 3 * 60 * 1000);
+  if (!entry?.user_id) return null;
+  const listed = (data.users || []).find((row) => row.id === entry.user_id);
+  if (listed?.id && listed?.username) {
+    return { id: String(listed.id), username: String(listed.username), avatarUrl: avatarUrl(listed) };
+  }
+  const lookup = await fetch(`https://discord.com/api/v10/users/${entry.user_id}`, {
+    headers: { Authorization: `Bot ${token}` },
+  });
+  const body = await lookup.json().catch(() => ({}));
+  if (!lookup.ok || !body?.id || !body?.username) return null;
+  return { id: String(body.id), username: String(body.username), avatarUrl: avatarUrl(body) };
 }
 
 function logoDataUrl() {
@@ -241,6 +312,42 @@ function renderMessage(title, detail) {
 </html>`;
 }
 
+function renderWaitingPage(state) {
+  const safeState = JSON.stringify(state);
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Nexa</title>
+  <style>
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #07080c; color: #f5f7fb; font-family: "Segoe UI", sans-serif; }
+    main { width: min(460px, calc(100% - 48px)); text-align: center; }
+    h1 { font-size: 32px; margin: 0 0 12px; }
+    p { color: #c5cad6; line-height: 1.5; }
+    code { color: #f5f7fb; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Waiting for Discord</h1>
+    <p>The Nexa bot is the test path for this sign-in. In Discord, run <code>/login</code>. This page then shows Ready to Play with your Discord name and avatar.</p>
+  </main>
+  <script>
+    const state = ${safeState};
+    async function poll() {
+      try {
+        const response = await fetch('/callback/status?state=' + encodeURIComponent(state));
+        const data = await response.json();
+        if (data.ready) location.replace('/callback/ready?state=' + encodeURIComponent(state));
+      } catch { /* keep waiting */ }
+    }
+    setInterval(poll, 1000);
+    poll();
+  </script>
+</body>
+</html>`;
+}
+
 function sendHtml(res, status, html) {
   res.writeHead(status, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' });
   res.end(html);
@@ -257,6 +364,26 @@ function readBody(req) {
 
 async function onCallback(req, res) {
   const url = new URL(req.url || '/', DISCORD_REDIRECT_URI);
+  if (req.method === 'GET' && url.pathname === '/callback/status') {
+    const state = url.searchParams.get('state') || '';
+    const row = pending.get(state);
+    const ready = Boolean(row && row.status === 'authorized' && row.profile);
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ ready }));
+    return;
+  }
+
+  if (req.method === 'GET' && url.pathname === '/callback/ready') {
+    const state = url.searchParams.get('state') || '';
+    const row = pending.get(state);
+    if (!row?.profile || row.status !== 'authorized') {
+      sendHtml(res, 400, renderMessage('Sign-in expired', 'Start again from Continue with Discord in Nexa.'));
+      return;
+    }
+    sendHtml(res, 200, renderReadyPage({ username: row.profile.username, avatarUrl: row.profile.avatarUrl, state }));
+    return;
+  }
+
   if (req.method === 'GET' && url.pathname === '/callback') {
     const oauthError = url.searchParams.get('error');
     const state = url.searchParams.get('state') || '';
@@ -275,19 +402,27 @@ async function onCallback(req, res) {
       sendHtml(res, 400, renderMessage('Sign-in expired', 'Start again from Continue with Discord in Nexa.'));
       return;
     }
+    let profile = row.profile || null;
     try {
       const accessToken = await exchangeCode(code, row.verifier);
-      const profile = await fetchIdentity(accessToken);
-      row.profile = profile;
-      row.status = 'authorized';
-      row.verifier = '';
-      sendHtml(res, 200, renderReadyPage({ username: profile.username, avatarUrl: profile.avatarUrl, state }));
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Discord sign-in failed.';
-      row.status = 'error';
-      row.error = message;
-      sendHtml(res, 400, renderMessage('Discord sign-in failed', message));
+      profile = await fetchIdentity(accessToken);
+    } catch {
+      profile = profile || (await identityFromGuild(url.searchParams.get('guild_id') || ''));
     }
+    if (!profile?.id || !profile?.username) {
+      row.status = 'needs-bot';
+      row.verifier = '';
+      sendHtml(res, 200, renderWaitingPage(state));
+      return;
+    }
+    row.profile = {
+      id: profile.id,
+      username: profile.username,
+      avatarUrl: profile.avatarUrl || avatarUrl({ id: profile.id, avatar: null }),
+    };
+    row.status = 'authorized';
+    row.verifier = '';
+    sendHtml(res, 200, renderReadyPage({ username: row.profile.username, avatarUrl: row.profile.avatarUrl, state }));
     return;
   }
 

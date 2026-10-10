@@ -8,7 +8,8 @@ import { getDb, save, DEFAULT_SETTINGS } from './store.js';
 import { cleanDisplayName, cooldownState, formatRemaining } from './profanity.js';
 import { shopRefresh } from './time.js';
 import { findShippingBuild } from './builds.js';
-import { beginDiscordLogin, oauthCallbackReady, pollDiscordLogin, startDiscordCallback, DISCORD_REDIRECT_URI } from './discord-auth.js';
+import { beginDiscordLogin, oauthCallbackReady, pollDiscordLogin, startDiscordCallback, submitBotIdentity, DISCORD_REDIRECT_URI } from './discord-auth.js';
+import { APP_VERSION, applyUpdate, updateStatus } from './update.js';
 
 const THEMES = new Set(['default', 'void', 'ember', 'frost', 'jade', 'bud', 'rose', 'sunset', 'aurora', 'tom', 'noir', 'dark']);
 
@@ -25,6 +26,7 @@ app.use((req, _res, next) => {
 
 const TYPES = new Set(['skin', 'emote', 'pickaxe', 'glider']);
 const RARITIES = new Set(['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythic']);
+const SECTIONS = new Set(['featured', 'daily']);
 const CATALOG = [
   { name: 'Chapter 2 Season 2', version: '12.41' },
   { name: 'Chapter 2 Season 1', version: '11.31' },
@@ -76,21 +78,7 @@ function requireAdmin(req, res, next) {
   next();
 }
 
-const BUNDLED_SKINS = {
-  chani: '/shop-chani.png',
-  default: '/skin-default.png',
-  portrait: '/skin-default.png',
-  'default portrait': '/skin-default.png',
-  'default skin': '/skin-default.png',
-};
-const LOCAL_IMAGES = new Set(['/shop-chani.png', '/skin-default.png']);
-
-function bundledImageForName(name) {
-  return BUNDLED_SKINS[String(name || '').trim().toLowerCase()] || '';
-}
-
 function validImage(image) {
-  if (LOCAL_IMAGES.has(image)) return true;
   if (typeof image !== 'string' || image.length < 12 || image.length > 1_500_000) return false;
   if (image.startsWith('data:image/')) return true;
   try {
@@ -103,6 +91,36 @@ function validImage(image) {
 
 app.get('/health', (_req, res) => {
   res.json({ ok: true, name: 'nexa' });
+});
+
+app.post('/auth/discord/bot', (req, res) => {
+  const result = submitBotIdentity({
+    id: req.body?.id,
+    username: req.body?.username,
+    avatarUrl: req.body?.avatar,
+  });
+  if (result.error) return res.status(409).json({ error: result.error });
+  res.json({ ok: true });
+});
+
+app.get('/launcher/version', (_req, res) => {
+  res.json({ version: APP_VERSION });
+});
+
+app.get('/launcher/update', async (_req, res) => {
+  try {
+    res.json(await updateStatus());
+  } catch (error) {
+    res.status(502).json({ error: error instanceof Error ? error.message : 'Could not check for updates.' });
+  }
+});
+
+app.post('/launcher/update/apply', async (_req, res) => {
+  try {
+    res.json(await applyUpdate());
+  } catch (error) {
+    res.status(502).json({ error: error instanceof Error ? error.message : 'Could not install the update.' });
+  }
 });
 
 app.post('/auth/discord/start', (_req, res) => {
@@ -217,8 +235,8 @@ app.post('/shop/items', requireAuth, requireAdmin, (req, res) => {
   const type = req.body?.type;
   const rarity = req.body?.rarity;
   const vbucks = Number(req.body?.vbucks);
-  let image = typeof req.body?.image === 'string' ? req.body.image.trim() : '';
-  if (!image) image = bundledImageForName(name);
+  const image = typeof req.body?.image === 'string' ? req.body.image.trim() : '';
+  const section = req.body?.section;
   if (name.length < 2 || name.length > 32) {
     return res.status(400).json({ error: 'Item name must be 2–32 characters.' });
   }
@@ -227,8 +245,9 @@ app.post('/shop/items', requireAuth, requireAdmin, (req, res) => {
   if (!Number.isInteger(vbucks) || vbucks < 0 || vbucks > 100000) {
     return res.status(400).json({ error: 'V-Bucks must be a whole number from 0 to 100000.' });
   }
+  if (!SECTIONS.has(section)) return res.status(400).json({ error: 'Pick Featured or Daily.' });
   if (!validImage(image)) {
-    return res.status(400).json({ error: 'Add an image URL or upload a picture.' });
+    return res.status(400).json({ error: 'Import an image for this item.' });
   }
   const db = getDb();
   const item = {
@@ -238,6 +257,7 @@ app.post('/shop/items', requireAuth, requireAdmin, (req, res) => {
     rarity,
     vbucks,
     image,
+    section,
   };
   db.items.push(item);
   save();
@@ -338,8 +358,9 @@ app.post('/builds/launch', requireAuth, (req, res) => {
   const requested = typeof req.body?.id === 'string' ? req.body.id : db.selectedBuildId;
   const build = db.builds.find((entry) => entry.id === requested);
   if (!build) return res.status(400).json({ error: 'No build is selected.' });
-  if (!build.executablePath || !fs.existsSync(build.executablePath)) {
-    return res.status(400).json({ error: 'FortniteShipping.exe is missing for this build.' });
+  const shippingName = path.basename(build.executablePath || '').toLowerCase();
+  if (shippingName !== 'fortniteclient-win64-shipping.exe' || !fs.existsSync(build.executablePath)) {
+    return res.status(400).json({ error: 'FortniteClient-Win64-Shipping.exe is missing for this build.' });
   }
   db.selectedBuildId = build.id;
   save();

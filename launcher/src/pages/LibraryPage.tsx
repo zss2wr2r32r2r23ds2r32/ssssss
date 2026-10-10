@@ -20,6 +20,7 @@ export function LibraryPage() {
   const { toast } = useSession();
   const [builds, setBuilds] = useState<Build[]>([]);
   const [over, setOver] = useState(false);
+  const [cancelled, setCancelled] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function load() {
@@ -28,10 +29,20 @@ export function LibraryPage() {
   }
 
   useEffect(() => {
-    inputRef.current?.setAttribute('webkitdirectory', '');
-    inputRef.current?.setAttribute('directory', '');
+    const input = inputRef.current;
+    input?.setAttribute('webkitdirectory', '');
+    input?.setAttribute('directory', '');
+    const onCancel = () => setCancelled(true);
+    input?.addEventListener('cancel', onCancel);
     load().catch((err: Error) => toast(err.message));
+    return () => input?.removeEventListener('cancel', onCancel);
   }, [toast]);
+
+  function openPicker() {
+    playClick();
+    setCancelled(false);
+    inputRef.current?.click();
+  }
 
   async function importFolder(files: File[]) {
     const folderPath = files.map(folderFromFile).find(Boolean) || '';
@@ -55,7 +66,7 @@ export function LibraryPage() {
       toast(`Starting ${result.name}…`);
       await load();
     } catch (err) {
-      toast(err instanceof Error ? err.message : 'FortniteShipping.exe is missing for this build.');
+      toast(err instanceof Error ? err.message : 'FortniteClient-Win64-Shipping.exe is missing for this build.');
     }
   }
 
@@ -68,37 +79,73 @@ export function LibraryPage() {
   const count = builds.length === 1 ? '1 build installed' : `${builds.length} builds installed`;
 
   return (
-    <div className="page library">
-      <header className="page-head">
-        <div>
-          <h1>Library</h1>
-          <p>{count}</p>
+    <div
+      className={builds.length ? 'page library' : 'page library is-empty'}
+      onDragEnter={(event) => {
+        event.preventDefault();
+        setOver(true);
+      }}
+      onDragOver={(event) => {
+        event.preventDefault();
+        setOver(true);
+      }}
+      onDragLeave={() => setOver(false)}
+      onDrop={(event) => {
+        event.preventDefault();
+        setOver(false);
+        void importFolder(Array.from(event.dataTransfer.files));
+      }}
+    >
+      {cancelled ? (
+        <div className="import-toast" role="status">
+          <span>import cancelled</span>
+          <button type="button" aria-label="Dismiss" onClick={() => setCancelled(false)}>
+            ×
+          </button>
         </div>
-      </header>
+      ) : null}
 
-      <button
-        type="button"
-        className={over ? 'drop-zone over' : 'drop-zone'}
-        onClick={() => {
-          playClick();
-          inputRef.current?.click();
-        }}
-        onDragEnter={(event) => {
-          event.preventDefault();
-          setOver(true);
-        }}
-        onDragOver={(event) => {
-          event.preventDefault();
-          setOver(true);
-        }}
-        onDragLeave={() => setOver(false)}
-        onDrop={(event) => {
-          event.preventDefault();
-          setOver(false);
-          void importFolder(Array.from(event.dataTransfer.files));
-        }}
-      >
-        <span>Drag and drop a build here or click to browse</span>
+      {builds.length ? (
+        <>
+          <header className="page-head">
+            <div>
+              <h1>Library</h1>
+              <p>{count}</p>
+            </div>
+          </header>
+          <div className={over ? 'build-grid over' : 'build-grid'}>
+            {builds.map((build) => (
+              <article key={build.id} className="build-card">
+                {build.splashPath ? (
+                  <img src={assetUrl(`/builds/${build.id}/splash`)} alt="" draggable={false} />
+                ) : (
+                  <div className="build-fallback" />
+                )}
+                <button type="button" className="play-hit" aria-label={`Play ${build.name}`} onClick={() => play(build)}>
+                  <span className="play-icon" aria-hidden="true">
+                    <svg width="54" height="54" viewBox="0 0 54 54">
+                      <circle cx="27" cy="27" r="26" fill="rgba(0,0,0,0.45)" stroke="white" strokeWidth="1.5" />
+                      <path d="M22 17.5v19l16-9.5z" fill="white" />
+                    </svg>
+                  </span>
+                </button>
+                <span className="build-name">{build.name}</span>
+                <button type="button" className="build-remove" onClick={() => remove(build.id)}>
+                  Remove
+                </button>
+              </article>
+            ))}
+          </div>
+        </>
+      ) : (
+        <div className="library-empty">
+          <h1>No builds..yet</h1>
+          <p>Import a local Fortnite folder to add it to your library.</p>
+        </div>
+      )}
+
+      <button type="button" className="library-add" aria-label="Import a build" onClick={openPicker}>
+        +
       </button>
       <input
         ref={inputRef}
@@ -108,35 +155,14 @@ export function LibraryPage() {
         onChange={(event) => {
           const files = event.target.files ? Array.from(event.target.files) : [];
           event.target.value = '';
+          if (!files.length) {
+            setCancelled(true);
+            return;
+          }
+          setCancelled(false);
           void importFolder(files);
         }}
       />
-
-      {builds.length ? (
-        <div className="build-grid">
-          {builds.map((build) => (
-            <article key={build.id} className="build-card">
-              {build.splashPath ? (
-                <img src={assetUrl(`/builds/${build.id}/splash`)} alt="" draggable={false} />
-              ) : (
-                <div className="build-fallback" />
-              )}
-              <button type="button" className="play-hit" aria-label={`Play ${build.name}`} onClick={() => play(build)}>
-                <span className="play-icon" aria-hidden="true">
-                  <svg width="54" height="54" viewBox="0 0 54 54">
-                    <circle cx="27" cy="27" r="26" fill="rgba(0,0,0,0.45)" stroke="white" strokeWidth="1.5" />
-                    <path d="M22 17.5v19l16-9.5z" fill="white" />
-                  </svg>
-                </span>
-              </button>
-              <span className="build-name">{build.name}</span>
-              <button type="button" className="build-remove" onClick={() => remove(build.id)}>
-                Remove
-              </button>
-            </article>
-          ))}
-        </div>
-      ) : null}
     </div>
   );
 }

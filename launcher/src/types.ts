@@ -10,6 +10,7 @@ export interface ShopItem {
   rarity: Rarity;
   vbucks: number;
   image: string;
+  section?: 'featured' | 'daily';
 }
 
 export interface User {
