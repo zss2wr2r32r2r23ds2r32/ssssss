@@ -1,0 +1,9 @@
+config-version: 2
+message-mode: chat
+
+# ShardedCore links to Realized Duels for /duel and /queue.
+# Install the Duels plugin — ShardedCore no longer overrides those commands.
+integration:
+  plugin: Duels
+  duel-command: duel
+  queue-command: queue

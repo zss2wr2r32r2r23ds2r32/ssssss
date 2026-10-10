@@ -1,0 +1,48 @@
+config-version: 5
+message-mode: chat
+cooldown-hours: 168
+actionbar-prefix: '&#FFD700&lWEEKLY &8▷ &r'
+spin-ticks: 20
+spin-interval-ticks: 4
+spin-format: '&6Weekly spin... &f%reward% %rarity_color%[%rarity% &8(%percent%%)&r%rarity_color%&8]'
+
+sounds:
+  spin: UI_BUTTON_CLICK
+  win: ENTITY_PLAYER_LEVELUP
+
+rewards:
+  tokens_small:
+    display: '500 Tokens'
+    rarity-label: 'Common'
+    rarity-color: '&7'
+    weight: 35
+    commands:
+      - 'tokens give %player% 500'
+  tokens_medium:
+    display: '1500 Tokens'
+    rarity-label: 'Uncommon'
+    rarity-color: '&a'
+    weight: 25
+    commands:
+      - 'tokens give %player% 1500'
+  tokens_large:
+    display: '3000 Tokens'
+    rarity-label: 'Rare'
+    rarity-color: '&b'
+    weight: 20
+    commands:
+      - 'tokens give %player% 3000'
+  shard_key:
+    display: '3 Shard Keys'
+    rarity-label: 'Epic'
+    rarity-color: '&d'
+    weight: 10
+    commands:
+      - 'crate key give %player% shard 3'
+  craft_week:
+    display: '/craft for 7 days'
+    rarity-label: 'Legendary'
+    rarity-color: '&6'
+    weight: 10
+    commands:
+      - 'lp user %player% permission settemp sharded.craft.use true 7d'

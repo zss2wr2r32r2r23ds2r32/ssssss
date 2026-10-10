@@ -1,0 +1,162 @@
+config-version: 4
+message-mode: chat
+fetch-limit: 5000
+
+teams:
+  token-weight: 1
+  kill-weight: 100
+  playtime-hour-weight: 50
+
+stats:
+  no-team: 'None'
+
+gui:
+  hub-title: '&8Leaderboards'
+  board-title:
+    tokens: '&8Token Leaderboard'
+    kills: '&8Kills Leaderboard'
+    deaths: '&8Deaths Leaderboard'
+    killstreaks: '&8Killstreak Leaderboard'
+    playtime: '&8Playtime Leaderboard'
+    teams: '&8Team Leaderboard'
+    duels: '&8Duels Wins Leaderboard'
+  stats-title: '&8Stats'
+  entries-per-page: 10
+  unranked: 'Unranked'
+  previous-name: '&ePrevious Page'
+  next-name: '&eNext Page'
+  back-name: '&cBack'
+  close-name: '&cClose'
+  navigation:
+    use-global: true
+  colors:
+    tokens: '&x&5&C&9&4&F&C'
+    kills: '&x&F&F&0&0&0&0'
+    deaths: '&x&0&0&B&7&F&F'
+    killstreaks: '&x&F&F&0&0&5&D'
+    playtime: '&x&F&F&E&E&0&0'
+    teams: '&x&F&F&0&0&6&7'
+    duels: '&x&F&F&8&8&0&0'
+    stats: '&x&F&F&0&0&6&7'
+    team: '&x&F&F&0&0&6&7'
+  labels:
+    tokens: 'Tokens'
+    kills: 'Kills'
+    deaths: 'Deaths'
+    killstreaks: 'Best Streak'
+    playtime: 'Playtime'
+    teams: 'Score'
+    duels: 'Wins'
+    team: 'Team'
+  hub-items:
+    tokens:
+      name: '&x&5&C&9&4&F&C&lTokens'
+      lore:
+        - '&8Leaderboard'
+        - ''
+        - '&x&5&C&9&4&F&CInformation:'
+        - '&x&5&C&9&4&F&C| &fView the richest players'
+        - '&x&5&C&9&4&F&C| &fon the server.'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+    kills:
+      name: '&x&F&F&0&0&0&0&lKills'
+      lore:
+        - '&8Leaderboard'
+        - ''
+        - '&x&F&F&0&0&0&0Information:'
+        - '&x&F&F&0&0&0&0| &fView the players with'
+        - '&x&F&F&0&0&0&0| &fthe most kills.'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+    deaths:
+      name: '&x&0&0&B&7&F&F&lDeaths'
+      lore:
+        - '&8Leaderboard'
+        - ''
+        - '&x&0&0&B&7&F&FInformation:'
+        - '&x&0&0&B&7&F&F| &fView the players with'
+        - '&x&0&0&B&7&F&F| &fthe most deaths.'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+    killstreaks:
+      name: '&x&F&F&0&0&5&D&lKillstreaks'
+      lore:
+        - '&8Leaderboard'
+        - ''
+        - '&x&F&F&0&0&5&DInformation:'
+        - '&x&F&F&0&0&5&D| &fView the highest killstreaks.'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+    playtime:
+      name: '&x&F&F&E&E&0&0&lPlaytime'
+      lore:
+        - '&8Leaderboard'
+        - ''
+        - '&x&F&F&E&E&0&0Information:'
+        - '&x&F&F&E&E&0&0| &fView the longest playtimes.'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+    teams:
+      name: '&x&F&F&0&0&6&7&lTeams'
+      lore:
+        - '&8Leaderboard'
+        - ''
+        - '&x&F&F&0&0&6&7Information:'
+        - '&x&F&F&0&0&6&7| &fView the top teams.'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+    duels:
+      name: '&x&F&F&8&8&0&0&lDuels Wins'
+      lore:
+        - '&8Leaderboard'
+        - ''
+        - '&x&F&F&8&8&0&0Information:'
+        - '&x&F&F&8&8&0&0| &fView the top duel wins.'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+  stats-head-name: '&x&F&F&0&0&6&7%name%'
+  stats-head-lore:
+    - '&8Statistics'
+    - ''
+    - '&x&F&F&0&0&6&7Information:'
+    - '&x&F&F&0&0&6&7| &fRank: %prefix%'
+  hologram:
+    token-line: '&a#%rank% &f%name% &7— &f%value% Tokens'
+    killstreak-line: '&c#%rank% &f%name% &7— &f%value% Streak'
+  stats-items:
+    kills:
+      name: '&x&F&F&0&0&0&0&lKills'
+      lore:
+        - '&8Statistics'
+        - ''
+        - '&x&F&F&0&0&0&0Information:'
+        - '&x&F&F&0&0&0&0| &fKills: &x&F&F&0&0&0&0%value%'
+    deaths:
+      name: '&x&0&0&B&7&F&F&lDeaths'
+      lore:
+        - '&8Statistics'
+        - ''
+        - '&x&0&0&B&7&F&FInformation:'
+        - '&x&0&0&B&7&F&F| &fDeaths: &x&0&0&B&7&F&F%value%'
+    killstreaks:
+      name: '&x&F&F&0&0&5&D&lKillstreaks'
+      lore:
+        - '&8Statistics'
+        - ''
+        - '&x&F&F&0&0&5&DInformation:'
+        - '&x&F&F&0&0&5&D| &fBest Streak: &x&F&F&0&0&5&D%value%'
+    tokens:
+      name: '&x&5&C&9&4&F&C&lTokens'
+      lore:
+        - '&8Statistics'
+        - ''
+        - '&x&5&C&9&4&F&CInformation:'
+        - '&x&5&C&9&4&F&C| &fTokens: &x&5&C&9&4&F&C%value%'
+    playtime:
+      name: '&x&F&F&E&E&0&0&lPlaytime'
+      lore:
+        - '&8Statistics'
+        - ''
+        - '&x&F&F&E&E&0&0Information:'
+        - '&x&F&F&E&E&0&0| &fPlaytime: &x&F&F&E&E&0&0%value%'

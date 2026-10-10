@@ -1,0 +1,328 @@
+config-version: 5
+menu_title: '⛃ Token Shop'
+open_command:
+  - tokenshop
+register_command: true
+size: 36
+
+open_permission: tokenshop.use
+no_permission_close_menu: true
+
+open_commands:
+  - '[sound] BLOCK_CHEST_OPEN'
+  - '[sound] UI_BUTTON_CLICK'
+
+items:
+
+  glass_0:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 0
+    display_name: ' '
+
+  glass_1:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 1
+    display_name: ' '
+
+  glass_2:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 2
+    display_name: ' '
+
+  glass_3:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 3
+    display_name: ' '
+
+  glass_4:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 4
+    display_name: ' '
+
+  glass_5:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 5
+    display_name: ' '
+
+  glass_6:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 6
+    display_name: ' '
+
+  glass_7:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 7
+    display_name: ' '
+
+  glass_8:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 8
+    display_name: ' '
+
+  glass_9:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 9
+    display_name: ' '
+
+  glass_17:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 17
+    display_name: ' '
+
+  glass_18:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 18
+    display_name: ' '
+
+  glass_19:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 19
+    display_name: ' '
+
+  glass_20:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 20
+    display_name: ' '
+
+  glass_21:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 21
+    display_name: ' '
+
+  glass_22:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 22
+    display_name: ' '
+
+  glass_23:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 23
+    display_name: ' '
+
+  glass_24:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 24
+    display_name: ' '
+
+  glass_25:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 25
+    display_name: ' '
+
+  glass_26:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 26
+    display_name: ' '
+
+  glass_27:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 27
+    display_name: ' '
+
+  glass_28:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 28
+    display_name: ' '
+
+  glass_29:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 29
+    display_name: ' '
+
+  glass_30:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 30
+    display_name: ' '
+
+  glass_31:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 31
+    display_name: ' '
+
+  glass_32:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 32
+    display_name: ' '
+
+  glass_33:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 33
+    display_name: ' '
+
+  glass_34:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 34
+    display_name: ' '
+
+  glass_35:
+    material: BLACK_STAINED_GLASS_PANE
+    slot: 35
+    display_name: ' '
+
+  emotes_category:
+    material: MUSIC_DISC_PIGSTEP
+    slot: 10
+    display_name: '&x&F&C&F&F&0&0&lEMOTES &8[&x&F&F&0&0&0&0SOON&8]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&C&F&F&0&0Information:'
+      - '&x&F&C&F&F&0&0| &fBuy Emotes'
+      - '&x&F&C&F&F&0&0| &fShow off your amazing moves!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+    click_commands:
+      - '[message] &cEmotes are coming soon!'
+      - '[sound] ENTITY_VILLAGER_NO'
+
+  glows_category:
+    material: NETHERITE_CHESTPLATE
+    slot: 11
+    display_name: '&x&0&0&6&E&F&F&lGLOWS'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&0&0&6&E&F&FInformation:'
+      - '&x&0&0&6&E&F&F| &fBuy Glows'
+      - '&x&0&0&6&E&F&F| &fStand out from everyone else!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+    click_commands:
+      - '[openguimenu] glow'
+      - '[sound] UI_BUTTON_CLICK'
+
+  keys_category:
+    material: TRIPWIRE_HOOK
+    slot: 12
+    display_name: '&x&A&9&F&F&0&0&lKEYS'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&A&9&F&F&0&0Information:'
+      - '&x&A&9&F&F&0&0| &fBuy crate keys'
+      - '&x&A&9&F&F&0&0| &fUnlock unique rewards!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+    click_commands:
+      - '[openguimenu] keys'
+      - '[sound] UI_BUTTON_CLICK'
+
+  cosmetics_category:
+    material: PINK_HARNESS
+    slot: 13
+    display_name: '&x&F&F&0&0&7&2&lCOSMETICS'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&0&7&2Information:'
+      - '&x&F&F&0&0&7&2| &fBuy Cosmetics'
+      - '&x&F&F&0&0&7&2| &fEnhance your appearance!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+    click_commands:
+      - '[openguimenu] cosmetics'
+      - '[sound] UI_BUTTON_CLICK'
+
+  chatcolors_category:
+    material: RED_DYE
+    slot: 14
+    display_name: '&x&F&F&0&0&0&0&lCHAT COLOURS'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&0&0&0Information:'
+      - '&x&F&F&0&0&0&0| &fBuy Chat Colours'
+      - '&x&F&F&0&0&0&0| &fCustomize your chat!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+    click_commands:
+      - '[openguimenu] chatcolors'
+      - '[sound] UI_BUTTON_CLICK'
+
+  namecolors_category:
+    material: NAME_TAG
+    slot: 15
+    display_name: '&x&0&0&E&0&F&F&lNAME COLOURS'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&0&0&E&0&F&FInformation:'
+      - '&x&0&0&E&0&E&F&F| &fBuy Name Gradients'
+      - '&x&0&0&E&0&F&F| &fCustomize your TAB name!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+    click_commands:
+      - '[openguimenu] gradients'
+      - '[sound] UI_BUTTON_CLICK'
+
+  tags_category:
+    material: PAPER
+    slot: 16
+    display_name: '&x&F&C&F&F&0&0&lTAGS'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&C&F&F&0&0Information:'
+      - '&x&F&C&F&F&0&0| &fBuy Player Tags'
+      - '&x&F&C&F&F&0&0| &fCustomize your appearance!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+    click_commands:
+      - '[openguimenu] tags'
+      - '[sound] UI_BUTTON_CLICK'
+
+  backpack_category:
+    material: CHEST
+    slot: 21
+    display_name: '&x&5&C&9&4&F&C&lBACKPACK'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&5&C&9&4&F&CInformation:'
+      - '&x&5&C&9&4&F&C| &fBuy extra &f/backpack'
+      - '&x&5&C&9&4&F&C| &fstorage slots'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+    click_commands:
+      - '[openguimenu] backpack'
+      - '[sound] UI_BUTTON_CLICK'
+
+  your_balance:
+    material: '%player_head%'
+    slot: 22
+    display_name: '&x&5&C&9&4&F&C&lYOUR TOKENS'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&5&C&9&4&F&CInformation:'
+      - '&x&5&C&9&4&F&C| &fYour current token balance'
+      - '&x&5&C&9&4&F&C| &fcan be spent in this shop!'
+      - ''
+      - '&x&5&C&9&4&F&C● &fTokens: &x&5&C&9&4&F&C%tokens_formatted%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&lSTORE'
+    click_commands:
+      - '[sound] UI_BUTTON_CLICK'
+
+  abilities_category:
+    material: NETHER_STAR
+    slot: 23
+    display_name: '&x&F&F&6&7&0&0&lABILITIES'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&6&7&0&0Information:'
+      - '&x&F&F&6&7&0&0| &fBuy temporary perks'
+      - '&x&F&F&6&7&0&0| &fFly, craft, smelt & more!'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+    click_commands:
+      - '[openguimenu] abilities'
+      - '[sound] UI_BUTTON_CLICK'
+
+  close_menu:
+    nav-override: true
+    slot: 31
+    click_commands:
+      - '[sound] UI_BUTTON_CLICK'
+      - '[close]'

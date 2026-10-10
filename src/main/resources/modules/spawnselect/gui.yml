@@ -1,0 +1,42 @@
+config-version: 1
+menu_title: 'Spawn Selector'
+size: 27
+
+items:
+
+  vanilla:
+    material: GRASS_BLOCK
+    slot: 12
+    display_name: '&x&9&F&F&F&0&0&lVANILLA &x&9&F&F&F&0&0Spawn'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&9&F&F&F&0&0Information:'
+      - '&x&9&F&F&F&0&0| &fSpawn Randomly'
+      - '&x&9&F&F&F&0&0| &fIn the world'
+      - ''
+      - '&x&9&F&F&F&0&0| &fSelect this spawn'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Select'
+    click_commands:
+      - '[close]'
+      - '[spawn_select_vanilla]'
+
+  main:
+    material: SPYGLASS
+    slot: 14
+    display_name: '&x&F&F&0&0&5&3&lMAIN &x&F&F&0&0&5&3Spawn'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&0&5&3Information:'
+      - '&x&F&F&0&0&5&3| &fWant to play Diamond SMP'
+      - '&x&F&F&0&0&5&3| &fIn a less vanilla way'
+      - '&x&F&F&0&0&5&3| &fAnd Get essentials?'
+      - ''
+      - '&x&F&F&0&0&5&3| &fSelect this spawn'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Select'
+    click_commands:
+      - '[close]'
+      - '[spawn_select_main]'
