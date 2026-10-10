@@ -1,9 +1,21 @@
 import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
 
-export function Modal({ title, onClose, children }: { title: string; onClose: () => void; children: ReactNode }) {
+export function Modal({
+  title,
+  onClose,
+  children,
+  blur = false,
+  plain = false,
+}: {
+  title: string;
+  onClose: () => void;
+  children: ReactNode;
+  blur?: boolean;
+  plain?: boolean;
+}) {
   return (
-    <div className="modal-back" onMouseDown={onClose} role="presentation">
+    <div className={blur ? 'modal-back modal-blur' : 'modal-back'} onMouseDown={onClose} role="presentation">
       <motion.div
         className="modal"
         role="dialog"
@@ -16,9 +28,11 @@ export function Modal({ title, onClose, children }: { title: string; onClose: ()
       >
         <header className="modal-head">
           <h2>{title}</h2>
-          <button type="button" className="icon-x" onClick={onClose} aria-label="Close">
-            ×
-          </button>
+          {plain ? null : (
+            <button type="button" className="icon-x" onClick={onClose} aria-label="Close">
+              ×
+            </button>
+          )}
         </header>
         {children}
       </motion.div>

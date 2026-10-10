@@ -1,10 +1,10 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { api, clearToken, getToken, setToken } from './api';
-import { applyAccent } from './accent';
+import { applyTheme } from './themes';
 import type { Settings, User } from './types';
 
 const defaultSettings: Settings = {
-  accent: '#4c8dff',
+  theme: 'default',
   mobileBuilds: false,
   resetOnRelease: false,
   potatoGraphics: false,
@@ -41,7 +41,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     const [me, nextSettings] = await Promise.all([api<User>('/me'), api<Settings>('/settings')]);
     setUser(me);
     setSettings(nextSettings);
-    applyAccent(nextSettings.accent);
+    applyTheme(nextSettings.theme);
   }, []);
 
   useEffect(() => {
@@ -59,9 +59,26 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   }, [refresh]);
 
   const login = useCallback(async () => {
-    const result = await api<{ token: string; user: User }>('/auth/dev-login', { method: 'POST', body: {} });
-    setToken(result.token);
-    await refresh();
+    const start = await api<{ url: string; state: string }>('/auth/discord/start', { method: 'POST', body: {} });
+    if (window.nexa?.openExternal) await window.nexa.openExternal(start.url);
+    else {
+      const opened = window.open(start.url, '_blank', 'noopener');
+      if (!opened) throw new Error('Allow pop-ups so Discord can open in the browser.');
+    }
+    const deadline = Date.now() + 5 * 60 * 1000;
+    while (Date.now() < deadline) {
+      await new Promise((resolve) => window.setTimeout(resolve, 800));
+      const pending = await api<{ status: string; token?: string; error?: string }>(
+        `/auth/discord/pending?state=${encodeURIComponent(start.state)}`,
+      );
+      if (pending.status === 'error') throw new Error(pending.error || 'Discord sign-in failed.');
+      if (pending.status === 'ready' && pending.token) {
+        setToken(pending.token);
+        await refresh();
+        return;
+      }
+    }
+    throw new Error('Discord sign-in timed out. Finish it in the browser, then try again.');
   }, [refresh]);
 
   const logout = useCallback(async () => {
@@ -78,10 +95,10 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     async (patch: Partial<Settings>) => {
       const next = { ...settings, ...patch };
       setSettings(next);
-      if (next.accent) applyAccent(next.accent);
+      if (next.theme) applyTheme(next.theme);
       const saved = await api<Settings>('/settings', { method: 'PUT', body: next });
       setSettings(saved);
-      applyAccent(saved.accent);
+      applyTheme(saved.theme);
     },
     [settings],
   );

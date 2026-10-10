@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { api } from '../api';
 import { playClick } from '../audio';
 import { Modal } from '../components/Modal';
-import { VBuck } from '../components/Icons';
 import { formatNum } from '../format';
 import { useSession } from '../session';
 import type { Build, NewsItem, Stats } from '../types';
@@ -15,6 +14,7 @@ export function HomePage() {
   const [adding, setAdding] = useState(false);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
+  const [image, setImage] = useState('');
   const [newsError, setNewsError] = useState('');
 
   async function load() {
@@ -48,9 +48,10 @@ export function HomePage() {
     playClick();
     setNewsError('');
     try {
-      await api('/news', { method: 'POST', body: { title, body } });
+      await api('/news', { method: 'POST', body: { title, body, image } });
       setTitle('');
       setBody('');
+      setImage('');
       setAdding(false);
       await load();
       toast('News posted');
@@ -72,7 +73,7 @@ export function HomePage() {
       </section>
 
       <section className="home-grid">
-        <article className="card">
+        <article className="card stat-card">
           <header className="card-head">
             <h2>Statistics</h2>
           </header>
@@ -80,18 +81,7 @@ export function HomePage() {
             <Stat label="Eliminations" value={stats ? formatNum(stats.elims) : '—'} />
             <Stat label="Victory Royals" value={stats ? formatNum(stats.wins) : '—'} />
             <Stat label="Matches Played" value={stats ? formatNum(stats.matches) : '—'} />
-            <Stat
-              label="V-Bucks"
-              value={
-                stats ? (
-                  <span className="vbucks-value">
-                    {formatNum(stats.vbucks)} <VBuck size={18} />
-                  </span>
-                ) : (
-                  '—'
-                )
-              }
-            />
+            <Stat label="V-Bucks" value={stats ? formatNum(stats.vbucks) : '—'} />
           </div>
         </article>
 
@@ -123,6 +113,7 @@ export function HomePage() {
                   <div>
                     <strong>{item.title}</strong>
                     <p>{item.body}</p>
+                    {item.image ? <img className="news-image" src={item.image} alt="" draggable={false} /> : null}
                   </div>
                   <time dateTime={item.createdAt}>
                     {new Date(item.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
@@ -151,6 +142,10 @@ export function HomePage() {
             <label>
               Body
               <textarea value={body} onChange={(event) => setBody(event.target.value)} maxLength={600} required />
+            </label>
+            <label>
+              Image URL
+              <input value={image} onChange={(event) => setImage(event.target.value)} placeholder="Optional" />
             </label>
             {newsError ? <p className="form-error">{newsError}</p> : null}
             <button type="submit" className="btn primary">

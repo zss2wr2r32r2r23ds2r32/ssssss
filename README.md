@@ -16,27 +16,38 @@ npm run dev
 | Launcher | http://localhost:5173 |
 | API | http://127.0.0.1:4177 |
 
-`npm run dev` starts the API and the launcher together. Sign in with **Continue with Discord** — that logs in the local admin immediately (no OAuth yet).
+`npm run dev` starts the API and the launcher together. **Continue with Discord** opens the system browser for Discord OAuth. The launcher window signs in after you press Continue on the Ready to Play page.
 
-The admin profile is **Avix** (`100000000000000001`). Profile, stats, shop, news, builds, leaderboard, and settings live in `server/data/db.json` (gitignored). Delete that file to reseed.
+Profile, stats, shop, news, builds, leaderboard, and settings live in `server/data/db.json` (gitignored). Delete that file to reseed.
 
-## Discord bot
+## Discord bot and OAuth
 
-The bot is optional. If `DISCORD_TOKEN` is missing it logs a clear message and exits without taking the launcher down.
+Nexa signs in with Discord application `1558290151124369440`. Create or open that application in the [Discord Developer Portal](https://discord.com/developers/applications).
+
+Add this redirect URI and no other:
+
+```
+http://127.0.0.1:4390/callback
+```
+
+That same address is the Ready to Play page for `npm run dev` and for `Nexa.exe`. The launcher uses PKCE. The client id is public. Do not put a client secret in the repo or in the exe.
+
+| What | Where |
+| --- | --- |
+| Bot token | `bot/.env` as `DISCORD_TOKEN` |
+| Application id for slash commands | `bot/.env` as `DISCORD_CLIENT_ID` |
+| Client secret, only if Discord rejects the PKCE exchange | environment variable `DISCORD_CLIENT_SECRET`, or `server/.env` (see `server/.env.example`) |
+| Admin Discord user ids, comma-separated | `ADMIN_DISCORD_IDS` in `server/.env` |
+
+Shop add/remove and news posts stay limited to those admin ids. Copy `bot/.env.example` to `bot/.env` and put the bot token there. From the repo root:
 
 ```bash
-cp bot/.env.example bot/.env
-# fill in DISCORD_TOKEN and DISCORD_CLIENT_ID
 npm run bot
 ```
 
+The bot lives in `bot/`. There is no separate bot executable. If `DISCORD_TOKEN` is missing, the bot logs that and exits. The launcher keeps running.
+
 `LAUNCHER_API_URL` defaults to `http://127.0.0.1:4177`. The bot only calls GET endpoints.
-
-Invite the app with the `bot` and `applications.commands` scopes (no extra permissions):
-
-```
-https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&scope=bot%20applications.commands&permissions=0
-```
 
 **Where commands are registered**
 
@@ -47,7 +58,7 @@ https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&scope=bot%20applic
 | --- | --- |
 | `/stats` | Eliminations, wins, matches, and V-Bucks for the local profile |
 | `/shop` | Time until 01:00 Europe/London, plus a few item names and prices |
-| `/link` | Acknowledges the local admin profile as linked |
+| `/link` | Acknowledges the signed-in profile as linked |
 
 ## Scripts
 
@@ -64,7 +75,7 @@ https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&scope=bot%20applic
 
 `npm run pack:win` produces `release/Nexa.exe`. That file is not committed. The window title is Nexa and it uses the Nexa logo. The packaged app loads the API inside the Electron process before the window opens, then the UI calls that local server. Continue with Discord does not need a separate `npm run dev`. In the browser, the title-bar buttons do nothing; in the Electron window they minimize, maximize, and close.
 
-The home greeting uses the Discord username. The pencil in Settings changes the in-game name only.
+The home greeting uses the Discord username. The pencil opens a display-name dialog. Library cards come from a folder that already contains `FortniteShipping.exe`. Nexa does not download game files.
 
 ## Layout
 

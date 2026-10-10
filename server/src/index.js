@@ -7,7 +7,10 @@ import path from 'node:path';
 import { getDb, save, DEFAULT_SETTINGS } from './store.js';
 import { cleanDisplayName, cooldownState, formatRemaining } from './profanity.js';
 import { shopRefresh } from './time.js';
-import { inspectFolder } from './builds.js';
+import { findShippingBuild } from './builds.js';
+import { beginDiscordLogin, oauthCallbackReady, pollDiscordLogin, startDiscordCallback, DISCORD_REDIRECT_URI } from './discord-auth.js';
+
+const THEMES = new Set(['default', 'void', 'ember', 'frost', 'jade', 'bud', 'rose', 'sunset', 'aurora', 'tom', 'noir', 'dark']);
 
 const PORT = Number(process.env.PORT || 4177);
 const app = express();
@@ -102,12 +105,17 @@ app.get('/health', (_req, res) => {
   res.json({ ok: true, name: 'nexa' });
 });
 
-app.post('/auth/dev-login', (_req, res) => {
-  const db = getDb();
-  const token = crypto.randomBytes(24).toString('hex');
-  db.session = { token, userId: db.user.id };
-  save();
-  res.json({ token, user: presentUser(db) });
+app.post('/auth/discord/start', (_req, res) => {
+  if (!oauthCallbackReady()) {
+    return res.status(503).json({
+      error: `Discord sign-in needs ${DISCORD_REDIRECT_URI} to be open. Restart Nexa and try again.`,
+    });
+  }
+  res.json(beginDiscordLogin());
+});
+
+app.get('/auth/discord/pending', (req, res) => {
+  res.json(pollDiscordLogin(req.query.state));
 });
 
 app.post('/auth/logout', requireAuth, (_req, res) => {
@@ -151,13 +159,11 @@ app.get('/settings', (_req, res) => {
 
 app.put('/settings', requireAuth, (req, res) => {
   const body = req.body || {};
-  const accent = typeof body.accent === 'string' ? body.accent.trim().toLowerCase() : getDb().settings.accent;
-  if (!/^#[0-9a-fA-F]{6}$/.test(accent)) {
-    return res.status(400).json({ error: 'Accent color must be a hex value like #4C8DFF.' });
-  }
+  const requested = typeof body.theme === 'string' ? body.theme.trim().toLowerCase() : '';
   const db = getDb();
+  const theme = THEMES.has(requested) ? requested : THEMES.has(db.settings.theme) ? db.settings.theme : 'default';
   db.settings = {
-    accent,
+    theme,
     mobileBuilds: Boolean(body.mobileBuilds),
     resetOnRelease: Boolean(body.resetOnRelease),
     potatoGraphics: Boolean(body.potatoGraphics),
@@ -183,11 +189,16 @@ app.post('/news', requireAuth, requireAdmin, (req, res) => {
   if (body.length < 1 || body.length > 600) {
     return res.status(400).json({ error: 'Body must be 1–600 characters.' });
   }
+  const image = typeof req.body?.image === 'string' ? req.body.image.trim() : '';
+  if (image && !validImage(image)) {
+    return res.status(400).json({ error: 'That image needs to be a URL or an upload.' });
+  }
   const db = getDb();
   const item = {
     id: crypto.randomUUID(),
     title,
     body,
+    image: image || null,
     createdAt: new Date().toISOString(),
     author: db.user.displayName,
   };
@@ -233,6 +244,18 @@ app.post('/shop/items', requireAuth, requireAdmin, (req, res) => {
   res.status(201).json(item);
 });
 
+app.delete('/shop/items/:id', requireAuth, requireAdmin, (req, res) => {
+  const db = getDb();
+  const before = db.items.length;
+  db.items = db.items.filter((item) => item.id !== req.params.id);
+  if (db.items.length === before) return res.status(404).json({ error: 'Item not found.' });
+  for (const slot of ['skin', 'emote', 'pickaxe', 'glider']) {
+    if (db.user.equipped?.[slot] === req.params.id) db.user.equipped[slot] = null;
+  }
+  save();
+  res.json({ items: db.items });
+});
+
 app.post('/shop/equip', requireAuth, (req, res) => {
   const db = getDb();
   const item = db.items.find((entry) => entry.id === req.body?.itemId);
@@ -256,58 +279,39 @@ app.get('/builds', (_req, res) => {
 });
 
 app.post('/builds/detect', requireAuth, (req, res) => {
-  res.json(inspectFolder(req.body?.folderPath));
+  const found = findShippingBuild(req.body?.folderPath);
+  if (found.error) return res.status(400).json({ error: found.error });
+  res.json({ exists: true, version: found.version, executablePath: found.executablePath });
 });
 
-app.post('/builds', requireAuth, (req, res) => {
-  const source = req.body?.source === 'catalog' ? 'catalog' : 'local';
+app.post('/builds/import', requireAuth, (req, res) => {
+  const found = findShippingBuild(req.body?.folderPath);
+  if (found.error) return res.status(400).json({ error: found.error });
   const db = getDb();
-
-  if (source === 'catalog') {
-    const name = typeof req.body?.name === 'string' ? req.body.name.trim() : '';
-    const known = CATALOG.find((entry) => entry.name === name);
-    if (!known) return res.status(400).json({ error: 'That season is not in the catalog.' });
-    if (db.builds.some((build) => build.source === 'catalog' && build.name === known.name)) {
-      return res.status(409).json({ error: 'That build is already in your library.' });
-    }
-    const build = {
-      id: crypto.randomUUID(),
-      name: known.name,
-      version: known.version,
-      folderPath: null,
-      executablePath: null,
-      source: 'catalog',
-      createdAt: new Date().toISOString(),
-    };
-    db.builds.push(build);
-    if (!db.selectedBuildId) db.selectedBuildId = build.id;
-    save();
-    return res.status(201).json({ build, builds: db.builds, selectedId: db.selectedBuildId });
-  }
-
-  const folderPath = typeof req.body?.folderPath === 'string' ? req.body.folderPath.trim() : '';
-  if (!folderPath) return res.status(400).json({ error: 'Enter a folder path.' });
-  const inspected = inspectFolder(folderPath);
-  const version = (typeof req.body?.version === 'string' ? req.body.version.trim() : '') || inspected.version || '';
-  if (!version) return res.status(400).json({ error: 'Could not detect a version. Enter one.' });
-  if (version.length > 48) return res.status(400).json({ error: 'Version label is too long.' });
-  const name = (typeof req.body?.name === 'string' ? req.body.name.trim() : '') || version;
-  if (name.length < 1 || name.length > 48) {
-    return res.status(400).json({ error: 'Name must be 1–48 characters.' });
+  if (db.builds.some((build) => build.executablePath === found.executablePath)) {
+    return res.status(409).json({ error: 'That build is already in your library.' });
   }
   const build = {
     id: crypto.randomUUID(),
-    name,
-    version,
-    folderPath,
-    executablePath: inspected.executablePath,
+    name: found.name,
+    version: found.version,
+    folderPath: found.folderPath,
+    executablePath: found.executablePath,
+    splashPath: found.splashPath,
     source: 'local',
     createdAt: new Date().toISOString(),
   };
   db.builds.push(build);
-  if (!db.selectedBuildId) db.selectedBuildId = build.id;
+  db.selectedBuildId = build.id;
   save();
   res.status(201).json({ build, builds: db.builds, selectedId: db.selectedBuildId });
+});
+
+app.get('/builds/:id/splash', (req, res) => {
+  const build = getDb().builds.find((entry) => entry.id === req.params.id);
+  if (!build?.splashPath || !fs.existsSync(build.splashPath)) return res.status(404).end();
+  res.type('image/bmp');
+  res.sendFile(path.resolve(build.splashPath));
 });
 
 app.post('/builds/select', requireAuth, (req, res) => {
@@ -329,21 +333,21 @@ app.delete('/builds/:id', requireAuth, (req, res) => {
   res.json({ builds: db.builds, selectedId: db.selectedBuildId });
 });
 
-app.post('/builds/launch', requireAuth, (_req, res) => {
+app.post('/builds/launch', requireAuth, (req, res) => {
   const db = getDb();
-  const build = db.builds.find((entry) => entry.id === db.selectedBuildId);
-  if (!build?.executablePath || !fs.existsSync(build.executablePath)) {
-    return res.status(400).json({ error: 'No build is selected.' });
+  const requested = typeof req.body?.id === 'string' ? req.body.id : db.selectedBuildId;
+  const build = db.builds.find((entry) => entry.id === requested);
+  if (!build) return res.status(400).json({ error: 'No build is selected.' });
+  if (!build.executablePath || !fs.existsSync(build.executablePath)) {
+    return res.status(400).json({ error: 'FortniteShipping.exe is missing for this build.' });
   }
-  try {
-    fs.accessSync(build.executablePath, fs.constants.X_OK);
-  } catch {
-    return res.status(400).json({ error: 'No build is selected.' });
-  }
+  db.selectedBuildId = build.id;
+  save();
   const child = spawn(build.executablePath, [], {
     detached: true,
     stdio: 'ignore',
     windowsHide: true,
+    cwd: path.dirname(build.executablePath),
   });
   child.on('error', (error) => {
     console.error('[nexa-api] launch failed', error.message);
@@ -387,6 +391,8 @@ if (process.env.NEXA_STATIC) {
     res.status(404).json({ error: `No route ${req.method} ${req.path}` });
   });
 }
+
+startDiscordCallback();
 
 const httpServer = app.listen(PORT, '127.0.0.1', () => {
   console.log(`[nexa-api] listening on http://127.0.0.1:${PORT}`);

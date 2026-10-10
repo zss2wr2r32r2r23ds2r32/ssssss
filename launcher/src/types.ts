@@ -32,7 +32,7 @@ export interface User {
 }
 
 export interface Settings {
-  accent: string;
+  theme: string;
   mobileBuilds: boolean;
   resetOnRelease: boolean;
   potatoGraphics: boolean;
@@ -49,6 +49,7 @@ export interface NewsItem {
   id: string;
   title: string;
   body: string;
+  image?: string | null;
   createdAt: string;
   author: string;
 }
@@ -59,6 +60,7 @@ export interface Build {
   version: string;
   folderPath: string | null;
   executablePath: string | null;
+  splashPath?: string | null;
   source: 'local' | 'catalog';
   createdAt: string;
 }

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, dialog, ipcMain } = require('electron');
+const { app, BrowserWindow, dialog, ipcMain, shell } = require('electron');
 const path = require('path');
 const http = require('http');
 
@@ -86,6 +86,13 @@ function createWindow() {
   });
   ipcMain.on('window:close', () => win.close());
 }
+
+ipcMain.handle('shell:open-external', async (_event, url) => {
+  if (typeof url !== 'string' || !url.startsWith('https://discord.com/oauth2/authorize?')) {
+    throw new Error('Refusing to open that address.');
+  }
+  await shell.openExternal(url);
+});
 
 app.whenReady().then(async () => {
   if (packagedMode()) {

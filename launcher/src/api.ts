@@ -12,6 +12,11 @@ export function clearToken() {
   localStorage.removeItem(TOKEN_KEY);
 }
 
+export function assetUrl(path: string) {
+  const base = window.nexa?.apiBase?.replace(/\/$/, '') || '';
+  return `${base}/api${path}`;
+}
+
 export async function api<T>(path: string, opts: { method?: string; body?: unknown } = {}): Promise<T> {
   const headers: Record<string, string> = {};
   const token = getToken();

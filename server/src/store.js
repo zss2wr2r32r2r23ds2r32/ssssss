@@ -16,7 +16,7 @@ const dataDir = dataDirectory();
 const dbPath = path.join(dataDir, 'db.json');
 
 const DEFAULT_SETTINGS = {
-  accent: '#4c8dff',
+  theme: 'default',
   mobileBuilds: false,
   resetOnRelease: false,
   potatoGraphics: false,
@@ -87,15 +87,8 @@ function load() {
     const parsed = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
     if (!parsed?.user || !Array.isArray(parsed.items)) throw new Error('bad db');
     parsed.settings = { ...DEFAULT_SETTINGS, ...(parsed.settings || {}) };
-    const shopReady = parsed.items.length === 1 && parsed.items[0]?.id === 'chani' && parsed.items[0]?.image === '/shop-chani.png';
-    if (!shopReady) {
-      parsed.items = seedItems();
-      if (parsed.user.equipped?.skin && parsed.user.equipped.skin !== 'chani') parsed.user.equipped.skin = null;
-      parsed.user.equipped.emote = null;
-      parsed.user.equipped.pickaxe = null;
-      parsed.user.equipped.glider = null;
-      fs.writeFileSync(dbPath, JSON.stringify(parsed, null, 2));
-    }
+    if (!parsed.settings.theme) parsed.settings.theme = 'default';
+    if (!Array.isArray(parsed.items)) parsed.items = seedItems();
     return parsed;
   } catch (error) {
     console.error('[nexa-api] Could not read data file, reseeding.', error.message);

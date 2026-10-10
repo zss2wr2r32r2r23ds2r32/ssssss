@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { api } from '../api';
 import { playClick } from '../audio';
-import { IconType, VBuck } from '../components/Icons';
+import { IconType } from '../components/Icons';
 import { Modal } from '../components/Modal';
 import { formatClock, formatNum } from '../format';
 import { useSession } from '../session';
@@ -84,6 +84,17 @@ export function ShopPage() {
     reader.readAsDataURL(file);
   }
 
+  async function removeItem(item: ShopItem) {
+    playClick();
+    try {
+      const data = await api<{ items: ShopItem[] }>(`/shop/items/${item.id}`, { method: 'DELETE' });
+      setItems(data.items);
+      toast(`Removed ${item.name}`);
+    } catch (err) {
+      toast(err instanceof Error ? err.message : 'Could not remove that item.');
+    }
+  }
+
   async function addItem(event: React.FormEvent) {
     event.preventDefault();
     playClick();
@@ -143,6 +154,11 @@ export function ShopPage() {
               className="item-card"
               style={{ background: `linear-gradient(180deg, ${top} 0%, ${bottom} 78%)` }}
             >
+              {user?.role === 'admin' ? (
+                <button type="button" className="item-remove" aria-label={`Remove ${item.name}`} onClick={() => removeItem(item)}>
+                  Remove
+                </button>
+              ) : null}
               <span className="type-badge">
                 <IconType type={item.type} />
               </span>
@@ -153,7 +169,7 @@ export function ShopPage() {
                   <span className="price free">Free</span>
                 ) : (
                   <span className="price">
-                    {formatNum(item.vbucks)} <VBuck size={15} />
+                    {formatNum(item.vbucks)} <img className="vbuck-icon" src="/vbucks.png" alt="" draggable={false} />
                   </span>
                 )}
               </span>

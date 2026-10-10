@@ -58,6 +58,73 @@ function looksExecutable(file) {
   }
 }
 
+function nearestTo(exe, paths) {
+  if (!paths.length) return null;
+  const exeDir = path.dirname(exe);
+  return [...paths].sort((a, b) => {
+    const depth = (file) => path.relative(exeDir, file).split(path.sep).length;
+    return depth(a) - depth(b);
+  })[0];
+}
+
+function buildTitle(exe) {
+  const banned = new Set(['binaries', 'win64', 'win32', 'engine', 'fortnitegame', 'shipping']);
+  const parts = path.dirname(exe).split(path.sep).filter(Boolean);
+  for (let index = parts.length - 1; index >= 0; index -= 1) {
+    if (!banned.has(parts[index].toLowerCase())) return parts[index].slice(0, 48);
+  }
+  return 'Fortnite';
+}
+
+export function findShippingBuild(folderPath) {
+  if (!folderPath || typeof folderPath !== 'string') return { error: 'Choose a folder.' };
+  const resolved = path.resolve(folderPath.trim());
+  if (!fs.existsSync(resolved)) return { error: 'That folder is not on this machine.' };
+  let root = resolved;
+  try {
+    const stat = fs.statSync(resolved);
+    if (stat.isFile()) root = path.dirname(resolved);
+    else if (!stat.isDirectory()) return { error: 'Choose a folder.' };
+  } catch {
+    return { error: 'That folder is not on this machine.' };
+  }
+
+  const exes = [];
+  const splashes = [];
+  const stack = [root];
+  let seen = 0;
+  while (stack.length && seen < 8000) {
+    const dir = stack.pop();
+    let entries = [];
+    try {
+      entries = fs.readdirSync(dir, { withFileTypes: true });
+    } catch {
+      continue;
+    }
+    for (const entry of entries) {
+      if (entry.name.startsWith('.')) continue;
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        if (SKIP_DIRS.has(entry.name)) continue;
+        stack.push(full);
+        continue;
+      }
+      if (!entry.isFile()) continue;
+      seen += 1;
+      const lower = entry.name.toLowerCase();
+      if (lower === 'fortniteshipping.exe') exes.push(full);
+      if (lower === 'splash.bmp') splashes.push(full);
+    }
+  }
+
+  if (!exes.length) return { error: "Couldn't find FortniteShipping.exe in that folder." };
+  const executablePath = exes[0];
+  const splashPath = nearestTo(executablePath, splashes);
+  const name = buildTitle(executablePath);
+  const version = versionFromText(name) || versionFromText(path.basename(root)) || 'Local';
+  return { folderPath: root, executablePath, splashPath, name, version };
+}
+
 export function inspectFolder(folderPath) {
   const empty = { exists: false, version: null, executablePath: null };
   if (!folderPath || typeof folderPath !== 'string') return empty;

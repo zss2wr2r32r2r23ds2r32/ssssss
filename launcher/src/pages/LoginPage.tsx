@@ -33,7 +33,7 @@ export function LoginPage() {
           <p>Link your Discord account to Nexa and pick up where you left off.</p>
           <button type="button" className="discord-btn" onClick={onContinue} disabled={busy}>
             <IconDiscord />
-            Continue with Discord
+            {busy ? 'Waiting for Discord…' : 'Continue with Discord'}
           </button>
           {error ? <p className="form-error">{error}</p> : null}
         </div>

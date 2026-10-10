@@ -5,6 +5,8 @@ interface NexaBridge {
   maximize: () => void;
   close: () => void;
   apiBase?: string;
+  filePath?: (file: File) => string;
+  openExternal?: (url: string) => Promise<void>;
 }
 
 interface Window {

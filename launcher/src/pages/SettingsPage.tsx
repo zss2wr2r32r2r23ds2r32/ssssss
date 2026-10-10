@@ -3,18 +3,11 @@ import { useState } from 'react';
 import { api } from '../api';
 import { playClick } from '../audio';
 import { IconPencil } from '../components/Icons';
+import { Modal } from '../components/Modal';
 import { formatRemaining, motionTransition, reducedMotion } from '../format';
 import { useSession } from '../session';
+import { THEMES } from '../themes';
 import type { SettingsTab } from '../types';
-
-const PRESETS = [
-  { name: 'Ion', hex: '#4c8dff' },
-  { name: 'Violet', hex: '#8b5cff' },
-  { name: 'Ember', hex: '#ff6a3d' },
-  { name: 'Mint', hex: '#2ee6a6' },
-  { name: 'Gold', hex: '#e2b657' },
-  { name: 'Rose', hex: '#ff4d8d' },
-];
 
 const NAV: { id: SettingsTab; label: string }[] = [
   { id: 'account', label: 'Account' },
@@ -69,7 +62,7 @@ function Account() {
       await api('/me', { method: 'PATCH', body: { displayName: draft } });
       await refresh();
       setEditing(false);
-      toast('In-game name updated');
+      toast('Display name updated');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not update that name.');
     }
@@ -89,53 +82,26 @@ function Account() {
         <div>
           <span className="kicker">Discord</span>
           <div className="discord-name">{user.discordName}</div>
-          <span className="kicker in-game-label">In-game name</span>
-          {editing ? (
-            <form className="name-edit" onSubmit={save}>
-              <input
-                value={draft}
-                onChange={(event) => setDraft(event.target.value)}
-                minLength={4}
-                maxLength={16}
-                aria-label="In-game name"
-                autoFocus
-              />
-              <button type="submit" className="btn primary">
-                Save
-              </button>
-              <button
-                type="button"
-                className="btn ghost"
-                onClick={() => {
-                  setEditing(false);
-                  setError('');
-                  setDraft(user.displayName);
-                }}
-              >
-                Cancel
-              </button>
-            </form>
-          ) : (
-            <div className="display-row">
-              <strong>{user.displayName}</strong>
-              <button
-                type="button"
-                className="icon-btn"
-                aria-label="Edit in-game name"
-                onClick={() => {
-                  playClick();
-                  setDraft(user.displayName);
-                  setEditing(true);
-                }}
-              >
-                <IconPencil />
-              </button>
-            </div>
-          )}
-          {error ? <p className="form-error">{error}</p> : null}
+          <span className="kicker in-game-label">Display name</span>
+          <div className="display-row">
+            <strong>{user.displayName}</strong>
+            <button
+              type="button"
+              className="icon-btn"
+              aria-label="Change display name"
+              onClick={() => {
+                playClick();
+                setDraft(user.displayName);
+                setError('');
+                setEditing(true);
+              }}
+            >
+              <IconPencil />
+            </button>
+          </div>
           <p className="hint">
             {user.nameChange.allowed
-              ? 'First change is open. After that, the in-game name waits 14 days.'
+              ? 'First change is open. After that, the display name waits 14 days.'
               : `You can change your name again in ${formatRemaining(user.nameChange.remainingMs)}.`}
           </p>
           <div className="discord-id">
@@ -147,6 +113,46 @@ function Account() {
       <button type="button" className="btn ghost logout" onClick={onLogout}>
         Log out
       </button>
+      {editing ? (
+        <Modal
+          title="Change display name"
+          blur
+          plain
+          onClose={() => {
+            setEditing(false);
+            setError('');
+          }}
+        >
+          <form className="stack" onSubmit={save}>
+            <p className="lede">This is how others will see you across Nexa.</p>
+            <input
+              value={draft}
+              onChange={(event) => setDraft(event.target.value)}
+              minLength={4}
+              maxLength={16}
+              aria-label="Display name"
+              autoFocus
+            />
+            {error ? <p className="form-error">{error}</p> : null}
+            <div className="modal-actions">
+              <button
+                type="button"
+                className="btn ghost"
+                onClick={() => {
+                  playClick();
+                  setEditing(false);
+                  setError('');
+                }}
+              >
+                Cancel
+              </button>
+              <button type="submit" className="btn primary">
+                Save
+              </button>
+            </div>
+          </form>
+        </Modal>
+      ) : null}
     </div>
   );
 }
@@ -154,36 +160,35 @@ function Account() {
 function Appearance() {
   const { settings, updateSettings, toast } = useSession();
 
-  async function setAccent(accent: string) {
+  async function setTheme(theme: string) {
     playClick();
     try {
-      await updateSettings({ accent: accent.toLowerCase() });
+      await updateSettings({ theme });
     } catch (err) {
-      toast(err instanceof Error ? err.message : 'Could not save that color.');
+      toast(err instanceof Error ? err.message : 'Could not save that theme.');
     }
   }
 
   return (
     <div className="stack">
       <div>
-        <h2>Accent</h2>
-        <p className="lede">Recolors the sidebar, buttons, focus rings, and chips.</p>
+        <h2>Themes</h2>
+        <p className="lede">Changes the launcher background. Buttons stay the same.</p>
       </div>
-      <div className="swatches">
-        {PRESETS.map((preset) => (
+      <div className="theme-grid">
+        {THEMES.map((theme) => (
           <button
-            key={preset.hex}
+            key={theme.id}
             type="button"
-            className={settings.accent.toLowerCase() === preset.hex.toLowerCase() ? 'swatch on' : 'swatch'}
-            style={{ background: preset.hex }}
-            aria-label={preset.name}
-            onClick={() => setAccent(preset.hex)}
-          />
+            className={settings.theme === theme.id ? 'theme-card on' : 'theme-card'}
+            style={{ background: theme.gradient }}
+            aria-label={theme.name}
+            onClick={() => setTheme(theme.id)}
+          >
+            <span>{theme.name}</span>
+          </button>
         ))}
       </div>
-      <button type="button" className="btn primary sample">
-        Sample button
-      </button>
     </div>
   );
 }
