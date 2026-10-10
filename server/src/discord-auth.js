@@ -212,6 +212,21 @@ function logoDataUrl() {
   return '';
 }
 
+function bannerFile() {
+  const candidates = [
+    process.env.NEXA_STATIC ? path.join(process.env.NEXA_STATIC, 'banner-login.png') : '',
+    path.join(process.cwd(), 'launcher', 'public', 'banner-login.png'),
+    path.join(process.cwd(), '..', 'launcher', 'public', 'banner-login.png'),
+  ].filter(Boolean);
+  return candidates.find((file) => fs.existsSync(file)) || '';
+}
+
+function truncateDiscordId(id) {
+  const value = String(id || '');
+  if (value.length <= 12) return value;
+  return `${value.slice(0, 6)}…${value.slice(-4)}`;
+}
+
 function fontDataUrl() {
   const candidates = [
     process.env.NEXA_STATIC ? path.join(process.env.NEXA_STATIC, 'fonts', 'plus-jakarta-sans.woff2') : '',
@@ -228,13 +243,14 @@ function fontDataUrl() {
   return '';
 }
 
-export function renderReadyPage({ username, avatarUrl: picture, state }) {
+export function renderReadyPage({ username, avatarUrl: picture, state, discordId }) {
   const logo = logoDataUrl();
   const font = fontDataUrl();
   const safeName = escapeHtml(username);
   const safeAvatar = escapeHtml(picture);
+  const safeId = escapeHtml(truncateDiscordId(discordId));
   const safeState = JSON.stringify(state);
-  const logoTag = logo ? `<img class="logo" src="${logo}" alt="Nexa" />` : '';
+  const logoTag = logo ? `<img class="logo" src="${logo}" alt="" />` : '';
   const fontFace = font
     ? `@font-face{font-family:"Plus Jakarta Sans";src:url("${font}") format("woff2");font-weight:100 800;font-display:swap;}`
     : '';
@@ -258,108 +274,200 @@ export function renderReadyPage({ username, avatarUrl: picture, state }) {
       font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
       overflow: hidden;
     }
-    .welcome, .ready {
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .welcome {
+    .signin, .greet, .queue {
       position: fixed;
       inset: 0;
       display: grid;
       place-items: center;
-      text-align: center;
-      padding: 32px;
-      z-index: 2;
-    }
-    .welcome h1 { margin: 18px 0 8px; font-size: 42px; font-weight: 700; letter-spacing: -0.03em; }
-    .welcome p { margin: 0; color: #b7becb; font-size: 16px; font-weight: 500; }
-    .welcome .logo {
-      width: 96px;
-      height: auto;
-      filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.55)) drop-shadow(0 0 36px rgba(170, 190, 255, 0.45));
-    }
-    .ready {
-      width: min(420px, calc(100% - 48px));
       opacity: 0;
-      transform: translateY(22px);
       pointer-events: none;
+      transition: opacity 0.55s ease;
     }
-    body.show-ready .welcome { opacity: 0; transform: translateY(-18px); pointer-events: none; }
-    body.show-ready .ready { opacity: 1; transform: none; pointer-events: auto; }
+    .signin { opacity: 1; pointer-events: auto; background: #07080c; }
+    body.show-greet .signin { opacity: 0; pointer-events: none; }
+    body.show-greet .greet { opacity: 1; }
+    body.show-queue .greet { opacity: 0; }
+    body.show-queue .queue { opacity: 1; pointer-events: auto; }
+    .signin-wrap { width: min(440px, calc(100% - 40px)); text-align: center; }
+    .signin h1 { margin: 0 0 8px; font-size: 44px; font-weight: 750; letter-spacing: -0.04em; }
+    .subtitle { margin: 0 0 22px; color: #9aa3b5; font-size: 15px; }
     .card {
-      background: #14161e;
+      background: #16181f;
       border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 22px;
-      padding: 36px 28px 28px;
-      text-align: center;
-      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+      border-radius: 18px;
+      padding: 26px 22px 18px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
     }
-    .card .logo {
-      width: 72px;
-      height: auto;
-      filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.4));
-    }
-    .card h1 { margin: 14px 0 20px; font-size: 34px; font-weight: 700; letter-spacing: -0.03em; }
+    .kicker { margin: 0 0 14px; color: #9aa3b5; font-size: 13px; }
     .avatar {
-      width: 88px;
-      height: 88px;
+      width: 84px;
+      height: 84px;
       border-radius: 999px;
       object-fit: cover;
       background: #1c1f28;
     }
-    .name { margin: 12px 0 22px; font-size: 18px; font-weight: 650; }
+    .username { margin: 12px 0 2px; font-size: 20px; font-weight: 750; }
+    .discord-id { margin: 0 0 12px; color: #8b93a7; font-size: 13px; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #2f9e57;
+      color: white;
+      border-radius: 999px;
+      padding: 4px 10px 4px 6px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .chip svg { width: 16px; height: 16px; display: block; }
     button {
       width: 100%;
-      height: 48px;
+      height: 46px;
+      margin-top: 18px;
       border: 0;
-      border-radius: 12px;
-      background: #2a2e38;
-      color: white;
+      border-radius: 10px;
+      background: #fff;
+      color: #111318;
       font: inherit;
-      font-weight: 700;
-      font-size: 16px;
+      font-weight: 750;
+      font-size: 15px;
       cursor: pointer;
     }
-    button:hover { background: #353a46; }
+    button:hover { background: #f2f4f8; }
+    .secure {
+      margin: 14px 0 0;
+      color: #8b93a7;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .greet { background: #07080c; overflow: hidden; }
+    .greet-bg {
+      position: absolute;
+      inset: -48px;
+      background: #07080c url('/callback/banner') center / cover no-repeat;
+      filter: blur(18px);
+      transform: scale(1.08);
+    }
+    .greet-shade { position: absolute; inset: 0; background: rgba(5, 6, 10, 0.42); }
+    .greet-copy { position: relative; z-index: 1; text-align: center; }
+    .greet .avatar { width: 112px; height: 112px; border: 3px solid rgba(255, 255, 255, 0.9); }
+    .greet h1 { margin: 16px 0 12px; font-size: 40px; font-weight: 750; letter-spacing: -0.03em; }
+    .accent-line { width: 72px; height: 3px; margin: 0 auto; border-radius: 999px; background: #d7dbe4; }
+    .qcard {
+      width: min(440px, calc(100% - 48px));
+      background: #12141c;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      padding: 28px 24px 22px;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+    }
+    .qcard .logo { width: 42px; height: auto; }
+    .word { margin: 8px 0 18px; font-size: 28px; font-weight: 800; letter-spacing: 0.16em; }
+    .status { margin: 0 0 14px; color: #d5dbe8; font-size: 15px; }
+    .bar { height: 8px; border-radius: 999px; background: #2a2e38; overflow: hidden; }
+    .bar > div { height: 100%; width: 0; background: linear-gradient(90deg, #8ea0ff, #f5f7fb); }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 18px; }
+    .stats strong { display: block; font-size: 18px; }
+    .stats span { color: #8b93a7; font-size: 12px; }
+    .note { margin: 16px 0 0; color: #8b93a7; font-size: 13px; }
   </style>
 </head>
 <body>
-  <section class="welcome">
-    <div>
-      ${logoTag}
-      <h1>Welcome back</h1>
-      <p>Glad to see you again, ${safeName}</p>
+  <section class="signin">
+    <div class="signin-wrap">
+      <h1>Nexa</h1>
+      <p class="subtitle">Sign in to the launcher with your Discord account.</p>
+      <div class="card">
+        <p class="kicker">Signing in as</p>
+        <img class="avatar" src="${safeAvatar}" alt="" />
+        <p class="username">${safeName}</p>
+        <p class="discord-id">${safeId}</p>
+        <span class="chip">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.3 5.3A16 16 0 0 0 15.9 4l-.4.8a13.5 13.5 0 0 1 4 1.5 14 14 0 0 0-13 0A12 12 0 0 1 8.5 4L8.1 4A16 16 0 0 0 4.7 5.3C1.7 9.8 1 13.4 1.4 16.9A16 16 0 0 0 6.3 19l.8-1.2a11 11 0 0 1-1.6-.8l.4-.3c3.2 1.5 6.6 1.5 9.8 0l.4.3c-.5.3-1 .6-1.6.8l.8 1.2a16 16 0 0 0 4.9-2.1c.5-4.1-.7-7.6-3.3-11.6ZM8.8 14.6c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Zm6.4 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Z"/></svg>
+          Discord
+        </span>
+        <form id="go">
+          <button type="submit">Continue as ${safeName}</button>
+        </form>
+        <p class="secure">
+          <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" d="M7 10V7a5 5 0 0 1 10 0v3"/><rect x="5" y="10" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+          Secure Discord authentication
+        </p>
+      </div>
     </div>
   </section>
-  <section class="ready">
-    <div class="card">
-      ${logoTag}
-      <h1>Ready to Play?</h1>
+  <section class="greet">
+    <div class="greet-bg"></div>
+    <div class="greet-shade"></div>
+    <div class="greet-copy">
       <img class="avatar" src="${safeAvatar}" alt="" />
-      <p class="name">${safeName}</p>
-      <form id="go">
-        <button type="submit">Continue</button>
-      </form>
+      <h1>Welcome, ${safeName}</h1>
+      <div class="accent-line"></div>
+    </div>
+  </section>
+  <section class="queue">
+    <div class="qcard">
+      ${logoTag}
+      <div class="word">NEXA</div>
+      <p class="status" id="status">Finding you a spot</p>
+      <div class="bar" aria-hidden="true"><div id="fill"></div></div>
+      <div class="stats">
+        <div><strong id="spot">12</strong><span>Spot</span></div>
+        <div><strong id="line">28</strong><span>In line</span></div>
+        <div><strong id="eta">1 min</strong><span>Estimate</span></div>
+      </div>
+      <p class="note">Players are let in a few at a time.</p>
     </div>
   </section>
   <script>
     const state = ${safeState};
-    setTimeout(() => document.body.classList.add('show-ready'), 1400);
-    document.getElementById('go').addEventListener('submit', async (event) => {
+    const button = document.querySelector('#go button');
+    const label = button.textContent;
+    document.getElementById('go').addEventListener('submit', (event) => {
       event.preventDefault();
-      const button = event.currentTarget.querySelector('button');
-      if (button.dataset.sent === '1') return;
-      button.dataset.sent = '1';
-      button.textContent = 'Continue';
+      if (document.body.dataset.left === '1') return;
+      document.body.dataset.left = '1';
+      button.textContent = label;
+      document.body.classList.add('show-greet');
+      setTimeout(() => {
+        document.body.classList.add('show-queue');
+        const started = performance.now();
+        const duration = 2400;
+        const fill = document.getElementById('fill');
+        const status = document.getElementById('status');
+        const line = document.getElementById('line');
+        const eta = document.getElementById('eta');
+        const tick = (now) => {
+          const t = Math.min(1, (now - started) / duration);
+          fill.style.width = (t * 100) + '%';
+          const waiting = Math.max(4, Math.round(28 - t * 22));
+          line.textContent = String(waiting);
+          eta.textContent = t > 0.72 ? '< 1 min' : '1 min';
+          status.textContent = t < 0.45 ? 'Finding you a spot' : 'Letting a few players in';
+          if (t < 1) requestAnimationFrame(tick);
+          else finish();
+        };
+        requestAnimationFrame(tick);
+      }, 1700);
+    });
+    async function finish() {
+      const status = document.getElementById('status');
       try {
-        await fetch('/callback/continue', {
+        const response = await fetch('/callback/continue', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ state }),
         });
-      } catch { /* the launcher still polls */ }
-      button.dataset.sent = '0';
-      button.textContent = 'Continue';
-    });
+        if (!response.ok) throw new Error('continue');
+        status.textContent = "You're in";
+      } catch {
+        status.textContent = 'Still connecting';
+      }
+    }
   </script>
 </body>
 </html>`;
@@ -439,6 +547,17 @@ function readBody(req) {
 
 async function onCallback(req, res) {
   const url = new URL(req.url || '/', DISCORD_REDIRECT_URI);
+  if (req.method === 'GET' && url.pathname === '/callback/banner') {
+    const file = bannerFile();
+    if (!file) {
+      res.writeHead(404);
+      res.end();
+      return;
+    }
+    res.writeHead(200, { 'Content-Type': 'image/png', 'Cache-Control': 'no-store' });
+    fs.createReadStream(file).pipe(res);
+    return;
+  }
   if (req.method === 'GET' && url.pathname === '/callback/status') {
     const state = url.searchParams.get('state') || '';
     const row = pending.get(state);
@@ -455,7 +574,7 @@ async function onCallback(req, res) {
       sendHtml(res, 400, renderMessage('Sign-in expired', 'Start again from Continue with Discord in Nexa.'));
       return;
     }
-    sendHtml(res, 200, renderReadyPage({ username: row.profile.username, avatarUrl: row.profile.avatarUrl, state }));
+    sendHtml(res, 200, renderReadyPage({ username: row.profile.username, avatarUrl: row.profile.avatarUrl, discordId: row.profile.id, state }));
     return;
   }
 
@@ -497,7 +616,7 @@ async function onCallback(req, res) {
     };
     row.status = 'authorized';
     row.verifier = '';
-    sendHtml(res, 200, renderReadyPage({ username: row.profile.username, avatarUrl: row.profile.avatarUrl, state }));
+    sendHtml(res, 200, renderReadyPage({ username: row.profile.username, avatarUrl: row.profile.avatarUrl, discordId: row.profile.id, state }));
     return;
   }
 

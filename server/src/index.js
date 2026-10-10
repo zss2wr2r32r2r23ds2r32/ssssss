@@ -26,7 +26,7 @@ app.use((req, _res, next) => {
   next();
 });
 
-const TYPES = new Set(['skin', 'emote', 'pickaxe', 'glider']);
+const TYPES = new Set(['skin', 'emote', 'pickaxe', 'glider', 'backbling', 'wrap']);
 const RARITIES = new Set(['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythic']);
 const SECTIONS = new Set(['featured', 'daily']);
 const CATALOG = [
@@ -366,6 +366,8 @@ app.post('/builds/import', requireAuth, (req, res) => {
     folderPath: found.folderPath,
     executablePath: found.executablePath,
     splashPath: found.splashPath,
+    gameVersion: found.gameVersion || '',
+    changelist: found.changelist || '',
     source: 'local',
     createdAt: new Date().toISOString(),
   };
@@ -458,7 +460,7 @@ app.get('/leaderboard', (req, res) => {
       you: true,
     },
   ];
-  const by = req.query.by === 'elims' ? 'elims' : 'wins';
+  const by = req.query.by === 'elims' || req.query.by === 'points' ? req.query.by : 'wins';
   rows.sort((a, b) => b[by] - a[by] || b.wins - a.wins || a.name.localeCompare(b.name));
   res.json({ rows, by });
 });
@@ -489,16 +491,17 @@ let shopRefreshBusy = false;
 async function refreshShopIfDue() {
   const key = shopDayKey();
   const current = getDb();
-  if (current.shopDay === key && Array.isArray(current.items) && current.items.length > 0) return;
+  if (current.shopDay === key && current.shopSource === 'c2s2' && Array.isArray(current.items) && current.items.length > 0) return;
   if (shopRefreshBusy) return;
   shopRefreshBusy = true;
   try {
     const items = await pullShopItems();
     if (!items.length) return;
     const next = getDb();
-    if (next.shopDay === key && Array.isArray(next.items) && next.items.length > 0) return;
+    if (next.shopDay === key && next.shopSource === 'c2s2' && Array.isArray(next.items) && next.items.length > 0) return;
     next.items = items;
     next.shopDay = key;
+    next.shopSource = 'c2s2';
     save();
     console.log(`[nexa-api] shop refreshed for ${key} (${items.length} items)`);
   } catch (error) {

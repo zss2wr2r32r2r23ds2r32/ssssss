@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { api } from '../api';
 import { playClick } from '../audio';
+import { IconBin } from '../components/Icons';
 import { Modal } from '../components/Modal';
 import { formatClock, formatNum } from '../format';
 import { useSession } from '../session';
@@ -15,13 +16,15 @@ const RARITY: Record<Rarity, string> = {
   mythic: '#d2a431',
 };
 
-const TYPES: ItemType[] = ['skin', 'emote', 'pickaxe', 'glider'];
+const TYPES: ItemType[] = ['skin', 'emote', 'pickaxe', 'glider', 'backbling', 'wrap'];
 const RARITIES: Rarity[] = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythic'];
 const TYPE_LABEL: Record<ItemType, string> = {
   skin: 'Outfit',
   emote: 'Emote',
   pickaxe: 'Pickaxe',
   glider: 'Glider',
+  backbling: 'Back bling',
+  wrap: 'Wrap',
 };
 
 function ShopCard({ item, admin, onRemove }: { item: ShopItem; admin: boolean; onRemove: (item: ShopItem) => void }) {
@@ -30,16 +33,13 @@ function ShopCard({ item, admin, onRemove }: { item: ShopItem; admin: boolean; o
       <div className="item-art" style={{ background: RARITY[item.rarity] }}>
         {admin ? (
           <button type="button" className="item-remove" aria-label={`Remove ${item.name}`} onClick={() => onRemove(item)}>
-            Remove
+            <IconBin size={16} />
           </button>
         ) : null}
         <img src={item.image} alt="" draggable={false} />
       </div>
       <div className="item-bar">
-        <div>
-          <strong>{item.name}</strong>
-          <small>{TYPE_LABEL[item.type]}</small>
-        </div>
+        <strong className="item-name">{item.name}</strong>
         <span className="price">
           {item.vbucks === 0 ? 'Free' : formatNum(item.vbucks)}
           <img className="vbuck-icon" src="/vbucks.png" alt="" draggable={false} />
@@ -252,10 +252,7 @@ export function ShopPage() {
                   <img src={image} alt="" draggable={false} />
                 </div>
                 <div className="item-bar">
-                  <div>
-                    <strong>{name || 'Name'}</strong>
-                    <small>{TYPE_LABEL[type]}</small>
-                  </div>
+                  <strong className="item-name">{name || 'Name'}</strong>
                   <span className="price">
                     {formatNum(Number(vbucks) || 0)}
                     <img className="vbuck-icon" src="/vbucks.png" alt="" draggable={false} />

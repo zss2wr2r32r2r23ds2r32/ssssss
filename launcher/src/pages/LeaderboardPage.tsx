@@ -8,7 +8,7 @@ import type { LeaderRow } from '../types';
 export function LeaderboardPage() {
   const { toast, user } = useSession();
   const [rows, setRows] = useState<LeaderRow[]>([]);
-  const [by, setBy] = useState<'wins' | 'elims'>('wins');
+  const [by, setBy] = useState<'wins' | 'elims' | 'points'>('wins');
 
   useEffect(() => {
     api<{ rows: LeaderRow[] }>(`/leaderboard?by=${by}`)
@@ -30,15 +30,16 @@ export function LeaderboardPage() {
           <button type="button" className={by === 'elims' ? 'on' : ''} onClick={() => { playClick(); setBy('elims'); }}>
             Elims
           </button>
+          <button type="button" className={by === 'points' ? 'on' : ''} onClick={() => { playClick(); setBy('points'); }}>
+            Points
+          </button>
         </div>
       </header>
       <ol className="ranks">
         <li className="rank head">
           <span>#</span>
           <span>Player</span>
-          <span>Wins</span>
-          <span>Elims</span>
-          <span>Points</span>
+          <span>{by === 'wins' ? 'Wins' : by === 'elims' ? 'Elims' : 'Points'}</span>
         </li>
         {rows.map((row, index) => (
           <li key={row.id} className={row.you ? 'rank you' : 'rank'}>
@@ -48,9 +49,7 @@ export function LeaderboardPage() {
               {row.name}
               {row.you ? <em>You</em> : null}
             </span>
-            <span>{formatNum(row.wins)}</span>
-            <span>{formatNum(row.elims)}</span>
-            <span>{formatNum(row.points)}</span>
+            <span>{formatNum(row[by])}</span>
           </li>
         ))}
       </ol>

@@ -154,8 +154,92 @@ export function findShippingBuild(folderPath) {
   if (!executablePath) return { error: 'FortniteClient-Win64-Shipping.exe is missing for this build.' };
   const splashPath = nearestTo(executablePath, splashes);
   const name = buildTitle(executablePath);
-  const version = versionFromText(name) || versionFromText(path.basename(root)) || 'Local';
-  return { folderPath: root, executablePath, splashPath, name, version };
+  const release = readReleaseIdentity(root, engine, fortniteGame);
+  const version = release.gameVersion && release.changelist
+    ? `${release.gameVersion}-CL-${release.changelist}`
+    : versionFromText(name) || versionFromText(path.basename(root)) || 'Local';
+  return {
+    folderPath: root,
+    executablePath,
+    splashPath,
+    name,
+    version,
+    gameVersion: release.gameVersion,
+    changelist: release.changelist,
+  };
+}
+
+function releaseFromText(text) {
+  let version = '';
+  let changelist = '';
+  const inline = String(text).match(/(\d+\.\d+)-CL-(\d+)/i);
+  if (inline) {
+    version = inline[1];
+    changelist = inline[2];
+  }
+  try {
+    const parsed = JSON.parse(text);
+    const branch = String(parsed?.BranchName || '');
+    const branchVersion = branch.match(/(\d+\.\d+)/);
+    const branchCl = branch.match(/CL-(\d+)/i);
+    if (branchVersion) version = branchVersion[1];
+    if (branchCl) changelist = branchCl[1];
+    if (!changelist && parsed?.Changelist != null) {
+      const digits = String(parsed.Changelist).replace(/\D/g, '');
+      if (digits) changelist = digits;
+    }
+  } catch {
+    /* plain text is enough when it already matched */
+  }
+  if (!/^\d+\.\d+$/.test(version) || !/^\d{5,12}$/.test(changelist)) return null;
+  return { gameVersion: version, changelist };
+}
+
+function readReleaseIdentity(root, engine, fortniteGame) {
+  const direct = [
+    engine ? path.join(engine, 'Build', 'Build.version') : '',
+    fortniteGame ? path.join(fortniteGame, 'Build', 'Build.version') : '',
+    path.join(root, 'Engine', 'Build', 'Build.version'),
+    path.join(root, 'Build.version'),
+  ].filter(Boolean);
+  for (const file of direct) {
+    try {
+      const found = releaseFromText(fs.readFileSync(file, 'utf8').slice(0, 8000));
+      if (found) return found;
+    } catch {
+      /* try the next file */
+    }
+  }
+  const stack = [root];
+  let seen = 0;
+  while (stack.length && seen < 4000) {
+    const dir = stack.pop();
+    let entries = [];
+    try {
+      entries = fs.readdirSync(dir, { withFileTypes: true });
+    } catch {
+      continue;
+    }
+    for (const entry of entries) {
+      if (entry.name.startsWith('.')) continue;
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        const lower = entry.name.toLowerCase();
+        if (SKIP_DIRS.has(entry.name) || lower === 'content' || lower === 'paks' || lower === 'binaries') continue;
+        stack.push(full);
+        continue;
+      }
+      if (!entry.isFile() || entry.name.toLowerCase() !== 'build.version') continue;
+      seen += 1;
+      try {
+        const found = releaseFromText(fs.readFileSync(full, 'utf8').slice(0, 8000));
+        if (found) return found;
+      } catch {
+        /* unreadable */
+      }
+    }
+  }
+  return { gameVersion: '', changelist: '' };
 }
 
 export function inspectFolder(folderPath) {

@@ -129,7 +129,14 @@ export function LibraryPage() {
                     </svg>
                   </span>
                 </button>
-                <span className="build-name">{build.name}</span>
+                {build.gameVersion && build.changelist ? (
+                  <span className="build-version">
+                    <strong>Fortnite {build.gameVersion}</strong>
+                    <span>{build.gameVersion}-CL-{build.changelist}</span>
+                  </span>
+                ) : (
+                  <span className="build-name">{build.name}</span>
+                )}
                 <button type="button" className="build-remove" onClick={() => remove(build.id)}>
                   Remove
                 </button>

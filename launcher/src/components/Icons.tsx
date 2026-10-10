@@ -168,6 +168,17 @@ export function IconType({ type }: { type: string }) {
   );
 }
 
+export function IconBin({ size }: IconProps) {
+  return (
+    <svg {...base(size)}>
+      <path d="M4.5 7h15" />
+      <path d="M9 7V5.2h6V7" />
+      <path d="M7.2 7.2 8 19h8l.8-11.8" />
+      <path d="M10 11v5.2M14 11v5.2" />
+    </svg>
+  );
+}
+
 export function VBuck({ size = 16 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true">

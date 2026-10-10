@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api';
 import { playClick } from '../audio';
+import { IconBin } from '../components/Icons';
 import { Modal } from '../components/Modal';
 import { formatNum } from '../format';
 import { visibleName } from '../names';
@@ -124,8 +125,8 @@ export function HomePage() {
                   </div>
                   <div className="news-side">
                     {user?.role === 'admin' ? (
-                      <button type="button" className="text-btn" onClick={() => removeNews(item.id)}>
-                        Remove
+                      <button type="button" className="icon-btn news-bin" aria-label="Remove" onClick={() => removeNews(item.id)}>
+                        <IconBin size={16} />
                       </button>
                     ) : null}
                     <time dateTime={item.createdAt}>

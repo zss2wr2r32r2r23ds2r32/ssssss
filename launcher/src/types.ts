@@ -1,4 +1,4 @@
-export type ItemType = 'skin' | 'emote' | 'pickaxe' | 'glider';
+export type ItemType = 'skin' | 'emote' | 'pickaxe' | 'glider' | 'backbling' | 'wrap';
 export type Rarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic';
 export type Tab = 'home' | 'library' | 'shop' | 'leaderboards' | 'donate' | 'settings';
 export type SettingsTab = 'account' | 'game' | 'launcher';
@@ -62,6 +62,8 @@ export interface Build {
   folderPath: string | null;
   executablePath: string | null;
   splashPath?: string | null;
+  gameVersion?: string;
+  changelist?: string;
   source: 'local' | 'catalog';
   createdAt: string;
 }
