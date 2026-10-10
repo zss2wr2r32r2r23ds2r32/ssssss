@@ -2,6 +2,9 @@
   "identifier": "default",
   "description": "Nexa main window",
   "windows": ["main"],
+  "remote": {
+    "urls": ["http://127.0.0.1:4177", "http://127.0.0.1:4177/", "http://127.0.0.1:4177/*"]
+  },
   "permissions": [
     "core:default",
     "core:window:allow-minimize",

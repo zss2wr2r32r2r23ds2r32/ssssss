@@ -237,7 +237,7 @@ fn main() {
     let app = tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![open_external, pick_folder])
         .setup(|app| {
-            let icon = tauri::image::Image::from_ico(include_bytes!("../icons/icon.ico"))?;
+            let icon = tauri::image::Image::from_bytes(include_bytes!("../icons/icon.ico"))?;
             tauri::WebviewWindowBuilder::new(
                 app,
                 "main",
@@ -250,6 +250,7 @@ fn main() {
             .decorations(false)
             .center()
             .focused(true)
+            .devtools(false)
             .icon(icon)?
             .initialization_script(INIT_SCRIPT)
             .build()?;

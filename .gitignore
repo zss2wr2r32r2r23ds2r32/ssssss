@@ -10,3 +10,4 @@ release/
 build/
 src-tauri/target/
 src-tauri/embed/
+src-tauri/gen/
