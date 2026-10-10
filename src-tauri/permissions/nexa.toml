@@ -1,0 +1,9 @@
+[[permission]]
+identifier = "allow-open-external"
+description = "Open the Discord authorize page"
+commands.allow = ["open_external"]
+
+[[permission]]
+identifier = "allow-pick-folder"
+description = "Pick a Fortnite build folder"
+commands.allow = ["pick_folder"]

@@ -20,6 +20,8 @@ interface SessionValue {
   updateSettings: (patch: Partial<Settings>) => Promise<void>;
   toast: (message: string) => void;
   toastMessage: string | null;
+  arriving: boolean;
+  finishArrival: () => void;
 }
 
 const SessionContext = createContext<SessionValue | null>(null);
@@ -29,6 +31,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettings] = useState<Settings>(defaultSettings);
   const [booting, setBooting] = useState(true);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [arriving, setArriving] = useState(false);
 
   const toast = useCallback((message: string) => {
     setToastMessage(message);
@@ -75,6 +78,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
       if (pending.status === 'ready' && pending.token) {
         setToken(pending.token);
         await refresh();
+        setArriving(true);
         return;
       }
     }
@@ -89,6 +93,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     }
     clearToken();
     setUser(null);
+    setArriving(false);
   }, []);
 
   const updateSettings = useCallback(
@@ -103,9 +108,11 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     [settings],
   );
 
+  const finishArrival = useCallback(() => setArriving(false), []);
+
   const value = useMemo(
-    () => ({ user, settings, booting, login, logout, refresh, updateSettings, toast, toastMessage }),
-    [user, settings, booting, login, logout, refresh, updateSettings, toast, toastMessage],
+    () => ({ user, settings, booting, login, logout, refresh, updateSettings, toast, toastMessage, arriving, finishArrival }),
+    [user, settings, booting, login, logout, refresh, updateSettings, toast, toastMessage, arriving, finishArrival],
   );
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;

@@ -29,7 +29,6 @@ await build({
   bundle: true,
   platform: 'node',
   format: 'cjs',
-  outfile: 'electron/server.cjs',
-  external: ['electron'],
+  outfile: 'src-tauri/embed/server.cjs',
   logLevel: 'info',
 });

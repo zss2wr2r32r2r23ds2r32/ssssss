@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { playClick } from './audio';
+import { Arrival } from './components/Arrival';
 import { Sidebar } from './components/Sidebar';
 import { TitleBar } from './components/TitleBar';
 import { motionTransition, reducedMotion } from './format';
@@ -26,7 +27,7 @@ function parseHash() {
 }
 
 export function App() {
-  const { user, booting, toastMessage } = useSession();
+  const { user, booting, toastMessage, arriving, finishArrival } = useSession();
   const [tab, setTab] = useState<Tab>('home');
   const [settingsTab, setSettingsTab] = useState<SettingsTab>('account');
 
@@ -55,10 +56,28 @@ export function App() {
     lockImages();
     const observer = new MutationObserver(lockImages);
     observer.observe(document.body, { childList: true, subtree: true });
+    const blockInspect = (event: MouseEvent) => {
+      event.preventDefault();
+    };
+    const blockKeys = (event: KeyboardEvent) => {
+      const key = event.key.toLowerCase();
+      const inspect =
+        event.key === 'F12' ||
+        (event.ctrlKey && event.shiftKey && (key === 'i' || key === 'j' || key === 'c')) ||
+        (event.ctrlKey && !event.shiftKey && key === 'u') ||
+        (event.metaKey && event.altKey && key === 'i');
+      if (!inspect) return;
+      event.preventDefault();
+      event.stopPropagation();
+    };
     document.addEventListener('dragstart', blockDrag);
+    document.addEventListener('contextmenu', blockInspect);
+    window.addEventListener('keydown', blockKeys, true);
     return () => {
       observer.disconnect();
       document.removeEventListener('dragstart', blockDrag);
+      document.removeEventListener('contextmenu', blockInspect);
+      window.removeEventListener('keydown', blockKeys, true);
     };
   }, []);
 
@@ -71,7 +90,8 @@ export function App() {
 
   let body = <div className="boot">Loading Nexa…</div>;
   if (!booting && !user) body = <LoginPage />;
-  if (!booting && user) {
+  if (!booting && user && arriving) body = <Arrival user={user} onDone={finishArrival} />;
+  if (!booting && user && !arriving) {
     body = (
       <div className="workspace">
         <Sidebar tab={tab} onTab={go} />

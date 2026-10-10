@@ -196,22 +196,6 @@ async function identityFromGuild(guildId) {
   return { id: String(body.id), username: String(body.username), avatarUrl: avatarUrl(body) };
 }
 
-function logoDataUrl() {
-  const candidates = [
-    process.env.NEXA_STATIC ? path.join(process.env.NEXA_STATIC, 'logo.png') : '',
-    path.join(process.cwd(), 'launcher', 'public', 'logo.png'),
-    path.join(process.cwd(), '..', 'launcher', 'public', 'logo.png'),
-  ].filter(Boolean);
-  for (const file of candidates) {
-    try {
-      return `data:image/png;base64,${fs.readFileSync(file).toString('base64')}`;
-    } catch {
-      /* try the next location */
-    }
-  }
-  return '';
-}
-
 function bannerFile() {
   const candidates = [
     process.env.NEXA_STATIC ? path.join(process.env.NEXA_STATIC, 'banner-login.png') : '',
@@ -244,13 +228,11 @@ function fontDataUrl() {
 }
 
 export function renderReadyPage({ username, avatarUrl: picture, state, discordId }) {
-  const logo = logoDataUrl();
   const font = fontDataUrl();
   const safeName = escapeHtml(username);
   const safeAvatar = escapeHtml(picture);
   const safeId = escapeHtml(truncateDiscordId(discordId));
   const safeState = JSON.stringify(state);
-  const logoTag = logo ? `<img class="logo" src="${logo}" alt="" />` : '';
   const fontFace = font
     ? `@font-face{font-family:"Plus Jakarta Sans";src:url("${font}") format("woff2");font-weight:100 800;font-display:swap;}`
     : '';
@@ -400,62 +382,16 @@ export function renderReadyPage({ username, avatarUrl: picture, state, discordId
       </div>
     </div>
   </section>
-  <section class="greet">
-    <div class="greet-bg"></div>
-    <div class="greet-shade"></div>
-    <div class="greet-copy">
-      <img class="avatar" src="${safeAvatar}" alt="" />
-      <h1>Welcome, ${safeName}</h1>
-      <div class="accent-line"></div>
-    </div>
-  </section>
-  <section class="queue">
-    <div class="qcard">
-      ${logoTag}
-      <div class="word">NEXA</div>
-      <p class="status" id="status">Finding you a spot</p>
-      <div class="bar" aria-hidden="true"><div id="fill"></div></div>
-      <div class="stats">
-        <div><strong id="spot">12</strong><span>Spot</span></div>
-        <div><strong id="line">28</strong><span>In line</span></div>
-        <div><strong id="eta">1 min</strong><span>Estimate</span></div>
-      </div>
-      <p class="note">Players are let in a few at a time.</p>
-    </div>
-  </section>
   <script>
     const state = ${safeState};
     const button = document.querySelector('#go button');
     const label = button.textContent;
-    document.getElementById('go').addEventListener('submit', (event) => {
+    document.getElementById('go').addEventListener('submit', async (event) => {
       event.preventDefault();
       if (document.body.dataset.left === '1') return;
       document.body.dataset.left = '1';
-      button.textContent = label;
-      document.body.classList.add('show-greet');
-      setTimeout(() => {
-        document.body.classList.add('show-queue');
-        const started = performance.now();
-        const duration = 2400;
-        const fill = document.getElementById('fill');
-        const status = document.getElementById('status');
-        const line = document.getElementById('line');
-        const eta = document.getElementById('eta');
-        const tick = (now) => {
-          const t = Math.min(1, (now - started) / duration);
-          fill.style.width = (t * 100) + '%';
-          const waiting = Math.max(4, Math.round(28 - t * 22));
-          line.textContent = String(waiting);
-          eta.textContent = t > 0.72 ? '< 1 min' : '1 min';
-          status.textContent = t < 0.45 ? 'Finding you a spot' : 'Letting a few players in';
-          if (t < 1) requestAnimationFrame(tick);
-          else finish();
-        };
-        requestAnimationFrame(tick);
-      }, 1700);
-    });
-    async function finish() {
-      const status = document.getElementById('status');
+      button.disabled = true;
+      button.textContent = 'Opening Nexa…';
       try {
         const response = await fetch('/callback/continue', {
           method: 'POST',
@@ -463,11 +399,13 @@ export function renderReadyPage({ username, avatarUrl: picture, state, discordId
           body: JSON.stringify({ state }),
         });
         if (!response.ok) throw new Error('continue');
-        status.textContent = "You're in";
+        button.textContent = 'Continue in the Nexa window';
       } catch {
-        status.textContent = 'Still connecting';
+        document.body.dataset.left = '0';
+        button.disabled = false;
+        button.textContent = label;
       }
-    }
+    });
   </script>
 </body>
 </html>`;

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { api, assetUrl } from '../api';
 import { playClick } from '../audio';
+import { IconBin } from '../components/Icons';
 import { useSession } from '../session';
 import type { Build } from '../types';
 
@@ -38,9 +39,24 @@ export function LibraryPage() {
     return () => input?.removeEventListener('cancel', onCancel);
   }, [toast]);
 
-  function openPicker() {
+  async function openPicker() {
     playClick();
     setCancelled(false);
+    if (window.nexa?.pickFolder) {
+      const folderPath = await window.nexa.pickFolder();
+      if (!folderPath) {
+        setCancelled(true);
+        return;
+      }
+      try {
+        await api('/builds/import', { method: 'POST', body: { folderPath } });
+        await load();
+        toast('Build added');
+      } catch (err) {
+        toast(err instanceof Error ? err.message : 'Could not add that build.');
+      }
+      return;
+    }
     inputRef.current?.click();
   }
 
@@ -137,8 +153,17 @@ export function LibraryPage() {
                 ) : (
                   <span className="build-name">{build.name}</span>
                 )}
-                <button type="button" className="build-remove" onClick={() => remove(build.id)}>
-                  Remove
+                <button
+                  type="button"
+                  className="build-remove"
+                  aria-label={`Remove ${build.name}`}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    void remove(build.id);
+                  }}
+                >
+                  <IconBin size={16} />
                 </button>
               </article>
             ))}

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Nexa",
+  "version": "0.1.5",
+  "identifier": "dev.nexa.launcher",
+  "build": {
+    "frontendDist": "../launcher/dist",
+    "devUrl": "http://127.0.0.1:4177"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [],
+    "security": {
+      "csp": null,
+      "dangerousRemoteDomainIpcAccess": [
+        {
+          "scheme": "http",
+          "domain": "127.0.0.1",
+          "windows": ["main"],
+          "plugins": [],
+          "enableTauriAPI": true
+        }
+      ]
+    }
+  },
+  "bundle": {
+    "active": false,
+    "icon": ["icons/icon.ico"]
+  }
+}

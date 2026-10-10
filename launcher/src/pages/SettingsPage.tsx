@@ -205,7 +205,7 @@ function Launcher() {
   const [checking, setChecking] = useState(false);
   const [message, setMessage] = useState('');
   const [latestToast, setLatestToast] = useState(false);
-  const [version, setVersion] = useState('0.1.4');
+  const [version, setVersion] = useState('0.1.5');
 
   useEffect(() => {
     api<{ version: string }>('/launcher/version')

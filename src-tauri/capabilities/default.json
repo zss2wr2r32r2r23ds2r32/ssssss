@@ -1,0 +1,15 @@
+{
+  "identifier": "default",
+  "description": "Nexa main window",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "core:window:allow-minimize",
+    "core:window:allow-toggle-maximize",
+    "core:window:allow-close",
+    "core:window:allow-set-focus",
+    "core:window:allow-is-maximized",
+    "allow-open-external",
+    "allow-pick-folder"
+  ]
+}

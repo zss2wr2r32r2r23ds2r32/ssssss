@@ -16,13 +16,53 @@ function readVersion() {
       /* try the next package.json */
     }
   }
-  return '0.1.4';
+  return '0.1.5';
 }
 
 export const APP_VERSION = readVersion();
 
 const REPO = 'zss2wr2r32r2r23ds2r32/ssssss';
 const TAG = /^nexa-(\d+)\.(\d+)\.(\d+)$/;
+
+const HELPER_SOURCE = `const fs = require('fs');
+const { spawn } = require('child_process');
+const pid = Number(process.env.NEXA_UPDATE_PID || '0');
+const src = process.env.NEXA_UPDATE_SRC || '';
+const dest = process.env.NEXA_UPDATE_DEST || '';
+function alive(target) {
+  if (!target) return false;
+  try {
+    process.kill(target, 0);
+    return true;
+  } catch (error) {
+    return Boolean(error && error.code === 'EPERM');
+  }
+}
+const started = Date.now();
+function copy(attempt) {
+  try {
+    if (!src || !dest) throw new Error('missing update paths');
+    fs.copyFileSync(src, dest);
+    const child = spawn(dest, [], { detached: true, stdio: 'ignore', windowsHide: true, shell: false });
+    child.unref();
+    process.exit(0);
+  } catch (error) {
+    if (attempt < 20) {
+      setTimeout(copy, 300, attempt + 1);
+      return;
+    }
+    process.exit(1);
+  }
+}
+function wait() {
+  if (alive(pid) && Date.now() - started < 90000) {
+    setTimeout(wait, 300);
+    return;
+  }
+  setTimeout(copy, 400, 0);
+}
+wait();
+`;
 
 export function parseReleaseTag(tag) {
   const match = TAG.exec(String(tag || '').trim());
@@ -84,29 +124,20 @@ export async function updateStatus(fetchImpl = fetch) {
   };
 }
 
-function quitApp() {
-  setTimeout(() => {
-    if (typeof global.__nexaExit === 'function') {
-      global.__nexaExit();
-      return;
-    }
-    process.exit(0);
-  }, 400);
-}
-
-export async function applyUpdate(fetchImpl = fetch) {
+export async function applyUpdate(fetchImpl = fetch, hooks = {}) {
   const status = await updateStatus(fetchImpl);
   if (!status.updateAvailable) return status;
   if (!status.downloadUrl) throw new Error('The latest release has no Nexa.exe asset.');
-  const packaged = Boolean(process.versions.electron && process.platform === 'win32');
-  if (!packaged) {
+
+  const platform = hooks.platform || process.platform;
+  const destination = hooks.exePath ?? process.env.NEXA_EXE_PATH ?? '';
+  if (platform !== 'win32' || !destination) {
     return {
       ...status,
       message: `Version ${status.latest} is available. Check for updates again from Nexa.exe to install it.`,
     };
   }
 
-  const destination = process.env.PORTABLE_EXECUTABLE_FILE || process.execPath;
   const folder = path.join(os.tmpdir(), 'nexa-update');
   fs.mkdirSync(folder, { recursive: true });
   const downloaded = path.join(folder, 'Nexa.exe');
@@ -116,20 +147,35 @@ export async function applyUpdate(fetchImpl = fetch) {
   if (!response.ok || !response.body) throw new Error('Could not download the update.');
   await pipeline(Readable.fromWeb(response.body), fs.createWriteStream(downloaded));
 
-  const child = spawn(process.execPath, [], {
+  const helper = path.join(folder, 'replace.cjs');
+  fs.writeFileSync(helper, HELPER_SOURCE);
+  const spawnImpl = hooks.spawn || spawn;
+  const child = spawnImpl(process.execPath, [helper], {
     detached: true,
     stdio: 'ignore',
     windowsHide: true,
     shell: false,
     env: {
       ...process.env,
-      NEXA_UPDATE_HELPER: '1',
-      NEXA_UPDATE_PID: String(process.pid),
+      NEXA_UPDATE_PID: String(hooks.parentPid ?? process.env.NEXA_PARENT_PID ?? ''),
       NEXA_UPDATE_SRC: downloaded,
       NEXA_UPDATE_DEST: destination,
     },
   });
-  child.unref();
-  quitApp();
+  child.unref?.();
+
+  const parent = Number(hooks.parentPid ?? process.env.NEXA_PARENT_PID ?? '0');
+  const killImpl = hooks.kill || process.kill;
+  const exitImpl = hooks.exit || ((code) => process.exit(code));
+  setTimeout(() => {
+    if (parent) {
+      try {
+        killImpl(parent);
+      } catch {
+        /* the window is already gone */
+      }
+    }
+    exitImpl(0);
+  }, 400);
   return { ...status, message: `Updating to ${status.latest}. Nexa will restart.` };
 }

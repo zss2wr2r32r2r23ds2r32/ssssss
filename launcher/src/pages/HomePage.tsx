@@ -125,7 +125,16 @@ export function HomePage() {
                   </div>
                   <div className="news-side">
                     {user?.role === 'admin' ? (
-                      <button type="button" className="icon-btn news-bin" aria-label="Remove" onClick={() => removeNews(item.id)}>
+                      <button
+                        type="button"
+                        className="icon-btn news-bin"
+                        aria-label="Remove"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          event.stopPropagation();
+                          void removeNews(item.id);
+                        }}
+                      >
                         <IconBin size={16} />
                       </button>
                     ) : null}

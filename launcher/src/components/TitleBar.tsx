@@ -2,7 +2,7 @@ import { IconClose, IconMax, IconMin } from './Icons';
 
 export function TitleBar() {
   return (
-    <header className="titlebar">
+    <header className="titlebar" data-tauri-drag-region>
       <div className="titlebar-brand">
         <img src="/logo.png" alt="" className="titlebar-logo" draggable={false} />
         <span>Nexa</span>

@@ -26,7 +26,8 @@ app.use((req, _res, next) => {
   next();
 });
 
-const TYPES = new Set(['skin', 'emote', 'pickaxe', 'glider', 'backbling', 'wrap']);
+const SHOP_TYPES = new Set(['skin', 'pickaxe', 'glider', 'wrap']);
+const SHOP_SOURCE = 'c2s2-gear';
 const RARITIES = new Set(['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythic']);
 const SECTIONS = new Set(['featured', 'daily']);
 const CATALOG = [
@@ -274,8 +275,12 @@ app.delete('/news/:id', requireAuth, requireAdmin, (req, res) => {
   res.json({ news: db.news });
 });
 
+function shopItems(items) {
+  return (Array.isArray(items) ? items : []).filter((item) => SHOP_TYPES.has(item.type));
+}
+
 app.get('/shop/items', (_req, res) => {
-  res.json({ items: getDb().items });
+  res.json({ items: shopItems(getDb().items) });
 });
 
 app.post('/shop/items', requireAuth, requireAdmin, (req, res) => {
@@ -288,7 +293,7 @@ app.post('/shop/items', requireAuth, requireAdmin, (req, res) => {
   if (name.length < 2 || name.length > 32) {
     return res.status(400).json({ error: 'Item name must be 2–32 characters.' });
   }
-  if (!TYPES.has(type)) return res.status(400).json({ error: 'Pick a type.' });
+  if (!SHOP_TYPES.has(type)) return res.status(400).json({ error: 'Pick a type.' });
   if (!RARITIES.has(rarity)) return res.status(400).json({ error: 'Pick a rarity.' });
   if (!Number.isInteger(vbucks) || vbucks < 0 || vbucks > 100000) {
     return res.status(400).json({ error: 'V-Bucks must be a whole number from 0 to 100000.' });
@@ -321,7 +326,7 @@ app.delete('/shop/items/:id', requireAuth, requireAdmin, (req, res) => {
     if (db.user.equipped?.[slot] === req.params.id) db.user.equipped[slot] = null;
   }
   save();
-  res.json({ items: db.items });
+  res.json({ items: shopItems(db.items) });
 });
 
 app.post('/shop/equip', requireAuth, (req, res) => {
@@ -491,17 +496,17 @@ let shopRefreshBusy = false;
 async function refreshShopIfDue() {
   const key = shopDayKey();
   const current = getDb();
-  if (current.shopDay === key && current.shopSource === 'c2s2' && Array.isArray(current.items) && current.items.length > 0) return;
+  if (current.shopDay === key && current.shopSource === SHOP_SOURCE && Array.isArray(current.items) && current.items.length > 0) return;
   if (shopRefreshBusy) return;
   shopRefreshBusy = true;
   try {
     const items = await pullShopItems();
     if (!items.length) return;
     const next = getDb();
-    if (next.shopDay === key && next.shopSource === 'c2s2' && Array.isArray(next.items) && next.items.length > 0) return;
+    if (next.shopDay === key && next.shopSource === SHOP_SOURCE && Array.isArray(next.items) && next.items.length > 0) return;
     next.items = items;
     next.shopDay = key;
-    next.shopSource = 'c2s2';
+    next.shopSource = SHOP_SOURCE;
     save();
     console.log(`[nexa-api] shop refreshed for ${key} (${items.length} items)`);
   } catch (error) {

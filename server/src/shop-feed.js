@@ -2,7 +2,6 @@ const TYPE_MAP = {
   outfit: 'skin',
   pickaxe: 'pickaxe',
   glider: 'glider',
-  backpack: 'backbling',
   wrap: 'wrap',
 };
 

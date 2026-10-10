@@ -7,6 +7,7 @@ interface NexaBridge {
   apiBase?: string;
   filePath?: (file: File) => string;
   openExternal?: (url: string) => Promise<void>;
+  pickFolder?: () => Promise<string>;
 }
 
 interface Window {

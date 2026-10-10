@@ -16,7 +16,7 @@ const RARITY: Record<Rarity, string> = {
   mythic: '#d2a431',
 };
 
-const TYPES: ItemType[] = ['skin', 'emote', 'pickaxe', 'glider', 'backbling', 'wrap'];
+const TYPES: ItemType[] = ['skin', 'pickaxe', 'glider', 'wrap'];
 const RARITIES: Rarity[] = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythic'];
 const TYPE_LABEL: Record<ItemType, string> = {
   skin: 'Outfit',
@@ -32,7 +32,16 @@ function ShopCard({ item, admin, onRemove }: { item: ShopItem; admin: boolean; o
     <article className={`item-card ${item.section === 'featured' ? 'featured' : 'daily'}`}>
       <div className="item-art" style={{ background: RARITY[item.rarity] }}>
         {admin ? (
-          <button type="button" className="item-remove" aria-label={`Remove ${item.name}`} onClick={() => onRemove(item)}>
+          <button
+            type="button"
+            className="item-remove"
+            aria-label={`Remove ${item.name}`}
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              onRemove(item);
+            }}
+          >
             <IconBin size={16} />
           </button>
         ) : null}
