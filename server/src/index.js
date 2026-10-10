@@ -11,6 +11,7 @@ import { findShippingBuild } from './builds.js';
 import { beginDiscordLogin, oauthCallbackReady, pollDiscordLogin, startDiscordCallback, submitBotIdentity, DISCORD_REDIRECT_URI } from './discord-auth.js';
 import { discordUserIsAdmin } from './roles.js';
 import { pullShopItems } from './shop-feed.js';
+import { cachedCosmetic, cosmeticImageUrl, imageType, presentShopItem, warmShopArt } from './shop-art.js';
 import { APP_VERSION, applyUpdate, updateStatus } from './update.js';
 
 const THEMES = new Set(['default', 'void', 'ember', 'frost', 'jade', 'bud', 'rose', 'sunset', 'aurora', 'tom', 'noir', 'dark']);
@@ -276,11 +277,27 @@ app.delete('/news/:id', requireAuth, requireAdmin, (req, res) => {
 });
 
 function shopItems(items) {
-  return (Array.isArray(items) ? items : []).filter((item) => SHOP_TYPES.has(item.type));
+  return (Array.isArray(items) ? items : []).filter((item) => SHOP_TYPES.has(item.type)).map(presentShopItem);
 }
 
 app.get('/shop/items', (_req, res) => {
-  res.json({ items: shopItems(getDb().items) });
+  const items = shopItems(getDb().items);
+  warmShopArt(getDb().items);
+  res.json({ items });
+});
+
+app.get('/shop/art', async (req, res) => {
+  const remote = cosmeticImageUrl(req.query.url);
+  if (!remote) return res.status(400).json({ error: 'Image not allowed.' });
+  try {
+    const bytes = await cachedCosmetic(remote);
+    const type = imageType(bytes);
+    if (!type) return res.status(502).json({ error: 'Could not load that image.' });
+    res.set('Cache-Control', 'public, max-age=86400');
+    res.type(type).send(bytes);
+  } catch {
+    res.status(502).json({ error: 'Could not load that image.' });
+  }
 });
 
 app.post('/shop/items', requireAuth, requireAdmin, (req, res) => {
@@ -508,6 +525,7 @@ async function refreshShopIfDue() {
     next.shopDay = key;
     next.shopSource = SHOP_SOURCE;
     save();
+    warmShopArt(items);
     console.log(`[nexa-api] shop refreshed for ${key} (${items.length} items)`);
   } catch (error) {
     console.error('[nexa-api] shop refresh failed', error instanceof Error ? error.message : error);

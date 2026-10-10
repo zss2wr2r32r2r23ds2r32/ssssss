@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import test from 'node:test';
-import { applyUpdate } from './update.js';
+import { APP_VERSION, applyUpdate, compareVersions } from './update.js';
 
 function releases(version) {
   return [
@@ -21,9 +21,13 @@ function fetchImpl(payload) {
   };
 }
 
+test('0.1.6 is newer than the previous Windows build', () => {
+  assert.equal(compareVersions('0.1.6', '0.1.5') > 0, true);
+});
+
 test('the latest version does not spawn a helper', async () => {
   let spawned = false;
-  const status = await applyUpdate(fetchImpl(releases('0.1.5')), {
+  const status = await applyUpdate(fetchImpl(releases(APP_VERSION)), {
     platform: 'win32',
     exePath: 'C:\\\\Nexa\\\\Nexa.exe',
     spawn() {
@@ -42,7 +46,8 @@ test('a newer Windows release downloads Nexa.exe and replaces it without a conso
   const calls = [];
   const killed = [];
   let exited = null;
-  const status = await applyUpdate(fetchImpl(releases('0.1.6')), {
+  const [major, minor, patch] = APP_VERSION.split('.').map((part) => Number(part));
+  const status = await applyUpdate(fetchImpl(releases(`${major}.${minor}.${patch + 1}`)), {
     platform: 'win32',
     exePath: 'C:\\\\Games\\\\Nexa.exe',
     parentPid: 4242,

@@ -104,7 +104,7 @@ The item shop refreshes every day at 01:00 Europe/London from the [Fortnite cosm
 
 ## Updates
 
-Settings → Launcher → **Check for updates** reads GitHub releases for `zss2wr2r32r2r23ds2r32/ssssss`. The tag it expects is `nexa-` plus the version, for example `nexa-0.1.5`. It uses the highest `nexa-` release, not an older tag. The release asset must be named `Nexa.exe`. When you are already on that version, the button does not start another process. It shows a dismissable toast: You’re on the latest version. When a newer tag exists, Nexa downloads that `Nexa.exe`, a hidden helper replaces the running app’s exe after the window closes, and Nexa starts again. That path does not open a command prompt.
+Settings → Launcher → **Check for updates** reads GitHub releases for `zss2wr2r32r2r23ds2r32/ssssss`. The tag it expects is `nexa-` plus the version, for example `nexa-0.1.6`. It uses the highest `nexa-` release, not an older tag. The release asset must be named `Nexa.exe`. When you are already on that version, the button does not start another process. It shows a dismissable toast: You’re on the latest version. When a newer tag exists, Nexa downloads that `Nexa.exe`, a hidden helper replaces the running app’s exe after the window closes, and Nexa starts again. That path does not open a command prompt.
 
 ## Layout
 

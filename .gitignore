@@ -5,6 +5,7 @@ dist/
 .env
 bot/.env
 server/data/*.json
+server/data/shop-art/
 launcher/dist/
 release/
 build/

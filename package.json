@@ -1,6 +1,6 @@
 {
   "name": "nexa",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Nexa desktop launcher",
   "private": true,
   "workspaces": [

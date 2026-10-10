@@ -45,7 +45,7 @@ function ShopCard({ item, admin, onRemove }: { item: ShopItem; admin: boolean; o
             <IconBin size={16} />
           </button>
         ) : null}
-        <img src={item.image} alt="" draggable={false} />
+        <img className="cosmetic" src={item.image} alt="" draggable={false} decoding="sync" loading="eager" />
       </div>
       <div className="item-bar">
         <strong className="item-name">{item.name}</strong>

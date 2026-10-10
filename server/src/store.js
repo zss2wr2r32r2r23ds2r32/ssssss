@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-function dataDirectory() {
+export function dataDirectory() {
   if (process.env.NEXA_DATA_DIR) return path.resolve(process.env.NEXA_DATA_DIR);
   try {
     return path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'data');
