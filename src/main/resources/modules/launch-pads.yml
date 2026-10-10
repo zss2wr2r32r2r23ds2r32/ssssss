@@ -1,0 +1,24 @@
+# Launch Pads Module
+# Stepping on pressure plates launches you (uses THIS config — not double-jump)
+
+enabled: true
+
+any-pressure-plate: true
+
+materials:
+  - STONE_PRESSURE_PLATE
+  - OAK_PRESSURE_PLATE
+  - LIGHT_WEIGHTED_PRESSURE_PLATE
+  - HEAVY_WEIGHTED_PRESSURE_PLATE
+
+# Horizontal launch strength (from look direction)
+power: 1.5
+# Upward boost
+vertical-boost: 1.0
+cooldown-ticks: 10
+
+play-sound: true
+sound:
+  name: ENTITY_BAT_TAKEOFF
+  volume: 1.0
+  pitch: 1.2

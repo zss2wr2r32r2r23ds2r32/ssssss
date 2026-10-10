@@ -1,0 +1,48 @@
+# Announcements Module
+
+enabled: true
+
+variables:
+  text-primary: "&f"
+  text-secondary-discord: "&#3091DB"
+  text-secondary-store: "&#94FF00"
+  discord-url: "discord.gg/shardedmc"
+  store-url: "store.shardedmc.net"
+  store-title-color: "&#94FF00"
+
+commands:
+  discord:
+    enabled: true
+  store:
+    enabled: true
+
+discord:
+  messages:
+    - ""
+    - "<#3091DB>✉ &lDISCORD SERVER"
+    - ""
+    - "{@text-primary}Join our discord server to {@text-secondary-discord}stay"
+    - "{@text-primary}informed about {@text-secondary-discord}changes{@text-primary}, updates & more."
+    - ""
+    - "<#3091DB>&lVISIT TODAY!"
+    - "<#3091DB>✔ <link:https://{@discord-url}>{@discord-url}</link>"
+    - ""
+
+store:
+  messages:
+    - ""
+    - "{@store-title-color}&l$ SERVER WEBSTORE"
+    - ""
+    - "{@text-primary}Visit our webstore to buy"
+    - "{@text-secondary-store}ranks{@text-primary}, {@text-secondary-store}crate keys{@text-primary} & {@text-secondary-store}more!"
+    - ""
+    - "{@store-title-color}&lVISIT TODAY!"
+    - "{@store-title-color}✔ <link:https://{@store-url}>{@store-url}</link>"
+    - ""
+
+broadcast:
+  enabled: true
+  interval-seconds: 420
+  types:
+    - "discord"
+    - "store"

@@ -1,0 +1,15 @@
+# Spawn Module
+# Use /setspawn to set the lobby spawn point
+
+enabled: true
+
+spawn:
+  world: world
+  x: 125.50152489211689
+  y: 171.0
+  z: 229.44505137380676
+  yaw: 0.679917
+  pitch: 0.3732399
+
+messages:
+  set: '%prefix% &aSpawn point set to your current location!'

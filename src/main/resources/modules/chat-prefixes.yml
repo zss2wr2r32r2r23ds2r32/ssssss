@@ -1,0 +1,17 @@
+# Chat Format Module
+# Uses PlaceholderAPI + LuckPerms API fallback for prefixes
+
+enabled: true
+
+format: "{prefix}{name}{tag} &8▷ &r{message}"
+
+# What {prefix}, {suffix}, and {tag} stand for.
+prefix-placeholder: "%luckperms_prefix%"
+suffix-placeholder: "%luckperms_suffix%"
+tag-placeholder: "%shardedcore_tag%"
+name-placeholder: "%player_name%"
+
+# Used only when LuckPerms / PlaceholderAPI return nothing
+default-prefix: ""
+default-suffix: ""
+default-tag: ""

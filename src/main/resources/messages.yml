@@ -1,0 +1,5 @@
+# ShardedLobbyCore - Messages
+
+no-permission: "%prefix% &#FF2727You do not have permission to do that."
+player-only: "%prefix% &#FF2727This command can only be used by players."
+reload-success: "%prefix% &#9FFF00All configurations reloaded successfully. &7(v%version%)"

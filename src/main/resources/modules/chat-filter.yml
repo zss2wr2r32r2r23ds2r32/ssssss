@@ -1,0 +1,74 @@
+# Chat Filter Module
+# Every message runs through the checks below, in this order.
+# The first one that blocks ends it. Word rules live in blocked.yml.
+
+enabled: true
+
+scan:
+  chat: true
+  private-messages: true
+  commands: []
+
+slowmode:
+  enabled: true
+  seconds: 3
+
+length:
+  enabled: true
+  max-characters: 128
+  max-same-in-a-row: 5
+
+repeat:
+  enabled: true
+  remember-seconds: 30
+  match-percent: 80
+
+shouting:
+  enabled: true
+  max-uppercase: 8
+  action: LOWERCASE
+
+words:
+  enabled: true
+  mask: "***"
+
+alerts:
+  enabled: true
+  checks: false
+  format: "&#FF0000&lFILTER &8▷ &f%player% &7» &f%message% &8(%rule% %action%)"
+
+log:
+  enabled: true
+  rules-only: true
+  keep-days: 14
+
+sounds:
+  blocked:
+    enabled: true
+    sound: "BLOCK_NOTE_BLOCK_BASS"
+    volume: 0.8
+    pitch: 0.8
+  click:
+    enabled: true
+    sound: "UI_BUTTON_CLICK"
+    volume: 1.0
+    pitch: 1.2
+
+messages:
+  actionbar: false
+  slowmode: "&#FF0000&lERROR &8▷ &fWait &#FF0000%seconds%s &fbefore your next message."
+  too-long: "&#FF0000&lERROR &8▷ &fKeep it under &#FF0000%max% &fcharacters."
+  spamming: "&#FF0000&lERROR &8▷ &fStop repeating the same character."
+  repeating: "&#FF0000&lERROR &8▷ &fYou just said that."
+  shouting: "&#FF0000&lERROR &8▷ &fThat is a lot of caps."
+  blocked: "&#FF0000&lERROR &8▷ &fThat message is not allowed here."
+  history-empty: "&#FF0000&lERROR &8▷ &fNothing was caught yet."
+  usage-regex: "&#FF0000&lERROR &8▷ &fUse &#FF0000/chatfilter regex <word>&f."
+  usage-similar: "&#FF0000&lERROR &8▷ &fUse &#FF0000/chatfilter similar <first> <second>&f."
+  usage-test: "&#FF0000&lERROR &8▷ &fUse &#FF0000/chatfilter test <message>&f."
+  regex-added: "&#FF0000&lERROR &8▷ &fAdded &#97F900%word% &fto the rule &#97F900%rule%&f."
+  regex-known: "&#FF0000&lERROR &8▷ &f%word% is already in &#FF0000%rule%&f."
+  regex-invalid: "&#FF0000&lERROR &8▷ &fUse a word with at least three different letters."
+  similar: "&#FF0000&lERROR &8▷ &f%first% &7and &f%second% &7match &#2BD6FF%percent%%&7."
+  test-clean: "&#FF0000&lERROR &8▷ &fNo rule catches that message."
+  test-hit: "&#FF0000&lERROR &8▷ &fRule &#FF0000%rule% &8(%action%) &7» &f%result%"
