@@ -1,0 +1,76 @@
+# The event lifecycle: /start, /end, revives and the winner announcement.
+enabled: true
+
+start:
+  # Length of the countdown /start runs. 0 unlocks immediately.
+  countdown-seconds: 10
+  # Prefer the length picked in the countdown menu over the value above.
+  use-selected-countdown: true
+  # Refuse to start until a gamemode is selected in /settings.
+  require-selection: true
+  # /start turns the whitelist on so nobody new can join mid-event.
+  whitelist-on: true
+  # Turn the PvP toggle on when the event unlocks, whatever it was set to.
+  force-enable-pvp: true
+  # Apply the world border configured under on-event-start in worldborder.yml.
+  apply-border: true
+  # Forget the blocks tracked so far, so a clear only removes in-event builds.
+  reset-block-tracking: true
+  # Throw away any leftover death-head stashes from the previous run.
+  clear-head-stashes: true
+  # Top up health, hunger and put out fire for everyone at the start.
+  heal: true
+
+end:
+  # /end turns the whitelist back on.
+  whitelist-on: true
+  send-to-lobby: true
+  # BUNGEE  sends the proxy's own Connect message (works with Velocity too)
+  # COMMAND runs the command below as the player
+  method: 'BUNGEE'
+  server: 'lobby'
+  command: 'server %server%'
+  # Wait this long before moving players, so they can read the winner title.
+  delay-seconds: 0
+  # Return to the lobby phase afterwards, ready for the next run.
+  reset-state: true
+
+winner:
+  enabled: true
+  title: '&#AD4EFF&lEVENT WINNER'
+  subtitle: '&f%player% Has won the Event!'
+  times:
+    fade-in: 10
+    stay: 80
+    fade-out: 20
+  sound:
+    enabled: true
+    key: 'minecraft:ui.toast.challenge_complete'
+    volume: 1.0
+    pitch: 1.0
+  chat:
+    - ''
+    - '&#AD4EFF&lEVENT WINNER'
+    - '&f%player% Has won the Event!'
+    - ''
+  # Do not declare a winner until at least this many players took part.
+  minimum-players: 2
+
+join:
+  # Game mode applied on join during the lobby phase. NONE leaves it alone.
+  gamemode: 'SURVIVAL'
+  give-kit: true
+  heal: true
+  # Players who join while the event is running become spectators.
+  spectate-if-running: true
+
+revive:
+  gamemode: 'SURVIVAL'
+  teleport-to-spawn: true
+  give-kit: true
+
+# Count leaving during a live event as an elimination.
+treat-quit-as-death: true
+
+# Stop eliminated players from talking while the event runs.
+mute-dead-players: false

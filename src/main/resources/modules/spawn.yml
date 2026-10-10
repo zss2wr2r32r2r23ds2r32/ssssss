@@ -1,0 +1,30 @@
+# /setspawn <crystal|diasmp>  and  /spawn [crystal|diasmp|all]
+#
+# Spawn points are stored per gamemode in data.yml. Players are sent to the
+# spawn of the currently selected gamemode when they join and when they respawn.
+enabled: true
+
+# Snap the stored spawn to the centre of the block you were standing on.
+centre-on-block: true
+
+# /setspawn turns the whitelist off so players can join and gather.
+disable-whitelist-on-setspawn: true
+# Also toggle Paper's whitelist enforcement, which kicks players already online.
+enforce-whitelist: false
+
+teleport-on-join: true
+teleport-on-respawn: true
+
+# If no spawn has been set yet, fall back to the main world's spawn.
+fall-back-to-world-spawn: true
+
+# Land a group in a small circle instead of one exact block.
+spread:
+  enabled: false
+  radius: 3.0
+
+sound:
+  enabled: true
+  key: 'minecraft:entity.enderman.teleport'
+  volume: 0.6
+  pitch: 1.2

@@ -1,0 +1,35 @@
+# Death handling: spectator mode plus a glowing, lootable player head.
+#
+# On death the victim's items are held aside and a glowing head is dropped in
+# their place. Right-clicking that head releases everything they were carrying.
+enabled: true
+
+# Put the player into spectator mode once they respawn.
+spectator-on-death: true
+
+# Keep the victim's experience level instead of scattering orbs.
+keep-level: true
+
+head:
+  enabled: true
+  glow: true
+  name: '&#AD4EFF&l%player%'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#AD4EFFInformation:'
+    - '&#AD4EFF| &fHolds everything they'
+    - '&#AD4EFF| &fwere carrying'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nRIGHT-CLICK&r &x&F&F&B&A&0&0To Open'
+  drop-at-death-location: true
+  # Keep the dropped head from despawning after five minutes.
+  never-despawn: true
+  # Float the head's name above it on the ground.
+  show-custom-name: true
+
+release:
+  # Remove the head once its items have been released.
+  consume-head: true
+  # Also remove a head whose stash is already gone.
+  consume-empty-head: true

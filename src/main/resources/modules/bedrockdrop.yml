@@ -1,0 +1,60 @@
+# "Drop to bedrock": clears everything inside the border down to the floor.
+#
+# How it stays smooth:
+#   * chunks are fetched asynchronously and snapshotted,
+#   * the snapshots are scanned off the main thread to find non-air blocks,
+#   * the main thread only writes air, and stops as soon as it has used its
+#     per-tick time budget.
+#
+# The defaults below keep the server at a full tick rate on a 200x200 area.
+# Raise max-millis-per-tick and max-blocks-per-tick to finish sooner at the
+# cost of some tick time, or set instant: true to do it all in one tick.
+enabled: true
+
+area:
+  # BORDER reads the live world border size, so a 200x200 border clears a
+  # 200x200 area with no extra configuration. FIXED uses the values below.
+  mode: 'BORDER'
+  centre-x: 0.0
+  centre-z: 0.0
+  size: 200.0
+  # Shrink the cleared box by this many blocks on each side.
+  inset: 0.0
+  # Hard safety cap on the width that can ever be cleared. 0 disables the cap.
+  max-size: 2000.0
+
+# The lowest layer that gets cleared. -63 leaves the bedrock floar at -64
+# intact, so players land on bedrock.
+min-y: -63
+
+# The highest layer that gets cleared. Leave commented out to use the world
+# height. Set it to, for example, 100 to leave anything above y=100 alone.
+#max-y: 320
+
+# Skip the empty sky above each column using the chunk heightmap. This is the
+# single biggest win on open terrain and should stay on.
+use-heightmap: true
+
+# Materials that survive the clear.
+preserve:
+  - BEDROCK
+
+# Clear the whole area in a single tick. This will visibly stall the server on
+# anything but a small area; it exists for operators who want it anyway.
+instant: false
+
+# Per-tick budget for writing air.
+max-millis-per-tick: 8
+max-blocks-per-tick: 120000
+
+# How many chunk snapshots may be queued at once. Higher uses more memory.
+max-pending-chunks: 8
+chunk-fetches-per-tick: 4
+
+# Generate chunks that have never been visited. Usually unwanted: it would
+# generate terrain only to immediately delete it.
+generate-missing-chunks: false
+
+# Move players down to the floor once the clear finishes.
+drop-players: false
+drop-players-offset: 1

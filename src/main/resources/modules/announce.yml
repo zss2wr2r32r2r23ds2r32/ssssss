@@ -1,0 +1,26 @@
+# /announce <text>
+# Shows a title to everyone online. %text% is whatever was typed.
+enabled: true
+
+title: '&#AD4EFF&lANNOUNCEMENT'
+subtitle: '&f%text%'
+
+# Title timings, in ticks (20 ticks = 1 second).
+times:
+  fade-in: 10
+  stay: 60
+  fade-out: 10
+
+sound:
+  enabled: true
+  key: 'minecraft:block.note_block.pling'
+  volume: 1.0
+  pitch: 1.2
+
+# Also print the announcement in chat.
+also-chat: false
+chat-format:
+  - ''
+  - '&#AD4EFF&lANNOUNCEMENT'
+  - '&f%text%'
+  - ''
