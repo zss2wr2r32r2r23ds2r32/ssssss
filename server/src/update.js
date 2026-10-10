@@ -16,7 +16,7 @@ function readVersion() {
       /* try the next package.json */
     }
   }
-  return '0.1.2';
+  return '0.1.3';
 }
 
 export const APP_VERSION = readVersion();
@@ -116,28 +116,18 @@ export async function applyUpdate(fetchImpl = fetch) {
   if (!response.ok || !response.body) throw new Error('Could not download the update.');
   await pipeline(Readable.fromWeb(response.body), fs.createWriteStream(downloaded));
 
-  const script = path.join(folder, 'replace.bat');
-  const bat = [
-    '@echo off',
-    'set PID=%1',
-    'set SRC=%~2',
-    'set DEST=%~3',
-    ':wait',
-    'tasklist /FI "PID eq %PID%" | find "%PID%" >nul',
-    'if not errorlevel 1 (',
-    '  timeout /t 1 /nobreak >nul',
-    '  goto wait',
-    ')',
-    'copy /Y "%SRC%" "%DEST%"',
-    'start "" "%DEST%"',
-    'del "%~f0"',
-    '',
-  ].join('\r\n');
-  fs.writeFileSync(script, bat);
-  const child = spawn('cmd.exe', ['/c', script, String(process.pid), downloaded, destination], {
+  const child = spawn(process.execPath, [], {
     detached: true,
     stdio: 'ignore',
     windowsHide: true,
+    shell: false,
+    env: {
+      ...process.env,
+      NEXA_UPDATE_HELPER: '1',
+      NEXA_UPDATE_PID: String(process.pid),
+      NEXA_UPDATE_SRC: downloaded,
+      NEXA_UPDATE_DEST: destination,
+    },
   });
   child.unref();
   quitApp();

@@ -3,14 +3,14 @@ import { api } from '../api';
 import { playClick } from '../audio';
 import { Modal } from '../components/Modal';
 import { formatNum } from '../format';
+import { visibleName } from '../names';
 import { useSession } from '../session';
-import type { Build, NewsItem, Stats } from '../types';
+import type { NewsItem, Stats } from '../types';
 
 export function HomePage() {
   const { user, toast } = useSession();
   const [stats, setStats] = useState<Stats | null>(null);
   const [news, setNews] = useState<NewsItem[] | null>(null);
-  const [selectedName, setSelectedName] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
@@ -18,15 +18,12 @@ export function HomePage() {
   const [newsError, setNewsError] = useState('');
 
   async function load() {
-    const [nextStats, nextNews, builds] = await Promise.all([
+    const [nextStats, nextNews] = await Promise.all([
       api<Stats>('/stats'),
       api<{ news: NewsItem[] }>('/news'),
-      api<{ builds: Build[]; selectedId: string | null }>('/builds'),
     ]);
     setStats(nextStats);
     setNews(nextNews.news);
-    const selected = builds.builds.find((build) => build.id === builds.selectedId);
-    setSelectedName(selected?.name ?? null);
   }
 
   useEffect(() => {
@@ -77,7 +74,7 @@ export function HomePage() {
           <img src="/skin-default.png" alt="Default skin" draggable={false} />
         </div>
         <div className="hero-copy">
-          <h1>Welcome Back, {user?.discordName}!</h1>
+          <h1>What’s up, {user ? visibleName(user.discordName, user.displayName) : ''}!</h1>
           <p>Experience Chapter 2 Season 2 With Nexa</p>
         </div>
       </section>
@@ -143,7 +140,6 @@ export function HomePage() {
       </section>
 
       <div className="launch-wrap">
-        <p className="launch-meta">{selectedName ? `Selected build · ${selectedName}` : 'No build selected'}</p>
         <button type="button" className="launch" onClick={launch}>
           Launch Fortnite
         </button>

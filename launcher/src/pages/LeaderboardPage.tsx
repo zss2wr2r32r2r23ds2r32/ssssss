@@ -38,6 +38,7 @@ export function LeaderboardPage() {
           <span>Player</span>
           <span>Wins</span>
           <span>Elims</span>
+          <span>Points</span>
         </li>
         {rows.map((row, index) => (
           <li key={row.id} className={row.you ? 'rank you' : 'rank'}>
@@ -49,6 +50,7 @@ export function LeaderboardPage() {
             </span>
             <span>{formatNum(row.wins)}</span>
             <span>{formatNum(row.elims)}</span>
+            <span>{formatNum(row.points)}</span>
           </li>
         ))}
       </ol>

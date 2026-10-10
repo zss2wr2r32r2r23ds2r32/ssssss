@@ -228,8 +228,11 @@ p { margin: 0; }
 .hero {
   position: relative;
   display: flex;
-  align-items: flex-start;
-  min-height: 210px;
+  align-items: center;
+  height: 168px;
+  min-height: 168px;
+  padding: 0 28px 0 16px;
+  gap: 8px;
   border-radius: 16px;
   overflow: hidden;
   border: 1px solid var(--line);
@@ -246,30 +249,28 @@ p { margin: 0; }
 .hero-copy {
   position: relative;
   z-index: 1;
-  width: 100%;
-  padding: 18px 48px 14px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: left;
   text-shadow: 0 2px 18px rgba(0, 0, 0, 0.75);
 }
 .hero-copy h1 { font-size: 30px; line-height: 1.2; font-weight: 700; letter-spacing: -0.02em; }
 .hero-copy p { margin-top: 6px; color: #d5dae3; font-size: 15px; }
 .hero-skin {
-  position: absolute;
-  left: 8px;
-  bottom: 0;
-  top: 0;
-  width: 132px;
+  position: relative;
   z-index: 1;
+  width: 108px;
+  height: 148px;
+  flex: none;
   display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: none;
 }
 .hero-skin img {
-  height: 58%;
+  height: 148px;
   width: auto;
   max-width: none;
   object-fit: contain;
@@ -357,12 +358,19 @@ p { margin: 0; }
   border-radius: 12px;
   background: #2a2d36;
   color: #f5f7fb;
-  font-size: 30px;
-  font-weight: 500;
-  line-height: 1;
+  display: grid;
+  place-items: center;
+  padding: 0;
   cursor: pointer;
   z-index: 5;
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+}
+.library-plus {
+  display: block;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1;
+  transform: translateY(-1px);
 }
 .library-add:hover { background: #353844; }
 .import-toast {
@@ -411,9 +419,9 @@ p { margin: 0; }
   display: block;
   width: auto;
   height: auto;
-  max-width: none;
-  max-height: none;
-  object-fit: none;
+  max-width: 280px;
+  max-height: 156px;
+  object-fit: contain;
 }
 .build-fallback { width: 320px; height: 180px; background: #101218; }
 .build-card:hover img { filter: blur(7px) brightness(0.55); }
@@ -597,7 +605,7 @@ p { margin: 0; }
 .ranks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .rank {
   display: grid;
-  grid-template-columns: 48px 1.4fr 0.6fr 0.6fr;
+  grid-template-columns: 48px 1.4fr 0.6fr 0.6fr 0.7fr;
   align-items: center;
   gap: 8px;
   padding: 12px 14px;
@@ -635,8 +643,9 @@ p { margin: 0; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 22px;
+  padding-top: 64px;
   text-align: center;
 }
 .donate img { width: 180px; height: auto; }
@@ -662,6 +671,7 @@ p { margin: 0; }
   padding: 22px;
   min-height: 360px;
 }
+.settings-panel-hug { min-height: 0; padding: 16px; }
 .settings-panel h2 { font-size: 18px; }
 .settings-panel h3 { font-size: 16px; margin-bottom: 8px; }
 .account-row {

@@ -67,6 +67,19 @@ export function nextLondonReset(now = new Date()) {
   return target;
 }
 
+export function shopDayKey(now = new Date()) {
+  const parts = zoneParts(now, ZONE);
+  let { year, month, day } = parts;
+  if (parts.hour < 1) {
+    const prev = new Date(Date.UTC(year, month - 1, day));
+    prev.setUTCDate(prev.getUTCDate() - 1);
+    year = prev.getUTCFullYear();
+    month = prev.getUTCMonth() + 1;
+    day = prev.getUTCDate();
+  }
+  return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+}
+
 export function shopRefresh(now = new Date()) {
   const resetsAt = nextLondonReset(now);
   const seconds = Math.max(1, Math.floor((resetsAt.getTime() - now.getTime()) / 1000));

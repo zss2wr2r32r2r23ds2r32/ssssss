@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { loadEnv } from './env.js';
+import { discordUserIsAdmin } from './roles.js';
 import { getDb, save } from './store.js';
 
 loadEnv();
@@ -10,7 +11,7 @@ loadEnv();
 export const DISCORD_CLIENT_ID = '1558290151124369440';
 export const DISCORD_REDIRECT_URI = 'http://127.0.0.1:4390/callback';
 const AUTHORIZE_BASE =
-  'https://discord.com/oauth2/authorize?client_id=1558290151124369440&permissions=8&response_type=code&redirect_uri=http%3A%2F%2F127.0.0.1%3A4390%2Fcallback&integration_type=0&scope=identify+rpc+bot';
+  'https://discord.com/oauth2/authorize?client_id=1558290151124369440&response_type=code&redirect_uri=http%3A%2F%2F127.0.0.1%3A4390%2Fcallback&scope=identify';
 
 const pending = new Map();
 let callbackListening = false;
@@ -48,19 +49,6 @@ export function pollDiscordLogin(state) {
   return { status: row.status };
 }
 
-function adminIds() {
-  return (process.env.ADMIN_DISCORD_IDS || '')
-    .split(',')
-    .map((id) => id.trim())
-    .filter(Boolean);
-}
-
-function roleFor(discordId) {
-  const ids = adminIds();
-  if (ids.length === 0) return 'admin';
-  return ids.includes(discordId) ? 'admin' : 'player';
-}
-
 export function submitBotIdentity(profile) {
   const id = String(profile?.id || '');
   const username = String(profile?.username || '').trim();
@@ -88,13 +76,13 @@ function avatarUrl(user) {
   }
 }
 
-function applyProfile(profile) {
+async function applyProfile(profile) {
   const db = getDb();
   const same = db.user.discordId === profile.id;
   db.user.id = profile.id;
   db.user.discordId = profile.id;
   db.user.discordName = profile.username;
-  db.user.role = roleFor(profile.id);
+  db.user.role = (await discordUserIsAdmin(profile.id)) ? 'admin' : 'player';
   db.user.avatar = profile.avatarUrl || avatarUrl({ id: profile.id, avatar: null });
   if (!same || !db.user.displayName) {
     db.user.displayName = String(profile.username || 'Player').slice(0, 16);
@@ -224,11 +212,32 @@ function logoDataUrl() {
   return '';
 }
 
+function fontDataUrl() {
+  const candidates = [
+    process.env.NEXA_STATIC ? path.join(process.env.NEXA_STATIC, 'fonts', 'plus-jakarta-sans.woff2') : '',
+    path.join(process.cwd(), 'launcher', 'public', 'fonts', 'plus-jakarta-sans.woff2'),
+    path.join(process.cwd(), '..', 'launcher', 'public', 'fonts', 'plus-jakarta-sans.woff2'),
+  ].filter(Boolean);
+  for (const file of candidates) {
+    try {
+      return `data:font/woff2;base64,${fs.readFileSync(file).toString('base64')}`;
+    } catch {
+      /* try the next location */
+    }
+  }
+  return '';
+}
+
 export function renderReadyPage({ username, avatarUrl: picture, state }) {
   const logo = logoDataUrl();
+  const font = fontDataUrl();
   const safeName = escapeHtml(username);
   const safeAvatar = escapeHtml(picture);
-  const safeState = escapeHtml(state);
+  const safeState = JSON.stringify(state);
+  const logoTag = logo ? `<img class="logo" src="${logo}" alt="Nexa" />` : '';
+  const fontFace = font
+    ? `@font-face{font-family:"Plus Jakarta Sans";src:url("${font}") format("woff2");font-weight:100 800;font-display:swap;}`
+    : '';
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -236,6 +245,7 @@ export function renderReadyPage({ username, avatarUrl: picture, state }) {
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Nexa</title>
   <style>
+    ${fontFace}
     :root { color-scheme: dark; }
     * { box-sizing: border-box; }
     body {
@@ -246,46 +256,111 @@ export function renderReadyPage({ username, avatarUrl: picture, state }) {
       background: #07080c;
       color: #f5f7fb;
       font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+      overflow: hidden;
     }
-    main { width: min(420px, calc(100% - 48px)); text-align: center; }
-    img.logo { width: 72px; height: auto; margin: 0 auto 28px; }
-    h1 { margin: 0; font-size: 40px; letter-spacing: -0.03em; font-weight: 700; }
-    .avatar {
+    .welcome, .ready {
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .welcome {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 32px;
+      z-index: 2;
+    }
+    .welcome h1 { margin: 18px 0 8px; font-size: 42px; font-weight: 700; letter-spacing: -0.03em; }
+    .welcome p { margin: 0; color: #b7becb; font-size: 16px; font-weight: 500; }
+    .welcome .logo {
       width: 96px;
-      height: 96px;
+      height: auto;
+      filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.55)) drop-shadow(0 0 36px rgba(170, 190, 255, 0.45));
+    }
+    .ready {
+      width: min(420px, calc(100% - 48px));
+      opacity: 0;
+      transform: translateY(22px);
+      pointer-events: none;
+    }
+    body.show-ready .welcome { opacity: 0; transform: translateY(-18px); pointer-events: none; }
+    body.show-ready .ready { opacity: 1; transform: none; pointer-events: auto; }
+    .card {
+      background: #14161e;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 22px;
+      padding: 36px 28px 28px;
+      text-align: center;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+    }
+    .card .logo {
+      width: 72px;
+      height: auto;
+      filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.4));
+    }
+    .card h1 { margin: 14px 0 20px; font-size: 34px; font-weight: 700; letter-spacing: -0.03em; }
+    .avatar {
+      width: 88px;
+      height: 88px;
       border-radius: 999px;
       object-fit: cover;
-      margin: 28px auto 14px;
-      background: #141820;
+      background: #1c1f28;
     }
-    .name { margin: 0 0 28px; font-size: 18px; color: #c5cad6; font-weight: 600; }
+    .name { margin: 12px 0 22px; font-size: 18px; font-weight: 650; }
     button {
       width: 100%;
-      height: 52px;
+      height: 48px;
       border: 0;
       border-radius: 12px;
-      background: rgba(255, 255, 255, 0.14);
+      background: #2a2e38;
       color: white;
       font: inherit;
       font-weight: 700;
       font-size: 16px;
       cursor: pointer;
     }
-    button:hover { background: rgba(255, 255, 255, 0.24); }
-    p.done { color: #c5cad6; line-height: 1.5; }
+    button:hover { background: #353a46; }
   </style>
 </head>
 <body>
-  <main>
-    ${logo ? `<img class="logo" src="${logo}" alt="Nexa" />` : ''}
-    <h1>Ready to Play?</h1>
-    <img class="avatar" src="${safeAvatar}" alt="" />
-    <p class="name">${safeName}</p>
-    <form method="post" action="/callback/continue">
-      <input type="hidden" name="state" value="${safeState}" />
-      <button type="submit">Continue</button>
-    </form>
-  </main>
+  <section class="welcome">
+    <div>
+      ${logoTag}
+      <h1>Welcome back</h1>
+      <p>Glad to see you again, ${safeName}</p>
+    </div>
+  </section>
+  <section class="ready">
+    <div class="card">
+      ${logoTag}
+      <h1>Ready to Play?</h1>
+      <img class="avatar" src="${safeAvatar}" alt="" />
+      <p class="name">${safeName}</p>
+      <form id="go">
+        <button type="submit">Continue</button>
+      </form>
+    </div>
+  </section>
+  <script>
+    const state = ${safeState};
+    setTimeout(() => document.body.classList.add('show-ready'), 1400);
+    document.getElementById('go').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const button = event.currentTarget.querySelector('button');
+      if (button.dataset.sent === '1') return;
+      button.dataset.sent = '1';
+      button.textContent = 'Continue';
+      try {
+        await fetch('/callback/continue', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ state }),
+        });
+      } catch { /* the launcher still polls */ }
+      button.dataset.sent = '0';
+      button.textContent = 'Continue';
+    });
+  </script>
 </body>
 </html>`;
 }
@@ -428,16 +503,27 @@ async function onCallback(req, res) {
 
   if (req.method === 'POST' && url.pathname === '/callback/continue') {
     const raw = await readBody(req);
-    const params = new URLSearchParams(raw);
-    const state = params.get('state') || '';
+    const type = String(req.headers['content-type'] || '');
+    let state = '';
+    if (type.includes('application/json')) {
+      try {
+        state = String(JSON.parse(raw).state || '');
+      } catch {
+        state = '';
+      }
+    } else {
+      state = new URLSearchParams(raw).get('state') || '';
+    }
     const row = pending.get(state);
     if (!row || row.status !== 'authorized' || !row.profile) {
-      sendHtml(res, 400, renderMessage('Sign-in expired', 'Start again from Continue with Discord in Nexa.'));
+      res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+      res.end(JSON.stringify({ ok: false }));
       return;
     }
-    row.token = applyProfile(row.profile);
+    row.token = await applyProfile(row.profile);
     row.status = 'ready';
-    sendHtml(res, 200, renderMessage('You’re in', 'Return to the Nexa window. This tab can close.'));
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ ok: true }));
     return;
   }
 

@@ -1,6 +1,59 @@
 const { app, BrowserWindow, dialog, ipcMain, shell } = require('electron');
+const { spawn } = require('child_process');
+const fs = require('fs');
 const path = require('path');
 const http = require('http');
+
+function parentAlive(pid) {
+  if (!pid) return false;
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function runUpdateHelper() {
+  const pid = Number(process.env.NEXA_UPDATE_PID);
+  const src = process.env.NEXA_UPDATE_SRC || '';
+  const dest = process.env.NEXA_UPDATE_DEST || '';
+  app.whenReady().then(() => {
+    const started = Date.now();
+    const tick = () => {
+      if (parentAlive(pid) && Date.now() - started < 90000) {
+        setTimeout(tick, 300);
+        return;
+      }
+      const copy = (attempt) => {
+        try {
+          if (src && dest) fs.copyFileSync(src, dest);
+          const child = spawn(dest, [], {
+            detached: true,
+            stdio: 'ignore',
+            windowsHide: true,
+            shell: false,
+          });
+          child.unref();
+          app.exit(0);
+        } catch (error) {
+          if (attempt < 20) {
+            setTimeout(() => copy(attempt + 1), 300);
+            return;
+          }
+          console.error('[nexa-update]', error instanceof Error ? error.message : error);
+          app.exit(1);
+        }
+      };
+      setTimeout(() => copy(0), 400);
+    };
+    tick();
+  });
+}
+
+if (process.env.NEXA_UPDATE_HELPER === '1') {
+  runUpdateHelper();
+} else {
 
 const PORT = String(process.env.PORT || '4177');
 process.env.PORT = PORT;
@@ -113,3 +166,4 @@ app.whenReady().then(async () => {
 app.on('window-all-closed', () => {
   app.quit();
 });
+}

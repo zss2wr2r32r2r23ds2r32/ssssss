@@ -145,7 +145,7 @@ export function LibraryPage() {
       )}
 
       <button type="button" className="library-add" aria-label="Import a build" onClick={openPicker}>
-        +
+        <span className="library-plus">+</span>
       </button>
       <input
         ref={inputRef}

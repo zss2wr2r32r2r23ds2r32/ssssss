@@ -30,7 +30,7 @@ export function SettingsPage({ tab, onTab }: { tab: SettingsTab; onTab: (tab: Se
         <AnimatePresence mode="wait">
           <motion.div
             key={tab}
-            className="settings-panel"
+            className={tab === 'account' ? 'settings-panel settings-panel-hug' : 'settings-panel'}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
@@ -204,7 +204,8 @@ function Launcher() {
   const { toast } = useSession();
   const [checking, setChecking] = useState(false);
   const [message, setMessage] = useState('');
-  const [version, setVersion] = useState('0.1.2');
+  const [latestToast, setLatestToast] = useState(false);
+  const [version, setVersion] = useState('0.1.3');
 
   useEffect(() => {
     api<{ version: string }>('/launcher/version')
@@ -216,10 +217,11 @@ function Launcher() {
     playClick();
     setChecking(true);
     setMessage('');
+    setLatestToast(false);
     try {
       const status = await api<{ updateAvailable: boolean; latest: string; message: string }>('/launcher/update');
       if (!status.updateAvailable) {
-        setMessage("You're on the latest version.");
+        setLatestToast(true);
         return;
       }
       setMessage(`Updating to ${status.latest}…`);
@@ -252,6 +254,14 @@ function Launcher() {
         {checking ? 'Checking…' : 'Check for updates'}
       </button>
       {message ? <p className="ok-note">{message}</p> : null}
+      {latestToast ? (
+        <div className="import-toast" role="status">
+          <span>You’re on the latest version.</span>
+          <button type="button" aria-label="Dismiss" onClick={() => setLatestToast(false)}>
+            ×
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 }

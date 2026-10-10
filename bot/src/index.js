@@ -1,3 +1,4 @@
+import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import dotenv from 'dotenv';
@@ -6,6 +7,7 @@ import { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } from 'di
 dotenv.config({ path: path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '.env') });
 
 const token = process.env.DISCORD_TOKEN?.trim();
+const adminRoleId = process.env.ADMIN_ROLE_ID?.trim() || '';
 const apiBase = (process.env.LAUNCHER_API_URL || 'http://127.0.0.1:4177').replace(/\/$/, '');
 
 if (!token) {
@@ -121,6 +123,39 @@ client.on('interactionCreate', async (interaction) => {
     }
     console.error('[nexa-bot]', interaction.commandName, error.message);
   }
+});
+
+async function userHasAdminRole(userId) {
+  if (!adminRoleId || !client.isReady()) return false;
+  if (!/^\d{15,22}$/.test(String(userId || ''))) return false;
+  for (const guild of client.guilds.cache.values()) {
+    try {
+      const member = await client.rest.get(Routes.guildMember(guild.id, userId));
+      const roles = Array.isArray(member?.roles) ? member.roles.map(String) : [];
+      if (roles.includes(adminRoleId)) return true;
+    } catch {
+      /* this user is not in the guild, or the role lookup failed */
+    }
+  }
+  return false;
+}
+
+const adminLookup = http.createServer(async (req, res) => {
+  const url = new URL(req.url || '/', 'http://127.0.0.1:4391');
+  let admin = false;
+  if (req.method === 'GET' && url.pathname === '/admin' && adminRoleId) {
+    try {
+      admin = await userHasAdminRole(url.searchParams.get('userId') || '');
+    } catch {
+      admin = false;
+    }
+  }
+  res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+  res.end(JSON.stringify({ admin }));
+});
+adminLookup.listen(4391, '127.0.0.1', () => {
+  console.log('[nexa-bot] admin role lookup on http://127.0.0.1:4391/admin');
+  if (!adminRoleId) console.log('[nexa-bot] ADMIN_ROLE_ID is unset. Shop and news controls stay hidden.');
 });
 
 client.login(token).catch((error) => {

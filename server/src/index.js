@@ -6,9 +6,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { getDb, save, DEFAULT_SETTINGS } from './store.js';
 import { cleanDisplayName, cooldownState, formatRemaining } from './profanity.js';
-import { shopRefresh } from './time.js';
+import { shopDayKey, shopRefresh } from './time.js';
 import { findShippingBuild } from './builds.js';
 import { beginDiscordLogin, oauthCallbackReady, pollDiscordLogin, startDiscordCallback, submitBotIdentity, DISCORD_REDIRECT_URI } from './discord-auth.js';
+import { discordUserIsAdmin } from './roles.js';
+import { pullShopItems } from './shop-feed.js';
 import { APP_VERSION, applyUpdate, updateStatus } from './update.js';
 
 const THEMES = new Set(['default', 'void', 'ember', 'frost', 'jade', 'bud', 'rose', 'sunset', 'aurora', 'tom', 'noir', 'dark']);
@@ -63,14 +65,28 @@ function readToken(req) {
   return header.startsWith('Bearer ') ? header.slice(7) : '';
 }
 
+async function syncRole(user) {
+  if (!user?.discordId) return;
+  const admin = await discordUserIsAdmin(user.discordId);
+  const next = admin ? 'admin' : 'player';
+  if (user.role !== next) {
+    user.role = next;
+    save();
+  }
+}
+
 function requireAuth(req, res, next) {
   const token = readToken(req);
   const db = getDb();
   if (!token || !db.session || db.session.token !== token) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
-  req.user = db.user;
-  next();
+  syncRole(db.user)
+    .then(() => {
+      req.user = getDb().user;
+      next();
+    })
+    .catch(next);
 }
 
 function requireAdmin(req, res, next) {
@@ -143,12 +159,13 @@ app.post('/auth/logout', requireAuth, (_req, res) => {
   res.json({ ok: true });
 });
 
-app.get('/me', (req, res) => {
+app.get('/me', async (req, res) => {
   const token = readToken(req);
   const db = getDb();
   if (token && (!db.session || db.session.token !== token)) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
+  if (token && db.session?.token === token) await syncRole(db.user);
   res.json(presentUser(db));
 });
 
@@ -426,6 +443,7 @@ app.get('/leaderboard', (req, res) => {
       avatar: rival.avatar,
       wins: rival.wins,
       elims: rival.elims,
+      points: rival.wins * 100 + rival.elims,
       you: false,
     })),
     {
@@ -436,6 +454,7 @@ app.get('/leaderboard', (req, res) => {
       avatar: db.user.avatar,
       wins: db.user.stats.wins,
       elims: db.user.stats.elims,
+      points: db.user.stats.wins * 100 + db.user.stats.elims,
       you: true,
     },
   ];
@@ -465,8 +484,34 @@ if (process.env.NEXA_STATIC) {
 
 startDiscordCallback();
 
+let shopRefreshBusy = false;
+
+async function refreshShopIfDue() {
+  const key = shopDayKey();
+  const current = getDb();
+  if (current.shopDay === key && Array.isArray(current.items) && current.items.length > 0) return;
+  if (shopRefreshBusy) return;
+  shopRefreshBusy = true;
+  try {
+    const items = await pullShopItems();
+    if (!items.length) return;
+    const next = getDb();
+    if (next.shopDay === key && Array.isArray(next.items) && next.items.length > 0) return;
+    next.items = items;
+    next.shopDay = key;
+    save();
+    console.log(`[nexa-api] shop refreshed for ${key} (${items.length} items)`);
+  } catch (error) {
+    console.error('[nexa-api] shop refresh failed', error instanceof Error ? error.message : error);
+  } finally {
+    shopRefreshBusy = false;
+  }
+}
+
 const httpServer = app.listen(PORT, '127.0.0.1', () => {
   console.log(`[nexa-api] listening on http://127.0.0.1:${PORT}`);
+  refreshShopIfDue();
+  setInterval(refreshShopIfDue, 30_000);
 });
 httpServer.on('error', (error) => {
   console.error('[nexa-api] listen failed:', error.message);

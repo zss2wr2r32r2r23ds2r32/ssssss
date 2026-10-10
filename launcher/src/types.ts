@@ -74,5 +74,6 @@ export interface LeaderRow {
   avatar: string;
   wins: number;
   elims: number;
+  points: number;
   you: boolean;
 }
