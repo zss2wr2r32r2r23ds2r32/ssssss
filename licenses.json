@@ -1,0 +1,11 @@
+{
+  "salt": "pine-pollen-macro-v1",
+  "keys": [
+    {
+      "hash": "ae89aa89b4126018c97e89cb8fba7b3dd9bcae0fd57e8c2ff79f4558b00c36a4",
+      "label": "Admin testing key",
+      "role": "admin",
+      "note": "Testing license: admintest123"
+    }
+  ]
+}

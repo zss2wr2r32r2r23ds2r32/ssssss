@@ -1,0 +1,16 @@
+# Saved license / user settings
+settings/*.ini
+settings/*.json
+!settings/.gitkeep
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea
+.vscode
+*.log
+__pycache__/
+.pytest_cache/
+*.pyc
+.coverage
+build/

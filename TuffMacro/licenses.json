@@ -1,0 +1,11 @@
+{
+  "salt": "tuff-macro-v1",
+  "keys": [
+    {
+      "hash": "a1c254e301986bccdc66b6164e84e5047dfe33f02a9af09fafc34a42882201bc",
+      "label": "Owner",
+      "role": "admin",
+      "note": ""
+    }
+  ]
+}
