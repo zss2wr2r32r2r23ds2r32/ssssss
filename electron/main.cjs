@@ -33,6 +33,8 @@ function startPackagedServer() {
   process.env.PORT = PORT;
   process.env.NEXA_STATIC = path.join(root, 'ui');
   process.env.NEXA_DATA_DIR = path.join(app.getPath('userData'), 'data');
+  process.env.NEXA_APP_VERSION = app.getVersion();
+  global.__nexaExit = () => app.exit(0);
   const entry = path.join(root, 'server.cjs');
   // Load the API in this process. Spawning process.execPath fails on the
   // portable Windows stub, which is not a Node binary.

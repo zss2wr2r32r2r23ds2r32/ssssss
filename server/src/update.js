@@ -4,13 +4,22 @@ import os from 'node:os';
 import path from 'node:path';
 import { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
-import { createRequire } from 'node:module';
-import { fileURLToPath } from 'node:url';
 
-const require = createRequire(import.meta.url);
+function readVersion() {
+  if (process.env.NEXA_APP_VERSION) return process.env.NEXA_APP_VERSION;
+  const candidates = [path.join(process.cwd(), 'package.json'), path.join(process.cwd(), '..', 'package.json')];
+  for (const file of candidates) {
+    try {
+      const parsed = JSON.parse(fs.readFileSync(file, 'utf8'));
+      if (parsed.name === 'nexa' && parsed.version) return parsed.version;
+    } catch {
+      /* try the next package.json */
+    }
+  }
+  return '0.1.1';
+}
 
-const packagePath = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'package.json');
-export const APP_VERSION = JSON.parse(fs.readFileSync(packagePath, 'utf8')).version;
+export const APP_VERSION = readVersion();
 
 const REPO = 'zss2wr2r32r2r23ds2r32/ssssss';
 const TAG = /^nexa-(\d+)\.(\d+)\.(\d+)$/;
@@ -77,14 +86,9 @@ export async function updateStatus(fetchImpl = fetch) {
 
 function quitApp() {
   setTimeout(() => {
-    if (process.versions.electron) {
-      try {
-        const { app } = require('electron');
-        app.exit(0);
-        return;
-      } catch {
-        /* fall through */
-      }
+    if (typeof global.__nexaExit === 'function') {
+      global.__nexaExit();
+      return;
     }
     process.exit(0);
   }, 400);
