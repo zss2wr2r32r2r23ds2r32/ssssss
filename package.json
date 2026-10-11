@@ -1,0 +1,23 @@
+{
+  "name": "nexa",
+  "version": "0.1.7",
+  "description": "Nexa desktop launcher",
+  "private": true,
+  "workspaces": [
+    "launcher",
+    "server",
+    "bot"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,app -c blue,magenta \"npm run dev -w server\" \"npm run dev -w launcher\"",
+    "start": "npm run start -w server",
+    "bot": "npm run start -w bot",
+    "build": "npm run build -w launcher",
+    "pack:win": "npm run build && node scripts/bundle-server.mjs && node scripts/pack-tauri.mjs",
+    "test": "node --test server/src/update.test.js server/src/queue.test.js server/src/stats.test.js"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "esbuild": "^0.25.1"
+  }
+}
