@@ -1,0 +1,71 @@
+# ╔═══════════════════════════════════════════════════════╗
+# ║   SeaTeams 2.0 — Logs Date Picker                     ║
+# ╚═══════════════════════════════════════════════════════╝
+
+inventory:
+  rows: 3
+  title: '&8📜 Log Date Range'
+
+layout:
+  - '....h....'
+  - '.t.y.w.c.'
+  - 'b........'
+
+items:
+  header:
+    symbol: h
+    material: BOOK
+    name: '&#a855f7📜 %log_type% Logs'
+    lore:
+      - ''
+      - '&7Choose a date range to view'
+      - '&7the team''s logs.'
+
+  today:
+    symbol: t
+    material: CLOCK
+    name: '&#22c55e☀ Today'
+    lore:
+      - ''
+      - '&7Show all logs from today.'
+    action: logs_today
+
+  yesterday:
+    symbol: y
+    material: COMPASS
+    name: '&#ffaa00☼ Yesterday'
+    lore:
+      - ''
+      - '&7Show logs from yesterday.'
+    action: logs_yesterday
+
+  week:
+    symbol: w
+    material: BOOKSHELF
+    name: '&#00d4ff☽ Last 7 Days'
+    lore:
+      - ''
+      - '&7Show logs from the past'
+      - '&7seven days.'
+    action: logs_week
+
+  custom:
+    symbol: c
+    material: NAME_TAG
+    name: '&#ff66cc✎ Custom Range'
+    lore:
+      - ''
+      - '&7Type a date range like'
+      - '&f2026-01-01 2026-01-31'
+      - ''
+      - '&8» &7Closes the menu and prompts'
+    action: logs_custom
+
+  back:
+    symbol: b
+    material: SPECTRAL_ARROW
+    name: '&#00d4ff← Back'
+    lore:
+      - ''
+      - '&7Return to the previous menu.'
+    action: go_back

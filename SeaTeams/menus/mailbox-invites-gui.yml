@@ -1,0 +1,51 @@
+# ╔═══════════════════════════════════════════════════════╗
+# ║   SeaTeams 2.0 — Mailbox & Invites                    ║
+# ║   Both menus are 3 × 9 (27 slots).                    ║
+# ║   Items fill slots 0-17 (top 2 rows). Bottom row =    ║
+# ║   spectral arrow back at slot 18, rest black glass.   ║
+# ╚═══════════════════════════════════════════════════════╝
+
+mailbox:
+  inventory:
+    rows: 0
+    title: '&8✉ Mailbox'
+  back-slot: 18
+
+invites:
+  inventory:
+    rows: 3
+    title: '&8✉ Pending Invites'
+    # Wall-to-wall: 18 invite slots (rows 1 & 2)
+    invite-slots: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    max-invites: 18
+
+  invite-item:
+    material: PLAYER_HEAD
+    name: '&#ffd700%team_name%'
+    lore:
+      - ''
+      - '&7Members: &f%members%'
+      - '&7Inviter: &f%inviter%'
+      - ''
+      - '&7Expires in: &f%expires%s'
+      - ''
+      - '&8» &aLeft-click to accept'
+      - '&8» &cRight-click to deny'
+
+  no-invites-item:
+    slot: 13
+    material: BARRIER
+    name: '&#ff4444✗ No Pending Invites'
+    lore:
+      - ''
+      - '&7You don''t have any team'
+      - '&7invites waiting.'
+
+  navigation:
+    back:
+      slot: 18
+      material: SPECTRAL_ARROW
+      name: '&#00d4ff← Back'
+      lore:
+        - ''
+        - '&7Return to the main menu.'

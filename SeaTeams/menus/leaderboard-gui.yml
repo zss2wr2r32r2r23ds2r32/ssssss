@@ -1,0 +1,72 @@
+# ╔═══════════════════════════════════════════════════════╗
+# ║   SeaTeams 2.0 — Leaderboard Menu                     ║
+# ║   All teams shown as the leader's player head with    ║
+# ║   colorful premium lore. Lime shulker for next page.  ║
+# ╚═══════════════════════════════════════════════════════╝
+
+inventory:
+  rows: 6
+  title: '&8★ Leaderboard'
+
+# Slots 0-44 hold team entries (5 rows × 9 cols).
+# Slots 45-53 are reserved for navigation.
+
+max-per-page: 45
+
+team-item:
+  # All teams use the leader's player head — no special blocks for top 3.
+  material: PLAYER_HEAD
+  name: '&#ffd700&l#%rank% &7│ &f&l%team_name%'
+  lore:
+    - ''
+    - '&#a855f7✦ &7Score: &#ffd700%score%'
+    - '&#22c55e✦ &7Level: &#22c55e%level%'
+    - '&#00d4ff✦ &7Members: &f%members%'
+    - ''
+    - '&#ff4444⚔ &7Kills: &f%kills%'
+    - '&#7f7f7f☠ &7Deaths: &f%deaths%'
+    - ''
+
+navigation:
+  back:
+    slot: 49
+    material: SPECTRAL_ARROW
+    name: '&#00d4ff← Back'
+    lore:
+      - ''
+      - '&7Return to the main menu.'
+
+  previous:
+    slot: 45
+    material: RED_SHULKER_BOX
+    name: '&#ff4444← Previous Page'
+    lore:
+      - ''
+      - '&7Go to the previous page.'
+
+  next:
+    slot: 53
+    material: LIME_SHULKER_BOX
+    name: '&#22c55eNext Page →'
+    lore:
+      - ''
+      - '&7Go to the next page.'
+
+  page-display:
+    slot: 47
+    material: BOOK
+    name: '&#ffd700📖 Page %page% / %max%'
+    lore:
+      - ''
+      - '&7Browse all teams ranked'
+      - '&7by total score.'
+
+  your-rank:
+    slot: 51
+    material: PLAYER_HEAD
+    name: '&#22c55eYour Position'
+    lore:
+      - ''
+      - '&7Team: &f%your_team%'
+      - '&7Rank: &#ffd700#%your_rank%'
+      - '&7Score: &f%your_score%'

@@ -1,0 +1,156 @@
+# ╔═══════════════════════════════════════════════╗
+# ║     SeaTeams 2.0 — Settings                   ║
+# ║     Made by zVault                              ║
+# ╚═══════════════════════════════════════════════╝
+# Color codes:  &a / &l (legacy)   |   &#00d4ff (hex)   |   <gradient:#aabbcc:#ffffff>...</gradient> (MiniMessage)
+
+plugin:
+  debug: false
+  # Prefix shown in all plugin messages
+  prefix: '&#FF3399&lTEAMS &8▷ '
+  # GUI theme: OCEAN (default) | DARK | LIGHT
+  gui-theme: OCEAN
+
+# ─── Database ───────────────────────────────────
+database:
+  # SQLITE or MYSQL
+  type: SQLITE
+  mysql:
+    host: localhost
+    port: 3306
+    database: seateams
+    username: root
+    password: password
+    pool-size: 10
+    # Extra HikariCP tuning
+    connection-timeout: 30000
+    idle-timeout: 600000
+    max-lifetime: 1800000
+
+# ─── Team Creation ──────────────────────────────
+team-creation:
+  requires-payment: false
+  payment-amount: 500.0
+  min-name-length: 3
+  max-name-length: 16
+  max-members: 18    # Maximum number of players per team
+  allow-color-codes-in-name: false
+  banned-keywords:
+    - fuck
+    - cock
+    - dick
+    - pussy
+    - nigger
+    - nigga
+    - nazi
+    - hitler
+
+# ─── Team Features ──────────────────────────────
+features:
+  bank:
+    enabled: false
+  enderchest:
+    enabled: false
+  home:
+    enabled: false
+  ally:
+    enabled: true
+    max-allies: 1
+  leaderboard:
+    enabled: false
+    update-interval: 300   # seconds
+    # Score formula weights — tweak to taste
+    kill-factor: 3.0
+    death-factor: -1.5
+    money-factor: 0.001
+    mob-kill-factor: 0.5
+    level-factor: 10.0
+  chat:
+    team-format: '&#00d4ff[TEAM] &f%player% &8» &7%message%'
+    ally-format: '&#ffb300[ALLY] &f%player% &8» &7%message%'
+    spy-format:  '&#a855f7[SPY]&7 &f%team% &8» &f%player% &8» &7%message%'
+  friendly-fire:
+    default: false
+  mailbox:
+    enabled: false
+  pvp-tracker:
+    enabled: false
+    announce-kills: false
+    # Scope of the kill broadcast:
+    #   server  — every online player sees it (default)
+    #   teams   — only members of the killer's and victim's teams see it
+    announce-scope: server
+    announce-format: ''
+  # Tab-list integration — adds team name prefix to player names.
+  # DISABLED by default in 2.0: server owners should use PlaceholderAPI
+  # placeholders like %seateams_team_name% in their own chat/tab plugin
+  # instead of having SeaTeams force-modify display names.
+  tab-list:
+    enabled: false
+    format: '&8[&#00d4ff%team_name%&8] &f%name%'
+
+  # NEW in 2.0: Help / SOS button
+  help:
+    enabled: true
+    cooldown-seconds: 60   # Per-player cooldown to prevent spam
+    # The prefix shown before the (clickable) player name in the alert.
+    # The player name itself is dynamically clickable to send /tpa <name>.
+    broadcast-prefix: '&#ff4444⚠ HELP NEEDED &7- '
+  # NEW in 2.0: team progression / level system
+  progression:
+    enabled: true
+    base-xp: 100             # XP needed for level 2 baseline
+    growth-exponent: 1.5     # Scales each level: xp = base * level^exp
+    xp-per-kill: 25
+    xp-loss-per-death: 0
+    xp-per-mob-kill: 2
+    xp-per-block-break: 0
+
+# ─── Team Roles ─────────────────────────────────
+# Priority: lower number = higher rank.  -1 = Leader (immovable)
+roles:
+  '-1':
+    name: '&#ffd700Leader'
+    display: '&#ffd700✦'
+    permissions: [MANAGE_MEMBERS, MANAGE_ALLIANCE, SET_NAME, SET_TAG, SWITCH_FRIENDLY_FIRE, DISBAND, PROMOTE, DEMOTE, KICK, VIEW_LOGS]
+  '1':
+    name: '&#00d4ffCo-Leader'
+    display: '&#00d4ff❖'
+    permissions: [MANAGE_MEMBERS, MANAGE_ALLIANCE, SET_NAME, SET_TAG, SWITCH_FRIENDLY_FIRE, PROMOTE, DEMOTE, KICK, VIEW_LOGS]
+  '5':
+    name: '&#a855f7Officer'
+    display: '&#a855f7◆'
+    permissions: [MANAGE_MEMBERS, KICK]
+  '8':
+    name: '&#22c55eMember'
+    display: '&#22c55e●'
+    permissions: []
+  '10':
+    name: '&#94a3b8Recruit'
+    display: '&#94a3b8○'
+    permissions: []
+
+# ─── Invite Settings ────────────────────────────
+invites:
+  lifetime-seconds: 60
+  max-pending: 18
+
+# ─── Placeholder formatting ─────────────────────
+placeholders:
+  team-tag: '[%value%]'
+  team-name: '%value%'
+  # Shown for %seateams_name%, %seateams_tag%, %seateams_role% when player has no team.
+  # Set per-field overrides with not-in-team-name / not-in-team-tag / not-in-team-role.
+  not-in-team: 'N/A'
+  # not-in-team-name: 'None'   # uncomment to override just the name placeholder
+  # not-in-team-tag:  ''        # e.g. empty tag for teamless players
+  # not-in-team-role: 'None'
+
+# ─── Performance ────────────────────────────────
+performance:
+  # Cache team data in memory for this many seconds before re-querying DB
+  cache-ttl: 30
+  # Async dirty-team save interval in seconds
+  auto-save-interval: 120
+  # Max teams loaded in memory at once (0 = unlimited)
+  max-cached-teams: 500

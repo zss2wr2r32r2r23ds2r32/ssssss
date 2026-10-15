@@ -1,0 +1,110 @@
+# ╔═══════════════════════════════════════════════════════╗
+# ║   SeaTeams 2.0 — Bank Menu                            ║
+# ╚═══════════════════════════════════════════════════════╝
+
+inventory:
+  rows: 4
+  title: '&8$ Team Bank'
+
+layout:
+  - '....I....'
+  - '.D.d.x.X.'
+  - '...A.W...'
+  - '....b...L'
+
+items:
+  info:
+    symbol: I
+    slot: 4
+    material: GOLD_BLOCK
+    name: '&#ffd700$ Bank Balance'
+    lore:
+      - ''
+      - '&7Team Balance:'
+      - '&f$%balance%'
+      - ''
+      - '&7Your Balance:'
+      - '&f$%personal_balance%'
+
+  deposit-100:
+    symbol: D
+    material: GOLD_NUGGET
+    name: '&#22c55e↓ Deposit $%amount_small%'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7deposit &f$%amount_small%&7 to the team bank.'
+    action: deposit_100
+
+  deposit-1000:
+    symbol: d
+    material: GOLD_INGOT
+    name: '&#22c55e↓ Deposit $%amount_large%'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7deposit &f$%amount_large%&7 to the team bank.'
+    action: deposit_1000
+
+  withdraw-100:
+    symbol: x
+    material: IRON_NUGGET
+    name: '&#ff4444↑ Withdraw $%amount_small%'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7withdraw &f$%amount_small%&7 from the team bank.'
+    action: withdraw_100
+
+  withdraw-1000:
+    symbol: X
+    material: IRON_INGOT
+    name: '&#ff4444↑ Withdraw $%amount_large%'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7withdraw &f$%amount_large%&7 from the team bank.'
+    action: withdraw_1000
+
+  custom-deposit:
+    symbol: A
+    material: WRITABLE_BOOK
+    name: '&#22c55e↓ Custom Deposit'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7type a custom deposit amount'
+      - '&7in chat.'
+    action: deposit_custom
+
+  custom-withdraw:
+    symbol: W
+    material: WRITABLE_BOOK
+    name: '&#ff4444↑ Custom Withdraw'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7type a custom withdrawal amount'
+      - '&7in chat.'
+    action: withdraw_custom
+
+  back:
+    symbol: b
+    material: SPECTRAL_ARROW
+    name: '&#00d4ff← Back'
+    lore:
+      - ''
+      - '&7Return to the main menu.'
+    action: go_back
+
+  logs:
+    symbol: L
+    material: BOOK
+    name: '&#a855f7📜 Bank Logs'
+    lore:
+      - ''
+      - '&7Click on this item to'
+      - '&7view bank transaction history.'
+      - ''
+      - '&c&oCo-Leader or higher only.'
+    action: open_bank_logs
