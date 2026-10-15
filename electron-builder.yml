@@ -1,0 +1,33 @@
+appId: com.avixstudios.desktop
+productName: Avix Studios
+copyright: Copyright © Avix Studios
+directories:
+  output: release
+  buildResources: build
+files:
+  - dist/**/*
+  - electron/**/*
+  - build/icon.png
+  - package.json
+  - "!node_modules/**"
+asar: true
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+    - target: portable
+      arch:
+        - x64
+  icon: build/icon.ico
+  executableName: AvixStudios
+  artifactName: ${productName}-${version}-${arch}.${ext}
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  shortcutName: Avix Studios
+  uninstallDisplayName: Avix Studios
+  artifactName: AvixStudios-Setup-${version}.${ext}
+portable:
+  artifactName: AvixStudios-${version}-portable.exe
