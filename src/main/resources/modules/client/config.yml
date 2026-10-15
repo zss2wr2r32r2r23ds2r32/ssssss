@@ -1,0 +1,25 @@
+config-version: 2
+message-mode: chat
+
+apply-delay-ticks: 40
+
+# Escape menu disconnect text — installed into ItemsAdder (uses IA resource pack, no second prompt)
+itemsadder-escape-menu:
+  enabled: true
+  auto-install: true
+  namespace: shardedcore
+  block-id: shardedcore_esc_menu
+  disconnect-text: '&x&A&D&4&E&F&FDisconnect from ShardedMC'
+  install-path: 'plugins/ItemsAdder/contents/shardedcore/configs/esc_menu.yml'
+  reload-on-install: false
+  reload-command: iareload
+
+discord-rpc:
+  enabled: true
+  send-without-detection: true
+  game-name: 'Sharded MC'
+  details: 'Playing Sharded MC'
+  state: 'Online on ShardedMC'
+  image-url: ''
+  image-text: 'Sharded MC'
+  show-player-count: true

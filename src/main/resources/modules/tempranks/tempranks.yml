@@ -1,0 +1,192 @@
+config-version: 4
+menu_title: 'Rank Shop'
+open_command:
+  - rankshop
+  - temprankshop
+size: 36
+open_permission: tempranks.use
+
+open_commands:
+  - '[sound] BLOCK_CHEST_OPEN'
+
+items:
+
+  ruby_7d:
+    material: RED_HARNESS
+    slot: 11
+    display_name: '&#FF2B2B&lRUBY &#FF2B2BRank &7[7D]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF2B2BInformation:'
+      - '&#FF2B2B| &fPurchase ranks using tokens'
+      - '&#FF2B2B| &ftokens can be obtained by &#FF2B2BKill Streaks'
+      - ''
+      - '&#FF2B2B| &fTokens: &#FF2B2B500'
+      - ''
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
+    click_commands:
+      - '[temprank_buy] ruby 7 500'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  ruby_14d:
+    material: RED_HARNESS
+    slot: 20
+    display_name: '&#FF2B2B&lRUBY &#FF2B2BRank &7[14D]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF2B2BInformation:'
+      - '&#FF2B2B| &fPurchase ranks using tokens'
+      - '&#FF2B2B| &ftokens can be obtained by &#FF2B2BKill Streaks'
+      - ''
+      - '&#FF2B2B| &fTokens: &#FF2B2B900'
+      - ''
+      - '&#FFBA00▷ &#FFBA00&l&nCLICK&r &#FFBA00To Purchase'
+    click_commands:
+      - '[temprank_buy] ruby 14 900'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  sapphire_7d:
+    material: BLUE_HARNESS
+    slot: 12
+    display_name: '&#006EFF&lSAPPHIRE &#006EFFRank &7[7D]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#006EFFInformation:'
+      - '&#006EFF| &fPurchase ranks using tokens'
+      - '&#006EFF| &ftokens can be obtained by &#006EFFKill Streaks'
+      - ''
+      - '&#006EFF| &fTokens: &#006EFF750'
+      - ''
+      - '&#FFCF00▷ &#FFCF00&l&nCLICK&r &#FFCF00To Purchase'
+    click_commands:
+      - '[temprank_buy] sapphire 7 750'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  sapphire_14d:
+    material: BLUE_HARNESS
+    slot: 21
+    display_name: '&#006EFF&lSAPPHIRE &#006EFFRank &7[14D]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#006EFFInformation:'
+      - '&#006EFF| &fPurchase ranks using tokens'
+      - '&#006EFF| &ftokens can be obtained by &#006EFFKill Streaks'
+      - ''
+      - '&#006EFF| &fTokens: &#006EFF1350'
+      - ''
+      - '&#FFCF00▷ &#FFCF00&l&nCLICK&r &#FFCF00To Purchase'
+    click_commands:
+      - '[temprank_buy] sapphire 14 1350'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  onyx_7d:
+    material: YELLOW_HARNESS
+    slot: 13
+    display_name: '&#FFCF00&lONYX &#FFCF00Rank &7[7D]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FFCF00Information:'
+      - '&#FFCF00| &fPurchase ranks using tokens'
+      - '&#FFCF00| &ftokens can be obtained by &#FFCF00Kill Streaks'
+      - ''
+      - '&#FFCF00| &fTokens: &#FFCF001000'
+      - ''
+      - '&#FFCF00▷ &#FFCF00&l&nCLICK&r &#FFCF00To Purchase'
+    click_commands:
+      - '[temprank_buy] onyx 7 1000'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  onyx_14d:
+    material: YELLOW_HARNESS
+    slot: 22
+    display_name: '&#FFCF00&lONYX &#FFCF00Rank &7[14D]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FFCF00Information:'
+      - '&#FFCF00| &fPurchase ranks using tokens'
+      - '&#FFCF00| &ftokens can be obtained by &#FFCF00Kill Streaks'
+      - ''
+      - '&#FFCF00| &fTokens: &#FFCF001800'
+      - ''
+      - '&#FFCF00▷ &#FFCF00&l&nCLICK&r &#FFCF00To Purchase'
+    click_commands:
+      - '[temprank_buy] onyx 14 1800'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  aether_7d:
+    material: LIGHT_BLUE_HARNESS
+    slot: 14
+    display_name: '&#7DEBFF&lAETHER &#7DEBFFRank &7[7D]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#7DEBFFInformation:'
+      - '&#7DEBFF| &fPurchase ranks using tokens'
+      - '&#7DEBFF| &ftokens can be obtained by &#7DEBFFKill Streaks'
+      - ''
+      - '&#7DEBFF| &fTokens: &#7DEBFF1500'
+      - ''
+      - '&#FFCF00▷ &#FFCF00&l&nCLICK&r &#FFCF00To Purchase'
+    click_commands:
+      - '[temprank_buy] aether 7 1500'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  aether_14d:
+    material: LIGHT_BLUE_HARNESS
+    slot: 23
+    display_name: '&#7DEBFF&lAETHER &#7DEBFFRank &7[14D]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#7DEBFFInformation:'
+      - '&#7DEBFF| &fPurchase ranks using tokens'
+      - '&#7DEBFF| &ftokens can be obtained by &#7DEBFFKill Streaks'
+      - ''
+      - '&#7DEBFF| &fTokens: &#7DEBFF2700'
+      - ''
+      - '&#FFCF00▷ &#FFCF00&l&nCLICK&r &#FFCF00To Purchase'
+    click_commands:
+      - '[temprank_buy] aether 14 2700'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  flawless_7d:
+    material: PURPLE_HARNESS
+    slot: 15
+    display_name: '&#8B5CF6&lFLAWLESS &#8B5CF6Rank &7[7D]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#8B5CF6Information:'
+      - '&#8B5CF6| &fPurchase ranks using tokens'
+      - '&#8B5CF6| &ftokens can be obtained by &#8B5CF6Kill Streaks'
+      - ''
+      - '&#8B5CF6| &fTokens: &#8B5CF62000'
+      - ''
+      - '&#FFCF00▷ &#FFCF00&l&nCLICK&r &#FFCF00To Purchase'
+    click_commands:
+      - '[temprank_buy] flawless 7 2000'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  flawless_14d:
+    material: PURPLE_HARNESS
+    slot: 24
+    display_name: '&#8B5CF6&lFLAWLESS &#8B5CF6Rank &7[14D]'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#8B5CF6Information:'
+      - '&#8B5CF6| &fPurchase ranks using tokens'
+      - '&#8B5CF6| &ftokens can be obtained by &#8B5CF6Kill Streaks'
+      - ''
+      - '&#8B5CF6| &fTokens: &#8B5CF63600'
+      - ''
+      - '&#FFCF00▷ &#FFCF00&l&nCLICK&r &#FFCF00To Purchase'
+    click_commands:
+      - '[temprank_buy] flawless 14 3600'
+      - '[sound] ENTITY_PLAYER_LEVELUP'

@@ -1,0 +1,7 @@
+prefix: '%prefix%'
+players-only: '%prefix%&#FF2727Players only.'
+no-permission: '%prefix%&#FF2727You do not have permission.'
+cooldown: '%prefix%&#FF2727Daily reward available in &f%time%&#FF2727.'
+already-claiming: '%prefix%&#FF2727You are already claiming your daily reward.'
+no-rewards: '%prefix%&#FF2727No rewards configured.'
+won: '%prefix%&#9FFF00You won &f%reward% &#9FFF00(&f%rarity%&#9FFF00)!'

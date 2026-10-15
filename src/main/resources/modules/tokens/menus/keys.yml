@@ -1,0 +1,69 @@
+config-version: 6
+menu_title: 'Token Shop &8| Keys'
+open_command: keys
+size: 27
+open_permission: tokenshop.use
+
+items:
+
+  back_button:
+    nav-override: true
+    slot: 26
+    left_click_commands:
+      - '[openguimenu] mainmenu'
+
+  kill_key:
+    material: RED_CANDLE
+    slot: 13
+    display_name: '&x&F&F&0&0&0&0&lKILL &x&F&F&0&0&0&0Key'
+    lore:
+      - '&8Description'
+      - ''
+      - '&x&F&F&0&0&0&0Information:'
+      - '&x&F&F&0&0&0&0| &fPurchase a &x&F&F&0&0&0&0Kill Key'
+      - ''
+      - '&x&F&F&0&0&0&0⚓ &fCost: &x&F&F&0&0&0&01500 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[tokens_take] 1500'
+      - '[console] crate key give %player_name% killkey 1'
+      - '[message] %token_prefix%&#9FFF00You purchased a Kill Key!'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  cosmetic_key:
+    material: PURPLE_CANDLE
+    slot: 11
+    display_name: '&fShard Key'
+    lore:
+      - '&8Description'
+      - ''
+      - '&7Purchase a Shard Key'
+      - ''
+      - '&7Cost: &f1000 Tokens'
+      - ''
+      - '&eClick to purchase'
+    left_click_commands:
+      - '[tokens_take] 1000'
+      - '[console] crate key give %player_name% shard 1'
+      - '[message] %token_prefix%&#9FFF00You purchased a Shard Key!'
+      - '[sound] ENTITY_PLAYER_LEVELUP'
+
+  astral_key:
+    material: BLUE_CANDLE
+    slot: 15
+    display_name: '&#0045FF&lASTRAL &#0045FFKey'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#0045FFInformation:'
+      - '&#0045FF| &fPurchase an &#0045FFAstral Key'
+      - ''
+      - '&#0045FF⚓ &fCost: &#0045FF3000 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Purchase'
+    left_click_commands:
+      - '[tokens_take] 3000'
+      - '[console] crate key give %player_name% astral 1'
+      - '[message] %token_prefix%&#9FFF00You purchased an Astral Key!'
+      - '[sound] ENTITY_PLAYER_LEVELUP'

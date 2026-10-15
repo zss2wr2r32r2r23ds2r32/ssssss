@@ -1,0 +1,8 @@
+prefix: '&#99FF00&lSHOP &7▷ &r'
+players-only: '&#FF0000&lERROR &7▷ &fOnly players can open the shop.'
+no-permission: '&#FF0000&lERROR &7▷ &fYou do not have permission to use the shop.'
+bought: '&#99ff00&lSHOP &7▷ &fYou bought &#99ff00%amount%x %item% &ffor &#99ff00$%total%&f.'
+cannot-afford: '&#FF0000&lERROR &7▷ &fYou need &#99ff00$%total% &ffor that.'
+no-space: '&#FF0000&lERROR &7▷ &fYour inventory has no room for that.'
+no-economy: '&#FF0000&lERROR &7▷ &fThe shop is not ready yet.'
+no-sections: '&#FF0000&lERROR &7▷ &fThe shop has nothing in it yet.'

@@ -1,0 +1,29 @@
+config-version: 3
+prefix: '%prefix%'
+
+players-only: '%prefix%&#FF2727Only players can use this command.'
+no-permission: '%prefix%&#FF2727You don''t have permission to open tags.'
+not-owned: '%prefix%&#FF2727You don''t own %tag%&#FF2727!'
+equipped: '%prefix%&#9FFF00Tag equipped!'
+removed: '%prefix%&#9FFF00Tag removed!'
+custom-prompt: '%prefix%&#9FFF00Type your custom tag in chat. Example: &#FF0000&lCOOL or &8[&#FF0000&lCOOL&8] (&l required, max 5 letters)'
+custom-bold-required: '%prefix%&#FF2727Custom tags must use &f&l &#FF2727(bold) before the tag letters. Example: &8[&#FF0000&lCOOL&8]'
+custom-non-english: '%prefix%&#FF2727Only English letters (A-Z) are allowed in custom tags and team names.'
+custom-blacklisted: '%prefix%&#FF2727That tag contains a blocked word.'
+custom-emoji-blocked: '%prefix%&#FF2727That tag contains a blocked emoji.'
+custom-invalid-format: '%prefix%&#FF2727Invalid tag. Use a color + tag text (e.g. &#FF0000COOL) or &8[&#FF0000COOL&8]'
+custom-set: '%prefix%&#9FFF00Custom tag set to %tag%&#9FFF00!'
+custom-reapplied: '%prefix%&#9FFF00Re-applied your saved custom tag!'
+custom-limited-blocked: '%prefix%&#FF2727That tag matches a limited-time tag and is not allowed.'
+custom-too-long: '%prefix%&#FF2727Custom tags can be at most &f5 &#FF2727letters (colors don''t count).'
+custom-cooldown: '%prefix%&#FF2727You can create a new custom tag in &f%time%&#FF2727.'
+tag-created: '%prefix%&#9FFF00Created tag &f%tag%&#9FFF00 — open &f/tags &#9FFF00to view it in the GUI.'
+tag-create-usage: '%prefix%&#FF2727Usage: &f/tags create <id> <display>'
+tag-limited-usage: '%prefix%&#FF2727Usage: &f/tags limited <id> <display>'
+tag-permission-hint: '%prefix%&#9FFF00Grant &f%permission% &#9FFF00for players to own this tag.'
+tag-deleted: '%prefix%&#9FFF00Deleted tag &f%tag%&#9FFF00.'
+tag-not-found: '%prefix%&#FF2727Tag &f%tag% &#FF2727not found.'
+menu-full: '%prefix%&#FF2727The tag menu is full.'
+
+message-modes:
+  equipped: actionbar

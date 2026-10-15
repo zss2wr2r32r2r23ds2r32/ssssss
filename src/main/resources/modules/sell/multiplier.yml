@@ -1,0 +1,13 @@
+multipliers:
+  default: {permission: '', multiplier: 1.0}
+  vip: {permission: sharded.sell.multiplier.vip, multiplier: 1.25}
+  mvp: {permission: sharded.sell.multiplier.mvp, multiplier: 1.5}
+  premium: {permission: sharded.sell.multiplier.premium, multiplier: 2.0}
+gui:
+  title: '&8Sell Multipliers'
+  size: 27
+  current:
+    slot: 13
+    material: GOLD_INGOT
+    name: '&#FFD900&lYOUR MULTIPLIER'
+    lore: ['&7Current: &#FFD900%multiplier%x']

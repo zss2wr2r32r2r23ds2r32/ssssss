@@ -1,0 +1,318 @@
+config-version: 1
+message-mode: chat
+
+gui:
+  title: '&8Kill Rewards'
+  size: 54
+  filler: BLACK_STAINED_GLASS_PANE
+
+rewards:
+  tier_1:
+    required-kills: 1
+    slot: 10
+    material: WOODEN_SWORD
+    name: '&a1 Kills'
+    lore-locked:
+      - '&7Reach &f1 &7player kills'
+      - '&7Progress: &f%kills%&7/&f%required%'
+    lore-unlocked:
+      - '&aClick to claim!'
+      - '&7Reward: &f50 Tokens'
+    lore-claimed:
+      - '&8Already claimed'
+    commands:
+      - 'tokens give %player% 50'
+
+  tier_2:
+    required-kills: 5
+    slot: 11
+    material: STONE_SWORD
+    name: '&a5 Kills'
+    lore-locked:
+      - '&7Reach &f5 &7player kills'
+      - '&7Progress: &f%kills%&7/&f%required%'
+    lore-unlocked:
+      - '&aClick to claim!'
+      - '&7Reward: &f50 Tokens'
+    lore-claimed:
+      - '&8Already claimed'
+    commands:
+      - 'tokens give %player% 50'
+
+  tier_3:
+    required-kills: 10
+    slot: 12
+    material: IRON_SWORD
+    name: '&a10 Kills'
+    lore-locked:
+      - '&7Reach &f10 &7player kills'
+      - '&7Progress: &f%kills%&7/&f%required%'
+    lore-unlocked:
+      - '&aClick to claim!'
+      - '&7Reward: &f100 Tokens'
+    lore-claimed:
+      - '&8Already claimed'
+    commands:
+      - 'tokens give %player% 100'
+
+  tier_4:
+    required-kills: 15
+    slot: 13
+    material: GOLDEN_SWORD
+    name: '&a15 Kills'
+    lore-locked:
+      - '&7Reach &f15 &7player kills'
+      - '&7Progress: &f%kills%&7/&f%required%'
+    lore-unlocked:
+      - '&aClick to claim!'
+      - '&7Reward: &f150 Tokens'
+    lore-claimed:
+      - '&8Already claimed'
+    commands:
+      - 'tokens give %player% 150'
+
+  tier_5:
+    required-kills: 20
+    slot: 14
+    material: DIAMOND_SWORD
+    name: '&a20 Kills'
+    lore-locked:
+      - '&7Reach &f20 &7player kills'
+      - '&7Progress: &f%kills%&7/&f%required%'
+    lore-unlocked:
+      - '&aClick to claim!'
+      - '&7Reward: &f200 Tokens'
+    lore-claimed:
+      - '&8Already claimed'
+    commands:
+      - 'tokens give %player% 200'
+
+  tier_6:
+    required-kills: 25
+    slot: 15
+    material: NETHERITE_SWORD
+    name: '&e25 Kills'
+    lore-locked: ['&7Reach &f25 &7kills (&f%kills%&7/&f%required%&7)']
+    lore-unlocked: ['&aClick to claim!', '&7Reward: &f250 Tokens']
+    lore-claimed: ['&8Already claimed']
+    commands: ['tokens give %player% 250']
+
+  tier_7:
+    required-kills: 30
+    slot: 16
+    material: BOW
+    name: '&e30 Kills'
+    lore-locked: ['&7Reach &f30 &7kills (&f%kills%&7/&f%required%&7)']
+    lore-unlocked: ['&aClick to claim!', '&7Reward: &f300 Tokens']
+    lore-claimed: ['&8Already claimed']
+    commands: ['tokens give %player% 300']
+
+  tier_8:
+    required-kills: 40
+    slot: 19
+    material: CROSSBOW
+    name: '&e40 Kills'
+    lore-locked: ['&7Reach &f40 &7kills (&f%kills%&7/&f%required%&7)']
+    lore-unlocked: ['&aClick to claim!', '&7Reward: &f400 Tokens']
+    lore-claimed: ['&8Already claimed']
+    commands: ['tokens give %player% 400']
+
+  tier_9:
+    required-kills: 50
+    slot: 20
+    material: TRIDENT
+    name: '&e50 Kills'
+    lore-locked: ['&7Reach &f50 &7kills (&f%kills%&7/&f%required%&7)']
+    lore-unlocked: ['&aClick to claim!', '&7Reward: &f500 Tokens']
+    lore-claimed: ['&8Already claimed']
+    commands: ['tokens give %player% 500']
+
+  tier_10:
+    required-kills: 60
+    slot: 21
+    material: GOLDEN_AXE
+    name: '&e60 Kills'
+    lore-locked: ['&7Reach &f60 &7kills (&f%kills%&7/&f%required%&7)']
+    lore-unlocked: ['&aClick to claim!', '&7Reward: &f600 Tokens']
+    lore-claimed: ['&8Already claimed']
+    commands: ['tokens give %player% 600']
+
+  tier_11:
+    required-kills: 75
+    slot: 22
+    material: IRON_AXE
+    name: '&e75 Kills'
+    lore-locked: ['&7Reach &f75 &7kills (&f%kills%&7/&f%required%&7)']
+    lore-unlocked: ['&aClick to claim!', '&7Reward: &f750 Tokens']
+    lore-claimed: ['&8Already claimed']
+    commands: ['tokens give %player% 750']
+
+  tier_12:
+    required-kills: 100
+    slot: 23
+    material: DIAMOND_AXE
+    name: '&e100 Kills'
+    lore-locked: ['&7Reach &f100 &7kills (&f%kills%&7/&f%required%&7)']
+    lore-unlocked: ['&aClick to claim!', '&7Reward: &f1000 Tokens']
+    lore-claimed: ['&8Already claimed']
+    commands: ['tokens give %player% 1000']
+
+  tier_13:
+    required-kills: 125
+    slot: 24
+    material: NETHERITE_AXE
+    name: '&e125 Kills'
+    lore-locked: ['&7Reach &f125 &7kills (&f%kills%&7/&f%required%&7)']
+    lore-unlocked: ['&aClick to claim!', '&7Reward: &f1250 Tokens']
+    lore-claimed: ['&8Already claimed']
+    commands: ['tokens give %player% 1250']
+
+  tier_14:
+    required-kills: 150
+    slot: 25
+    material: SPECTRAL_ARROW
+    name: '&e150 Kills'
+    lore-locked: ['&7Reach &f150 &7kills (&f%kills%&7/&f%required%&7)']
+    lore-unlocked: ['&aClick to claim!', '&7Reward: &f1500 Tokens']
+    lore-claimed: ['&8Already claimed']
+    commands: ['tokens give %player% 1500']
+
+  tier_15:
+    required-kills: 200
+    slot: 28
+    material: TNT
+    name: '&e200 Kills'
+    lore-locked: ['&7Reach &f200 &7kills (&f%kills%&7/&f%required%&7)']
+    lore-unlocked: ['&aClick to claim!', '&7Reward: &f2000 Tokens']
+    lore-claimed: ['&8Already claimed']
+    commands: ['tokens give %player% 2000']
+
+  tier_16:
+    required-kills: 250
+    slot: 29
+    material: FIREWORK_ROCKET
+    name: '&e250 Kills'
+    lore-locked: ['&7Reach &f250 &7kills (&f%kills%&7/&f%required%&7)']
+    lore-unlocked: ['&aClick to claim!', '&7Reward: &f2500 Tokens']
+    lore-claimed: ['&8Already claimed']
+    commands: ['tokens give %player% 2500']
+
+  tier_17:
+    required-kills: 300
+    slot: 30
+    material: TOTEM_OF_UNDYING
+    name: '&e300 Kills'
+    lore-locked: ['&7Reach &f300 &7kills (&f%kills%&7/&f%required%&7)']
+    lore-unlocked: ['&aClick to claim!', '&7Reward: &f3000 Tokens']
+    lore-claimed: ['&8Already claimed']
+    commands: ['tokens give %player% 3000']
+
+  tier_18:
+    required-kills: 400
+    slot: 31
+    material: ENCHANTED_GOLDEN_APPLE
+    name: '&e400 Kills'
+    lore-locked: ['&7Reach &f400 &7kills (&f%kills%&7/&f%required%&7)']
+    lore-unlocked: ['&aClick to claim!', '&7Reward: &f4000 Tokens']
+    lore-claimed: ['&8Already claimed']
+    commands: ['tokens give %player% 4000']
+
+  tier_19:
+    required-kills: 500
+    slot: 32
+    material: NETHER_STAR
+    name: '&e500 Kills'
+    lore-locked: ['&7Reach &f500 &7kills (&f%kills%&7/&f%required%&7)']
+    lore-unlocked: ['&aClick to claim!', '&7Reward: &f5000 Tokens']
+    lore-claimed: ['&8Already claimed']
+    commands: ['tokens give %player% 5000']
+
+  tier_20:
+    required-kills: 750
+    slot: 33
+    material: DRAGON_HEAD
+    name: '&e750 Kills'
+    lore-locked: ['&7Reach &f750 &7kills (&f%kills%&7/&f%required%&7)']
+    lore-unlocked: ['&aClick to claim!', '&7Reward: &f7500 Tokens']
+    lore-claimed: ['&8Already claimed']
+    commands: ['tokens give %player% 7500']
+
+  tier_21:
+    required-kills: 1000
+    slot: 34
+    material: BEACON
+    name: '&e1000 Kills'
+    lore-locked: ['&7Reach &f1000 &7kills (&f%kills%&7/&f%required%&7)']
+    lore-unlocked: ['&aClick to claim!', '&7Reward: &f10000 Tokens']
+    lore-claimed: ['&8Already claimed']
+    commands: ['tokens give %player% 10000']
+
+  tier_22:
+    required-kills: 1500
+    slot: 37
+    material: ELYTRA
+    name: '&e1500 Kills'
+    lore-locked: ['&7Reach &f1500 &7kills (&f%kills%&7/&f%required%&7)']
+    lore-unlocked: ['&aClick to claim!', '&7Reward: &f15000 Tokens']
+    lore-claimed: ['&8Already claimed']
+    commands: ['tokens give %player% 15000']
+
+  tier_23:
+    required-kills: 2000
+    slot: 38
+    material: SHIELD
+    name: '&e2000 Kills'
+    lore-locked: ['&7Reach &f2000 &7kills (&f%kills%&7/&f%required%&7)']
+    lore-unlocked: ['&aClick to claim!', '&7Reward: &f20000 Tokens']
+    lore-claimed: ['&8Already claimed']
+    commands: ['tokens give %player% 20000']
+
+  tier_24:
+    required-kills: 3000
+    slot: 39
+    material: TURTLE_HELMET
+    name: '&e3000 Kills'
+    lore-locked: ['&7Reach &f3000 &7kills (&f%kills%&7/&f%required%&7)']
+    lore-unlocked: ['&aClick to claim!', '&7Reward: &f30000 Tokens']
+    lore-claimed: ['&8Already claimed']
+    commands: ['tokens give %player% 30000']
+
+  tier_25:
+    required-kills: 5000
+    slot: 40
+    material: WITHER_SKELETON_SKULL
+    name: '&e5000 Kills'
+    lore-locked: ['&7Reach &f5000 &7kills (&f%kills%&7/&f%required%&7)']
+    lore-unlocked: ['&aClick to claim!', '&7Reward: &f50000 Tokens']
+    lore-claimed: ['&8Already claimed']
+    commands: ['tokens give %player% 50000']
+
+  tier_26:
+    required-kills: 7500
+    slot: 41
+    material: DRAGON_EGG
+    name: '&e7500 Kills'
+    lore-locked: ['&7Reach &f7500 &7kills (&f%kills%&7/&f%required%&7)']
+    lore-unlocked: ['&aClick to claim!', '&7Reward: &f75000 Tokens']
+    lore-claimed: ['&8Already claimed']
+    commands: ['tokens give %player% 75000']
+
+  tier_27:
+    required-kills: 10000
+    slot: 42
+    material: HEART_OF_THE_SEA
+    name: '&e10000 Kills'
+    lore-locked: ['&7Reach &f10000 &7kills (&f%kills%&7/&f%required%&7)']
+    lore-unlocked: ['&aClick to claim!', '&7Reward: &f100000 Tokens']
+    lore-claimed: ['&8Already claimed']
+    commands: ['tokens give %player% 100000']
+
+  tier_28:
+    required-kills: 15000
+    slot: 43
+    material: NETHERITE_INGOT
+    name: '&e15000 Kills'
+    lore-locked: ['&7Reach &f15000 &7kills (&f%kills%&7/&f%required%&7)']
+    lore-unlocked: ['&aClick to claim!', '&7Reward: &f150000 Tokens']
+    lore-claimed: ['&8Already claimed']
+    commands: ['tokens give %player% 150000']

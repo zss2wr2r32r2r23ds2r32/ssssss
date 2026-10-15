@@ -1,0 +1,57 @@
+config-version: 1
+
+# Global navigation button templates — used by Java GUIs and YAML menus (nav: back|previous|next|close).
+
+sounds:
+  open: UI_BUTTON_CLICK
+  click: UI_BUTTON_CLICK
+  close: BLOCK_CHEST_CLOSE
+  navigate: UI_BUTTON_CLICK
+
+back:
+  material: BARRIER
+  display_name: '&#FF0000&lBACK'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#FF0000Information:'
+    - '&#FF0000| &fClick here, to go'
+    - '&#FF0000| &fto the previous page.'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+
+previous:
+  material: BARRIER
+  display_name: '&#FF005D&lPREVIOUS'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#FF005DInformation:'
+    - '&#FF005D| &fClick here, to go'
+    - '&#FF005D| &fto the previous page.'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+
+next:
+  material: LIME_DYE
+  display_name: '&#94FF00&lNEXT'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#94FF00Information:'
+    - '&#94FF00| &fClick here, to go'
+    - '&#94FF00| &fto the next page.'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Navigate'
+
+close:
+  material: BARRIER
+  display_name: '&#FF0000&lCLOSE'
+  lore:
+    - '&8Description'
+    - ''
+    - '&#FF0000Information:'
+    - '&#FF0000| &fClick here, to'
+    - '&#FF0000| &fclose this page.'
+    - ''
+    - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Close'

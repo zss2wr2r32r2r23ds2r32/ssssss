@@ -1,0 +1,105 @@
+config-version: 8
+menu_title: Pets
+size: 27
+open_permission: sharded.pets.view
+
+items:
+  filler:
+    material: BLACK_STAINED_GLASS_PANE
+    slots: [0,1,2,3,4,5,6,7,8,9,17,18,26]
+    display_name: ' '
+
+  parrot:
+    material: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjU5YmUwYjQ2NTJjM2ZiZjRiNjZlY2M5ZTc0MzI3MWJiZDY2NmIwNDRmNTIxMTgwMDMzMjVkYTIxMzBjZmZkNSJ9fX0=
+    slot: 10
+    permission: sharded.pets.parrot
+    display_name: '&#FF0000&lPARROT &#FF0000Pet'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF0000Information:'
+      - '&#FF0000| &fClick to Apply'
+      - '&#FF0000| &#FF0000Parrot &fPet'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+    click_commands:
+      - '[pet_equip_parrot]'
+
+  axolotl:
+    material: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWM3MWFmODE1MzRjYjlmMmIyOGZkNjg4NWJmOTdjMTAxZGUxOTBmZGY2OTY2N2Y2NGYyYjdkYjVmZTE0NDczOCJ9fX0=
+    slot: 12
+    permission: sharded.pets.axolotl
+    display_name: '&#FF0067&lAXOLOTL &#FF0067Pet'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF0067Information:'
+      - '&#FF0067| &fClick to Apply'
+      - '&#FF0067| &#FF0067Axolotl &fPet'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+    click_commands:
+      - '[pet_equip_axolotl]'
+
+  bee:
+    material: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2UxNmI3OTIxZWFlNTgwODM2ZmYzYjQyNTYyNGUxYmM0NmQ0Y2RlMGM1ZmNkN2E1YzRjZDA5Mzk1NDQzNzk4YyJ9fX0=
+    slot: 14
+    permission: sharded.pets.bee
+    display_name: '&#FFF800&lBEE &#FFF800Pet'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FFF800Information:'
+      - '&#FFF800| &fClick to Apply'
+      - '&#FFF800| &#FFF800Bee &fPet'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+    click_commands:
+      - '[pet_equip_bee]'
+
+  bat:
+    material: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWJhZTk2ZmE0MTYwZDRkMmFlODdlNjA4NTI1YzEwYWNkNDQxZDc1MjY1NDRjMzRmOTM0NTI0NjJmODE5YWM3OSJ9fX0=
+    slot: 16
+    permission: sharded.pets.bat
+    display_name: '&#8845EA&lBAT &#8845EA&lPet'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#8845EAInformation:'
+      - '&#8845EA| &fClick to Apply'
+      - '&#8845EA| &#8845EABat &fPet'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+    click_commands:
+      - '[pet_equip_bat]'
+
+  allay:
+    material: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWY1M2E4OWE5YjUxMTUzNTdiOTk4MzhlNWFiN2ZhYWQxODEzNzIyMWZjMjkzNDU2YWExNjJlY2EyZWMwMWVhYiJ9fX0=
+    slot: 22
+    permission: sharded.pets.allay
+    display_name: '&#00ACFF&lALLAY &#00ACFFPet'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#00ACFFInformation:'
+      - '&#00ACFF| &fClick to Apply'
+      - '&#00ACFF| &#00ACFFAllay &fPet'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Apply'
+    click_commands:
+      - '[pet_equip_allay]'
+
+  remove:
+    material: BARRIER
+    slot: 26
+    display_name: '&#FF0000&lREMOVE &#FF0000Pet'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF0000Information:'
+      - '&#FF0000| &fClick to Remove Pet'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Remove'
+    click_commands:
+      - '[player] pet remove'
+      - '[close]'

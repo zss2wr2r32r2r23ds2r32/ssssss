@@ -1,0 +1,8 @@
+config-version: 1
+prefix: '%prefix%'
+
+players-only: '%prefix%&#FF2727Only players can use this command.'
+no-permission: '%prefix%&#FF2727You do not have permission.'
+not-enough-kills: '%prefix%&#FF2727You need &f%required% &7kills (&f%kills%&7/&f%required%&7).'
+already-claimed: '%prefix%&#FF2727You already claimed this reward.'
+claimed: '%prefix%&#9FFF00Claimed reward: &f%reward%'

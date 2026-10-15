@@ -1,0 +1,229 @@
+config-version: 9
+prefix: '&#FCFF00&lTEAM &8▷ &r'
+message-mode: chat
+
+creation:
+  min-name-length: 3
+  max-name-length: 16
+  max-members: 18
+  banned-keywords:
+    - fuck
+    - nazi
+
+invites:
+  lifetime-seconds: 120
+
+ally:
+  max-allies: 1
+  request-lifetime-seconds: 120
+
+emergency:
+  cooldown-seconds: 60
+
+leaderboard:
+  limit: 10
+  token-weight: 1
+  kill-weight: 100
+  playtime-hour-weight: 50
+
+chat:
+  team-format: '&#FCFF00&lTEAM &8▷ &r&f%player% &8» &7%message%'
+  ally-format: '&#0098FF&lALLIES &8▷ &r&f%player% &8» &7%message%'
+
+placeholders:
+  not-in-team: 'N/A'
+
+gui:
+  click-footer: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+  click-footer-create: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Create'
+  click-footer-confirm: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Confirm'
+  click-footer-cancel: '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Cancel'
+  color: '&x&F&F&B&A&0&0'
+
+  create-title: '&8Create Team'
+  create-anvil-name: '&x&F&F&B&A&0&0&lCreate Team'
+  create-anvil-lore:
+    - '&8Descriptions'
+    - ''
+    - '&x&F&F&B&A&0&0Information:'
+    - '&x&F&F&B&A&0&0| &fClick here to type'
+    - '&x&F&F&B&A&0&0| &fyour team name in chat.'
+    - ''
+    - '%click_create%'
+
+  confirm-title: '&8Confirm &f%team%'
+  cancel-name: '&#FF2727&lCancel'
+  cancel-lore:
+    - '&8Descriptions'
+    - ''
+    - '&#FF2727Information:'
+    - '&#FF2727| &fGo back and cancel'
+    - '&#FF2727| &fteam creation.'
+    - ''
+    - '%click_cancel%'
+  confirm-name: '&#9FFF00&lConfirm'
+  confirm-lore:
+    - '&8Descriptions'
+    - ''
+    - '&#9FFF00Information:'
+    - '&#9FFF00| &fCreate this team'
+    - '&#9FFF00| &fwith the name shown.'
+    - ''
+    - '%click_confirm%'
+
+  main-title: '&8Team &f%team%'
+  members-name: '&#9FFF00&lMembers'
+  members-lore:
+    - '&8Descriptions'
+    - ''
+    - '&#9FFF00Information:'
+    - '&#9FFF00| &fView and manage'
+    - '&#9FFF00| &fall team members.'
+    - ''
+    - '%click%'
+    - ''
+    - '&7Total: &f%count%'
+
+  browse-name: '&#00D4FF&lBrowse Teams'
+  browse-lore:
+    - '&8Descriptions'
+    - ''
+    - '&#00D4FFInformation:'
+    - '&#00D4FF| &fView other teams'
+    - '&#00D4FF| &fand their statistics.'
+    - ''
+    - '%click%'
+
+  emergency-name: '&#FF2727&lEmergency'
+  emergency-lore:
+    - '&8Descriptions'
+    - ''
+    - '&#FF2727Information:'
+    - '&#FF2727| &fAlert your team members'
+    - '&#FF2727| &fwith your location.'
+    - ''
+    - '%click%'
+
+  chat-name: '&x&F&F&B&A&0&0&lTeam Chat'
+  chat-lore:
+    - '&8Descriptions'
+    - ''
+    - '&x&F&F&B&A&0&0Information:'
+    - '&x&F&F&B&A&0&0| &fToggle team chat mode.'
+    - ''
+    - '&x&F&F&B&A&0&0⚓ &fStatus: %status%'
+    - ''
+    - '%click%'
+
+  allies-name: '&#FFD700&lAllies'
+  allies-lore:
+    - '&8Descriptions'
+    - ''
+    - '&#FFD700Information:'
+    - '&#FFD700| &fView your team allies.'
+    - '&#FFD700| &fUse &f/team ally <team>'
+    - ''
+    - '&#FFD700Allies: &f%count%/%max%'
+    - ''
+    - '%click%'
+
+  leaderboard-name: '&#FFD700&lTeam Leaderboard'
+  leaderboard-lore:
+    - '&8Descriptions'
+    - ''
+    - '&#FFD700Information:'
+    - '&#FFD700| &fView the server'
+    - '&#FFD700| &fteam leaderboard.'
+    - ''
+    - '%click%'
+
+  disband-name: '&#FF2727&lDisband team'
+  disband-lore:
+    - '&8Descriptions'
+    - ''
+    - '&#FF2727Information:'
+    - '&#FF2727| &fPermanently disband'
+    - '&#FF2727| &fyour team.'
+    - ''
+    - '%click%'
+
+  leave-name: '&#FF2727&lLeave team'
+  leave-lore:
+    - '&8Descriptions'
+    - ''
+    - '&#FF2727Information:'
+    - '&#FF2727| &fLeave your current team.'
+    - ''
+    - '%click%'
+
+  disband-confirm-title: '&8Disband &f%team%?'
+  disband-confirm-name: '&#9FFF00&lConfirm disband'
+  disband-confirm-lore:
+    - '&8Descriptions'
+    - ''
+    - '&#9FFF00Information:'
+    - '&#9FFF00| &fThis cannot be undone!'
+    - '&#9FFF00| &fAll members will be removed.'
+    - ''
+    - '%click_confirm%'
+  disband-cancel-lore:
+    - '&8Descriptions'
+    - ''
+    - '&#FF2727Information:'
+    - '&#FF2727| &fGo back and cancel'
+    - '&#FF2727| &fthe disband.'
+    - ''
+    - '%click_cancel%'
+
+  back-name: '&#FFD700&lBack'
+  previous-name: '&ePrevious page'
+  next-name: '&eNext page'
+
+  navigation:
+    use-global: true
+
+  members-title: '&8Members &f%team%'
+  member-head-lore:
+    - '&8Descriptions'
+    - ''
+    - '&#9FFF00&l%role%'
+    - '&#9FFF00| &f%status%'
+    - ''
+    - '&7Leader click: promote/demote'
+    - '&7Officer click: kick member'
+  leader-head-lore:
+    - '&8Descriptions'
+    - ''
+    - '&#FFD700&lTeam leader'
+    - '&#FFD700| &f%status%'
+    - ''
+    - '&7This is your team owner.'
+
+  browse-title: '&8Browse Teams'
+  browse-entry-name: '&x&F&F&B&A&0&0&l%team%'
+  browse-entry-lore:
+    - '&8Descriptions'
+    - ''
+    - '&x&F&F&B&A&0&0Information:'
+    - '&x&F&F&B&A&0&0| &fMembers: &f%count%'
+    - '&x&F&F&B&A&0&0| &fLeaderboard: &f#%rank%'
+    - ''
+    - '%click%'
+
+  profile-title: '&8Team &f%team%'
+  profile-item-name: '&x&F&F&B&A&0&0&l%team%'
+  profile-item-lore:
+    - '&8Descriptions'
+    - ''
+    - '&x&F&F&B&A&0&0Information:'
+    - '&x&F&F&B&A&0&0| &fLeaderboard: &f#%rank%'
+    - '&x&F&F&B&A&0&0| &fMembers: &f%count%'
+    - '&x&F&F&B&A&0&0| &fKills: &f%kills%'
+    - '&x&F&F&B&A&0&0| &fTokens: &f%tokens%'
+    - '&x&F&F&B&A&0&0| &fPlaytime: &f%playtime%'
+    - '&x&F&F&B&A&0&0| &fScore: &f%score%'
+    - ''
+    - '%click%'
+
+  unranked: 'Unranked'
+  browse-per-page: 21
