@@ -1,0 +1,4 @@
+config-version: 2
+prefix: '%prefix%'
+
+swear-blocked: '%prefix%&#FF2727That word is not allowed in chat.'

@@ -1,0 +1,5 @@
+# Item editor — /itemedit, /serveritem, /itemstorage
+enabled: true
+config-version: 1
+max-saved-items-per-player: 64
+max-server-items: 256

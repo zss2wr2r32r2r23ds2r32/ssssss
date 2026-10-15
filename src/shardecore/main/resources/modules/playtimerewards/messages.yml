@@ -1,0 +1,7 @@
+players-only: "&#FF0000&lERROR &8▷ &fOnly players have a playtime."
+no-permission: "&#FF0000&lERROR &8▷ &fYou do not have permission."
+playtime: "&#FFEE00&lPLAYTIME &8▷ &fYou played &#FFEE00%playtime% &fon this server."
+claimed: "&#FFEE00&lPLAYTIME &8▷ &fThe &#FFEE00%required% &freward is yours."
+already-claimed: "&#FF0000&lERROR &8▷ &fYou already took that reward."
+ready: "&#FFEE00&lPLAYTIME &8▷ &f&#FFEE00%amount% &freward(s) are ready. Use &#FFEE00/playtimerewards"
+not-unlocked: "&#FF0000&lERROR &8▷ &fYou need &#FFEE00%playtime% &fmore playtime."

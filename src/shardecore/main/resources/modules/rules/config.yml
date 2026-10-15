@@ -1,0 +1,87 @@
+﻿# Rules GUI — configure items and slots freely.
+gui-title: "&8Server Rules"
+sound-open: "block.note_block.pling"
+rows: 3
+
+rules:
+  mods:
+    material: RED_HARNESS
+    fallback: LEATHER_HORSE_ARMOR
+    armor-color: "#FF0000"
+    name: "&#FF0000&lMODS"
+    slot: 11
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000| &fIf you are seen with"
+      - "&#FF0000| &fAny Mods listed Below"
+      - "&#FF0000| &fEven if &#FF0000&nDisabled&f"
+      - "&#FF0000| &fYou will be Banned"
+      - ""
+      - "&#FF0000Mods:"
+      - "&#FF0000● &fX-Ray / Freecam"
+      - "&#FF0000● &fKillAura / Reach"
+      - "&#FF0000● &fAutoClickers"
+  discord:
+    material: BLUE_HARNESS
+    fallback: LEATHER_HORSE_ARMOR
+    armor-color: "#0055FF"
+    name: "&#0055FF&lDISCORD RULES"
+    slot: 12
+    lore:
+      - "&8Description"
+      - ""
+      - "&#0055FFInformation:"
+      - "&#0055FF| &fFollow Discord TOS"
+      - "&#0055FF| &fand community guidelines"
+      - ""
+      - "&#0055FF● &fNo advertising"
+      - "&#0055FF● &fNo toxicity"
+      - "&#0055FF● &fRespect staff"
+  exploits:
+    material: YELLOW_HARNESS
+    fallback: LEATHER_HORSE_ARMOR
+    armor-color: "#FCFF00"
+    name: "&#FCFF00&lEXPLOITS"
+    slot: 13
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FCFF00Information:"
+      - "&#FCFF00| &fNo duping, bug abuse"
+      - "&#FCFF00| &for unintended mechanics"
+      - ""
+      - "&#FCFF00● &fReport bugs to staff"
+      - "&#FCFF00● &fDo not share exploits"
+  threats:
+    material: LIME_HARNESS
+    fallback: LEATHER_HORSE_ARMOR
+    armor-color: "#94FF00"
+    name: "&#94FF00&lTHREATS"
+    slot: 14
+    lore:
+      - "&8Description"
+      - ""
+      - "&#94FF00Information:"
+      - "&#94FF00| &fNo threats, doxing"
+      - "&#94FF00| &for real-world harassment"
+      - ""
+      - "&#94FF00● &fInstant ban"
+      - "&#94FF00● &fReported to authorities if needed"
+  ingame:
+    material: PINK_HARNESS
+    fallback: LEATHER_HORSE_ARMOR
+    armor-color: "#FF0067"
+    name: "&#FF0067&lINGAME RULES"
+    slot: 15
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0067Information:"
+      - "&#FF0067| &fNo lag machines"
+      - "&#FF0067| &fNo excessive redstone abuse"
+      - ""
+      - "&#FF0067● &fKeep chunk loaders fair"
+      - "&#FF0067● &fNo intentional server crash"
+

@@ -1,0 +1,142 @@
+config-version: 11
+# Personal settings — one 5-row menu. No TPA, mob spawn, fast crystals, or payments.
+
+on-color: "&#9FFF00"
+off-color: "&#FF2121"
+on-text: "&lON"
+off-text: "&lOFF"
+sound-open: "block.note_block.pling"
+sound-toggle: "ui.button.click"
+message-channel: chat
+filler-style: bordered-inner
+
+defaults:
+  public-chat: true
+  private-msg: true
+  live: true
+  scoreboard: true
+  night-vision: false
+  death-msgs: true
+  join-leave: true
+  rtpqueue: true
+
+page1:
+  title: "&8Settings"
+  rows: 5
+  close-slot: 40
+  items:
+    public-chat:
+      material: PALE_OAK_SIGN
+      fallback: OAK_SIGN
+      name: "&#FCFF00&lPUBLIC CHAT"
+      slot: 11
+      lore:
+        - "&8Chat"
+        - ""
+        - "&#FCFF00Information:"
+        - "&#FCFF00| &fShow or hide public chat"
+        - "&#FCFF00| &fin your own view"
+        - ""
+        - "&#FCFF00i &fStatus: %status%"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle"
+    private-msg:
+      material: WRITABLE_BOOK
+      name: "&#FF4D4D&lPRIVATE MESSAGES"
+      slot: 12
+      lore:
+        - "&8Chat"
+        - ""
+        - "&#FF4D4DInformation:"
+        - "&#FF4D4D| &fAllow private messages"
+        - "&#FF4D4D| &ffrom other players"
+        - ""
+        - "&#FF4D4Di &fStatus: %status%"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle"
+    live:
+      material: GOAT_HORN
+      name: "&#FF007C&lLIVE CHAT"
+      slot: 13
+      lore:
+        - "&8Chat"
+        - ""
+        - "&#FF007CInformation:"
+        - "&#FF007C| &fShow live chat feed"
+        - "&#FF007C| &ffrom streamers"
+        - ""
+        - "&#FF007Ci &fStatus: %status%"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle"
+    scoreboard:
+      material: ITEM_FRAME
+      fallback: PAINTING
+      name: "&#0098FF&lSCOREBOARD"
+      slot: 14
+      lore:
+        - "&8Display"
+        - ""
+        - "&#0098FFInformation:"
+        - "&#0098FF| &fShow the sidebar"
+        - "&#0098FF| &fscoreboard"
+        - ""
+        - "&#0098FFi &fStatus: %status%"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle"
+    night-vision:
+      material: GOLDEN_CARROT
+      name: "&#FCFF00&lNIGHT VISION"
+      slot: 20
+      lore:
+        - "&8Display"
+        - ""
+        - "&#FCFF00Information:"
+        - "&#FCFF00| &fKeep night vision"
+        - "&#FCFF00| &fon while you play"
+        - ""
+        - "&#FCFF00i &fStatus: %status%"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle"
+    death-msgs:
+      material: SKELETON_SKULL
+      name: "&#FF8600&lDEATH MESSAGES"
+      slot: 21
+      lore:
+        - "&8Chat"
+        - ""
+        - "&#FF8600Information:"
+        - "&#FF8600| &fShow death messages"
+        - "&#FF8600| &fin chat"
+        - ""
+        - "&#FF8600i &fStatus: %status%"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle"
+    join-leave:
+      material: COPPER_DOOR
+      fallback: OAK_DOOR
+      name: "&#FFBA00&lJOIN / LEAVE"
+      slot: 22
+      lore:
+        - "&8Chat"
+        - ""
+        - "&#FFBA00Information:"
+        - "&#FFBA00| &fShow join and leave"
+        - "&#FFBA00| &fmessages in chat"
+        - ""
+        - "&#FFBA00i &fStatus: %status%"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle"
+    rtpqueue:
+      material: SPYGLASS
+      name: "&#FF8800&lEVENT SOUNDS"
+      slot: 23
+      lore:
+        - "&8Events"
+        - ""
+        - "&#FF8800Information:"
+        - "&#FF8800| &fHear KOTH and outpost"
+        - "&#FF8800| &fhorn sounds"
+        - ""
+        - "&#FF8800i &fStatus: %status%"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle"

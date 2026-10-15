@@ -1,0 +1,24 @@
+config-version: 7
+prefix: '&#FF2727&lOUTPOST &8▷ &r'
+message-mode: chat
+allowed-worlds:
+  - spawn
+capture-percent-per-second: 1.0
+token-reward: 500
+max-unclaimed-seconds: 600
+active-sound-instrument: PONDER_GOAT_HORN
+actionbar: '&f%percent%% captured'
+actionbar-contested: '&cContested — solo capture required!'
+locator-bar: true
+bossbar: true
+tab:
+  enabled: true
+  start-command: 'tab scoreboard show outpost'
+  stop-command: 'tab scoreboard hide outpost'
+bossbar-active: '%prefix%&f%capturer% &8| &f%percent%%'
+bossbar-empty: '%prefix%&fN/A &8| &fEnds in &f%empty_time%'
+capture-rewards:
+  tokens: 500
+  commands:
+    - '[console] crate key give %player_name% outpost 1'
+region: {}

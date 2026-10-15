@@ -1,0 +1,377 @@
+menu_title: 'Tags'
+size: 54
+config-version: 2
+open_permission: tokenshop.use
+
+items:
+  filler:
+    material: BLACK_STAINED_GLASS_PANE
+    slots: [0,1,2,3,4,5,6,7,8,9,17,18,26,27,35,36,37,38,39,40,41,42,43,44,45,46,47,48,50,51,52,53]
+    display_name: ' '
+
+  back_button:
+    nav-override: true
+    slot: 49
+    left_click_commands:
+      - '[openguimenu] mainmenu'
+
+  sigma:
+    material: LIGHT_BLUE_BUNDLE
+    slot: 10
+    display_name: '&#00A2FF&lSIGMA'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#00A2FFInformation:'
+      - '&#00A2FF| &fUnlock the SIGMA tag'
+      - ''
+      - '&#00A2FF⚓ &fCost: &#00A2FF&n250 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy'
+    left_click_commands:
+      - '[deny_if_permission] sharded.tag.sigma'
+      - '[tokens_take] 250'
+      - '[console] lp user %player_name% permission set sharded.tag.sigma true'
+      - '[message] &#00D6FF&lTAGS &8▷ &fUnlocked &#00A2FFSIGMA&f.'
+
+  mummy:
+    material: PINK_BUNDLE
+    slot: 11
+    display_name: '&#FF0086&lMUMMY'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF0086Information:'
+      - '&#FF0086| &fUnlock the MUMMY tag'
+      - ''
+      - '&#FF0086⚓ &fCost: &#FF0086&n250 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy'
+    left_click_commands:
+      - '[deny_if_permission] sharded.tag.mummy'
+      - '[tokens_take] 250'
+      - '[console] lp user %player_name% permission set sharded.tag.mummy true'
+      - '[message] &#00D6FF&lTAGS &8▷ &fUnlocked &#FF0086MUMMY&f.'
+
+  goat:
+    material: YELLOW_BUNDLE
+    slot: 12
+    display_name: '&#FFEE00&lGOAT'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FFEE00Information:'
+      - '&#FFEE00| &fUnlock the GOAT tag'
+      - ''
+      - '&#FFEE00⚓ &fCost: &#FFEE00&n500 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy'
+    left_click_commands:
+      - '[deny_if_permission] sharded.tag.swordmummy'
+      - '[tokens_take] 500'
+      - '[console] lp user %player_name% permission set sharded.tag.swordmummy true'
+      - '[message] &#00D6FF&lTAGS &8▷ &fUnlocked &#FFEE00GOAT&f.'
+
+  sharded:
+    material: PURPLE_BUNDLE
+    slot: 13
+    display_name: '&#A370EE&lSHARDED'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#A370EEInformation:'
+      - '&#A370EE| &fUnlock the SHARDED tag'
+      - ''
+      - '&#A370EE⚓ &fCost: &#A370EE&n500 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy'
+    left_click_commands:
+      - '[deny_if_permission] sharded.tag.sharded'
+      - '[tokens_take] 500'
+      - '[console] lp user %player_name% permission set sharded.tag.sharded true'
+      - '[message] &#00D6FF&lTAGS &8▷ &fUnlocked &#A370EESHARDED&f.'
+
+  one:
+    material: LIME_BUNDLE
+    slot: 14
+    display_name: '&#A9FF00&l#1'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#A9FF00Information:'
+      - '&#A9FF00| &fUnlock the #1 tag'
+      - ''
+      - '&#A9FF00⚓ &fCost: &#A9FF00&n600 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy'
+    left_click_commands:
+      - '[deny_if_permission] sharded.tag.one'
+      - '[tokens_take] 600'
+      - '[console] lp user %player_name% permission set sharded.tag.one true'
+      - '[message] &#00D6FF&lTAGS &8▷ &fUnlocked &#A9FF00#1&f.'
+
+  p2w:
+    material: YELLOW_BUNDLE
+    slot: 15
+    display_name: '&#FCFF00&lP2W'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FCFF00Information:'
+      - '&#FCFF00| &fUnlock the P2W tag'
+      - ''
+      - '&#FCFF00⚓ &fCost: &#FCFF00&n350 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy'
+    left_click_commands:
+      - '[deny_if_permission] sharded.tag.p2w'
+      - '[tokens_take] 350'
+      - '[console] lp user %player_name% permission set sharded.tag.p2w true'
+      - '[message] &#00D6FF&lTAGS &8▷ &fUnlocked &#FCFF00P2W&f.'
+
+  goty:
+    material: RED_BUNDLE
+    slot: 16
+    display_name: '&#FF2F2F&lGOTY'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF2F2FInformation:'
+      - '&#FF2F2F| &fUnlock the GOTY tag'
+      - ''
+      - '&#FF2F2F⚓ &fCost: &#FF2F2F&n700 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy'
+    left_click_commands:
+      - '[deny_if_permission] sharded.tag.goty'
+      - '[tokens_take] 700'
+      - '[console] lp user %player_name% permission set sharded.tag.goty true'
+      - '[message] &#00D6FF&lTAGS &8▷ &fUnlocked &#FF2F2FGOTY&f.'
+
+  hacker:
+    material: RED_BUNDLE
+    slot: 19
+    display_name: '&#FF0000&lHACKER'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF0000Information:'
+      - '&#FF0000| &fUnlock the HACKER tag'
+      - ''
+      - '&#FF0000⚓ &fCost: &#FF0000&n800 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy'
+    left_click_commands:
+      - '[deny_if_permission] sharded.tag.hacker'
+      - '[tokens_take] 800'
+      - '[console] lp user %player_name% permission set sharded.tag.hacker true'
+      - '[message] &#00D6FF&lTAGS &8▷ &fUnlocked &#FF0000HACKER&f.'
+
+  skillissue:
+    material: ORANGE_BUNDLE
+    slot: 20
+    display_name: '&#FF5C5C&lSKILL ISSUE'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF5C5CInformation:'
+      - '&#FF5C5C| &fUnlock the SKILL ISSUE tag'
+      - ''
+      - '&#FF5C5C⚓ &fCost: &#FF5C5C&n300 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy'
+    left_click_commands:
+      - '[deny_if_permission] sharded.tag.skillissue'
+      - '[tokens_take] 300'
+      - '[console] lp user %player_name% permission set sharded.tag.skillissue true'
+      - '[message] &#00D6FF&lTAGS &8▷ &fUnlocked &#FF5C5CSKILL ISSUE&f.'
+
+  freekill:
+    material: ORANGE_BUNDLE
+    slot: 21
+    display_name: '&#FFC93C&lFREE KILL'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FFC93CInformation:'
+      - '&#FFC93C| &fUnlock the FREE KILL tag'
+      - ''
+      - '&#FFC93C⚓ &fCost: &#FFC93C&n300 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy'
+    left_click_commands:
+      - '[deny_if_permission] sharded.tag.freekill'
+      - '[tokens_take] 300'
+      - '[console] lp user %player_name% permission set sharded.tag.freekill true'
+      - '[message] &#00D6FF&lTAGS &8▷ &fUnlocked &#FFC93CFREE KILL&f.'
+
+  cooked:
+    material: ORANGE_BUNDLE
+    slot: 22
+    display_name: '&#FF6B35&lCOOKED'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF6B35Information:'
+      - '&#FF6B35| &fUnlock the COOKED tag'
+      - ''
+      - '&#FF6B35⚓ &fCost: &#FF6B35&n300 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy'
+    left_click_commands:
+      - '[deny_if_permission] sharded.tag.cooked'
+      - '[tokens_take] 300'
+      - '[console] lp user %player_name% permission set sharded.tag.cooked true'
+      - '[message] &#00D6FF&lTAGS &8▷ &fUnlocked &#FF6B35COOKED&f.'
+
+  ping999:
+    material: GRAY_BUNDLE
+    slot: 23
+    display_name: '&#8D99AE&lPING 999'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#8D99AEInformation:'
+      - '&#8D99AE| &fUnlock the PING 999 tag'
+      - ''
+      - '&#8D99AE⚓ &fCost: &#8D99AE&n300 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy'
+    left_click_commands:
+      - '[deny_if_permission] sharded.tag.ping999'
+      - '[tokens_take] 300'
+      - '[console] lp user %player_name% permission set sharded.tag.ping999 true'
+      - '[message] &#00D6FF&lTAGS &8▷ &fUnlocked &#8D99AEPING 999&f.'
+
+  lagabuser:
+    material: LIME_BUNDLE
+    slot: 24
+    display_name: '&#00E5A0&lLAG ABUSER'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#00E5A0Information:'
+      - '&#00E5A0| &fUnlock the LAG ABUSER tag'
+      - ''
+      - '&#00E5A0⚓ &fCost: &#00E5A0&n300 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy'
+    left_click_commands:
+      - '[deny_if_permission] sharded.tag.lagabuser'
+      - '[tokens_take] 300'
+      - '[console] lp user %player_name% permission set sharded.tag.lagabuser true'
+      - '[message] &#00D6FF&lTAGS &8▷ &fUnlocked &#00E5A0LAG ABUSER&f.'
+
+  onehp:
+    material: RED_BUNDLE
+    slot: 25
+    display_name: '&#E53935&l1 HP'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#E53935Information:'
+      - '&#E53935| &fUnlock the 1 HP tag'
+      - ''
+      - '&#E53935⚓ &fCost: &#E53935&n300 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy'
+    left_click_commands:
+      - '[deny_if_permission] sharded.tag.onehp'
+      - '[tokens_take] 300'
+      - '[console] lp user %player_name% permission set sharded.tag.onehp true'
+      - '[message] &#00D6FF&lTAGS &8▷ &fUnlocked &#E539351 HP&f.'
+
+  missed:
+    material: GRAY_BUNDLE
+    slot: 28
+    display_name: '&#B0B0B0&lMISSED'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#B0B0B0Information:'
+      - '&#B0B0B0| &fUnlock the MISSED tag'
+      - ''
+      - '&#B0B0B0⚓ &fCost: &#B0B0B0&n300 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy'
+    left_click_commands:
+      - '[deny_if_permission] sharded.tag.missed'
+      - '[tokens_take] 300'
+      - '[console] lp user %player_name% permission set sharded.tag.missed true'
+      - '[message] &#00D6FF&lTAGS &8▷ &fUnlocked &#B0B0B0MISSED&f.'
+
+  touchgrass:
+    material: LIME_BUNDLE
+    slot: 29
+    display_name: '&#7CB342&lTOUCH GRASS'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#7CB342Information:'
+      - '&#7CB342| &fUnlock the TOUCH GRASS tag'
+      - ''
+      - '&#7CB342⚓ &fCost: &#7CB342&n300 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy'
+    left_click_commands:
+      - '[deny_if_permission] sharded.tag.touchgrass'
+      - '[tokens_take] 300'
+      - '[console] lp user %player_name% permission set sharded.tag.touchgrass true'
+      - '[message] &#00D6FF&lTAGS &8▷ &fUnlocked &#7CB342TOUCH GRASS&f.'
+
+  lootgoblin:
+    material: LIME_BUNDLE
+    slot: 30
+    display_name: '&#8BC34A&lLOOT GOBLIN'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#8BC34AInformation:'
+      - '&#8BC34A| &fUnlock the LOOT GOBLIN tag'
+      - ''
+      - '&#8BC34A⚓ &fCost: &#8BC34A&n350 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy'
+    left_click_commands:
+      - '[deny_if_permission] sharded.tag.lootgoblin'
+      - '[tokens_take] 350'
+      - '[console] lp user %player_name% permission set sharded.tag.lootgoblin true'
+      - '[message] &#00D6FF&lTAGS &8▷ &fUnlocked &#8BC34ALOOT GOBLIN&f.'
+
+  downbad:
+    material: PINK_BUNDLE
+    slot: 31
+    display_name: '&#EC407A&lDOWN BAD'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#EC407AInformation:'
+      - '&#EC407A| &fUnlock the DOWN BAD tag'
+      - ''
+      - '&#EC407A⚓ &fCost: &#EC407A&n300 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy'
+    left_click_commands:
+      - '[deny_if_permission] sharded.tag.downbad'
+      - '[tokens_take] 300'
+      - '[console] lp user %player_name% permission set sharded.tag.downbad true'
+      - '[message] &#00D6FF&lTAGS &8▷ &fUnlocked &#EC407ADOWN BAD&f.'
+
+  profrunner:
+    material: LIGHT_BLUE_BUNDLE
+    slot: 32
+    display_name: '&#4FC3F7&lPROFESSIONAL RUNNER'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#4FC3F7Information:'
+      - '&#4FC3F7| &fUnlock the PROFESSIONAL RUNNER tag'
+      - ''
+      - '&#4FC3F7⚓ &fCost: &#4FC3F7&n350 Tokens'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy'
+    left_click_commands:
+      - '[deny_if_permission] sharded.tag.profrunner'
+      - '[tokens_take] 350'
+      - '[console] lp user %player_name% permission set sharded.tag.profrunner true'
+      - '[message] &#00D6FF&lTAGS &8▷ &fUnlocked &#4FC3F7PROFESSIONAL RUNNER&f.'

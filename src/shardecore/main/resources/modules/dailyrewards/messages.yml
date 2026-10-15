@@ -1,0 +1,8 @@
+config-version: 1
+prefix: "&#9FFF00&lDAILY &8▷ &r"
+players-only: "&#FF0000&lERROR &8▷ &fOnly a player can claim daily rewards."
+no-permission: "&#FF0000&lERROR &8▷ &fYou do not have permission."
+cooldown: "%prefix%&fCome back in &#9FFF00%time%&f."
+already-claiming: "%prefix%&fYou are already spinning a reward."
+no-rewards: "&#FF0000&lERROR &8▷ &fNo daily rewards are configured."
+won: "%prefix%&fYou won &#9FFF00%reward% %rarity_color%[%rarity%&8 (%percent%%)&r%rarity_color%&f]!"

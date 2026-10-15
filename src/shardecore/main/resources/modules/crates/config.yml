@@ -1,0 +1,109 @@
+edit-title: "&8Edit %crate%"
+preview-title: "&8Crate Preview"
+select-title: "&8Select Rewards"
+roll-title: "&8Opening..."
+# Fallback rows when a crate has no rows set; each crate's own rows are used when > 0
+preview-rows: 5
+select-rows: 5
+default-rows: 5
+# When true, /crate edit always opens at least 5 rows
+edit-force-5-rows: false
+close-slot: 40
+confirm-slot: 40
+bundle-title: "&8Reward items"
+bundle-rows: 4
+default-animation: selectable
+sound-tick: "ui.button.click"
+sound-win: "entity.player.levelup"
+# Optional lore shown only in preview / selection GUIs (not on the real reward item). Leave empty for none.
+preview-lore: []
+select-lore: []
+config-version: 9
+
+menu:
+  title: "&8Crates"
+  rows: 3
+  filler-style: glass
+  sound-open: "block.note_block.pling"
+  items:
+    keyall:
+      slot: 11
+      crate-id: keyall
+      material: LIME_SHULKER_BOX
+      name: "&#80ff00&lKEYALL &#80ff00Crate"
+      lore:
+        - "&7[ᴄʀᴀᴛᴇs]"
+        - ""
+        - "&#80ff00Descriptions:"
+        - "&#80ff00| &fOpen The &#80ff00Keyall Crate"
+        - "&#80ff00| &fTo Earn the &#80ff00Essentials"
+        - ""
+        - "&#80ff00🌊 &fYour Keys: &#80ff00&n%key%"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nLEFT&x&F&F&B&A&0&0-CLICK&r &x&F&F&B&A&0&0To Preview &x&F&F&B&A&0&0◁"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nRIGHT&x&F&F&B&A&0&0-CLICK&r &x&F&F&B&A&0&0To Open&x&F&F&B&A&0&0◁"
+    sharded:
+      slot: 12
+      crate-id: sharded
+      material: PURPLE_SHULKER_BOX
+      name: "&#8000ff&lSHARDED &#8000ffCrate"
+      lore:
+        - "&7[ᴄʀᴀᴛᴇs]"
+        - ""
+        - "&#8000ffDescriptions:"
+        - "&#8000ff| &fOpen The &#8000ffSharded Crate"
+        - "&#8000ff| &fTo Earn Unique &#8000ffItems "
+        - ""
+        - "&#8000ff🌊 &fYour Keys: &#8000ff&n%key%"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nLEFT&x&F&F&B&A&0&0-CLICK&r &x&F&F&B&A&0&0To Preview &x&F&F&B&A&0&0◁"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nRIGHT&x&F&F&B&A&0&0-CLICK&r &x&F&F&B&A&0&0To Open&x&F&F&B&A&0&0◁"
+    kill:
+      slot: 13
+      crate-id: kill
+      material: RED_SHULKER_BOX
+      name: "&#ff0000&lKILL &#ff0000Crate"
+      lore:
+        - "&7[ᴄʀᴀᴛᴇs]"
+        - ""
+        - "&#ff0000Descriptions:"
+        - "&#ff0000| &fOpen The &#ff0000Kill Crate"
+        - "&#ff0000| &fTo Earn Unique &#ff0000Items "
+        - ""
+        - "&#ff0000🌊 &fYour Keys: &#ff0000&n%key%"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nLEFT&x&F&F&B&A&0&0-CLICK&r &x&F&F&B&A&0&0To Preview &x&F&F&B&A&0&0◁"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nRIGHT&x&F&F&B&A&0&0-CLICK&r &x&F&F&B&A&0&0To Open&x&F&F&B&A&0&0◁"
+    astral:
+      slot: 14
+      crate-id: astral
+      material: BLUE_SHULKER_BOX
+      name: "&#005aff&lASTRAL &#005affCrate"
+      lore:
+        - "&7[ᴄʀᴀᴛᴇs]"
+        - ""
+        - "&#005affDescriptions:"
+        - "&#005aff| &fOpen The &#005affAstral Crate"
+        - "&#005aff| &fTo Earn Unique &#005affItems "
+        - ""
+        - "&#005aff🌊 &fYour Keys: &#005aff&n%key%"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nLEFT&x&F&F&B&A&0&0-CLICK&r &x&F&F&B&A&0&0To Preview &x&F&F&B&A&0&0◁"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nRIGHT&x&F&F&B&A&0&0-CLICK&r &x&F&F&B&A&0&0To Open&x&F&F&B&A&0&0◁"
+    spooky:
+      slot: 16
+      crate-id: spooky
+      material: ORANGE_SHULKER_BOX
+      name: "&#ff6700&lSPOOKY &#ff6700Crate"
+      lore:
+        - "&7[ᴄʀᴀᴛᴇs]"
+        - ""
+        - "&#ff6700Descriptions:"
+        - "&#ff6700| &fOpen The &#ff6700Halloween Crate"
+        - "&#ff6700| &fTo Earn &#ff6700Exclusive &#ff6700Items"
+        - ""
+        - "&#ff6700🌊 &fYour Keys: &#ff6700&n%key%"
+        - "&#ff6700🏹 &fOpened: &#ff6700&n%opened%"
+        - ""
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nLEFT&x&F&F&B&A&0&0-CLICK&r &x&F&F&B&A&0&0To Preview &x&F&F&B&A&0&0◁"
+        - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nRIGHT&x&F&F&B&A&0&0-CLICK&r &x&F&F&B&A&0&0To Open&x&F&F&B&A&0&0◁"

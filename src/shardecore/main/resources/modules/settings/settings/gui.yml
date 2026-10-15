@@ -1,0 +1,118 @@
+config-version: 8
+menu_title: 'Settings'
+size: 45
+open_permission: sharded.settings.use
+
+filler:
+  material: GRAY_STAINED_GLASS_PANE
+  name: ' '
+  auto-fill: true
+
+items:
+  public_chat:
+    material: OAK_SIGN
+    slot: 11
+    permission: sharded.chat.toggle
+    display_name: '&#FCFF00&lPUBLIC CHAT'
+    lore:
+      - '&8Chat'
+      - ''
+      - '&#FCFF00Information:'
+      - '&#FCFF00| &fShow or hide public chat'
+      - ''
+      - '&#FCFF00⛨ &fStatus: %status_public_chat%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    left_click_commands:
+      - '[player] publicchat toggle'
+      - '[refresh] settings'
+  private_messages:
+    material: WRITABLE_BOOK
+    slot: 12
+    permission: sharded.msg.toggle
+    display_name: '&#FF4D4D&lPRIVATE MESSAGES'
+    lore:
+      - '&8Chat'
+      - ''
+      - '&#FF4D4DInformation:'
+      - '&#FF4D4D| &fAllow private messages'
+      - ''
+      - '&#FF4D4D⛨ &fStatus: %status_private_messages%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    left_click_commands:
+      - '[player] msgtoggle'
+      - '[refresh] settings'
+  scoreboard:
+    material: ITEM_FRAME
+    slot: 14
+    permission: sharded.settings.scoreboard
+    display_name: '&#0098FF&lSCOREBOARD'
+    lore:
+      - '&8Display'
+      - ''
+      - '&#0098FFInformation:'
+      - '&#0098FF| &fToggle the sidebar'
+      - ''
+      - '&#0098FF⛨ &fStatus: %status_scoreboard%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    left_click_commands:
+      - '[scoreboard_toggle]'
+      - '[refresh] settings'
+  death_messages:
+    material: SKELETON_SKULL
+    slot: 22
+    permission: sharded.settings.deathmessages
+    display_name: '&#FF8600&lDEATH MESSAGES'
+    lore:
+      - '&8Chat'
+      - ''
+      - '&#FF8600Information:'
+      - '&#FF8600| &fToggle death messages'
+      - ''
+      - '&#FF8600⛨ &fStatus: %status_death_messages%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    left_click_commands:
+      - '[player] deathmessages toggle'
+      - '[refresh] settings'
+  join_messages:
+    material: OAK_DOOR
+    slot: 23
+    permission: sharded.settings.joinmessages
+    display_name: '&#FFBA00&lJOIN/LEAVE MESSAGES'
+    lore:
+      - '&8Chat'
+      - ''
+      - '&#FFBA00Information:'
+      - '&#FFBA00| &fToggle join/leave messages'
+      - ''
+      - '&#FFBA00⛨ &fStatus: %status_join_messages%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    left_click_commands:
+      - '[player] joinmessages toggle'
+      - '[refresh] settings'
+  event_sounds:
+    material: SPYGLASS
+    slot: 24
+    permission: sharded.settings.eventsounds
+    display_name: '&#FF8800&lEVENT SOUNDS'
+    lore:
+      - '&8Events'
+      - ''
+      - '&#FF8800Information:'
+      - '&#FF8800| &fToggle KOTH and outpost horns'
+      - ''
+      - '&#FF8800⛨ &fStatus: %status_event_sounds%'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    left_click_commands:
+      - '[player] eventsoundstoggle'
+      - '[refresh] settings'
+  close:
+    nav-override: true
+    slot: 40
+    click_commands:
+      - '[close]'

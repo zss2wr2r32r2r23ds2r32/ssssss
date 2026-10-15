@@ -1,0 +1,4 @@
+config-version: 1
+
+no-permission: "&#FF0000&lCHAT &8▷ &fYou cannot do that."
+reloaded: "&#97F900&lCHAT &7▷ &fChat filter reloaded."

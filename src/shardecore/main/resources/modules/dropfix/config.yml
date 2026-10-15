@@ -1,0 +1,6 @@
+config-version: 2
+
+players: true
+mobs: true
+center-on-block: true
+merge-stacks: true

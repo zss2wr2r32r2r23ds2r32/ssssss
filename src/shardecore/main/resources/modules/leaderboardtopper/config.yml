@@ -1,0 +1,31 @@
+config-version: 14
+
+# How often holograms refresh (seconds).
+refresh-seconds: 30
+
+scale: 1.0
+line-width: 400
+view-range: 48
+billboard: FIXED
+
+empty-name: "---"
+empty-value: "---"
+# Each rank is its own TextDisplay line laid out as:  [head] #rank NAME | value
+# Text width is measured per line so every "#" starts in the same column,
+# directly right of the head. Long names only grow to the right.
+line-template: "&c#%rank% &f%name% &f| &c%value%"
+
+player-heads: true
+heads-per-board: 10
+# Distance (blocks) from the head column to the left edge of the "#rank" text.
+text-gap: 0.22
+# Extra nudge for the head away from the text (blocks). Usually 0.
+head-x-offset: 0.0
+# Lift heads onto the same visual line as the #number text.
+head-y-start: 0.08
+# Spacing between each rank line (and matching head).
+head-y-step: -0.26
+head-scale: 0.36
+head-flatness: 0.03
+# Set true only if a board renders with heads on the wrong side.
+flip-x: false

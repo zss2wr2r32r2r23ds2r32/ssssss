@@ -1,0 +1,79 @@
+menu_title: 'Chat Colors'
+size: 36
+config-version: 1
+open_permission: tokenshop.use
+
+items:
+  filler:
+    material: BLACK_STAINED_GLASS_PANE
+    slots: [0,1,2,3,4,5,6,7,8,9,17,18,26,27,28,29,30,32,33,34,35]
+    display_name: ' '
+
+  back_button:
+    nav-override: true
+    slot: 31
+    left_click_commands:
+      - '[openguimenu] mainmenu'
+
+  red:
+    material: RED_BUNDLE
+    slot: 10
+    display_name: '&#FF0000&lRED'
+    lore: ['&8Description','','&#FF0000Information:','&#FF0000| &fUnlock red chat color','','&#FF0000⚓ &fCost: &#FF0000&n200 Tokens','','&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy']
+    left_click_commands: ['[deny_if_permission] sharded.chatcolor.red','[tokens_take] 200','[console] lp user %player_name% permission set sharded.chatcolor.red true','[message] &#A370EE&lCHATCOLOR &8▷ &fUnlocked &#FF0000RED&f.']
+
+  yellow:
+    material: YELLOW_BUNDLE
+    slot: 11
+    display_name: '&#FFF800&lYELLOW'
+    lore: ['&8Description','','&#FFF800Information:','&#FFF800| &fUnlock yellow chat color','','&#FFF800⚓ &fCost: &#FFF800&n200 Tokens','','&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy']
+    left_click_commands: ['[deny_if_permission] sharded.chatcolor.yellow','[tokens_take] 200','[console] lp user %player_name% permission set sharded.chatcolor.yellow true','[message] &#A370EE&lCHATCOLOR &8▷ &fUnlocked &#FFF800YELLOW&f.']
+
+  green:
+    material: LIME_BUNDLE
+    slot: 12
+    display_name: '&#8AFF00&lGREEN'
+    lore: ['&8Description','','&#8AFF00Information:','&#8AFF00| &fUnlock green chat color','','&#8AFF00⚓ &fCost: &#8AFF00&n200 Tokens','','&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy']
+    left_click_commands: ['[deny_if_permission] sharded.chatcolor.green','[tokens_take] 200','[console] lp user %player_name% permission set sharded.chatcolor.green true','[message] &#A370EE&lCHATCOLOR &8▷ &fUnlocked &#8AFF00GREEN&f.']
+
+  blue:
+    material: LIGHT_BLUE_BUNDLE
+    slot: 13
+    display_name: '&#00C1FF&lBLUE'
+    lore: ['&8Description','','&#00C1FFInformation:','&#00C1FF| &fUnlock blue chat color','','&#00C1FF⚓ &fCost: &#00C1FF&n200 Tokens','','&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy']
+    left_click_commands: ['[deny_if_permission] sharded.chatcolor.blue','[tokens_take] 200','[console] lp user %player_name% permission set sharded.chatcolor.blue true','[message] &#A370EE&lCHATCOLOR &8▷ &fUnlocked &#00C1FFBLUE&f.']
+
+  light_blue:
+    material: LIGHT_BLUE_BUNDLE
+    slot: 14
+    display_name: '&#7EE8FF&lLIGHT BLUE'
+    lore: ['&8Description','','&#7EE8FFInformation:','&#7EE8FF| &fUnlock light blue chat color','','&#7EE8FF⚓ &fCost: &#7EE8FF&n200 Tokens','','&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy']
+    left_click_commands: ['[deny_if_permission] sharded.chatcolor.light_blue','[tokens_take] 200','[console] lp user %player_name% permission set sharded.chatcolor.light_blue true','[message] &#A370EE&lCHATCOLOR &8▷ &fUnlocked &#7EE8FFLIGHT BLUE&f.']
+
+  purple:
+    material: PURPLE_BUNDLE
+    slot: 15
+    display_name: '&#8000FF&lPURPLE'
+    lore: ['&8Description','','&#8000FFInformation:','&#8000FF| &fUnlock purple chat color','','&#8000FF⚓ &fCost: &#8000FF&n200 Tokens','','&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy']
+    left_click_commands: ['[deny_if_permission] sharded.chatcolor.purple','[tokens_take] 200','[console] lp user %player_name% permission set sharded.chatcolor.purple true','[message] &#A370EE&lCHATCOLOR &8▷ &fUnlocked &#8000FFPURPLE&f.']
+
+  pink:
+    material: PINK_BUNDLE
+    slot: 16
+    display_name: '&#FF74DF&lPINK'
+    lore: ['&8Description','','&#FF74DFInformation:','&#FF74DF| &fUnlock pink chat color','','&#FF74DF⚓ &fCost: &#FF74DF&n200 Tokens','','&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy']
+    left_click_commands: ['[deny_if_permission] sharded.chatcolor.pink','[tokens_take] 200','[console] lp user %player_name% permission set sharded.chatcolor.pink true','[message] &#A370EE&lCHATCOLOR &8▷ &fUnlocked &#FF74DFPINK&f.']
+
+  blossom:
+    material: PINK_BUNDLE
+    slot: 21
+    display_name: '&#FF74DF&lBLOSSOM'
+    lore: ['&8Description','','&#FF74DFInformation:','&#FF74DF| &fUnlock blossom gradient','','&#FF74DF⚓ &fCost: &#FF74DF&n500 Tokens','','&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy']
+    left_click_commands: ['[deny_if_permission] sharded.chatcolor.blossom','[tokens_take] 500','[console] lp user %player_name% permission set sharded.chatcolor.blossom true','[message] &#A370EE&lCHATCOLOR &8▷ &fUnlocked &#FF74DFBLOSSOM&f.']
+
+  amethyst:
+    material: PURPLE_BUNDLE
+    slot: 23
+    display_name: '&#9B59B6&lAMETHYST'
+    lore: ['&8Description','','&#9B59B6Information:','&#9B59B6| &fUnlock amethyst gradient','','&#9B59B6⚓ &fCost: &#9B59B6&n500 Tokens','','&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Buy']
+    left_click_commands: ['[deny_if_permission] sharded.chatcolor.amethyst','[tokens_take] 500','[console] lp user %player_name% permission set sharded.chatcolor.amethyst true','[message] &#A370EE&lCHATCOLOR &8▷ &fUnlocked &#9B59B6AMETHYST&f.']

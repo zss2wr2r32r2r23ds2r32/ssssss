@@ -1,0 +1,50 @@
+prefix: "&#AD4EFF&lSHARDED &7▷ &f"
+
+spawn:
+  teleported: "{prefix}Welcome to spawn."
+  not-set: "{prefix}No main spawn is set yet. Using the world spawn."
+  set: "{prefix}Main spawn set at &#2BD6FF%x%&f, &#2BD6FF%y%&f, &#2BD6FF%z% &7(%world%)."
+  first-join: "{prefix}Welcome to the server."
+
+pickup:
+  captured: "{prefix}Captured &#2BD6FF%mob%&f. Right-click a block to place it."
+  placed: "{prefix}Placed &#2BD6FF%mob%&f."
+  spawn-blocked: "{prefix}You cannot place captured mobs in the spawn region."
+  failed: "{prefix}You cannot pick that up."
+  empty-hand: "{prefix}Use an empty hand while sneaking to pick up a mob."
+
+portalrtp:
+  unknown-destination: "{prefix}That portal has no RTP destination set."
+  searching: "{prefix}Finding a safe location..."
+  success: "{prefix}Random teleport complete."
+  failed: "{prefix}Could not find a safe location. Try again."
+  cooldown: "{prefix}Wait &#2BD6FF%seconds%s &fbefore using RTP again."
+  no-permission: "{prefix}You cannot use RTP."
+
+rtp:
+  unknown-destination: "{prefix}RTP is not configured for that world."
+
+graves:
+  created: "{prefix}Your items are in a grave at &#2BD6FF%x%&f, &#2BD6FF%y%&f, &#2BD6FF%z%&f."
+  recovered: "{prefix}You recovered your grave."
+  expired: "{prefix}That grave has expired."
+  not-yours: "{prefix}That grave is not yours yet."
+  empty: "{prefix}The grave is empty."
+
+mob-toggle:
+  on: "{prefix}Hostile mobs and phantoms are now blocked within &#2BD6FF50 &fblocks of you."
+  off: "{prefix}Nearby mob spawning is on again."
+
+rollback:
+  saved: "{prefix}Saved inventory snapshot for &#2BD6FF%player%&f."
+  restored: "{prefix}Restored &#2BD6FF%player%&f's inventory (%when%)."
+  none: "{prefix}No snapshots for &#2BD6FF%player%&f yet."
+  unknown-player: "{prefix}Unknown player &#2BD6FF%player%&f."
+  usage: "{prefix}Use &#2BD6FF/invrollback <player> [list|latest|#]&f."
+  list-header: "{prefix}Snapshots for &#2BD6FF%player%&f:"
+  list-line: "&8▶ &#2BD6FF#%index% &f%when% &7(%reason%)"
+
+core:
+  reloaded: "{prefix}ShardedCore reloaded."
+  no-permission: "{prefix}You cannot do that."
+  players-only: "{prefix}Players only."

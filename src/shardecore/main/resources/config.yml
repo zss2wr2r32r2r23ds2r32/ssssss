@@ -1,0 +1,115 @@
+# ---------------------------------------------------------
+#  ShardedCore - main configuration
+# ---------------------------------------------------------
+#
+# This file is the plugin switchboard. Almost every visible string, slot,
+# item, lore, filler, sound, and message lives in YAML:
+#
+#   plugins/ShardedCore/config.yml            — this file (prefix, messages, modules)
+#   plugins/ShardedCore/gui-navigation.yml    — global fillers, nav items, names, lores, sounds
+#   plugins/ShardedCore/modules/<name>/       — each feature's GUI slots/items/lores/sounds/messages
+#
+# /shardedcore reload applies all of the above.
+
+config-version: 28
+
+# Edit plugins/ShardedCore/gui-navigation.yml for fillers, close/back/next/confirm
+# buttons, and default GUI sounds (volume/pitch included).
+
+prefix: '&#00A2FF&lCORE &8▷ &r'
+error: '&#FF2121'
+success: '&#9FFF00'
+# chat | actionbar | both — global default for all modules
+message-mode: chat
+
+messages:
+  no-permission: '&cYou don''t have permission.'
+  reloaded: '&aConfiguration reloaded. &7(%modules% modules enabled)'
+  reset-configs: '&aReset &f%count% &aconfig files from plugin defaults.'
+
+# Optional overrides if you prefer keeping GUI buttons in this file instead of
+# gui-navigation.yml. Keys: back, previous, next, close, confirm, cancel,
+# next-page, previous-page. Each may set material, name, lore.
+gui-buttons: {}
+
+modules:
+  craft: true
+  fix: true
+  trash: true
+  chat: true
+  chatformat: true
+  privatemessages: true
+  nightvision: true
+  deathmessages: true
+  joinmessages: true
+  backpack: true
+  graves: true
+  itemedit: true
+  armortrims: true
+  fly: true
+  autosmelt: true
+  portalrtp: true
+  spawnselect: true
+  settings: true
+  killstreaks: true
+  pets: true
+  tempranks: true
+  abilities: true
+  pickupmobs: true
+  pickupspawners: true
+  tokens: true
+  eglow: true
+  tags: true
+  chatcolor: true
+  namecolor: true
+  wardrobe: true
+  cold: false
+  itemshop: true
+  toolname: true
+  bundles: true
+  staff: true
+  punishments: true
+  chatmoderation: true
+  announce: true
+  invrollback: true
+  screenshare: true
+  staffchat: true
+  requeststaff: true
+  guide: true
+  rules: true
+  client: true
+  collisions: true
+  teams: true
+  dailyrewards: true
+  weeklyrewards: true
+  rewards: true
+  leaderboards: true
+  leaderboardboards: true
+  media: true
+  namegradients: true
+  ranksinfo: true
+  cosmeticschat: true
+  crates: true
+  stats: true
+  homes: true
+  kits: true
+  roles: true
+  outpost: true
+  koth: true
+  coreprotect: true
+  duel: true
+  combat: true
+  nametags: true
+  live: true
+  dropfix: true
+  exploitfixer: true
+  killrewards: true
+  playtimerewards: true
+  chatfilter: true
+  serverlinks: true
+  commandwhitelist: true
+  leaderboardtopper: false
+  arenasync: true
+  welcome: true
+  staffpromote: true
+  multiverse: false

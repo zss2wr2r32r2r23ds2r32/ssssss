@@ -1,0 +1,4 @@
+# Chat module - lets players toggle public chat visibility with /chattoggle.
+
+mentions:
+  enabled: true

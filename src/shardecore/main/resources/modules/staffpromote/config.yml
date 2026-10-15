@@ -1,0 +1,12 @@
+config-version: 1
+message-mode: chat
+
+storage:
+  # sqlite or mariadb
+  type: sqlite
+  mariadb:
+    host: localhost
+    port: 3306
+    database: sharded
+    username: root
+    password: ''

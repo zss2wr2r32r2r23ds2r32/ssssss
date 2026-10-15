@@ -1,0 +1,143 @@
+config-version: 8
+gui-title: "&8Kits"
+admin-gui-title: "&8Kit Admin"
+preview-title: "&8Kit Preview - %kit%"
+edit-title: "&8Edit Kit - %kit%"
+delete-title: "&8Delete %kit%?"
+default-cooldown-seconds: 3600
+store-command: "store"
+sound-success: "entity.experience_orb.pickup"
+rows: 5
+admin-rows: 5
+message-channel: chat
+filler: GRAY_STAINED_GLASS_PANE
+star: "★"
+star-color: "&#FFD700"
+
+# When false, kits.admin does not skip claim cooldown (kits.bypass / kits.no.cooldown still do)
+admin-bypass-cooldown: false
+
+# Left-click claims, right-click previews. Preview rearranges are saved per-player
+# under kits/layouts/<uuid>.yml (not the global kit definition).
+lore-available:
+  - "&8%description%"
+  - ""
+  - "%stars%"
+  - ""
+  - "%color%Information:"
+  - "%color%| &fClick To Claim"
+  - "%color%| %color%&n%kit%&r %color%Kit"
+  - ""
+  - "%color%⏳ &fCooldown: %color%%cooldown%"
+  - ""
+  - "%action%"
+lore-cooldown:
+  - "&8%description%"
+  - ""
+  - "%stars%"
+  - ""
+  - "%color%Information:"
+  - "%color%| &fOn cooldown"
+  - "%color%| %color%&n%kit%&r %color%Kit"
+  - ""
+  - "%color%⏳ &fCooldown: %color%%cooldown%"
+  - ""
+  - "%action%"
+lore-locked:
+  - "&8%description%"
+  - ""
+  - "%stars%"
+  - ""
+  - "%color%Information:"
+  - "%color%| &fLocked"
+  - "%color%| %color%&n%kit%&r %color%Kit"
+  - ""
+  - "%color%☀ &fRank: %color%&l%kit% %color%Rank"
+  - ""
+  - "%action%"
+
+lore-owned:
+  - "&8Description"
+  - ""
+  - "%color%Information:"
+  - "%color%| &fClick To Claim"
+  - "%color%| %color%&n%kit%&r %color%Kit"
+  - ""
+  - "%color%⏳ &fCooldown: %color%%cooldown%"
+  - ""
+  - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Claim"
+lore-owned-note: unused-legacy
+
+default-action-available: "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Claim"
+default-action-cooldown: "&x&F&F&8&6&0&0▷ &x&F&F&8&6&0&0On Cooldown"
+default-action-locked: "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Unlock"
+
+kits:
+  member:
+    display: "Member"
+    description: "Starter kit"
+    color: "&7"
+    icon: GRAY_BUNDLE
+    fallback: BUNDLE
+    slot: 13
+    cooldown-seconds: 3600
+    rarity: 1
+    glow: false
+    permission: none
+  booster:
+    display: "Booster"
+    description: "Booster kit"
+    color: "&#FF58BD"
+    icon: PURPLE_BUNDLE
+    fallback: BUNDLE
+    slot: 19
+    cooldown-seconds: 3600
+    rarity: 2
+    glow: true
+  legend:
+    display: "Legend"
+    description: "Legend kit"
+    color: "&#A9FF00"
+    icon: LIME_BUNDLE
+    fallback: BUNDLE
+    slot: 21
+    cooldown-seconds: 3600
+    rarity: 3
+  mythic:
+    display: "Mythic"
+    description: "Mythic kit"
+    color: "&#FF0048"
+    icon: MAGENTA_BUNDLE
+    fallback: BUNDLE
+    slot: 22
+    cooldown-seconds: 3600
+    rarity: 4
+  champion:
+    display: "Champion"
+    description: "Champion kit"
+    color: "&#FF1500"
+    icon: RED_BUNDLE
+    fallback: BUNDLE
+    slot: 23
+    cooldown-seconds: 3600
+    rarity: 4
+  media:
+    display: "Media"
+    description: "Media kit"
+    color: "&#FF0072"
+    icon: PINK_BUNDLE
+    fallback: BUNDLE
+    slot: 25
+    cooldown-seconds: 3600
+    rarity: 3
+  divine:
+    display: "Divine"
+    description: "Divine kit"
+    color: "&#F1FF00"
+    name: "&#F1FF00&lD&#F2FF24&lI&#F3FF48&lV&#F3FF6C&lI&#F4FF90&lN&#F5FFB4&lE"
+    icon: YELLOW_BUNDLE
+    fallback: BUNDLE
+    slot: 31
+    cooldown-seconds: 3600
+    rarity: 5
+    glow: true

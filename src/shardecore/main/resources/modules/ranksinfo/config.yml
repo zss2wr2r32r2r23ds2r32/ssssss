@@ -1,0 +1,249 @@
+config-version: 12
+message-mode: chat
+
+gui:
+  title: "Ranks"
+  rows: 4
+  # Empty slots like the screenshot — no grey glass, no custom heads yet.
+  filler: false
+  filler-material: AIR
+  layout: screenshot-v10
+
+close:
+  enabled: false
+  slot: 31
+  material: BARRIER
+  name: "&#FF0000&lClose"
+  lore:
+    - "&7Close this menu"
+
+shop:
+  enabled: false
+  slot: 4
+  material: EMERALD
+  name: "&#26E07A&lBuy Ranks"
+  command: "store"
+  lore:
+    - "&8Description"
+    - ""
+    - "&e▷ &e&lCLICK&r &eTo Open Store"
+
+# 4-row screenshot layout: ruby/sapphire/onyx + media on row 2, aether/flawless + booster on row 3.
+ranks:
+  ruby:
+    enabled: true
+    slot: 11
+    material: PARROT_SPAWN_EGG
+    name: "&#FF0000&lRuby Rank"
+    command: "store"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000| &fCustom tool names"
+      - "&#FF0000| &fAuto smelter enchant on pickaxe"
+      - "&#FF0000| &fGraves — loot goes into chests on kills"
+      - ""
+      - "&#FF0000Commands:"
+      - "&#FF0000| &f/trash"
+      - "&#FF0000| &f/autosmelt"
+      - ""
+      - "&#FF0000Extras:"
+      - "&#FF0000| &f125 tokens"
+      - "&#FF0000| &f+1 backpack space"
+      - "&#FF0000| &f1x kill crate"
+      - ""
+      - "&e▷ &e&lCLICK TO PURCHASE"
+
+  sapphire:
+    enabled: true
+    slot: 12
+    material: VEX_SPAWN_EGG
+    name: "&#55FFFF&lSapphire Rank"
+    command: "store"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#55FFFFInformation:"
+      - "&#55FFFF| &fCustom tool names"
+      - "&#55FFFF| &fAuto smelter enchant on pickaxe"
+      - "&#55FFFF| &fGraves — loot goes into chests on kills"
+      - "&#55FFFF| &fLonger grave duration"
+      - "&#55FFFF| &fPets"
+      - ""
+      - "&#55FFFFCommands:"
+      - "&#55FFFF| &f/trash"
+      - "&#55FFFF| &f/autosmelt"
+      - "&#55FFFF| &f/craft"
+      - ""
+      - "&#55FFFFExtras:"
+      - "&#55FFFF| &f500 tokens"
+      - "&#55FFFF| &f+2 backpack space"
+      - "&#55FFFF| &f1x kill key"
+      - "&#55FFFF| &f1x cosmetic key"
+      - ""
+      - "&e▷ &e&lCLICK TO PURCHASE"
+
+  onyx:
+    enabled: true
+    slot: 13
+    material: BLAZE_SPAWN_EGG
+    name: "&#FFAA00&lOnyx Rank"
+    command: "store"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFAA00Information:"
+      - "&#FFAA00| &fCustom tool names"
+      - "&#FFAA00| &fAuto smelter enchant on pickaxe"
+      - "&#FFAA00| &fGraves — loot goes into chests on kills"
+      - "&#FFAA00| &fLonger grave duration"
+      - "&#FFAA00| &fPets"
+      - "&#FFAA00| &fCustom death messages"
+      - "&#FFAA00| &fFix tools"
+      - ""
+      - "&#FFAA00Commands:"
+      - "&#FFAA00| &f/trash"
+      - "&#FFAA00| &f/autosmelt"
+      - "&#FFAA00| &f/craft"
+      - "&#FFAA00| &f/fix"
+      - ""
+      - "&#FFAA00Extras:"
+      - "&#FFAA00| &f1250 tokens"
+      - "&#FFAA00| &f+3 backpack space"
+      - "&#FFAA00| &f2x kill key"
+      - "&#FFAA00| &f1x cosmetic key"
+      - ""
+      - "&e▷ &e&lCLICK TO PURCHASE"
+
+  media:
+    enabled: true
+    slot: 15
+    material: AXOLOTL_SPAWN_EGG
+    name: "&#FF55FF&lMedia Rank"
+    command: "store"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF55FFInformation:"
+      - "&#FF55FF| &fCustom tool names"
+      - "&#FF55FF| &fAuto smelter enchant on pickaxe"
+      - "&#FF55FF| &fGraves — loot goes into chests on kills"
+      - "&#FF55FF| &#8B1A1A[Creator] &fchat tag"
+      - "&#FF55FF| &fCustom join message"
+      - ""
+      - "&#FF55FFCommands:"
+      - "&#FF55FF| &f/trash"
+      - "&#FF55FF| &f/autosmelt"
+      - "&#FF55FF| &f/live"
+      - ""
+      - "&#FF55FFExtras:"
+      - "&#FF55FF| &f350 tokens"
+      - "&#FF55FF| &f+2 backpack space"
+      - "&#FF55FF| &f1x kill crate"
+      - "&#FF55FF| &f1x astral key"
+      - "&#FF55FF| &f1x cosmetic key"
+      - ""
+      - "&e▷ &e&lCLICK TO VIEW"
+
+  aether:
+    enabled: true
+    slot: 20
+    material: ALLAY_SPAWN_EGG
+    name: "&#00AAAA&lAether Rank"
+    command: "store"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#00AAAAInformation:"
+      - "&#00AAAA| &fCustom tool names"
+      - "&#00AAAA| &fAuto smelter enchant on pickaxe"
+      - "&#00AAAA| &fGraves — loot goes into chests on kills"
+      - "&#00AAAA| &fLonger grave duration"
+      - "&#00AAAA| &fPets"
+      - "&#00AAAA| &fCustom death messages"
+      - "&#00AAAA| &fFix tools"
+      - "&#00AAAA| &fPick up mobs"
+      - "&#00AAAA| &fSilk touch spawners — pay tokens"
+      - ""
+      - "&#00AAAACommands:"
+      - "&#00AAAA| &f/trash"
+      - "&#00AAAA| &f/autosmelt"
+      - "&#00AAAA| &f/craft"
+      - "&#00AAAA| &f/fix"
+      - "&#00AAAA| &f/fly — in main spawn"
+      - "&#00AAAA| &f/trims"
+      - ""
+      - "&#00AAAAExtras:"
+      - "&#00AAAA| &f1750 tokens"
+      - "&#00AAAA| &f+4 backpack space"
+      - "&#00AAAA| &f2x kill key"
+      - "&#00AAAA| &f1x cosmetic key"
+      - ""
+      - "&e▷ &e&lCLICK TO PURCHASE"
+
+  flawless:
+    enabled: true
+    slot: 21
+    material: PHANTOM_SPAWN_EGG
+    name: "&#D5A6FF&lFlawless Rank"
+    command: "store"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#D5A6FFInformation:"
+      - "&#D5A6FF| &fCustom tool names"
+      - "&#D5A6FF| &fAuto smelter enchant on pickaxe"
+      - "&#D5A6FF| &fGraves — loot goes into chests on kills"
+      - "&#D5A6FF| &fLonger grave duration"
+      - "&#D5A6FF| &fPets"
+      - "&#D5A6FF| &fCustom death messages"
+      - "&#D5A6FF| &fFix tools"
+      - "&#D5A6FF| &fPick up mobs"
+      - "&#D5A6FF| &fPick up spawners"
+      - "&#D5A6FF| &fCustom join message"
+      - "&#D5A6FF| &fPriority in tab and queue"
+      - ""
+      - "&#D5A6FFCommands:"
+      - "&#D5A6FF| &f/trash"
+      - "&#D5A6FF| &f/autosmelt"
+      - "&#D5A6FF| &f/craft"
+      - "&#D5A6FF| &f/fix"
+      - "&#D5A6FF| &f/fly — in main spawn"
+      - "&#D5A6FF| &f/trims"
+      - ""
+      - "&#D5A6FFExtras:"
+      - "&#D5A6FF| &f3500 tokens"
+      - "&#D5A6FF| &f+5 backpack space"
+      - "&#D5A6FF| &f3x kill key"
+      - ""
+      - "&e▷ &e&lCLICK TO PURCHASE"
+
+  booster:
+    enabled: true
+    slot: 24
+    material: SHULKER_SPAWN_EGG
+    name: "&#AA00AA&lBooster Rank"
+    command: "store"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#AA00AAInformation:"
+      - "&#AA00AA| &fCustom tool names"
+      - "&#AA00AA| &fAuto smelter enchant on pickaxe"
+      - "&#AA00AA| &fGraves — loot goes into chests on kills"
+      - ""
+      - "&#AA00AACommands:"
+      - "&#AA00AA| &f/trash"
+      - "&#AA00AA| &f/autosmelt"
+      - ""
+      - "&#AA00AAExtras:"
+      - "&#AA00AA| &f500 tokens"
+      - "&#AA00AA| &f+2 backpack space"
+      - "&#AA00AA| &f1x kill crate"
+      - "&#AA00AA| &f1x astral key"
+      - ""
+      - "&e▷ &e&lCLICK TO PURCHASE"
+
+messages:
+  players-only: "&#FF0000&lERROR &8▷ &fOnly players can open ranks."

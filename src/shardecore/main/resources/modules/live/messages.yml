@@ -1,0 +1,12 @@
+config-version: 2
+
+players-only: "&#FF0000&lERROR &8▷ &fPlayers only."
+no-permission: "&#FF0000&lERROR &8▷ &fYou cannot do that."
+usage: "&#FF256E&lLIVE &8▷ &fUse /live <link>"
+cooldown: "&#FF0000&lERROR &8▷ &fWait &#FF256E%seconds%s &fbefore posting again."
+bad-platform: "&#FF0000&lERROR &8▷ &fThat platform is not allowed."
+invalid-platform: "&#FF0000&lERROR &8▷ &fThat platform is not allowed."
+disabled: "&#FF0000&lERROR &8▷ &fYour live announcements are toggled off."
+toggle-on: "&#FF256E&lLIVE &8▷ &fLivestream messages are now shown."
+toggle-off: "&#FF256E&lLIVE &8▷ &fLivestream messages are now hidden."
+sent: "&#FF256E&lLIVE &8▷ &fYour stream link was broadcast."

@@ -1,0 +1,20 @@
+config-version: 8
+message-mode: chat
+
+spawn-command-enabled: true
+join-world: spawn
+prompt-on-join: true
+prompt-delay-ticks: 40
+
+main-teleport-seconds: 10
+main-teleport-actionbar: '&#FF005D&lSPAWN &8▷ &fTeleporting you to spawn in &#FF005D&n%seconds%&r&#FF005Ds'
+teleport-cancelled-actionbar: '&#FF005D&lSPAWN &8▷ &fYou moved &8— &7teleport cancelled.'
+countdown-sound: BLOCK_NOTE_BLOCK_PLING
+cancel-sound: BLOCK_NOTE_BLOCK_BASS
+
+# /setspawn vanilla updates both this value and vanilla-spawn.
+vanilla-world: world
+vanilla-random-radius: 256
+
+gui:
+  title: '&8Spawn Selector'

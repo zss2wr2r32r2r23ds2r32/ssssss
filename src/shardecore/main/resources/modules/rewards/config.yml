@@ -1,0 +1,54 @@
+config-version: 4
+message-mode: chat
+
+gui:
+  enabled: true
+  title: '&8Rewards'
+  size: 27
+  ready: '&#8aff00&lREADY'
+  colors:
+    daily: '&#9FFF00'
+    weekly: '&#FFD700'
+  items:
+    daily:
+      slot: 11
+      name: '&#9FFF00&lDAILY REWARDS'
+      lore:
+        - '&8Rewards'
+        - ''
+        - '&#9FFF00Information:'
+        - '&#9FFF00| &fClaim your daily reward.'
+        - ''
+        - '&#9FFF00☀ &fTime: &#9FFF00%time%'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0to claim'
+      lore-claimed:
+        - '&8Rewards'
+        - ''
+        - '&#9FFF00Information:'
+        - '&#9FFF00| &fYou have already claimed this.'
+        - ''
+        - '&#9FFF00☀ &fTime: &#9FFF00%time%'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0%time%'
+    weekly:
+      slot: 15
+      name: '&#FFD700&lWEEKLY REWARDS'
+      lore:
+        - '&8Rewards'
+        - ''
+        - '&#FFD700Information:'
+        - '&#FFD700| &fClaim your weekly reward.'
+        - ''
+        - '&#FFD700☀ &fTime: &#FFD700%time%'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0to claim'
+      lore-claimed:
+        - '&8Rewards'
+        - ''
+        - '&#FFD700Information:'
+        - '&#FFD700| &fYou have already claimed this.'
+        - ''
+        - '&#FFD700☀ &fTime: &#FFD700%time%'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0%time%'

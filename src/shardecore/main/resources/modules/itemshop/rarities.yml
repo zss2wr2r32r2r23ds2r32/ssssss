@@ -1,0 +1,88 @@
+config-version: 2
+
+rarities:
+  common:
+    display-name: '&#B0B0B0COMMON'
+    color: '&#B0B0B0'
+    gradient: '&#B0B0B0'
+    weight: 50
+    default-price-hat: 325
+    default-price-tag: 250
+    border-material: LIGHT_GRAY_STAINED_GLASS_PANE
+    lore-line: '&#B0B0B0★ COMMON ★'
+    purchase-sound:
+      sound: entity.experience_orb.pickup
+      volume: 0.7
+      pitch: 1.2
+    broadcast-on-purchase: false
+    broadcast-message: ''
+    glow: false
+    sort-order: 10
+  rare:
+    display-name: '&x&5&C&9&4&F&CRARE'
+    color: '&x&5&C&9&4&F&C'
+    gradient: '&x&5&C&9&4&F&C'
+    weight: 25
+    default-price-hat: 650
+    default-price-tag: 500
+    border-material: LIGHT_BLUE_STAINED_GLASS_PANE
+    lore-line: '&x&5&C&9&4&F&C★ RARE ★'
+    purchase-sound:
+      sound: entity.player.levelup
+      volume: 0.6
+      pitch: 1.4
+    broadcast-on-purchase: false
+    broadcast-message: ''
+    glow: false
+    sort-order: 20
+  epic:
+    display-name: '&#A370EEEPIC'
+    color: '&#A370EE'
+    gradient: '&#A370EE'
+    weight: 15
+    default-price-hat: 1150
+    default-price-tag: 950
+    border-material: PURPLE_STAINED_GLASS_PANE
+    lore-line: '&#A370EE★ EPIC ★'
+    purchase-sound:
+      sound: block.amethyst_block.chime
+      volume: 1.0
+      pitch: 1.1
+    broadcast-on-purchase: false
+    broadcast-message: ''
+    glow: true
+    sort-order: 30
+  legendary:
+    display-name: '&#FFD700LEGENDARY'
+    color: '&#FFD700'
+    gradient: '&#FFD700'
+    weight: 8
+    default-price-hat: 1900
+    default-price-tag: 1500
+    border-material: YELLOW_STAINED_GLASS_PANE
+    lore-line: '&#FFD700★ LEGENDARY ★'
+    purchase-sound:
+      sound: ui.toast.challenge_complete
+      volume: 0.8
+      pitch: 1.0
+    broadcast-on-purchase: true
+    broadcast-message: '&#A370EE&lITEM SHOP &8▷ &f%player% bought a &#FFD700LEGENDARY &f%item%&f!'
+    glow: true
+    sort-order: 40
+  sharded:
+    display-name: '&#c084fcSHARDED'
+    color: '&#c084fc'
+    gradient: '&#c084fc'
+    weight: 2
+    default-price-hat: 3200
+    default-price-tag: 2500
+    border-material: MAGENTA_STAINED_GLASS_PANE
+    lore-line: '&#c084fc★ SHARDED ★'
+    purchase-sound:
+      sound: item.totem.use
+      volume: 0.5
+      pitch: 1.3
+    broadcast-on-purchase: true
+    broadcast-message: '&#c084fc&lSHARDED &8▷ &f%player% claimed %item% from the daily shop!'
+    glow: true
+    sort-order: 50

@@ -1,0 +1,3 @@
+config-version: 1
+# Item shop lives in this folder: plugins/ShardedCore/modules/itemshop/
+# Edit hats.yml, tags.yml, rarities.yml, itemshop.yml, tokens.yml, and messages.yml here.

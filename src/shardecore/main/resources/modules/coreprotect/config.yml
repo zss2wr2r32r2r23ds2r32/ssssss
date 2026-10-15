@@ -1,0 +1,24 @@
+config-version: 1
+message-mode: chat
+block-natural-mobs-in-spawn: true
+side-max-build-y: 111
+horn-block-worlds:
+  - spawn
+
+regions:
+  spawn: {}
+  combat: {}
+  pvp: {}
+  side1: {}
+  side2: {}
+  side3: {}
+  side4: {}
+
+auto-reset:
+  enabled: true
+  interval-minutes: 15
+  commands:
+    - arenas reset side1 fast
+    - arenas reset side2 fast
+    - arenas reset side3 fast
+    - arenas reset side4 fast

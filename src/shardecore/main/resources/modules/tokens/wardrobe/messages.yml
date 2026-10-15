@@ -1,0 +1,35 @@
+config-version: 6
+prefix: '%prefix%'
+players-only: '%prefix%&#FF2727Only players can use this command.'
+no-permission: '%prefix%&#FF2727You don''t have permission.'
+not-owned: '%prefix%&#FF2727You don''t own %hat%&#FF2727!'
+already-owned: '%prefix%&#FFBA00You already own %hat%&#FFBA00.'
+equipped: '%prefix%&#9FFF00You have equipped %hat%&#9FFF00. Use &f/wardrobe &#9FFF00again to remove it.'
+removed: '%prefix%&#9FFF00Hat removed. Your helmet has been returned.'
+unlocked: '%prefix%&#9FFF00%hat% &#9FFF00added to your wardrobe! Use &f/wardrobe&#9FFF00.'
+purchased: '%prefix%&#9FFF00Purchased %hat% &#9FFF00for &f%price% &#9FFF00tokens. Use &f/wardrobe&#9FFF00.'
+not-enough-tokens: '%prefix%&#FF2727You need &f%missing% &#FF2727more tokens for %hat%&#FF2727.'
+shop-unavailable: '%prefix%&#FF2727The token shop is not available right now.'
+item-missing: '%prefix%&#FF2727Could not load %hat%&#FF2727 — try /wardrobe again in a few seconds.'
+still-loading: '%prefix%&#FFBA00ItemsAdder cosmetics are still loading. Open /wardrobe again in a few seconds.'
+unknown-hat: '%prefix%&#FF2727Unknown hat &f%hat%&#FF2727.'
+hidden: '%prefix%&#9FFF00Hidden %hat% &#9FFF00from wardrobe and the token shop.'
+shown: '%prefix%&#9FFF00Showing %hat% &#9FFF00in wardrobe and the token shop again.'
+limited-added: '%prefix%&#9FFF00Moved %hat% &#9FFF00to Limited. Players will see &elimited hat will be gone soon&#9FFF00.'
+limited-removed: '%prefix%&#9FFF00Removed %hat% &#9FFF00from Limited.'
+favourited: '%prefix%&#9FFF00Added %hat% &#9FFF00to Favourites.'
+unfavourited: '%prefix%&#FFBA00Removed %hat% &#FFBA00from Favourites.'
+admin-usage: '%prefix%&#FF2727Usage: /wardrobe hide <hat> | show <hat> | limited add <hat> | limited remove <hat>'
+preview-spawn-only: '%prefix%&#FF2727You can only preview hats at spawn!'
+preview-world-missing: '%prefix%&#FF2727Preview location is not available in this world.'
+preview-started: '%prefix%&#9FFF00Previewing %hat%&#9FFF00 — do &f/wardrobe leave&#9FFF00 when done.'
+preview-ended: '%prefix%&#9FFF00Preview ended.'
+preview-active: '%prefix%&#FF2727You are previewing — use &f/wardrobe leave&#FF2727.'
+preview-not-active: '%prefix%&#FF2727You are not previewing a hat.'
+
+message-modes:
+  equipped: chat
+  removed: chat
+  preview-started: actionbar
+  preview-ended: actionbar
+  preview-active: actionbar
