@@ -1,0 +1,42 @@
+# ShardedMC Performance Configuration
+# High-performance sharded Minecraft server settings
+
+sharding:
+  enabled: true
+  worker-threads: auto
+  region-size: 8
+  lock-timeout-ms: 5000
+
+chunks:
+  async-loading: true
+  async-generation: true
+  prefetch: true
+  cache-size: 2048
+  unload-delay: 300
+  io-threads: 4
+  generation-threads: 4
+  lighting-threads: 2
+  prefetch-radius: 2
+
+network:
+  worker-threads: auto
+  compression-level: adaptive
+  max-packet-batch-size: 64
+  async-processing: true
+
+performance:
+  adaptive-threading: true
+  profiling: false
+  metrics: true
+  slow-tick-threshold-ms: 50
+  target-tps: 20
+
+entity:
+  concurrent-ticking: true
+  inactive-tick-interval: 4
+  spatial-index-cell-size: 16
+
+reliability:
+  isolate-worker-failures: true
+  worker-stall-threshold-ms: 30000
+  crash-recovery: true

@@ -1,0 +1,11 @@
+# ShardedMC
+
+/build/
+/.gradle/
+*.iml
+.idea/
+*.log
+/world/
+/logs/
+/plugins/
+/run/
