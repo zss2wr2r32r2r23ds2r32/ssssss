@@ -1,0 +1,28 @@
+# Player Visibility Module
+
+enabled: true
+cooldown-seconds: 3
+
+item:
+  slot: 7
+  material: LIME_DYE
+  material-disabled: RED_DYE
+  name-enabled: "&#94FF00Player Visability"
+  name-disabled: "&#FF0000Player Visability"
+  lore-enabled:
+    - "&8Description"
+    - ""
+    - "&7Right click me to hide players"
+  lore-disabled:
+    - "&8Description"
+    - ""
+    - "&7Right click me to show players"
+
+status:
+  enabled: "&7[Enabled]"
+  disabled: "&7[Disabled]"
+
+messages:
+  hidden: "%prefix% &#FF2727All players are now hidden."
+  shown: "%prefix% &#9FFF00All players are now visible."
+  cooldown: "%prefix% &#FF2727Wait %seconds%s before toggling visibility again."

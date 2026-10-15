@@ -1,0 +1,77 @@
+# PvP Module
+
+enabled: true
+
+hold-seconds: 5
+
+action-bar:
+  enter: "&#FF0000&lPVP &8▷ &fEntering PVP In &#FF0000%seconds%s"
+  leave: "&#FF0000&lPVP &8▷ &fLeaving PVP In &#FF0000%seconds%s"
+
+countdown-sounds:
+  enabled: true
+  sound: BLOCK_NOTE_BLOCK_PLING
+  volume: 1.0
+  pitch: 1.0
+  pitch-step: 0.15
+
+enter-item:
+  material: DIAMOND_SWORD
+  name: "&#FF0000PVP Sword"
+  lore:
+    - "&8Description"
+    - ""
+    - "&7Hold to enter PvP"
+
+leave-item:
+  material: NETHERITE_SWORD
+  name: "&#22FF00Leave PVP"
+  lore:
+    - "&8Description"
+    - ""
+    - "&7Hold to leave PvP"
+
+messages:
+  entered: "%prefix% &#9FFF00You have entered PvP mode, you may fight!"
+  left: "%prefix% &#9FFF00You have left PvP mode, PvP is now disabled."
+
+kit:
+  arrow-slot: 9
+  arrow-amount: 16
+  armor:
+    helmet:
+      material: DIAMOND_HELMET
+    chestplate:
+      material: DIAMOND_CHESTPLATE
+    leggings:
+      material: DIAMOND_LEGGINGS
+    boots:
+      material: DIAMOND_BOOTS
+  items:
+    sword:
+      slot: 0
+      material: DIAMOND_SWORD
+      plain: true
+      unbreakable: true
+      enchantments:
+        sharpness: 4
+    golden-apples:
+      slot: 1
+      material: GOLDEN_APPLE
+      amount: 8
+      plain: true
+    bow:
+      slot: 2
+      material: BOW
+      plain: true
+      unbreakable: true
+      enchantments:
+        infinity: 1
+    leave-sword:
+      slot: 8
+      material: NETHERITE_SWORD
+      name: "&#22FF00Leave PVP &7[Hold]"
+      lore:
+        - "&8Description"
+        - ""
+        - "&7Hold to leave PvP"

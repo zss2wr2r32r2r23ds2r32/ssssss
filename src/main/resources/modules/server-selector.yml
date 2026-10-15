@@ -1,0 +1,67 @@
+# Server Selector Module
+# Uses BungeeCord plugin messages — /server does NOT exist on backend lobby servers
+
+enabled: true
+center-servers: true
+connect-method: bungee
+debug: false
+connect-failed-message: "%prefix% &#FF2727Could not connect to that server. Please try again or contact staff."
+
+gui:
+  title: "SERVER SELECTOR"
+  rows: 3
+
+filler:
+  material: BLACK_STAINED_GLASS_PANE
+  name: " "
+  lore:
+    - "&7"
+
+servers:
+  survival:
+    material: END_CRYSTAL
+    name: "&#8AFF00Shop &#8AFF00Survival"
+    bungee-name: Survival
+    lore:
+      - "&8Description"
+      - ""
+      - "&#8AFF00| &fClick me to Connect"
+      - "&#8AFF00| &fTo &#8AFF00Shop Survival"
+      - ""
+      - "&#8AFF00⚓ &fPlayers: &#8AFF00%bungee_survival%"
+      - "&#FF005D🌊 &fSeason: &#FF005D#1"
+      - "&#008DFF⛨ &fStatus: &#008DFF"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Join"
+
+  events:
+    material: FIREWORK_ROCKET
+    name: "&#FF007CEvents"
+    bungee-name: Events
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF007C| &fClick me to Connect"
+      - "&#FF007C| &fTo &#FF007CEvents"
+      - ""
+      - "&#8AFF00⚓ &fPlayers: &#8AFF00%bungee_events%"
+      - "&#FF005D🌊 &fSeason: &#FF005D#1"
+      - "&#008DFF⛨ &fStatus: &#008DFF"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Join"
+
+  diamond-smp:
+    material: DIAMOND
+    name: "&#FF0000Diamond SMP"
+    bungee-name: DiaSMP
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000| &fClick me to Connect"
+      - "&#FF0000| &fTo &#FF0000Diamond SMP"
+      - ""
+      - "&#8AFF00⚓ &fPlayers: &#8AFF00%bungee_diasmp%"
+      - "&#FF005D🌊 &fSeason: &#FF005D#1"
+      - "&#008DFF⛨ &fStatus: &#008DFF"
+      - ""
+      - "&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Join"

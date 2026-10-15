@@ -1,0 +1,13 @@
+# Moderation Module
+# /clearchat and /lockchat commands
+
+enabled: true
+
+chat-locked-on-start: false
+clearchat-lines: 100
+
+messages:
+  chat-locked: "%prefix% &cChat is currently locked."
+  clearchat-broadcast: "%prefix% &cChat has been cleared by &#00A2FF%player%"
+  chat-locked-broadcast: "%prefix% &cChat has been locked by &#00A2FF%player%"
+  chat-unlocked-broadcast: "%prefix% &aChat has been unlocked by &#00A2FF%player%"

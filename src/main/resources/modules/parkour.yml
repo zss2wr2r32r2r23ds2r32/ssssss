@@ -1,0 +1,29 @@
+# Parkour Module
+# Click the configured block or hotbar item to start parkour
+
+enabled: true
+
+block:
+  material: LIME_GLAZED_TERRACOTTA
+
+blocks:
+  - LIME_GLAZED_TERRACOTTA
+
+command: "ajparkour start"
+
+restore-delay-ticks: 5
+restore-adventure-mode: true
+
+end-commands:
+  - "ajparkour leave"
+  - "ajparkour quit"
+  - "ajparkour stop"
+  - "ajparkour end"
+
+messages:
+  start:
+    enabled: false
+    text: "%prefix% &#9FFF00Parkour started!"
+  end:
+    enabled: false
+    text: "%prefix% &#9FFF00Parkour ended!"
