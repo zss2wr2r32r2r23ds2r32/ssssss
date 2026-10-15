@@ -1,0 +1,22 @@
+name: ShardedSMP
+version: ${project.version}
+main: dev.shardedsmp.ShardedSMP
+api-version: "1.21"
+author: ShardedSMP
+description: Event SMP with sky-drop obsidian, phases, grace, and community quests
+commands:
+  grace:
+    description: Start the 30-minute grace period
+    usage: /grace start
+    permission: shardedsmp.admin
+  obsidian:
+    description: Test and inspect the obsidian event
+    usage: /obsidian test
+    permission: shardedsmp.admin
+  diamonds:
+    description: View community diamond quest progress
+    usage: /diamonds
+permissions:
+  shardedsmp.admin:
+    description: Admin commands for ShardedSMP
+    default: op

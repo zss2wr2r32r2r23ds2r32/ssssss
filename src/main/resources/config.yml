@@ -1,0 +1,32 @@
+# ShardedSMP configuration
+world: world
+border-size: 1500
+border-padding: 16
+
+grace-minutes: 30
+grace-steak-amount: 32
+
+obsidian:
+  total: 10
+  required-players: 5
+  phase-two-found: 5
+  # Extra wait after grace ends before the first piece can spawn
+  first-delay-min-seconds: 90
+  first-delay-max-seconds: 240
+  # Random delay between each of the 10 pieces
+  delay-min-seconds: 80
+  delay-max-seconds: 280
+
+quest:
+  diamonds: 500
+
+messages:
+  obsidian-spawn: "&fA Piece of &#FF0000Obsidian &fHas Spawned at X%x% y%y% Z%z%"
+  phase-title: "&#FF0000&lPHASE %phase%"
+  phase-subtitle: "&fHas begun"
+  grace-actionbar: "&fGrace ends in &#FF0000%time%"
+  holder-actionbar: "&fObsidian Holder &#FF0000%player% &7x%count%"
+  ground-actionbar: "&fA Piece of &#FF0000Obsidian &fis still on the ground"
+  nether-portal: "&fThe Nether Portal has opened at X%x% y%y% Z%z%"
+  end-portal: "&fThe End Portal has spawned at X%x% y%y% Z%z%"
+  diamonds-progress: "&bDiamonds &f%current%&7/&f%needed%"
