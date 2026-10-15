@@ -1,0 +1,27 @@
+# Disable modules.joinmessages when using this module to avoid duplicate join/quit messages.
+config-version: 1
+message-mode: chat
+
+counter:
+  enabled: true
+  first-join-broadcast: '&#0098FF⚓ &7Welcome &#0098FF%player% &7— you are player &#0098FF#%count%&7!'
+
+# Highest priority format the player has permission for is used.
+# Placeholders: %player%, %count%, %counter%, %rank%, %group%
+formats:
+  default:
+    permission: ''
+    priority: 0
+    join: '&#9FFF00+ &f%player%'
+    first-join: '&#0098FF⚓ &7Welcome &#0098FF%player% &7(&f#%count%&#0098FF&7)!'
+    quit: '&#FF2727- &f%player%'
+  vip:
+    permission: sharded.joinmessages.vip
+    priority: 10
+    join: '&#9FFF00+ %rank%&f%player% &7joined the server!'
+    quit: '&#FF2727- %rank%&f%player% &7left the server.'
+  admin:
+    permission: sharded.joinmessages.admin
+    priority: 100
+    join: '&#9FFF00+ %rank%&f%player% &7has arrived.'
+    quit: '&#FF2727- %rank%&f%player% &7has left.'

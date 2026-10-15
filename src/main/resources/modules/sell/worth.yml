@@ -1,0 +1,10 @@
+title: '&8Item Worth | Page %page%'
+size: 54
+previous-slot: 45
+next-slot: 53
+entry-slots: [10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34,37,38,39,40,41,42,43]
+item:
+  name: '&#99FF00%item%'
+  lore: ['&7Sell price: &#99FF00%price%', '&7With multiplier: &#99FF00%multiplied%']
+previous: {material: ARROW, name: '&#FF0000&lPREVIOUS'}
+next: {material: ARROW, name: '&#99FF00&lNEXT'}

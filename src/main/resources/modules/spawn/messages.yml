@@ -1,0 +1,10 @@
+config-version: 1
+prefix: '&#16D223&lTELEPORT &7▷ &r'
+
+players-only: '%prefix%&#FF2727Only players can use this command.'
+no-permission: '%prefix%&#FF2727You don''t have permission.'
+not-set: '%prefix%&#FF2727Spawn has not been set yet.'
+teleported: '%prefix%&#9FFF00Teleported to spawn.'
+cooldown: '%prefix%&#FF2727Please wait &f%seconds% &7seconds before using spawn again.'
+set: '%prefix%&#9FFF00Spawn &f%name% &7has been set.'
+deleted: '%prefix%&#9FFF00Spawn has been deleted.'

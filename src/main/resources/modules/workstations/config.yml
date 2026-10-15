@@ -1,0 +1,17 @@
+config-version: 1
+message-mode: chat
+
+play-sound: true
+override-craft: false
+
+permissions:
+  anvil: sharded.workstations.anvil
+  grindstone: sharded.workstations.grindstone
+  smithingtable: sharded.workstations.smithingtable
+  craft: sharded.craft.use
+
+sounds:
+  anvil: BLOCK_ANVIL_PLACE
+  grindstone: BLOCK_GRINDSTONE_USE
+  smithingtable: BLOCK_SMITHING_TABLE_USE
+  craft: BLOCK_WOOD_PLACE

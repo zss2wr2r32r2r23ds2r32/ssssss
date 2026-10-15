@@ -1,0 +1,88 @@
+# The spawner shop. Its icon and its slot in the main menu sit in ../config.yml
+# Empty on purpose. Drop entries under items: the way the other shops do it,
+# the menu picks them up on the next reload.
+
+menu:
+  title: "&8Shop Menu | Spawner"
+  rows: 3
+  pages: 1
+
+buttons:
+
+  previous:
+    slot: 21
+    material: RED_STAINED_GLASS_PANE
+    name: "&#FF0000&lPREVIOUS PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FF0000Information:"
+      - "&#FF0000¦ &fGo one page back."
+      - ""
+      - "&#FF0000▷ &n&lCLICK&r&#FF0000 To Navigate"
+
+  return:
+    slot: 22
+    material: GUSTER_BANNER_PATTERN
+    name: "&#FFD900&lRETURN BACK"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#FFD900Information:"
+      - "&#FFD900¦ &fGo back to the"
+      - "&#FFD900¦ &f&#FFD900shop menu&f."
+      - ""
+      - "&#FFD900▷ &n&lCLICK&r&#FFD900 To Return"
+
+  next:
+    slot: 23
+    material: LIME_STAINED_GLASS_PANE
+    name: "&#99ff00&lUPCOMING PAGE"
+    lore:
+      - "&8Description"
+      - ""
+      - "&#99ff00Information:"
+      - "&#99ff00¦ &fGo one page forward."
+      - ""
+      - "&#99ff00▷ &n&lCLICK&r&#99ff00 To Navigate"
+
+items:
+  skeleton:
+    page: 1
+    slot: 11
+    name: "&#E3E3E3&lSKELETON SPAWNER"
+    material: SPAWNER
+    price: 350
+    command: "spawnergive %player% SKELETON %amount%"
+
+  creeper:
+    page: 1
+    name: "&#007E20&lCREEPER SPAWNER"
+    slot: 12
+    material: SPAWNER
+    price: 700
+    command: "spawnergive %player% CREEPER %amount%"
+
+  blaze:
+    page: 1
+    name: "&#F77F0F&lBLAZE SPAWNER"
+    slot: 13
+    material: SPAWNER
+    price: 1400
+    command: "spawnergive %player% BLAZE %amount%"
+
+  ZOMBIE:
+    page: 1
+    name: "&#80ee0b&lZOMBIE SPAWNER"
+    slot: 14
+    material: SPAWNER
+    price: 2800
+    command: "spawnergive %player% ZOMBIE %amount%"
+
+  irongolem:
+    page: 1
+    name: "&7&lIRON-GOLEM SPAWNER"
+    slot: 15
+    material: SPAWNER
+    price: 5000
+    command: "spawnergive %player% IRON_GOLEM %amount%"

@@ -1,0 +1,135 @@
+config-version: 1
+message-mode: chat
+play-open-sound: true
+
+gui:
+  main:
+    title: '&8Server Rules'
+    size: 27
+    filler:
+      material: BLACK_STAINED_GLASS_PANE
+      name: ' '
+    items:
+      client:
+        material: WRITABLE_BOOK
+        slot: 11
+        name: '&#FF69B4&lCLIENT RULES'
+        lore:
+          - '&8Allowed and banned modifications'
+          - ''
+          - '&#FF69B4| &fHacked clients, movement mods,'
+          - '&#FF69B4| &fESP, radar, macros, and more.'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+        action: client
+      general:
+        material: BOOK
+        slot: 13
+        name: '&#9FFF00&lGENERAL RULES'
+        lore:
+          - '&8Gameplay and server conduct'
+          - ''
+          - '&#9FFF00| &fGriefing, scamming, exploits,'
+          - '&#9FFF00| &fand general gameplay rules.'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+        action: general
+      chat:
+        material: PAPER
+        slot: 15
+        name: '&#55FFFF&lCHAT RULES'
+        lore:
+          - '&8Chat behaviour and conduct'
+          - ''
+          - '&#55FFFF| &fSpam, harassment, advertising,'
+          - '&#55FFFF| &fand staff interaction rules.'
+          - ''
+          - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To View'
+        action: chat
+  client:
+    title: '&8Client Rules'
+    size: 27
+    filler:
+      material: BLACK_STAINED_GLASS_PANE
+      name: ' '
+    items:
+      rules:
+        material: BOOK
+        slot: 13
+        name: '&#FF69B4&lCLIENT RULES'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#FF69B4| &fNo Hacked Clients'
+          - '&#FF69B4| &fNo Movement Mods'
+          - '&#FF69B4| &fNo Inventory Mods'
+          - '&#FF69B4| &fNo Health Indicators'
+          - '&#FF69B4| &fNo Radar, ESP, or Freecam'
+          - '&#FF69B4| &fNo Auto / Easy Place'
+          - '&#FF69B4| &fNo Macros, Scripts, or Auto Clickers'
+          - '&#FF69B4| &fNo Mouse Tweak Mods or Scrolling Exploits'
+          - '&#FF69B4| &fNo Crafting Modifications'
+      back:
+        material: ARROW
+        slot: 22
+        name: '&#FF2727&lBack'
+        lore:
+          - '&7Return to categories.'
+        action: back
+  general:
+    title: '&8General Rules'
+    size: 27
+    filler:
+      material: BLACK_STAINED_GLASS_PANE
+      name: ' '
+    items:
+      rules:
+        material: BOOK
+        slot: 13
+        name: '&#9FFF00&lGENERAL RULES'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#9FFF00| &fNo Griefing or Stealing'
+          - '&#9FFF00| &fNo Scamming'
+          - '&#9FFF00| &fNo Exploiting Bugs or Duplication'
+          - '&#9FFF00| &fNo Lag Machines'
+          - '&#9FFF00| &fNo Inappropriate Builds or Skins'
+          - '&#9FFF00| &fNo AFK Farming Outside Allowed Areas'
+      back:
+        material: ARROW
+        slot: 22
+        name: '&#FF2727&lBack'
+        lore:
+          - '&7Return to categories.'
+        action: back
+  chat:
+    title: '&8Chat Rules'
+    size: 27
+    filler:
+      material: BLACK_STAINED_GLASS_PANE
+      name: ' '
+    items:
+      rules:
+        material: BOOK
+        slot: 13
+        name: '&#55FFFF&lCHAT RULES'
+        lore:
+          - '&8Description'
+          - ''
+          - '&#55FFFF| &fNo Spamming'
+          - '&#55FFFF| &fNo Harassment'
+          - '&#55FFFF| &fNo Advertising'
+          - '&#55FFFF| &fNo Discrimination or Hate Speech'
+          - '&#55FFFF| &fNo Death Threats'
+          - '&#55FFFF| &fNo Doxxing / Sharing Private Info'
+          - '&#55FFFF| &fNo Impersonation'
+          - '&#55FFFF| &fNo Ban Evasion'
+          - '&#55FFFF| &fNo Lying to Staff'
+      back:
+        material: ARROW
+        slot: 22
+        name: '&#FF2727&lBack'
+        lore:
+          - '&7Return to categories.'
+        action: back

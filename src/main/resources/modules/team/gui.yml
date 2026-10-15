@@ -1,0 +1,156 @@
+menu_title: '&#FF3399&lTEAMS'
+config-version: 1
+size: 27
+open_permission: sharded.teams.use
+
+items:
+  filler:
+    material: BLACK_STAINED_GLASS_PANE
+    slots: [0,1,2,3,4,5,6,7,8,9,17,18,19,20,21,23,24,25,26]
+    display_name: ' '
+
+  create:
+    material: ANVIL
+    slot: 10
+    display_name: '&#00d4ff&lCREATE TEAM'
+    lore:
+      - '&7Create a new team'
+      - ''
+      - '&fUse &a/team create <name>'
+      - ''
+      - '&eClick for hint'
+    click_commands:
+      - '[action] team_create'
+
+  members:
+    material: PLAYER_HEAD
+    slot: 11
+    display_name: '&#00d4ff&lMEMBERS'
+    lore:
+      - '&7Team: &f%team_name%'
+      - '&7Members: &f%member_count%'
+      - ''
+      - '&eClick to view'
+    click_commands:
+      - '[close]'
+      - '[action] team_members'
+
+  invite:
+    material: PAPER
+    slot: 12
+    display_name: '&#ffd700&lINVITE'
+    lore:
+      - '&7Invite a player'
+      - ''
+      - '&f/team invite <player>'
+    click_commands:
+      - '[action] team_invite_prompt'
+
+  stats:
+    material: BOOK
+    slot: 13
+    display_name: '&#a855f7&lSTATS'
+    lore:
+      - '&7View team statistics'
+    click_commands:
+      - '[close]'
+      - '[action] team_stats'
+
+  leaderboard:
+    material: MOJANG_BANNER_PATTERN
+    slot: 14
+    display_name: '&#ffd700&lLEADERBOARD'
+    lore:
+      - '&7Top teams by score'
+    click_commands:
+      - '[close]'
+      - '[action] team_leaderboard'
+
+  emergency:
+    material: BELL
+    slot: 15
+    display_name: '&#ff4444&lEMERGENCY'
+    lore:
+      - '&7Alert your team you need help'
+    click_commands:
+      - '[close]'
+      - '[action] team_emergency'
+
+  chat:
+    material: WRITABLE_BOOK
+    slot: 16
+    display_name: '&#FF3399&lTEAM CHAT'
+    lore:
+      - '&7Toggle team chat mode'
+      - '&7Status: %team_chat%'
+    click_commands:
+      - '[action] team_chat_toggle'
+
+  ally:
+    material: WHITE_BANNER
+    slot: 22
+    display_name: '&#ff8800&lALLIES'
+    lore:
+      - '&7Allies: &f%ally_count%/%ally_max%'
+      - ''
+      - '&f/team ally <team>'
+      - '&f/team accept'
+    click_commands:
+      - '[action] team_ally_prompt'
+
+  leave:
+    material: OAK_DOOR
+    slot: 4
+    display_name: '&#ff8800&lLEAVE'
+    lore:
+      - '&7Leave your team'
+    click_commands:
+      - '[close]'
+      - '[action] team_leave'
+
+  disband:
+    material: DARK_OAK_DOOR
+    slot: 4
+    display_name: '&#ff4444&lDISBAND'
+    lore:
+      - '&7Disband your team (leader only)'
+    click_commands:
+      - '[close]'
+      - '[action] team_disband'
+
+  accept:
+    material: LIME_DYE
+    slot: 20
+    display_name: '&#9FFF00&lACCEPT INVITE'
+    lore:
+      - '&7Accept a pending invite or ally request'
+    click_commands:
+      - '[close]'
+      - '[action] team_accept'
+
+  promote:
+    material: GOLD_INGOT
+    slot: 21
+    display_name: '&#ffd700&lPROMOTE'
+    lore:
+      - '&f/team promote <player>'
+    click_commands:
+      - '[action] team_promote_prompt'
+
+  demote:
+    material: IRON_INGOT
+    slot: 23
+    display_name: '&#94a3b8&lDEMOTE'
+    lore:
+      - '&f/team demote <player>'
+    click_commands:
+      - '[action] team_demote_prompt'
+
+  kick:
+    material: BARRIER
+    slot: 24
+    display_name: '&#ff4444&lKICK'
+    lore:
+      - '&f/team kick <player>'
+    click_commands:
+      - '[action] team_kick_prompt'

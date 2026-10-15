@@ -1,0 +1,10 @@
+config-version: 2
+prefix: '%prefix%'
+
+message-modes:
+  broadcast: chat
+  sent: inherit
+
+usage: '%prefix%&#FF2727Usage: &f/announce <message>'
+no-permission: '%prefix%&#FF2727You don''t have permission.'
+sent: '%prefix%&#9FFF00Announcement sent.'

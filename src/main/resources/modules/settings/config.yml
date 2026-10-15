@@ -1,0 +1,193 @@
+config-version: 1
+prefix: '&#D66BFC&lSETTINGS &8▷ &r'
+message-mode: chat
+
+status:
+  enabled: '&#9FFF00&lENABLED'
+  disabled: '&#FF2727&lDISABLED'
+
+gui:
+  title: '&8Settings'
+  size: 36
+  filler:
+    material: BLACK_STAINED_GLASS_PANE
+    name: ' '
+  items:
+    public_chat:
+      slot: 11
+      material: NAME_TAG
+      permission: shardedcore.settings.use
+      toggle-key: public-chat
+      default: true
+      on-message: chat-on
+      off-message: chat-off
+      name: '&#FF0072&lPUBLIC CHAT'
+      lore:
+        - '&8Description'
+        - ''
+        - '&#FF0072| &fToggle public chat visibility'
+        - ''
+        - '&#FF0072⛨ &fStatus: %status_public_chat%'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    private_messages:
+      slot: 12
+      material: WRITABLE_BOOK
+      permission: shardedcore.settings.use
+      toggle-key: msgtoggle
+      default: true
+      on-message: msg-on
+      off-message: msg-off
+      name: '&#FF0000&lPRIVATE MESSAGES'
+      lore:
+        - '&8Description'
+        - ''
+        - '&#FF0000| &fToggle private messages'
+        - ''
+        - '&#FF0000⛨ &fStatus: %status_private_messages%'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    join_messages:
+      slot: 13
+      material: OAK_DOOR
+      permission: shardedcore.settings.use
+      toggle-key: jointoggle
+      default: true
+      on-message: join-on
+      off-message: join-off
+      name: '&#FFD900&lJOIN/LEAVE MESSAGES'
+      lore:
+        - '&8Description'
+        - ''
+        - '&#FFD900| &fToggle join/leave messages'
+        - ''
+        - '&#FFD900⛨ &fStatus: %status_join_messages%'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    death_messages:
+      slot: 14
+      material: SKELETON_SKULL
+      permission: shardedcore.settings.use
+      toggle-key: deathtoggle
+      default: true
+      on-message: death-on
+      off-message: death-off
+      name: '&#FF3400&lDEATH MESSAGES'
+      lore:
+        - '&8Description'
+        - ''
+        - '&#FF3400| &fToggle death messages'
+        - ''
+        - '&#FF3400⛨ &fStatus: %status_death_messages%'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    mob_toggle:
+      slot: 15
+      material: SPAWNER
+      permission: shardedcore.settings.use
+      toggle-key: mobtoggle
+      default: true
+      on-message: mob-on
+      off-message: mob-off
+      name: '&#56FF00&lMOB TOGGLE'
+      lore:
+        - '&8Description'
+        - ''
+        - '&#56FF00| &fToggle mob spawns near you'
+        - ''
+        - '&#56FF00⛨ &fStatus: %status_mob_toggle%'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    pay_toggle:
+      slot: 20
+      material: GOLD_INGOT
+      permission: shardedcore.settings.use
+      toggle-key: paytoggle
+      default: false
+      on-message: pay-on
+      off-message: pay-off
+      name: '&#FFD700&lPAYMENTS'
+      lore:
+        - '&8Description'
+        - ''
+        - '&#FFD700| &fToggle receiving payments'
+        - ''
+        - '&#FFD700⛨ &fStatus: %status_pay%'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    nightvision:
+      slot: 21
+      material: ENDER_EYE
+      permission: shardedcore.settings.use
+      toggle-key: nightvision
+      default: false
+      effect: nightvision
+      on-message: nv-on
+      off-message: nv-off
+      name: '&#9B59FF&lNIGHT VISION'
+      lore:
+        - '&8Description'
+        - ''
+        - '&#9B59FF| &fToggle night vision'
+        - ''
+        - '&#9B59FF⛨ &fStatus: %status_nightvision%'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    live:
+      slot: 22
+      material: REDSTONE
+      permission: shardedcore.settings.use
+      toggle-key: live
+      default: true
+      on-message: live-on
+      off-message: live-off
+      name: '&#FF0000&lLIVE ALERTS'
+      lore:
+        - '&8Description'
+        - ''
+        - '&#FF0000| &fToggle live stream alerts'
+        - ''
+        - '&#FF0000⛨ &fStatus: %status_live%'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    mentions:
+      slot: 23
+      material: PAPER
+      permission: shardedcore.settings.use
+      toggle-key: mentions
+      default: true
+      on-message: mentions-on
+      off-message: mentions-off
+      name: '&#00A2FF&lMENTIONS'
+      lore:
+        - '&8Description'
+        - ''
+        - '&#00A2FF| &fToggle chat mentions'
+        - ''
+        - '&#00A2FF⛨ &fStatus: %status_mentions%'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    tpa:
+      slot: 24
+      material: ENDER_PEARL
+      permission: shardedcore.settings.use
+      toggle-key: tpa-incoming-enabled
+      default: true
+      on-message: tpa-on
+      off-message: tpa-off
+      name: '&#0098FF&lTPA REQUESTS'
+      lore:
+        - '&8Description'
+        - ''
+        - '&#0098FF| &fToggle incoming TPA requests'
+        - ''
+        - '&#0098FF⛨ &fStatus: %status_tpa%'
+        - ''
+        - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Toggle'
+    close:
+      slot: 31
+      close: true
+      material: BARRIER
+      name: '&#FF0000&lCLOSE'
+      lore:
+        - '&7Click to close settings.'

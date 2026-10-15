@@ -1,0 +1,77 @@
+config-version: 3
+prefix: '%prefix%'
+
+message-modes:
+  staffmode-enabled: actionbar
+  staffmode-disabled: actionbar
+  vanish-enabled: actionbar
+  vanish-disabled: actionbar
+  frozen: actionbar
+  unfrozen: actionbar
+  randomtp: actionbar
+  playtime-reward: inherit
+
+players-only: '%prefix%&#FF2727Only players can use this command.'
+no-permission: '%prefix%&#FF2727You don''t have permission.'
+gamemode-set: '%prefix%&#9FFF00Gamemode set to &f%mode%&#9FFF00.'
+player-not-found: '%prefix%&#FF2727Player not found.'
+gtp-usage: '%prefix%&#FF2727Usage: &f/gtp <player>'
+teleported-to: '%prefix%&#9FFF00Teleported to &f%player%&#9FFF00.'
+invalid-duration: '%prefix%&#FF2727Invalid duration.'
+no-ip: '%prefix%&#FF2727No IP address found for that player.'
+no-reasons: '%prefix%&#FF2727No reasons configured.'
+unknown-punish-type: '%prefix%&#FF2727Unknown punishment type.'
+
+audit-staff: '&f%player% &7used &f%command%'
+
+staffmode-enabled: '%prefix%&#9FFF00Staff mode &aenabled&#9FFF00.'
+staffmode-disabled: '%prefix%&#FF2727Staff mode &cdisabled&#FF2727.'
+vanish-enabled: '%prefix%&#9FFF00You are now &avanished&#9FFF00.'
+vanish-disabled: '%prefix%&#FF2727You are no longer vanished.'
+freeze-enabled: '%prefix%&#9FFF00Froze &f%player%&#9FFF00.'
+freeze-disabled: '%prefix%&#9FFF00Unfroze &f%player%&#9FFF00.'
+freeze-usage: '%prefix%&#FF2727Usage: &f/freeze <player>'
+freeze-hint: '%prefix%&#FF8300Right-click a player with the freeze item.'
+frozen: '%prefix%&#FF2727You have been &cfrozen&#FF2727.'
+unfrozen: '%prefix%&#9FFF00You have been &aunfrozen&#9FFF00.'
+
+punish-usage: '%prefix%&#FF2727Usage: &f/punish <player>'
+punish-hint: '%prefix%&#FF0000Hit a player with the punish axe.'
+
+ban-usage: '%prefix%&#FF2727Usage: &f/ban <player> [reason] [duration]'
+banip-usage: '%prefix%&#FF2727Usage: &f/banip <player> [reason] [duration]'
+banned: '%prefix%&#9FFF00Banned &f%player% &7(&f%reason%&7, &f%duration%&7)'
+muted: '%prefix%&#9FFF00Muted &f%player% &7(&f%reason%&7, &f%duration%&7)'
+muted-target: '%prefix%&#FF2727You were muted for &f%reason%&#FF2727.'
+muted-chat: '%prefix%&#FF2727You are muted (&f%reason%&#FF2727).'
+ip-banned: '%prefix%&#9FFF00IP banned &f%player% &7(&f%ip%&7, &f%reason%&7)'
+
+unban-usage: '%prefix%&#FF2727Usage: &f/unban <player>'
+unmute-usage: '%prefix%&#FF2727Usage: &f/unmute <player>'
+pardon-usage: '%prefix%&#FF2727Usage: &f/pardon <player>'
+unbanned: '%prefix%&#9FFF00Unbanned &f%player%&#9FFF00.'
+unmuted: '%prefix%&#9FFF00Unmuted &f%player%&#9FFF00.'
+pardoned: '%prefix%&#9FFF00Pardoned &f%player%&#9FFF00.'
+
+offend-usage: '%prefix%&#FF2727Usage: &f/offend <player>'
+offenses: '%prefix%&#FF8300%player% &7— Bans: &f%bans% &7Mutes: &f%mutes% &7Warns: &f%warns%'
+repeat-offender: '%prefix%&#FF0000%player% &7is a &crepeat offender&#FF2727.'
+
+wipe-usage: '%prefix%&#FF2727Usage: &f/wipe <player> [reason]'
+wiped: '%prefix%&#9FFF00Wiped &f%player% &7(&f%reason%&7)'
+
+alts-usage: '%prefix%&#FF2727Usage: &f/alts [player]'
+alts-header: '%prefix%&#FF8300Alts for &f%player% &7(&f%ip%&7):'
+alts-none: '%prefix%&#FF2727No alts found on that IP.'
+alts-entry: '%prefix% &7- &f%name%'
+
+stafflist-empty: '%prefix%&#FF2727No staff online.'
+stafflist-header: '%prefix%&#FF8300Online staff (&f%count%&#FF8300):'
+stafflist-entry: '%prefix% &7- &f%player% &8(%status%)'
+stafflist-vanished: 'vanished'
+stafflist-visible: 'visible'
+
+randomtp: '%prefix%&#9FFF00Teleported to &f%player%&#9FFF00.'
+randomtp-none: '%prefix%&#FF2727No players available to teleport to.'
+
+broadcast-punish: '%prefix%&#FF2727%action% &f%player% &7by &f%staff% &7— &f%reason%'

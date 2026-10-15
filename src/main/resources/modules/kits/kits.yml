@@ -1,0 +1,37 @@
+kits:
+  starter:
+    display-name: '&#99FF00&lSTARTER KIT'
+    icon: CHEST
+    slot: 11
+    permission: sharded.kits.starter
+    cooldown-seconds: 86400
+    lore: ['&7Basic tools and food', '', '&#FFD900▷ Click to preview']
+    items:
+      - {slot: 0, material: STONE_SWORD, amount: 1}
+      - {slot: 1, material: STONE_PICKAXE, amount: 1}
+      - {slot: 2, material: STONE_AXE, amount: 1}
+      - {slot: 3, material: STONE_SHOVEL, amount: 1}
+      - {slot: 8, material: BREAD, amount: 16}
+  tools:
+    display-name: '&#22AFFB&lTOOLS KIT'
+    icon: IRON_PICKAXE
+    slot: 13
+    permission: sharded.kits.tools
+    cooldown-seconds: 43200
+    lore: ['&7Iron tools', '', '&#FFD900▷ Click to preview']
+    items:
+      - {slot: 0, material: IRON_SWORD, amount: 1}
+      - {slot: 1, material: IRON_PICKAXE, amount: 1}
+      - {slot: 2, material: IRON_AXE, amount: 1}
+      - {slot: 3, material: IRON_SHOVEL, amount: 1}
+  food:
+    display-name: '&#FB7B0B&lFOOD KIT'
+    icon: COOKED_BEEF
+    slot: 15
+    permission: sharded.kits.food
+    cooldown-seconds: 21600
+    lore: ['&7Cooked food stacks', '', '&#FFD900▷ Click to preview']
+    items:
+      - {slot: 0, material: COOKED_BEEF, amount: 32}
+      - {slot: 1, material: COOKED_PORKCHOP, amount: 32}
+      - {slot: 2, material: GOLDEN_CARROT, amount: 16}

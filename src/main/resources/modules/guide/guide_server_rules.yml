@@ -1,0 +1,41 @@
+menu_title: 'Server Rules'
+config-version: 3
+size: 27
+open_permission: sharded.guide.use
+
+open_commands:
+  - '[sound] BLOCK_CHEST_OPEN'
+
+items:
+  filler:
+    material: BLACK_STAINED_GLASS_PANE
+    slots: [0,1,2,3,4,5,6,7,8,9,11,13,15,17,18,19,20,21,23,24,25,26]
+    display_name: ' '
+
+  rules:
+    material: BOOK
+    slot: 13
+    display_name: '&#FF69B4&lSERVER RULES'
+    lore:
+      - '&8Description'
+      - ''
+      - '&#FF69B4Information:'
+      - '&#FF69B4| &fNo Hacked Clients'
+      - '&#FF69B4| &fNo Movement Mods'
+      - '&#FF69B4| &fNo Inventory Mods'
+      - '&#FF69B4| &fNo Health Indicators'
+      - '&#FF69B4| &fNo Radar, ESP, or Freecam'
+      - '&#FF69B4| &fNo Auto / Easy Place'
+      - '&#FF69B4| &fNo Macros, Scripts, or Auto Clickers'
+      - '&#FF69B4| &fNo Mouse Tweak Mods or Scrolling Exploits'
+      - '&#FF69B4| &fNo Crafting Modifications'
+      - ''
+      - '&x&F&F&B&A&0&0▷ &x&F&F&B&A&0&0&l&nCLICK&r &x&F&F&B&A&0&0To Go Back'
+    click_commands:
+      - '[openguimenu] guide_rules'
+
+  back:
+    nav-override: true
+    slot: 22
+    click_commands:
+      - '[openguimenu] guide_rules'

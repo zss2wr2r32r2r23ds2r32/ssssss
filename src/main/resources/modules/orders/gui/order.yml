@@ -1,0 +1,120 @@
+# The board. Slots and the window size come from here, so a button can be moved without
+# touching anything else. No filler-slots line means no filler at all.
+title: '&8🔥 Orders'
+size: 54
+previous:
+  slot: 48
+  material: RED_STAINED_GLASS_PANE
+  name: '&#FF007B&lPREVIOUS PAGE'
+  lore:
+  - '&8Description'
+  - ''
+  - '&#FF007BInformation:'
+  - '&fClick here, to go'
+  - '&fto the previous page.'
+  - ''
+  - '&#FFD900▶ &n&lCLICK&#FFD900 To Navigate'
+next:
+  slot: 50
+  material: LIME_STAINED_GLASS_PANE
+  name: '&#45FF17&lNEXT PAGE'
+  lore:
+  - '&8Description'
+  - ''
+  - '&#45FF17Information:'
+  - '&fClick here, to go'
+  - '&fto the next page.'
+  - ''
+  - '&#FFD900▶ &n&lCLICK&#FFD900 To Navigate'
+sort:
+  slot: 45
+  material: CAULDRON
+  name: '&#F90EC2&lSORTING'
+  lore:
+  - '&8Description'
+filter:
+  slot: 53
+  material: HOPPER
+  name: '&#019BEE&lFILTER'
+refresh:
+  slot: 49
+  material: BELL
+  name: '&#FFF300&lREFRESH ORDERS'
+  lore:
+  - '&8Description'
+  - ''
+  - '&#FFF300Information:'
+  - '&fClick to refresh the'
+  - '&flist of orders.'
+  - ''
+  - '&#FFD900▶ &n&lCLICK&#FFD900 To Refresh'
+search:
+  slot: 47
+  material: OAK_SIGN
+  name: '&#FB7B0B&lSEARCH'
+  lore:
+  - '&8Description'
+  - ''
+  - '&#FB7B0BInformation:'
+  - '&fClick to search for'
+  - '&fa specific order.'
+  - ''
+  - '&#FFD900▶ &n&lCLICK&#FFD900 To Search'
+new:
+  slot: 46
+  material: PAPER
+  name: '&#019BEE&lNEW ORDER'
+  lore:
+  - '&8Description'
+  - ''
+  - '&#019BEEInformation'
+  - '&fClick here, to create'
+  - '&fa new order.'
+  - ''
+  - '&#FFD900▶ &n&lCLICK&#FFD900 To Create'
+mine-button:
+  slot: 51
+  material: BEACON
+  name: '&#00FF89&lYOUR ORDERS'
+  lore:
+  - '&8Description'
+  - ''
+  - '&#00FF89Information'
+  - '&fClick to view'
+  - '&fyour orders.'
+  - ''
+  - '&#FFD900▶ &n&lCLICK&#FFD900 To View'
+active: '&#F90EC2● '
+inactive: '&f● '
+filter-active: '&#019BEE● '
+# The keys are the enum names in lower case with dashes, nothing else is read.
+sort-names:
+  newest: Recently Listed
+  most-paid: Most Paid
+  best-per-item: Most Money Per Item
+  most-delivered: Most Delivered
+filter-names:
+  all: All
+  blocks: Blocks
+  tools: Tools
+  combat: Combat
+  food: Food
+  potions: Potions
+  books: Books
+  ingredients: Ingredients
+  other: Other
+no-search: '-'
+no-extras: '-'
+order:
+  name: '&#45FF17%player_name%''s Order'
+  glow: false
+  lore:
+  - '&8Description'
+  - ''
+  - '&#45FF17Information:'
+  - '&#019BEE⚑ &fItem: &#019BEE%total_amount% %item_name%'
+  - '&#45FF17&l$ &fPrice: &#45FF17$%price_per_item% each'
+  - '&#F90EC2🌊 &fDelivered: &#F90EC2%total_delivered%&7/&#F90EC2%total_amount%'
+  - '&#45FF17&l$ &fPaid: &#45FF17%total_paid%&7/&#45FF17$%total_price%'
+  - ''
+  - '&#FFD900▶ &n&lCLICK&#FFD900 To Deliver'
